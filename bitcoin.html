@@ -132,23 +132,110 @@
 								 <p><img src="img/an5.png"class="center"></p>
 								<p>A.) Hashing the previous block and storing that hash in the current block, creating a chain of blocks and hashing the transactions and storing them in the Merkel Tree (used for ease of verification of transactions).</p>
 								</p>B.It uses SHA256 for the proof of work consensus mechanism. This requires mining of blocks, which means finding a value (nonce), such that the hash (SHA256) of the block plus the nonce will be less than a prespecified number called target. Smaller the target, more difficult it is to mine the block.</p>
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
+								<p><h5>Private key-</h5></p>
+								<p>The private key consists of alphabetic numeric characters that gives a user access and control over their funds to their corresponding cryptocurrency address. The private key is used to sign transactions that allow the user to spend their funds<p/>
+								<P><h5> Public Key- </h5></p>	
+                                 <p>Bitcoin uses digital signatures for user authorisation. Each node generates a public-private key pair. It uses the public key as its network address and the private key to sign blocks/transactions. To check if the node/user has authorised any transaction/block, you have to verify the digital signature using the node’s public key. It is not possible to deduce the private key from the public key, hence this node-alias mechanism is secure. Bitcoin uses ECDSA encryption. </p>								
+								<p><img src="img/an7.png" class="center"></p>
+								<div class="transbox">
+					 <p><h3 class="mb-6">4.What is Proof-Of-Work ?</h3></p></div>
+					 <p>Proof-of-Work, or PoW, is the original consensus algorithm in a Blockchain network.</p>
+					 <p>In Blockchain, this algorithm is used to confirm transactions and produce new blocks to the chain. With PoW, miners compete against each other to complete transactions on the network and get rewarded.</p>
+					 <p>In a network users send each other digital tokens.A decentralized ledger gathers all the transactions into blocks. However, care should be taken to confirm the transactions and arrange blocks.</p>			
+					 <p>his responsibility bears on special nodes called miners, and a process is called mining.</p>			
+					 <p>The main working principles are a complicated mathematical puzzle and a possibility to easily prove the solution.</p>		
+					<p><h5>What is “mathematical puzzle?”</h5></p>
+					<p>It’s an issue that requires a lot of computational power to solve.</p>
+				     <p><h6> There are a lot of them, for instance:</h6></p>
+					 <p>hash function, or how to find the input knowing the output.</p>
+					 <p>integer factorization, in other words, how to present a number as a multiplication of two other numbers.</p>
+					 <p>guided tour puzzle protocol. If the server suspects a DoS attack, it requires a calculation of hash functions, for some nodes in a defined order. In this case, it’s a ‘how to find a chain of hash function values’ problem.</p>		
+				      <p>The answer to the PoW problem or mathematical equation is called hash.</p>		
+					<p>As the network is growing, it is facing more and more difficulties. The algorithms need more and more hash power to solve. So, the complexity of the task is a sensitive issue.</p>
+					<p><h5>How can this algorithm implemented in Blockchain	</h5></p>		
+					<p>Miners solve the puzzle, form the new block and confirm the transactions.How complex a puzzle is depends on the number of users, the current power and the network load. The hash of each block contains the hash of the previous block, which increases security and prevents any block violation.</p>			
+						<p><img src="img/an8.jpg" class="center"></p>
+                          <p>If a miner manages to solve the puzzle, the new block is formed. The transactions are placed in this block and considered confirmed</p>						
+							<img src="img/an9.jpg" class=-"center">
+							
+							
+			<div class="transbox">
+					 <p><h3 class="mb-6">5.How to create and  Join Public Bitcoin Blockchain ?</h3></p></div>
+					 <p></h5>Steps to create public blockchain bitcoin core.</h5></p>                               		
+                      <p></h6>Step-1: first you need to download bitcoin core from  <a href="https://bitcoin.org/en/download">https://bitcoin.org/en/downloadt</a></h6></p>                               		
+                      <p><img src="img/an01.png"class="center"></p>
+					  <p><div class="center">
+					  <p>And download the version as per your requirement.</p></div></p>
+                      <p><h6>Step-2:Install the Bitcoin core set up</h6></p>
+                      <p><img src="img/an02.png"class="center"></p>
+					  <p><div class="center">
+					  <p>And accept all the terms and license of the package</p></div></p>
+					  <p><h5>Step-3: open the system environment variable and set path of bitcoin.</h5></p>
+					  <p>C:\Program Files\bitcoin\daemon</p></div>
+					                        <p><img src="img/an3.png"class="center"></p>
+                          <p><div class="center">
+					  <p>You can set path from program files, you need to open bitcoin folder ,open daemon folder and copy the path and paste it in the system environment variable.</div></p>
+                        <p><h5>Step-4: create a folder in the driver and name the folder bitcoin.</h5></p>
+                                        <p><img src="img/ak1.png"class="center"></p>
+                        <p><h5>Step-5: create a new folder inside the bitcoin folder and name the folder bitcoin core.</h5></p>
+                                        <p><img src="img/ak2.png"class="center"></p>
+						<p><h5>Step-6:  now create a configure file in the bitcoincore folder and name the configure file bitcoin.</h5></p>				
+                                        <p>You need to save this file as bitcoin.configure.</p>
+										<p><img src="img/ak3.png"class="center"></p>
+                             <p><h6>Server=1:-</h6> There is only one server in the configure file, and connects your pc to bitcoin core server.</p>
+
+                             <p><h6>Daemon=1:-</h6> There is only one daemon in the configure file and work as a background process in your computer.</p>
+ 
+                             <p><h6>Rpc user:-</h6>  you have to give rpc user name as per your requirement.  And you can give this to other person to connect your node in there computer.</p>
+ 
+                             <p><h6>Rpc-password:-</h6> give password as your requirement.And you can give this to other person to connect your node in there computer. untill the person doesn’t have your password he will not have access to coonect you account.</p>
+ 
+                             <p><h6>Rpc allow ip:-</h6> it provides an ip address to your node so connect you node in different computer.</p>
+                             <p><h5>Rpc-port:-</h6> It gives port number to your node.</p>
+						<p><h5>Step-7: open command prompt.</h5></p>
+						           <p><img src="img/ak4.png"class="center"></p>
+											<p><h5>Step-8: open the folder from command prompt from the destination where you created.<h5></p>
+						           <p><img src="img/ak5.png"class="center"></p>
+						<p><h5>Step-9: And enter the following command</h5></p>
+                                    <p>Bitcoind –datadir=./bitcoincore –txindex</p>
+									<p><img src="img/ak6.png"class="center"></p>
+						<p><h5>Step-10: after entering the above command in the cmd you will see different folder created in the bitcoincore .</h5></p>
+				        <p><img src ="img/ak7.png" class="center"></p>
+										<p><h5>Step-11: open the second command prompt and again open folder from command prompt</h5></p>
+						        <p><img src ="img/ak8.png" class="center"></p>
+						<p><h5>Step-12: And enter the following command </h5></p>
+						<p>Bitcoin-cli –datadir=./bitcoincore  getblockchaininfo</p>
+					 <p><img src ="img/ak01.png" class="center"></p>
+						<p><h5>Step-13: After entering the command you will see the public blockchain of bitcoin in the command prompt.</h5></p>
+					 <p><img src ="img/ak02.png" class="center"></p>
+						<p><h5>Step-14: All the blocks which is created by the bitcoin are stored in the bitcoincore folder inside the blocks folder. </h5></p>
+					 					 <p><img src ="img/ak04.png" class="center"></p>
+                         <p> All the Block which is created is saved in the folder.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+									
 								
 								<section class="gallery-area section-gap">
 				<div class="container">
