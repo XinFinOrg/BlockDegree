@@ -281,16 +281,33 @@
 								   <font color="#8B4513"><p>0x4a10a580a10a0fbe3fc1624c1d348838184d7664</p></font>
 								   <p>this is the `from` account from the above code example. This account address is represented by a hex string. It has a related account balance in Ether. Whenever you run the code example, you are in actuality sending cash from one person on the network to every other user.</p>
 				  
-							   
-							   
-							   
-							   
-							   
-							   
-							   
-							   
-							   
-							   
+				                <div class="transbox">
+								 <p><h3 class="mb-6">7.How to Create dapp on Ethereum Blockchain ?</h3></p>
+								   </div>
+								   <p>Today I'm going to show you how to build your first decentralized application, or dApp, on the Ethereum blockchain. I'll show you how to write your first Ethereum smart contract, where we'll hold an election between two candidates. We'll write tests against the smart contract, deploy it to the Ethereum blockchain, and develop a client-side application that allows accounts to cast votes</p>
+							        <p>In order to build our dApp, we need a few dependencies first.</p>
+									<p><h5>Node Package Manager (NPM)</h5></p>
+									<p>The first dependency we need is <a href="http://nodejs.org/en/ ">Node Package Manager,</a> or NPM, which comes with Node.js. You can see if you have node already installed by going to your terminal and typing: node -v</p>
+									 <p><h5>Truffle Framework</h5></p>
+									 <p>The next dependency is the <a href="http://truffleframework.com/">Truffle Framework,</a> which allows us to build decentralized applications on the Ethereum blockchain. It provides a suite of tools that allow us to write smart contacts with the Solidity programming language. It also enables us to test our smart contracts and deploy them to the blockchain. It also gives us a place to develop our client-side application.</p>
+							         <p>You can install Truffle with NPM by in your command line like this:</p>
+							        <p><font color="#8B4513"><strong>npm install -g truffle</strong></font></p>		
+                                     <p><h5>Ganache</h5></p>
+                                     <p>The next dependency is<a href="http://truffleframework.com/ganache "> Ganache.</a> a local in-memory blockchain. You can install Ganache by <a href ="http://truffleframework.com/ganache">downloading it from the Truffle Framework website.</a> It will give us 10 external accounts with addresses on our local Ethereum blockchain. Each account is preloaded with 100 fake ether.</p>									 
+                                     <p><h5>Metamask</h5></p>								 
+							           <p>The next dependency is the <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeog">Metamask extension for Google Chrome.</a> In order to use the blockchain, we must connect to it (remember, I said the block chain is a network). We’ll have to install a special browser extension in order to use the Ethereum block chain. That’s where metamask comes in. We’ll be able to connect to our local Ethereum blockchain with our personal account, and interact with our smart contract.</p>
+							          <p></h5>We’re going to be using the Metamask chrome extension for this tutorial, so you’ll also need to install the google chrome browser if you don’t have it already. To install Metamask, search for the Metamask Chrome plugin in the Google Chrome web store. Once you’ve installed it, be sure that it is checked in your list of extensions. You’ll see the fox icon in the top right hand side of your Chrome browser when it’s installed. Reference the video walk through if you get stuck! </h5></p>
+							        <p><h5>Now let's create a project directory for our dApp</h5></p>
+									<p><h6>Create a folder in the desktop and name the folder election </h6><p>
+							   <font color="#8B4513">
+                                           <p>Cd:desktop</p>
+                                            <p>Mkdir election</p>
+                                             <p>Cd election</p>	</font>
+											<p><img src="img/up1.png" class="center"></p>
+											<p>Now that we're inside our project, we can get up and running fast with a <a href="http://truffleframework.com/boxes/">Truffle box.</a> We'll be using the Pet Shop box for this tutorial. From within your project directory, install the <a href="http://truffleframework.com/boxes/pet-shop">pet shop box</a> from the command line like this</p>
+											 <p><h6>Let's see what the pet shop box gave us:</h6></p>
+								           <p><img src="img/up2.png" class="center"></p>
+
 							   
 							   
 							   
