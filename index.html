@@ -18,22 +18,23 @@
 
 		<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
 		
-			<!--CSS============================================= -->
+		<!--CSS============================================= -->
 			
-			<link rel="stylesheet" href="css/linearicons.css">
-			<link rel="stylesheet" href="css/font-awesome.min.css">
-			<link rel="stylesheet" href="css/bootstrap.css">
-			<link rel="stylesheet" href="css/magnific-popup.css">
-			<link rel="stylesheet" href="css/nice-select.css">							
-			<link rel="stylesheet" href="css/animate.min.css">
-			<link rel="stylesheet" href="css/owl.carousel.css">			
-			<link rel="stylesheet" href="css/jquery-ui.css">			
-			<link rel="stylesheet" href="css/main.css">
-						<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/linearicons.css">
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/magnific-popup.css">
+		<link rel="stylesheet" href="css/nice-select.css">							
+		<link rel="stylesheet" href="css/animate.min.css">
+		<link rel="stylesheet" href="css/owl.carousel.css">			
+		<link rel="stylesheet" href="css/jquery-ui.css">			
+		<link rel="stylesheet" href="css/main.css">
+        
+		<link rel="stylesheet" href="css/login-form.css">
 
 		</head>
 		<body>	
-		  <header id="header" id="home">
+		  <header id="header">
 	  		<div class="header-top">
 	  			<div class="container">
 			  		<div class="row">
@@ -48,34 +49,35 @@
 			  			<div class="col-lg-6 col-sm-6 col-4 header-top-right no-padding">
 			  				
 			  				<a href="mailto:support@colorlib.com"><span class="lnr lnr-envelope"></span> <span class="text">support@XinFin.org</span></a>
-			  				<a href="Login.html"><span class="lnr lnr-envelope"></span> <span class="text">Login</span></a>			
-							
+			  				<a href="#" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap"><span class="lnr lnr-envelope"></span> <span class="text">Login</span></a>							
 			  			</div>
 			  		</div>			  					
 	  			</div>
 			</div>
+            
+            
 		    <div class="container main-menu">
 		    	<div class="row align-items-center justify-content-between d-flex">
 			      <div id="logo">
-			        <a href="index.html"><img src="logo.png" alt="" title="education" /></a>
+			        <a href="index.html"><img src="img/logo.png" alt="" title="education" /></a>
 			      </div>
 			      <nav id="nav-menu-container">
 			        <ul class="nav-menu">
-			          <li><a href="index.html">Online Blockchain Training</a>
-					  <ul><li>Blockchain Basic Course For engineer</li>
-					  <li>Blockchain Advanced Course For Engineer</li>
-					 <li>Blockchain Advanced Course For Professional</li>
-
-					  </ul></li>
+			          <li class="menu-has-children"><a href="">Online Blockchain Training</a>
+			            <ul>
+			              <li><a href="#" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Blockchain Basic Course For engineer</a></li>
+			              <li><a href="blockchain-advance-course.html">Blockchain Advanced Course For Engineer</a></li>
+                          <li><a href="blockchain-advance-course-fpr-professional.html">Blockchain Advanced Course For Professional</a></li>
+			            </ul>
+			          </li>			          					          					          		          
 			          <li><a href="about.html">University Course Offline</a></li>
-
-			          <li><a href="courses.html">Blockchain Training</a></li>
-			          <li><a href="events.html">Event</a></li>
-			        
-			          </li>					          					          		          
-			          <li><a href="contact.html">Contact us</a></li>
+                      <li><a href="courses.html">Blockchain Training</a></li>
+                      <li><a href="events.html">Event</a></li>
+                      <li><a href="contact.html">Contact Us</a></li>
 			        </ul>
-			      </nav><!-- #nav-menu-container -->		    		
+			      </nav><!-- #nav-menu-container -->	
+                  
+                  	    		
 		    	</div>
 		    </div>
 		  </header><!-- #header -->
@@ -399,6 +401,71 @@
         </div>
     </footer>
 			<!-- End footer Area -->	
+            
+            
+            
+            
+        <!-- /.login modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="login-html">
+    <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
+    <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+    <div class="login-form">
+      <form class="sign-in-htm" action="login.php" method="GET">
+      
+        <div class="group">
+          <!--<label for="user" class="label">Username</label>-->
+          <input id="username" name="username" type="text" class="input" placeholder="Username">
+        </div>
+        <div class="group">
+          <!--<label for="pass" class="label">Password</label>-->
+          <input id="password" name="password" type="password" class="input" data-type="password" placeholder="Password">
+        </div>
+        <div class="group">
+          <input id="check" type="checkbox" class="check" checked>
+          <label for="check"><span class="icon"></span> Keep me Signed in</label>
+        </div>
+        <div class="group">
+          <input type="submit" class="button" value="Sign In">
+        </div>                      
+        <div class="foot-lnk">
+          <a href="#forgot">Forgot Password?</a>
+        </div>
+      </form>
+      <form class="sign-up-htm" action="./api/user/signup.php" method="POST">
+        <div class="group">
+          <!--<label for="user" class="label">Username</label>-->
+          <input id="username" name="username" type="text" class="input" placeholder="Username">
+        </div>
+        <div class="group">
+          <!--<label for="pass" class="label">Password</label>-->
+          <input id="password" name="password" type="password" class="input" data-type="password" placeholder="Password">
+        </div>
+        <div class="group">
+          <!--<label for="pass" class="label">Confirm Password</label>-->
+          <input id="pass" type="password" class="input" data-type="password" placeholder="Confirm Password">
+        </div>
+        <div class="group">
+          <input type="submit" class="button" value="Sign Up">
+        </div>
+        <div class="foot-lnk">
+          <label for="tab-1">Already Member?</label>
+        </div>
+      </form>
+    </div>
+  </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <!-- /.login modal -->
+    
+    
 
 
 			<script src="js/vendor/jquery-2.2.4.min.js"></script>
