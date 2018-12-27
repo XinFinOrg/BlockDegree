@@ -29,6 +29,11 @@
 			<link rel="stylesheet" href="css/owl.carousel.css">			
 			<link rel="stylesheet" href="css/jquery-ui.css">			
 			<link rel="stylesheet" href="css/main.css">
+			<script>
+function openWin() {
+  window.open("login.html");
+}
+</script>
 		</head>
 		<body>	
 		  <header id="header" id="home">
@@ -51,6 +56,9 @@
 			  		</div>			  					
 	  			</div>
 			</div>
+			
+			
+			
 		   <div class="container main-menu">
 		    	<div class="row align-items-center justify-content-between d-flex">
 			      <div id="logo">
@@ -202,8 +210,8 @@
 												</li>
 											</ul>
 								<div class="product-form__item product-form__item--submit">
-									<button type="submit" name="add" id="AddToCart-product-template" class="btn product-form__cart-submit">
-									  <span id="AddToCartText-product-template">ADD TO CART</span>
+									<button type="submit" name="add" id="AddToCart-product-template" onclick="openWin()"class="btn product-form__cart-submit">
+									  <span id="AddToCartText-product-template"onclick="openWin()">ADD TO CART</span>
 									   <img src="https://cdn.shopify.com/s/files/1/2137/1081/files/cart_daade5d2-ad4b-4113-8a12-66f17727a8d4.png?10249633122119047455" style="    margin-top: -3px;">
 									</button>      
 									
@@ -215,7 +223,9 @@
 					
 				</div>	
 			</section>
+			
 
+           
 
 			<section class="container c-details">
 				<div class="row">
@@ -229,7 +239,7 @@
 					</div>
 
 					<div class="col-md-6">
-																	 <p> <h4>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspCourse Details</h4></p>
+					<p><h4>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspCourse Details</h4></p>
 
 						<div class="accordion"  id="accordionExample">
 
