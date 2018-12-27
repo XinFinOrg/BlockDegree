@@ -18,9 +18,9 @@
 .grid {
     *zoom: 1;
     list-style: none;
-    margin: 0;
+    margin: 40px;
     padding: 0;
-    margin-left: -30px;
+    margin-left: 30px;
 }
 @media only screen and (min-width: 750px) {
 	.medium-up--one-half {
@@ -28,8 +28,8 @@
 	}
 }
 .grid__item {
-    float: left;
-    padding-left: 30px;
+    float: right;
+    padding-left: 50px;
     width: 100%;
 }
 @media only screen and (min-width: 750px) {
@@ -305,5 +305,8 @@ button.btn.button.rfq-btn {
 
 .width50 {
 	width: 50%;
+	
+	
+	
 	
 	
