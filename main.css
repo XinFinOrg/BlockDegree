@@ -531,6 +531,122 @@ div {
     border-radius: .3rem;
     outline: 0;
 }
+
+#ver-search-results span.credential {
+    width: 400;
+}
+
+#ver-search-results span.credential {
+    width: 466px;
+    padding-left: 5px;
+    line-height: 19px;
+}
+.ver-search-results-titles span {
+    font-size: 16px;
+    font-weight: bold;
+}
+.ver-search-results-titles span, .ver-search-results-line span {
+    font-size: 14px;
+    line-height: 40px;
+    padding-right: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    zoom: 1;
+    *display: inline;
+    *vertical-align: auto;
+}
+
+
+#ver-search-results.detail-overlay a.print-button-insert {
+    position: static;
+}
+
+#ver-search-results.detail-overlay a.print-button-insert {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    line-height: 18px;
+}
+input[type="submit"], input[type="button"], .btn, a.btn {
+    padding: 6px 14px;
+    height: auto;
+    border: 2px solid #001871;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #001871;
+    background-color: transparent;
+    border-radius: 22px;
+    cursor: pointer;
+}
+a:link, a:visited, a:hover, a:active {
+    color: #00a1df;
+    text-decoration: none;
+}
+user agent stylesheet
+a:-webkit-any-link:active {
+    color: -webkit-activelink;
+}
+user agent stylesheet
+a:-webkit-any-link {
+    color: -webkit-link;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+input[type="submit"], input[type="button"], .btn, a.btn {
+    padding: 6px 14px;
+    height: auto;
+    border: 2px solid #001871;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #001871;
+    background-color: transparent;
+    border-radius: 22px;
+    cursor: pointer;
+}
+a:link, a:visited, a:hover, a:active {
+    color: #00a1df;
+    text-decoration: none;
+}
+user agent stylesheet
+a:-webkit-any-link:active {
+    color: -webkit-activelink;
+}
+user agent stylesheet
+a:-webkit-any-link {
+    color: -webkit-link;
+    cursor: pointer;
+    text-decoration: underline;
+}
 	
+	
+	@media only screen and (max-width: 736px)
+#Content #ContentInner {
+    padding: 0 20px !important;
+    margin: 0 !important;
+}
+
+#ContentInner {
+    margin: 0 auto;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+
+
 
 	
