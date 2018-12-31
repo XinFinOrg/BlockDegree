@@ -900,9 +900,9 @@ element.style {
 
 
 .column {
-  float: center;
+  float: left;
   width: 33.3%;
-  margin-bottom: 4px;
+  margin-bottom: 16px;
   padding: 0 8px;
 }
 
@@ -949,4 +949,17 @@ element.style {
 
 .button:hover {
   background-color: #555;
+}
+
+.card img {
+  border-radius: 50%;
+}
+
+.tab-content h3 {
+    text-align: center;
+    padding-bottom: 50px;
+    color: rgb(0, 30, 70);
+    font-family: latolight;
+    font-weight: 700;
+    font-size: 36px !important;
 }
