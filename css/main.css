@@ -963,3 +963,21 @@ element.style {
     font-weight: 700;
     font-size: 36px !important;
 }
+
+
+
+element.style {
+}
+.text2 .text-content {
+    color: #8e9dab;
+    line-height: 20px;
+    font-size: 14px;
+}
+.card p {
+    text-align: justify;
+    font-size: 16px;
+    letter-spacing: .5px;
+}
+.card p {
+    margin: 0 0 10px;
+}
