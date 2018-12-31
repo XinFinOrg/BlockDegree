@@ -28,7 +28,7 @@
 			<link rel="stylesheet" href="css/animate.min.css">
 			<link rel="stylesheet" href="css/owl.carousel.css">			
 			<link rel="stylesheet" href="css/jquery-ui.css">			
-			<link rel="stylesheet" href="main.css">
+			<link rel="stylesheet" href="css/main.css">
 		</head>
 		<body>	
 		  <header id="header" id="home">
@@ -88,7 +88,7 @@
 					<div id="secondaryPageContent" class="group contentRow">
 						<div id="ver-search-bar">
 <h2>Verification</h2>
-<p>Please enter either a full name (first and last) or primary email address. Results will be displayed if the holder is currently certified and has selected to share their certification information.</p>
+<p>Please enter a Transaction Hash. Results will be displayed if the holder is currently certified and has selected to share their certification information.</p>
   
 <script type="text/javascript">
 $(document).ready(function() {
@@ -126,15 +126,7 @@ function searchByName(){
         document.location.href=nURL;
 }
 
-function searchByEmail(){
-    
-    	var email = $("#email").val(); 
-        var nURL = '/verification-email?init=1';
-    	if(email != '') {
-    		nURL += '&email='+email;
-        }
-        document.location.href=nURL;
-} 
+
     
 </script>    
 <div class="group">
@@ -142,8 +134,8 @@ function searchByEmail(){
     <form action="javascript:searchByName()" id="search-by-name" class="search-by-box">
         <h2>Search by...</h2>
         <fieldset>
-            <label for="fullname">Full Name</label>
-            <input id="fullname" maxlength="60" name="fullname" size="20" type="text" class="text">
+            <label for="fullname">Tx Hash</label>
+            <input id="fullname" maxlength="60" name="fullname" size="60" type="0xe4d63hr8ehf8whe8h38hefh" class="text">
         </fieldset>
 
        <p> <fieldset>
@@ -151,40 +143,31 @@ function searchByEmail(){
         </fieldset></p>
     </form>
 
-    <div class="search-or">OR</div>
 
-    <form action="javascript:searchByEmail()" id="search-by-email" class="search-by-box">
-        <h2>Search by...</h2>
-
-        <fieldset>
-            <label for="email">Email</label>
-            <input id="email" maxlength="60" name="fullname" size="20" type="email" class="text">
-        </fieldset>
-        <p><fieldset>
-            <input type="submit" name="search" value="Search">
-        </fieldset></p>
-    </form>
+    
     
 </div>						</div>
-						<div id="ver-search-results" style="display: block;">
+						<div id="ver-search-results" style="display: block; ">
 							<div id="ver-search-results-header">
-<h2>Results for <span class="search-terms">Ankit Patel</span></h2>
+<h2>Results for <span class="search-terms"><p >0xe4d63hr8ehf8whe8h38hefh</p></span></h2>
+<p><STRONG>The Authenticity of this certification is verifiable on the blockchain using this unique crypto hash.</STRONG></p>
 <div class="ver-search-results-titles">
-	<span class="name">Name</span>
+	<span class="name">Tx Hash</span>
 	<span class="city">City</span>
 	<span class="state">State</span>
 	<span class="country">Country</span>
 	<span class="view-cert"></span>
 </div>							</div>
-							<div class="ver-search-results-line odd" itemid="59bb88ed-2ed0-44c2-836d-1c3eaf6c5fde" rowid="0">
+	<div class="ver-search-results-line odd" itemid="59bb88ed-2ed0-44c2-836d-1c3eaf6c5fde" rowid="0">
 								<div style="position:relative;">
-<span class="name">Ankit</span>
-<span class="city">Singapore</span>
-<span class="state">Singapore</span>
-<span class="country">Singapore </span>
-<span class="view-cert">
-   <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">View Certifications</a>
-</span>								</div>
+           <span class="name"><strong>0xe4d63hr8ehf8whe8h38hefh</strong></span>
+           <span class="city">Singapore</span>
+           <span class="state">Singapore</span>
+           <span class="country">Singapore </span>
+           <span class="view-cert">
+                              <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">View Certifications</a>
+                             </span>	
+     </div>
 							</div>
 						</div>
 					</div>
@@ -205,7 +188,7 @@ function searchByEmail(){
 							
 							<div class="name-button-header">
 								<span>
-									<h2 class="cert-name-insert">Ankit Patel</h2>
+									<h2 class="cert-name-insert">0xe4d63hr8ehf8whe8h38hefh</h2>
 								</span>
 								<span class="btnwrapper">
 									<div>
