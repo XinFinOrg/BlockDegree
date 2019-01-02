@@ -981,3 +981,79 @@ element.style {
 .card p {
     margin: 0 0 10px;
 }
+
+element.style {
+}
+
+@media only screen and (max-width: 749px)
+.page-width {
+    padding-left: 22px;
+    padding-right: 22px;
+}
+.page-width {
+    padding-left: 55px;
+    padding-right: 55px;
+}
+.page-width {
+    *zoom: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+
+
+
+.have-trained-title {
+    color: #2c5594;
+    font-size: 24px;
+    text-align: center;
+    padding: 30px;
+    border-top: 1px solid #e4e1e1;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+
+@media screen and (max-width: 768px)
+.have-trained {
+    display: none;
+}
+
+.have-trained {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+user agent stylesheet
+div {
+    display: block;
+}
