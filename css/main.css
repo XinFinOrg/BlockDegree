@@ -1511,12 +1511,7 @@ input[type=text1] {
   -ms-flex: 75%; /* IE10 */
   flex: 75%;
 }
-.container1 {
-  background-color: #f2f2f2;
-  padding: 5px 20px 15px 20px;
-  border: 1px solid lightgrey;
-  border-radius: 3px;
-}
+
 
 .row1 {
   display: -ms-flexbox; /* IE10 */
