@@ -117,12 +117,15 @@
             <input type="text1" id="city" name="city" placeholder="New York">
 
             <div class="row">
-              <div class="col-50">
+
+              <div class="col-50"   >
                 <p><label for="state">State</label></p>
                 <input type="text1" id="state" name="state" placeholder="NY">
               </div>
-              <div class="col-50">
-                <p><label for="zip">Zip</label></p>
+              <div class="col-50" style=".col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;}">
+                <label for="zip">Zip</label></p>
                 <input type="text1" id="zip" name="zip" placeholder="10001">
               </div>
             </div>
