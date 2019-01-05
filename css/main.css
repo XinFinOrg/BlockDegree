@@ -1500,6 +1500,10 @@ input[type=text1] {
   border: 1px solid #ccc;
   border-radius: 3px;
 }
+span.price {
+    float: right;
+    color: grey;
+}
 
 
 .col-50 {
