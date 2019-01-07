@@ -934,6 +934,7 @@ element.style {
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
+.card img{display:block;width:50%;margin:auto;margin-top:15px;margin-bottom:25px;}.card h2 {text-align:center!important;}
 
 /* Some left and right padding inside the container */
 .container {
@@ -1543,4 +1544,4 @@ span.price {
 
 /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
 
--------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------Univer--------------------------------------------------------------------------
