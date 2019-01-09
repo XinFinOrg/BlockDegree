@@ -1,17 +1,15 @@
 <?php
     $to = 'demo@site.com';
-    $name = $_POST["name"];
-    $email= $_POST["email"];
-    $text= $_POST["message"];
-    $subject= $_POST["subject"];
+    $name = $_GET["name"];
+    $email= $_GET["email"];
+    $text= $_GET["message"];
+    $subject= $_GET["subject"];
     
 
 
-    $headers = 'MIME-Version: 1.0' . "\r\n";
-    $headers .= "From: " . $email . "\r\n"; // Sender's E-mail
-    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-    $message ='<table style="width:100%">
+    
+    $message ='
+    <table style="width:100%">
         <tr>
             <td>'.$name.'  '.$subject.'</td>
         </tr>
