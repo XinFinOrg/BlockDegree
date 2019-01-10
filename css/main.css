@@ -938,7 +938,8 @@ element.style {
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
-.card img{display:block;width:50%;margin:auto;margin-top:15px;margin-bottom:25px;}.card h2 {text-align:center!important;}
+.card img{display:block;width:50%;margin:auto;margin-top:15px;margin-bottom:25px;}
+.card h2 {text-align:center!important;}
 
 /* Some left and right padding inside the container */
 .container {
@@ -973,7 +974,7 @@ element.style {
 }
 
 .card img {
-  border-radius: 50%;
+  border-radius: 100%;
 }
 
 .tab-content h3 {
