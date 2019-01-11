@@ -30,6 +30,7 @@
 			<link rel="stylesheet" href="css/jquery-ui.css">			
 			<link rel="stylesheet" href="css/main.css">
 									<link rel="stylesheet" href="css/style.css">
+									<link rel="stylesheet" href="css/popup.css">
 
 		</head>
 		<body>	
@@ -139,25 +140,69 @@
 							<div class="title text-center">
 								<h1 class="mb-10">First Users</h1>
 								<p><strong>So many projects are ready to implement the XinFin Blockchian Training platform to develop their dApp services based on the blockchain system.</strong></p>
+
+
+
+
 								<form style="background-color: white;">
-                                    <input type="button" style="background-color:#87CEEB;" value="Become A Partner" onclick="window.location.href='login.html'" />
+                                    <input type="button" style="background-color:#87CEEB;width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold;" value="Become A Partner" onclick="document.getElementById('id01').style.display='block'" />
+
                                 </form>
+
+
+
 							</div>
 						</div>
 					</div>
+
+
+
+
+
+
+
+
+
+
+
+<div id="id01" class="modal">
+  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+  <form class="modal-content" action="/action_page.php">
+    <div class="container">
+      <h1>Request For Partnership</h1>
+      <p>Please fill in this form to create an account.</p>
+      <hr>
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" required>
+
+      <div class="clearfix">
+        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+        <button type="submit" class="signupbtn">Sign Up</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
   
   <div class="have-trained"> 
     
-
-  </div>  
-  
+</div>  
   
   </div>
  
-  
-  
-</div>
-			</section>>
+  </div>
+			</section>
 
 			<!-- Start course-mission Area -->
 			
