@@ -1,5 +1,5 @@
 /* =================================== */
-/*  Basic Style 
+/*  Basic Style
 /* =================================== */
 
 
@@ -100,8 +100,17 @@ h4, h5, h6 {
     line-height: 1.2em !important;
     margin-bottom: 0;
     margin-top: 0;
-    font-weight: 600;
 }
+
+h1, h2, h3 {
+  font-weight: 600;
+}
+
+h4, h5, h6 {
+  font-weight: 300;
+}
+
+
 .h1, .h2, .h3,
 .h4, .h5, .h6 {
     margin-bottom: 0;
@@ -120,6 +129,10 @@ h6, .h6 { font-size: 14px; color: $title-color;}
 
 td, th {
     border-radius: 0px;
+}
+
+strong {
+  font-weight: 600;
 }
 /**
  * For modern browsers
@@ -320,4 +333,8 @@ td, th {
         margin-left: 0;
         margin-right: 0;
     }
+}
+
+.content--rounded {
+  border-radius: 15px;
 }

@@ -44,7 +44,7 @@
         font-weight:700;
       }
     }
-  
+
     @media(max-width:480px){
       a{
         .lnr{
@@ -66,9 +66,8 @@
 }
 
 .main-menu{
-  padding-bottom:20px ;
-  padding-top:20px ;
-  border-bottom:1px solid #39353e;
+  padding-bottom: 15px ;
+  padding-top: 15px ;
 }
 
 #header {
@@ -82,7 +81,8 @@
 
 #header.header-scrolled {
   transition: all 0.5s;
-  background-color: rgba(#04091e,.9);
+  background-color: white;
+  border-bottom: 1px solid $gray-400;
   .main-menu{
     border-color:transparent;
   }
@@ -112,6 +112,7 @@
 #header #logo img {
   padding: 0;
   margin: 0;
+  max-height: 60px;
 }
 
 @media (max-width: 768px) {
@@ -196,8 +197,8 @@
   padding: 0 8px 0px 8px;
   text-decoration: none;
   display: inline-block;
-  color: $white;
-  font-weight:500;  
+  color: #002844;
+  font-weight:500;
   font-size: 12px;
   text-transform: uppercase;
   outline: none;
@@ -209,6 +210,11 @@
 
 .nav-menu > li {
   margin-left: 10px;
+}
+
+.nav-menu li:hover > .btn {
+  background: $btn--secondary;
+  border: 1px solid $btn--secondary;
 }
 
 .nav-menu ul {
@@ -247,7 +253,7 @@
   position: fixed;
   right: 15px;
   z-index: 999;
-  top: 62px;
+  top: 20px;
   border: 0;
   background: none;
   font-size: 24px;
@@ -258,8 +264,12 @@
 }
 
 #mobile-nav-toggle i {
-  color: $white;
-  font-weight: 900;  
+  color: $text-color;
+  font-weight: 900;
+}
+
+.mobile-nav-active #mobile-nav-toggle i {
+  color: white;
 }
 
 @media (max-width: 960px) {
@@ -361,5 +371,3 @@ body.mobile-nav-active #mobile-nav {
 body.mobile-nav-active #mobile-nav-toggle {
   color: #fff;
 }
-
-

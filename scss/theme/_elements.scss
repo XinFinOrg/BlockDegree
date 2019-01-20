@@ -131,7 +131,7 @@ h2 {
 	font-size: 30px;
 }
 h3 {
-	font-size: 24px;
+	font-size: 20px;
 }
 h4 {
 	font-size: 18px;
@@ -262,7 +262,7 @@ h1, h2, h3, h4, h5, h6 {
 		color: $success;
 		border: 1px solid $success;
 		background: $white;
-		
+
 		&:hover {
 			color: $white;
 			background: $success;
@@ -283,7 +283,7 @@ h1, h2, h3, h4, h5, h6 {
 		color: $info;
 		border: 1px solid $info;
 		background: $white;
-		
+
 		&:hover {
 			color: $white;
 			background: $info;
@@ -1093,4 +1093,30 @@ h1, h2, h3, h4, h5, h6 {
 	.nice-select::after {
 		right: 20px;
 	}
+}
+
+.slick-prev,
+.slick-next {
+  height: 30px;
+  width: 30px;
+  z-index: 9;
+
+  &:before {
+    color: $btn--secondary;
+    border-radius: 100%;
+    font-size: 30px;
+  }
+}
+
+.slick-prev {
+  left: -15px;
+}
+
+.slick-next {
+  right: -15px;
+}
+
+.hr-primary {
+  margin: 0;
+  border-top: 6px solid $primary-color;
 }

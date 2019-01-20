@@ -3,7 +3,7 @@
 /* =================================== */
 
 .section-gap {
-    padding: 120px 0;
+    padding: 30px 20px;
 }
 
 
@@ -100,10 +100,21 @@
 
 /*-------- Start Banner Area ------------*/
 .banner-area {
-    background: url(../img/banner-bg.jpg) right;
+    background: url(../img/home/software-blockchain-professional-engineers.jpg) right top;
     background-size: cover;
-    .overlay-bg {
-        background-color: rgba(#04091e, .8);
+
+    &:before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      @include linear-gradient(60deg, rgba(#fff, 80%), rgba(#fff, 0));
+      @include media-breakpoint-up(md) {
+        width: 80%;
+      }
+      @include media-breakpoint-up(xl){
+        @include linear-gradient(80deg, rgba(#fff, 80%), rgba(#fff, 0));
+      }
     }
 }
 
@@ -120,7 +131,6 @@
         font-weight: 700;
         line-height: 1em;
         margin-top: 10px;
-        color: $white;
         @include media-breakpoint-down(md) {
             font-size: 36px;
         }
@@ -151,6 +161,73 @@
 
 /*-------- End Banner Area ------------*/
 
+/*-------- Start Abovefold Area ------------*/
+#above-fold {
+  img {
+    height: 50px;
+  }
+}
+/*-------- End Abovefold Area ------------*/
+
+/*-------- Start technological partners Area ------------*/
+#partners {
+  img {
+    max-height: 150px;
+  }
+}
+/*-------- End technological partners Area ------------*/
+
+/*-------- Start contributors Area ------------*/
+.contributors {
+  z-index: 5;
+  position: relative;
+}
+/*-------- End contributors Area ------------*/
+
+/*-------- Start CTA Area ------------*/
+.home__cta {
+  height: 40vh;
+  @include media-breakpoint-up(md){
+    height: 70vh;
+  }
+  @include media-breakpoint-up(xl) {
+    height: 60vh;
+  }
+}
+
+.home__cta--container {
+  height: 50vh;
+  width: 100%;
+  position: absolute;
+  top: -10vh;
+  background: url('../img/home/collaborators-blockchain-professional.jpg') top/cover;
+  @include media-breakpoint-up(md) {
+    height: 80vh;
+  }
+  @include media-breakpoint-up(xl) {
+    height: 70vh;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    @include linear-gradient(60deg, rgba($overlay__gradient--stop-1, 0.85), rgba($overlay__gradient--stop-2, 0.85));
+  }
+
+  .row {
+    height: 50vh;
+    @include media-breakpoint-up(md) {
+      height: 80vh;
+    }
+    @include media-breakpoint-up(xl) {
+      height: 70vh;
+    }
+  }
+}
+
+/*-------- End CTA Area ------------*/
 
 /*-------- Start feature Area ------------*/
 
@@ -159,7 +236,7 @@
 }
 
 .single-feature{
-    text-align: center;    
+    text-align: center;
     .title{
         background:rgba(#fff,.15);
         padding:20px 0px;
@@ -202,89 +279,27 @@
 /*-------- End feature Area ------------*/
 
 
-/*-------- Start popular-course Area ------------*/
+/*-------- Start course Area ------------*/
+.course__single {
+  .content--rounded {
+    position: relative;
 
-.popular-course-area{
-    .owl-dots {
-        text-align: center;
-        bottom: 5px;
-        margin-top:40px;
-        width: 100%;
-        -webkit-backface-visibility: hidden;
-        -moz-backface-visibility: hidden;
-        -ms-backface-visibility: hidden;
-        backface-visibility: hidden;
+    &:before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: $overlay--dark;
+      top: 0;
+      left: 0;
+      @include opacity(0.5);
+      z-index: 0;
     }
-
-    .owl-dot {
-        height: 10px;
-        width: 10px;
-        display: inline-block;
-        background: rgba(127,127,127, 0.5);
-        margin-left: 5px;
-        margin-right: 5px;
-        @include transition();
-    }
-
-    .owl-dot.active {
-        @include transition;
-        background:$primary-color;
-    }
-
-}
-
-.single-popular-carusel{
-    .thumb-wrap{
-    }
-    .thumb{
-        overflow:hidden;
-        img{
-            width:100%;
-            @include transition();
-        }
-    }
-    .meta{
-        margin-top: -26px;
-        z-index: 2;
-        position: inherit; 
-        padding:0px 10px;  
-        p{
-            font-size:12px;
-            font-weight:300;
-            color:$white;
-            margin-bottom:0px;
-            .lnr{
-                margin:0px 5px;
-            }
-        }
-        h4{
-            color:$white;
-        }
-    } 
-    .details{
-        h4{
-            @include transition();
-            margin:20px 0px; 
-            &:hover{
-                color:$primary-color!important;
-            }
-        }
-    }  
-    @media(max-width:576px){
-        margin:15px;
-    }
-    &:hover{
-        .thumb{
-            img{
-                transform:scale(1.1);
-            }
-        }
-    }
+  }
 }
 
 
-
-/*-------- End popular-course Area ------------*/
+/*-------- End course Area ------------*/
 
 
 /*-------- Start search-course Area ------------*/
@@ -301,14 +316,14 @@
             @media(max-width:991px){
                 font-size:30px;
             }
-        } 
+        }
         p{
             font-size:12px;
-        }   
+        }
         @media(max-width:991px){
             padding-top:120px;
             margin-bottom:40px;
-        }   
+        }
     }
     .search-course-right{
         background:rgba(#fff,.10);
@@ -317,7 +332,7 @@
             .form-control{
                 margin-bottom:5px;
                 border-radius:0px;
-                padding: 0.675rem 0.75rem;                
+                padding: 0.675rem 0.75rem;
                 font-size:13px;
                 font-weight:300;
             }
@@ -327,7 +342,7 @@
             }
             .form-select .nice-select .list .option{
                 padding-left:15px;
-            }            
+            }
             .primary-btn{
                 width:100%;
                 margin-top:5px;
@@ -352,7 +367,7 @@
                 h4{
                     font-size:12px;
                 }
-            }             
+            }
         }
     }
 }
@@ -389,12 +404,12 @@
     .owl-dot.active {
         @include transition;
         background:$primary-color;
-    } 
+    }
     @media(max-width:1024px){
         .owl-controls{
             display:none;
         }
-    }   
+    }
 }
 
 .single-carusel{
@@ -476,7 +491,7 @@
     .owl-dot.active {
         @include transition;
         background:$primary-color;
-    }   
+    }
 }
 
 
@@ -496,7 +511,7 @@
         padding:15px;
     }
 
-}   
+}
 
 /*-------- End review Area -------------*/
 
@@ -577,7 +592,7 @@
             background: $primary-color;
             box-shadow: 0px 10px 20px 0px rgba(60, 64, 143, 0.2);
         }
-    }   
+    }
 }
 
 /*-------- End Latest blog Style   -------------*/
@@ -594,10 +609,10 @@
     }
     p{
         max-width:670px;
-        margin:20px 0px; 
+        margin:20px 0px;
         @media(max-width:576px){
             padding:0% 5%;
-        }        
+        }
     }
     .overlay-bg{
         background:rgba(#04091e,.20);
@@ -663,5 +678,3 @@
 
 
 /*-------- End Common Page Style   -------------*/
-
-

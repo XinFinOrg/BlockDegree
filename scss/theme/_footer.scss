@@ -6,16 +6,16 @@
 /*-------- start footer Area -------------*/
 
 .footer-area {
-    background-color: #04091e;
+  background-color: $bg__footer;
+  border-bottom: 1px solid $primary-color;
 }
 
 
 .single-footer-widget {
     h4{
-        color: $white;
         margin-bottom: 25px;
         font-weight: 500;
-    }    
+    }
     .form-control{
         border: none;
         width: 80%!important;
@@ -49,9 +49,8 @@
         z-index: 9999;
         cursor: pointer;
     }
-    .info { 
+    .info {
         margin-top: 25px;
-        color: #fff;
         font-size: 12px;
         &.valid {
             color: green;
@@ -64,11 +63,16 @@
        font-size: 1.2rem;
        border-radius:0;
        background:$primary-color;
-       color:$white;
+       color: white;
+
+       &:hover {
+         background: $btn--secondary;
+       }
+
        .lnr{
         line-height:inherit;
         font-size:13px;
-        padding: 0px 4px;        
+        padding: 0px 4px;
        }
     }
     ::-moz-selection {
@@ -113,7 +117,6 @@
 }
 
 .footer-bottom{
-    padding-top:50px;
     .footer-social{
         text-align: right;
         @media(max-width: 991px){
@@ -128,7 +131,6 @@
     .footer-social{
         a{
             background: rgba(255, 255, 255, 0.1);
-            color: #fff;
             width: 30px;
             height: 30px;
             display: inline-block;
@@ -139,6 +141,7 @@
             }
             &:hover{
                 background-color:$primary-color;
+                color: white;
             }
         }
     }
