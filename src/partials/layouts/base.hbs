@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Xinfin">
+    <meta name="description" content={{#if description}} {{description}} {{else}} Professional blockchain training course by Xinfin {{/if}}>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/img/brand/favicon.ico">
+    <title>
+      {{#if title}} {{title}} {{else}} Xinfin Blockchain Training {{/if}}
+    </title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+    {{#> head-block}}
+      {{> includes/header }}
+    {{/head-block}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+    <script src="/js/vendor/handlebars-v4.0.12.js"></script>
+    <script src="/js/ajax.js"></script>
+  </head>
+
+  <body>
+    <header id="header">
+      {{> includes/nav}}
+    </header>
+
+    <section>
+      {{#> body-block}}
+      {{/body-block}}
+    </section>
+
+    <footer>
+      {{#> footer-block}}
+        {{> includes/footer }}
+      {{/footer-block}}
+    </footer>
+
+
+    <script src="/js/vendor/bootstrap.min.js"></script>
+    <script src="/js/vendor/jquery.magnific-popup.min.js"></script>
+    <script src="/js/vendor/superfish.min.js"></script>
+    <script src="/js/vendor/jquery.ajaxchimp.min.js"></script>
+    <script src="/js/vendor/slick.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/nav.js"></script>
+    {{#> scripts-block}}
+       {{!-- Custom scripts per page can be added. --}}
+    {{/scripts-block}}
+   </body>
+</html>

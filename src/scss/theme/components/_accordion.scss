@@ -1,0 +1,9 @@
+#accordion {
+  .card-header {
+    border-left: 4px solid $btn__gradient--stop-1;
+
+    &.more:hover {
+      cursor: pointer;
+    }
+  }
+}

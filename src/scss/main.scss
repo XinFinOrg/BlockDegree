@@ -1,0 +1,34 @@
+
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+
+//
+// Grid mixins
+//
+
+@import "bootstrap/mixins/breakpoints";
+
+
+// including variables and mixins
+@import "theme/helpers/variables";
+@import "theme/helpers/mixins";
+@import "theme/components/flexbox";
+@import "theme/helpers/reset";
+
+
+// Custom Scss
+@import 'theme/helpers/base';
+@import "theme/helpers/elements";
+
+@import "theme/components/header";
+@import "theme/components/footer";
+@import "theme/components/gallery";
+@import "theme/components/bgAndBtn";
+@import "theme/components/accordion";
+
+@import "theme/layouts/home";
+@import "theme/layouts/about";
+@import "theme/layouts/courses";
+@import "theme/layouts/events";
+@import "theme/layouts/blog";
+@import "theme/layouts/contact";

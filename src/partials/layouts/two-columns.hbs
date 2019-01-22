@@ -1,0 +1,12 @@
+<div class="{{#if containerClass}} {{containerClass}} {{else}}container__cstm{{/if}}">
+  <div class="row">
+    <div class="col-12 col-sm-8">
+      {{#> col-left}}
+      {{/col-left}}
+    </div>
+    <div class="col-12 col-sm-4{{#if addClassRightCol}} {{addClassRightCol}}{{/if}}" >
+      {{#> col-right}}
+      {{/col-right}}
+    </div>
+  </div>
+</div>
