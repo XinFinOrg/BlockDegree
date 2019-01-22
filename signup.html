@@ -112,17 +112,20 @@
 
 
 
-      <section><div id="login-box">
+      <section>
+        <div id="login-box">
+                <form action="insert.php" method="POST">
+
   <div class="left">
     <h1>Sign up</h1>
 
-    
-    <input type="text" name="username" placeholder="Username" />
-    <input type="text" name="email" placeholder="E-mail" />
-    <input type="password" name="password" placeholder="Password" />
-    <input type="password" name="password2" placeholder="Retype password" />
+    <input type="text" name="username" placeholder="Username"  required />
+    <input type="text" name="email" placeholder="E-mail" required/>
+    <input type="password" name="password" placeholder="Password" required />
+    <input type="password" name="password2" placeholder="Retype password" required />
     
     <input type="submit" name="signup_submit" value="Sign me up" />
+
   </div>
   
   <div class="right">
@@ -133,7 +136,9 @@
     <button class="social-signin google">Log in with Google+</button>
   </div>
   <div class="or">OR</div>
+</form>
 </div>
+
 </section>
 
 
