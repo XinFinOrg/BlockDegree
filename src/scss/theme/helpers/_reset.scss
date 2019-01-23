@@ -134,6 +134,13 @@ td, th {
 strong {
   font-weight: 600;
 }
+
+a {
+  color: $primary-color;
+  &:hover {
+    color: $nav-color;
+  }
+}
 /**
  * For modern browsers
  * 1. The space content is one way to avoid an Opera bug when the

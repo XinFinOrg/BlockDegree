@@ -73,43 +73,55 @@
           </div>
         </div>
       </div>
+      <div class="bg-light py-3">
+        <div class="container py-5" id="uni">
+          <div class="mb-5">
+            <h2 class="mb-2 text-center">Overview</h2>
+            <p>XinFin Blockchain Training Academy, in association with <strong>SPIT & K.J. Somiya College</strong> Centre for Continuing Education offers first-of-its kind 8-hours classroom training program providing in-depth knowledge about blockchain technology to build Blockchain-based applications for enterprises and businesses. Certified Blockchain Professional credential certifies the individuals in Blockchain discipline of Distributed Ledger Technology from a vendor-neutral perspective</p>
   
-      <div class="container__cstm">
-        <div class="mb-5">
-          <h2 class="mb-2 text-center">Overview</h2>
-          <p>XinFin Blockchain Training Academy, in association with <strong>SPIT & K.J. Somiya College</strong> Centre for Continuing Education offers first-of-its kind 8-hours classroom training program providing in-depth knowledge about blockchain technology to build Blockchain-based applications for enterprises and businesses. Certified Blockchain Professional credential certifies the individuals in Blockchain discipline of Distributed Ledger Technology from a vendor-neutral perspective</p>
+            <p>Enterprises are struggling to identify the right talent to deploy in-house Blockchain-based projects. This certification will work as a bridge between resources & businesses (employees, consultants & advisers) to give enterprises confidence in the quick hire.</p>
+          </div>
   
-          <p>Enterprises are struggling to identify the right talent to deploy in-house Blockchain-based projects. This certification will work as a bridge between resources & businesses (employees, consultants & advisers) to give enterprises confidence in the quick hire.</p>
-        </div>
-  
-        <h2 class="text-center">Our technological partners</h2>
-        <div class=" py-3 ">
-          <div class="row">
-            <div class="col-12 col-sm-8">
-                <div class="row align-items-center p-3" id="partners">
-                  <div class="col-4">
-                    <img src="img/spit1.jpg" class="img-fluid" alt="Sardar Patel Institute of Technology">
-                  </div>
-        
-                  <div class="col-4">
-                    <img src="img/KJ-Somaiya-College-of-Engineering-Mumbai.jpg" class="img-fluid" alt="Somaiya College of Engineering Mumbai">
-                  </div>
-        
-                  <div class="col-4">
-                    <img src="img/temasek-polytechnic-logo.jpg" class="img-fluid" alt="Temasek Polytechnic">
-                  </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-4 row align-items-center" >
-                <div>
-                  <h4 class="mb-3">Join us in our mission to educate and train up blockchain professionals</h4>
-                  <button type="button" class="btn btn-gradient py-1 width--full">Become our partners</button>
-                </div>
+          <h2 class="text-center">Our technological partners</h2>
+          <div class="py-3">
+            <div class="row">
+              <div class="col-12
+                 col-sm-9
+                ">
+                    <div class="row p-3 height--stretch" id="partners">
+                      <script id="partners-details-template" type="text/x-handlebars-template">
+                        {{#each partners}}
+                        <div class="col-4 px-2">
+                          <div class="border height--full bg-white">
+                            <div class="card border-0">
+                              <div class="img-body row mx-0 align-items-center">
+                                <img src="img/{{img}}" class="card-img-top img--contain" alt="Sardar Patel Institute of Technology">
+                              </div>
+                              <div class="card-body">
+                                <h4 class="card-title">{{name}}</h4>
+                                <div class="card-text">{{{trimString description name @index}}}</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {{/each}}
+                      </script>
+                    </div>
+              </div>
+              <div class="col-12
+                   col-sm-3
+                   row align-items-center" >
+                    <div>
+                      <h4 class="mb-3">Join us in our mission to educate and train up blockchain professionals</h4>
+                      <button type="button" class="btn btn-gradient py-1 width--full" id="form-dialog">Become our partners</button>
+                      <div class="dialog" id="partner-form" title="Become our partners">test</div>
+                    </div>
+              </div>
             </div>
           </div>
+  
+  
         </div>
-  
-  
       </div>
       </section>
   
@@ -189,11 +201,12 @@
       <script src="/js/vendor/jquery.magnific-popup.min.js"></script>
       <script src="/js/vendor/superfish.min.js"></script>
       <script src="/js/vendor/jquery.ajaxchimp.min.js"></script>
+      <script src="/js/vendor/jquery-ui.js"></script>
       <script src="/js/vendor/slick.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
       <script src="/js/main.js"></script>
       <script src="/js/nav.js"></script>
+    <script src="/js/uni.js"></script>
      </body>
   </html>
 

@@ -293,7 +293,7 @@
     height: 100%;
     max-height: 200px;
 
-    h3{color: white;}
+    h3, a, p {color: white;}
 
     &:before {
       content: '';
@@ -309,7 +309,7 @@
   }
 
   &:hover {
-    a, h3 { color: black; }
+    a, h3, p { color: black; }
     .content--rounded{
       -webkit-box-shadow: 7px 14px 93px -29px rgba(0,0,0,0.75);
       -moz-box-shadow: 7px 14px 93px -29px rgba(0,0,0,0.75);

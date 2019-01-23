@@ -1,10 +1,14 @@
-<div class="{{#if containerClass}} {{containerClass}} {{else}}container__cstm{{/if}}">
+<div class="{{#if containerClass}}{{containerClass}}{{else}}container__cstm{{/if}}">
   <div class="row">
-    <div class="col-12 col-sm-8">
+    <div class="col-12
+      {{#if leftColWidth}} col-sm-{{leftColWidth}}{{else}} col-sm-8{{/if}}
+      {{#if addClassLeftCol}} {{addClassLeftCol}}{{/if}}">
       {{#> col-left}}
       {{/col-left}}
     </div>
-    <div class="col-12 col-sm-4{{#if addClassRightCol}} {{addClassRightCol}}{{/if}}" >
+    <div class="col-12
+        {{#if rightColWidth}} col-sm-{{rightColWidth}}{{else}} col-sm-4{{/if}}
+        {{#if addClassRightCol}} {{addClassRightCol}}{{/if}}" >
       {{#> col-right}}
       {{/col-right}}
     </div>

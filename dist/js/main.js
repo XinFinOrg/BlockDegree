@@ -411,9 +411,19 @@ $(document).ready(function() {
     }
 
     //------- Mailchimp js --------//
+    $('#mc_embed_signup').find('form').ajaxChimp();
 
-    $(document).ready(function() {
-        $('#mc_embed_signup').find('form').ajaxChimp();
+
+    // Popup
+    $('.dialog').dialog({autoOpen: false });
+
+    $('#partners .dialog-btn').on('click', (e) => {
+      e.preventDefault();
+      $('.dialog[data-dialog-idx='+ e.target.dataset.btnIdx +']').dialog('open');
     });
 
+    $('#form-dialog').on('click', (e) => {
+      e.preventDefault();
+      $('#partner-form').dialog('open');
+    });
 });

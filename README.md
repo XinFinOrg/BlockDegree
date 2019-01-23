@@ -14,18 +14,29 @@
 The src file runs on Gulp, handlebars, livereload and other relevant packages. Using handlebars, the templates could be reused easily and the code is more maintainable. Otherwise, the dist folder is good to go as well.
 
 Some of the benefits of this template:
-1. Easily change hero images, title and copy with a single line e.g. {{> includes/hero hero-title="University Courses" hero-image="/img/pm4.jpg" hero-copy="this is if you want to add a line below the title"}} as seen in the university courses page
-2. Add two column template {{> layouts/two-columns}}  {{#\*inline "col-left"}}{{/inline}}  {{#\*inline "col-right"}}{{/inline}}
-3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in /dist/data/courses.json. Run gulp courseCompile and the new pages will be generated in /dist/courses. The structure of the course page is updated at /src/partials/layouts/courses.hbs. (To note, at the home page, there is no fix number set to the courses display)
+1. Easily change hero images, title and copy with a single line e.g. as seen in the university courses page
+```
+{{> includes/hero hero-title="University Courses" hero-image="/img/pm4.jpg" hero-copy="this is if you want to add a line below the title"}}
+```
+
+
+2. Add two column template
+```
+{{> layouts/two-columns}}  {{#\*inline "col-left"}}{{/inline}}  {{#\*inline "col-right"}}{{/inline}}
+```
+
+3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in __/dist/data/courses.json__. Run __gulp compileCourses__ and the new pages will be generated in __/dist/courses__. The structure of the course page is updated at __/src/partials/layouts/courses.hbs__. (To note, at the home page, there is no fix number set to the courses display)
+
 4. Similarly for events and contributors. Easily add, edit and remove the data structure. This made changing the view while reducing error.
-5. The same header, navigation and footer can be generated for every single as each referred to the same /partials/includes/header etc.
+
+5. The same header, navigation and footer can be generated for every single as each referred to the same __/partials/includes/header__ etc.
 
 Get node up and running
 ```
 npm install
 ```
 
-To see live changes during development
+To watch live changes during development
 ```
 gulp watch
 ```
@@ -44,6 +55,9 @@ gulp compileCourses
 
 ## Recommended resources
 https://cloudfour.com/thinks/the-hidden-power-of-handlebars-partials/
+
 https://www.sitepoint.com/using-inline-partials-and-decorators-with-handlebars-4-0/
+
 https://code-maven.com/handlebars-with-slightly-complex-data
+
 http://tompennington.co.uk/posts/generating-multiple-static-html-pages-with-gulp-and-handlebars/
