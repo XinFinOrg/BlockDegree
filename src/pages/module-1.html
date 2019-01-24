@@ -1,0 +1,23 @@
+{{#> base pageClass="course-module"}}
+  {{> layouts/base title="Blockchain training"}}
+
+  {{#*inline "body-block"}}
+
+    {{> includes/hero hero-title="Blockchain basic course for engineer"}}
+
+    {{> layouts/module sidebarId="mod-1" }}
+    {{#*inline "lessons-block"}}
+      <div>
+        {{> courses/introduction-to-blockchain/history-of-blockchain }}
+        {{> courses/introduction-to-blockchain/the-evolution-of-blockchain }}
+        {{> courses/mod2/test }}
+      </div>
+    {{/inline}}
+
+  {{/inline}}
+
+  {{#*inline "scripts-block"}}
+  <script src="/js/ajax.js"></script>
+  <script src="/js/module.js"></script>
+  {{/inline}}
+{{/base}}

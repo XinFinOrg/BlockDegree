@@ -13,6 +13,23 @@
   }
 }
 
+// Single module page
+.course-module {
+  #header {
+    background: white;
+    @include media-breakpoint-up(sm) {
+      position: sticky;
+    }
+  }
+
+  .module-content {
+    h1, h2, h3, h4, h5 {
+      margin-top: 40px;
+      margin-bottom: 20px;
+    }
+  }
+}
+
 /* =================================== */
 
 

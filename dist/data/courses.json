@@ -11,6 +11,9 @@
       "prerequisites": ["Necessary: Basic knowledge Networking", "Basic knowledge in Server"],
       "curriculum": [
         {
+          "topic": "History of the blockchain"
+        },
+        {
           "topic": "The Evolution of the Blockchain: Generation 1 to 3",
           "sub-topic": ["First Generation Blockchain Technology", "Second Generation Blockchain", "Third Generation Blockchain Technology"]
         },

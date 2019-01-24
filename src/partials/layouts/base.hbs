@@ -18,7 +18,7 @@
     <script src="/js/ajax.js"></script>
   </head>
 
-  <body>
+  <body{{#if pageClass}} class={{pageClass}}{{/if}}>
     <header id="header">
       {{> includes/nav}}
     </header>

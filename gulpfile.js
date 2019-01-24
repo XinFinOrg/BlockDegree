@@ -39,9 +39,7 @@ gulp.task('clean-courses', () => {
 });
 
 gulp.task('metalsmith', () => {
-  console.log('Finish cleaning the courses folder');
-
-  return gulp.src('./src/_data/**')
+  return gulp.src('./src/_data/**/*.md')
     .pipe(metalsmith({
       use: [
         markdown(),
@@ -54,11 +52,11 @@ gulp.task('metalsmith', () => {
       ignorePartials: true,
       batch: ['./src/partials']
     }))
-    .pipe(gulp.dest('./src/courses/'))
+    .pipe(gulp.dest('./src/partials/courses/'))
 });
 
 gulp.task('html', () => {
-  return gulp.src('./src/pages/*.html')
+  return gulp.src('./src/pages/**/*.html')
     .pipe(handlebars({}, {
       ignorePartials: true,
       batch: ['./src/partials']
