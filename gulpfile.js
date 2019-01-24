@@ -1,8 +1,14 @@
 const gulp = require('gulp');
-const handlebars = require('gulp-compile-handlebars');
+const clean = require('gulp-clean');
 const rename = require('gulp-rename');
-const sass = require('gulp-sass');
 const livereload = require('gulp-livereload');
+const sass = require('gulp-sass');
+
+const handlebars = require('gulp-compile-handlebars');
+const metalsmith = require('gulp-metalsmith');
+const markdown = require('metalsmith-markdown');
+const templates = require('metalsmith-templates');
+
 const bs = require('browser-sync').create();
 const reload = bs.reload;
 
@@ -11,7 +17,7 @@ const courses = courseData['courses'];
 
 sass.compiler = require('node-sass');
 
-gulp.task('compileCourses', (done) => {  
+gulp.task('compileCourses', (done) => {
   for(var i=0; i<courses.length; i++){
     let course = courses[i],
         fileName = course.slug;
@@ -25,6 +31,30 @@ gulp.task('compileCourses', (done) => {
       .pipe(gulp.dest('dist/courses'));
   }
   done();
+});
+
+gulp.task('clean-courses', () => {
+  return gulp.src('./src/courses', {read: false})
+    .pipe(clean());
+});
+
+gulp.task('metalsmith', () => {
+  console.log('Finish cleaning the courses folder');
+
+  return gulp.src('./src/_data/**')
+    .pipe(metalsmith({
+      use: [
+        markdown(),
+        templates({
+          "engine": "handlebars",
+          "directory": "./src/partials/layouts"
+        })]
+    }))
+    .pipe(handlebars({}, {
+      ignorePartials: true,
+      batch: ['./src/partials']
+    }))
+    .pipe(gulp.dest('./src/courses/'))
 });
 
 gulp.task('html', () => {

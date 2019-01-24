@@ -20,12 +20,17 @@
   "devDependencies": {
     "browser-sync": "^2.26.3",
     "gulp": "^4.0.0",
+    "gulp-clean": "^0.4.0",
     "gulp-compile-handlebars": "^0.6.1",
     "gulp-livereload": "^4.0.1",
+    "gulp-metalsmith": "^1.1.0",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
     "handlebars": "^4.0.12",
     "handlebars-layout": "^0.1.4",
+    "metalsmith-markdown": "^1.1.0",
+    "metalsmith-templates": "^0.7.0",
     "node-sass": "^4.11.0"
-  }
+  },
+  "dependencies": {}
 }

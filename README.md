@@ -5,7 +5,8 @@
 - [ ] Enroll today, start lesson.
 - [ ] Functionality for certificate page
 - [ ] Functionality for contact form
-- [ ] Become partner button at university course offline
+- [X] Become partner button at university course offline
+- [ ] Content for become partner popup
 - [ ] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
 - [ ] Code to read the images in folder for gallery and automatically generate it
 - [ ] 404 page
@@ -61,3 +62,9 @@ https://www.sitepoint.com/using-inline-partials-and-decorators-with-handlebars-4
 https://code-maven.com/handlebars-with-slightly-complex-data
 
 http://tompennington.co.uk/posts/generating-multiple-static-html-pages-with-gulp-and-handlebars/
+
+https://www.codeofaninja.com/2018/09/rest-api-authentication-example-php-jwt-tutorial.html
+
+http://learningwithjb.com/posts/markdown-and-handlebars-to-make-pages
+
+https://www.netlify.com/blog/2015/12/08/a-step-by-step-guide-metalsmith-on-netlify/
