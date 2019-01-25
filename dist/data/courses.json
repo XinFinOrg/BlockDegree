@@ -1,18 +1,15 @@
 {
   "courses": [
     {
-      "title": "Blockchain basic course for engineer",
+      "title": "101 - Blockchain basic course for engineer",
       "video": "https://www.youtube.com/embed/jLaqms1IHWE",
       "duration": "3 days",
       "slug": "blockchain-basic",
-      "sypnosis": "testtestetse insert short description",
+      "sypnosis": "Blockchain, the foundation of Bitcoin, has received extensive attentions recently. Blockchain serves as an immutable ledger which allows transactions take place in a decentralized manner.",
       "overview": "Blockchain, the foundation of Bitcoin, has received extensive attentions recently. Blockchain serves as an immutable ledger which allows transactions take place in a decentralized manner. Blockchain-based applications are springing up, covering numerous fields including financial services, reputation system and Internet of Things (IoT), and so on. However, there are still many challenges of blockchain technology such as scalability and security problems waiting to be overcome. This paper presents a comprehensive overview on blockchain technology.",
       "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device.",
       "prerequisites": ["Necessary: Basic knowledge Networking", "Basic knowledge in Server"],
       "curriculum": [
-        {
-          "topic": "History of the blockchain"
-        },
         {
           "topic": "The Evolution of the Blockchain: Generation 1 to 3",
           "sub-topic": ["First Generation Blockchain Technology", "Second Generation Blockchain", "Third Generation Blockchain Technology"]
@@ -47,11 +44,11 @@
       ]
     },
     {
-      "title": "Blockchain advanced course for engineer",
+      "title": "102 - Blockchain advanced course for engineer",
       "video": "https://www.youtube.com/embed/oSP-taqLWPQ",
       "duration": "3 days",
       "slug": "blockchain-advanced",
-      "sypnosis": "insert short description",
+      "sypnosis": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). ",
       "overview": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). Each validator independently checks the payment and block data being passed around. There are rules in place to make the network operate as intended.",
       "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
       "prerequisites": ["Necessary: Basic knowledge in JavaScript / HTML", "Basic knowledge in C++ / Java, data types", "Advantageous: Basic knowledge with git repositories"],
@@ -73,6 +70,49 @@
         },
         {
           "topic": "How to create and join public bitcoin blockchain?"
+        }
+      ]
+    },
+    {
+      "title": "103 - Blockchain professional course for engineer",
+      "video": "https://www.youtube.com/embed/jLaqms1IHWE",
+      "duration": "3 days",
+      "slug": "blockchain-Professional",
+      "sypnosis": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. ",
+      "overview": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. Students will participate in approximately 50% programming lab time providing practical experience, enhancing their knowledge and existing skill set. Due to the technical programming lab content covered in this course, it is not recommended for those without programming knowledge and experience.",
+      "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device.",
+      "prerequisites": ["Necessary: Basic knowledge Networking", "Basic knowledge in Server"],
+      "curriculum": [
+        {
+          "topic": "The Evolution of the Blockchain: Generation 1 to 3",
+          "sub-topic": ["First Generation Blockchain Technology", "Second Generation Blockchain", "Third Generation Blockchain Technology"]
+        },
+        {
+          "topic": "What is blockchain?"
+        },
+        {
+          "topic": "Why do we need blockchain technology?",
+          "sub-topic": ["Business Scenario Implemented Using the Database", "Business Scenario Implemented Using the Blockchain"]
+        },
+        {
+          "topic": "Features Of Blockchain",
+          "sub-topic": ["Minting", "Decentraliszed", "Safe and secure system", "Increased capacity"]
+        },
+        {
+          "topic": "What are the benefits of blockchain",
+          "sub-topic": ["Transparency", "Reduced transaction costs", "Faster transaction settlements", "Decentralization", "User controlled network"]
+        },
+        {
+          "topic": "What is the difference between blockchain and database",
+          "sub-topic": ["How cryptographic techniques are implemented in the blockchain", "Hash function", "Nonce", "Nodes", "Block", "Wallets, digital signatures, protocols", "What is a wallet", "Digital signature", "What are cryptographic keys?"]
+        },
+        {
+          "topic": "Problems solved by blockchain technology",
+          "sub-topic": ["Suppy chain and item histories", "Voting", "Government operations", "Currency and transaction support"]
+        },
+        {
+          "topic": "What is the future of blockchain technology?",
+          "sub-topic": ["Widespread Distributed Data Models", "DLT-based system", "Blockchain based security measures"]
         }
       ]
     }
