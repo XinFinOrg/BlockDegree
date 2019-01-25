@@ -10,7 +10,7 @@ Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.htm
 - [X] Become partner button at university course offline
 - [ ] Content for become partner popup
 - [ ] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
-- [ ] Code to read the images in folder for gallery and automatically generate it
+- [X] Code to read the images in folder for gallery and automatically generate it
 - [ ] 404 page
 
 ## Running the website
