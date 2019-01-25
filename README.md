@@ -10,4 +10,4 @@
 Entire Course access is free but Nominal fees will be charge, if you like to get XinFin Blockchain Certification. 
 Certification will be issue on XinFin Public Blockchain (More detail: XinFin.org).
 
-We invite Educational Institute to be part of our Education Initiative.
+We invite Educational Institute to be part of Education Initiative.
