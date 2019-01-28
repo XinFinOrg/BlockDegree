@@ -11,7 +11,7 @@ Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.htm
 - [ ] Previous and next arrow when use finish reading the documents
 - [ ] Content for become partner popup
 - [ ] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
-- [ ] Code to read the images in folder for gallery and automatically generate it
+- [X] Code to read the images in folder for gallery and automatically generate it
 - [ ] 404 page
 
 ## Running the website
@@ -29,7 +29,7 @@ Some of the benefits of this template:
 {{> layouts/two-columns}}  {{#\*inline "col-left"}}{{/inline}}  {{#\*inline "col-right"}}{{/inline}}
 ```
 
-3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in __/dist/data/courses.json__. Run __gulp compileCourses__ and the new pages will be generated in __/dist/courses__. The structure of the course page is updated at __/src/partials/layouts/courses.hbs__. (To note, at the home page, there is no fix number set to the courses display)
+3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in __/dist/data/courses.json__. Run __gulp compileCourseOverview__ and the new pages will be generated in __/dist/courses__. The structure of the course page is updated at __/src/partials/layouts/courses.hbs__. (To note, at the home page, there is no fix number set to the courses display)
 
 4. Similarly for events and contributors. Easily add, edit and remove the data structure. This made changing the view while reducing error.
 
@@ -59,7 +59,7 @@ gulp html
 
 This will rebuild the course pages.
 ```
-gulp compileCourses
+gulp compileCourseOverview
 ```
 
 ## Recommended resources
