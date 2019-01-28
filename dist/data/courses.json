@@ -11,10 +11,10 @@
       "prerequisites": ["Necessary: Basic knowledge Networking", "Basic knowledge in Server"],
       "curriculum": [
         {
-          "topic": "History of the blockchain"
+          "topic": "History of blockchain"
         },
         {
-          "topic": "The Evolution of the Blockchain: Generation 1 to 3",
+          "topic": "The Evolution of Blockchain",
           "sub-topic": ["First Generation Blockchain Technology", "Second Generation Blockchain", "Third Generation Blockchain Technology"]
         },
         {
@@ -22,27 +22,34 @@
         },
         {
           "topic": "Why do we need blockchain technology?",
-          "sub-topic": ["Business Scenario Implemented Using the Database", "Business Scenario Implemented Using the Blockchain"]
+          "sub-topic": ["Business Scenario Implemented Using the Database", "Business Scenario Implemented Using Blockchain"]
         },
         {
           "topic": "Features Of Blockchain",
-          "sub-topic": ["Minting", "Decentraliszed", "Safe and secure system", "Increased capacity"]
+          "sub-topic": ["Decentralised", "Mining", "Safe and secure system", "Increased capacity"]
         },
         {
-          "topic": "What are the benefits of blockchain",
+          "topic": "What are the benefits of blockchain?",
           "sub-topic": ["Transparency", "Reduced transaction costs", "Faster transaction settlements", "Decentralization", "User controlled network"]
         },
         {
-          "topic": "What is the difference between blockchain and database",
-          "sub-topic": ["How cryptographic techniques are implemented in the blockchain", "Hash function", "Nonce", "Nodes", "Block", "Wallets, digital signatures, protocols", "What is a wallet", "Digital signature", "What are cryptographic keys?"]
+          "topic": "What is the difference between blockchain and database?"
+        },
+        {
+          "topic": "Permissioned vs permissionless blockchain",
+          "sub-topic": ["Permissioned blockchain", "Permissionless blockchain"]
+        },
+        {
+          "topic": "How does blockchain work?",
+          "sub-topic": ["Hash function", "Nonce", "Nodes", "Block", "Wallets, digital signatures, protocols", "What is a wallet?", "Digital signature", "What are cryptographic keys?", "Protocols", "What is mining?"]
         },
         {
           "topic": "Problems solved by blockchain technology",
-          "sub-topic": ["Suppy chain and item histories", "Voting", "Government operations", "Currency and transaction support"]
+          "sub-topic": ["Currency and transaction support", "Suppy chain and item histories", "Voting", "Government operations", "Intellectual property", "Cloud storage", "Real estate"]
         },
         {
           "topic": "What is the future of blockchain technology?",
-          "sub-topic": ["Widespread Distributed Data Models", "DLT-based system", "Blockchain based security measures"]
+          "sub-topic": ["Widespread Distributed Data Models", "DLT-based system", "Standardization And Collaboration", "A Growing Need For Credible Crypto Backing", "A Potential Ecosystem Of Specialized Chains", "Blockchain based security measures", "Crypto currency Is Just Going Through Normal Product Cycle", "Change of Blockchain towards Maturity"]
         }
       ]
     },

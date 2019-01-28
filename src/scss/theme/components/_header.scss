@@ -6,6 +6,16 @@
 /*--------------------------------------------------------------
 # Header
 --------------------------------------------------------------*/
+.nav--sticky #header{
+  position: sticky;
+  background: white;
+  border-bottom: 1px solid #ced4da;
+}
+#mobile-nav ul li a.btn {
+  width: 90%;
+  margin: 3% 5%;
+}
+
 .header-top{
   background:#04091e;
   font-size: 12px;

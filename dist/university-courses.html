@@ -22,9 +22,10 @@
         <link rel="stylesheet" href="/css/slick-theme.css">
         <link rel="stylesheet" href="/css/login-form.css">
         <link rel="stylesheet" href="/css/main.css">
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
-      <script src="/js/vendor/handlebars-v4.0.12.js"></script>
-      <script src="/js/ajax.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+        <script src="/js/vendor/handlebars-v4.0.12.js"></script>
+        <script src="/js/utils.js"></script>
     </head>
   
     <body>
@@ -53,7 +54,7 @@
                 <li><a href="/verify-certification.html" class="py-1">Verify Certification</a></li>
                 <li><a href="/contact.html" class="py-1">Contact Us</a></li>
                 <li>
-                  <a href="" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Login</a>
+                  <a href="/login.html" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Login</a>
                 </li>
               </ul>
             </nav>
@@ -91,7 +92,7 @@
                     <div class="row p-3 height--stretch" id="partners">
                       <script id="partners-details-template" type="text/x-handlebars-template">
                         {{#each partners}}
-                        <div class="col-4 px-2">
+                        <div class="col-12 col-sm-4 pb-4 pb-sm-0 px-2">
                           <div class="border height--full bg-white">
                             <div class="card border-0">
                               <div class="img-body row mx-0 align-items-center">
@@ -111,7 +112,7 @@
               <div class="col-12
                    col-sm-3
                    row align-items-center" >
-                    <div>
+                    <div class="mx-3">
                       <h4 class="mb-3">Join us in our mission to educate and train up blockchain professionals</h4>
                       <button type="button" class="btn btn-gradient py-1 width--full" id="form-dialog">Become our partners</button>
                       <div class="dialog" id="partner-form" title="Become our partners">test</div>
@@ -205,8 +206,7 @@
       <script src="/js/vendor/slick.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
       <script src="/js/main.js"></script>
-      <script src="/js/nav.js"></script>
-    <script src="/js/uni.js"></script>
+      <script src="/js/pageHandlebars.js"></script>
      </body>
   </html>
 

@@ -11,11 +11,8 @@
     </title>
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
     {{#> head-block}}
-      {{> includes/header }}
+      {{> includes/head }}
     {{/head-block}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
-    <script src="/js/vendor/handlebars-v4.0.12.js"></script>
-    <script src="/js/ajax.js"></script>
   </head>
 
   <body{{#if pageClass}} class={{pageClass}}{{/if}}>
@@ -43,7 +40,7 @@
     <script src="/js/vendor/slick.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/nav.js"></script>
+    <script src="/js/pageHandlebars.js"></script>
     {{#> scripts-block}}
        {{!-- Custom scripts per page can be added. --}}
     {{/scripts-block}}

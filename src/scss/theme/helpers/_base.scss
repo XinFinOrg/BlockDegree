@@ -11,6 +11,9 @@
 }
 
 .width--full {
+  @include media-breakpoint-down(sm){
+    width: 98%;
+  }
   width: 100%;
 }
 

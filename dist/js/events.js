@@ -1,15 +1,3 @@
-(function() {
-  let content = document.getElementById('events');
-
-  ajax_get('../data/events.json', function(data){
-    // console.log('this ' + data['courses'][0]['title'])
-    let source = document.getElementById('event-template').innerHTML;
-    let template = Handlebars.compile(source);
-
-    content.innerHTML = template(data);
-  });
-})();
-
 $(document).ready(function() {
   $('.events__carousel').slick({
     dots: true,
@@ -36,4 +24,4 @@ $(document).ready(function() {
       console.log("Error pulling photos: " + textStatus + ". Error: " + errorThrown);
     }
   });
-})();
+});

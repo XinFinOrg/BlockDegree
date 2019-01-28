@@ -28,6 +28,7 @@
     "gulp-sass": "^4.0.2",
     "handlebars": "^4.0.12",
     "handlebars-layout": "^0.1.4",
+    "metalsmith": "^2.3.0",
     "metalsmith-markdown": "^1.1.0",
     "metalsmith-templates": "^0.7.0",
     "node-sass": "^4.11.0"

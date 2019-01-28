@@ -8,13 +8,14 @@ Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.htm
 - [ ] Functionality for certificate page
 - [ ] Functionality for contact form
 - [X] Become partner button at university course offline
+- [ ] Previous and next arrow when use finish reading the documents
 - [ ] Content for become partner popup
 - [ ] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
 - [ ] Code to read the images in folder for gallery and automatically generate it
 - [ ] 404 page
 
 ## Running the website
-The src file runs on Gulp, handlebars, livereload and other relevant packages. Using handlebars, the templates could be reused easily and the code is more maintainable. Otherwise, the dist folder is good to go as well.
+The src file runs on Gulp, handlebars, livereload and other relevant packages. Using handlebars, the templates could be reused easily and the code is more maintainable. Otherwise, the dist folder is good to go as well. Have to run on server environment.
 
 Some of the benefits of this template:
 1. Easily change hero images, title and copy with a single line e.g. as seen in the university courses page
@@ -33,6 +34,11 @@ Some of the benefits of this template:
 4. Similarly for events and contributors. Easily add, edit and remove the data structure. This made changing the view while reducing error.
 
 5. The same header, navigation and footer can be generated for every single as each referred to the same __/partials/includes/header__ etc.
+
+6. Create courses in markdown under __/src/_data__. The file structure that you created for data will be generated under __dist/courses/__. This is generated using metalsmith, hence you need to run metalsmith command separately to reload the page if you are running gulp watch.
+```
+gulp metalsmith
+```
 
 Get node up and running
 ```

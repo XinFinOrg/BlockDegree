@@ -1,9 +1,14 @@
-#accordion {
+.accordion {
   .card-header {
-    border-left: 4px solid $btn__gradient--stop-1;
-
     &.more:hover {
       cursor: pointer;
     }
+  }
+}
+
+// Accordion at single course overview/info page
+#acc__course-info {
+  .card-header {
+    border-left: 4px solid $btn__gradient--stop-1;
   }
 }
