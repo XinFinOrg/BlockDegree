@@ -1,0 +1,37 @@
+{{#> base}}
+  {{> layouts/base title="Blockchain events"}}
+
+  {{#*inline "body-block"}}
+    {{> includes/hero hero-title="Events"}}
+
+    <div class="container__cstm">
+      <div>
+        <h2 class="mb-2">Our past events</h2>
+        <div class="events__carousel" id="events">
+          <script id="event-template" type="text/x-handlebars-template">
+            \{{#each events}}
+            <div class="event__single">
+              <img src="img/\{{image}}" class="card-img-top border-bottom p-2"
+                   style="height: 150px; width: auto; object-fit:contain;" />
+              <div class="p-2">
+                <h5 class="card-title mb-0">\{{name}}</h5>
+                <p class="mb-3"><em class="text-muted">\{{date}}</em></p>
+                <p class="card-text">\{{overview}}</p>
+              </div>
+            </div>
+            \{{/each}}
+          </script>
+        </div>
+      </div>
+
+      <div class="pt-5">
+        <h2 class="mb-2">Our gallery</h2>
+        <div id="gallery"></div>
+      </div>
+    </div>
+  {{/inline}}
+
+  {{#*inline "scripts-block"}}
+  <script src="js/events.js"></script>
+  {{/inline}}
+{{/base}}

@@ -1,0 +1,59 @@
+{{#> base}}
+  {{> layouts/base
+    title="University courses"
+    description="University courses that have partnered with Xinfin"}}
+
+  {{#*inline "body-block"}}
+    {{> includes/hero
+          hero-title="University Courses"
+          hero-image="/img/pm4.jpg"}}
+    <div class="bg-light py-3">
+      <div class="container py-5" id="uni">
+        <div class="mb-5">
+          <h2 class="mb-2 text-center">Overview</h2>
+          <p>XinFin Blockchain Training Academy, in association with <strong>SPIT & K.J. Somiya College</strong> Centre for Continuing Education offers first-of-its kind 8-hours classroom training program providing in-depth knowledge about blockchain technology to build Blockchain-based applications for enterprises and businesses. Certified Blockchain Professional credential certifies the individuals in Blockchain discipline of Distributed Ledger Technology from a vendor-neutral perspective</p>
+
+          <p>Enterprises are struggling to identify the right talent to deploy in-house Blockchain-based projects. This certification will work as a bridge between resources & businesses (employees, consultants & advisers) to give enterprises confidence in the quick hire.</p>
+        </div>
+
+        <h2 class="text-center">Our technological partners</h2>
+        {{> layouts/two-columns
+              containerClass="py-3"
+              leftColWidth="9"
+              rightColWidth="3"
+              addClassRightCol="row align-items-center"}}
+          {{#*inline "col-left"}}
+          <div class="row p-3 height--stretch" id="partners">
+            <script id="partners-details-template" type="text/x-handlebars-template">
+              \{{#each partners}}
+              <div class="col-12 col-sm-4 pb-4 pb-sm-0 px-2">
+                <div class="border height--full bg-white">
+                  <div class="card border-0">
+                    <div class="img-body row mx-0 align-items-center">
+                      <img src="img/\{{img}}" class="card-img-top img--contain" alt="Sardar Patel Institute of Technology">
+                    </div>
+                    <div class="card-body">
+                      <h4 class="card-title">\{{name}}</h4>
+                      <div class="card-text">\{{{trimString description name @index}}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              \{{/each}}
+            </script>
+          </div>
+          {{/inline}}
+
+          {{#*inline "col-right"}}
+          <div class="mx-3">
+            <h4 class="mb-3">Join us in our mission to educate and train up blockchain professionals</h4>
+            <button type="button" class="btn btn-gradient py-1 width--full" id="form-dialog">Become our partners</button>
+            <div class="dialog" id="partner-form" title="Become our partners">test</div>
+          </div>
+          {{/inline}}
+
+      </div>
+    </div>
+  {{/inline}}
+
+{{/base}}

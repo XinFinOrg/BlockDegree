@@ -1,0 +1,25 @@
+\{{#> base}}
+
+  \{{> layouts/base pageClass="course-module"}}
+    \{{#*inline "body-block"}}
+      \{{> includes/hero hero-title="{{parent}}"}}
+        <div class="row mx-0">
+          <div class="col-12 col-sm-4 px-0">
+            \{{#> sidebar}}
+            \{{> layouts/modSidebar sidebarId="mod-1" }}
+            \{{/sidebar}}
+          </div>
+
+          <div class="col-12 col-sm-8 p-4 module-content">
+            <div class="container py-2 py-sm-5">
+              <h2 id="{{title}}">{{{ title }}}</h2>
+              <div>{{{ contents }}}</div>
+            </div>
+          </div>
+      </div>
+    </section>
+    \{{/inline}}
+    <script src="/js/modMenu.js"></script>
+    \{{#*inline "scripts-block"}}
+    \{{/inline}}
+\{{/base}}

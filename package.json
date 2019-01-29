@@ -1,0 +1,37 @@
+{
+  "name": "Blockchain_Tutorial-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XinFinOrg/Blockchain_Tutorial-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XinFinOrg/Blockchain_Tutorial-website/issues"
+  },
+  "homepage": "https://github.com/XinFinOrg/Blockchain_Tutorial-website#readme",
+  "devDependencies": {
+    "browser-sync": "^2.26.3",
+    "gulp": "^4.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-compile-handlebars": "^0.6.1",
+    "gulp-livereload": "^4.0.1",
+    "gulp-metalsmith": "^1.1.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "handlebars": "^4.0.12",
+    "handlebars-layout": "^0.1.4",
+    "metalsmith": "^2.3.0",
+    "metalsmith-markdown": "^1.1.0",
+    "metalsmith-templates": "^0.7.0",
+    "node-sass": "^4.11.0"
+  },
+  "dependencies": {}
+}

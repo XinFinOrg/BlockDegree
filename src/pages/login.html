@@ -1,0 +1,37 @@
+{{#> base pageClass="nav--sticky"}}
+  {{> layouts/base}}
+  {{#*inline "body-block"}}
+  <div class="container__cstm">
+    <div class="row justify-content-center">
+
+      <div class="form-messages"></div>
+      <div class="form-content" id="form-login" method="post" action="">
+        <!-- Login Form -->
+        <form class="p-4 ">
+          <h2 class="mb-3">Login</h2>
+          <div class="text-left pl-4">
+            <label for="email" class="mb-0">Email</label>
+          </div>
+          <input type="text" id="email" class="p-2" name="email" required>
+          <div class="text-left pl-4">
+            <label for="password" class="mb-0 pt-2">Password</label>
+          </div>
+          <input type="password" id="password" class="p-2" name="password" required>
+          <div class="pl-2"><a href="#">Forgot Password?</a></div>
+          <input type="submit" class="btn btn-primary py-2 mt-4 text-white" value="Log In">
+        </form>
+
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+          <a class="underlineHover" href="/register.html">New user? Register here</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {{/inline}}
+
+  {{#*inline "scripts-block"}}
+    <<script src="/js/userLogin.js"></script>
+  {{/inline}}
+{{/base}}
