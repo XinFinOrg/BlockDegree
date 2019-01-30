@@ -44,7 +44,7 @@ function runHandlebars(id, dataSrc, src) {
   if(document.getElementById(id) != null) {
     let content = document.getElementById(id);
     ajax_get(dataSrc, function(data){
-      let source = document.getElementById(src).innerHTML, 
+      let source = document.getElementById(src).innerHTML,
           template = Handlebars.compile(source);
 
       content.innerHTML = template(data);
@@ -56,6 +56,17 @@ Handlebars.registerHelper('url', function(options) {
   let removeSpecial = options.replace(/[^\w\s]/gi, '');
 
   return removeSpecial.replace(/ +/g, '-').toLowerCase();
+});
+
+Handlebars.registerHelper('trimmed', (info) => {
+  let length = 15,
+      splitString = info.split(' ');
+
+  let trimmedString = splitString.length > length ?
+                      splitString.slice(0, length).join(' ') + ' ...':
+                      info;
+
+  return trimmedString;
 });
 
 Handlebars.registerHelper('trimString', (info, title, idx) => {
