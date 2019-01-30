@@ -140,42 +140,71 @@
   
             <div class="col-12 col-sm-8 p-4 module-content">
               <div class="container py-2 py-sm-5">
-                <h2 id="Why do we need blockchain technology?">What is Proof-Of-Work ?</h2>
-                <div><p>Proof-of-Work, or PoW, is the original consensus algorithm in a Blockchain network.
-                  </p>
-  <p>In Blockchain, this algorithm is used to confirm transactions and produce new blocks to the chain. With PoW, miners compete against each other to complete transactions on the network and get rewarded.
-In a network users send each other digital tokens.A decentralized ledger gathers all the transactions into blocks. However, care should be taken to confirm the transactions and arrange blocks.</p>
-  <p>This responsibility bears on special nodes called miners, and a process is called mining.
-    </p>
-  <p>The main working principles are a complicated mathematical puzzle and a possibility to easily prove the solution.
-    </p>
+                <h2 id="What is the difference between blockchain and database?">How to create and  Join Public Bitcoin Blockchain ?</h2>
+                <div><p><strong>Steps to create public blockchain bitcoin core.</strong></p>
+  <ol>
+  <h3><li>Step-1: first you need to download bitcoin core from <a href="https://bitcoin.org/en/download">https://bitcoin.org/en/download</a></h3></li>
+  </ol>
+  <p><img src="../../img/an01.png" height=400px; width=750px;></p>
 
-    <h3>
-        What is “mathematical puzzle?”
-        </h3>
-  <p>While traders only focus on the million dollar gains they could possibly realize, they always overlook the basic technology behind cryptocurrency. Blockchain is the technology behind Bitcoin and Altcoins, which makes storing valuables possible. Blockchain stores data in a distributed ledger which can be potentially accessed and updated in a secure way by billions of people.
-  Blockchain technology will soon go beyond the digital currency movement and begin to influence almost every sector. From real estate to entertainment, as startup businesses continue to integrate blockchain into their business models. The methods of governing some countries and their democratic processes will be influenced as well by the incoming wave of blockchain.</p>
-  
-  <h3 id="business-scenario-implemented-using-the-database">Hashing </h3>
-  <p>A hashing algorithm converts a string of any size into a string of predefined size (e.g. 256 bytes). It is one-way, meaning when provided with the hash, no can deduce the original string (this is true only if the hash size is significantly big - 256 or 512 bytes).  Bitcoin uses SHA256 hashing algorithm and uses for two purposes -  </p>
-  <img src="">
-  <p>Hashing the previous block and storing that hash in the current block, creating a chain of blocks and hashing the transactions and storing them in the Merkel Tree (used for ease of verification of transactions).</p>
-  <p>Different sources of truth: At any given time, all databases may not have similar data, as the process involved in updating the database depends on the organization, and there could be a delay in distributing the data to all the parties.</p>
+  <p>And download the version as per your requirement.  </p>
 
-  <h3 id="business-scenario-implemented-using-blockchain">Business Scenario Implemented Using Blockchain</h3>
-  <p>With the same Blockchain technology, all parties track the movement of products through the supply chain.</p>
-  <p>A single shared data storage, which is tamper-evident (designed to reveal any unusual interference) and protected using cryptographic methods.</p>
-  <p>All parties will have the same copy of this ledger.</p>
-  <p>All parties must reach a general agreement before a new transaction is added to the shared ledger.</p>
-  <p>Transactions recorded on the ledger can never be changed.</p>
-  <p>Benefits of the ledger-based approach are:
-  Single source of truth: At any point in time, all the parties will refer to the same data since it is a single shared ledger.</p>
-  <p>Early detection of human error: Since all parties need to reach a general agreement, any human or application errors will be discovered on time in the chain.</p>
-  <p>Safety: The manufacturer can make sure that the quality of their products is intact.</p>
-  <p>Customer centric supply chain: Since blockchain enables the manufacturer to directly connect with the customer; the manufacturer is able to provide a better customer experience</p>
-  <p>Regulatory compliance: Through transparent auditing, Blockchain allows users to comply with regulations.</p>
-  </div>
-              </div>
+  <h3><strong>Step-2:Install the Bitcoin core set up</strong></h3>
+  <p><img src="../../img/an02.png" height=400px; width=700px;></p>
+  <p>And accept all the terms and license of the package.<p>
+
+    
+  <h3><strong>Step-3: open the system environment variable and set path of bitcoin.</strong></h3>
+  <h5><strong>C:\Program Files\bitcoin\daemon</strong></h5>
+  <p><img src="../../img/an3.png" height=400px; width=700px;></p>
+  <p>You can set path from program files, you need to open bitcoin folder ,open daemon folder and copy the path and paste it in the system environment variable.</p>
+
+
+ <h3><strong>Step-4: create a folder in the driver and name the folder bitcoin.</strong></h3>
+ <p><img src="../../img/ak1.png" height=400px; width=700px;></p>
+
+ <h3><strong>Step-5: create a new folder inside the bitcoin folder and name the folder bitcoin core.</strong></h3>
+ <p><img src="../../img/ak2.png" height=400px; width=700px;></p>
+
+ <h3><strong>Step-6:  now create a configure file in the bitcoincore folder and name the configure file bitcoin.  </strong></h3>
+ <p>You need to save this file as bitcoin.configure</p>
+ <p><img src="../../img/ak3.png" height=400px; width=700px;></p>
+ <p><strong>Server=1:-</strong> There is only one server in the configure file, and connects your pc to bitcoin core server.  </p>
+<p><strong>Daemon=1:-</strong> There is only one daemon in the configure file and work as a background process in your computer.  </p>
+<p><strong>Rpc user:- </strong> you have to give rpc user name as per your requirement.  And you can give this to other person to connect your node in there computer.
+ <p><strong>Rpc-password:-</strong> give password as your requirement.And you can give this to other person to connect your node in there computer. until the person doesn’t have your password he will not have access to connect you account.</p>
+ <p><strong>Rpc allow ip:- </strong>it provides an ip address to your node so connect you node in different computer.</p>
+<p><strong>Rpc-port:-</strong> It gives port number to your node.</p>
+
+<h3><strong>Step-7: open command prompt  </strong></h3>
+<p><img src="../../img/ak4.png" height=400px; width=700px;></p>
+
+<h3><strong>Step-8: open the folder from command prompt from the destination where you created.</strong></h3>
+<p><img src="../../img/ak5.png" height=400px; width=700px;></p>
+
+<h3><strong>Step-9: And enter the following command</strong></h3>
+<p>Bitcoind –datadir=./bitcoincore –txindex</p>
+<p><img src="../../img/ak6.png" height=400px; width=700px;></p>
+
+<h3><strong>Step-10: after entering the above command in the cmd you will see different folder created in the bitcoincore .</strong></h3>
+<p><img src="../../img/ak7.png" height=400px; width=700px;></p>
+
+<h3><strong>Step-11: open the second command prompt and again open folder from command prompt  </strong></h3>
+<p><img src="../../img/ak5.png" height=400px; width=700px;></p>
+
+<h3><strong>Step-12: And enter the following command</strong></h3>
+<p>Bitcoin-cli –datadir=./bitcoincore  <strong>getblockchaininfo</strong></p>
+<p><img src="../../img/ak01.png" height=400px; width=700px;></p>
+
+<h3><strong>Step-13: After entering the command you will see the public blockchain of bitcoin in the command prompt.  </strong></h3></div>
+<p><img src="../../img/ak03.png" height=400px; width=700px;></p>
+
+<h3><strong>Step-14: All the blocks which is created by the bitcoin are stored in the bitcoincore folder inside the blocks folder.</strong></h3>
+<p><img src="../../img/ak04.png" height=400px; width=700px;></p>
+<p>All the Block which is created is saved in the folder.</p>
+
+
+</div>
             </div>
         </div>
       </section>
