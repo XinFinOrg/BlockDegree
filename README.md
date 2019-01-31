@@ -1,5 +1,21 @@
 <div style="text-align:center"><p align="center"><img src ="https://user-images.githubusercontent.com/32508576/49203187-5c77cb00-f3cd-11e8-942d-6821d8a70803.jpg" alt="banner" /></p></div>
 
+# Free Blockchain education Resource. Learn How to Become Blockchain Professional 
+ 
+ Current Free Module
+  
+ a. Blockchain Basic Course. 
+ 
+ b. Blockchain Advanced Course for Engineer 
+ 
+ c. Blockchain Advanced Course for Professional
+ 
+ 
+Entire Course access is free but Nominal fees will be charge, if you like to get XinFin Blockchain Certification. 
+Certification will be issue on XinFin Public Blockchain (More detail: XinFin.org).
+
+We invite Educational Institute to be part of Education Initiative.
+
 
 Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.html
 
