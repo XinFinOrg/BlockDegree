@@ -1,3 +1,6 @@
+<div style="text-align:center"><p align="center"><img src ="https://user-images.githubusercontent.com/32508576/49203187-5c77cb00-f3cd-11e8-942d-6821d8a70803.jpg" alt="banner" /></p></div>
+
+
 Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.html
 
 ## To do
