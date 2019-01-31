@@ -95,6 +95,6 @@ gulp.task('watch', () => {
   gulp.watch('./src/**/*.hbs', gulp.series('html'));
   gulp.watch('./src/**/*.html', gulp.series('html'));
   gulp.watch('./src/scss/**/*.scss', gulp.series('sass'));
-  livereload.listen();
+  //livereload.listen();
   gulp.watch('**/*.html').on('change', reload);
 });

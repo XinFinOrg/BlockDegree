@@ -140,16 +140,28 @@
   
             <div class="col-12 col-sm-8 p-4 module-content">
               <div class="container py-2 py-sm-5">
-                <h2 id="What is the future of blockchain technology?">What is the future of blockchain technology?</h2>
-                <div><p>Blockchain is still a very sensitive topic and its dynamics have proven to cause both a positive impact as well as negative. Here are just but a few examples of Block chain systems.</p>
-  <p>So these are some examples of what is future of blockchain technology.</p>
+                <h2 id="What is the future of blockchain technology?">Cryptography</h2>
+                <div><p>Blockchain is secured with cryptographic algorithms. Cryptography is the practice of applying mathematical functions to pieces of data in order to secure it. The two cryptographic concepts used in the Bitcoin blockchain, and in any blockchain in general, are hashing and public-private key cryptography.   
+
+                </p>
+  <p>In order to keep your wallet secure, Bitcoin wallets store a secret piece of data called a private key or seed. This private key is then used to sign transactions, providing a mathematical proof that they have come from the owner of the wallet. We call this a cryptographic signature. </p>
   <h3 id="widespread-distributed-data-models">Widespread Distributed Data Models</h3>
-  <p>Blockchain has highlighted a critical aspect of the way data is going to work in the coming decades, and that is a world where data will be ever increasingly distributed. Any solutions for next-generation data problems must come to grips with this fact, and plan for a day where critical data is distributed among many geographies and even across on-premise and cloud data centers.</p>
-  <h3 id="dlt-based-system">DLT-Based System</h3>
-  <p>Distributed ledger technology (DLT) is here to stay. Dubai has vowed to replace all government systems with DLT-based digital structures by 2020, which indicates that DLT will just grow over time. While the transition from a paper-based system to digital has been underway for a long time, DLT provides the underlying trust, immutability and transparency that such systems desperately need.</p>
-  <h3 id="standardization-and-collaboration">Standardization And Collaboration</h3>
-  <p>One of the areas of advancement in blockchain will be the standardization of interoperability among the different blockchains. While it is inevitable that there will be several blockchains with a specific business purpose, true benefits for the consumer or enterprise will be realized when they are able to &quot;collaborate&quot; in an open standard.</p>
-  <h3 id="a-growing-need-for-credible-crypto-backing">A Growing Need For Credible Crypto Backing</h3>
+  <p>The signature also prevents the transaction from being altered by anybody once it has been issued. All transactions are broadcast to the network and usually begin to be confirmed within 10-20 minutes, through a process called mining.
+  </p>
+  <p>A private key is a secret piece of data that proves your right to spend bitcoins from a specific wallet through a cryptographic signature. Your private key(s) are stored in your computer if you use a software wallet; they are stored on some remote servers if you use a web wallet. Private keys must never be revealed as they allow you to spend bitcoins for their respective Bitcoin wallet.</p>
+  <h3 >Cryptography works as the security mechanism in a blockchain technology.   </h3>
+  <h4>hashing</h4>
+  <p>A hashing algorithm converts a string of any size into a string of predefined size (e.g. 256 bytes). It is one-way, meaning when provided with the hash, no can deduce the original string (this is true only if the hash size is significantly big - 256 or 512 bytes).  Bitcoin uses SHA256 hashing algorithm and uses for two purposes -</p>
+  <p><img src="../../img/an5.png" height=400px; width=750px;></p>
+  <p>Hashing the previous block and storing that hash in the current block, creating a chain of blocks and hashing the transactions and storing them in the Merkel Tree (used for ease of verification of transactions).  </p>
+  <p>It uses SHA256 for the proof of work consensus mechanism. This requires mining of blocks, which means finding a value (nonce), such that the hash (SHA256) of the block plus the nonce will be less than a prespecified number called target. Smaller the target, more difficult it is to mine the block.</p>
+ <p><strong>Private key-</strong> </p>
+ <p>The private key consists of alphabetic numeric characters that gives a user access and control over their funds to their corresponding cryptocurrency address. The private key is used to sign transactions that allow the user to spend their funds</p>
+   <p><strong> Public Key-   </strong></p>
+   <p>  Bitcoin uses digital signatures for user authorisation. Each node generates a          public-private key pair. It uses the public key as its network address and the private key to sign blocks/transactions. To check if the node/user has authorised any transaction/block, you have to verify the digital signature using the node’s public key. It is not possible to deduce the private key from the public key, hence this node-alias mechanism is secure. Bitcoin uses    ECDSA encryption.   </p>
+   <p><img src="../../img/an7.png" height=400px; width=750px;></p>
+
+ <h3 id="a-growing-need-for-credible-crypto-backing">A Growing Need For Credible Crypto Backing</h3>
   <p>Money, regardless of whether it’s physical or digital, needs credible backing. When there are no trusted parties handling the transactions, then a distributed ledger becomes key, like blockchain. However, if a cryptocurrency is an official currency, then there are already technologies in place to ensure transactional integrity and prohibit tampering with transactional data.</p>
   <h3 id="a-potential-ecosystem-of-specialized-chains">A Potential Ecosystem Of Specialized Chains</h3>
   <p>Defunct crypto currencies have created a significant amount of “public technical debt,” and their smart-contracts might still get triggered. As we calibrate and confirm industry-grade blockchain use cases -- healthcare information exchange and crypto claims settlement, for example -- we will likely end up with an ecosystem of specialized chains, operating security and utility chains in parallel.</p>
