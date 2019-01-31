@@ -273,7 +273,7 @@ $(document).ready(function() {
             $('#header').removeClass('header-scrolled');
         }
     });
-    
+
     // //------- Google Map  js --------//
     //
     // if (document.getElementById("map")) {
@@ -430,7 +430,7 @@ $(document).ready(function() {
   }
 
   // Course curriculum
-  if($('.course-module')){
+  if($('.course-module').length){
     let fullPath = window.location.pathname,
     currentPathIndex = fullPath.lastIndexOf('/'),
     currentPath = fullPath.slice(currentPathIndex + 1, -5), // -5 cause of .html ext

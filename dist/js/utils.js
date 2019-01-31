@@ -40,15 +40,47 @@ function accessCourseMod(el) {
   window.location =  el + '.html'
 }
 
+function submitForm(form) {
+  let errMsg = form.errMsg,
+      accessMsg = form.accessMsg;
+
+  let formData = {
+    'email': $('input[name=email]').val(),
+    'password': $('input[name=password]').val()
+  },
+  query = null;
+  if (getUrlVars().length) {
+    query = getUrlVars()['from'];
+  }
+
+  $.ajax({
+    type: 'POST',
+    url: $(form).attr('action'),
+    data: formData,
+    dataType: 'json'
+  })
+  .done((res) => {
+    console.log(JSON.stringify(res))
+    if(res.status == false) {
+      $('.form-messages').removeClass('d-none alert-success');
+      $('.form-messages').addClass('alert-danger');
+      $('.form-messages').html(errMsg);
+    } else if (query) {
+      window.location = query;
+    } else {
+      $('.form-messages').addClass('alert-success');
+      $('.form-messages').removeClass('d-none alert-danger');
+      $('.form-messages').html(accessMsg);
+    }
+  })
+};
+
 function runHandlebars(id, dataSrc, src) {
   if(document.getElementById(id) != null) {
     let content = document.getElementById(id);
     ajax_get(dataSrc, function(data){
-<<<<<<< HEAD
+
       let source = document.getElementById(src).innerHTML,
-=======
-      let source = document.getElementById(src).innerHTML, 
->>>>>>> apis
           template = Handlebars.compile(source);
 
       content.innerHTML = template(data);
@@ -62,7 +94,6 @@ Handlebars.registerHelper('url', function(options) {
   return removeSpecial.replace(/ +/g, '-').toLowerCase();
 });
 
-<<<<<<< HEAD
 Handlebars.registerHelper('trimmed', (info) => {
   let length = 15,
       splitString = info.split(' ');
@@ -74,8 +105,7 @@ Handlebars.registerHelper('trimmed', (info) => {
   return trimmedString;
 });
 
-=======
->>>>>>> apis
+
 Handlebars.registerHelper('trimString', (info, title, idx) => {
   let length = 10,
       splitString = info.split(' ');
@@ -87,4 +117,8 @@ Handlebars.registerHelper('trimString', (info, title, idx) => {
                       info;
 
   return trimmedString;
+});
+
+Handlebars.registerHelper('user', () => {
+  console.log('login')
 });
