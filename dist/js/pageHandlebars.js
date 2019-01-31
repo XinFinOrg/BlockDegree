@@ -8,4 +8,9 @@ runHandlebars('courses', '/data/courses.json', 'course-template');
 
 runHandlebars('mod__details', '/data/courses.json', 'module-template');
 
+<<<<<<< HEAD
+=======
+runHandlebars('mod1__details', '/data/advance.json', 'module-templates');
+
+>>>>>>> apis
 runHandlebars('partners', '/data/partners.json', 'partners-details-template');
