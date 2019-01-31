@@ -69,7 +69,7 @@
           <div class="container">
             <div class="row align-items-center justify-content-center">
               <div class="hero-banner__content text-center">
-                <h1 class="text-white">Blockchain Advanced course for engineer</h1>
+                <h1 class="text-white">Blockchain advanced course for engineer</h1>
                 
               </div>
             </div>
@@ -78,12 +78,12 @@
           <div class="row mx-0">
             <div class="col-12 col-sm-4 px-0">
               <!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
-              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=mod-1 style="background: #fafbfc;">
+              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=1 style="background: #fafbfc;">
                 <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
                 <div id="mod__details">
                   <script id="module-template" type="text/x-handlebars-template">
-                    <!-- Hard-coded for now, to look into ways to run the index automatically -->
-                    {{#with courses.[1]}}
+              
+                    {{#with courses.[1] }}
               
                       {{#each curriculum as |ccm|}}
               
@@ -140,35 +140,20 @@
   
             <div class="col-12 col-sm-8 p-4 module-content">
               <div class="container py-2 py-sm-5">
-                  <p><img src="../../img/Bitcoin-vs-blockchain.png" height=400px; width=700px;></p>
-
-                <h2 id="Features of blockchain">What is Blockchain and bitcoin ?</h2>
-
-                <p>Many people think that bitcoin equates to blockchain. The confusion probably stems from the fact that bitcoin is the most well known cryptocurrency in the market today and blockchain is relatively still a mystery to most people.  </p>
-  
-  <p>Blockchain is a form of distributed ledger technology. Similar to any other technologies that we have seen, like internet, or AI, blockchain is a tool that could be implemented to solve certain problems in organisations and society. In this blockchain technology, it comprises of various elements: cryptocurrency, nodes, consensus algorithm and cryptographic hashes etc. </p>
-  <p>Bitcoin, on the other hand, is the first cryptocurrency to be created in the blockchain space. At this point in time, most people will associate bitcoin as a digital gold. To put things into perspective, there are currently more than 2000 cryptocurrencies being powered by various blockchain technologies. And bitcoin is just one of them. </p>
-  <p>This is the first and also an important Blockchain feature. The most amazing thing about this Blockchain technology is that it increases the capacity of the whole network. This is because there are a lot of computers working together that offer more power in total then the few devices that are centralized. A perfect example of this increased capacity function is reported in a project by Stanford University. A supercomputer that simulates protein folding was created for medical research.</p>
-  <h5><strong>Properties and usage</strong></h5>
-  <p>Bitcoin: The main aim of bitcoin is to enable and simplify transactions without the interventions of intermediaries, such as banks and governments. The advantage of using bitcoin over traditional transfer method is the potential reduction in transaction time and cost. This property has allowed bitcoin to be used for cross-border transactions, peer-to-peer payment and cryptocurrency trading. However, the limited scope of bitcoin has seen little use cases beyond those three.  </p>
-   <p>Blockchain: Over the years, the blockchain technology has evolved from the distributed ledger use for bitcoin. Blockchain has enabled direct peer-to-peer transactions without the need of a trusted intermediary in a low-cost, safe and secure environment. The development of blockchain has allowed more sophisticated data to be store along with the transaction. This means that blockchain could be used to track the transfer of various items, from currencies, to property rights to commodities.  This means that blockchain technology could be adapted to cater to various industries, e.g. insurance, supply chain and even government agencies.   </p>
-               
-   
-  <h5><strong>Technological components  </strong></h5>
-  <P>Bitcoin: Bitcoin is a public blockchain. Bitcoin users in general maintain their privacy and anonymity as only their digital wallet public address is known. The transactions recorded in the bitcoin ledger consists of cryptic numeric codes that people can’t understand.</P>
-  <P>Blockchain can be public, private, or hybrid. Depending on the requirements of the users or organisations, different type of blockchain technology will be used. When implementing blockchain technology, organisations will need to understand how the integration of blockchain technology can comply with the existing requirements and practices. </P>
-  <P>In most cases, the identity of the users who are involved in the transactions need to be known. On this account, industry practices like know your customers and anti money laundering will need to be integrated to the blockchain solution. Therefore, the transactions recorded in the blockchain ledger are designed to be understood by the various business units.  </P>
-  <h5><strong>distributed ledger  </strong></h5>
-  <p>The reason that Bitcoin could be transacted without a trusted intermediary is because of the way the blockchain technology is designed. The Bitcoin blockchain is a shared public ledger on which all the transactions of the Bitcoin network are verified, confirmed, recorded and made transparent to the public. You could actually look at the confirmed transactions through the Bitcoin blockchain explorer. From the blockchain explorer, you can see the sender, receiver, timestamp, miner and amount of Bitcoin in any single transaction.</p>
-  <p>This transparency of the blockchain will ensure that the network is aware of the actual spendable balance in the wallet before verifying the transactions and appending them to the Bitcoin blockchain. This prevent double-spending, which is a potential system flaw that enables the same digital token to be spend in more than one transaction, and enables the peer-to-peer transactions. </p>
-  <h5><strong>consensus algorithm  </strong></h5>
-  <p>Mining is a distributed consensus system that is used to confirm pending transactions by including them in the block chain. It enforces a chronological order in the blockchain, protects the neutrality of the network, and allows different computers to agree on the state of the system. To be confirmed, transactions must be packed in a block that fits very strict cryptographic rules that will be verified by the network. These rules prevent previous blocks from being modified because doing so would invalidate all the subsequent blocks. Mining also creates the equivalent of a competitive lottery that prevents any individual from easily adding new blocks consecutively to the blockchain. In this way, no group or individuals can control what is included in the block chain or replace parts of the blockchain to roll back their own spends.
-
-  </p>
-
-
-
-</div>
+                <h2 id="What is blockchain and bitcoin">What is blockchain and bitcoin</h2>
+                <div><p>Many people think that bitcoin equates to blockchain. The confusion probably stems from the fact that bitcoin is the most well known cryptocurrency in the market today and blockchain is relatively still a mystery to most people.</p>
+  <p>Blockchain is a form of distributed ledger technology. Similar to any other technologies that we have seen, like internet, or AI, blockchain is a tool that could be implemented to solve certain problems in organisations and society. In this blockchain technology, it comprises of various elements: cryptocurrency, nodes, consensus algorithm and cryptographic hashes etc.</p>
+  <p>Bitcoin, on the other hand, is the first cryptocurrency to be created in the blockchain space. At this point in time, most people will associate bitcoin as a digital gold. To put things into perspective, there are currently more than 2000 cryptocurrencies being powered by various blockchain technologies. And bitcoin is just one of them.</p>
+  <h3 id="key-differences-between-blockchain-and-bitcoin">Key differences between blockchain and bitcoin</h3>
+  <p>We will now explore in more detail on how bitcoin and blockchain differ. In general, we could categorise the key differences between bitcoin and blockchain.</p>
+  <h4 id="properties-and-usage">Properties and usage</h4>
+  <p><strong>Bitcoin</strong>: The main aim of bitcoin is to enable and simplify transactions without the interventions of intermediaries, such as banks and governments. The advantage of using bitcoin over traditional transfer method is the potential reduction in transaction time and cost. This property has allowed bitcoin to be used for cross-border transactions, peer-to-peer payment and cryptocurrency trading. However, the limited scope of bitcoin has seen little use cases beyond those three.</p>
+  <p><strong>Blockchain</strong>: Over the years, the blockchain technology has evolved from the distributed ledger use for bitcoin. Blockchain has enabled direct peer-to-peer transactions without the need of a trusted intermediary in a low-cost, safe and secure environment. The development of blockchain has allowed more sophisticated data to be store along with the transaction. This means that blockchain could be used to track the transfer of various items, from currencies, to property rights to commodities.  This means that blockchain technology could be adapted to cater to various industries, e.g. insurance, supply chain and even government agencies</p>
+  <h4 id="technological-components">Technological components</h4>
+  <p><strong>Bitcoin</strong>: Bitcoin is a public blockchain. Bitcoin users in general maintain their privacy and anonymity as only their digital wallet public address is known. The transactions recorded in the bitcoin ledger consists of cryptic numeric codes that people can’t understand.</p>
+  <p><strong>Blockchain</strong>:  Blockchain can be public, private, or hybrid. Depending on the requirements of the users or organisations, different type of blockchain technology will be used. When implementing blockchain technology, organisations will need to understand how the integration of blockchain technology can comply with the existing requirements and practices.</p>
+  <p>In most cases, the identity of the users who are involved in the transactions need to be known. On this account, industry practices like know your customers and anti money laundering will need to be integrated to the blockchain solution. Therefore, the transactions recorded in the blockchain ledger are designed to be understood by the various business units.  </p>
+  </div>
               </div>
             </div>
         </div>
@@ -184,8 +169,7 @@
                             <h4>Useful</h4>
                             <ul>
                                 <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-          
+                                <li><a href="/privacy-policy.html">Privacy Policy</a></li>
                             </ul>
                         </div>
                     </div>

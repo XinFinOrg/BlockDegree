@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: How does blockchain work?
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 Nearly everyone has heard of Blockchain and that it is cool. But not everybody understands how it works.
 

@@ -3,8 +3,8 @@
   <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
   <div id="mod__details">
     <script id="module-template" type="text/x-handlebars-template">
-      <!-- Hard-coded for now, to look into ways to run the index automatically -->
-      \{{#with courses.[0]}}
+
+      \{{#with courses.[{{{sidebarId}}}] }}
 
         \{{#each curriculum as |ccm|}}
 

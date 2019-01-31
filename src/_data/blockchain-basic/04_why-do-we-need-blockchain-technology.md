@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: Why do we need blockchain technology?
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 The origin of the blockchain technology can be traced back to early 2008, a period at which the world was going through a miserable financial crisis. During this period, someone with the false name: “Satoshi Nakamoto”, no one really knows if it was a person or a group, noticed the danger of the centralized nature of our financial system. Back then, to transfer money or even carry out a simple transaction, the assistance of a third party (like a bank or Paypal) was required.
 

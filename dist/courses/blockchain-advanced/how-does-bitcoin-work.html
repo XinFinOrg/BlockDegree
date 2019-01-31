@@ -69,7 +69,7 @@
           <div class="container">
             <div class="row align-items-center justify-content-center">
               <div class="hero-banner__content text-center">
-                <h1 class="text-white"></h1>
+                <h1 class="text-white">Blockchain advanced course for engineer</h1>
                 
               </div>
             </div>
@@ -78,12 +78,12 @@
           <div class="row mx-0">
             <div class="col-12 col-sm-4 px-0">
               <!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
-              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=mod-1 style="background: #fafbfc;">
+              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=1 style="background: #fafbfc;">
                 <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
-                <div id="mod1__details">
-                  <script id="module-templates" type="text/x-handlebars-template">
-                    <!-- Hard-coded for now, to look into ways to run the index automatically -->
-                    {{#with courses.[0]}}
+                <div id="mod__details">
+                  <script id="module-template" type="text/x-handlebars-template">
+              
+                    {{#with courses.[1] }}
               
                       {{#each curriculum as |ccm|}}
               
@@ -140,12 +140,10 @@
   
             <div class="col-12 col-sm-8 p-4 module-content">
               <div class="container py-2 py-sm-5">
-                <h2 id="How to use Bitcoin?"> How to use Bitcoin?</h2>
-                <div><p>In order to interact and transact with Bitcoin, you will need a bitcoin wallet. A Bitcoin wallet will enable you to receive, transfer and store Bitcoins. A Bitcoin wallet can be an app, website or a hardware wallet. A Bitcoin hardware wallet is a small device that is generally offline and store Bitcoins. 
-                  </p>
-  <p>Once you install or create your Bitcoin wallet, it will generate a public Bitcoin address, public key and private key. When transacting with Bitcoin, you should never let people know your private key, as doing so will enable others to gain access to your Bitcoin wallet. Always store the private key in a safe place. In theory, you can create as many Bitcoin wallet address as you like, as long as you are able to keep a backup of all of your  private keys.     </p>
-  <p>After you created your wallet, you are ready to transact in Bitcoin. If you want to receive bitcoin, you will have to disclose your public bitcoin address and vice versa. This is actually similar to how we will transfer money in from a bank account to another bank account    </p>
-  
+                <h2 id="How does bitcoin work">How does bitcoin work</h2>
+                <div><p>In order to interact and transact with Bitcoin, you will need a bitcoin wallet. A Bitcoin wallet will enable you to receive, transfer and store Bitcoins. A Bitcoin wallet can be an app, website or a hardware wallet. A Bitcoin hardware wallet is a small device that is generally offline and store Bitcoins.</p>
+  <p>Once you install or create your Bitcoin wallet, it will generate a public Bitcoin address, public key and private key. When transacting with Bitcoin, you should never let people know your private key, as doing so will enable others to gain access to your Bitcoin wallet. Always store the private key in a safe place. In theory, you can create as many Bitcoin wallet address as you like, as long as you are able to keep a backup of all of your private keys.</p>
+  <p>After you created your wallet, you are ready to transact in Bitcoin. If you want to receive bitcoin, you will have to disclose your public bitcoin address and vice versa. This is actually similar to how we will transfer money in from a bank account to another bank account</p>
   </div>
               </div>
             </div>
@@ -162,8 +160,7 @@
                             <h4>Useful</h4>
                             <ul>
                                 <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-          
+                                <li><a href="/privacy-policy.html">Privacy Policy</a></li>
                             </ul>
                         </div>
                     </div>

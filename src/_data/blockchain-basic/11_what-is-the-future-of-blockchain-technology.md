@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: What is the future of blockchain technology?
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 Blockchain is still a very sensitive topic and its dynamics have proven to cause both a positive impact as well as negative. Here are just but a few examples of Block chain systems.
 

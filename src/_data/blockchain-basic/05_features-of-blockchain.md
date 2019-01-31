@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: Features of blockchain
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 ### Decentralized System
 Decentralized technology gives you the opportunity to store your assets in a network that can be further accessed through internet. An asset in this case can be anything from a contract to a document and many more. Through this token-based asset, the owner has a direct control over his account through the use of a key linked to his account, giving the owner a power to securely transfer his assets to anyone he wants.The Blockchain technology proves to be a really useful tool for decentralizing the web. It has the power to bring big changes in the industries.

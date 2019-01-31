@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: Permissioned vs permissionless blockchain
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 ### Permissioned Blockchain
 Permissioned Blockchains limit access for those who can perform different activities on the Blockchain. The exchanges are approved and handled by the individuals with record, accepting them for certain trust levels.

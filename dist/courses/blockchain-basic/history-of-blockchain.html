@@ -78,12 +78,12 @@
           <div class="row mx-0">
             <div class="col-12 col-sm-4 px-0">
               <!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
-              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=mod-1 style="background: #fafbfc;">
+              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=0 style="background: #fafbfc;">
                 <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
                 <div id="mod__details">
                   <script id="module-template" type="text/x-handlebars-template">
-                    <!-- Hard-coded for now, to look into ways to run the index automatically -->
-                    {{#with courses.[0]}}
+              
+                    {{#with courses.[0] }}
               
                       {{#each curriculum as |ccm|}}
               
@@ -164,8 +164,7 @@
                             <h4>Useful</h4>
                             <ul>
                                 <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-          
+                                <li><a href="/privacy-policy.html">Privacy Policy</a></li>
                             </ul>
                         </div>
                     </div>

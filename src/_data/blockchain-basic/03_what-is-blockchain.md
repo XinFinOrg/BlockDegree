@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: What is blockchain?
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 Blockchain is a decentralized distributed database of immutable records, where transactions are protected by strong cryptographic algorithms and the network status is maintained by the Consensus algorithm.
 

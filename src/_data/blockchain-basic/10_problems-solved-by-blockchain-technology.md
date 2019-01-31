@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: Problems solved by blockchain technology
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 We are now living in a truly revolutionary time of decentralization, cryptocurrencies, and tokenized economies. However, none of this would be possible if it were not for the development of the Blockchain.
 

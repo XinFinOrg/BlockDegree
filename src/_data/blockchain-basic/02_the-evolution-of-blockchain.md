@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: The Evolution of the Blockchain- Generation 1 to 4
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 ### 1st Generation Blockchains focus on moving value, maintaining a ledger, ideal payment systems
 

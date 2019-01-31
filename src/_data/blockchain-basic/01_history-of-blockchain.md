@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: History of the Blockchain
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 In 1991, Dr W. Scott Stornetta published a whitepaper with his co-author Dr Stuart Haber to introduce ‘blockchain’. The term blockchain can be defined as a decentralised, cryptic database on which digital transactions take place.
 

@@ -1,7 +1,8 @@
 ---
 parent: Blockchain basic course for engineer
 title: What is the difference between blockchain and database?
-template: documentation.hbs
+template: courseContent.hbs
+courseIdx: 0
 ---
 __The distinctions between a traditional (Relational or document-oriented) database and a blockchain__
 

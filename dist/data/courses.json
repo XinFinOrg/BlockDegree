@@ -87,14 +87,14 @@
       "title": "103 - Blockchain professional course for engineer",
       "video": "https://www.youtube.com/embed/jLaqms1IHWE",
       "duration": "3 days",
-      "slug": "blockchain-Professional",
+      "slug": "blockchain-professional",
       "sypnosis": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. ",
       "overview": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. Students will participate in approximately 50% programming lab time providing practical experience, enhancing their knowledge and existing skill set. Due to the technical programming lab content covered in this course, it is not recommended for those without programming knowledge and experience.",
       "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device.",
       "prerequisites": ["Necessary: Basic knowledge Networking", "Basic knowledge in Server"],
       "curriculum": [
         {
-          "topic": "The Evolution of the Blockchain: Generation 1 to 3",
+          "topic": "What is Ethereum blockchain?",
           "sub-topic": ["First Generation Blockchain Technology", "Second Generation Blockchain", "Third Generation Blockchain Technology"]
         },
         {
@@ -106,7 +106,7 @@
         },
         {
           "topic": "Features Of Blockchain",
-          "sub-topic": ["Minting", "Decentraliszed", "Safe and secure system", "Increased capacity"]
+          "sub-topic": ["Minting", "Decentralised", "Safe and secure system", "Increased capacity"]
         },
         {
           "topic": "What are the benefits of blockchain",
