@@ -35,9 +35,9 @@
 
                   <p>{{duration}}</p>
                 </div>
-                <button type="button" class="btn btn-gradient enroll-btn" data-title="{{slug}}/{{url curriculum.[0].topic}}">
+                <a href="/courses/{{slug}}"><button type="button" class="btn btn-gradient enroll-btn">
                   Enroll today
-                </button>
+                </button></a>
               </div>
 
           </div>
@@ -103,9 +103,9 @@
 
       <div class="row mx-0 align-items-center text-center bg-secondary cta">
         <div class="col py-5">
-          <button type="button" class="btn btn-warning btn-cstm-rounded px-5 enroll-btn" data-title="{{slug}}/{{url curriculum.[0].topic}}">
+          <a href="/courses/{{slug}}"><button type="button" class="btn btn-warning btn-cstm-rounded px-5 enroll-btn">
             Start learning
-          </button>
+          </button></a>
         </div>
       </div>
     </section>
@@ -113,16 +113,6 @@
     <footer>
       {{> includes/footer }}
     </footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="/js/vendor/bootstrap.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-    <script src="/js/vendor/jquery.magnific-popup.min.js"></script>
-    <script src="/js/vendor/superfish.min.js"></script>
-    <script src="/js/vendor/jquery.ajaxchimp.min.js"></script>
-    <script src="/js/vendor/slick.min.js"></script>
-    <script src="/js/pageHandlebars.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/courseAccess.js"></script>
+    {{> includes/footerScripts }}
    </body>
 </html>

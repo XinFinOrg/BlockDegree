@@ -12,7 +12,8 @@ Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.htm
 - [ ] Content for become partner popup
 - [ ] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
 - [X] Code to read the images in folder for gallery and automatically generate it
-- [ ] 404 page
+- [X] 404 page
+- [ ] For the course content pages, it is preferable if the side bar could automatically be populated with the heading and sub-heading generated in the markdown files or generate a json file of that
 
 ## Running the website
 The src file runs on Gulp, handlebars, livereload and other relevant packages. Using handlebars, the templates could be reused easily and the code is more maintainable. Otherwise, the dist folder is good to go as well. Have to run on server environment.
@@ -35,7 +36,7 @@ Some of the benefits of this template:
 
 5. The same header, navigation and footer can be generated for every single as each referred to the same __/partials/includes/header__ etc.
 
-6. Create courses in markdown under __/src/_data__. The file structure that you created for data will be generated under __dist/courses/__. This is generated using metalsmith, hence you need to run metalsmith command separately to reload the page if you are running gulp watch.
+6. Create courses in markdown under __/content__. The file structure that you created for data will be generated under __/server/protected/courses/__. This is generated using metalsmith, hence you need to run metalsmith command separately.
 ```
 gulp metalsmith
 ```
@@ -52,12 +53,12 @@ gulp watch
 
 Sometimes, the browser does not reload, or if you change the data structure for courses, it might not immediately make changes (gulp only watches the courses.hbs to regenerate the page), when that happens, you can manually rebuild the website or compile the courses page (2 separate commands).
 
-This will rebuild the html pages.
+Rebuild the html pages.
 ```
 gulp html
 ```
 
-This will rebuild the course pages.
+Rebuild the course overview pages.
 ```
 gulp compileCourseOverview
 ```

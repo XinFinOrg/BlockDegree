@@ -48,4 +48,4 @@ We work with various industry and educational institutions to uphold the academi
 # What's next?
 Upon successful completion of the courses, you can choose to take our blockchain examination. This exam comprises of 100 questions, 50 theory and 50 practical, to be completed within 45 minutes. The minimum passing score of the exam is above 60%. Upon passing of the exam, you will be entitled to receive a certification of competence, which will be added to the Xinfin blockchain. With the certificate on the blockchain, you will be able to check your immutable certificate using the transaction hash provided to you.
 
-You are ready to take on roles in the blockchain industry. Also, as blockchain is an ever evolving industry, you could also choose to contribute to our courseware upon gaining industry insights.
+You are ready to take on roles in the blockchain industry. Also, as blockchain is an ever evolving industry, you could also choose to contribute to our content upon gaining industry insights.

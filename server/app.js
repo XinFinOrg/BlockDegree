@@ -17,21 +17,21 @@ mongoose.connect(configDB.url);
 require('./config/passport')(passport);
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'ejs');
-app.engine('handlebars', hbs({
+app.engine('hbs', hbs({
   extname: 'hbs',
-  layoutsDir: '../src/partials/layouts',
-  partialsDir: '../src/partials/'
+  defaultLayout: 'base',
+  layoutsDir:  path.join(process.cwd() + '/src/partials/layouts'),
+  partialsDir:  path.join(process.cwd() + '/src/partials/')
 }));
-app.set('view engine', 'handlebars');
+app.set('views', path.join(process.cwd() + '/src/partials/layouts'))
+app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static('dist'));
+app.use(express.static('dist', { extensions: ['html', 'htm'] }));
+app.use(express.static('public', { extensions: ['html', 'htm'] }));
 
 // required for passport
 app.use(session({ secret: 'itsmeakshayhere' })); // session secret
@@ -41,11 +41,9 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 require('./routes/routes.js')(app, passport);
 
-// app.get('/login-this', (req,res) => res.sendFile('login.html', {root: './dist'}));
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+// catch 404 and render 404 page
+app.use('*', function(req, res) {
+  res.render('error')
 });
 
 // error handler
@@ -58,5 +56,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;

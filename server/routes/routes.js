@@ -1,10 +1,19 @@
+var path = require('path');
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    if(req.params.courseName) {
+      res.redirect('/login?from=' + req.params.courseName)
+    } else {
+      res.redirect('/login');
+    }
+  }
+}
+
+
 module.exports = function (app, passport) {
-    // app.get('/', function (req, res) {
-    //     res.render('index.ejs');
-    // });
-    // app.get('/login', function (req, res) {
-    //     res.render('login.ejs', { message: req.flash('loginMessage') });
-    // });
     app.post('/login', (req, res, next) => {
         passport.authenticate('local-login', {
             session: true,
@@ -13,9 +22,7 @@ module.exports = function (app, passport) {
             console.log(user)
         })(req, res, next);
     });
-    // app.get('/signup', function (req, res) {
-    //     res.render('signup.ejs', { message: req.flash('signupMessage') });
-    // });
+
     app.post('/signup',(req, res, next) => {
         passport.authenticate('local-signup', {
             session: true,
@@ -23,19 +30,30 @@ module.exports = function (app, passport) {
             res.send({ status: user, message: info })
         })(req, res, next);
     });
-    // app.get('/sig
-    // app.get('/profile', isLoggedIn, function (req, res) {
-    //     res.render('profile.ejs', {
-    //         user: req.user
-    //     });
-    // });
+
     app.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/');
     });
+
+    app.get('/courses/:courseName', isLoggedIn, function (req, res){
+      switch(req.params.courseName) {
+        case 'blockchain-basic':
+          res.redirect('/courses/blockchain-basic/history-of-blockchain');
+          break;
+        case 'blockchain-advanced':
+          res.redirect('/courses/blockchain-advanced/what-is-blockchain-and-bitcoin');
+          break;
+        case 'blockchain-professional':
+          res.redirect('/courses/blockchain-professional/what-is-ethereum-blockchain');
+      }
+    });
+
+    app.get('/courses/:courseName/:content', isLoggedIn, function(req, res){
+      res.sendFile(path.join( process.cwd(), '/server/protected/courses/' + req.params.courseName + '/' + req.params.content + '.html'));
+    });
+
+    app.get('/tt', isLoggedIn, (req, res) => {
+      console.log('auth: ' + req.isAuthenticated())
+    });
 };
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated())
-        return next();
-    res.redirect('/');
-}

@@ -34,7 +34,7 @@ gulp.task('compileCourseOverview', (done) => {
         }
       }))
       .pipe(rename(fileName + '.html'))
-      .pipe(gulp.dest('dist/courses'));
+      .pipe(gulp.dest('dist'));
   }
   done();
 });
@@ -45,7 +45,7 @@ gulp.task('clean-courses', () => {
 });
 
 gulp.task('metalsmith', () => {
-  return gulp.src('./src/_data/**/*.md')
+  return gulp.src('./content/**/*.md')
     .pipe(metalsmith({
       use: [
         markdown(),
@@ -60,7 +60,7 @@ gulp.task('metalsmith', () => {
     .pipe(rename(function(path){
       path.basename = path.basename.replace(/^[0-9]+_/g, '')
     }))
-    .pipe(gulp.dest('./dist/courses'))
+    .pipe(gulp.dest('./server/protected/courses'))
 });
 
 gulp.task('html', () => {
@@ -82,7 +82,10 @@ gulp.task('sass', () => {
 gulp.task('watch', () => {
   bs.init({
     server: {
-      baseDir: './dist'
+      baseDir: './dist',
+      serveStaticOptions: {
+            extensions: ['html']
+        }
     }
   });
 
