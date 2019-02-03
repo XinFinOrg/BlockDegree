@@ -33,7 +33,7 @@
         <div class="container main-menu">
           <div class="row align-items-center justify-content-between d-flex">
             <div id="logo">
-              <a href="/index.html"><img src="/img/brand/XinFin_transparent.png" alt="xinfin blockchain education training" /></a>
+              <a href="/"><img src="/img/brand/XinFin_transparent.png" alt="xinfin blockchain education training" /></a>
             </div>
         
             <nav id="nav-menu-container">
@@ -42,19 +42,24 @@
                   <ul id="nav-sub-1">
                     <script id="nav-submenu-template" type="text/template">
                       {{#each courses}}
-                        <li><a href="/courses/{{slug}}.html" data-toggle="moda" data-target="#exampleModal" data-whatever="@getbootstra">
+                        <li><a href="/{{slug}}" data-toggle="moda" data-target="#exampleModal" data-whatever="@getbootstra">
                           {{title}}
                         </a></li>
                       {{/each}}
                     </script>
                   </ul>
                 </li>
-                <li><a href="/university-courses.html" class="py-1">University Course Offline</a></li>
-                <li><a href="/events.html" class="py-1">Event</a></li>
-                <li><a href="/verify-certification.html" class="py-1">Verify Certification</a></li>
-                <li><a href="/contact.html" class="py-1">Contact Us</a></li>
-                <li>
-                  <a href="/login.html" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Login</a>
+                <li><a href="/university-courses" class="py-1">University Course Offline</a></li>
+                <li><a href="/events" class="py-1">Event</a></li>
+                <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
+                <li><a href="/contact" class="py-1">Contact Us</a></li>
+                <li id="login-btn">
+                  <script id="nav-login" type="text/template">
+                    <a id="userAuth-btn" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"
+                       href="{{#if this}}/logout{{else}}/login{{/if}}">
+                      {{#if this}}Logout{{else}}Login{{/if}}
+                    </a>
+                  </script>
                 </li>
               </ul>
             </nav>
@@ -63,32 +68,32 @@
       </header>
   
       <section>
+    <div class="form-messages alert alert-danger d-none" role="alert"></div>
     <div class="container__cstm">
       <div class="row justify-content-center">
   
-        <div class="form-messages"></div>
-        <div class="form-content" id="form-register" method="post" action="">
+        <div class="form-content" id="form-register" method="post" action="/signup">
           <!-- Login Form -->
           <form class="p-4">
             <h2 class="mb-3">Register</h2>
             <div class="text-left pl-4">
               <label for="email" class="mb-0 pt-2">Email</label>
             </div>
-            <input type="text" id="email" class="p-2" name="login">
+            <input type="email" id="email" class="p-2" name="email" value="e@w" required>
             <div class="text-left pl-4">
               <label for="password" class="mb-0 pt-2">Password</label>
             </div>
-            <input type="password" id="password" class="p-2" name="login">
+            <input type="password" id="password" class="p-2" name="password" value="!" required>
             <div class="text-left pl-4">
               <label for="cfm-password" class="mb-0">Confirm your password</label>
             </div>
-            <input type="password" id="cfm-password" class="p-2" name="cfm-password">
+            <input type="password" id="cfm-password" class="p-2" name="cfm-password" required>
             <input type="submit" class="btn btn-primary py-2 mt-4 text-white" value="Register">
           </form>
   
           <!-- Remind Passowrd -->
           <div id="formFooter">
-            <a class="underlineHover" href="/login.html">Already a user? Login here</a>
+            <a class="underlineHover" href="/login">Already a user? Login here</a>
           </div>
   
         </div>
@@ -105,8 +110,7 @@
                             <h4>Useful</h4>
                             <ul>
                                 <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-          
+                                <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
                     </div>
@@ -168,15 +172,16 @@
       </footer>
   
   
-      <script src="/js/vendor/bootstrap.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
       <script src="/js/vendor/jquery.magnific-popup.min.js"></script>
+      <script src="/js/vendor/jquery-ui.js"></script>
       <script src="/js/vendor/superfish.min.js"></script>
       <script src="/js/vendor/jquery.ajaxchimp.min.js"></script>
-      <script src="/js/vendor/jquery-ui.js"></script>
       <script src="/js/vendor/slick.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-      <script src="/js/main.js"></script>
       <script src="/js/pageHandlebars.js"></script>
+      <script src="/js/main.js"></script>
      </body>
   </html>
-
+    <<script src="/js/userAuth.js"></script>

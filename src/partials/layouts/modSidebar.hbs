@@ -3,8 +3,8 @@
   <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
   <div id="mod__details">
     <script id="module-template" type="text/x-handlebars-template">
-      <!-- Hard-coded for now, to look into ways to run the index automatically -->
-      \{{#with courses.[0]}}
+
+      \{{#with courses.[{{{sidebarId}}}] }}
 
         \{{#each curriculum as |ccm|}}
 
@@ -21,7 +21,7 @@
                   data-target="#sub-\{{@index}}"
                   aria-expandeded="false"
                 \{{/if}}>
-              <a href="\{{url ccm.topic}}.html">
+              <a href="\{{url ccm.topic}}">
                 <div class="row px-2 py-3">
                   <h4 style="font-weight:600" class="col-10 mod__heading"> \{{ccm.topic}}</h4>
 
@@ -40,7 +40,7 @@
 
                   \{{#each ccm.sub-topic as |sub|}}
                     <li class="pl-4 py-3">
-                      <a id="\{{url sub}}" href="\{{url ccm.topic}}.html#\{{url sub}}">
+                      <a id="\{{url sub}}" href="\{{url ccm.topic}}#\{{url sub}}">
                         <h5 class="mod__sub-heading">\{{sub}}</h5>
                       </a>
                     </li> \{{/each}}

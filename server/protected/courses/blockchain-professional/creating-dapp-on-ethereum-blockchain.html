@@ -1,0 +1,836 @@
+
+  <!DOCTYPE html>
+  <html lang="zxx" class="no-js">
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="author" content="Xinfin">
+      <meta name="description" content= Professional blockchain training course by Xinfin >
+      <meta charset="UTF-8">
+      <link rel="icon" href="/img/brand/favicon.ico">
+      <title>
+         Xinfin Blockchain Training 
+      </title>
+      <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+        <link rel="stylesheet" href="/css/linearicons.css">
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/bootstrap.css">
+        <link rel="stylesheet" href="/css/magnific-popup.css">
+        <link rel="stylesheet" href="/css/nice-select.css">
+        <link rel="stylesheet" href="/css/animate.min.css">
+        <link rel="stylesheet" href="/css/jquery-ui.css">
+        <link rel="stylesheet" href="/css/slick.css">
+        <link rel="stylesheet" href="/css/slick-theme.css">
+        <link rel="stylesheet" href="/css/login-form.css">
+        <link rel="stylesheet" href="/css/main.css">
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+        <script src="/js/vendor/handlebars-v4.0.12.js"></script>
+        <script src="/js/utils.js"></script>
+    </head>
+  
+    <body class=course-module>
+      <header id="header">
+        <div class="container main-menu">
+          <div class="row align-items-center justify-content-between d-flex">
+            <div id="logo">
+              <a href="/"><img src="/img/brand/XinFin_transparent.png" alt="xinfin blockchain education training" /></a>
+            </div>
+        
+            <nav id="nav-menu-container">
+              <ul class="nav-menu">
+                <li class="menu-has-children"><a href="" class="py-1">Online Blockchain Training</a>
+                  <ul id="nav-sub-1">
+                    <script id="nav-submenu-template" type="text/template">
+                      {{#each courses}}
+                        <li><a href="/{{slug}}" data-toggle="moda" data-target="#exampleModal" data-whatever="@getbootstra">
+                          {{title}}
+                        </a></li>
+                      {{/each}}
+                    </script>
+                  </ul>
+                </li>
+                <li><a href="/university-courses" class="py-1">University Course Offline</a></li>
+                <li><a href="/events" class="py-1">Event</a></li>
+                <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
+                <li><a href="/contact" class="py-1">Contact Us</a></li>
+                <li>
+                  <a id="userAuth-btn" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Login</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+  
+      <section>
+        <div class="hero-banner hero-overlay"
+             style="background: url('/img/top-banner.jpg') center/cover;">
+          <div class="container">
+            <div class="row align-items-center justify-content-center">
+              <div class="hero-banner__content text-center">
+                <h1 class="text-white">Blockchain professional course for engineer</h1>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+          <div class="row mx-0">
+            <div class="col-12 col-sm-4 px-0">
+              <!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
+              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=2 style="background: #fafbfc;">
+                <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
+                <div id="mod__details">
+                  <script id="module-template" type="text/x-handlebars-template">
+              
+                    {{#with courses.[2] }}
+              
+                      {{#each curriculum as |ccm|}}
+              
+                        {{#if ccm.sub-topic}}
+                        <ul id="acc__mod-{{@index}}"> {{else}}
+                        <ul> {{/if}}
+              
+                            <!-- Heading -->
+                            <li
+                              {{#if ccm.sub-topic}}
+                                id="{{url ccm.topic}}"
+                                class="with-child"
+                                data-toggle="collapse"
+                                data-target="#sub-{{@index}}"
+                                aria-expandeded="false"
+                              {{/if}}>
+                            <a href="{{url ccm.topic}}">
+                              <div class="row px-2 py-3">
+                                <h4 style="font-weight:600" class="col-10 mod__heading"> {{ccm.topic}}</h4>
+              
+                                {{#if ccm.sub-topic}}
+                                  <div class="col-1 arrow">
+                                    &#x25BC;
+                                  </div>
+                                {{/if}}
+                              </div>
+                            </a></li>
+                            <!-- End heading -->
+              
+                            <!-- Start sub-heading if there is -->
+                            {{#if ccm.sub-topic}}
+                              <ul id="sub-{{@index}}" class="collapse side-nav__child">
+              
+                                {{#each ccm.sub-topic as |sub|}}
+                                  <li class="pl-4 py-3">
+                                    <a id="{{url sub}}" href="{{url ccm.topic}}#{{url sub}}">
+                                      <h5 class="mod__sub-heading">{{sub}}</h5>
+                                    </a>
+                                  </li> {{/each}}
+              
+                              </ul>
+                            {{/if}}
+                            <!-- End sub-heading if there is -->
+              
+                          </ul>
+                        {{/each}}
+                      {{/with}}
+              
+              
+                  </script>
+                </div>
+              </nav>
+            </div>
+  
+            <div class="col-12 col-sm-8 p-4 module-content">
+              <div class="container py-2 py-sm-5">
+                <h2 id="Creating Dapp on Ethereum blockchain">Creating Dapp on Ethereum blockchain</h2>
+                <div><p>Today I&#39;m going to show you how to build your first decentralized application, or dApp, on the Ethereum blockchain. I&#39;ll show you how to write your first Ethereum smart contract, where we&#39;ll hold an election between two candidates. We&#39;ll write tests against the smart contract, deploy it to the Ethereum blockchain, and develop a client-side application that allows accounts to cast votes</p>
+  <p>In order to build our dApp, we need a few dependencies first.
+  Node Package Manager (NPM)
+  The first dependency we need is Node Package Manager, or NPM, which comes with Node.js. You can see if you have node already installed by going to your terminal and
+  typing: node -v</p>
+  <p>Truffle Framework
+  The next dependency is the Truffle Framework, which allows us to build decentralized applications on the Ethereum blockchain. It provides a suite of tools that allow us to write smart contacts with the Solidity programming language. It also enables us to test our smart contracts and deploy them to the blockchain. It also gives us a place to develop our client-side application.</p>
+  <p>You can install Truffle with NPM by in your command line like this:
+  npm install -g truffle</p>
+  <h3 id="ganache">Ganache</h3>
+  <p>The next dependency is Ganache, a local in-memory blockchain. You can install Ganache by downloading it from the Truffle Framework website. It will give us 10 external accounts with addresses on our local Ethereum blockchain. Each account is preloaded with 100 fake ether.</p>
+  <h3 id="metamask">Metamask</h3>
+  <p>The next dependency is the Metamask extension for Google Chrome. In order to use the blockchain, we must connect to it (remember, I said the block chain is a network). We’ll have to install a special browser extension in order to use the Ethereum block chain. That’s where metamask comes in. We’ll be able to connect to our local Ethereum blockchain with our personal account, and interact with our smart contract.</p>
+  <p>We’re going to be using the Metamask chrome extension for this tutorial, so you’ll also need to install the google chrome browser if you don’t have it already. To install Metamask, search for the Metamask Chrome plugin in the Google Chrome web store. Once you’ve installed it, be sure that it is checked in your list of extensions. You’ll see the fox icon in the top right hand side of your Chrome browser when it’s installed. Reference the video walk through if you get stuck!</p>
+  <p>Now let&#39;s create a project directory for our dApp</p>
+  <p>Create a folder in the desktop and name the folder election</p>
+  <pre><code class="language-console">shell
+  user:~$ mkdir election
+  user:~$ cd election</code></pre>
+  <p>Now that we&#39;re inside our project, we can get up and running fast with a Truffle box. We&#39;ll be using the Pet Shop box for this tutorial. From within your project directory, install the pet shop box from the command line like this</p>
+  <pre><code class="language-console">shell
+  user:~/election$: truffle unbox pet-shop</code></pre>
+  <p>Let&#39;s see what the pet shop box gave us:</p>
+  <p>contracts directory: This is where all smart contacts live. We already have a Migration contract that handles our migrations to the blockchain.
+  migrations directory: This is where all of the migration files live. These migrations are similar to other web development frameworks that require migrations to change the state of a database. Whenever we deploy smart contracts to the blockchain, we are updating the blockchain&#39;s state, and therefore need a migration.
+  node_modules directory: This is the home of all of our Node dependencies.
+  src directory: This is where we&#39;ll develop our client-side application.
+  test directory: This is where we&#39;ll write our tests for our smart contracts.
+  truffle.js file: This is the main configuration file for our Truffle project.
+  Then you need to open election folder and and open contracts and save it as Election.sol</p>
+  <pre><code class="language-javscript">election.sol
+  pragma solidity 0.4.24;
+  
+  contract Election {
+      // Read/write candidate
+      string public candidate;
+  
+      // Constructor
+      function Election () public {
+          candidate = &quot;Candidate 1&quot;;
+      }
+  }</code></pre>
+  <p>And paste the following code in the election.sol Let me explain this code. We start by declaring the solidity version with the pragma solidity statement. Next, we declare the smart contract with the &quot;contract&quot; keyword, followed by the contract name. Next, we declare a state variable that will store the value of the candidate name. State variables allow us to write data to the blockchain. We have declared that this variable will be a string, and we have set its visibility to public. Because it is public, solidity will give us a getter function for free that will allow us to access this value outside of our contract. We&#39;ll see that in action later in the console!
+  Then, we create a constructor function that will get called whenever we deploy the smart contract to the blockchain. This is where we&#39;ll set the value of the candidate state variable that will get stored to the blockchain upon migration. Notice that the constructor function has the same name as the smart contract. This is how Solidity knows that the function is a constructor.
+  Now that we&#39;ve created the foundation for the smart contract, let&#39;s see if we can deploy it to the blockchain. In order to do this, we&#39;ll need to create a new file in the migrations directory. From your project root, create a new file in migration folder and name the file 2_deploy_contracts.js and paste the code in the following file.</p>
+  <pre><code class="language-javascript">2_deploy_contracts.js
+  var Election = artifacts.require(&quot;./Election.sol&quot;);
+  
+  module.exports = function(deployer) {
+    deployer.deploy(Election);
+  };</code></pre>
+  <p>First, we require the contract we&#39;ve created, and assign it to a variable called &quot;Election&quot;. Next, we add it to the manifest of deployed contracts to ensure that it gets deployed when we run the migrations. Now let&#39;s run our migrations from the command line like this:</p>
+  <pre><code class="language-console">shell
+  user:~/election$: truffle migrate</code></pre>
+  <p>Now that we have successfully migrated our smart contract to the local Ethereum blockchain, let&#39;s open the console to interact with the smart contract. You can open the truffle console from the command line
+  Now that we&#39;re inside the console, let&#39;s get an instance of our deployed smart contract and see if we can read the candidate&#39;s name from the contract. From the console, run this code:</p>
+  <pre><code class="language-console">shell
+  user:~/election$: election.deployed().then(function(instance) { app = instance })</code></pre>
+  <p>Here Election is the name of the variable that we created in the migration file. We retrieved a deployed instance of the contract with the deployed() function, and assigned it to an app variable inside the promise&#39;s callback function.
+  Now we can read the value of the candidate</p>
+  <pre><code class="language-console">shell
+  user:~/election$: app.candidate()</code></pre>
+  <p>Congratulations! You&#39;ve just written your first smart contract, deployed to the blockchain, and retrieved some of its data.</p>
+  <p>Now that everything is set up properly, let&#39;s continue building out the smart contact by listing out the candidates that will run in the election. We need a way to store multiple candidates, and store multiple attributes about each candidate. We want to keep track of a candidate&#39;s id, name, and vote count. Here is how we will model the candidate:</p>
+  <pre><code class="language-javascript">.sol
+  contract Election {
+      // Model a Candidate
+      struct Candidate {
+          uint id;
+          string name;
+          uint voteCount;
+      }
+  }</code></pre>
+  <p>We have modeled the candidate with a Solidity Struct. Solidity allows us to create our own structure types as we&#39;ve done for our candidate here. We specified that this struct has an id of unsigned integer type, name of string type, and voteCount of unsigned integer type. Simply declaring this struct won&#39;t actually give us a candidate. We need to instantiate it and assign it to a variable before we can write it to storage.
+  The next thing we need is a place to store the candidates. We need a place to store one of the structure types that we&#39;ve just created. We can do this with a Solidity mapping. A mapping in Solidity is like an associative array or a hash, that associates key-value pairs. We can create this mapping like this:</p>
+  <pre><code class="language-JavaScript">.sol
+  contract Election {
+      // Model a Candidate
+      struct Candidate {
+          uint id;
+          string name;
+          uint voteCount;
+      }
+      // Read/write Candidates
+      mapping(uint =&gt; Candidate) public candidates;  
+  }</code></pre>
+  <p>In this case, the key to the mapping is an unsigned integer, and the value is a Candidate structure type that we just defined. This essentially gives us an id-based lookup for each candidate. Since this mapping is assigned to a state variable, we will write data to the blockchain anytime we assign new key-value pairs to it. Next, we set this mapping&#39;s visibility to public in order to get a getter function, just like we did with the candidate name in the smoke test.</p>
+  <p>Next, we keep track of how many candidates exist in the election with a counter cache state variable like this:</p>
+  <pre><code class="language-javascript">.sol
+  contract Election {
+      // Model a Candidate
+      struct Candidate {
+          uint id;
+          string name;
+          uint voteCount;
+      }
+  
+      // Read/write Candidates
+      mapping(uint =&gt; Candidate) public candidates;
+  
+      // Store Candidates Count
+      uint public candidatesCount;
+  }</code></pre>
+  <p>In Solidity, there is no way to determine the size of a mapping, and no way to iterate over it, either. That&#39;s because any key in a mapping that hasn&#39;t been assigned a value yet will return a default value (an empty candidate in this case). For example, if we only had 2 candidates in this election, and we try to look up candidate #99, then the mapping will return an empty Candidate structure. This behavior makes it impossible to know how many candidates exist, and therefore we must use a counter cache.
+  Next, let&#39;s create a function to add candidates to the mapping we&#39;ve created like this:</p>
+  <pre><code class="language-javscript">.sol
+  contract Election {
+      function addCandidate (string _name) private {
+          candidatesCount ++;
+          candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+      }
+  }</code></pre>
+  <p>We&#39;ve declared the function addCandidate that takes one argument of string type that represents the candidate&#39;s name. Inside the function, we increment the candidate counter cache to denote that a new candidate has been added. Then we update the mapping with a new Candidate struct, using the current candidate count as the key. This Candidate struct is initialized with the candidate id from the current candidate count, the name from the function argument, and the initial vote count to 0. Note that this function&#39;s visibility is private because we only want to call it inside the contract.
+  Now we can add two candidates to our election by calling the &quot;addCandidate&quot; function twice inside the constructor function like this:</p>
+  <pre><code class="language-javascript">.sol
+  contract Election {
+      function Election () public {
+          addCandidate(&quot;Candidate 1&quot;);
+          addCandidate(&quot;Candidate 2&quot;);
+      }
+  }</code></pre>
+  <p>This migration will execute when we deploy the contract to the blockchain, and populate our election with two candidates. At this point, your complete contract code should look like this:</p>
+  <pre><code class="language-javaScript">.sol
+  pragma solidity ^0.4.2;
+  
+  contract Election {
+      // Model a Candidate
+      struct Candidate {
+          uint id;
+          string name;
+          uint voteCount;
+      }
+  
+      // Read/write candidates
+      mapping(uint =&gt; Candidate) public candidates;
+  
+      // Store Candidates Count
+      uint public candidatesCount;
+  
+      function Election () public {
+          addCandidate(&quot;Candidate 1&quot;);
+          addCandidate(&quot;Candidate 2&quot;);
+      }
+  
+      function addCandidate (string _name) private {
+          candidatesCount ++;
+          candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+      }
+  }</code></pre>
+  <p>Now let&#39;s migrate our contract like this:</p>
+  <pre><code class="language-console">shell
+  user:~/election$: truffle migrate --reset</code></pre>
+  <p>Now let&#39;s write some tests to ensure that our smart contract is initialized correctly. First, let me explain why testing is so important when you&#39;re developing smart contracts. We want to ensure that the contracts are bug free for a few reasons:</p>
+  <ol>
+  <li>All of the code on the Ethereum blockchain is immutable; it cannot change. If the contract contains any bugs, we must disable it and deploy a new copy. This new copy will not have the same state as the old contract, and it will have a different address.</li>
+  <li>Deploying contracts costs gas because it creates a transaction and writes data to the blockchain. This costs Ethere, and we want to minimize the amount of Ether we ever have to pay.</li>
+  <li>If any of our contract functions that write to the blockchain contain bugs, the account who is calling this function could potentially waste Ether, and it might not behave the way they expect.</li>
+  </ol>
+  <p>Testing
+  Now let&#39;s write some tests. Make sure you have Ganache running first. Then, create a new file in the test folder and name the file election.js and paste the following code</p>
+  <p>var Election = artifacts.require(&quot;./Election.sol&quot;);</p>
+  <p>contract(&quot;Election&quot;, function(accounts) {
+    var electionInstance;</p>
+  <p>  it(&quot;initializes with two candidates&quot;, function() {
+      return Election.deployed().then(function(instance) {
+        return instance.candidatesCount();
+      }).then(function(count) {
+        assert.equal(count, 2);
+      });
+    });</p>
+  <p>  it(&quot;it initializes the candidates with the correct values&quot;, function() {
+      return Election.deployed().then(function(instance) {
+        electionInstance = instance;
+        return electionInstance.candidates(1);
+      }).then(function(candidate) {
+        assert.equal(candidate[0], 1, &quot;contains the correct id&quot;);
+        assert.equal(candidate[1], &quot;Candidate 1&quot;, &quot;contains the correct name&quot;);
+        assert.equal(candidate[2], 0, &quot;contains the correct votes count&quot;);
+        return electionInstance.candidates(2);
+      }).then(function(candidate) {
+        assert.equal(candidate[0], 2, &quot;contains the correct id&quot;);
+        assert.equal(candidate[1], &quot;Candidate 2&quot;, &quot;contains the correct name&quot;);
+        assert.equal(candidate[2], 0, &quot;contains the correct votes count&quot;);
+      });
+    });
+  });</p>
+  <p>Let me explain this code. First, we require the require the contract and assign it to a variable, like we did in the migration file. Next, we call the &quot;contract&quot; function, and write all our tests within the callback function. This callback function provides an &quot;accounts&quot; variable that represents all the accounts on our blockchain, provided by Ganache.</p>
+  <p>The first test checks that the contract was initialized with the correct number of candidates by checking the candidates count is equal to 2.
+  The next test inspects the values of each candidate in the election, ensuring that each candidate has the correct id, name, and vote count.
+  Now let&#39;s run the tests from the command line like this:</p>
+  <p>Truffle test</p>
+  <p>Client-Side Application</p>
+  <p>Now let&#39;s start building out the client-side application that will talk to our smart contract. We&#39;ll do this by modifying the HTML and Javascript files that came with the Truffle Pet Shop box that we installed in the previous section. We&#39;ll use this existing code to get started. Let&#39;s also take note of a few other things that came with the Truffle Pet Shop box like the Bootstrap framework that will keep us from having to write any CSS in this tutorial. We also got lite-server, which will serve our assets for development purposes.</p>
+  <p>You do not have to be a front-end expert to follow along with this part of the tutorial. I have intentionally kept the HTML and Javascript code very simple, and we will not spend much time focusing on it. I want to stay focused on developing the smart contract portion of our dApp!
+  Go ahead and replace all of the content of your &quot;index.html&quot; file with this code:</p>
+  <pre><code class="language-HTML">&lt;!DOCTYPE html&gt;
+  &lt;html lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+      &lt;meta charset=&quot;utf-8&quot;&gt;
+      &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+      &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+      &lt;title&gt;Election Results&lt;/title&gt;
+  
+      &lt;!-- Bootstrap --&gt;
+      &lt;link href=&quot;css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;div class=&quot;container&quot; style=&quot;width: 650px;&quot;&gt;
+        &lt;div class=&quot;row&quot;&gt;
+          &lt;div class=&quot;col-lg-12&quot;&gt;
+            &lt;h1 class=&quot;text-center&quot;&gt;Election Results&lt;/h1&gt;
+            &lt;hr/&gt;
+            &lt;br/&gt;
+            &lt;div id=&quot;loader&quot;&gt;
+              &lt;p class=&quot;text-center&quot;&gt;Loading...&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div id=&quot;content&quot; style=&quot;display: none;&quot;&gt;
+              &lt;table class=&quot;table&quot;&gt;
+                &lt;thead&gt;
+                  &lt;tr&gt;
+                    &lt;th scope=&quot;col&quot;&gt;#&lt;/th&gt;
+                    &lt;th scope=&quot;col&quot;&gt;Name&lt;/th&gt;
+                    &lt;th scope=&quot;col&quot;&gt;Votes&lt;/th&gt;
+                  &lt;/tr&gt;
+                &lt;/thead&gt;
+                &lt;tbody id=&quot;candidatesResults&quot;&gt;
+                &lt;/tbody&gt;
+              &lt;/table&gt;
+              &lt;hr/&gt;
+              &lt;p id=&quot;accountAddress&quot; class=&quot;text-center&quot;&gt;&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+  
+      &lt;!-- jQuery (necessary for Bootstrap&#39;s JavaScript plugins) --&gt;
+      &lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js&quot;&gt;&lt;/script&gt;
+      &lt;!-- Include all compiled plugins (below), or include individual files as needed --&gt;
+      &lt;script src=&quot;js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;js/web3.min.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;js/truffle-contract.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;js/app.js&quot;&gt;&lt;/script&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;
+  `</code></pre>
+  <p>Next, replace all of the content of your &quot;app.js&quot; file with this code:
+  App = {
+    web3Provider: null,
+    contracts: {},
+    account: &#39;0x0&#39;,</p>
+  <p>  init: function() {
+      return App.initWeb3();
+    },</p>
+  <p>  initWeb3: function() {
+      if (typeof web3 !== &#39;undefined&#39;) {
+        // If a web3 instance is already provided by Meta Mask.
+        App.web3Provider = web3.currentProvider;
+        web3 = new Web3(web3.currentProvider);
+      } else {
+        // Specify default instance if no web3 instance provided
+        App.web3Provider = new Web3.providers.HttpProvider(&#39;<a href="http://localhost:7545&#39;">http://localhost:7545&#39;</a>);
+        web3 = new Web3(App.web3Provider);
+      }
+      return App.initContract();
+    },</p>
+  <p>  initContract: function() {
+      $.getJSON(&quot;Election.json&quot;, function(election) {
+        // Instantiate a new truffle contract from the artifact
+        App.contracts.Election = TruffleContract(election);
+        // Connect provider to interact with contract
+        App.contracts.Election.setProvider(App.web3Provider);</p>
+  <pre><code>  return App.render();
+  });</code></pre><p>  },</p>
+  <p>  render: function() {
+      var electionInstance;
+      var loader = $(&quot;#loader&quot;);
+      var content = $(&quot;#content&quot;);</p>
+  <pre><code>loader.show();
+  content.hide();
+  
+  // Load account data
+  web3.eth.getCoinbase(function(err, account) {
+    if (err === null) {
+      App.account = account;
+      $(&quot;#accountAddress&quot;).html(&quot;Your Account: &quot; + account);
+    }
+  });
+  
+  // Load contract data
+  App.contracts.Election.deployed().then(function(instance) {
+    electionInstance = instance;
+    return electionInstance.candidatesCount();
+  }).then(function(candidatesCount) {
+    var candidatesResults = $(&quot;#candidatesResults&quot;);
+    candidatesResults.empty();
+  
+    for (var i = 1; i &lt;= candidatesCount; i++) {
+      electionInstance.candidates(i).then(function(candidate) {
+        var id = candidate[0];
+        var name = candidate[1];
+        var voteCount = candidate[2];
+  
+        // Render candidate Result
+        var candidateTemplate = &quot;&lt;tr&gt;&lt;th&gt;&quot; + id + &quot;&lt;/th&gt;&lt;td&gt;&quot; + name + &quot;&lt;/td&gt;&lt;td&gt;&quot; + voteCount + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;
+        candidatesResults.append(candidateTemplate);
+      });
+    }
+  
+    loader.hide();
+    content.show();
+  }).catch(function(error) {
+    console.warn(error);
+  });</code></pre><p>  }
+  };</p>
+  <p>$(function() {
+    $(window).load(function() {
+      App.init();
+    });
+  });
+  Let&#39;s take note of a few things that this code does:
+  Set up web3: web3.js is a javascript library that allows our client-side application to talk to the blockchain. We configure web3 inside the &quot;initWeb3&quot; function.
+  Initialize contracts: We fetch the deployed instance of the smart contract inside this function and assign some values that will allow us to interact with it.
+  Render function: The render function lays out all the content on the page with data from the smart contract. For now, we list the candidates we created inside the smart contract. We do this by looping through each candidate in the mapping, and rendering it to the table. We also fetch the current account that is connected to the blockchain inside this function and display it on the page.
+  Now let&#39;s view the client-side application in the browser. First, make sure that you&#39;ve migrated your contracts like this:
+  truffle migrate --reset
+  Next, start your development server from the command line like this:
+  npm run dev</p>
+  <p>This should automatically open a new browser window with your client-side application.</p>
+  <p>Notice that your application says &quot;Loading...&quot;. That&#39;s because we&#39;re not logged in to the blockchain yet! In order to connect to the blockchain, we need to import one of the accounts from Ganache into Metamask.
+  Once you&#39;re connected with Metamask, you should see all of the contract and account data loaded.</p>
+  <p>Now let&#39;s add the ability to cast votes in the election. Let&#39;s define a &quot;voters&quot; mapping to the smart contract to keep track of the accounts that have voted in the election like this:
+  contract Election {
+      // ...</p>
+  <pre><code>// Store accounts that have voted
+  mapping(address =&gt; bool) public voters;
+  
+  // ...</code></pre><p>}</p>
+  <pre><code>      Now let&#39;s add a &quot;vote&quot; function:</code></pre><p>contract Election {
+      // ...</p>
+  <pre><code>// Store accounts that have voted
+  mapping(address =&gt; bool) public voters;
+  
+  // ...
+  
+  function vote (uint _candidateId) public {
+      // require that they haven&#39;t voted before
+      require(!voters[msg.sender]);
+  
+      // require a valid candidate
+      require(_candidateId &gt; 0 &amp;&amp; _candidateId &lt;= candidatesCount);
+  
+      // record that voter has voted
+      voters[msg.sender] = true;
+  
+      // update candidate vote Count
+      candidates[_candidateId].voteCount ++;
+  }</code></pre><p>}
+  The core functionality of this function is to increase the candidate&#39;s vote count by reading the Candidate struct out of the &quot;candidates&quot; mapping and increasing the &quot;voteCount&quot; by 1 with the increment operator (++). Let&#39;s look at a few other things that it does:
+  It accepts one argument. This is an unsigned integer with the candidate&#39;s id.
+  Its visibility is public because we want an external account to call it.
+  It adds the account that voted to the voters mapping that we just created. This will allow us to keep track that the voter has voted in the election. We access the account that&#39;s calling this function with the global variable &quot;msg.sender&quot; provided by Solidity.
+  It implements require statements that will stop execution if the conditions are not met. First require that the voter hasn&#39;t voted before. We do this by reading the account address with &quot;msg.sender&quot; from the mapping. If it&#39;s there, the account has already voted. Next, it requires that the candidate id is valid. The candidate id must be greater than zero and less
+  than or equal to the total candidate count.</p>
+  <p>Now your complete contract code should look like this:
+  pragma solidity ^0.4.2;</p>
+  <p>contract Election {
+      // Model a Candidate
+      struct Candidate {
+          uint id;
+          string name;
+          uint voteCount;
+      }</p>
+  <pre><code>// Store accounts that have voted
+  mapping(address =&gt; bool) public voters;
+  // Read/write candidates
+  mapping(uint =&gt; Candidate) public candidates;
+  // Store Candidates Count
+  uint public candidatesCount;
+  
+  function Election () public {
+      addCandidate(&quot;Candidate 1&quot;);
+      addCandidate(&quot;Candidate 2&quot;);
+  }
+  
+  function addCandidate (string _name) private {
+      candidatesCount ++;
+      candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+  }
+  
+  function vote (uint _candidateId) public {
+      // require that they haven&#39;t voted before
+      require(!voters[msg.sender]);
+  
+      // require a valid candidate
+      require(_candidateId &gt; 0 &amp;&amp; _candidateId &lt;= candidatesCount);
+  
+      // record that voter has voted
+      voters[msg.sender] = true;
+  
+      // update candidate vote Count
+      candidates[_candidateId].voteCount ++;
+  }</code></pre><p>}
+  Test Voting Function
+  Now let&#39;s add a test to our &quot;election.js&quot; test file:
+  it(&quot;allows a voter to cast a vote&quot;, function() {
+      return Election.deployed().then(function(instance) {
+        electionInstance = instance;
+        candidateId = 1;
+        return electionInstance.vote(candidateId, { from: accounts[0] });
+      }).then(function(receipt) {
+        return electionInstance.voters(accounts[0]);
+      }).then(function(voted) {
+        assert(voted, &quot;the voter was marked as voted&quot;);
+        return electionInstance.candidates(candidateId);
+      }).then(function(candidate) {
+        var voteCount = candidate[2];
+        assert.equal(voteCount, 1, &quot;increments the candidate&#39;s vote count&quot;);
+      })
+    });</p>
+  <p>We want to test two things here:
+  Test that the function increments the vote count for the candidate.
+  Test that the voter is added to the mapping whenever they vote.
+  Next we can write a few test for our function&#39;s requirements. Let&#39;s write a test to ensure that our vote function throws an exception for double voting:
+  it(&quot;throws an exception for double voting&quot;, function() {
+      return Election.deployed().then(function(instance) {
+        electionInstance = instance;
+        candidateId = 2;
+        electionInstance.vote(candidateId, { from: accounts[1] });
+        return electionInstance.candidates(candidateId);
+      }).then(function(candidate) {
+        var voteCount = candidate[2];
+        assert.equal(voteCount, 1, &quot;accepts first vote&quot;);
+        // Try to vote again
+        return electionInstance.vote(candidateId, { from: accounts[1] });
+      }).then(assert.fail).catch(function(error) {
+        assert(error.message.indexOf(&#39;revert&#39;) &gt;= 0, &quot;error message must contain revert&quot;);
+        return electionInstance.candidates(1);
+      }).then(function(candidate1) {
+        var voteCount = candidate1[2];
+        assert.equal(voteCount, 1, &quot;candidate 1 did not receive any votes&quot;);
+        return electionInstance.candidates(2);
+      }).then(function(candidate2) {
+        var voteCount = candidate2[2];
+        assert.equal(voteCount, 1, &quot;candidate 2 did not receive any votes&quot;);
+      });
+    });
+  First, we&#39;ll set up a test scenario with a fresh account that hasn&#39;t voted yet. Then we&#39;ll cast a vote on their behalf. Then we&#39;ll try to vote again. We&#39;ll assert that an error has occurred here. We can inspect the error message, and ensure that no candidates received votes, just like the previous test.
+  Now let&#39;s run our tests:</p>
+  <p>Truffle test</p>
+  <p>Client-Side Voting</p>
+  <p>Let&#39;s add a form that allows accounts to vote below the table in our &quot;index.html&quot; file:</p>
+  <p>Let&#39;s add a form that allows accounts to vote below the table in our &quot;index.html&quot; file:</p>
+  <form onSubmit="App.castVote(); return false;">
+    <div class="form-group">
+      <label for="candidatesSelect">Select Candidate</label>
+      <select class="form-control" id="candidatesSelect">
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Vote</button>
+    <hr />
+  </form>
+  
+  
+  <p>`Let&#39;s examine a few things about this form:
+  We create the form with an empty select element. We will populate the select options with the candidates provided by our smart contract in our &quot;app.js&quot; file.
+  The form has an &quot;onSubmit&quot; handler that will call the &quot;castVote&quot; function. We will define this in our &quot;app.js&quot; file.
+  Now let&#39;s update our app.js file to handle both of those things. First we list all the candidates from the smart contract inside the form&#39;s select element. Then we&#39;ll hide the form on the page once the account has voted. We&#39;ll update the render function to look like this:
+  render: function() {
+    var electionInstance;
+    var loader = $(&quot;#loader&quot;);
+    var content = $(&quot;#content&quot;);</p>
+  <p>  loader.show();
+    content.hide();</p>
+  <p>  // Load account data
+    web3.eth.getCoinbase(function(err, account) {
+      if (err === null) {
+        App.account = account;
+        $(&quot;#accountAddress&quot;).html(&quot;Your Account: &quot; + account);
+      }
+    });</p>
+  <p>  // Load contract data
+    App.contracts.Election.deployed().then(function(instance) {
+      electionInstance = instance;
+      return electionInstance.candidatesCount();
+    }).then(function(candidatesCount) {
+      var candidatesResults = $(&quot;#candidatesResults&quot;);
+      candidatesResults.empty();</p>
+  <pre><code>var candidatesSelect = $(&#39;#candidatesSelect&#39;);
+  candidatesSelect.empty();
+  
+  for (var i = 1; i &lt;= candidatesCount; i++) {
+    electionInstance.candidates(i).then(function(candidate) {
+      var id = candidate[0];
+      var name = candidate[1];
+      var voteCount = candidate[2];</code></pre><p> // Render candidate Result
+          var candidateTemplate = &quot;<tr><th>&quot; + id + &quot;</th><td>&quot; + name + &quot;</td><td>&quot; + voteCount + &quot;</td></tr>&quot;
+          candidatesResults.append(candidateTemplate);</p>
+  <pre><code>    // Render candidate ballot option
+      var candidateOption = &quot;&lt;option value=&#39;&quot; + id + &quot;&#39; &gt;&quot; + name + &quot;&lt;/ option&gt;&quot;
+      candidatesSelect.append(candidateOption);
+    });
+  }
+  return electionInstance.voters(App.account);</code></pre><p>  }).then(function(hasVoted) {
+      // Do not allow a user to vote
+      if(hasVoted) {
+        $(&#39;form&#39;).hide();
+      }
+      loader.hide();
+      content.show();
+    }).catch(function(error) {
+      console.warn(error);
+    });
+  }</p>
+  <p>Next, we want to write a function that&#39;s called whenever the form is submitted:
+  castVote: function() {
+      var candidateId = $(&#39;#candidatesSelect&#39;).val();
+      App.contracts.Election.deployed().then(function(instance) {
+        return instance.vote(candidateId, { from: App.account });
+      }).then(function(result) {
+        // Wait for votes to update
+        $(&quot;#content&quot;).hide();
+        $(&quot;#loader&quot;).show();
+      }).catch(function(err) {
+        console.error(err);
+      });
+    }</p>
+  <p>First, we query for the candidateId in the form. When we call the vote function from our smart contract, we pass in this id, and we provide the current account with the function&#39;s &quot;from&quot; metadata. This will be an asynchronous call. When it is finished, we&#39;ll show the loader and hide the page content. Whenever the vote is recorded, we&#39;ll do the opposite, showing the content to the user again.
+  Now your front-end application should look like this:</p>
+  <p>Go ahead and try the voting function. Once you do, you should see a Metamask confirmation pop up like this:</p>
+  <p>Once you click submit, you&#39;ve successfully casted a vote! You&#39;ll still see a loading screen. For now, you&#39;ll have to refresh the page to see the votes recorded. We&#39;ll implement the functionality update the loader automatically</p>
+  <p>The accompanying video footage for this portion of the tutorial begins at 1:48:05. You can download the code for this portion of the tutorial here. Feel free to use these as a reference point if you get stuck!
+  The very last step in this tutorial is to trigger an event whenever a vote is cast. This will allow us to update our client-side application when an account has voted. Fortunately, this is quite easy. Let&#39;s start by declaring an event in our contract like this:
+  contract Election {
+      // ...
+      event votedEvent (
+          uint indexed _candidateId
+      );
+      // ...
+  }</p>
+  <p>Now we can trigger this &quot;voted&quot; event inside our &quot;vote&quot; function like this:
+  function vote (uint _candidateId) public {
+      // require that they haven&#39;t voted before
+      require(!voters[msg.sender]);</p>
+  <pre><code>// require a valid candidate
+  require(_candidateId &gt; 0 &amp;&amp; _candidateId &lt;= candidatesCount);
+  
+  // record that voter has voted
+  voters[msg.sender] = true;
+  
+  // update candidate vote Count
+  candidates[_candidateId].voteCount ++;
+  
+  // trigger voted event
+  votedEvent(_candidateId);</code></pre><p>}
+  Now that we&#39;ve updated our contract, we must run our migrations:
+  truffle migrate --reset
+  We can also update our tests to check for this voting event like this:
+  it(&quot;allows a voter to cast a vote&quot;, function() {
+    return Election.deployed().then(function(instance) {
+      electionInstance = instance;
+      candidateId = 1;
+      return electionInstance.vote(candidateId, { from: accounts[0] });
+    }).then(function(receipt) {
+      assert.equal(receipt.logs.length, 1, &quot;an event was triggered&quot;);
+      assert.equal(receipt.logs[0].event, &quot;votedEvent&quot;, &quot;the event type is correct&quot;);
+      assert.equal(receipt.logs[0].args._candidateId.toNumber(), candidateId, &quot;the candidate id is correct&quot;);
+      return electionInstance.voters(accounts[0]);
+    }).then(function(voted) {
+      assert(voted, &quot;the voter was marked as voted&quot;);
+      return electionInstance.candidates(candidateId);
+    }).then(function(candidate) {
+      var voteCount = candidate[2];
+      assert.equal(voteCount, 1, &quot;increments the candidate&#39;s vote count&quot;);
+    })
+  });</p>
+  <p>This test inspects the transaction receipt returned by the &quot;vote&quot; function to ensure that it has logs. These logs contain the event that was triggered. We check that the event is the correct type, and that it has the correct candidate id.
+  Now let&#39;s update the client-side application to listen for the voted event and fire a page refresh any time that it is triggered. We can do that with a &quot;listenForEvents&quot; function like this:
+  listenForEvents: function() {
+    App.contracts.Election.deployed().then(function(instance) {
+      instance.votedEvent({}, {
+        fromBlock: 0,
+        toBlock: &#39;latest&#39;
+      }).watch(function(error, event) {
+        console.log(&quot;event triggered&quot;, event)
+        // Reload when a new vote is recorded
+        App.render();
+      });
+    });
+  }</p>
+  <p>This function does a few things. First, we subscribe to the voted event by calling the &quot;votedEvent&quot; function. We pass in some metadata that tells us to listen to all events on the blockchain. Then we &quot;watch&quot; this event. Inside here, we log to the console anytime a &quot;votedEvent&quot; is triggered. We also re-render all the content on the page. This will get rid of the loader after the vote has been recorded, and show the updated vote count on the table.
+  Finally, we can call this function whenever we initialize the contract:
+  initContract: function() {
+    $.getJSON(&quot;Election.json&quot;, function(election) {
+      // Instantiate a new truffle contract from the artifact
+      App.contracts.Election = TruffleContract(election);
+      // Connect provider to interact with contract
+      App.contracts.Election.setProvider(App.web3Provider);</p>
+  <pre><code>App.listenForEvents();
+  
+  return App.render();</code></pre><p>  });
+  }</p>
+  <p>Now, you can vote on your client-side application, and watch the votes recorded in real time! Be patient, it might take a few seconds for the event to trigger. If you don&#39;t see an event, try restarting Chrome. There is a known issue with  Metamask surrounding events. Restarting Chrome always fixes it for me.
+  Congratulations!  You have successfully built a full stack decentralized application on the Ethereum blockchain!</p>
+  </div>
+              </div>
+            </div>
+        </div>
+      </section>
+      </section>
+  
+      <footer>
+          <footer class="footer-area">
+            <div class="container section-gap">
+                <div class="row">
+                    <div class="col-lg-2 col-md-6 col-sm-6">
+                        <div class="single-footer-widget">
+                            <h4>Useful</h4>
+                            <ul>
+                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-footer-widget">
+                            <h4>About</h4>
+                            <ul>
+                                <li><a href="#">Guides</a></li>
+          
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4  col-md-6 col-sm-6">
+                        <div class="single-footer-widget">
+                            <h4>Newsletter</h4>
+                            <p>Stay updated with our latest news</p>
+                            <div class="" id="mc_embed_signup" style="">
+                                <form target="_blank" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01" method="get">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="EMAIL" placeholder="Enter Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Email Address '" required="" type="email">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default" type="submit">
+                                                <span class="lnr lnr-arrow-right"></span>
+                                            </button>
+                                        </div>
+                                        <div class="info"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          
+          <div class="footer-bottom border-top">
+            <div class="container">
+              <div class="row align-items-center justify-content-between section-gap">
+                <p class="footer-text m-0 col-lg-6 col-md-12">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script> <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://Xinfin.org" target="_blank">XinFin</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </p>
+                <div class="col-lg-6 col-sm-12 footer-social">
+                  <a href="https://www.facebook.com/XinFinHybridBlockchain/"><i class="fa fa-facebook"></i></a>
+                  <a href="https://twitter.com/XinFin_Official"><i class="fa fa-twitter"></i></a>
+          
+                  <a href="https://linkedin.com/in/xinfin"><i class="fa fa-linkedin"></i></a>
+                  <a href="https://www.youtube.com/channel/UCQaL6FixEQ80RJC0B2egX6g"><i class="fa fa-youtube"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          </footer>
+          <hr class="hr-primary" />
+      </footer>
+  
+  
+      <script src="/js/vendor/bootstrap.min.js"></script>
+      <script src="/js/vendor/jquery.magnific-popup.min.js"></script>
+      <script src="/js/vendor/superfish.min.js"></script>
+      <script src="/js/vendor/jquery.ajaxchimp.min.js"></script>
+      <script src="/js/vendor/jquery-ui.js"></script>
+      <script src="/js/vendor/slick.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+      <script src="/js/main.js"></script>
+      <script src="/js/pageHandlebars.js"></script>
+     </body>
+  </html>
+    <script src="/js/modMenu.js"></script>

@@ -64,22 +64,23 @@
       "prerequisites": ["Necessary: Basic knowledge in JavaScript / HTML", "Basic knowledge in C++ / Java, data types", "Advantageous: Basic knowledge with git repositories"],
       "curriculum": [
         {
-          "topic": "What is blockchain and Bitcoin?"
+          "topic": "What is blockchain and Bitcoin?",
+          "sub-topic": ["Key differences between blockchain and bitcoin"]
         },
         {
           "topic": "How Does Bitcoin Work?",
-          "sub-topic": ["Balances - blockchain", "Transactions - private keys", "Processing Mining"]
+          "sub-topic": ["How to use Bitcoin", "Technological architecture"]
         },
         {
           "topic": "Cryptography",
-          "sub-topic": ["Hashing"]
+          "sub-topic": ["Private keys", "Cryptography as a security mechanism"]
         },
         {
-          "topic": "What is Proof-Of-Work",
-          "sub-topic": ["Minting", "Decntralised", "Safe and secure system", "Increased capacity"]
+          "topic": "What is Proof Of Work",
+          "sub-topic": ["Mathematical puzzle in blockchain", "Implementation of proof of work"]
         },
         {
-          "topic": "How to create and join public bitcoin blockchain?"
+          "topic": "Running Bitcoin blockchain node"
         }
       ]
     },
@@ -87,42 +88,65 @@
       "title": "103 - Blockchain professional course for engineer",
       "video": "https://www.youtube.com/embed/jLaqms1IHWE",
       "duration": "3 days",
-      "slug": "blockchain-Professional",
+      "slug": "blockchain-professional",
       "sypnosis": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. ",
       "overview": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. Students will participate in approximately 50% programming lab time providing practical experience, enhancing their knowledge and existing skill set. Due to the technical programming lab content covered in this course, it is not recommended for those without programming knowledge and experience.",
       "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device.",
       "prerequisites": ["Necessary: Basic knowledge Networking", "Basic knowledge in Server"],
       "curriculum": [
         {
-          "topic": "The Evolution of the Blockchain: Generation 1 to 3",
-          "sub-topic": ["First Generation Blockchain Technology", "Second Generation Blockchain", "Third Generation Blockchain Technology"]
+          "topic": "What is Ethereum blockchain?"
         },
         {
-          "topic": "What is blockchain?"
+          "topic": "How to create private Ethereum blockchain?"
         },
         {
-          "topic": "Why do we need blockchain technology?",
-          "sub-topic": ["Business Scenario Implemented Using the Database", "Business Scenario Implemented Using the Blockchain"]
+          "topic": "How to set up multi-nodes private Ethereum blockchain?"
         },
         {
-          "topic": "Features Of Blockchain",
-          "sub-topic": ["Minting", "Decentraliszed", "Safe and secure system", "Increased capacity"]
+          "topic": "What is smart contract?",
+          "sub-topic": ["Advantages of smart contracts", "Disadvantages of smart contracts"]
         },
         {
-          "topic": "What are the benefits of blockchain",
-          "sub-topic": ["Transparency", "Reduced transaction costs", "Faster transaction settlements", "Decentralization", "User controlled network"]
+          "topic": "Popular features of ICO smart contracts"
         },
         {
-          "topic": "What is the difference between blockchain and database",
-          "sub-topic": ["How cryptographic techniques are implemented in the blockchain", "Hash function", "Nonce", "Nodes", "Block", "Wallets, digital signatures, protocols", "What is a wallet", "Digital signature", "What are cryptographic keys?"]
+          "topic": "Deploying smart contract and tokens on Ethereum"
         },
         {
-          "topic": "Problems solved by blockchain technology",
-          "sub-topic": ["Suppy chain and item histories", "Voting", "Government operations", "Currency and transaction support"]
+          "topic": "How do account work?"
         },
         {
-          "topic": "What is the future of blockchain technology?",
-          "sub-topic": ["Widespread Distributed Data Models", "DLT-based system", "Blockchain based security measures"]
+          "topic": "Dependencies for developing on Ethereum",
+          "sub-topic": ["Node Package Manager (NPM)", "Truffle framework", "Ganache", "Metamask"]
+        },
+        {
+          "topic": "Deploying smart contracts with Truffle"
+        },
+        {
+          "topic": "Introduction to Solidity"
+        },
+        {
+          "topic": "Testing solidity contracts"
+        },
+        {
+          "topic": "Developing the client side interface"
+        },
+        {
+          "topic": "Adding voting functions to smart contracts"
+        },
+        {
+          "topic": "Testing voting functions"
+        },
+        {
+          "topic": "Implementing voting on client side"
+        },
+        {
+          "topic": "Difference between Proof of Work and Proof of Stake",
+          "sub-topic": ["Proof of Work", "Proof of Stake", "Why are coins moving over to PoS?"]
+        },
+        {
+          "topic": "Differences among various blockchains"
         }
       ]
     }
