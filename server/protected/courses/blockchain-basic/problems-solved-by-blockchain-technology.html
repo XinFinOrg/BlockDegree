@@ -105,24 +105,17 @@
                                 data-target="#sub-{{@index}}"
                                 aria-expandeded="false"
                               {{/if}}>
+                            <a href="{{url ccm.topic}}">
                               <div class="row px-2 py-3">
-                                <div class="col-10">
-                                  <a href="{{url ccm.topic}}">
-                                    <h4 class="mod__heading"> {{ccm.topic}}</h4>
-                                  </a>
-                                </div>
+                                <h4 style="font-weight:600" class="col-10 mod__heading"> {{ccm.topic}}</h4>
+              
                                 {{#if ccm.sub-topic}}
-                                  <div class="col-1 arrow"
-                                       id="{{url ccm.topic}}"
-                                       class="with-child"
-                                       data-toggle="collapse"
-                                       data-target="#sub-{{@index}}"
-                                       aria-expanded="false">
+                                  <div class="col-1 arrow">
                                     &#x25BC;
                                   </div>
                                 {{/if}}
                               </div>
-                            </li>
+                            </a></li>
                             <!-- End heading -->
               
                             <!-- Start sub-heading if there is -->

@@ -63,10 +63,6 @@ gulp.task('metalsmith', () => {
     .pipe(gulp.dest('./server/protected/courses'))
 });
 
-gulp.task('watch-ms', () => {
-  gulp.watch('./content/**/*.md', gulp.series('metalsmith'))
-})
-
 gulp.task('html', () => {
   return gulp.src('./src/pages/**/*.html')
     .pipe(handlebars({}, {

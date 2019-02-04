@@ -2,7 +2,6 @@ Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.htm
 
 ## To do
 - [ ] Login functionality
-- [ ] Need to check on the rerouting of the express function that authenticates whether user isLoggedIn
 - [ ] Pages for the link at footer
 - [ ] Email sign up (only UI)
 - [ ] Enroll today, start lesson.
@@ -31,7 +30,7 @@ Some of the benefits of this template:
 {{> layouts/two-columns}}  {{#\*inline "col-left"}}{{/inline}}  {{#\*inline "col-right"}}{{/inline}}
 ```
 
-3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in __/dist/data/courses.json__. Run __gulp compileCourseOverview__ and the new pages will be generated in __/dist/courses__. The structure of the course page is updated at __/src/partials/layouts/courseOverview.hbs__. (To note, at the home page, there is no fix number set to the courses display)
+3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in __/dist/data/courses.json__. Run __gulp compileCourseOverview__ and the new pages will be generated in __/dist/courses__. The structure of the course page is updated at __/src/partials/layouts/courses.hbs__. (To note, at the home page, there is no fix number set to the courses display)
 
 4. Similarly for events and contributors. Easily add, edit and remove the data structure. This made changing the view while reducing error.
 

@@ -17,11 +17,11 @@ $(document).ready(function() {
     ]
   });
 
-  // $.ajax({
-  //   url:'img/gallery/',
-  //   success: (data) => {console.log(data)},
-  //   error: (XMLHttpRequest, textStatus, errorThrown) => {
-  //     console.log("Error pulling photos: " + textStatus + ". Error: " + errorThrown);
-  //   }
-  // });
+  $.ajax({
+    url:'img/gallery/',
+    success: (data) => {console.log(data)},
+    error: (XMLHttpRequest, textStatus, errorThrown) => {
+      console.log("Error pulling photos: " + textStatus + ". Error: " + errorThrown);
+    }
+  });
 });
