@@ -105,17 +105,24 @@
                                 data-target="#sub-{{@index}}"
                                 aria-expandeded="false"
                               {{/if}}>
-                            <a href="{{url ccm.topic}}">
                               <div class="row px-2 py-3">
-                                <h4 style="font-weight:600" class="col-10 mod__heading"> {{ccm.topic}}</h4>
-              
+                                <div class="col-10">
+                                  <a href="{{url ccm.topic}}">
+                                    <h4 class="mod__heading"> {{ccm.topic}}</h4>
+                                  </a>
+                                </div>
                                 {{#if ccm.sub-topic}}
-                                  <div class="col-1 arrow">
+                                  <div class="col-1 arrow"
+                                       id="{{url ccm.topic}}"
+                                       class="with-child"
+                                       data-toggle="collapse"
+                                       data-target="#sub-{{@index}}"
+                                       aria-expanded="false">
                                     &#x25BC;
                                   </div>
                                 {{/if}}
                               </div>
-                            </a></li>
+                            </li>
                             <!-- End heading -->
               
                             <!-- Start sub-heading if there is -->
@@ -145,10 +152,33 @@
   
             <div class="col-12 col-sm-8 p-4 module-content">
               <div class="container py-2 py-sm-5">
-                <h2 id="How to set up multi-node private Ethereum blockchain?">How to set up multi-node private Ethereum blockchain?</h2>
-                <div><h4 id="add-nodes-to-your-network">Add nodes to your network</h4>
-  <p>Through enode you can add nodes in your computer. And admin can add nodes in the computer as per the requirement.
-  So node1  can add  node 2  through command admin.addPeer(“the enode of second  node enter here “) so both the nodes are connected with each other and if mining starts in node 1 then in node 2 mining will start in node 2.</p>
+                <h2 id="Adding nodes to your private blockchain">Adding nodes to your private blockchain</h2>
+                <div><h3 id="add-nodes-to-your-network">Add nodes to your network</h3>
+  <p>Blockchain is made up of multiple nodes. In order to connect your existing private blockchain node with more nodes, you will need to know the enode of the nodes you are connecting to.</p>
+  <h4 id="enodes">Enodes</h4>
+  <p>Through enode you can add nodes in your computer. <a href="https://github.com/ethereum/wiki/wiki/enode-url-format" target="_blank">Enode</a> is a way to identify an Ethereum node in a form of URL scheme. An enode consists of a username and hostname. A hexadecimal string node ID in the username is separated from the hostname by an @ sign. The hostname is given as an IP address, with the TCP listening port. If the TCP and UDP (discovery) ports differ, the UDP is specified as query parameter &quot;discport&quot;.</p>
+  <p>An example of an enode will look like this.</p>
+  <pre><code>enode://6f8a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301</code></pre><p>The example above describes a node with IP address <code>10.3.58.6</code> with a TCP listening port of <code>30303</code> and UDP discovery port of <code>30301</code>.</p>
+  <p>To check the ports used by geth and find your enode URI, run the following command</p>
+  <div class="precode">geth console</div>
+  
+  <pre><code class="language-console">&gt; admin.nodeInfo</code></pre>
+  <p>You will see the following information</p>
+  <div class="precode">geth console</div>
+  ```js
+  {
+    Name: 'Geth/v0.9.14/darwin/go1.4.2',
+    NodeUrl: 'enode://3414c01c19aa75a34f2dbd2f8d0898dc79d6b219ad77f8155abf1a287ce2ba60f14998a3a98c0cf14915eabfdacf914a92b27a01769de18fa2d049dbf4c17694@[::]:30303',
+    NodeID: '3414c01c19aa75a34f2dbd2f8d0898dc79d6b219ad77f8155abf1a287ce2ba60f14998a3a98c0cf14915eabfdacf914a92b27a01769de18fa2d049dbf4c17694',
+    IP: '::',
+    DiscPort: 30303,
+    TCPPort: 30303,
+    Td: '2044952618444',
+    ListenAddr: '[::]:30303'
+  }
+  ```
+  
+  <p>Node 1, which is the node that you have started in the previous tutorial, can add node 2 through command admin.addPeer(&quot;&lt;Enode of node 2&gt;&quot;). After adding node 2 as a peer in the network, both the nodes are connected adn will start mining.</p>
   <p>In the get CLI(Command Line Interface) enter the below command to get the Node-id.</p>
   <h4 id="connect-the-nodes">Connect the nodes</h4>
   <p>In the below image there is two nodes open and we can connect nodes through admin.addPeer(“enter the peer”) after adding both the peer  when you start the mining in the first block you can see the mining occurs in the second block also it happens only when you connect the nodes.</p>

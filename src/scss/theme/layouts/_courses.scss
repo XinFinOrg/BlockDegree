@@ -32,6 +32,13 @@
         margin-left: 30px;
       }
     }
+
+    pre {
+      border: 1px solid $border;
+      background: $bg--muted;
+      font-size: 14px;
+      padding: 15px;
+    }
   }
 }
 
@@ -44,6 +51,13 @@
   z-index: 999;
 }
 
+#mod__details .arrow {
+  &:hover {
+    cursor: pointer;
+    color: #2073D4;
+  }
+}
+
 #mod__details.mod--fixed{
   position: fixed;
   z-index: 99;
@@ -52,7 +66,6 @@
   width: 100%;
   background: #fafbfc;
 }
-
 
 /*  Courses Page Styles
 /* =================================== */

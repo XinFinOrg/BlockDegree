@@ -182,11 +182,11 @@ $(document).ready(function() {
     currentPathIndex = fullPath.lastIndexOf('/'),
     currentPath = fullPath.slice(currentPathIndex + 1),
     activeItem =  $('.mod__sidebar #' + currentPath);
-    console.log(currentPath)
 
     activeItem.find('.arrow').text('▲');
-    activeItem.attr('aria-expanded', 'false');
+    activeItem.attr('aria-expanded', 'true');
     activeItem.siblings('.side-nav__child').removeClass('collapse');
+    activeItem.siblings('.side-nav__child').addClass('show');
 
     $(".side-nav__child a").on('click', function(e){
         let section = $(this).attr('id'),
@@ -194,6 +194,13 @@ $(document).ready(function() {
             pos = $('.module-content ' +  contentToScrollTo).offset().top;
 
         $('html,body').animate({scrollTop: pos - 100}, 400);
+    });
+  }
+
+  if($('.course-module').length){
+    $('.arrow').on('click', function(e) {
+      console.log(e.target.innerText)
+      return e.target.innerText = e.target.innerText == '▲' ? '▼' : '▲'
     });
   }
 

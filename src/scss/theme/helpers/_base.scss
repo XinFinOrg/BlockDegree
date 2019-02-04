@@ -1,3 +1,43 @@
+body {
+  font-size: 16px;
+  line-height: 1.8rem;
+}
+
+pre {
+  white-space: pre-line;
+
+  .language-javascript,
+  .language-json,
+  .language-js {
+    white-space: pre-wrap;
+  }
+
+  .language-no-wrap {
+    white-space: pre;
+  }
+}
+
+code {
+  font-family: $code-font;
+}
+
+p code {
+  background: $bg--code;
+  color: #a4036f;
+  padding: 2px 4px;
+}
+
+.precode,
+code .comment {
+  color: $text--muted-color;
+}
+
+section img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
 .container__cstm {
   position: relative;
   margin: 80px auto;

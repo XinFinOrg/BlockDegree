@@ -1,5 +1,6 @@
 var path = require('path');
 
+// Please assist to check this function, whenever a request is send, the req.isAuthenticated() always return false
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     next();
@@ -36,7 +37,7 @@ module.exports = function (app, passport) {
         res.redirect('/');
     });
 
-    app.get('/courses/:courseName', isLoggedIn, function (req, res){
+    app.get('/courses/:courseName', function (req, res){
       switch(req.params.courseName) {
         case 'blockchain-basic':
           res.redirect('/courses/blockchain-basic/history-of-blockchain');
@@ -49,10 +50,11 @@ module.exports = function (app, passport) {
       }
     });
 
-    app.get('/courses/:courseName/:content', isLoggedIn, function(req, res){
+    app.get('/courses/:courseName/:content',  function(req, res){
       res.sendFile(path.join( process.cwd(), '/server/protected/courses/' + req.params.courseName + '/' + req.params.content + '.html'));
     });
 
+    // This is for easy testing of the isLoggedIn middleware function
     app.get('/tt', isLoggedIn, (req, res) => {
       console.log('auth: ' + req.isAuthenticated())
     });

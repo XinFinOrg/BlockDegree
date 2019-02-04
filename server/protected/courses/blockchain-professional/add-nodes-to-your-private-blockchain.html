@@ -74,7 +74,7 @@
           <div class="container">
             <div class="row align-items-center justify-content-center">
               <div class="hero-banner__content text-center">
-                <h1 class="text-white">Blockchain basic course for engineer</h1>
+                <h1 class="text-white">Blockchain professional course for engineer</h1>
                 
               </div>
             </div>
@@ -83,12 +83,12 @@
           <div class="row mx-0">
             <div class="col-12 col-sm-4 px-0">
               <!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
-              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=0 style="background: #fafbfc;">
+              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=2 style="background: #fafbfc;">
                 <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
                 <div id="mod__details">
                   <script id="module-template" type="text/x-handlebars-template">
               
-                    {{#with courses.[0] }}
+                    {{#with courses.[2] }}
               
                       {{#each curriculum as |ccm|}}
               
@@ -152,15 +152,34 @@
   
             <div class="col-12 col-sm-8 p-4 module-content">
               <div class="container py-2 py-sm-5">
-                <h2 id="Permissioned vs permissionless blockchain">Permissioned vs permissionless blockchain</h2>
-                <div><h3 id="permissioned-blockchain">Permissioned Blockchain</h3>
-  <p>Permissioned Blockchains limit access for those who can perform different activities on the Blockchain. The exchanges are approved and handled by the individuals with record, accepting them for certain trust levels.</p>
-  <p>A permissioned Blockchain is a closed community, and each participant is well defined. This type of Blockchain is built to allow an organization or a group of organizations to exchange information and record transactions very well. Although permissionless Blockchains was very popular in the business world, companies now know the many advantages of using Blockchains to expand business systems also, especially to provide trust, transparency, and efficiency into B2B exchanges. The Hyperledger Foundation is the leading open source initiative for these B2B Blockchains.</p>
-  <p>A permissioned Blockchain is run by the members of a certain group. Stakeholders “opt-in” to form a blockchain network. Only pre-approved entities can run the nodes that make transaction blocks valid and carry out smart contracts on the Blockchain. Permissioned Blockchains make it easy to share trusted information in a secure form, and with the required confidentiality for businesses to effectively operate.</p>
-  <h3 id="permissionless-blockchain">Permissionless Blockchain</h3>
-  <p>Permissionless Blockchains allow anyone to take an interest. The exchanges on the platform are approved and handled by votes or agreement. A vote does not depend on having a previous character in the record and no previous trust is expected.</p>
-  <p>Permissionless Blockchains allow anybody to create an address and start interacting with the blockchain network. The internet is a good example of a permissionless system; where anyone can create any website they want. Similarly, with a permissionless blockchain, creating an address on the network allows any person, thing, or entity to interact with other members or parties. Each party can choose to run a node for the blockchain and help to verify transactions (using mining method), and create smart contracts on the network. This is the essence of Bitcoin and Ethereum Blockchain networks. These networks make use of a crypto-economic model (pushed by proof-of-work consensus method) that rewards people to run network nodes. All network participants get tokens as reward for their contributions.</p>
-  <p>Permissionless blockchains are becoming accepted as a foundation for business-to-consumer (B2C) and consumer-to-consumer (C2C) cases. Many startup companies are making use of Bitcoin and Ethereum network solutions. Most of these solutions use a token (cryptocurrency) system to simplify the exchange of value among participants with the use of an internal rewarding structure.</p>
+                <h2 id="Add nodes to your private blockchain">Add nodes to your private blockchain</h2>
+                <div><h3 id="add-nodes-to-your-network">Add nodes to your network</h3>
+  <p>Blockchain is made up of multiple nodes. In order to connect your existing private blockchain node with more nodes, you will need to know the enode of the nodes you are connecting to.</p>
+  <h4 id="enodes">Enodes</h4>
+  <p>Through enode you can add nodes in your computer. <a href="https://github.com/ethereum/wiki/wiki/enode-url-format" target="_blank">Enode</a> is a way to identify an Ethereum node in a form of URL scheme. An enode consists of a username and hostname. A hexadecimal string node ID in the username is separated from the hostname by an @ sign. The hostname is given as an IP address, with the TCP listening port. If the TCP and UDP (discovery) ports differ, the UDP is specified as query parameter &quot;discport&quot;.</p>
+  <p>An example of an enode will look like this.</p>
+  <pre><code>enode://6f8a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301</code></pre><p>The example above describes a node with IP address <code>10.3.58.6</code> with a TCP listening port of <code>30303</code> and UDP discovery port of <code>30301</code>.</p>
+  <p>To check the ports used by geth and find your enode URI, run the following command</p>
+  <div class="precode">geth console</div>
+  
+  <pre><code class="language-console">&gt; admin.nodeInfo</code></pre>
+  <p>You will see the following information</p>
+  <div class="precode">geth console</div>
+  
+  <pre><code class="language-no-wrap">{
+    Name: &#39;Geth/v0.9.14/darwin/go1.4.2&#39;,
+    NodeUrl: &#39;enode://3414c01c19aa75a34f2dbd2f8d0898dc79d6b219ad77f8155abf1a287ce2ba60f14998a3a98c0cf14915eabfdacf914a92b27a01769de18fa2d049dbf4c17694@[::]:30303&#39;,
+    NodeID: &#39;3414c01c19aa75a34f2dbd2f8d0898dc79d6b219ad77f8155abf1a287ce2ba60f14998a3a98c0cf14915eabfdacf914a92b27a01769de18fa2d049dbf4c17694&#39;,
+    IP: &#39;::&#39;,
+    DiscPort: 30303,
+    TCPPort: 30303,
+    Td: &#39;2044952618444&#39;,
+    ListenAddr: &#39;[::]:30303&#39;
+  }</code></pre>
+  <p>Node 1, which is the node that you have started in the previous tutorial, can add node 2 through command admin.addPeer(&quot;&lt;Enode of node 2&gt;&quot;). After adding node 2 as a peer in the network, both the nodes are connected adn will start mining.</p>
+  <p>In the get CLI(Command Line Interface) enter the below command to get the Node-id.</p>
+  <h4 id="connect-the-nodes">Connect the nodes</h4>
+  <p>In the below image there is two nodes open and we can connect nodes through admin.addPeer(“enter the peer”) after adding both the peer  when you start the mining in the first block you can see the mining occurs in the second block also it happens only when you connect the nodes.</p>
   </div>
               </div>
             </div>

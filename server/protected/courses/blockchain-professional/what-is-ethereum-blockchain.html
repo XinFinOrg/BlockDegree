@@ -105,17 +105,24 @@
                                 data-target="#sub-{{@index}}"
                                 aria-expandeded="false"
                               {{/if}}>
-                            <a href="{{url ccm.topic}}">
                               <div class="row px-2 py-3">
-                                <h4 style="font-weight:600" class="col-10 mod__heading"> {{ccm.topic}}</h4>
-              
+                                <div class="col-10">
+                                  <a href="{{url ccm.topic}}">
+                                    <h4 class="mod__heading"> {{ccm.topic}}</h4>
+                                  </a>
+                                </div>
                                 {{#if ccm.sub-topic}}
-                                  <div class="col-1 arrow">
+                                  <div class="col-1 arrow"
+                                       id="{{url ccm.topic}}"
+                                       class="with-child"
+                                       data-toggle="collapse"
+                                       data-target="#sub-{{@index}}"
+                                       aria-expanded="false">
                                     &#x25BC;
                                   </div>
                                 {{/if}}
                               </div>
-                            </a></li>
+                            </li>
                             <!-- End heading -->
               
                             <!-- Start sub-heading if there is -->
@@ -148,7 +155,7 @@
                 <h2 id="What is Ethereum blockchain?">What is Ethereum blockchain?</h2>
                 <div><h3 id="beyond-bitcoin-first-generation-decentralized-applications">Beyond Bitcoin &amp; first generation decentralized applications</h3>
   <p>Although normally associated with Bitcoin, blockchain science has many other purposes that go way past digital currencies. In fact, Bitcoin is only one of quite a few hundred purposes that use blockchain technology today.</p>
-  <p>Until relatively recently, building blockchain applications has required a complex background in coding, cryptography, mathematics as well as significant resources. But times have changed. Previously unimagined applications, from electronic voting &amp; digitally recorded property assets to regulatory compliance &amp; trading are now actively being developed and deployed faster than ever before. By providing developers with the tools to build decentralized applications, <a href="https://github.com/ethereum/wiki/wiki/White-Paper">Ethereum is making all of this possible.</a></p>
+  <p>Until relatively recently, building blockchain applications has required a complex background in coding, cryptography, mathematics as well as significant resources. But times have changed. Previously unimagined applications, from electronic voting &amp; digitally recorded property assets to regulatory compliance &amp; trading are now actively being developed and deployed faster than ever before. By providing developers with the tools to build decentralized applications, <a href="https://github.com/ethereum/wiki/wiki/White-Paper" target="_blank">Ethereum is making all of this possible</a>.</p>
   <p>In the Ethereum blockchain, instead of mining for bitcoin, miners work to earn Ether, a type of crypto token that fuels the network. Beyond a tradeable Cryptocurrency Ether is also used by application developers to pay for transaction fees and services on the Ethereum network.</p>
   <p>There is a second type of token that is used to pay miners fees for including transactions in their block, it is called gas, and every smart contract execution requires a certain amount of gas to be sent along with it to entice miners to put it in the blockchain.</p>
   </div>

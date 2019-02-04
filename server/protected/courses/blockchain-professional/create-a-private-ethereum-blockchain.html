@@ -74,7 +74,7 @@
           <div class="container">
             <div class="row align-items-center justify-content-center">
               <div class="hero-banner__content text-center">
-                <h1 class="text-white">Blockchain basic course for engineer</h1>
+                <h1 class="text-white">Blockchain professional course for engineer</h1>
                 
               </div>
             </div>
@@ -83,12 +83,12 @@
           <div class="row mx-0">
             <div class="col-12 col-sm-4 px-0">
               <!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
-              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=0 style="background: #fafbfc;">
+              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=2 style="background: #fafbfc;">
                 <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
                 <div id="mod__details">
                   <script id="module-template" type="text/x-handlebars-template">
               
-                    {{#with courses.[0] }}
+                    {{#with courses.[2] }}
               
                       {{#each curriculum as |ccm|}}
               
@@ -152,15 +152,77 @@
   
             <div class="col-12 col-sm-8 p-4 module-content">
               <div class="container py-2 py-sm-5">
-                <h2 id="Permissioned vs permissionless blockchain">Permissioned vs permissionless blockchain</h2>
-                <div><h3 id="permissioned-blockchain">Permissioned Blockchain</h3>
-  <p>Permissioned Blockchains limit access for those who can perform different activities on the Blockchain. The exchanges are approved and handled by the individuals with record, accepting them for certain trust levels.</p>
-  <p>A permissioned Blockchain is a closed community, and each participant is well defined. This type of Blockchain is built to allow an organization or a group of organizations to exchange information and record transactions very well. Although permissionless Blockchains was very popular in the business world, companies now know the many advantages of using Blockchains to expand business systems also, especially to provide trust, transparency, and efficiency into B2B exchanges. The Hyperledger Foundation is the leading open source initiative for these B2B Blockchains.</p>
-  <p>A permissioned Blockchain is run by the members of a certain group. Stakeholders “opt-in” to form a blockchain network. Only pre-approved entities can run the nodes that make transaction blocks valid and carry out smart contracts on the Blockchain. Permissioned Blockchains make it easy to share trusted information in a secure form, and with the required confidentiality for businesses to effectively operate.</p>
-  <h3 id="permissionless-blockchain">Permissionless Blockchain</h3>
-  <p>Permissionless Blockchains allow anyone to take an interest. The exchanges on the platform are approved and handled by votes or agreement. A vote does not depend on having a previous character in the record and no previous trust is expected.</p>
-  <p>Permissionless Blockchains allow anybody to create an address and start interacting with the blockchain network. The internet is a good example of a permissionless system; where anyone can create any website they want. Similarly, with a permissionless blockchain, creating an address on the network allows any person, thing, or entity to interact with other members or parties. Each party can choose to run a node for the blockchain and help to verify transactions (using mining method), and create smart contracts on the network. This is the essence of Bitcoin and Ethereum Blockchain networks. These networks make use of a crypto-economic model (pushed by proof-of-work consensus method) that rewards people to run network nodes. All network participants get tokens as reward for their contributions.</p>
-  <p>Permissionless blockchains are becoming accepted as a foundation for business-to-consumer (B2C) and consumer-to-consumer (C2C) cases. Many startup companies are making use of Bitcoin and Ethereum network solutions. Most of these solutions use a token (cryptocurrency) system to simplify the exchange of value among participants with the use of an internal rewarding structure.</p>
+                <h2 id="Create a private Ethereum blockchain">Create a private Ethereum blockchain</h2>
+                <div><h4 id="download-geth">Download Geth</h4>
+  <p>Follow the instructions from the <a href="https://geth.ethereum.org/downloads/" target="_blonk">official Geth website</a> to download geth as per your requirement and your operating system.</p>
+  <img src="/img/courses/bc-adv/qa1.png" alt="geth-download"/>
+  
+  <h4 id="check-that-geth-is-installed">Check that geth is installed</h4>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/$: geth</code></pre>
+  <p>You will see the log of a running geth instance.
+  <img src="/img/courses/bc-adv/qa2.png" alt="geth-console" /></p>
+  <h4 id="configure-your-blockchain-setting">Configure your blockchain setting</h4>
+  <div class="precode">shell</div>
+  
+  <pre><code>user:~/$: mkdir blockchain
+  user:~/$: cd blockchain
+  user:~/blockchain$: touch genesis.json</code></pre><p><strong>What is a genesis file?</strong></p>
+  <p>The genesis block is the first block of the blockchain. As there is no reference to a previous block, the properties of the genesis block is usually hardcoded into the software, as seen in <code>genesis.json</code>. In <code>genesis.json</code> you will configure the properties of the blockchain. It is like the “settings” for your blockchain. For example, the chain configuration, level of difficulty to mine blocks, etc.</p>
+  <p>There are <strong>4 required values</strong> (config, difficulty, gasLimit and alloc) you need to specify in <code>genesis.json</code>.</p>
+  <p>This is an example of how a genesis file.</p>
+  <div class="precode">~/blockchain/genesis.json</div>
+  
+  <pre><code class="language-json">{
+    &quot;config&quot;: {
+      &quot;chainId&quot;: 989899,
+      &quot;homesteadBlock&quot;: 0,
+      &quot;eip155Block&quot;: 0,
+      &quot;eip158Block&quot;: 0
+    },
+    &quot;difficulty&quot;: &quot;200&quot;,
+    &quot;gasLimit&quot;: &quot;2100000&quot;,
+    &quot;alloc&quot;: {
+      &quot;7df9a875a174b3bc565e6424a0050ebc1b2d1d82&quot;: { &quot;balance&quot;: &quot;300000&quot; },
+      &quot;f41c74c9ae680c1aa78f42e5647a62f353b7bdde&quot;: { &quot;balance&quot;: &quot;400000&quot; }
+    }
+  }</code></pre>
+  <h4 id="initialise-the-genesis-file">Initialise the genesis file</h4>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/blockchain$: geth -datadir=./new init genesis.json</code></pre>
+  <p>This command will initialize your genesis block. You will see that a new folder is created in the blockchain folder. This new folder contains geth and your keystore.
+  <img src="/img/courses/bc-adv/qa5.png" alt="geth-console init" /></p>
+  <h4 id="start-your-blockchain-node-">Start your blockchain(node)</h4>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/blockchain$: geth  --datadir ./new --networkid 989899 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi
+  db,net,web3,admin,eth,miner,personal --rpccorsdomain</code></pre>
+  <p>This command includes admin, miner, gives your private blockchain network id and port number and also creates one miner to mine your private blockchain.</p>
+  <h4 id="create-your-first-account">Create your first account</h4>
+  <p>Attach Geth to your console with the rpcport you declared in the previous command.</p>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/blockchain$: geth attach http://0.0.0.0:8545</code></pre>
+  <p>Now you are ready to interact with your private Ethereum blockchain. Let&#39;s start off by creating new account and transferring some ether from one account to the other.</p>
+  <div class="precode">geth console</div>
+  
+  <pre><code class="language-console">&gt; Personal.newAccount()
+  &gt; miner.start()
+  &gt; miner.stop()
+  &gt; eth.getBalance(eth.coinbase) //Wei
+  &gt; web3.fromWei(eth.getBalance(eth.coinbase),”ether”)
+  &gt; eth.sendTransaction({from: &lt;AddrA&gt; to: &lt;AddrB&gt; value, :web3.toWei(85,&quot;ether&quot;)})  // it is Transfer some ether one account to another account</code></pre>
+  <img src="/img/courses/bc-adv/qa8.png" alt="create eth transactions" />
+  
+  
+  <h4 id="check-your-transaction">Check your transaction</h4>
+  <p>When you make a transaction, the console will print an alphanumberic string, which is the <code>TX receipt</code> for the particular transaction. With the <code>TX receipt</code>, you will be able to get the transaction details, like <strong>blockhash</strong>, <strong>blocknumber</strong>, <strong>sender</strong> and <strong>gas price</strong>.</p>
+  <div class="precode">geth console</div>
+  
+  <pre><code class="language-console">&gt; eth.getTransaction(&#39;&lt;TX receipt&gt;&#39;)</code></pre>
+  <img src="/img/courses/bc-adv/qa9.png" alt="check transaction information" />
   </div>
               </div>
             </div>
