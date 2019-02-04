@@ -1,7 +1,7 @@
 <div class="container main-menu">
   <div class="row align-items-center justify-content-between d-flex">
     <div id="logo">
-      <a href="/index.html"><img src="/img/brand/XinFin_transparent.png" alt="xinfin blockchain education training" /></a>
+      <a href="/"><img src="/img/brand/XinFin_transparent.png" alt="xinfin blockchain education training" /></a>
     </div>
 
     <nav id="nav-menu-container">
@@ -10,19 +10,24 @@
           <ul id="nav-sub-1">
             <script id="nav-submenu-template" type="text/template">
               \{{#each courses}}
-                <li><a href="/courses/\{{slug}}.html" data-toggle="moda" data-target="#exampleModal" data-whatever="@getbootstra">
+                <li><a href="/\{{slug}}" data-toggle="moda" data-target="#exampleModal" data-whatever="@getbootstra">
                   \{{title}}
                 </a></li>
               \{{/each}}
             </script>
           </ul>
         </li>
-        <li><a href="/university-courses.html" class="py-1">University Course Offline</a></li>
-        <li><a href="/events.html" class="py-1">Event</a></li>
-        <li><a href="/verify-certification.html" class="py-1">Verify Certification</a></li>
-        <li><a href="/contact.html" class="py-1">Contact Us</a></li>
-        <li>
-          <a href="/login.html" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Login</a>
+        <li><a href="/university-courses" class="py-1">University Course Offline</a></li>
+        <li><a href="/events" class="py-1">Event</a></li>
+        <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
+        <li><a href="/contact" class="py-1">Contact Us</a></li>
+        <li id="login-btn">
+          <script id="nav-login" type="text/template">
+            <a id="userAuth-btn" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"
+               href="\{{#if this}}/logout\{{else}}/login\{{/if}}">
+              \{{#if this}}Logout\{{else}}Login\{{/if}}
+            </a>
+          </script>
         </li>
       </ul>
     </nav>

@@ -22,31 +22,6 @@ $(document).ready(function() {
         $('select').niceSelect();
     };
 
-    //------- Lightbox  js --------//
-
-    // $('.img-gal').magnificPopup({
-    //     type: 'image',
-    //     gallery: {
-    //         enabled: true
-    //     }
-    // });
-    //
-    // $('.play-btn').magnificPopup({
-    //     type: 'iframe',
-    //     mainClass: 'mfp-fade',
-    //     removalDelay: 160,
-    //     preloader: false,
-    //     fixedContentPos: false
-    // });
-
-    //------- Datepicker  js --------//
-
-      // $( function() {
-      //   $( "#datepicker" ).datepicker();
-      //   $( "#datepicker2" ).datepicker();
-      // } );
-
-
     //------- Superfist nav menu  js --------//
 
     $('.nav-menu').superfish({
@@ -56,30 +31,7 @@ $(document).ready(function() {
         speed: 400
     });
 
-    /* ---------------------------------------------
-     accordion
-     --------------------------------------------- */
 
-    // var allPanels = $(".accordion > dd").hide();
-    // allPanels.first().slideDown("easeOutExpo");
-    // $(".accordion").each(function() {
-    //     $(this).find("dt > a").first().addClass("active").parent().next().css({
-    //         display: "block"
-    //     });
-    // });
-
-
-    //  $(document).on('click', '.accordion > dt > a', function(e) {
-    //
-    //     var current = $(this).parent().next("dd");
-    //     $(this).parents(".accordion").find("dt > a").removeClass("active");
-    //     $(this).addClass("active");
-    //     $(this).parents(".accordion").find("dd").slideUp("easeInExpo");
-    //     $(this).parent().next().slideDown("easeOutExpo");
-    //
-    //     return false;
-    //
-    // });
 
     //------- Tabs Js --------//
     if (document.getElementById("horizontalTab")) {
@@ -90,75 +42,6 @@ $(document).ready(function() {
     });
 
     };
-    //------- Owl Carusel  js --------//
-
-
-    // $('.active-popular-carusel').owlCarousel({
-    //     items:4,
-    //     margin: 30,
-    //     loop:true,
-    //     dots: true,
-    //     autoplayHoverPause: true,
-    //     smartSpeed:650,
-    //     autoplay:true,
-    //         responsive: {
-    //         0: {
-    //             items: 1
-    //         },
-    //         480: {
-    //             items: 1,
-    //         },
-    //         768: {
-    //             items: 2,
-    //         },
-    //         992: {
-    //             items:4
-    //         }
-    //     }
-    // });
-    //
-    // $('.active-upcoming-event-carusel').owlCarousel({
-    //     items:2,
-    //     margin: 30,
-    //     loop:true,
-    //     dots: true,
-    //     autoplayHoverPause: true,
-    //     smartSpeed:650,
-    //     autoplay:true,
-    //         responsive: {
-    //         0: {
-    //             items: 1
-    //         },
-    //         480: {
-    //             items: 1,
-    //         },
-    //         992: {
-    //             items: 2,
-    //         }
-    //     }
-    // });
-    //
-    //
-    // $('.active-review-carusel').owlCarousel({
-    //     items:2,
-    //     margin: 30,
-    //     loop:true,
-    //     dots: true,
-    //     autoplayHoverPause: true,
-    //     smartSpeed:650,
-    //     autoplay:true,
-    //         responsive: {
-    //         0: {
-    //             items: 1
-    //         },
-    //         480: {
-    //             items: 1,
-    //         },
-    //         768: {
-    //             items: 2,
-    //         }
-    //     }
-    // });
 
     //------- Mobile Nav  js --------//
 
@@ -273,142 +156,6 @@ $(document).ready(function() {
             $('#header').removeClass('header-scrolled');
         }
     });
-    
-    // //------- Google Map  js --------//
-    //
-    // if (document.getElementById("map")) {
-    //     google.maps.event.addDomListener(window, 'load', init);
-    //
-    //     function init() {
-    //         var mapOptions = {
-    //             zoom: 11,
-    //             center: new google.maps.LatLng(40.6700, -73.9400), // New York
-    //             styles: [{
-    //                 "featureType": "water",
-    //                 "elementType": "geometry",
-    //                 "stylers": [{
-    //                     "color": "#e9e9e9"
-    //                 }, {
-    //                     "lightness": 17
-    //                 }]
-    //             }, {
-    //                 "featureType": "landscape",
-    //                 "elementType": "geometry",
-    //                 "stylers": [{
-    //                     "color": "#f5f5f5"
-    //                 }, {
-    //                     "lightness": 20
-    //                 }]
-    //             }, {
-    //                 "featureType": "road.highway",
-    //                 "elementType": "geometry.fill",
-    //                 "stylers": [{
-    //                     "color": "#ffffff"
-    //                 }, {
-    //                     "lightness": 17
-    //                 }]
-    //             }, {
-    //                 "featureType": "road.highway",
-    //                 "elementType": "geometry.stroke",
-    //                 "stylers": [{
-    //                     "color": "#ffffff"
-    //                 }, {
-    //                     "lightness": 29
-    //                 }, {
-    //                     "weight": 0.2
-    //                 }]
-    //             }, {
-    //                 "featureType": "road.arterial",
-    //                 "elementType": "geometry",
-    //                 "stylers": [{
-    //                     "color": "#ffffff"
-    //                 }, {
-    //                     "lightness": 18
-    //                 }]
-    //             }, {
-    //                 "featureType": "road.local",
-    //                 "elementType": "geometry",
-    //                 "stylers": [{
-    //                     "color": "#ffffff"
-    //                 }, {
-    //                     "lightness": 16
-    //                 }]
-    //             }, {
-    //                 "featureType": "poi",
-    //                 "elementType": "geometry",
-    //                 "stylers": [{
-    //                     "color": "#f5f5f5"
-    //                 }, {
-    //                     "lightness": 21
-    //                 }]
-    //             }, {
-    //                 "featureType": "poi.park",
-    //                 "elementType": "geometry",
-    //                 "stylers": [{
-    //                     "color": "#dedede"
-    //                 }, {
-    //                     "lightness": 21
-    //                 }]
-    //             }, {
-    //                 "elementType": "labels.text.stroke",
-    //                 "stylers": [{
-    //                     "visibility": "on"
-    //                 }, {
-    //                     "color": "#ffffff"
-    //                 }, {
-    //                     "lightness": 16
-    //                 }]
-    //             }, {
-    //                 "elementType": "labels.text.fill",
-    //                 "stylers": [{
-    //                     "saturation": 36
-    //                 }, {
-    //                     "color": "#333333"
-    //                 }, {
-    //                     "lightness": 40
-    //                 }]
-    //             }, {
-    //                 "elementType": "labels.icon",
-    //                 "stylers": [{
-    //                     "visibility": "off"
-    //                 }]
-    //             }, {
-    //                 "featureType": "transit",
-    //                 "elementType": "geometry",
-    //                 "stylers": [{
-    //                     "color": "#f2f2f2"
-    //                 }, {
-    //                     "lightness": 19
-    //                 }]
-    //             }, {
-    //                 "featureType": "administrative",
-    //                 "elementType": "geometry.fill",
-    //                 "stylers": [{
-    //                     "color": "#fefefe"
-    //                 }, {
-    //                     "lightness": 20
-    //                 }]
-    //             }, {
-    //                 "featureType": "administrative",
-    //                 "elementType": "geometry.stroke",
-    //                 "stylers": [{
-    //                     "color": "#fefefe"
-    //                 }, {
-    //                     "lightness": 17
-    //                 }, {
-    //                     "weight": 1.2
-    //                 }]
-    //             }]
-    //         };
-    //         var mapElement = document.getElementById('map');
-    //         var map = new google.maps.Map(mapElement, mapOptions);
-    //         var marker = new google.maps.Marker({
-    //             position: new google.maps.LatLng(40.6700, -73.9400),
-    //             map: map,
-    //             title: 'Snazzy!'
-    //         });
-    //     }
-    // }
 
     //------- Mailchimp js --------//
     $('#mc_embed_signup').find('form').ajaxChimp();
@@ -430,11 +177,12 @@ $(document).ready(function() {
   }
 
   // Course curriculum
-  if($('.course-module')){
+  if($('.course-module').length){
     let fullPath = window.location.pathname,
     currentPathIndex = fullPath.lastIndexOf('/'),
-    currentPath = fullPath.slice(currentPathIndex + 1, -5), // -5 cause of .html ext
+    currentPath = fullPath.slice(currentPathIndex + 1),
     activeItem =  $('.mod__sidebar #' + currentPath);
+    console.log(currentPath)
 
     activeItem.find('.arrow').text('▲');
     activeItem.attr('aria-expanded', 'false');
@@ -447,5 +195,12 @@ $(document).ready(function() {
 
         $('html,body').animate({scrollTop: pos - 100}, 400);
     });
+  }
+
+  if($('#userAuth-btn').attr('href') == '/logout') {
+    $('#userAuth-btn').on('click', (e) => {
+      $.get(e.target.pathname)
+        .done(() => localStorage.setItem('hasUser', false) )
+    })
   }
 });

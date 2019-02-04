@@ -33,7 +33,7 @@
         <div class="container main-menu">
           <div class="row align-items-center justify-content-between d-flex">
             <div id="logo">
-              <a href="/index.html"><img src="/img/brand/XinFin_transparent.png" alt="xinfin blockchain education training" /></a>
+              <a href="/"><img src="/img/brand/XinFin_transparent.png" alt="xinfin blockchain education training" /></a>
             </div>
         
             <nav id="nav-menu-container">
@@ -42,19 +42,24 @@
                   <ul id="nav-sub-1">
                     <script id="nav-submenu-template" type="text/template">
                       {{#each courses}}
-                        <li><a href="/courses/{{slug}}.html" data-toggle="moda" data-target="#exampleModal" data-whatever="@getbootstra">
+                        <li><a href="/{{slug}}" data-toggle="moda" data-target="#exampleModal" data-whatever="@getbootstra">
                           {{title}}
                         </a></li>
                       {{/each}}
                     </script>
                   </ul>
                 </li>
-                <li><a href="/university-courses.html" class="py-1">University Course Offline</a></li>
-                <li><a href="/events.html" class="py-1">Event</a></li>
-                <li><a href="/verify-certification.html" class="py-1">Verify Certification</a></li>
-                <li><a href="/contact.html" class="py-1">Contact Us</a></li>
-                <li>
-                  <a href="/login.html" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Login</a>
+                <li><a href="/university-courses" class="py-1">University Course Offline</a></li>
+                <li><a href="/events" class="py-1">Event</a></li>
+                <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
+                <li><a href="/contact" class="py-1">Contact Us</a></li>
+                <li id="login-btn">
+                  <script id="nav-login" type="text/template">
+                    <a id="userAuth-btn" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"
+                       href="{{#if this}}/logout{{else}}/login{{/if}}">
+                      {{#if this}}Logout{{else}}Login{{/if}}
+                    </a>
+                  </script>
                 </li>
               </ul>
             </nav>
@@ -97,96 +102,95 @@
   
         <div class="pt-5">
           <h2 class="mb-2">Our gallery</h2>
-
-        </div>
-      
-
-        <div class="container">
-          <div class="row" style="background-image:linear-gradient(106deg,#D8BFD8,#E6E6FA ); border-radius: 10px;">
-            <div class="col-lg-6">
-              <a href="img/kj1.jpg" class="img-gal">
-                <div class="single-imgs relative">    
-                  <div class="overlay overlay-bg"></div>
-                  <div class="relative">        
-                    <img class="img-fluid" src="img/kj1.jpg" alt="">    
-                  </div>
+          <div id="gallery">
+            
+            <div class="container">
+              <div class="row" style="background-image:linear-gradient(106deg,#D8BFD8,#E6E6FA ); border-radius: 10px;">
+                <div class="col-lg-6">
+                  <a href="img/kj1.jpg" class="img-gal">
+                    <div class="single-imgs relative">
+                      <div class="overlay overlay-bg"></div>
+                      <div class="relative">
+                        <img class="img-fluid" src="img/kj1.jpg" alt="">
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            </div>
-            <div class="col-lg-6">
-              <a href="img/kstart1.jpeg" class="img-gal">
-                <div class="single-imgs relative">    
-                  <div class="overlay overlay-bg"></div>
-                  <div class="relative">        
-                    <img class="img-fluid" src="img/kstart1.jpeg" alt="">       
-                  </div>
+                <div class="col-lg-6">
+                  <a href="img/kstart1.jpeg" class="img-gal">
+                    <div class="single-imgs relative">
+                      <div class="overlay overlay-bg"></div>
+                      <div class="relative">
+                        <img class="img-fluid" src="img/kstart1.jpeg" alt="">
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            </div>
-            <div class="col-lg-4">
-              <a href="img/kstart2.jpeg" class="img-gal">
-                <div class="single-imgs relative">    
-                  <div class="overlay overlay-bg"></div>
-                  <div class="relative">        
-                    <img class="img-fluid" src="img/kstart2.jpeg" alt="">       
-                  </div>
+                <div class="col-lg-4">
+                  <a href="img/kstart2.jpeg" class="img-gal">
+                    <div class="single-imgs relative">
+                      <div class="overlay overlay-bg"></div>
+                      <div class="relative">
+                        <img class="img-fluid" src="img/kstart2.jpeg" alt="">
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            </div>
-            <div class="col-lg-4">
-              <a href="img/kstart3.jpeg" class="img-gal">
-                <div class="single-imgs relative">    
-                  <div class="overlay overlay-bg"></div>
-                  <div class="relative">          
-                    <img class="img-fluid" src="img/kstart3.jpeg" alt="">       
-                  </div>
+                <div class="col-lg-4">
+                  <a href="img/kstart3.jpeg" class="img-gal">
+                    <div class="single-imgs relative">
+                      <div class="overlay overlay-bg"></div>
+                      <div class="relative">
+                        <img class="img-fluid" src="img/kstart3.jpeg" alt="">
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            </div>
-            <div class="col-lg-4">
-              <a href="img/kstart4.jpeg"  class="img-gal">
-                <div class="single-imgs relative">    
-                  <div class="overlay overlay-bg"></div>
-                  <div class="relative">          
-                    <img class="img-fluid" src="img/kstart4.jpeg" alt="">       
-                  </div>
+                <div class="col-lg-4">
+                  <a href="img/kstart4.jpeg"  class="img-gal">
+                    <div class="single-imgs relative">
+                      <div class="overlay overlay-bg"></div>
+                      <div class="relative">
+                        <img class="img-fluid" src="img/kstart4.jpeg" alt="">
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            </div>
-            <div class="col-lg-5">
-              <a href="img/spit234.jpeg" class="img-gal">
-                <div class="single-imgs relative">    
-                  <div class="overlay overlay-bg"></div>
-                  <div class="relative">        
-                    <img class="img-fluid" src="img/spit234.jpeg" alt="">       
-                  </div>
+                <div class="col-lg-5">
+                  <a href="img/spit234.jpeg" class="img-gal">
+                    <div class="single-imgs relative">
+                      <div class="overlay overlay-bg"></div>
+                      <div class="relative">
+                        <img class="img-fluid" src="img/spit234.jpeg" alt="">
+                      </div>
+                    </div>
+                   </a>
                 </div>
-               </a>
-            </div>
-            <div class="col-lg-7">
-              <a href="img/spit236.jpeg" class="img-gal">
-                <div class="single-imgs relative">    
-                  <div class="overlay overlay-bg"></div>
-                  <div  class="relative">         
-                    <img class="img-fluid" src="img/spit236.jpeg" alt="">       
-                  </div>
+                <div class="col-lg-7">
+                  <a href="img/spit236.jpeg" class="img-gal">
+                    <div class="single-imgs relative">
+                      <div class="overlay overlay-bg"></div>
+                      <div  class="relative">
+                        <img class="img-fluid" src="img/spit236.jpeg" alt="">
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            </div>
-            <div class="col-lg-7">
-              <a href="img/1_PM0paOgnyZrmYHH3djku7Q.jpeg" class="img-gal">
-                <div class="single-imgs relative">    
-                  <div class="overlay overlay-bg"></div>
-                  <div  class="relative">         
-                    <img class="img-fluid" src="img/1_PM0paOgnyZrmYHH3djku7Q.jpeg" alt="">        
-                  </div>
+                <div class="col-lg-7">
+                  <a href="img/1_PM0paOgnyZrmYHH3djku7Q.jpeg" class="img-gal">
+                    <div class="single-imgs relative">
+                      <div class="overlay overlay-bg"></div>
+                      <div  class="relative">
+                        <img class="img-fluid" src="img/1_PM0paOgnyZrmYHH3djku7Q.jpeg" alt="">
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
+              </div>
             </div>
+  
           </div>
-        </div>  
-    
-                     </div>
+        </div>
       </div>
       </section>
   
@@ -199,8 +203,7 @@
                             <h4>Useful</h4>
                             <ul>
                                 <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-          
+                                <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
                     </div>
@@ -262,15 +265,16 @@
       </footer>
   
   
-      <script src="/js/vendor/bootstrap.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
       <script src="/js/vendor/jquery.magnific-popup.min.js"></script>
+      <script src="/js/vendor/jquery-ui.js"></script>
       <script src="/js/vendor/superfish.min.js"></script>
       <script src="/js/vendor/jquery.ajaxchimp.min.js"></script>
-      <script src="/js/vendor/jquery-ui.js"></script>
       <script src="/js/vendor/slick.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-      <script src="/js/main.js"></script>
       <script src="/js/pageHandlebars.js"></script>
+      <script src="/js/main.js"></script>
     <script src="js/events.js"></script>
      </body>
   </html>
