@@ -44,7 +44,7 @@ function submitForm(form) {
     type: 'POST',
     url: $(form).attr('action'),
     data: formData,
-    dataType: 'json'
+    dataType: 'json',
   })
   .done((res) => {
     if(res.status == false) {
@@ -52,7 +52,7 @@ function submitForm(form) {
       $('.form-messages').addClass('alert-danger');
       $('.form-messages').html(errMsg);
     } else if (query) {
-      localStorage.setItem('hasUser', true)
+      localStorage.setItem('hasUser', true);
       window.location = '/courses/' + query;
     } else {
       $('.form-messages').addClass('alert-success');

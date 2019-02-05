@@ -18,8 +18,11 @@ module.exports = function (app, passport) {
         passport.authenticate('local-login', {
             session: true,
         }, async (err, user, info) => {
-            res.send({ status: user, message: info })
-            console.log(user)
+            req.logIn(user, function(err) {
+              if (err) { return next(err); }
+              res.send({ status: user, message: info })
+              console.log('user logged in',user, info)
+            });
         })(req, res, next);
     });
 
@@ -54,6 +57,6 @@ module.exports = function (app, passport) {
     });
 
     app.get('/tt', isLoggedIn, (req, res) => {
-      console.log('auth: ' + req.isAuthenticated())
+      console.log('auth tt: ' + req.isAuthenticated())
     });
 };
