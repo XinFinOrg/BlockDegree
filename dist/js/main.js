@@ -187,6 +187,7 @@ $(document).ready(function() {
     activeItem.attr('aria-expanded', 'true');
     activeItem.siblings('.side-nav__child').removeClass('collapse');
     activeItem.siblings('.side-nav__child').addClass('show');
+    $('[href="' + currentPath + '"] > :header').addClass('active');
 
     $(".side-nav__child a").on('click', function(e){
         let section = $(this).attr('id'),
@@ -199,7 +200,6 @@ $(document).ready(function() {
 
   if($('.course-module').length){
     $('.arrow').on('click', function(e) {
-      console.log(e.target.innerText)
       return e.target.innerText = e.target.innerText == '▲' ? '▼' : '▲'
     });
   }

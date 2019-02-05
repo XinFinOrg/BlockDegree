@@ -1,7 +1,7 @@
 Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.html
 
 ## To do
-- [ ] Login functionality
+- [X] Login functionality
 - [ ] Need to check on the rerouting of the express function that authenticates whether user isLoggedIn
 - [ ] Pages for the link at footer
 - [ ] Email sign up (only UI)
@@ -9,7 +9,7 @@ Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.htm
 - [ ] Functionality for certificate page
 - [ ] Functionality for contact form
 - [X] Become partner button at university course offline
-- [ ] Previous and next arrow when use finish reading the documents
+- [ ] Previous and next arrow when user finish reading the documents
 - [ ] Content for become partner popup
 - [ ] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
 - [X] Code to read the images in folder for gallery and automatically generate it

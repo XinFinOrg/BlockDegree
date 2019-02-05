@@ -10,7 +10,7 @@ courseIdx: 1
 
 #### Open the system environment variable and set path of bitcoin
 `C:\Program Files\bitcoin\daemon`
-You can set path from program files, you need to open bitcoin folder ,open daemon folder and copy the path and paste it in the system environment variable.
+You can set path from program files, you need to open bitcoin folder, open daemon folder and copy the path and paste it in the system environment variable.
 
 #### Create a folder in the driver and name the folder bitcoin
 
@@ -27,17 +27,19 @@ You need to save this file as bitcoin.configure.
 * __Rpc-port__: It gives port number to your node.
 
 #### Enter the following command
+<div class="precode">shell</div>
+
 ```console
-shell
-user:~/bitcoin$: bitcoind –datadir=./bitcoincore –txindex
+user:~/bitcoin$ bitcoind –datadir=./bitcoincore –txindex
 ```
 
 #### After entering the above command in the cmd you will see different folder created in the bitcoincore
 
 #### Enter the following command
+<div class="precode">shell</div>
+
 ```console
-shell
-user:~/bitcoin$: bitcoin-cli –datadir=./bitcoincore getblockchaininfo
+user:~/bitcoin$ bitcoin-cli –datadir=./bitcoincore getblockchaininfo
 ```
 
 You will see the public blockchain of bitcoin in the command prompt.

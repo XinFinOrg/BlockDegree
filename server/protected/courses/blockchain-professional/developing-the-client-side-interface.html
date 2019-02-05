@@ -151,13 +151,14 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
+              <div class="container py-2">
                 <h2 id="Developing the client side interface">Developing the client side interface</h2>
                 <div><p>Now let&#39;s start building out the client-side application that will talk to our smart contract. We&#39;ll do this by modifying the HTML and Javascript files that came with the Truffle Pet Shop box that we installed in the previous section. We&#39;ll use this existing code to get started. Let&#39;s also take note of a few other things that came with the Truffle Pet Shop box like the Bootstrap framework that will keep us from having to write any CSS in this tutorial. We also got lite-server, which will serve our assets for development purposes.</p>
   <p>You do not have to be a front-end expert to follow along with this part of the tutorial. I have intentionally kept the HTML and Javascript code very simple, and we will not spend much time focusing on it. I want to stay focused on developing the smart contract portion of our dApp!</p>
   <p>Go ahead and replace all of the content of your <code>index.html</code> file with this code:</p>
-  <pre><code class="language-html">~/election/src/index.html
-  &lt;!DOCTYPE html&gt;
+  <div class="precode">~/election/src/index.html</div>
+  
+  <pre><code class="language-html">&lt;!DOCTYPE html&gt;
   &lt;html lang=&quot;en&quot;&gt;
     &lt;head&gt;
       &lt;meta charset=&quot;utf-8&quot;&gt;
@@ -208,8 +209,9 @@
   &lt;/html&gt;
   `</code></pre>
   <p>Next, replace all of the content of your <code>app.js</code> file with this code:</p>
-  <pre><code class="language-javascript">~/election/src/app.js
-  App = {
+  <div class="precode">~/election/src/app.js</div>
+  
+  <pre><code class="language-javascript">App = {
     web3Provider: null,
     contracts: {},
     account: &#39;0x0&#39;,
@@ -298,11 +300,13 @@
   <li><strong>Render function</strong>: The render function lays out all the content on the page with data from the smart contract. For now, we list the candidates we created inside the smart contract. We do this by looping through each candidate in the mapping, and rendering it to the table. We also fetch the current account that is connected to the blockchain inside this function and display it on the page.</li>
   </ol>
   <p>Now let&#39;s view the client-side application in the browser. First, make sure that you&#39;ve migrated your contracts like this:</p>
-  <pre><code class="language-console">shell
-  user:~/election$: truffle migrate --reset</code></pre>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/election$ truffle migrate --reset</code></pre>
   <p>Next, start your development server</p>
-  <pre><code class="language-console">shell
-  user:~/election$: npm run dev</code></pre>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/election$ npm run dev</code></pre>
   <p>This should automatically open a new browser window with your client-side application.</p>
   <p>Notice that your application says &quot;Loading...&quot;. That&#39;s because we&#39;re not logged in to the
   blockchain yet! In order to connect to the blockchain, we need to import one of the accounts
@@ -310,6 +314,20 @@
   <p>Once you&#39;re connected with Metamask, you should see all of the contract and account data
   loaded.</p>
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -324,7 +342,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -398,6 +416,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+

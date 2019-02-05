@@ -64,7 +64,12 @@ gulp.task('metalsmith', () => {
 });
 
 gulp.task('watch-ms', () => {
-  gulp.watch('./content/**/*.md', gulp.series('metalsmith'))
+  gulp.watch([
+    './content/**/*.md',
+    './src/partials/layouts/courseContent.hbs',
+    './src/partials/layouts/certBlock.hbs',
+    './src/partials/layouts/modSidebar.hbs'
+  ], gulp.series('metalsmith'))
 })
 
 gulp.task('html', () => {
@@ -94,13 +99,9 @@ gulp.task('watch', () => {
   });
 
   // Html and metal smith is run simultaneously, causing it to break so till that is figured out, have to manually run metalsmith
-  // gulp.watch('./src/_data/**/*.md', gulp.series('metalsmith'));
-  // gulp.watch('./src/partials/layouts/documentation.hbs', gulp.series('metalsmith'));
-  // gulp.watch('./src/partials/layouts/modSidebar.hbs', gulp.series('metalsmith'));
 
   gulp.watch('./src/partials/layouts/courseOverview.hbs', gulp.series('compileCourseOverview'));
-  gulp.watch('./src/**/*.hbs', gulp.series('html'));
-  gulp.watch('./src/**/*.html', gulp.series('html'));
+  gulp.watch(['./src/**/*.hbs', './src/**/*.html'], gulp.series('html'));
   gulp.watch('./src/scss/**/*.scss', gulp.series('sass'));
   livereload.listen();
   gulp.watch('**/*.html').on('change', reload);

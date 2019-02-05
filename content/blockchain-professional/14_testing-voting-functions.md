@@ -5,8 +5,9 @@ template: courseContent.hbs
 courseIdx: 2
 ---
 Now let's add a test to our `election.js` test file
+<div class="precode">~/election/test/election.js</div>
+
 ```javascript
-~/election/test/election.js
 it("allows a voter to cast a vote", function() {
     return Election.deployed().then(function(instance) {
       electionInstance = instance;
@@ -29,9 +30,9 @@ We want to test two things here:
 2. Test that the voter is added to the mapping whenever they vote.
 
 Next we can write a few test for our function's requirements. Let's write a test to ensure that our vote function throws an exception for double voting.
+<div class="precode">~/election/test/election.js</div>
 
 ```javascript
-~/election/test/election.js
 it("throws an exception for double voting", function() {
     return Election.deployed().then(function(instance) {
       electionInstance = instance;
@@ -60,7 +61,8 @@ it("throws an exception for double voting", function() {
 First, we'll set up a test scenario with a fresh account that hasn't voted yet. Then we'll cast a vote on their behalf. Then we'll try to vote again. We'll assert that an error has occurred here. We can inspect the error message, and ensure that no candidates received votes, just like the previous test.
 
 Now let's run our tests
+<div class="precode">shell</div>
+
 ```console
-shell
-user:~/election$: truffle test
+user:~/election$ truffle test
 ```

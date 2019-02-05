@@ -5,9 +5,9 @@ template: courseContent.hbs
 courseIdx: 2
 ---
 ### Create Genesis File on Notepad (json Format)
+<div class="precode">~/blockchain/genesis.json</div>
 
 ```json
-json
 {
 	"config": {
     "chainId": 989899,
@@ -23,8 +23,9 @@ json
 ```
 
 ### Start your blockchain
+<div class="precode">shell</div>
+
 ```console
-shell
 user:/$ cd ~/blockchain
 user:~/blockchain$ geth –datadir=./chaindata init genesis.json
 user:~/blockchain$ geth –datadir ./chaindata --networkid 989899
@@ -33,15 +34,17 @@ user:~/blockchain$ geth –datadir ./chaindata --networkid 989899
 
 ### Attach the Geth console
 Open a new command prompt and run the command below
+<div class="precode">shell</div>
+
 ```console
-shell
 user:/$ cd ~/blockchain
 user:~/blockchain$ geth attach
 ```
 
 Create  your own Account
+<div class="precode">geth console</div>
+
 ```console
-geth javascript console
 > personal.newAccount()
 > miner.start()
 > miner.stop()
@@ -51,19 +54,21 @@ geth javascript console
   15  
 ```
 
-The XDC-E smart contract is availabel on the following link .copy the smart contarct .
+The XDC-E smart contract is available on the following link. Copy the smart contract.
 
 https://docs.google.com/document/d/1v9Oow11P7WfDBUHwesD-bercqH4jOE_8bWtobssx8ro/edit?usp=sharing
 
-### Write Your Smart Contract on Remix Comipler
+### Write Your Smart Contract on Remix Compiler
+<img src="/img/courses/bc-pro/op2.png" alt="remix compiler"/>
 
-After that copy on ABI (Web3deploy) :-
+After that copy on ABI (Web3deploy)
+<img src="/img/courses/bc-pro/op3.png" alt="geth-download"/>
 
 Copy of the ->var Coincontract =web3.eth.contract………. etc.
+
 Copy of the ->var coin= coinContract.new …………. Etc.
 
-
-After that Submitted contract is creation
+After that your submitted contract is created
 
 ### Calling our Smart Contract
 
@@ -72,5 +77,6 @@ Now that our smart contract is deployed on our private Ethereum Blockchain, we c
 2. The contract address
 
 Contract is deployed
+<img src="/img/courses/bc-pro/op7.png" alt="deployed contract"/>
 
 With that you have deployed your smart contract to your own private Ethereum network!

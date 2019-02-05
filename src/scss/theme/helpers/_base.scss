@@ -3,9 +3,24 @@ body {
   line-height: 1.8rem;
 }
 
+p {
+  margin-bottom: 1.8rem;
+}
+
+ol {
+  list-style: decimal outside;
+  @include media-breakpoint-up(sm){
+    margin-left: 70px;
+  }
+  li {
+    padding-bottom: 20px;
+  }
+}
+
 pre {
   white-space: pre-line;
 
+  .language-html,
   .language-javascript,
   .language-json,
   .language-js {

@@ -151,11 +151,12 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
+              <div class="container py-2">
                 <h2 id="Implementing voting on client side">Implementing voting on client side</h2>
                 <div><p>Let&#39;s add a form that allows accounts to vote below the table in our <code>index.html</code></p>
-  <pre><code class="language-HTML">~/election/src/index.html
-  &lt;form onSubmit=&quot;App.castVote(); return false;&quot;&gt;
+  <div class="precode">~/election/src/index.html</div>
+  
+  <pre><code class="language-html">&lt;form onSubmit=&quot;App.castVote(); return false;&quot;&gt;
     &lt;div class=&quot;form-group&quot;&gt;
       &lt;label for=&quot;candidatesSelect&quot;&gt;Select Candidate&lt;/label&gt;
       &lt;select class=&quot;form-control&quot; id=&quot;candidatesSelect&quot;&gt;
@@ -168,8 +169,9 @@
   <p>We create the form with an empty select element. We will populate the select options with the candidates provided by our smart contract in our <code>app.js</code>.</p>
   <p>The form has an <code>onSubmit</code> handler that will call the <code>castVote</code> function. We will define this in our <code>app.js</code>.</p>
   <p>Now let&#39;s update our <code>app.js</code> to handle both of those things. First we list all the candidates from the smart contract inside the form&#39;s select element. Then we&#39;ll hide the form on the page once the account has voted. We&#39;ll update the render function to look like this:</p>
-  <pre><code class="language-javascript">~/election/src/app.js
-  render: function() {
+  <div class="precode">~/election/src/app.js</div>
+  
+  <pre><code class="language-javascript">render: function() {
     var electionInstance;
     var loader = $(&quot;#loader&quot;);
     var content = $(&quot;#content&quot;);
@@ -225,8 +227,9 @@
     });
   }</code></pre>
   <p>Next, we want to write a function that&#39;s called whenever the form is submitted:</p>
-  <pre><code class="language-javascript">~/election/src/app.js
-  ...
+  <div class="precode">~/election/src/app.js</div>
+  
+  <pre><code class="language-javascript">...
   castVote: function() {
       var candidateId = $(&#39;#candidatesSelect&#39;).val();
       App.contracts.Election.deployed().then(function(instance) {
@@ -241,13 +244,16 @@
     }
   ...</code></pre>
   <p>First, we query for the <code>candidateId</code> in the form. When we call the vote function from our smart contract, we pass in this id, and we provide the current account with the function&#39;s &quot;from&quot; metadata. This will be an asynchronous call. When it is finished, we&#39;ll show the loader and hide the page content. Whenever the vote is recorded, we&#39;ll do the opposite, showing the content to the user again.</p>
-  <p>Now your front-end application should look like this:</p>
-  <p>Go ahead and try the voting function. Once you do, you should see a Metamask confirmation pop up like this:</p>
+  <p>Now your front-end application should look like this:
+  <img src="/img/courses/bc-pro/election-mockup.jpg" alt="election frontend"/></p>
+  <p>Go ahead and try the voting function. Once you do, you should see a Metamask confirmation pop up.
+  <img src="/img/courses/bc-pro/metamask.jpg" alt="metamask"/></p>
   <p>Once you click submit, you&#39;ve successfully casted a vote! You&#39;ll still see a loading screen. For now, you&#39;ll have to refresh the page to see the votes recorded. We&#39;ll implement the functionality update the loader automatically</p>
-  <p>The accompanying video footage for this portion of the tutorial begins at 1:48:05. You can download the code for this portion of the tutorial here. Feel free to use these as a reference point if you get stuck!
-  The very last step in this tutorial is to trigger an event whenever a vote is cast. This will allow us to update our client-side application when an account has voted. Fortunately, this is quite easy. Let&#39;s start by declaring an event in our contract like this:</p>
-  <pre><code class="language-javascript">~/election/contracts/FILL_THS_IN.sol
-  contract Election {
+  <p>The accompanying video footage for this portion of the tutorial begins at 1:48:05. You can download the code for this portion of the tutorial here. Feel free to use these as a reference point if you get stuck!</p>
+  <p>The very last step in this tutorial is to trigger an event whenever a vote is cast. This will allow us to update our client-side application when an account has voted. Fortunately, this is quite easy. Let&#39;s start by declaring an event in our contract like this:</p>
+  <div class="precode">~/election/contracts/election.sol</div>
+  
+  <pre><code class="language-javascript">contract Election {
     ...
     event votedEvent (
       uint indexed _candidateId
@@ -255,8 +261,9 @@
     ...
   }</code></pre>
   <p>Now we can trigger this &quot;voted&quot; event inside our <code>vote</code> function like this:</p>
-  <pre><code class="language-javascript">~/election/contracts/FILL_THS_IN.sol
-  function vote (uint _candidateId) public {
+  <div class="precode">~/election/contracts/election.sol</div>
+  
+  <pre><code class="language-javascript">function vote (uint _candidateId) public {
     // require that they haven&#39;t voted before
     require(!voters[msg.sender]);
   
@@ -273,11 +280,13 @@
     votedEvent(_candidateId);
   }</code></pre>
   <p>Now that we&#39;ve updated our contract, we must run our migrations</p>
-  <pre><code class="language-console">shell
-  user:~/election$: truffle migrate --reset</code></pre>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/election$: truffle migrate --reset</code></pre>
   <p>We can also update our tests to check for this voting event like this</p>
-  <pre><code class="language-javascript">~/election/test/election.js
-  it(&quot;allows a voter to cast a vote&quot;, function() {
+  <div class="precode">~/election/test/election.js</div>
+  
+  <pre><code class="language-javascript">it(&quot;allows a voter to cast a vote&quot;, function() {
     return Election.deployed().then(function(instance) {
       electionInstance = instance;
       candidateId = 1;
@@ -297,8 +306,9 @@
   });</code></pre>
   <p>This test inspects the transaction receipt returned by the <code>vote</code> function to ensure that it has logs. These logs contain the event that was triggered. We check that the event is the correct type, and that it has the correct candidate id.</p>
   <p>Now let&#39;s update the client-side application to listen for the voted event and fire a page refresh any time that it is triggered. We can do that with a <code>listenForEvents</code> function like this:</p>
-  <pre><code class="language-javascript">~/election/src/app.js
-  ...
+  <div class="precode">~/election/src/app.js</div>
+  
+  <pre><code class="language-javascript">...
   listenForEvents: function() {
     App.contracts.Election.deployed().then(function(instance) {
       instance.votedEvent({}, {
@@ -313,8 +323,9 @@
   }</code></pre>
   <p>This function does a few things. First, we subscribe to the voted event by calling the <code>votedEvent</code> function. We pass in some metadata that tells us to listen to all events on the blockchain. Then we &quot;watch&quot; this event. Inside here, we log to the console anytime a <code>votedEvent</code> is triggered. We also re-render all the content on the page. This will get rid of the loader after the vote has been recorded, and show the updated vote count on the table.</p>
   <p>Finally, we can call this function whenever we initialize the contract:</p>
-  <pre><code class="language-javascript">~/election/src/app.js
-  ...
+  <div class="precode">~/election/src/app.js</div>
+  
+  <pre><code class="language-javascript">...
   initContract: function() {
     $.getJSON(&quot;Election.json&quot;, function(election) {
       // Instantiate a new truffle contract from the artifact
@@ -330,6 +341,20 @@
   <p>Now, you can vote on your client-side application, and watch the votes recorded in real time! Be patient, it might take a few seconds for the event to trigger. If you don&#39;t see an event, try restarting Chrome. There is a known issue with  Metamask surrounding events. Restarting Chrome always fixes it for me.</p>
   <p>Congratulations! You have successfully built a full stack decentralized application on the Ethereum blockchain!</p>
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -344,7 +369,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -418,6 +443,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+

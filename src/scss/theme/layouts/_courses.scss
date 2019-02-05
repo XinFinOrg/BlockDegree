@@ -20,8 +20,8 @@
 
   .module-content {
     h1, h2, h3, h4, h5 {
-      margin-top: 40px;
-      margin-bottom: 20px;
+      margin-top: 60px;
+      margin-bottom: 15px;
     }
 
     ul li {
@@ -89,9 +89,23 @@
 
 .mod__sidebar {
   .mod__heading,
-  .mod__sub-heading{
-    &:hover {
+  .mod__sub-heading {
+    &:hover,
+    &.active {
       color: $nav--hover;
     }
+  }
+}
+
+.cert-block {
+  position: relative;
+  margin-top: 100px;
+
+  &:before {
+    content: '';
+    position: absolute;
+    width: 90%;
+    left: 5%;
+    border-top: 4px solid $border;
   }
 }

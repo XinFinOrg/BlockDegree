@@ -151,11 +151,12 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
+              <div class="container py-2">
                 <h2 id="Deploying smart contracts and tokens on Ethereum">Deploying smart contracts and tokens on Ethereum</h2>
                 <div><h3 id="create-genesis-file-on-notepad-json-format-">Create Genesis File on Notepad (json Format)</h3>
-  <pre><code class="language-json">json
-  {
+  <div class="precode">~/blockchain/genesis.json</div>
+  
+  <pre><code class="language-json">{
       &quot;config&quot;: {
       &quot;chainId&quot;: 989899,
       &quot;homesteadBlock&quot;: 0,
@@ -168,40 +169,61 @@
       }
   }</code></pre>
   <h3 id="start-your-blockchain">Start your blockchain</h3>
-  <pre><code class="language-console">shell
-  user:/$ cd ~/blockchain
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:/$ cd ~/blockchain
   user:~/blockchain$ geth –datadir=./chaindata init genesis.json
   user:~/blockchain$ geth –datadir ./chaindata --networkid 989899</code></pre>
   <h3 id="attach-the-geth-console">Attach the Geth console</h3>
   <p>Open a new command prompt and run the command below</p>
-  <pre><code class="language-console">shell
-  user:/$ cd ~/blockchain
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:/$ cd ~/blockchain
   user:~/blockchain$ geth attach</code></pre>
   <p>Create  your own Account</p>
-  <pre><code class="language-console">geth javascript console
-  &gt; personal.newAccount()
+  <div class="precode">geth console</div>
+  
+  <pre><code class="language-console">&gt; personal.newAccount()
   &gt; miner.start()
   &gt; miner.stop()
   &gt; eth.getBalance(eth.coinbase)
     25000000000000000000
   &gt; web3.fromWei(eth.getBalance(eth.coinbase))
     15  </code></pre>
-  <p>The XDC-E smart contract is availabel on the following link .copy the smart contarct .</p>
+  <p>The XDC-E smart contract is available on the following link. Copy the smart contract.</p>
   <p><a href="https://docs.google.com/document/d/1v9Oow11P7WfDBUHwesD-bercqH4jOE_8bWtobssx8ro/edit?usp=sharing">https://docs.google.com/document/d/1v9Oow11P7WfDBUHwesD-bercqH4jOE_8bWtobssx8ro/edit?usp=sharing</a></p>
-  <h3 id="write-your-smart-contract-on-remix-comipler">Write Your Smart Contract on Remix Comipler</h3>
-  <p>After that copy on ABI (Web3deploy) :-</p>
-  <p>Copy of the -&gt;var Coincontract =web3.eth.contract………. etc.
-  Copy of the -&gt;var coin= coinContract.new …………. Etc.</p>
-  <p>After that Submitted contract is creation</p>
+  <h3 id="write-your-smart-contract-on-remix-compiler">Write Your Smart Contract on Remix Compiler</h3>
+  <img src="/img/courses/bc-pro/op2.png" alt="remix compiler"/>
+  
+  <p>After that copy on ABI (Web3deploy)
+  <img src="/img/courses/bc-pro/op3.png" alt="geth-download"/></p>
+  <p>Copy of the -&gt;var Coincontract =web3.eth.contract………. etc.</p>
+  <p>Copy of the -&gt;var coin= coinContract.new …………. Etc.</p>
+  <p>After that your submitted contract is created</p>
   <h3 id="calling-our-smart-contract">Calling our Smart Contract</h3>
   <p>Now that our smart contract is deployed on our private Ethereum Blockchain, we can invoke our smart contract. You will require two information of the smart contracts:</p>
   <ol>
   <li>The ABI definition</li>
   <li>The contract address</li>
   </ol>
-  <p>Contract is deployed</p>
+  <p>Contract is deployed
+  <img src="/img/courses/bc-pro/op7.png" alt="deployed contract"/></p>
   <p>With that you have deployed your smart contract to your own private Ethereum network!</p>
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -216,7 +238,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -290,6 +312,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+

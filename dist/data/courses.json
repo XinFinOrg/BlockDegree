@@ -105,10 +105,11 @@
         },
         {
           "topic": "What is smart contract?",
-          "sub-topic": ["Advantages of smart contracts", "Disadvantages of smart contracts"]
+          "sub-topic": ["Definition of blockchain", "Features of blockchain", "Advantages of smart contracts", "Disadvantages of smart contracts"]
         },
         {
-          "topic": "Popular features of ICO smart contracts"
+          "topic": "Popular features of ICO smart contracts",
+          "sub-topic": ["Capped contracts", "Mintable tokens", "Finalizable contracts", "Upgradable contracts", "Refundable contracts", "Time vault contracts", "Burnable tokens/ Freezable tokens"]
         },
         {
           "topic": "Deploying smart contract and tokens on Ethereum"

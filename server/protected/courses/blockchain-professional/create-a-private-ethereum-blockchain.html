@@ -151,18 +151,18 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
+              <div class="container py-2">
                 <h2 id="Create a private Ethereum blockchain">Create a private Ethereum blockchain</h2>
                 <div><h4 id="download-geth">Download Geth</h4>
   <p>Follow the instructions from the <a href="https://geth.ethereum.org/downloads/" target="_blonk">official Geth website</a> to download geth as per your requirement and your operating system.</p>
-  <img src="/img/courses/bc-adv/qa1.png" alt="geth-download"/>
+  <img src="/img/courses/bc-pro/qa1.png" alt="geth-download"/>
   
   <h4 id="check-that-geth-is-installed">Check that geth is installed</h4>
   <div class="precode">shell</div>
   
   <pre><code class="language-console">user:~/$: geth</code></pre>
   <p>You will see the log of a running geth instance.
-  <img src="/img/courses/bc-adv/qa2.png" alt="geth-console" /></p>
+  <img src="/img/courses/bc-pro/qa2.png" alt="geth-console" /></p>
   <h4 id="configure-your-blockchain-setting">Configure your blockchain setting</h4>
   <div class="precode">shell</div>
   
@@ -191,20 +191,19 @@
   <h4 id="initialise-the-genesis-file">Initialise the genesis file</h4>
   <div class="precode">shell</div>
   
-  <pre><code class="language-console">user:~/blockchain$: geth -datadir=./new init genesis.json</code></pre>
+  <pre><code class="language-console">user:~/blockchain$ geth -datadir=./new init genesis.json</code></pre>
   <p>This command will initialize your genesis block. You will see that a new folder is created in the blockchain folder. This new folder contains geth and your keystore.
-  <img src="/img/courses/bc-adv/qa5.png" alt="geth-console init" /></p>
+  <img src="/img/courses/bc-pro/qa5.png" alt="geth-console init" /></p>
   <h4 id="start-your-blockchain-node-">Start your blockchain(node)</h4>
   <div class="precode">shell</div>
   
-  <pre><code class="language-console">user:~/blockchain$: geth  --datadir ./new --networkid 989899 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi
-  db,net,web3,admin,eth,miner,personal --rpccorsdomain</code></pre>
+  <pre><code class="language-no-wrap">user:~/blockchain$ geth  --datadir ./new --networkid 989899 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi db,net,web3,admin,eth,miner,personal --rpccorsdomain</code></pre>
   <p>This command includes admin, miner, gives your private blockchain network id and port number and also creates one miner to mine your private blockchain.</p>
   <h4 id="create-your-first-account">Create your first account</h4>
   <p>Attach Geth to your console with the rpcport you declared in the previous command.</p>
   <div class="precode">shell</div>
   
-  <pre><code class="language-console">user:~/blockchain$: geth attach http://0.0.0.0:8545</code></pre>
+  <pre><code class="language-console">user:~/blockchain$ geth attach http://0.0.0.0:8545</code></pre>
   <p>Now you are ready to interact with your private Ethereum blockchain. Let&#39;s start off by creating new account and transferring some ether from one account to the other.</p>
   <div class="precode">geth console</div>
   
@@ -214,7 +213,7 @@
   &gt; eth.getBalance(eth.coinbase) //Wei
   &gt; web3.fromWei(eth.getBalance(eth.coinbase),”ether”)
   &gt; eth.sendTransaction({from: &lt;AddrA&gt; to: &lt;AddrB&gt; value, :web3.toWei(85,&quot;ether&quot;)})  // it is Transfer some ether one account to another account</code></pre>
-  <img src="/img/courses/bc-adv/qa8.png" alt="create eth transactions" />
+  <img src="/img/courses/bc-pro/qa8.png" alt="create eth transactions" />
   
   
   <h4 id="check-your-transaction">Check your transaction</h4>
@@ -222,8 +221,22 @@
   <div class="precode">geth console</div>
   
   <pre><code class="language-console">&gt; eth.getTransaction(&#39;&lt;TX receipt&gt;&#39;)</code></pre>
-  <img src="/img/courses/bc-adv/qa9.png" alt="check transaction information" />
+  <img src="/img/courses/bc-pro/qa9.png" alt="check transaction information" />
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -238,7 +251,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -312,6 +325,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+

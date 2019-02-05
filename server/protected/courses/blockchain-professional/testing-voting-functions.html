@@ -151,11 +151,12 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
+              <div class="container py-2">
                 <h2 id="Testing voting functions">Testing voting functions</h2>
                 <div><p>Now let&#39;s add a test to our <code>election.js</code> test file</p>
-  <pre><code class="language-javascript">~/election/test/election.js
-  it(&quot;allows a voter to cast a vote&quot;, function() {
+  <div class="precode">~/election/test/election.js</div>
+  
+  <pre><code class="language-javascript">it(&quot;allows a voter to cast a vote&quot;, function() {
       return Election.deployed().then(function(instance) {
         electionInstance = instance;
         candidateId = 1;
@@ -176,8 +177,9 @@
   <li>Test that the voter is added to the mapping whenever they vote.</li>
   </ol>
   <p>Next we can write a few test for our function&#39;s requirements. Let&#39;s write a test to ensure that our vote function throws an exception for double voting.</p>
-  <pre><code class="language-javascript">~/election/test/election.js
-  it(&quot;throws an exception for double voting&quot;, function() {
+  <div class="precode">~/election/test/election.js</div>
+  
+  <pre><code class="language-javascript">it(&quot;throws an exception for double voting&quot;, function() {
       return Election.deployed().then(function(instance) {
         electionInstance = instance;
         candidateId = 2;
@@ -202,9 +204,24 @@
     });</code></pre>
   <p>First, we&#39;ll set up a test scenario with a fresh account that hasn&#39;t voted yet. Then we&#39;ll cast a vote on their behalf. Then we&#39;ll try to vote again. We&#39;ll assert that an error has occurred here. We can inspect the error message, and ensure that no candidates received votes, just like the previous test.</p>
   <p>Now let&#39;s run our tests</p>
-  <pre><code class="language-console">shell
-  user:~/election$: truffle test</code></pre>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/election$ truffle test</code></pre>
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -219,7 +236,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -293,6 +310,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+

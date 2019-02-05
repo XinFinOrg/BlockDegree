@@ -151,13 +151,13 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
+              <div class="container py-2">
                 <h2 id="Running Bitcoin blockchain node">Running Bitcoin blockchain node</h2>
                 <div><h4 id="download-bitcoin-core-from-the-official-website">Download bitcoin core from the <a href="https://bitcoin.org/en/download">official website</a></h4>
   <h4 id="install-the-bitcoin-core-set-up">Install the Bitcoin core set up</h4>
   <h4 id="open-the-system-environment-variable-and-set-path-of-bitcoin">Open the system environment variable and set path of bitcoin</h4>
   <p><code>C:\Program Files\bitcoin\daemon</code>
-  You can set path from program files, you need to open bitcoin folder ,open daemon folder and copy the path and paste it in the system environment variable.</p>
+  You can set path from program files, you need to open bitcoin folder, open daemon folder and copy the path and paste it in the system environment variable.</p>
   <h4 id="create-a-folder-in-the-driver-and-name-the-folder-bitcoin">Create a folder in the driver and name the folder bitcoin</h4>
   <h4 id="create-a-new-folder-inside-the-bitcoin-folder-and-name-the-folder-bitcoin-core">Create a new folder inside the bitcoin folder and name the folder bitcoin core</h4>
   <h4 id="create-a-configure-file-in-the-bitcoincore-folder-and-name-the-configure-file-bitcoin">Create a configure file in the bitcoincore folder and name the configure file bitcoin</h4>
@@ -171,15 +171,31 @@
   <li><strong>Rpc-port</strong>: It gives port number to your node.</li>
   </ul>
   <h4 id="enter-the-following-command">Enter the following command</h4>
-  <pre><code class="language-console">shell
-  user:~/bitcoin$: bitcoind –datadir=./bitcoincore –txindex</code></pre>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/bitcoin$ bitcoind –datadir=./bitcoincore –txindex</code></pre>
   <h4 id="after-entering-the-above-command-in-the-cmd-you-will-see-different-folder-created-in-the-bitcoincore">After entering the above command in the cmd you will see different folder created in the bitcoincore</h4>
   <h4 id="enter-the-following-command">Enter the following command</h4>
-  <pre><code class="language-console">shell
-  user:~/bitcoin$: bitcoin-cli –datadir=./bitcoincore getblockchaininfo</code></pre>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/bitcoin$ bitcoin-cli –datadir=./bitcoincore getblockchaininfo</code></pre>
   <p>You will see the public blockchain of bitcoin in the command prompt.</p>
   <p>All the blocks which is created by the bitcoin are stored in the bitcoincore folder inside the blocks folder. All the Block which is created is saved in the folder.</p>
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -194,7 +210,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -268,6 +284,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+

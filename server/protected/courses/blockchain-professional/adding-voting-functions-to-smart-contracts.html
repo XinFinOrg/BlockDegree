@@ -151,19 +151,21 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
+              <div class="container py-2">
                 <h2 id="Adding voting functions to smart contracts">Adding voting functions to smart contracts</h2>
                 <div><p>Now let&#39;s add the ability to cast votes in the election. Let&#39;s define a &quot;voters&quot; mapping to the smart contract to keep track of the accounts that have voted in the election like this:</p>
-  <pre><code class="language-javascript">~/election/contracts/FILL_THS_IN.sol
-  contract Election {
+  <div class="precode">~/election/contracts/election.sol</div>
+  
+  <pre><code class="language-javascript">contract Election {
     ...
     // Store accounts that have voted
     mapping(address =&gt; bool) public voters;
     ...
   }</code></pre>
-  <p>Now let&#39;s add a &quot;vote&quot; function:</p>
-  <pre><code class="language-javascript">~/election/contracts/FILL_THS_IN.sol
-    contract Election {
+  <div class="precode">~/election/contracts/election.sol</div>
+  
+  <p>Now let&#39;s add a <code>vote</code> function:</p>
+  <pre><code class="language-javascript">  contract Election {
       ...
       // Store accounts that have voted
       mapping(address =&gt; bool) public voters;
@@ -182,16 +184,17 @@
         candidates[_candidateId].voteCount ++;
     }
   }</code></pre>
-  <p>The core functionality of this function is to increase the candidate&#39;s vote count by reading the Candidate struct out of the &quot;candidates&quot; mapping and increasing the &quot;voteCount&quot; by 1 with the increment operator (++). Let&#39;s look at a few other things that it does:</p>
+  <p>The core functionality of this function is to increase the candidate&#39;s vote count by reading the <code>Candidate</code> struct out of the <code>candidates</code> mapping and increasing the <code>voteCount</code> by 1 with the increment operator (++). Let&#39;s look at a few other things that it does:</p>
   <ul>
   <li>It accepts one argument. This is an unsigned integer with the candidate&#39;s id.</li>
   <li>It visibility is public because we want an external account to call it.</li>
   <li>It adds the account that voted to the voters mapping that we just created. This will allow us to keep track that the voter has voted in the election. We access the account that&#39;s calling this function with the global variable <code>msg.sender</code> provided by Solidity.</li>
-  <li>It implements require statements that will stop execution if the conditions are not met. First require that the voter hasn&#39;t voted before. We do this by reading the account address with &quot;msg.sender&quot; from the mapping. If it&#39;s there, the account has already voted. Next, it requires that the candidate id is valid. The candidate id must be greater than zero and less than or equal to the total candidate count.</li>
+  <li>It implements require statements that will stop execution if the conditions are not met. First require that the voter hasn&#39;t voted before. We do this by reading the account address with <code>msg.sender</code> from the mapping. If it&#39;s there, the account has already voted. Next, it requires that the candidate id is valid. The candidate id must be greater than zero and less than or equal to the total candidate count.</li>
   </ul>
   <p>Now your complete contract code should look like this:</p>
-  <pre><code class="language-javascript">~/election/contracts/FILL_THS_IN.sol
-  pragma solidity ^0.4.2;
+  <div class="precode">~/election/contracts/election.sol</div>
+  
+  <pre><code class="language-javascript">pragma solidity ^0.4.2;
   
   contract Election {
       // Model a Candidate
@@ -233,6 +236,20 @@
       }
   }</code></pre>
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -247,7 +264,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -321,6 +338,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+

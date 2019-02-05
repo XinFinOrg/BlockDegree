@@ -4,10 +4,10 @@ title: Testing Solidity contracts
 template: courseContent.hbs
 courseIdx: 2
 ---
-Now let's write some tests. Make sure you have Ganache running first. Then, create a new file in the test folder and name the file election.js and paste the following code
+Now let's write some tests. Make sure you have `Ganache` running first. Then, create a new file in the test folder and name the file `election.js` and paste the following code
+<div class="precode">~/election/test/election.js</div>
 
 ```javascript
-~/election/test/election.js
 var Election = artifacts.require("./Election.sol");
 
 contract("Election", function(accounts) {
@@ -46,7 +46,8 @@ The first test checks that the contract was initialized with the correct number 
 The next test inspects the values of each candidate in the election, ensuring that each candidate has the correct `id`, `name`, and `vote count`.
 
 Let's run the test
+<div class="precode">shell</div>
+
 ```console
-shell
-user:~/election$: truffle test
+user:~/election$ truffle test
 ```

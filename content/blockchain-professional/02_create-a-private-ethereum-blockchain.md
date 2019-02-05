@@ -7,7 +7,7 @@ courseIdx: 2
 #### Download Geth
 Follow the instructions from the <a href="https://geth.ethereum.org/downloads/" target="_blonk">official Geth website</a> to download geth as per your requirement and your operating system.
 
-<img src="/img/courses/bc-adv/qa1.png" alt="geth-download"/>
+<img src="/img/courses/bc-pro/qa1.png" alt="geth-download"/>
 
 #### Check that geth is installed
 <div class="precode">shell</div>
@@ -17,7 +17,7 @@ user:~/$: geth
 ```
 
 You will see the log of a running geth instance.
-<img src="/img/courses/bc-adv/qa2.png" alt="geth-console" />
+<img src="/img/courses/bc-pro/qa2.png" alt="geth-console" />
 
 #### Configure your blockchain setting
 <div class="precode">shell</div>
@@ -58,17 +58,16 @@ This is an example of how a genesis file.
 <div class="precode">shell</div>
 
 ```console
-user:~/blockchain$: geth -datadir=./new init genesis.json
+user:~/blockchain$ geth -datadir=./new init genesis.json
 ```
 This command will initialize your genesis block. You will see that a new folder is created in the blockchain folder. This new folder contains geth and your keystore.
-<img src="/img/courses/bc-adv/qa5.png" alt="geth-console init" />
+<img src="/img/courses/bc-pro/qa5.png" alt="geth-console init" />
 
 #### Start your blockchain(node)
 <div class="precode">shell</div>
 
-```console
-user:~/blockchain$: geth  --datadir ./new --networkid 989899 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi
-db,net,web3,admin,eth,miner,personal --rpccorsdomain
+```no-wrap
+user:~/blockchain$ geth  --datadir ./new --networkid 989899 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi db,net,web3,admin,eth,miner,personal --rpccorsdomain
 ```
 
 This command includes admin, miner, gives your private blockchain network id and port number and also creates one miner to mine your private blockchain.
@@ -78,7 +77,7 @@ Attach Geth to your console with the rpcport you declared in the previous comman
 <div class="precode">shell</div>
 
 ```console
-user:~/blockchain$: geth attach http://0.0.0.0:8545
+user:~/blockchain$ geth attach http://0.0.0.0:8545
 ```
 
 Now you are ready to interact with your private Ethereum blockchain. Let's start off by creating new account and transferring some ether from one account to the other.
@@ -93,7 +92,7 @@ Now you are ready to interact with your private Ethereum blockchain. Let's start
 > web3.fromWei(eth.getBalance(eth.coinbase),”ether”)
 > eth.sendTransaction({from: <AddrA> to: <AddrB> value, :web3.toWei(85,"ether")})  // it is Transfer some ether one account to another account
 ```
-<img src="/img/courses/bc-adv/qa8.png" alt="create eth transactions" />
+<img src="/img/courses/bc-pro/qa8.png" alt="create eth transactions" />
 
 
 #### Check your transaction
@@ -104,4 +103,4 @@ When you make a transaction, the console will print an alphanumberic string, whi
 ```console
 > eth.getTransaction('<TX receipt>')
 ```
-<img src="/img/courses/bc-adv/qa9.png" alt="check transaction information" />
+<img src="/img/courses/bc-pro/qa9.png" alt="check transaction information" />

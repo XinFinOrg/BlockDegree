@@ -6,9 +6,9 @@ courseIdx: 2
 ---
 
 Let's add a form that allows accounts to vote below the table in our `index.html`
+<div class="precode">~/election/src/index.html</div>
 
-```HTML
-~/election/src/index.html
+```html
 <form onSubmit="App.castVote(); return false;">
   <div class="form-group">
     <label for="candidatesSelect">Select Candidate</label>
@@ -28,8 +28,9 @@ The form has an `onSubmit` handler that will call the `castVote` function. We wi
 
 Now let's update our `app.js` to handle both of those things. First we list all the candidates from the smart contract inside the form's select element. Then we'll hide the form on the page once the account has voted. We'll update the render function to look like this:
 
+<div class="precode">~/election/src/app.js</div>
+
 ```javascript
-~/election/src/app.js
 render: function() {
   var electionInstance;
   var loader = $("#loader");
@@ -88,8 +89,9 @@ render: function() {
 ```
 
 Next, we want to write a function that's called whenever the form is submitted:
+<div class="precode">~/election/src/app.js</div>
+
 ```javascript
-~/election/src/app.js
 ...
 castVote: function() {
     var candidateId = $('#candidatesSelect').val();
@@ -109,17 +111,19 @@ castVote: function() {
 First, we query for the `candidateId` in the form. When we call the vote function from our smart contract, we pass in this id, and we provide the current account with the function's "from" metadata. This will be an asynchronous call. When it is finished, we'll show the loader and hide the page content. Whenever the vote is recorded, we'll do the opposite, showing the content to the user again.
 
 Now your front-end application should look like this:
+<img src="/img/courses/bc-pro/election-mockup.jpg" alt="election frontend"/>
 
-
-Go ahead and try the voting function. Once you do, you should see a Metamask confirmation pop up like this:
+Go ahead and try the voting function. Once you do, you should see a Metamask confirmation pop up.
+<img src="/img/courses/bc-pro/metamask.jpg" alt="metamask"/>
 
 Once you click submit, you've successfully casted a vote! You'll still see a loading screen. For now, you'll have to refresh the page to see the votes recorded. We'll implement the functionality update the loader automatically
 
 The accompanying video footage for this portion of the tutorial begins at 1:48:05. You can download the code for this portion of the tutorial here. Feel free to use these as a reference point if you get stuck!
+
 The very last step in this tutorial is to trigger an event whenever a vote is cast. This will allow us to update our client-side application when an account has voted. Fortunately, this is quite easy. Let's start by declaring an event in our contract like this:
+<div class="precode">~/election/contracts/election.sol</div>
 
 ```javascript
-~/election/contracts/FILL_THS_IN.sol
 contract Election {
   ...
   event votedEvent (
@@ -131,8 +135,9 @@ contract Election {
 
 
 Now we can trigger this "voted" event inside our `vote` function like this:
+<div class="precode">~/election/contracts/election.sol</div>
+
 ```javascript
-~/election/contracts/FILL_THS_IN.sol
 function vote (uint _candidateId) public {
   // require that they haven't voted before
   require(!voters[msg.sender]);
@@ -152,14 +157,16 @@ function vote (uint _candidateId) public {
 ```
 
 Now that we've updated our contract, we must run our migrations
+<div class="precode">shell</div>
+
 ```console
-shell
 user:~/election$: truffle migrate --reset
 ```
 
 We can also update our tests to check for this voting event like this
+<div class="precode">~/election/test/election.js</div>
+
 ```javascript
-~/election/test/election.js
 it("allows a voter to cast a vote", function() {
   return Election.deployed().then(function(instance) {
     electionInstance = instance;
@@ -183,9 +190,9 @@ it("allows a voter to cast a vote", function() {
 This test inspects the transaction receipt returned by the `vote` function to ensure that it has logs. These logs contain the event that was triggered. We check that the event is the correct type, and that it has the correct candidate id.
 
 Now let's update the client-side application to listen for the voted event and fire a page refresh any time that it is triggered. We can do that with a `listenForEvents` function like this:
+<div class="precode">~/election/src/app.js</div>
 
 ```javascript
-~/election/src/app.js
 ...
 listenForEvents: function() {
   App.contracts.Election.deployed().then(function(instance) {
@@ -204,8 +211,9 @@ listenForEvents: function() {
 This function does a few things. First, we subscribe to the voted event by calling the `votedEvent` function. We pass in some metadata that tells us to listen to all events on the blockchain. Then we "watch" this event. Inside here, we log to the console anytime a `votedEvent` is triggered. We also re-render all the content on the page. This will get rid of the loader after the vote has been recorded, and show the updated vote count on the table.
 
 Finally, we can call this function whenever we initialize the contract:
+<div class="precode">~/election/src/app.js</div>
+
 ```javascript
-~/election/src/app.js
 ...
 initContract: function() {
   $.getJSON("Election.json", function(election) {

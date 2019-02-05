@@ -18,9 +18,9 @@ The main working principles are a complicated mathematical puzzle and a possibil
 It’s an issue that requires a lot of computational power to solve.
 
 There are a lot of them, for instance:
-* hash function , or how to find the input knowing the output.
-* integer factorization , in other words, how to present a number as a multiplication of two other numbers.
-* guided tour puzzle protocol . If the server suspects a DoS attack, it requires a calculation of hash functions, for some nodes in a defined order. In this case, it’s a ‘how to find a chain of hash function values’ problem.
+* hash function, or how to find the input knowing the output.
+* integer factorization, in other words, how to present a number as a multiplication of two other numbers.
+* guided tour puzzle protocol. If the server suspects a DoS attack, it requires a calculation of hash functions, for some nodes in a defined order. In this case, it’s a ‘how to find a chain of hash function values’ problem.
 
 The answer to the PoW problem or mathematical equation is called hash.
 

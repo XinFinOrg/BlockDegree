@@ -1,4 +1,3 @@
-
   <!DOCTYPE html>
   <html lang="zxx" class="no-js">
     <head>
@@ -8,7 +7,7 @@
       <meta charset="UTF-8">
       <link rel="icon" href="/img/brand/favicon.ico">
       <title>
-         Xinfin Blockchain Training 
+         Privacy policy 
       </title>
       <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
@@ -29,7 +28,7 @@
         <script src="/js/utils.js"></script>
     </head>
   
-    <body class=course-module>
+    <body class=nav--sticky>
       <header id="header">
         <div class="container main-menu">
           <div class="row align-items-center justify-content-between d-flex">
@@ -69,148 +68,34 @@
       </header>
   
       <section>
-        <div class="hero-banner hero-overlay"
-             style="background: url('/img/top-banner.jpg') center/cover;">
-          <div class="container">
-            <div class="row align-items-center justify-content-center">
-              <div class="hero-banner__content text-center">
-                <h1 class="text-white">Blockchain professional course for engineer</h1>
-                
-              </div>
-            </div>
+    <div class="hero-banner hero-overlay"
+         style="background: url('/img/top-banner.jpg') center/cover;">
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="hero-banner__content text-center">
+            <h1 class="text-white">Terms and conditions</h1>
+            
           </div>
         </div>
-          <div class="row mx-0">
-            <div class="col-12 col-sm-4 px-0">
-              <!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
-              <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=2 style="background: #fafbfc;">
-                <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
-                <div id="mod__details">
-                  <script id="module-template" type="text/x-handlebars-template">
-              
-                    {{#with courses.[2] }}
-              
-                      {{#each curriculum as |ccm|}}
-              
-                        {{#if ccm.sub-topic}}
-                        <ul id="acc__mod-{{@index}}"> {{else}}
-                        <ul> {{/if}}
-              
-                            <!-- Heading -->
-                            <li
-                              {{#if ccm.sub-topic}}
-                                id="{{url ccm.topic}}"
-                                class="with-child"
-                                data-toggle="collapse"
-                                data-target="#sub-{{@index}}"
-                                aria-expandeded="false"
-                              {{/if}}>
-                              <div class="row px-2 py-3">
-                                <div class="col-10">
-                                  <a href="{{url ccm.topic}}">
-                                    <h4 class="mod__heading"> {{ccm.topic}}</h4>
-                                  </a>
-                                </div>
-                                {{#if ccm.sub-topic}}
-                                  <div class="col-1 arrow"
-                                       id="{{url ccm.topic}}"
-                                       class="with-child"
-                                       data-toggle="collapse"
-                                       data-target="#sub-{{@index}}"
-                                       aria-expanded="false">
-                                    &#x25BC;
-                                  </div>
-                                {{/if}}
-                              </div>
-                            </li>
-                            <!-- End heading -->
-              
-                            <!-- Start sub-heading if there is -->
-                            {{#if ccm.sub-topic}}
-                              <ul id="sub-{{@index}}" class="collapse side-nav__child">
-              
-                                {{#each ccm.sub-topic as |sub|}}
-                                  <li class="pl-4 py-3">
-                                    <a id="{{url sub}}" href="{{url ccm.topic}}#{{url sub}}">
-                                      <h5 class="mod__sub-heading">{{sub}}</h5>
-                                    </a>
-                                  </li> {{/each}}
-              
-                              </ul>
-                            {{/if}}
-                            <!-- End sub-heading if there is -->
-              
-                          </ul>
-                        {{/each}}
-                      {{/with}}
-              
-              
-                  </script>
-                </div>
-              </nav>
-            </div>
+      </div>
+    </div>
   
-            <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2">
-                <h2 id="Add nodes to your private blockchain">Add nodes to your private blockchain</h2>
-                <div><h3 id="add-nodes-to-your-network">Add nodes to your network</h3>
-  <p>Blockchain is made up of multiple nodes. In order to connect your existing private blockchain node with more nodes, you will need to know the enode of the nodes you are connecting to.</p>
-  <h4 id="enodes">Enodes</h4>
-  <p>Through enode you can add nodes in your computer. <a href="[https://github.com/ethereum/wiki/wiki/enode-url-format]" target="_blank">Enode</a> is a way to identify an Ethereum node in a form of URL scheme. An enode consists of a username and hostname. A hexadecimal string node ID in the username is separated from the hostname by an @ sign. The hostname is given as an IP address, with the TCP listening port. If the TCP and UDP (discovery) ports differ, the UDP is specified as query parameter &quot;discport&quot;.</p>
-  <p>An example of an enode will look like this.</p>
-  <pre><code class="language-no-wrap">enode://6f8a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301</code></pre>
-  <p>The example above describes a node with IP address <code>10.3.58.6</code> with a TCP listening port of <code>30303</code> and UDP discovery port of <code>30301</code>.</p>
-  <p>To check the ports used by geth and find your enode URI, run the following command</p>
-  <div class="precode">geth console</div>
+    <div class="container__cstm">
+      <p><strong>
+        The use of this website is subject to the following terms of use:
+      </strong></p>
   
-  <pre><code class="language-console">&gt; admin.nodeInfo</code></pre>
-  <p>You will see the following information</p>
-  <div class="precode">geth console</div>
+      <p>The content of the pages of this website is for your general information and use only. It is subject to change without notice.</p>
   
-  <pre><code class="language-no-wrap">{
-    Name: &#39;Geth/v0.9.14/darwin/go1.4.2&#39;,
-    NodeUrl: &#39;enode://3414c01c19aa75a34f2dbd2f8d0898dc79d6b219ad77f8155abf1a287ce2ba60f14998a3a98c0cf14915eabfdacf914a92b27a01769de18fa2d049dbf4c17694@[::]:30303&#39;,
-    NodeID: &#39;3414c01c19aa75a34f2dbd2f8d0898dc79d6b219ad77f8155abf1a287ce2ba60f14998a3a98c0cf14915eabfdacf914a92b27a01769de18fa2d049dbf4c17694&#39;,
-    IP: &#39;::&#39;,
-    DiscPort: 30303,
-    TCPPort: 30303,
-    Td: &#39;2044952618444&#39;,
-    ListenAddr: &#39;[::]:30303&#39;
-  }</code></pre>
-  <p>Once you have the details of your second node, add the node as a peer to the network with <code>admin.addPeer</code></p>
-  <div class="precode">shell</div>
+      <p>This website uses cookies to monitor browsing preferences. If you do allow cookies to be used, the following personal information may be stored by us for use by third parties: [insert list of information].</p>
   
-  <pre><code class="language-no-wrap">&gt; admin.addPeer(&quot;enode://3414c01c19aa75a34f2dbd2f8d0898dc79d6b219ad77f8155abf1a287ce2ba60f14998a3a98c0cf14915eabfdacf914a92b27a01769de18fa2d049dbf4c17694@[::]:30303&quot;)</code></pre>
-  <p>To check that the peers are connected correctly, use the <code>peer()</code> function. This will return the list of connected nodes.</p>
-  <div class="precode">shell</div>
+      <p>Your use of any information or materials on this website is entirely at your own risk, for which we shall not be liable. It shall be your own responsibility to ensure that any products, services or information available through this website meet your specific requirements.</p>
   
-  <pre><code class="language-no-wrap">&gt; admin.peers
-  [{
-    ID: &#39;3414c01c19aa75a34f2dbd2f8d0898dc79d6b219ad77f8155abf1a287ce2ba60f14998a3a98c0cf14915eabfdacf914a92b27a01769de18fa2d049dbf4c17694&#39;,
-    Name: &#39;Geth/v0.9.14/linux/go1.4.2&#39;,
-    Caps: &#39;eth/60&#39;,
-    RemoteAddress: &#39;5.9.150.40:30301&#39;,
-    LocalAddress: &#39;192.168.0.28:39219&#39;
-  }]</code></pre>
-  </div>
-                <div id="next-page" class="text-center text-sm-right"></div>
-                <div class="py-3 cert-block">
-                  <h3>Certified blockchain expert certification</h3>
-                  <div class="row">
-                    <div class="col-12 col-sm-4">
-                      <div class="card">
-                        <div class="card-body">
-                          <h4 class="card-title mt-0 mb-2">Free test</h4>
-                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-      </section>
+      <p>This website contains material which is owned by or licensed to us. This material includes, but is not limited to, the design, layout, look, appearance and graphics. Reproduction is prohibited other than in accordance with the copyright notice, which forms part of these terms and conditions. </p>
+  
+      <p>All trade marks reproduced in this website which are not the property of, or licensed to, the operator are acknowledged on the website.</p>
+      
+      <p>From time to time this website may also include links to other websites. These links are provided for your convenience to provide further information. They do not signify that we endorse the website(s). We have no responsibility for the content of the linked website(s).</p>
       </section>
   
       <footer>
@@ -294,8 +179,7 @@
       <script src="/js/vendor/slick.min.js"></script>
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
-        <script src="/js/modMenu.js"></script>
-        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
+
 

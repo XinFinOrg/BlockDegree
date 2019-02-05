@@ -9,9 +9,9 @@ Now let's start building out the client-side application that will talk to our s
 You do not have to be a front-end expert to follow along with this part of the tutorial. I have intentionally kept the HTML and Javascript code very simple, and we will not spend much time focusing on it. I want to stay focused on developing the smart contract portion of our dApp!
 
 Go ahead and replace all of the content of your `index.html` file with this code:
+<div class="precode">~/election/src/index.html</div>
 
 ```html
-~/election/src/index.html
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -64,8 +64,9 @@ Go ahead and replace all of the content of your `index.html` file with this code
 ````
 
 Next, replace all of the content of your `app.js` file with this code:
+<div class="precode">~/election/src/app.js</div>
+
 ```javascript
-~/election/src/app.js
 App = {
   web3Provider: null,
   contracts: {},
@@ -156,14 +157,16 @@ Let's take note of a few things that this code does:
 3. __Render function__: The render function lays out all the content on the page with data from the smart contract. For now, we list the candidates we created inside the smart contract. We do this by looping through each candidate in the mapping, and rendering it to the table. We also fetch the current account that is connected to the blockchain inside this function and display it on the page.
 
 Now let's view the client-side application in the browser. First, make sure that you've migrated your contracts like this:
+<div class="precode">shell</div>
+
 ```console
-shell
-user:~/election$: truffle migrate --reset
+user:~/election$ truffle migrate --reset
 ```
 Next, start your development server
+<div class="precode">shell</div>
+
 ```console
-shell
-user:~/election$: npm run dev
+user:~/election$ npm run dev
 ```
 This should automatically open a new browser window with your client-side application.
 

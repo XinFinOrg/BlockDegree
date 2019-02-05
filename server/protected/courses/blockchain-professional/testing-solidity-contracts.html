@@ -151,11 +151,12 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
+              <div class="container py-2">
                 <h2 id="Testing Solidity contracts">Testing Solidity contracts</h2>
-                <div><p>Now let&#39;s write some tests. Make sure you have Ganache running first. Then, create a new file in the test folder and name the file election.js and paste the following code</p>
-  <pre><code class="language-javascript">~/election/test/election.js
-  var Election = artifacts.require(&quot;./Election.sol&quot;);
+                <div><p>Now let&#39;s write some tests. Make sure you have <code>Ganache</code> running first. Then, create a new file in the test folder and name the file <code>election.js</code> and paste the following code</p>
+  <div class="precode">~/election/test/election.js</div>
+  
+  <pre><code class="language-javascript">var Election = artifacts.require(&quot;./Election.sol&quot;);
   
   contract(&quot;Election&quot;, function(accounts) {
     var electionInstance;
@@ -188,9 +189,24 @@
   <p>The first test checks that the contract was initialized with the correct number of candidates by checking the candidates count is equal to 2.</p>
   <p>The next test inspects the values of each candidate in the election, ensuring that each candidate has the correct <code>id</code>, <code>name</code>, and <code>vote count</code>.</p>
   <p>Let&#39;s run the test</p>
-  <pre><code class="language-console">shell
-  user:~/election$: truffle test</code></pre>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/election$ truffle test</code></pre>
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -205,7 +221,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -279,6 +295,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+

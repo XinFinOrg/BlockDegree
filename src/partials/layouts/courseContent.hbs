@@ -11,16 +11,21 @@
           </div>
 
           <div class="col-12 col-sm-8 p-4 module-content">
-            <div class="container py-2 py-sm-5">
+            <div class="container py-2">
               <h2 id="{{title}}">{{{ title }}}</h2>
               <div>{{{ contents }}}</div>
+              <div id="next-page" class="text-center text-sm-right"></div>
+              \{{#> certBlock}}
+              \{{> layouts/certBlock }}
+              \{{/certBlock}}
             </div>
           </div>
       </div>
     </section>
     \{{/inline}}
-    
+
     \{{#*inline "scripts-block"}}
       <script src="/js/modMenu.js"></script>
+      <script src="/js/cachedMenu.js"></script>
     \{{/inline}}
 \{{/base}}

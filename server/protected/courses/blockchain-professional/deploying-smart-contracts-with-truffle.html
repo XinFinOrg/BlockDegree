@@ -151,16 +151,18 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
+              <div class="container py-2">
                 <h2 id="Deploying smart contracts with Truffle">Deploying smart contracts with Truffle</h2>
                 <div><p>Now let&#39;s create a project directory for our dApp</p>
-  <p>Create a folder in the desktop and name the folder election</p>
-  <pre><code class="language-console">shell
-  user:~$ mkdir election
+  <p>Create a folder for your project. We will name the project <code>election</code>.</p>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~$ mkdir election
   user:~$ cd election</code></pre>
-  <p>Now that we&#39;re inside our project, we can get up and running fast with a Truffle box. We&#39;ll be using the Pet Shop box for this tutorial. From within your project directory, install the pet shop box from the command line like this</p>
-  <pre><code class="language-console">shell
-  user:~/election$: truffle unbox pet-shop</code></pre>
+  <p>Now that we&#39;re inside our project, we can get up and running fast with a Truffle box. We&#39;ll be using the Pet Shop box for this tutorial. From within your project directory, install the pet shop box from the command line like this.</p>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/election$ truffle unbox pet-shop</code></pre>
   <p>Let&#39;s see what the pet shop box gave us:</p>
   <ul>
   <li><strong>contracts</strong>: A directory where all smart contacts live. We already have a Migration contract that handles our migrations to the blockchain.</li>
@@ -170,9 +172,10 @@
   <li><strong>test</strong>: This is where we&#39;ll write our tests for our smart contracts.</li>
   <li><strong>truffle.js</strong>: This is the main configuration file for our Truffle project.</li>
   </ul>
-  <p>Then you need to open election folder and open contracts and save it as <code>election.sol</code>.</p>
-  <pre><code class="language-javscript">~/election/contracts/election.sol
-  pragma solidity 0.4.24;
+  <p>Then you need to open election folder and open contracts and save it as <code>election.sol</code>. And paste the following code in the <code>election.sol</code>.</p>
+  <div class="precode">~/election/contracts/election.sol</div>
+  
+  <pre><code class="language-javscript">pragma solidity 0.4.24;
   
   contract Election {
       // Read/write candidate
@@ -183,28 +186,46 @@
           candidate = &quot;Candidate 1&quot;;
       }
   }</code></pre>
-  <p>And paste the following code in the election.sol Let me explain this code. We start by declaring the solidity version with the pragma solidity statement. Next, we declare the smart contract with the &quot;contract&quot; keyword, followed by the contract name. Next, we declare a state variable that will store the value of the candidate name. State variables allow us to write data to the blockchain. We have declared that this variable will be a string, and we have set its visibility to public. Because it is public, solidity will give us a getter function for free that will allow us to access this value outside of our contract. We&#39;ll see that in action later in the console!</p>
+  <p> Let me explain this code. We start by declaring the solidity version with the pragma solidity statement. Next, we declare the smart contract with the &quot;contract&quot; keyword, followed by the contract name. Next, we declare a state variable that will store the value of the candidate name. State variables allow us to write data to the blockchain. We have declared that this variable will be a string, and we have set its visibility to public. Because it is public, solidity will give us a getter function for free that will allow us to access this value outside of our contract. We&#39;ll see that in action later in the console!</p>
   <p>Then, we create a constructor function that will get called whenever we deploy the smart contract to the blockchain. This is where we&#39;ll set the value of the candidate state variable that will get stored to the blockchain upon migration. Notice that the constructor function has the same name as the smart contract. This is how Solidity knows that the function is a constructor.</p>
-  <p>Now that we&#39;ve created the foundation for the smart contract, let&#39;s see if we can deploy it to the blockchain. In order to do this, we&#39;ll need to create a new file in the migrations directory. From your project root, create a new file in migration folder and name the file <code>2_deploy_contracts.js</code> and paste the code in the following file.</p>
-  <pre><code class="language-javascript">~/election/migration/2_deploy_contracts.js
-  var Election = artifacts.require(&quot;./Election.sol&quot;);
+  <p>Now that we&#39;ve created the foundation for the smart contract, let&#39;s see if we can deploy it to the blockchain. In order to do this, we&#39;ll need to create a new file in the migrations directory. From your project root, create a new file in migration folder and name the file <code>deploy_contracts.js</code> and paste the code in the following file.</p>
+  <div class="precode">~/election/contracts/election.sol</div>
+  
+  <pre><code class="language-javascript">var Election = artifacts.require(&quot;./Election.sol&quot;);
   
   module.exports = function(deployer) {
     deployer.deploy(Election);
   };</code></pre>
-  <p>First, we require the contract we&#39;ve created, and assign it to a variable called &quot;Election&quot;. Next, we add it to the manifest of deployed contracts to ensure that it gets deployed when we run the migrations. Now let&#39;s run our migrations from the command line like this:</p>
-  <pre><code class="language-console">shell
-  user:~/election$: truffle migrate</code></pre>
+  <p>First, we require the contract we&#39;ve created, and assign it to a variable <code>Election</code>. Next, we add it to the manifest of deployed contracts to ensure that it gets deployed when we run the migrations. Now let&#39;s run our migrations from the command line.</p>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/election$ truffle migrate</code></pre>
   <p>Now that we have successfully migrated our smart contract to the local Ethereum blockchain, let&#39;s open the console to interact with the smart contract. You can open the truffle console from the command line
   Now that we&#39;re inside the console, let&#39;s get an instance of our deployed smart contract and see if we can read the candidate&#39;s name from the contract. From the console, run this code:</p>
-  <pre><code class="language-console">shell
-  user:~/election$: election.deployed().then(function(instance) { app = instance })</code></pre>
-  <p>Here Election is the name of the variable that we created in the migration file. We retrieved a deployed instance of the contract with the deployed() function, and assigned it to an app variable inside the promise&#39;s callback function.
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/election$ election.deployed().then(function(instance) { app = instance })</code></pre>
+  <p>Here <code>Election</code> is the name of the variable that we created in the migration file. We retrieved a deployed instance of the contract with <code>deployed()</code>, and assigned it to an app variable inside the promise&#39;s callback function.
   Now we can read the value of the candidate</p>
-  <pre><code class="language-console">shell
-  user:~/election$: app.candidate()</code></pre>
+  <div class="precode">shell</div>
+  
+  <pre><code class="language-console">user:~/election$ app.candidate()</code></pre>
   <p>Congratulations! You&#39;ve just written your first smart contract, deployed to the blockchain, and retrieved some of its data.</p>
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -219,7 +240,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -293,6 +314,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+
