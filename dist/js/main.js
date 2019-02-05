@@ -185,7 +185,7 @@ $(document).ready(function() {
     console.log(currentPath)
 
     activeItem.find('.arrow').text('▲');
-    activeItem.attr('aria-expanded', 'false');
+    activeItem.attr('aria-expanded', 'true');
     activeItem.siblings('.side-nav__child').removeClass('collapse');
     activeItem.siblings('.side-nav__child').addClass('show');
     $('[href="' + currentPath + '"] > :header').addClass('active');

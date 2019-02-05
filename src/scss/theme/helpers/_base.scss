@@ -86,7 +86,9 @@ section img {
 
 .hero-banner {
   h1 {
-    font-size: 45px;
+    @include media-breakpoint-up(sm){
+      font-size: 45px;
+    }
   }
 
   .hero-banner__content {

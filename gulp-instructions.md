@@ -2,14 +2,15 @@ Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.htm
 
 ## To do
 - [X] Login functionality
-- [ ] Need to check on the rerouting of the express function that authenticates whether user isLoggedIn
+- [X] Need to check on the rerouting of the express function that authenticates whether user isLoggedIn
 - [ ] Pages for the link at footer
-- [ ] Email sign up (only UI)
+- [X] Email sign up (only UI)
+- [ ] Look into google auth sign-in
 - [ ] Enroll today, start lesson.
 - [ ] Functionality for certificate page
 - [ ] Functionality for contact form
 - [X] Become partner button at university course offline
-- [ ] Previous and next arrow when user finish reading the documents
+- [X] Next arrow when user finish reading the documents
 - [ ] Content for become partner popup
 - [ ] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
 - [X] Code to read the images in folder for gallery and automatically generate it
@@ -31,7 +32,7 @@ Some of the benefits of this template:
 {{> layouts/two-columns}}  {{#\*inline "col-left"}}{{/inline}}  {{#\*inline "col-right"}}{{/inline}}
 ```
 
-3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in __/dist/data/courses.json__. Run __gulp compileCourseOverview__ and the new pages will be generated in __/dist/courses__. The structure of the course page is updated at __/src/partials/layouts/courses.hbs__. (To note, at the home page, there is no fix number set to the courses display)
+3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in __/dist/data/courses.json__. Run __gulp compileCourseOverview__ and the new pages will be generated in __/dist/courses__. The structure of the course page is updated at __/src/partials/layouts/coursesOverview.hbs__. (To note, at the home page, there is no fix number set to the courses display)
 
 4. Similarly for events and contributors. Easily add, edit and remove the data structure. This made changing the view while reducing error.
 
@@ -51,7 +52,7 @@ To watch live changes during development
 ```
 gulp watch
 ```
-To watch metalsmith during development as well, watch it in another console
+To watch metalsmith during development as well in another console
 ```
 gulp watch-ms
 ```
@@ -66,6 +67,12 @@ gulp html
 Rebuild the course overview pages.
 ```
 gulp compileCourseOverview
+```
+
+You can now run the build files easily. First clean up the old files with `gulp clean` and then build the new files with `gulp build`.
+```
+gulp clean
+gulp build
 ```
 
 ## Recommended resources

@@ -14,17 +14,18 @@ function isLoggedIn(req, res, next) {
 
 
 module.exports = function (app, passport) {
-    app.post('/login', (req, res, next) => {
-        passport.authenticate('local-login', {
-            session: true,
-        }, async (err, user, info) => {
+  app.post('/login', (req, res, next) => {
+      passport.authenticate('local-login', {
+          session: true,
+      }, async (err, user, info) => {
             req.logIn(user, function(err) {
-              if (err) { return next(err); }
-              res.send({ status: user, message: info })
-              console.log('user logged in',user, info)
-            });
-        })(req, res, next);
-    });
+            if (err) { return next(err); }
+            res.send({ status: user, message: info })
+            console.log('user logged in',user, info)
+          });
+      })(req, res, next);
+  });
+
 
     app.post('/signup',(req, res, next) => {
         passport.authenticate('local-signup', {

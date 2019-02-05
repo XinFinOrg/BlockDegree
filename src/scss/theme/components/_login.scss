@@ -1,9 +1,13 @@
 /* STRUCTURE */
 .form-messages {
-  position: absolute;
-  top: 100px;
+  position: relative;
+  top: 20px;
   width: 80%;
   left: 10%;
+  @include media-breakpoint-up(sm) {
+    position: absolute;
+    top: 100px;
+  }
 }
 
 .form-content {

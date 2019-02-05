@@ -3,13 +3,15 @@
 /* =================================== */
 
 
-.gallery-area{
+#gallery {
     .single-imgs{
         img{
-            height: 300px;
-            object-fit: cover;
             margin: 20px 0;
             width:100%;
+            @include media-breakpoint-up(sm){
+              height: 300px;
+              object-fit: cover;
+            }
         }
         .overlay-bg{
             background: rgba($primary-color,.85);

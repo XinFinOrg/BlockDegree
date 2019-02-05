@@ -1,14 +1,15 @@
 const gulp = require('gulp');
-const clean = require('gulp-clean');
 const rename = require('gulp-rename');
 const livereload = require('gulp-livereload');
 const sass = require('gulp-sass');
+const del = require('del');
 
 const handlebars = require('gulp-compile-handlebars');
 const metalsmith = require('gulp-metalsmith');
 const markdown = require('metalsmith-markdown');
 const templates = require('metalsmith-templates');
 
+const runSequence = require('run-sequence');
 const bs = require('browser-sync').create();
 const reload = bs.reload;
 
@@ -39,9 +40,8 @@ gulp.task('compileCourseOverview', (done) => {
   done();
 });
 
-gulp.task('clean-courses', () => {
-  return gulp.src('./src/courses', {read: false})
-    .pipe(clean());
+gulp.task('clean', () => {
+  return del(['./server/protected', './dist/*.html'])
 });
 
 gulp.task('metalsmith', () => {
@@ -88,6 +88,8 @@ gulp.task('sass', () => {
 });
 
 
+gulp.task('build', gulp.series('compileCourseOverview', 'metalsmith', 'sass', 'html'))
+
 gulp.task('watch', () => {
   bs.init({
     server: {
@@ -95,7 +97,8 @@ gulp.task('watch', () => {
       serveStaticOptions: {
             extensions: ['html']
         }
-    }
+    },
+    port: 3010
   });
 
   // Html and metal smith is run simultaneously, causing it to break so till that is figured out, have to manually run metalsmith
