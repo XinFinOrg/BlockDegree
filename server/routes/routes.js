@@ -18,7 +18,7 @@ module.exports = function (app, passport) {
         passport.authenticate('local-login', {
             session: true,
         }, async (err, user, info) => {
-            req.logIn(user, function(err) {
+              req.logIn(user, function(err) {
               if (err) { return next(err); }
               res.send({ status: user, message: info })
               console.log('user logged in',user, info)

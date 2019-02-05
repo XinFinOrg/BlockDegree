@@ -59,7 +59,8 @@ function submitForm(form) {
       $('.form-messages').removeClass('d-none alert-danger');
       $('.form-messages').html(accessMsg);
       if(accessMsg.includes('login')){
-        localStorage.setItem('hasUser', true)
+        localStorage.setItem('hasUser', true);
+        window.location = '/courses/blockchain-basic/';
       };
     }
   })
