@@ -31,7 +31,7 @@ Some of the benefits of this template:
 {{> layouts/two-columns}}  {{#\*inline "col-left"}}{{/inline}}  {{#\*inline "col-right"}}{{/inline}}
 ```
 
-3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in __/dist/data/courses.json__. Run __gulp compileCourseOverview__ and the new pages will be generated in __/dist/courses__. The structure of the course page is updated at __/src/partials/layouts/courseOverview.hbs__. (To note, at the home page, there is no fix number set to the courses display)
+3. Easily update courses pages, update courses sub-menu, home page courses link by updating the data structure in __/dist/data/courses.json__. Run __gulp compileCourseOverview__ and the new pages will be generated in __/dist/courses__. The structure of the course page is updated at __/src/partials/layouts/courses.hbs__. (To note, at the home page, there is no fix number set to the courses display)
 
 4. Similarly for events and contributors. Easily add, edit and remove the data structure. This made changing the view while reducing error.
 
@@ -50,6 +50,10 @@ npm install
 To watch live changes during development
 ```
 gulp watch
+```
+To watch metalsmith during development as well, watch it in another console
+```
+gulp watch-ms
 ```
 
 Sometimes, the browser does not reload, or if you change the data structure for courses, it might not immediately make changes (gulp only watches the courses.hbs to regenerate the page), when that happens, you can manually rebuild the website or compile the courses page (2 separate commands).

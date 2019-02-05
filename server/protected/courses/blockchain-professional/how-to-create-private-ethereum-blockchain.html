@@ -105,24 +105,17 @@
                                 data-target="#sub-{{@index}}"
                                 aria-expandeded="false"
                               {{/if}}>
+                            <a href="{{url ccm.topic}}">
                               <div class="row px-2 py-3">
-                                <div class="col-10">
-                                  <a href="{{url ccm.topic}}">
-                                    <h4 class="mod__heading"> {{ccm.topic}}</h4>
-                                  </a>
-                                </div>
+                                <h4 style="font-weight:600" class="col-10 mod__heading"> {{ccm.topic}}</h4>
+              
                                 {{#if ccm.sub-topic}}
-                                  <div class="col-1 arrow"
-                                       id="{{url ccm.topic}}"
-                                       class="with-child"
-                                       data-toggle="collapse"
-                                       data-target="#sub-{{@index}}"
-                                       aria-expanded="false">
+                                  <div class="col-1 arrow">
                                     &#x25BC;
                                   </div>
                                 {{/if}}
                               </div>
-                            </li>
+                            </a></li>
                             <!-- End heading -->
               
                             <!-- Start sub-heading if there is -->
@@ -151,79 +144,59 @@
             </div>
   
             <div class="col-12 col-sm-8 p-4 module-content">
-              <div class="container py-2 py-sm-5">
-                <h2 id="Create a private Ethereum blockchain">Create a private Ethereum blockchain</h2>
+              <div class="container py-2">
+                <h2 id="How to create private Ethereum blockchain?">How to create private Ethereum blockchain?</h2>
                 <div><h4 id="download-geth">Download Geth</h4>
-  <p>Follow the instructions from the <a href="https://geth.ethereum.org/downloads/" target="_blonk">official Geth website</a> to download geth as per your requirement and your operating system.</p>
-  <img src="/img/courses/bc-adv/qa1.png" alt="geth-download"/>
-  
+  <p>Follow the instructions from the <a href="https://geth.ethereum.org/downloads/">official Geth website</a> to download geth as per your requirement and your operating system.</p>
   <h4 id="check-that-geth-is-installed">Check that geth is installed</h4>
-  <div class="precode">shell</div>
-  
-  <pre><code class="language-console">user:~/$: geth</code></pre>
-  <p>You will see the log of a running geth instance.
-  <img src="/img/courses/bc-adv/qa2.png" alt="geth-console" /></p>
+  <pre><code class="language-console">shell
+  user:~/$: geth</code></pre>
   <h4 id="configure-your-blockchain-setting">Configure your blockchain setting</h4>
-  <div class="precode">shell</div>
-  
-  <pre><code>user:~/$: mkdir blockchain
+  <pre><code class="language-console">shell
+  user:~/$: mkdir blockchain
   user:~/$: cd blockchain
-  user:~/blockchain$: touch genesis.json</code></pre><p><strong>What is a genesis file?</strong></p>
-  <p>The genesis block is the first block of the blockchain. As there is no reference to a previous block, the properties of the genesis block is usually hardcoded into the software, as seen in <code>genesis.json</code>. In <code>genesis.json</code> you will configure the properties of the blockchain. It is like the “settings” for your blockchain. For example, the chain configuration, level of difficulty to mine blocks, etc.</p>
-  <p>There are <strong>4 required values</strong> (config, difficulty, gasLimit and alloc) you need to specify in <code>genesis.json</code>.</p>
-  <p>This is an example of how a genesis file.</p>
-  <div class="precode">~/blockchain/genesis.json</div>
-  
-  <pre><code class="language-json">{
-    &quot;config&quot;: {
-      &quot;chainId&quot;: 989899,
-      &quot;homesteadBlock&quot;: 0,
-      &quot;eip155Block&quot;: 0,
-      &quot;eip158Block&quot;: 0
-    },
-    &quot;difficulty&quot;: &quot;200&quot;,
-    &quot;gasLimit&quot;: &quot;2100000&quot;,
-    &quot;alloc&quot;: {
-      &quot;7df9a875a174b3bc565e6424a0050ebc1b2d1d82&quot;: { &quot;balance&quot;: &quot;300000&quot; },
-      &quot;f41c74c9ae680c1aa78f42e5647a62f353b7bdde&quot;: { &quot;balance&quot;: &quot;400000&quot; }
-    }
-  }</code></pre>
+  user:~/blockchain$: touch genesis.json</code></pre>
+  <p>As you can see from the example, you need to create a <code>genesis.json</code> file in your blockchain folder.</p>
+  <p><strong>What is a genesis file?</strong></p>
+  <p>The genesis block is the start of the blockchain, and <code>genesis.json</code> is the file that defines it. It is like the “settings” for your blockchain. For example, the chain configuration, level of difficulty to mine blocks, etc.</p>
+  <p>There are 4 values(config, difficulty, gasLimit, alloc) you need to specify in <code>genesis.json</code>.</p>
+  <p><strong>Configure your genesis file</strong></p>
+  <p>Explain the various gonfig here</p>
   <h4 id="initialise-the-genesis-file">Initialise the genesis file</h4>
-  <div class="precode">shell</div>
-  
-  <pre><code class="language-console">user:~/blockchain$: geth -datadir=./new init genesis.json</code></pre>
-  <p>This command will initialize your genesis block. You will see that a new folder is created in the blockchain folder. This new folder contains geth and your keystore.
-  <img src="/img/courses/bc-adv/qa5.png" alt="geth-console init" /></p>
+  <pre><code class="language-console">shell
+  user:~/blockchain$: geth -datadir=./new init genesis.json</code></pre>
+  <p>This command will initialize your genesis block and automatically create new folder in the blockchain folder which contains geth and your keystore</p>
   <h4 id="start-your-blockchain-node-">Start your blockchain(node)</h4>
-  <div class="precode">shell</div>
-  
-  <pre><code class="language-console">user:~/blockchain$: geth  --datadir ./new --networkid 989899 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi
+  <pre><code class="language-console">shell
+  user:~/blockchain$: geth  --datadir ./new --networkid 989899 --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi
   db,net,web3,admin,eth,miner,personal --rpccorsdomain</code></pre>
-  <p>This command includes admin, miner, gives your private blockchain network id and port number and also creates one miner to mine your private blockchain.</p>
+  <p>This command includes admin minner gives your private blockchain network id and port number and also creates one miner to mine your private blockchain.</p>
   <h4 id="create-your-first-account">Create your first account</h4>
-  <p>Attach Geth to your console with the rpcport you declared in the previous command.</p>
-  <div class="precode">shell</div>
-  
-  <pre><code class="language-console">user:~/blockchain$: geth attach http://0.0.0.0:8545</code></pre>
-  <p>Now you are ready to interact with your private Ethereum blockchain. Let&#39;s start off by creating new account and transferring some ether from one account to the other.</p>
-  <div class="precode">shell</div>
-  
-  <pre><code class="language-console">&gt; Personal.newAccount()
-  &gt; miner.start()
-  &gt; miner.stop()
-  &gt; eth.getBalance(eth.coinbase) //Wei
-  &gt; web3.fromWei(eth.getBalance(eth.coinbase),”ether”)
-  &gt; eth.sendTransaction({from: &lt;AddrA&gt; to: &lt;AddrB&gt; value, :web3.toWei(85,&quot;ether&quot;)})  // it is Transfer some ether one account to another account</code></pre>
-  <img src="/img/courses/bc-adv/qa8.png" alt="create eth transactions" />
-  
-  
+  <p>in the below image there is two account  created in command prompt one account has balance of 185 ether after words transaction is done and 85 ether is transfer from first account to second account and then the second account has 85 ether.</p>
+  <pre><code class="language-console">shell
+  Personal.newAccount() 3
+  miner.start()
+  miner.stop()
+  eth.getBalance(eth.coinbase) //Wei
+  web3.fromWei(eth.getBalance(eth.coinbase),”ether”)
+  eth.sendTransaction({from:          to:          value, :web3.toWei(85,&quot;ether&quot;)})  // it is Transfer some ether one account to another account.</code></pre>
   <h4 id="check-your-transaction">Check your transaction</h4>
-  <p>When you make a transaction, the console will print an alphanumberic string, which is the <code>TX receipt</code> for the particular transaction. With the <code>TX receipt</code>, you will be able to get the transaction details, like <strong>blockhash</strong>, <strong>blocknumber</strong>, <strong>sender</strong> and <strong>gas price</strong>.</p>
-  <div class="precode">shell</div>
-  
-  <pre><code class="language-console">&gt; eth.getTransaction(&#39;&lt;TX receipt&gt;&#39;)</code></pre>
-  <img src="/img/courses/bc-adv/qa9.png" alt="check transaction information" />
+  <p>As seen above the transaction is done to see the transaction properly you need to write command eth.getTransaction (“enter the transaction receipt”) after entering the command you can see the Full block with block hash,block number,gas,gas price,hash,input etc you can see in the transaction.</p>
   </div>
+                <div id="next-page" class="text-center text-sm-right"></div>
+                <div class="py-3 cert-block">
+                  <h3>Certified blockchain expert certification</h3>
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mt-0 mb-2">Free test</h4>
+                          <a href="#" class="card-text btn btn-gradient px-1 width--full" disabled>Coming soon</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
         </div>
@@ -238,7 +211,7 @@
                         <div class="single-footer-widget">
                             <h4>Useful</h4>
                             <ul>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                             </ul>
                         </div>
@@ -312,6 +285,7 @@
       <script src="/js/pageHandlebars.js"></script>
       <script src="/js/main.js"></script>
         <script src="/js/modMenu.js"></script>
+        <script src="/js/cachedMenu.js"></script>
      </body>
   </html>
-    
+

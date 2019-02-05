@@ -182,9 +182,10 @@ $(document).ready(function() {
     currentPathIndex = fullPath.lastIndexOf('/'),
     currentPath = fullPath.slice(currentPathIndex + 1),
     activeItem =  $('.mod__sidebar #' + currentPath);
+    console.log(currentPath)
 
     activeItem.find('.arrow').text('▲');
-    activeItem.attr('aria-expanded', 'true');
+    activeItem.attr('aria-expanded', 'false');
     activeItem.siblings('.side-nav__child').removeClass('collapse');
     activeItem.siblings('.side-nav__child').addClass('show');
     $('[href="' + currentPath + '"] > :header').addClass('active');

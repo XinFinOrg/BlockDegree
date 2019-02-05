@@ -2,3 +2,5 @@
 .sass-cache/
 node_modules/
 server/config/database.js
+server/protected/
+dist/*.html
