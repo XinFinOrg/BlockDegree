@@ -9,7 +9,6 @@ const metalsmith = require('gulp-metalsmith');
 const markdown = require('metalsmith-markdown');
 const templates = require('metalsmith-templates');
 
-const runSequence = require('run-sequence');
 const bs = require('browser-sync').create();
 const reload = bs.reload;
 
@@ -41,7 +40,7 @@ gulp.task('compileCourseOverview', (done) => {
 });
 
 gulp.task('clean', () => {
-  return del(['./server/protected', './dist/*.html'])
+  return del(['./server/protected/courses/', './dist/*.html'])
 });
 
 gulp.task('metalsmith', () => {

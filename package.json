@@ -2,7 +2,9 @@
   "name": "Blockchain_Tutorial-website",
   "version": "1.0.0",
   "scripts": {
-    "start": "nodemon ./server/bin/www"
+    "start": "nodemon ./server/bin/www",
+    "test": "mocha",
+    "autotest": "supervisor -q -n exit -x mocha -- -b" 
   },
   "repository": {
     "type": "git",
@@ -15,6 +17,7 @@
   "homepage": "https://github.com/XinFinOrg/Blockchain_Tutorial-website#readme",
   "devDependencies": {
     "browser-sync": "^2.26.3",
+    "chai": "^4.2.0",
     "gulp": "^4.0.0",
     "gulp-compile-handlebars": "^0.6.1",
     "gulp-livereload": "^4.0.1",
@@ -26,9 +29,10 @@
     "metalsmith": "^2.3.0",
     "metalsmith-markdown": "^1.1.0",
     "metalsmith-templates": "^0.7.0",
+    "mocha": "^5.2.0",
     "node-sass": "^4.11.0",
     "nodemon": "^1.18.9",
-    "run-sequence": "^2.2.1"
+    "supervisor": "^0.12.0"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",

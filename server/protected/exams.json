@@ -1,0 +1,17 @@
+{
+  "exam": [
+    {
+      "question": "When was Blockchain Invented?",
+      "choices": ["Since 1993", "Since 2008", "Since 1991", "Since 1967"],
+      "answer": 2
+    },
+    {
+      "question": "What is a node?",
+      "choices":  ["A type of cryptocurrency",
+                "A blockchain",
+                "A computer on a blockchain network",
+                "An exchange"],
+      "answer": 3
+    }
+  ]
+}

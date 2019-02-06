@@ -1,17 +1,8 @@
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
 
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    if(req.params.courseName) {
-      res.redirect('/login?from=' + req.params.courseName)
-    } else {
-      res.redirect('/login');
-    }
-  }
-}
-
+const utils = require('../utils.js');
+let {readJSONFile, isLoggedIn} = utils;
 
 module.exports = function (app, passport) {
   app.post('/login', (req, res, next) => {
@@ -56,6 +47,16 @@ module.exports = function (app, passport) {
     app.get('/courses/:courseName/:content', isLoggedIn, function(req, res){
       res.sendFile(path.join( process.cwd(), '/server/protected/courses/' + req.params.courseName + '/' + req.params.content + '.html'));
     });
+
+    app.get('/exam', function(req, res){
+      let examQns;
+
+      readJSONFile(path.join( process.cwd(), '/server/protected/exams.json'), (err, json) => {
+        if(err){ throw err; }
+        examQns = json
+        res.render('exam', examQns)
+      })
+    })
 
     app.get('/tt', isLoggedIn, (req, res) => {
       console.log('auth tt: ' + req.isAuthenticated())
