@@ -31,7 +31,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static('dist', { extensions: ['html', 'htm'] }));
+<<<<<<< HEAD
 app.use(express.static('server/protected', { extensions: ['html', 'htm'] }));
+=======
+app.use(express.static('public', { extensions: ['html', 'htm'] }));
+>>>>>>> 5ca922ef5379b5f92d4b3ce5adcb6711395dce40
 
 // required for passport
 app.use(session({ secret: 'itsmeakshayhere' })); // session secret

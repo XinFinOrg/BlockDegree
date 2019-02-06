@@ -1,0 +1,297 @@
+  <!DOCTYPE html>
+  <html lang="zxx" class="no-js">
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="author" content="Xinfin">
+      <meta name="description" content= Professional blockchain training course by Xinfin >
+      <meta charset="UTF-8">
+      <link rel="icon" href="/img/brand/favicon.ico">
+      <title>
+         Verify certification 
+      </title>
+      <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+        <link rel="stylesheet" href="/css/linearicons.css">
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/bootstrap.css">
+        <link rel="stylesheet" href="/css/magnific-popup.css">
+        <link rel="stylesheet" href="/css/nice-select.css">
+        <link rel="stylesheet" href="/css/animate.min.css">
+        <link rel="stylesheet" href="/css/jquery-ui.css">
+        <link rel="stylesheet" href="/css/slick.css">
+        <link rel="stylesheet" href="/css/slick-theme.css">
+        <link rel="stylesheet" href="/css/login-form.css">
+        <link rel="stylesheet" href="/css/main.css">
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+        <script src="/js/vendor/handlebars-v4.0.12.js"></script>
+        <script src="/js/utils.js"></script>
+    </head>
+  
+    <body>
+      <header id="header">
+        <div class="container main-menu">
+          <div class="row align-items-center justify-content-between d-flex">
+            <div id="logo">
+              <a href="/"><img src="/img/brand/XinFin_transparent.png" alt="xinfin blockchain education training" /></a>
+            </div>
+        
+            <nav id="nav-menu-container">
+              <ul class="nav-menu">
+                <li class="menu-has-children"><a href="" class="py-1">Online Blockchain Training</a>
+                  <ul id="nav-sub-1">
+                    <script id="nav-submenu-template" type="text/template">
+                      {{#each courses}}
+                        <li><a href="/{{slug}}" data-toggle="moda" data-target="#exampleModal" data-whatever="@getbootstra">
+                          {{title}}
+                        </a></li>
+                      {{/each}}
+                    </script>
+                  </ul>
+                </li>
+                <li><a href="/university-courses" class="py-1">University Course Offline</a></li>
+                <li><a href="/events" class="py-1">Event</a></li>
+                <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
+                <li><a href="/contact" class="py-1">Contact Us</a></li>
+                <li id="login-btn">
+                  <script id="nav-login" type="text/template">
+                    <a id="userAuth-btn" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"
+                       href="{{#if this}}/logout{{else}}/login{{/if}}">
+                      {{#if this}}Logout{{else}}Login{{/if}}
+                    </a>
+                  </script>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+  
+      <section>
+      <div class="hero-banner hero-overlay"
+           style="background: url('/img/top-banner.jpg') center/cover;">
+        <div class="container">
+          <div class="row align-items-center justify-content-center">
+            <div class="hero-banner__content text-center">
+              <h1 class="text-white">Verify certification</h1>
+               <h3 class="text-white">Boost your credentials with our blockchain certification</h3> 
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- start abovefold area -->
+      <div id="above-fold"  class="bg-gradient">
+        <div class="container py-2">
+          <div class="row align-items-center text-center text-white">
+            <div class="col-12 col-sm-6">
+              Ready to be certified?
+            </div>
+            <div class="col-12 col-sm-6">
+              <a href="">
+                <button type="button" class="btn btn-outline-light px-3 px-sm-5">Claim your certificate</button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end abovefold area -->
+  
+        <div class="container__cstm">
+          <div class="row">
+            <div class="col-12
+               col-sm-8
+              ">
+                <div id="ContentInner" class="group secondaryPage">
+                  <div id="secondaryPageContent" class="group contentRow">
+                    <div id="ver-search-bar">
+                      <h2>Verification</h2>
+                      <p>Please enter a Transaction Hash. Results will be displayed if the holder is currently certified and has selected to share their certification information.</p>
+                    </div>
+                  </div>
+                </div>
+        
+                <form action="javascript:searchByName()" id="search-by-name" class="search-by-box">
+                  <div class="form-row align-items-center">
+                    <div class="col-12 col-sm-2">
+                      <label for="fullname" class="mb-0">Tx Hash</label>
+                    </div>
+                    <div class="col-12 col-sm-8">
+                      <input id="fullname" name="fullname" class="form-control">
+                    </div>
+                    <div class="col-12 col-sm-2 pt-3 pt-sm-0">
+                      <input type="submit" name="search" value="Search" class="btn btn-primary">
+                    </div>
+                  </div>
+                </form>
+            </div>
+            <div class="col-12
+                 col-sm-4
+                " >
+                  <div class="pt-5 pt-sm-0">
+                    <h3>Existing certifications</h3>
+                    <div class="mt-2 p-2 bg-light">
+                      <strong>0xe4d63hr8ehf8whe8h38hefh</strong>
+                      <p class="mb-0">Singapore, Singapore, Singapore</p>
+                      <button class="btn btn-gradient py-1 width--full" data-toggle="modal" data-target="#myModal">View Certificate</button>
+                    </div>
+        
+                    			<!--modal starts-->
+                    			<div id="myModal" class="modal fade" role="dialog">
+                    				  <div class="modal-dialog modal-lg">
+        
+                    					<!-- Modal content-->
+                    					<div class="modal-content">
+                    					  <div class="modal-body">
+                    						<div id="ver-search-results" class="detail-overlay">
+                    										<div class="ver-search-results-titles">
+        
+                    							<div class="name-button-header">
+                    								<span>
+                    									<h2 class="cert-name-insert">0xe4d63hr8ehf8whe8h38hefh</h2>
+                    								</span>
+                    								<span class="btnwrapper">
+                    									<div>
+                    										<a class="print-button-insert btn" target="_blank" href="/certification-detail-print?conId=003G0000017E6JbIAK">PRINT VIEW</a>
+                    									</div>
+                    								</span>
+                    							</div>
+                    							<div class="">
+                    								<span class="cert-badge-col-brace"></span>
+                    								<span class="credential">Credential</span>
+                    								<span class="date-certified">Certification Date</span>
+                    							</div>
+        
+                    										</div>
+                    										<div class="odd">
+                    											<div class="ver-search-results-line">
+                    							<span class="cert-badge Certified Administrator"></span>
+                    							<img src="img/veriBTC.jpg" width="100px" height="80px"/>
+                    							<span id="cert-name" class="credential" data-full-name="John Dray" data-conid="003G0000017E6JbIAK">Blockchain Certified Blockchain Technology</span>
+                    							<span class="date-certified">October 14, 2018 </span>
+                    											</div>
+                    										</div>
+                    										<div class="even">
+                    											<div class="ver-search-results-line">
+                    							<span class="cert-badge Certified Sales Consultant"></span>
+                    							<img src="img/pm2.jpg" width="100px" height="70px"/>
+                                                <span id="cert-name" class="credential" data-full-name="John Dray" data-conid="003G0000017E6JbIAK">Blockchain Certified Ethereum Blockchain Developer</span>
+                    							<span class="date-certified">July 4, 2018 </span>
+                    											</div>
+                    										</div>
+                    										<div class="odd">
+                    											<div class="ver-search-results-line">
+                    							<span class="cert-badge Certified App Builder"></span>
+                    		                    <img src="img/pm7.png" width="100px" height="70px"/>
+                                                <span id="cert-name" class="credential" data-full-name="John Dray" data-conid="003G0000017E6JbIAK">Blockchain Certified XDC01 Hybrid Blockchain Developer</span>
+                    							<span class="date-certified">June 28, 2018 </span>
+                    											</div>
+                    										</div>
+                    										<div>
+        
+                    								<p>
+                    								  <em>XinFin Blockchain Certified professionals are required to actively maintain their certifications by successfully completing incremental exams focused on new product functionality. Misrepresentation of a Blockchain Certification will result in disciplinary action, up to and including removal from the Blockchain Certification program. For additional information, click&nbsp;<a href="http://XinFin.org" target="_blank">here</a>.</em>
+                    								</p>
+                    										</div>
+                    									</div>
+                    					  </div>
+                    					  <div class="modal-footer">
+                    						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    					  </div>
+                    					</div>
+        
+                    				  </div>
+                    				</div>
+                  </div>
+            </div>
+          </div>
+        </div>
+  
+  
+      </section>
+  
+      <footer>
+          <footer class="footer-area">
+            <div class="container section-gap">
+                <div class="row">
+                    <div class="col-lg-2 col-md-6 col-sm-6">
+                        <div class="single-footer-widget">
+                            <h4>Useful</h4>
+                            <ul>
+                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-footer-widget">
+                            <h4>About</h4>
+                            <ul>
+                                <li><a href="#">Guides</a></li>
+          
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4  col-md-6 col-sm-6">
+                        <div class="single-footer-widget">
+                            <h4>Newsletter</h4>
+                            <p>Stay updated with our latest news</p>
+                            <div class="" id="mc_embed_signup" style="">
+                                <form target="_blank" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01" method="get">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="EMAIL" placeholder="Enter Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Email Address '" required="" type="email">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default" type="submit">
+                                                <span class="lnr lnr-arrow-right"></span>
+                                            </button>
+                                        </div>
+                                        <div class="info"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          
+          <div class="footer-bottom border-top">
+            <div class="container">
+              <div class="row align-items-center justify-content-between section-gap">
+                <p class="footer-text m-0 col-lg-6 col-md-12">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script> <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://Xinfin.org" target="_blank">XinFin</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </p>
+                <div class="col-lg-6 col-sm-12 footer-social">
+                  <a href="https://www.facebook.com/XinFinHybridBlockchain/"><i class="fa fa-facebook"></i></a>
+                  <a href="https://twitter.com/XinFin_Official"><i class="fa fa-twitter"></i></a>
+          
+                  <a href="https://linkedin.com/in/xinfin"><i class="fa fa-linkedin"></i></a>
+                  <a href="https://www.youtube.com/channel/UCQaL6FixEQ80RJC0B2egX6g"><i class="fa fa-youtube"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          </footer>
+          <hr class="hr-primary" />
+      </footer>
+  
+  
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+      <script src="/js/vendor/jquery.magnific-popup.min.js"></script>
+      <script src="/js/vendor/jquery-ui.js"></script>
+      <script src="/js/vendor/superfish.min.js"></script>
+      <script src="/js/vendor/jquery.ajaxchimp.min.js"></script>
+      <script src="/js/vendor/slick.min.js"></script>
+      <script src="/js/pageHandlebars.js"></script>
+      <script src="/js/main.js"></script>
+     </body>
+  </html>
+
+

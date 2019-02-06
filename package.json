@@ -4,7 +4,7 @@
   "scripts": {
     "start": "nodemon ./server/bin/www",
     "test": "mocha",
-    "autotest": "supervisor -q -n exit -x mocha -- -b" 
+    "autotest": "supervisor -q -n exit -x mocha -- -b"
   },
   "repository": {
     "type": "git",

@@ -27,6 +27,6 @@ The answer to the PoW problem or mathematical equation is called hash.
 As the network is growing, it is facing more and more difficulties. The algorithms need more and more hash power to solve. So, the complexity of the task is a sensitive issue.
 
 ### Implementation of proof of work
-Miners solve the puzzle, form the new block and confirm the transactions.How complex a puzzle is depends on the number of users, the current power and the network load. The hash of each block contains the hash of the previous block, which increases security and prevents any block violation.
+Miners solve the puzzle, form the new block and confirm the transactions. How complex a puzzle is depends on the number of users, the current power and the network load. The hash of each block contains the hash of the previous block, which increases security and prevents any block violation.
 
 If a miner manages to solve the puzzle, the new block is formed. The transactions are placed in this block and considered confirmed

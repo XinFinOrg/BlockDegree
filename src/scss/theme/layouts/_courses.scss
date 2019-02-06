@@ -39,6 +39,15 @@
       font-size: 14px;
       padding: 15px;
     }
+
+    ul li {
+      list-style-type: circle;
+      margin-left: 20px;
+      padding-bottom: 15px;
+      @include media-breakpoint-up(sm) {
+        margin-left: 30px;
+      }
+    }
   }
 }
 

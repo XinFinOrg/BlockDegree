@@ -9,7 +9,7 @@ courseIdx: 2
 Blockchain is made up of multiple nodes. In order to connect your existing private blockchain node with more nodes, you will need to know the enode of the nodes you are connecting to.
 
 #### Enodes
-Through enode you can add nodes in your computer. <a href="[https://github.com/ethereum/wiki/wiki/enode-url-format]" target="_blank">Enode</a> is a way to identify an Ethereum node in a form of URL scheme. An enode consists of a username and hostname. A hexadecimal string node ID in the username is separated from the hostname by an @ sign. The hostname is given as an IP address, with the TCP listening port. If the TCP and UDP (discovery) ports differ, the UDP is specified as query parameter "discport".
+Through enode you can add nodes in your computer. <a href="https://github.com/ethereum/wiki/wiki/enode-url-format" target="_blank">Enode</a> is a way to identify an Ethereum node in a form of URL scheme. An enode consists of a username and hostname. A hexadecimal string node ID in the username is separated from the hostname by an @ sign. The hostname is given as an IP address, with the TCP listening port. If the TCP and UDP (discovery) ports differ, the UDP is specified as query parameter "discport".
 
 An example of an enode will look like this.
 ```no-wrap

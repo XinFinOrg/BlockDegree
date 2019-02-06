@@ -31,7 +31,7 @@ Smart contracts are first introduced on the Ethereum blockchain. They are applic
 * Transaction information of affiliate or loyalty programs is also secured on platforms that have been developed on powered platform.
 
 ### Disadvantages of Smart Contracts
-Along with many advantages, it also comes with a few disadvantages. 
+Along with many advantages, it also comes with a few disadvantages.
 * Smart contract based on blockchain framework is a new concept. Thus, people have limited knowledge on it.
 * Making changes or altering transaction information is not possible with smart contracts. It is advantageous as it maintains transparency. But, it could be daunting when a transaction happens by mistake.
 * Third party agents do not disappear completely as they get new role.
