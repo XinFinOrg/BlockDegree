@@ -1,5 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+<<<<<<< HEAD
+
+const utils = require('../utils.js');
+let {readJSONFile, isLoggedIn} = utils;
+=======
+>>>>>>> f1a384795ad86aa477363d5bc221d6cb92bbb8c2
 
 const utils = require('../utils.js');
 let {readJSONFile, isLoggedIn} = utils;

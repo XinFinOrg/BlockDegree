@@ -59,8 +59,21 @@ function submitForm(form) {
       $('.form-messages').removeClass('d-none alert-danger');
       $('.form-messages').html(accessMsg);
       if(accessMsg.includes('login')){
+<<<<<<< HEAD
+        window.location = '/';
+=======
+>>>>>>> f1a384795ad86aa477363d5bc221d6cb92bbb8c2
         localStorage.setItem('hasUser', true)
       };
     }
   })
 };
+
+$(document).ready(function () {
+  if(window.location.href.indexOf("login") > -1) {
+    if(localStorage.getItem('hasUser') === "true") {
+      window.location = '/';
+    } else {
+    }
+  }
+});
