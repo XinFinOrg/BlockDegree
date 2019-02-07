@@ -59,11 +59,8 @@ function submitForm(form) {
       $('.form-messages').removeClass('d-none alert-danger');
       $('.form-messages').html(accessMsg);
       if(accessMsg.includes('login')){
-<<<<<<< HEAD
+        localStorage.setItem('hasUser', true);
         window.location = '/';
-=======
->>>>>>> f1a384795ad86aa477363d5bc221d6cb92bbb8c2
-        localStorage.setItem('hasUser', true)
       };
     }
   })
