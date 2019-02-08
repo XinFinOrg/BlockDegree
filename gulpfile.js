@@ -40,7 +40,7 @@ gulp.task('compileCourseOverview', (done) => {
 });
 
 gulp.task('clean', () => {
-  return del(['./server/protected/courses/', './dist/*.html'])
+  return del(['./server/protected/courses/', './dist/*.html', './dist/css/main.css'])
 });
 
 gulp.task('metalsmith', () => {

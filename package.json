@@ -4,7 +4,7 @@
   "scripts": {
     "start": "nodemon ./server/bin/www",
     "test": "mocha",
-    "autotest": "supervisor -q -n exit -x mocha -- -b" 
+    "autotest": "supervisor -q -n exit -x mocha -- -b"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
     "gulp-sass": "^4.0.2",
     "handlebars": "^4.0.12",
     "handlebars-layout": "^0.1.4",
+    "jsdom": "^13.2.0",
     "metalsmith": "^2.3.0",
     "metalsmith-markdown": "^1.1.0",
     "metalsmith-templates": "^0.7.0",

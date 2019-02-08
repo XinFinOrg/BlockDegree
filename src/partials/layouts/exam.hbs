@@ -9,7 +9,7 @@
 
     {{#each exam}}
     <div class="card py-3 px-5 mb-4">
-      <h4 id="q{{@index}}" class="mb-3">
+      <h4 id="q{{@index}}" class="mb-3 exam-qns">
         {{this.question}}
       </h4>
 
@@ -25,10 +25,10 @@
       </div>
     </div>
     {{/each}}
+    <div class="text-right">
+      <input id="exam-submit" type="submit" class="btn btn-primary py-2 mt-4 text-white" value="Submit your answers">
+    </div>
   </div>
 
 </div>
-
-{{#*inline "scripts-block"}}
 <script src="/js/exam.js"></script>
-{{/inline}}

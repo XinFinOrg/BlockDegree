@@ -53,10 +53,30 @@ module.exports = function (app, passport) {
 
       readJSONFile(path.join( process.cwd(), '/server/protected/exams.json'), (err, json) => {
         if(err){ throw err; }
-        examQns = json
-        res.render('exam', examQns)
+        // examQns = json
+        // let examArr = [];
+        // examArr.push(json)
+        // examArr.push({scripts: '<script src="/js/exam.js"></script>'})
+        // console.log(examArr)
+        // examQns.push({scrips: '<script src="/js/exam.js"></script>'})
+        res.render('exam', json)
       })
     })
+
+    app.post('/answers', (req, res, next) => {
+        // check the verification of user answers
+        console.log(req.body) // Answers are send as {'0': 'q0-c0', '1': 'q1-c2'}
+        // return the score
+        res.send('got the answers')
+    })
+
+    app.post('/signup',(req, res, next) => {
+        passport.authenticate('local-signup', {
+            session: true,
+        }, async (err, user, info) => {
+            res.send({ status: user, message: info })
+        })(req, res, next);
+    });
 
     app.get('/tt', isLoggedIn, (req, res) => {
       console.log('auth tt: ' + req.isAuthenticated())
