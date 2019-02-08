@@ -29,7 +29,7 @@ __Upgrade Agent__ transfers tokens to a new contract. Upgrade agent itself can b
 __Upgrade Token__ contract provides a token upgrade mechanism where the users can opt-in amount of tokens to the next smart contract revision
 
 ### Refundable Contracts
-In cases whereby the soft cap is not reached, you will need to return the money to the token's buyers. To achieve this, we can make use of OpenZepplin, a framework of reusable smart contracts for Ethereum. OpenZeppelin does it by creating a refund vault, which stores the tokens while the crowdsale is in progress. When the soft cap is not met, this feature will allow the possibility of users getting a refund.
+In cases whereby the soft cap is not reached, you might want to set the option of returning ethereum/bitcoin to the token's buyers. To achieve this, we can make use of OpenZepplin, a framework of reusable smart contracts for Ethereum. OpenZeppelin does it by creating a refund vault, which stores the tokens while the crowdsale is in progress. When the soft cap is not met, this feature will allow the possibility of users getting a refund.
 
 This is done using a pull mechanism, while keeping the Re-Entry problem into consideration to avoid attacks from malicious contracts/users.
 

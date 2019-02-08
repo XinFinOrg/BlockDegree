@@ -1,22 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 
+
 const utils = require('../utils.js');
 let {readJSONFile, isLoggedIn} = utils;
 
-module.exports = function (app, passport) {
-  app.post('/login', (req, res, next) => {
-      passport.authenticate('local-login', {
-          session: true,
-      }, async (err, user, info) => {
-            req.logIn(user, function(err) {
-            if (err) { return next(err); }
-            res.send({ status: user, message: info })
-            console.log('user logged in',user, info)
-          });
-      })(req, res, next);
-  });
 
+module.exports = function (app, passport) {
+    app.post('/login', (req, res, next) => {
+        passport.authenticate('local-login', {
+            session: true,
+        }, async (err, user, info) => {
+              req.logIn(user, function(err) {
+              if (err) { return next(err); }
+              res.send({ status: user, message: info })
+              console.log('user logged in',user, info)
+            });
+        })(req, res, next);
+    });
 
     app.post('/signup',(req, res, next) => {
         passport.authenticate('local-signup', {

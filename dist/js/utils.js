@@ -59,8 +59,18 @@ function submitForm(form) {
       $('.form-messages').removeClass('d-none alert-danger');
       $('.form-messages').html(accessMsg);
       if(accessMsg.includes('login')){
-        localStorage.setItem('hasUser', true)
+        localStorage.setItem('hasUser', true);
+        window.location = '/';
       };
     }
   })
 };
+
+$(document).ready(function () {
+  if(window.location.href.indexOf("login") > -1) {
+    if(localStorage.getItem('hasUser') === "true") {
+      window.location = '/';
+    } else {
+    }
+  }
+});

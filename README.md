@@ -73,10 +73,10 @@ You are ready to take on roles in the blockchain industry. Also, as blockchain i
 Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.html
 
 ## To do
-- [ ] Login functionality
+- [X] Login functionality
 - [ ] Pages for the link at footer
-- [ ] Email sign up (only UI)
-- [ ] Enroll today, start lesson.
+- [X] Email sign up (only UI )(Backend )
+- [X] Enroll today, start lesson.
 - [ ] Functionality for certificate page
 - [ ] Functionality for contact form
 - [X] Become partner button at university course offline
