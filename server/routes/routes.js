@@ -60,6 +60,7 @@ module.exports = function (app, passport) {
         // examArr.push({scripts: '<script src="/js/exam.js"></script>'})
         // console.log(examArr)
         // examQns.push({scrips: '<script src="/js/exam.js"></script>'})
+        console.log('test quetions:', json);
         res.render('exam', json)
       })
     })
