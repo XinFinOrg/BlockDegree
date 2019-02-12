@@ -4,6 +4,10 @@ title: What is the difference between blockchain and database?
 template: courseContent.hbs
 courseIdx: 0
 ---
+
+<img src="/img/courses/bc-basic/blockchain-database.png"  style="width:100%; height: 400px; align-content: center; "/>
+                <img src="/img/courses/bc-basic/bc-db.png"  style="width:100%; height: 400px; align-content: center; "/>
+
 __The distinctions between a traditional (Relational or document-oriented) database and a blockchain__
 
 1. In a traditional Database, a single authorised server or a group of authorised servers (sharing in MongoDB) store the data. The users of this data will have to assume that the organisation running the server will not change the data and the security of the server will not be affected.

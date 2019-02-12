@@ -4,6 +4,9 @@ title: Permissioned vs permissionless blockchain
 template: courseContent.hbs
 courseIdx: 0
 ---
+
+  <img src="/img/courses/bc-basic/permissioned-permissionless.png"  style="width:100%; height: 400px; align-content: center; "/>
+
 ### Permissioned Blockchain
 Permissioned Blockchains limit access for those who can perform different activities on the Blockchain. The exchanges are approved and handled by the individuals with record, accepting them for certain trust levels.
 

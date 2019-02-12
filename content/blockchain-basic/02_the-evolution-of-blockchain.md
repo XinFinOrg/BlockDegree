@@ -37,6 +37,8 @@ Imagine you did a work-from-home internship for a startup in the USA. And you go
 This entire process would take a minimum of 3-5 business days.
 
 For instance, Alex wants to send $100 to Bob. However, he would have to ignore a trusted third party like a Bank or Financial institution in order to enable Bob receive it earlier. A transaction charge of 2% is deducted from the total amount and Hrishikesh receives $98 only. Now the 2% charged might appear like a very little amount. However, imagine if you sent $100,000 rather of $100, then the transaction fees will also increase to $2,000, which is a huge amount. According to a record from SNL Financial and CNNMoney, JPMorgan Chase, Bank of America and Wells Fargo earned extra than $6 billion from
+  <img src="/img/courses/bc-basic/hst3.png"  style="width:100%; height: 400px; align-content: center; "/>
+
 
 
 Most of these expenses are recorded under Third-Party/Broker Fees, which you pay to a trusted third party (Paypal and Your Bank) for carrying out your transactions.
