@@ -4,6 +4,7 @@ title: History of the Blockchain
 template: courseContent.hbs
 courseIdx: 0
 ---
+
 In 1991, Dr W. Scott Stornetta published a whitepaper with his co-author Dr Stuart Haber to introduce ‘blockchain’. The term blockchain can be defined as a decentralised, cryptic database on which digital transactions take place.
 
 The origin of Blockchain can be traced back to 1991. A structure which was almost the same as Blockchain was mentioned in a research paper by Haber and Stornetta with the title: “How to Time-Stamp a Digital Document” in 1991.
