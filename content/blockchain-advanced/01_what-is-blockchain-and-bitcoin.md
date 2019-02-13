@@ -4,6 +4,9 @@ title: What is blockchain and bitcoin
 template: courseContent.hbs
 courseIdx: 1
 ---
+
+ <img src="/img/courses/bc-adv/Bitcoin-&-blockchain.png"  style="width:100%; height: 400px; align-content: center; "/>
+
 Many people think that bitcoin equates to blockchain. The confusion probably stems from the fact that bitcoin is the most well known cryptocurrency in the market today and blockchain is relatively still a mystery to most people.
 
 Blockchain is a form of distributed ledger technology. Similar to any other technologies that we have seen, like internet, or AI, blockchain is a tool that could be implemented to solve certain problems in organisations and society. In this blockchain technology, it comprises of various elements: cryptocurrency, nodes, consensus algorithm and cryptographic hashes etc.
