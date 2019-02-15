@@ -55,6 +55,7 @@ Handlebars.registerHelper('trimString', (info, title, idx) => {
     };
 })();
 
+// runHandlebars(id, dataSrc, src)
 runHandlebars('nav-sub-1', '/data/courses.json', 'nav-submenu-template');
 
 runHandlebars('contributors', '/data/contributors.json', 'contributors-template');

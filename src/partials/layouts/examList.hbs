@@ -1,0 +1,26 @@
+{{> includes/hero hero-title="Exams"}}
+<div class="container__cstm">
+  This is exam list
+  <div class="row" id="exams__list">
+
+    {{#each courses}}
+      <div class="col-12 col-sm-4">
+        <div class="card height--full">
+          <div class="card-body row align-items-end mx-0">
+            <div>
+              <h3 class="card-title d-inline-block" style="width: 85%;">{{this.title}}</h3>
+              <span class="small float-right">$</span> <!--- Replace with price data --->
+            </div>
+            <p class="card-text">
+              Here is some example text <!--- Replace with text data --->
+            </p>
+            <a href="#" class="btn btn-gradient width--full" > <!--- Replace with a href data --->
+              Enroll
+            </a>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+
+  </div>
+</div>

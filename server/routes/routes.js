@@ -49,6 +49,13 @@ module.exports = function (app, passport) {
       res.sendFile(path.join( process.cwd(), '/server/protected/courses/' + req.params.courseName + '/' + req.params.content + '.html'));
     });
 
+    app.get('/exams', function(req, res) {
+      readJSONFile(path.join( process.cwd(), '/dist/data/courses.json'), (err, json) => {
+        if(err){ throw err; }
+        res.render('examList', json)
+      });
+    })
+
     app.get('/exam', function(req, res){
       let examQns;
 
@@ -61,7 +68,7 @@ module.exports = function (app, passport) {
         // console.log(examArr)
         // examQns.push({scrips: '<script src="/js/exam.js"></script>'})
         console.log('test quetions:', json);
-        res.render('exam', json)
+        res.render('examList', json)
       })
     })
 
