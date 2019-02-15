@@ -41,3 +41,38 @@
     cursor: pointer;
   }
 }
+
+#exams__list {
+  .card-title {
+    color: white;
+  }
+
+  .card-price {
+    padding: 60px 10px;
+
+    .btn {
+      @include transition(all 0.4s);
+      position: relative;
+      width: 80%;
+      padding: 15px 10px;
+      background: white;
+
+      &:hover {
+        box-shadow: rgba(0,0,0,0.7) 0px 10px 35px -5px;
+      }
+    }
+  }
+
+  .single-exam__course:nth-child(3n+1) .card-title,
+  .single-exam__course:nth-child(3n+1) .card-price {
+    background: $btn__gradient--stop-1;
+  }
+  .single-exam__course:nth-child(3n+2) .card-title,
+  .single-exam__course:nth-child(3n+2) .card-price {
+    background: $primary-color;
+  }
+  .single-exam__course:nth-child(3n+3) .card-title,
+  .single-exam__course:nth-child(3n+3) .card-price {
+    background: #F75C03;
+  }
+}

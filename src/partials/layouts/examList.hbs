@@ -4,20 +4,23 @@
   <div class="row" id="exams__list">
 
     {{#each courses}}
-      <div class="col-12 col-sm-4">
+      <div class="col-12 col-sm-4 single-exam__course">
         <div class="card height--full">
-          <div class="card-body row align-items-end mx-0">
-            <div>
-              <h3 class="card-title d-inline-block" style="width: 85%;">{{this.title}}</h3>
-              <span class="small float-right">$</span> <!--- Replace with price data {{ this.price }}--->
-            </div>
-            <p class="card-text">
+          <div class="card-body row align-items-end mx-0 p-0">
+            <h3 class="card-title px-3 py-4 text-center mb-0">{{this.title}}</h3>
+            <div class="card-text p-2 px-sm-4 py-sm-5 width--full">&#10004;
+              {{#each pointers as |point| }}
+                &#10004; {{ point }}
+              {{/each}}
               Here is some example text <!--- Replace with text data {{this.text}}--->
-            </p>
+            </div>
             <!--- Replace with a href data or write post function, depending on logic --->
-            <a href="#" class="btn btn-gradient width--full" >
-              Enroll
-            </a>
+            <div class="card-price width--full text-center">
+              <h2 class="pb-4 text-white">$</h2> <!--- Replace with price data {{ this.price }}--->
+              <a href="#" class="btn text-body">
+                Enroll
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -25,5 +28,3 @@
 
   </div>
 </div>
-
-<script src="/js/"
