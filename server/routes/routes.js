@@ -50,23 +50,27 @@ module.exports = function (app, passport) {
     });
 
     app.get('/exams', function(req, res) {
+      // Populate with the course exam data
+      /***
+      Recommended exam data structure: [{
+        title: string,
+        price: int,
+        writeup/copy: string
+      }]
+      ***/
       readJSONFile(path.join( process.cwd(), '/dist/data/courses.json'), (err, json) => {
         if(err){ throw err; }
         res.render('examList', json)
       });
     })
 
+    // Need logic on on click, redirection with course id
+
     app.get('/exam', function(req, res){
       let examQns;
 
       readJSONFile(path.join( process.cwd(), '/server/protected/exams.json'), (err, json) => {
         if(err){ throw err; }
-        // examQns = json
-        // let examArr = [];
-        // examArr.push(json)
-        // examArr.push({scripts: '<script src="/js/exam.js"></script>'})
-        // console.log(examArr)
-        // examQns.push({scrips: '<script src="/js/exam.js"></script>'})
         console.log('test quetions:', json);
         res.render('examList', json)
       })
@@ -85,9 +89,5 @@ module.exports = function (app, passport) {
         }, async (err, user, info) => {
             res.send({ status: user, message: info })
         })(req, res, next);
-    });
-
-    app.get('/tt', isLoggedIn, (req, res) => {
-      console.log('auth tt: ' + req.isAuthenticated())
     });
 };
