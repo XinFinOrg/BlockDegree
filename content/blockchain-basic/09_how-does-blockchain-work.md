@@ -37,6 +37,15 @@ Sam decides to change entries in the diary again. At night, he got to the diary,
 Alice noticed that somebody had tampered with the diary again. He decides to complicate the record of each transaction. Therefore, after each record, he inserts a hash generated from the record + last hash. Making each entry depend on the previous.
 
 That way, if Sam tries to change the record again this time around, he will have to change the hash in all the previous entries. But Sam really wants more money, and he spends the whole night counting all the previous hashes.
+####How do Merkle trees work?
+
+A Merkle tree summarizes all the transactions in a block by producing a digital fingerprint of the entire set of transactions, thereby enabling a user to verify whether or not a transaction is included in a block.
+
+Merkle trees are created by repeatedly hashing pairs of nodes until there is only one hash left (this hash is called the Root Hash, or the Merkle Root). They are constructed from the bottom up, from hashes of individual transactions (known as Transaction IDs).
+
+Each leaf node is a hash of transactional data, and each non-leaf node is a hash of its previous hashes. Merkle trees are binary and therefore require an even number of leaf nodes. If the number of transactions is odd, the last hash will be duplicated once to create an even number of leaf nodes.
+
+
 
 ### Nonce
 But Alice did not want to lose hope, so he decided to add a number after each record. This number is called “Nonce”. Nonce should be chosen so that the generated hash ends in two zeros.
