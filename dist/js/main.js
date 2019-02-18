@@ -163,7 +163,10 @@ $(document).ready(function() {
 
   // Popup
   if($('.dialog').length){
-    $('.dialog').dialog({autoOpen: false });
+    $('.dialog').dialog({
+      autoOpen: false,
+      minWidth: 450
+     });
 
     $('#partners .dialog-btn').on('click', (e) => {
       e.preventDefault();
