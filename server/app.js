@@ -9,6 +9,7 @@ var flash    = require('connect-flash');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 var hbs = require( 'express-handlebars');
+var cors = require('cors');
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static('dist', { extensions: ['html', 'htm'] }));
 app.use(express.static('server/protected/courses', { extensions: ['html', 'htm'] }));
+app.use(cors());
 
 // required for passport
 app.use(session({ secret: 'itsmeakshayhere' })); // session secret

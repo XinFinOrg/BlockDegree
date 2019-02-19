@@ -26,6 +26,9 @@ module.exports = function (passport) {
                         var newUser = new User();
                         newUser.local.email = email;
                         newUser.local.password = newUser.generateHash(password);
+                        newUser.local.payment.course_1 = false;
+                        newUser.local.payment.course_2 = false;
+                        newUser.local.payment.course_3 = false;
                         newUser.save(function (err) {
                             if (err)
                                 throw err;

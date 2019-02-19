@@ -60,6 +60,7 @@ function submitForm(form) {
       $('.form-messages').html(accessMsg);
       if(accessMsg.includes('login')){
         localStorage.setItem('hasUser', true);
+        localStorage.setItem('email',$('input[name=email]').val());
         window.location = '/';
       };
     }

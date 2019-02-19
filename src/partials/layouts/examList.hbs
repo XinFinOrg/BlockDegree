@@ -1,30 +1,52 @@
 {{> includes/hero hero-title="Exams"}}
 <div class="container__cstm">
-  This is exam list
+  {{!-- This is exam list --}}
   <div class="row" id="exams__list">
 
     {{#each courses}}
-      <div class="col-12 col-sm-4 single-exam__course">
-        <div class="card height--full">
-          <div class="card-body row align-items-end mx-0 p-0">
-            <h3 class="card-title px-3 py-4 text-center mb-0">{{this.title}}</h3>
-            <div class="card-text p-2 px-sm-4 py-sm-5 width--full">&#10004;
-              {{#each pointers as |point| }}
-                &#10004; {{ point }}
-              {{/each}}
-              Here is some example text <!--- Replace with text data {{this.text}}--->
-            </div>
-            <!--- Replace with a href data or write post function, depending on logic --->
-            <div class="card-price width--full text-center">
-              <h2 class="pb-4 text-white">$</h2> <!--- Replace with price data {{ this.price }}--->
-              <a href="#" class="btn text-body">
-                Enroll
-              </a>
-            </div>
+    <div class="col-sm-4 single-exam__course">
+      <div class="card height--full">
+        <div class="card-body row align-items-end mx-0 p-0">
+          <h3 class="card-title px-3 py-4 text-center mb-0">{{this.title}}</h3>
+          <div class="card-text p-2 px-sm-4 py-sm-5 width--full">&#10004;
+            {{#each pointers as |point| }}
+            &#10004; {{ point }}
+            {{/each}}
+            Here is some example text
+            <!--- Replace with text data {{this.text}}--->
+          </div>
+          <!--- Replace with a href data or write post function, depending on logic --->
+          <div class="card-price width--full text-center">
+            <h2 class="pb-4 text-white">${{ this.price }}</h2>
+            <!--- Replace with price data {{ this.price }}--->
+            <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body" data-price="{{this.price}}" id="{{this.type}}">
+              Enroll
+            </button>
           </div>
         </div>
       </div>
+    </div>
     {{/each}}
 
   </div>
 </div>
+
+<script type="text/javascript">
+function pay(course_id,price)
+{
+  const email = localStorage.getItem('email');
+  $.ajax({
+    url : "/pay",
+    method : 'post',
+    data : {'email' : email, 'course_id' : course_id.id, 'price' : price},
+    success : function(data) {
+      console.log(data);
+      if(data.status=='200')
+      window.location.href = data.link;
+      else
+      alert(data.message);
+    }
+  });
+}
+
+</script>
