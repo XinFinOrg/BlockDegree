@@ -82,7 +82,7 @@ module.exports = function(app, passport) {
     );
   });
 
-  app.get("/exams", function(req, res) {
+  app.get("/exams", isLoggedIn, function(req, res) {
     // Populate with the course exam data
     /***
       Recommended exam data structure: [{
@@ -138,9 +138,9 @@ module.exports = function(app, passport) {
     )(req, res, next);
   });
 
-  app.post("/pay", cors(), async (req, res) => {
+  app.post("/pay", isLoggedIn, cors(), async (req, res) => {
     var price = req.body.price;
-    var email = req.body.email;
+    var email = req.user.local.email;
     var course_id = req.body.course_id;
     var payment_status;
 
