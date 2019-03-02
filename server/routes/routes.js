@@ -2,8 +2,12 @@ const fs = require("fs");
 const path = require("path");
 var paypal = require("paypal-rest-sdk");
 var cors = require("cors");
-var User = require("../config/models/user");
+var User = require('../config/models/user');
+var Token = require('../config/models/tokenVerification');
 var PaymentLogs = require("../config/models/payment_logs");
+var questions = require("../config/models/question");
+const emailer = require('../emailer/impl');
+var crypto = require('crypto');
 
 paypal.configure({
   mode: "sandbox", //sandbox or live
@@ -16,7 +20,7 @@ paypal.configure({
 const utils = require("../utils.js");
 let { readJSONFile, isLoggedIn } = utils;
 
-module.exports = function(app, passport) {
+module.exports = function (app, passport) {
   app.post("/login", (req, res, next) => {
     passport.authenticate(
       "local-login",
@@ -24,7 +28,7 @@ module.exports = function(app, passport) {
         session: true
       },
       async (err, user, info) => {
-        req.logIn(user, function(err) {
+        req.logIn(user, function (err) {
           if (err) {
             return next(err);
           }
@@ -47,12 +51,12 @@ module.exports = function(app, passport) {
     )(req, res, next);
   });
 
-  app.get("/logout", function(req, res) {
+  app.get("/logout", function (req, res) {
     req.logout();
     res.redirect("/");
   });
 
-  app.get("/courses/:courseName", isLoggedIn, function(req, res) {
+  app.get("/courses/:courseName", isLoggedIn, function (req, res) {
     switch (req.params.courseName) {
       case "blockchain-basic":
         res.redirect("/courses/blockchain-basic/history-of-blockchain");
@@ -69,20 +73,20 @@ module.exports = function(app, passport) {
     }
   });
 
-  app.get("/courses/:courseName/:content", isLoggedIn, function(req, res) {
+  app.get("/courses/:courseName/:content", isLoggedIn, function (req, res) {
     res.sendFile(
       path.join(
         process.cwd(),
         "/server/protected/courses/" +
-          req.params.courseName +
-          "/" +
-          req.params.content +
-          ".html"
+        req.params.courseName +
+        "/" +
+        req.params.content +
+        ".html"
       )
     );
   });
 
-  app.get("/exams", isLoggedIn, function(req, res) {
+  app.get("/exams", isLoggedIn, function (req, res) {
     // Populate with the course exam data
     /***
       Recommended exam data structure: [{
@@ -104,20 +108,22 @@ module.exports = function(app, passport) {
 
   // Need logic on on click, redirection with course id
 
-  app.get("/exam", function(req, res) {
-    let examQns;
+  // app.get("/exam", function(req, res) {
+  //   let examQns;
 
-    readJSONFile(
-      path.join(process.cwd(), "/server/protected/exams.json"),
-      (err, json) => {
-        if (err) {
-          throw err;
-        }
-        console.log("test quetions:", json);
-        res.render("examList", json);
-      }
-    );
-  });
+  //   readJSONFile(
+  //     path.join(process.cwd(), "/server/protected/exams.json"),
+  //     (err, json) => {
+  //       if (err) {
+  //         throw err;
+  //       }
+  //       console.log("test quetions:", json);
+  //       res.render("examList", json);
+  //     }
+  //   );
+  // });
+
+  
 
   app.post("/answers", (req, res, next) => {
     // check the verification of user answers
@@ -144,7 +150,7 @@ module.exports = function(app, passport) {
     var course_id = req.body.course_id;
     var payment_status;
 
-    await User.findOne({ "local.email": email }, function(err, user) {
+    await User.findOne({ "local.email": email }, function (err, user) {
       if (course_id == "course_1") {
         payment_status = user.local.payment.course_1;
       } else if (course_id == "course_2") {
@@ -196,14 +202,14 @@ module.exports = function(app, passport) {
         ]
       });
 
-      paypal.payment.create(payReq, function(error, payment) {
+      paypal.payment.create(payReq, function (error, payment) {
         var links = {};
 
         if (error) {
           console.error(JSON.stringify(error));
         } else {
           // Capture HATEOAS links
-          payment.links.forEach(function(linkObj) {
+          payment.links.forEach(function (linkObj) {
             links[linkObj.rel] = {
               href: linkObj.href,
               method: linkObj.method
@@ -233,15 +239,16 @@ module.exports = function(app, passport) {
       });
     } else {
       return res.send({ status: "400", message: "Payment already completed." });
+      // res.redirect("/courses/blockchain-basic/history-of-blockchain");
     }
   });
 
-  app.get("/suc", function(req, res, next) {
+  app.get("/suc", function (req, res, next) {
     var paymentId = req.query.paymentId;
     var payerId = { payer_id: req.query.PayerID };
     var order;
 
-    paypal.payment.execute(paymentId, payerId, function(error, payment) {
+    paypal.payment.execute(paymentId, payerId, function (error, payment) {
       if (error) {
         console.error(JSON.stringify(error));
       } else {
@@ -265,11 +272,11 @@ module.exports = function(app, passport) {
             }
           };
           //take payment
-          paypal.order.authorize(order, capture_details, function(error,authorization) {
+          paypal.order.authorize(order, capture_details, function (error, authorization) {
             if (error) {
               console.error(JSON.stringify(error));
             } else {
-              paypal.order.capture(order, capture_details, function(
+              paypal.order.capture(order, capture_details, function (
                 error,
                 capture
               ) {
@@ -277,7 +284,7 @@ module.exports = function(app, passport) {
                   console.error(error);
                 } else {
                   console.log("ORDER CAPTURE SUCCESS");
-                  User.findOne({ "local.email": email }, function(err, user) {
+                  User.findOne({ "local.email": email }, function (err, user) {
                     if (course_id == "course_1")
                       user.local.payment.course_1 = true;
                     else if (course_id == "course_2")
@@ -287,14 +294,32 @@ module.exports = function(app, passport) {
                     user.save();
                     PaymentLogs.findOne(
                       { payment_id: invoice_number, email: email },
-                      function(err, payment_log) {
+                      function (err, payment_log) {
                         payment_log.payment_status = true;
                         payment_log.save();
                       }
                     );
                   });
-                  res.send({ capture: capture });
+                  // res.send({ capture: capture });
                   // res.render("payment_successful",{message: course_id+" payment successfull."});
+                  console.log('course_id', course_id);
+                  switch (course_id) {
+                    case "course_1":
+                      res.redirect("/blockchain-basic-exam");
+                      break;
+                    case "course_2":
+                      res.redirect(
+                        "/blockchain-advanced-exam"
+                      );
+                      break;
+                    case "course_3":
+                      res.redirect(
+                        "/blockchain-professional-exam"
+                      );
+                  }
+                  // res.render("examList", course_id);
+                  // res.render("payment_successful",{message: course_id+" payment successfull."});
+                  // res.redirect("/courses/blockchain-basic/history-of-blockchain");
                 }
               });
             }
@@ -304,6 +329,167 @@ module.exports = function(app, passport) {
           res.send({ error: error });
         }
       }
+    });
+  });
+
+  app.get('/exam-result', isLoggedIn, function (req, res) {
+    const backUrl = req.header('Referer');
+    const examName = backUrl.split('/')[3].split('-')[1];
+    if (examName === "basic") {
+      User.findOne({ 'local.email': req.user.local.email}).then((result, error) => {
+        console.log('result basic:', result, error);
+        res.render('examResult', result);
+      });
+    } else if (examName === "advanced") {
+      res.render('examResult', jsonData);
+    } else if (examName === "professional") {
+      res.render('examResult', jsonData);
+    }
+  });
+
+  app.get('/blockchain-basic-exam', isLoggedIn, function (req, res) {
+    readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-basic.json'), (err, json) => {
+      if (err) { throw err; }
+      console.log('test quetions basic:', json);
+      res.render('blockchainBasic', json)
+    })
+  });
+
+  app.get('/blockchain-advanced-exam', isLoggedIn, function (req, res) {
+    readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-advanced.json'), (err, json) => {
+      if (err) { throw err; }
+      console.log('test quetions advanced:', json);
+      res.render('blockchainAdvanced', json)
+    })
+  });
+
+  app.get('/blockchain-professional-exam', isLoggedIn, function (req, res) {
+    readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-professional.json'), (err, json) => {
+      if (err) { throw err; }
+      console.log('test quetions professional:', json);
+      res.render('blockchainProfessional', json)
+    })
+  });
+
+  app.post("/postExam", isLoggedIn, function (req, res, next) {
+    var marks = 0;
+    const backUrl = req.header('Referer');
+    const examName = backUrl.split('/')[3].split('-')[1];
+    console.log(req.user);
+    console.log(req.user.local.examBasic.attempts);
+    const request = JSON.parse(JSON.stringify(req.body, null, 2));
+    console.log('request', request);
+    let attempts = req.user.local.examBasic.attempts;
+    if (examName === "basic") {
+      if (attempts != null && attempts < 3 ) {
+        questions.findOne({ exam: "firstExam" }).then((result, error) => {
+          for (let index = 0; index < result.questionsBasic.length; index++) {
+            if (parseInt(request[index]) + 1 == result.questionsBasic[index].answer) {
+              marks++;
+            }
+          }
+          attempts += 1;
+          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examBasic.attempts":attempts,"local.examBasic.marks":marks}}, {upsert: false},(err, doc) => {
+            if (err) {
+              console.log("Something went wrong when updating data!");
+              res.send({ status: 'false', message: info });
+            }
+            res.redirect('/exam-result');
+          });
+        });
+      } else if(attempts >= 3) {
+        attempts = 0;
+        User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examBasic.attempts":attempts,"local.examBasic.marks":marks,"local.payment.course_1": false}}, {upsert: false},(err, doc) => {
+          if (err) {
+            console.log("Something went wrong when updating data!");
+            res.send({ status: 'false', message: info });
+          }
+          res.redirect('/exam-result');
+        });
+      }
+    } else if (examName === "advanced") {
+      if (req.user.examAdvanced.attempts) {
+        questions.findOne({ exam: "firstExam" }).then((result, error) => {
+          for (let index = 0; index < result.questionsAdvanced.length; index++) {
+            if (parseInt(req.body[index]) + 1 == result.questionsAdvanced[index].answer) {
+              marks++;
+            }
+          }
+          req.user.local.examAdvanced.attempts += 1;
+          console.log("Marks", marks);
+          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examAdvanced.attempts":marks,"local.examAdvanced.marks":marks}}, {upsert: false},(err, doc) => {
+            if (err) {
+              console.log("Something wrong when updating data!");
+            }
+            console.log(doc);
+          });
+        });
+      }
+    } else if (examName === "professional") {
+      if (req.user.examProfessional.attempts) {
+        questions.findOne({ exam: "firstExam" }).then((result, error) => {
+          for (let index = 0; index < result.questionsProfessional.length; index++) {
+            if (parseInt(req.body[index]) + 1 == result.questionsProfessional[index].answer) {
+              marks++;
+            }
+          }
+          req.user.local.examProfessional.attempts += 1;
+          console.log("Marks", marks);
+          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examProfessional.attempts":marks, "local.examProfessional.marks":marks}}, {upsert: false},(err, doc) => {
+            if (err) {
+              console.log("Something wrong when updating data!");
+            }
+            console.log(doc);
+          });
+        });
+      }
+    }
+
+
+  });
+
+
+  app.get('/confirmation', function (req, res) {
+    // Find a matching token
+    // res.send('login')
+    console.log("In confirmation", req.query.token);
+    Token.findOne({ token: req.query.token }, function (err, token) {
+      if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
+      console.log("token mapped email:", token.email)
+      // If we found a token, find a matching user
+      User.findOne({ "local.email": token.email }, function (err, user) {
+        if (!user) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
+        if (user.local.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
+
+        // Verify and save the user
+        user.local.isVerified = true;
+        user.save(function (err) {
+          if (err) { console.log("ajdgakc", err.message); return res.status(500).send({ msg: err.message }); }
+          console.log("Success");
+          // res.status(200).send("The account has been verified. Please log in.");
+          res.redirect(200, '/login')
+        });
+      });
+    });
+  });
+
+
+  app.post('/resend', function (req, res, next) {
+    User.findOne({ email: req.body.email }, function (err, user) {
+      if (!user) return res.status(400).send({ msg: 'We were unable to find a user with that email.' });
+      if (user.isVerified) return res.status(400).send({ msg: 'This account has already been verified. Please log in.' });
+
+      // Create a verification token, save it, and send email
+      var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+
+      // Save the token
+      token.save(function (err) {
+        if (err) { return res.status(500).send({ msg: err.message }); }
+
+        // Send the email
+        emailer.sendTokenMail(req.body.email, token);
+      });
+
     });
   });
 };

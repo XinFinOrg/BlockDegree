@@ -8,7 +8,7 @@ function readJSONFile(filename, callback) {
       return;
     }
     try {
-      callback(null, JSON.parse(data));
+      callback(null, JSON.parse(data.toString().trim()));
     } catch(exception) {
       callback(exception);
     }

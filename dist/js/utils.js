@@ -26,6 +26,7 @@ function getUrlVars() {
     return vars;
 }
 
+
 function submitForm(form) {
   let errMsg = form.errMsg,
       accessMsg = form.accessMsg;

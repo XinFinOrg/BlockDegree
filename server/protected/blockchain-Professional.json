@@ -1,0 +1,50 @@
+{
+    "exam": [
+      {
+      "question": "What is Ethereum?",
+      "choices": ["Ethereum is a distributed public blockchain network And distributed computer network with its own currency that focuses on running the programming code of any decentralized application. More simply, it is a platform for sharing information across the globe that cannot be manipulated or changed.", "A Michelson-Morley Experiment", "Ethereum is a distributed Federation  blockchain network that focuses on running the Networking of any decentralized application.", "  Ethereum is a Bitcoin side chain."]
+  
+      },
+	  
+	  
+	    {
+      "question": "What is Genesis Block ?",
+      "choices": ["The First Block  after each block halving", "The First Block Of Blockchain", "A famous Block that hardcoded hash of the book of genesis onto the blockchain", "The 2nd Transaction of Blockchain"]
+  
+      },
+	  
+	    {
+	    "question": "What power the Ethereum Virtual Machine ?",
+		  "choices": ["Gas", "Ether", "Bitcoin", "Block-Rewards"]
+	  
+	  
+	    },
+	  
+	    {
+	     "question": "What Is Proof-Of-Stake ?",
+	      "choices": ["it’s for Mining", "How private key are made", "A  Transaction and Block Verification Protocol", "A Password needed to access an exchange"]
+	  
+	  
+	    },
+	  
+	    {
+	     "question": "What is the smallest and largest denomination of Ethereum Units?",	
+       "choices": ["Finney & Ada", "Sasha Grey & Rocco Siffredi", "Wei & Tether", "Einstein & Mether"]
+	  
+	  
+	    },
+	  
+	    {
+	    "question": "What is an Uncle in Ethereum?",
+		  "choices": ["One of the backers of the project at the crowdfunding", "A secret spy algorithm that crawls the blockchain for U.N.C.L.E", "A block not on the main blockchain but included in calculating the highest      cumulative difficulty", "A way of mining Ethereum using a Bitcoin Asic"]
+	  
+
+	    }
+	  
+	  
+	  
+	  
+	  
+	  
+	  ]
+}

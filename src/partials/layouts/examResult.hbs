@@ -1,0 +1,29 @@
+{{> includes/hero hero-title="Exam Result"}}
+<div class="container__cstm">
+
+  <div>
+    Exam Result
+  </div>
+
+  <div id="exam">
+
+    <form id="basicExamForm">
+      <div class="card py-3 px-5 mb-4">
+        <h4 class="mb-3 exam-qns">
+          Blockchasin Basic Result
+        </h4>
+        <ul>
+          <li>
+            <span>Attempts:</span> {{{local.examBasic.attempts}}}
+            <span>marks:</span> {{{local.examBasic.marks}}}
+          </li>
+        </ul>
+      </div>
+      {{!-- <div class="text-right">
+        <input id="exam-submit" type="submit" class="btn btn-primary py-2 mt-4 text-white" value="Submit your answers">
+      </div> --}}
+    </form>
+  </div>
+
+</div>
+<script src="/js/exam.js"></script>
