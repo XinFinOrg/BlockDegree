@@ -211,7 +211,10 @@ $(document).ready(function() {
   if($('#userAuth-btn').attr('href') == '/logout') {
     $('#userAuth-btn').on('click', (e) => {
       $.get(e.target.pathname)
-        .done(() => localStorage.setItem('hasUser', false) )
+        .done(() => {
+            localStorage.setItem('hasUser', false);
+            localStorage.setItem('email', '');
+         })
     })
   }
 });

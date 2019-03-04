@@ -39,7 +39,7 @@ module.exports = function (app, passport) {
     )(req, res, next);
   });
 
-  app.post("/signup", (req, res, next) => {
+  app.post("/register", (req, res, next) => {
     passport.authenticate(
       "local-signup",
       {
@@ -95,6 +95,14 @@ module.exports = function (app, passport) {
         writeup/copy: string
       }]
       ***/
+    questions.findOne({ exam: "firstExam" }).then((result, error) => {
+      for (let index = 0; index < result.questionsBasic.length; index++) {
+        if (parseInt(request[index]) + 1 == result.questionsBasic[index].answer) {
+          marks++;
+        }
+      }
+    });
+    
     readJSONFile(
       path.join(process.cwd(), "/dist/data/courses.json"),
       (err, json) => {
@@ -168,8 +176,8 @@ module.exports = function (app, passport) {
           payment_method: "paypal"
         },
         redirect_urls: {
-          return_url: "http://localhost:3000/suc",
-          cancel_url: "http://localhost:3000/err"
+          return_url: "http://78.129.212.204:3000/suc",
+          cancel_url: "http://78.129.212.204:3000/err"
         },
         transactions: [
           {

@@ -60,9 +60,13 @@ function submitForm(form) {
       $('.form-messages').removeClass('d-none alert-danger');
       $('.form-messages').html(accessMsg);
       if(accessMsg.includes('login')){
-        localStorage.setItem('hasUser', true);
-        localStorage.setItem('email',$('input[name=email]').val());
-        window.location = '/';
+        if($(form).attr('action') == '/signup') {
+          window.location = '/login';  
+        } else {
+          localStorage.setItem('hasUser', true);
+          localStorage.setItem('email',$('input[name=email]').val());
+          window.location = '/';
+        }
       };
     }
   })
