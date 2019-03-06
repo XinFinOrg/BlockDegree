@@ -50,6 +50,12 @@ module.exports = function (passport) {
                         newUser.local.payment.course_1 = false;
                         newUser.local.payment.course_2 = false;
                         newUser.local.payment.course_3 = false;
+                        newUser.local.examBasic.attempts = 0;
+                        newUser.local.examBasic.marks = 0;
+                        newUser.local.examAdvanced.attempts = 0;
+                        newUser.local.examAdvanced.marks = 0;
+                        newUser.local.examProfessional.attempts = 0;
+                        newUser.local.examProfessional.marks = 0;
                         newUser.save(function (err) {
                             if (err) {
                                 console.log("Error:", err)
@@ -63,7 +69,7 @@ module.exports = function (passport) {
                                     return done(null, false, "token errror")
                                 }
                                 console.log(email, token)
-                                emailer.sendTokenMail(email, token, req);
+                                emailer.sendTokenMail(email, token, req, 'signup');
                                 return done(null, newUser);
                             });
                         });

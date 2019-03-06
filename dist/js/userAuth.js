@@ -25,7 +25,7 @@ if(typeof jQuery != 'undefined') {
       let pw = document.getElementById("password"),
           cfmPw = document.getElementById("cfm-password");
 
-      registerForm.errMsg = 'Failed to register. Please check your input.'
+      registerForm.errMsg = 'This Email Id Already Register. Please check your input.'
       registerForm.accessMsg ='Your account has been created. <a href="/login">Login</a> to access our courses.'
 
       function validatePw() {

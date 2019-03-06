@@ -18,6 +18,14 @@ var userSchema = mongoose.Schema({
         examBasic : {
             attempts : Number,
             marks : Number
+        },
+        examAdvanced : {
+            attempts : Number,
+            marks : Number
+        },
+        examProfessional : {
+            attempts : Number,
+            marks : Number
         }
     },
     facebook         : {

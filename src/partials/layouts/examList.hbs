@@ -1,9 +1,10 @@
 {{> includes/hero hero-title="Exams"}}
 <div class="container__cstm">
   {{!-- This is exam list --}}
+  <p>hello</p>
+  <p>{{data.local.email}}</p>
   <div class="row" id="exams__list">
-
-    {{#each courses}}
+    {{#each json.courses}}
     <div class="col-sm-4 single-exam__course">
       <div class="card height--full">
         <div class="card-body row align-items-end mx-0 p-0">
@@ -18,11 +19,17 @@
           </div>
           <!--- Replace with a href data or write post function, depending on logic --->
           <div class="card-price width--full text-center">
-            <h2 class="pb-4 text-white">${{ this.price }}</h2>
+            <h2 class="pb-4 text-white">${{this.price}}</h2>
             <!--- Replace with price data {{ this.price }}--->
-            <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body" data-price="{{this.price}}" id="{{this.type}}">
-              Enroll
-            </button>
+            {{#if data.local.isVerified}}
+              <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body" data-price="{{this.price}}" id="{{this.type}}">
+                Take Exam {{data.local.password}}
+              </button>
+            {{else}}
+              <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body" data-price="{{this.price}}" id="{{this.type}}">
+                Enroll
+              </button>
+            {{/if}}
           </div>
         </div>
       </div>

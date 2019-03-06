@@ -95,23 +95,36 @@ module.exports = function (app, passport) {
         writeup/copy: string
       }]
       ***/
-    questions.findOne({ exam: "firstExam" }).then((result, error) => {
-      for (let index = 0; index < result.questionsBasic.length; index++) {
-        if (parseInt(request[index]) + 1 == result.questionsBasic[index].answer) {
-          marks++;
+     console.log('local exam ')
+    User.findOne({ "local.email": req.user.local.email }, function (err, user) {
+      if(err) { throw err };
+      readJSONFile(
+        path.join(process.cwd(), "/dist/data/courses.json"),
+        (err, json) => {
+          if (err) {
+            throw err;
+          }
+
+          const examListData = {
+            'data': user,
+            'json': json  
+          }
+          console.log('examlist data:::', examListData)
+          res.render("examList", examListData);
         }
-      }
+      );
     });
     
-    readJSONFile(
-      path.join(process.cwd(), "/dist/data/courses.json"),
-      (err, json) => {
-        if (err) {
-          throw err;
-        }
-        res.render("examList", json);
-      }
-    );
+    
+    // readJSONFile(
+    //   path.join(process.cwd(), "/dist/data/courses.json"),
+    //   (err, json) => {
+    //     if (err) {
+    //       throw err;
+    //     }
+    //     res.render("examList", json);
+    //   }
+    // );
   });
 
   // Need logic on on click, redirection with course id
@@ -176,8 +189,10 @@ module.exports = function (app, passport) {
           payment_method: "paypal"
         },
         redirect_urls: {
-          return_url: "http://78.129.212.204:3000/suc",
-          cancel_url: "http://78.129.212.204:3000/err"
+          // return_url: "http://78.129.212.204:3000/suc",
+          // cancel_url: "http://78.129.212.204:3000/err"
+          return_url: "http://localhost:3000/suc",
+          cancel_url: "http://localhost:3000/err"
         },
         transactions: [
           {
@@ -308,26 +323,9 @@ module.exports = function (app, passport) {
                       }
                     );
                   });
-                  // res.send({ capture: capture });
-                  // res.render("payment_successful",{message: course_id+" payment successfull."});
-                  console.log('course_id', course_id);
-                  switch (course_id) {
-                    case "course_1":
-                      res.redirect("/blockchain-basic-exam");
-                      break;
-                    case "course_2":
-                      res.redirect(
-                        "/blockchain-advanced-exam"
-                      );
-                      break;
-                    case "course_3":
-                      res.redirect(
-                        "/blockchain-professional-exam"
-                      );
-                  }
-                  // res.render("examList", course_id);
-                  // res.render("payment_successful",{message: course_id+" payment successfull."});
-                  // res.redirect("/courses/blockchain-basic/history-of-blockchain");
+                  console.log('course_id', course_id, email);
+                  emailer.sendTokenMail(email, '', req, course_id);
+                  res.redirect("/payment-success");
                 }
               });
             }
@@ -353,6 +351,10 @@ module.exports = function (app, passport) {
     } else if (examName === "professional") {
       res.render('examResult', jsonData);
     }
+  });
+
+  app.get('/payment-success', isLoggedIn, function(req, res) {
+    res.render('paymentSuccess');
   });
 
   app.get('/blockchain-basic-exam', isLoggedIn, function (req, res) {
@@ -495,7 +497,7 @@ module.exports = function (app, passport) {
         if (err) { return res.status(500).send({ msg: err.message }); }
 
         // Send the email
-        emailer.sendTokenMail(req.body.email, token);
+        emailer.sendTokenMail(req.body.email, token, req, 'resend');
       });
 
     });
