@@ -189,10 +189,10 @@ module.exports = function (app, passport) {
           payment_method: "paypal"
         },
         redirect_urls: {
-          // return_url: "http://78.129.212.204:3000/suc",
-          // cancel_url: "http://78.129.212.204:3000/err"
-          return_url: "http://localhost:3000/suc",
-          cancel_url: "http://localhost:3000/err"
+          return_url: "http://www.blockdegree.org/suc",
+          cancel_url: "http://www.blockdegree.org/err"
+          //return_url: "http://localhost:3000/suc",
+          //cancel_url: "http://localhost:3000/err"
         },
         transactions: [
           {
