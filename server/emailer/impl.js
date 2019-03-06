@@ -51,7 +51,7 @@ var transporter = nodemailer.createTransport({
             courseName = 'blockchain-professional-exam';
           }
           mailOptions = {
-            from: 'blockdegree.org',
+            from: 'info@blockdegree.org',
             to: mail,
             subject: 'Payment Successful',
             text:'Hello,\n\n' + 'Your payment is completed for ' + courseName + ' : \nhttp:\/\/' + req.headers.host + '/' + courseName + '.\n'
