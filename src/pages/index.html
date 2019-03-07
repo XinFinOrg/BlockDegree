@@ -68,6 +68,32 @@
   <!-- end abovefold area -->
 
   <!-- Start technological partner Area -->
+  <div class="bg-muted py-5">
+    <div class="py-5 px-3 p-sm-5">
+      <h2 class="text-center mb-3">Online courses</h2>
+      <div class="row course" id="courses">
+
+        <script id="course-template" type="text/x-handlebars-template">
+          \{{#each courses}}
+            <div class="col-12 col-sm-4 text-white p-2 course__single">
+              <a href="/\{{slug}}">
+                <div class="px-3 py-4 content--rounded overlay" style="background:url('img/pm6.jpg') center/cover;">
+                  <div class="overlay__content">
+                    <h3 class="mb-4 mt-1">\{{title}}</h3>
+                    <p class="mb-0 pt-2">\{{trimmed sypnosis}}</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          \{{/each}}
+        </script>
+
+      </div>
+    </div>
+  </div>
+  <!-- End technological partner Area-->
+
+  <!-- Start online class Area -->
   <div class="container py-5 my-5">
     <div class="row align-items-center">
 
@@ -94,32 +120,6 @@
         </div>
       </div>
 
-    </div>
-  </div>
-  <!-- End technological partner Area-->
-
-  <!-- Start online class Area -->
-  <div class="bg-muted py-5">
-    <div class="py-5 px-3 p-sm-5">
-      <h2 class="text-center mb-3">Online courses</h2>
-      <div class="row course" id="courses">
-
-        <script id="course-template" type="text/x-handlebars-template">
-          \{{#each courses}}
-            <div class="col-12 col-sm-4 text-white p-2 course__single">
-              <a href="/\{{slug}}">
-                <div class="px-3 py-4 content--rounded overlay" style="background:url('img/pm6.jpg') center/cover;">
-                  <div class="overlay__content">
-                    <h3 class="mb-4 mt-1">\{{title}}</h3>
-                    <p class="mb-0 pt-2">\{{trimmed sypnosis}}</p>
-                  </div>
-                </div>
-              </a>
-            </div>
-          \{{/each}}
-        </script>
-
-      </div>
     </div>
   </div>
   <!-- End online class Area -->
