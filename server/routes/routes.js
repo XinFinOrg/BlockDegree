@@ -38,6 +38,19 @@ module.exports = function (app, passport) {
       }
     )(req, res, next);
   });
+  
+  app.get('/auth/google', (req, res, next) => {
+    passport.authenticate('google', {
+      scope: ["profile", "email"]
+    })
+  });
+
+  app.get('/auth/google/callback', (req, res, next) => {
+    passport.authenticate('google', {
+      successRedirect: '/blockchain-basic-exam',
+      failureRedirect: '/'
+    })
+  })
 
   app.post("/register", (req, res, next) => {
     passport.authenticate(
@@ -106,7 +119,11 @@ module.exports = function (app, passport) {
           }
 
           const examListData = {
-            'data': user,
+            'data': {
+              "course_1": user.local.payment.course_1,
+              "course_2": user.local.payment.course_2,
+              "course_3": user.local.payment.course_3,
+            },
             'json': json  
           }
           console.log('examlist data:::', examListData)
@@ -189,10 +206,10 @@ module.exports = function (app, passport) {
           payment_method: "paypal"
         },
         redirect_urls: {
-          return_url: "http://www.blockdegree.org/suc",
-          cancel_url: "http://www.blockdegree.org/err"
-          //return_url: "http://localhost:3000/suc",
-          //cancel_url: "http://localhost:3000/err"
+          // return_url: "http://78.129.212.204:3000/suc",
+          // cancel_url: "http://78.129.212.204:3000/err"
+          return_url: "http://localhost:3000/suc",
+          cancel_url: "http://localhost:3000/err"
         },
         transactions: [
           {

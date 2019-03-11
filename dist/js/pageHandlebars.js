@@ -42,6 +42,10 @@ Handlebars.registerHelper('trimString', (info, title, idx) => {
   return trimmedString;
 });
 
+Handlebars.registerHelper("inc", function(value, options) {
+    return parseInt(value) + 1;
+});
+
 // Special case for login button
 (function (){
   if(document.getElementById('login-btn') != null) {

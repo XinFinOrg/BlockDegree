@@ -61,7 +61,9 @@ function submitForm(form) {
       $('.form-messages').html(accessMsg);
       if(accessMsg.includes('login')){
         if($(form).attr('action') == '/signup') {
-          window.location = '/login';  
+          form.email.value = "";
+          form.password.value = "";
+          form.cfmPw.value = "";
         } else {
           localStorage.setItem('hasUser', true);
           localStorage.setItem('email',$('input[name=email]').val());

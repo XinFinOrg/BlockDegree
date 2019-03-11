@@ -36,7 +36,15 @@ app.use(express.static('server/protected/courses', { extensions: ['html', 'htm']
 app.use(cors());
 
 // required for passport
-app.use(session({ secret: 'itsmeakshayhere' })); // session secret
+app.use(session({ 
+  secret: 'itsmeakshayhere',
+  resave: true,
+	saveUninitialized: true,
+	cookie: {
+	    httpOnly: true,
+      maxAge: 1000 * 60 * 30
+	}
+})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session

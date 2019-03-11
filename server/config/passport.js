@@ -1,9 +1,11 @@
 var LocalStrategy = require('passport-local').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var User = require('./models/user');
 var Token = require('./models/tokenVerification');
 const emailer = require('../emailer/impl');
 const Joi = require('joi');
 var crypto = require('crypto');
+var configAuth = require('./authSecrets');
 module.exports = function (passport) {
     passport.serializeUser(function (user, done) {
         done(null, user.id);
@@ -106,6 +108,24 @@ module.exports = function (passport) {
 
             });
 
+        }));
+
+    passport.use('google', new GoogleStrategy({
+
+        clientID: configAuth.googleAuth.clientID,
+        clientSecret: configAuth.googleAuth.clientSecret,
+        callbackURL: configAuth.googleAuth.callbackURL,
+    
+        },
+        function (token, refreshToken, profile, done) {
+            console.log('googlestrategy',profile);
+            process.nextTick(function() {
+                User.findOne({
+                    'local.email': profile.email[0].value
+                }, function(res, err) {
+                    console.log('google callback', res, err)
+                });
+            });
         }));
 
 };

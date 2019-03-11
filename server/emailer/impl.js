@@ -40,6 +40,7 @@ var transporter = nodemailer.createTransport({
             to: mail,
             subject: 'Login',
             text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp://www.blockdegree.org/confirmation\/?token=' + token.token + '.\n'
+
           };
         } else if (type === 'course_1' || type === 'course_2' || type === 'course_3') {
           var courseName;
@@ -55,6 +56,7 @@ var transporter = nodemailer.createTransport({
             to: mail,
             subject: 'Payment Successful',
             text:'Hello,\n\n' + 'Your payment is completed for ' + courseName + ' : \nhttp://www.blockdegree.org/' + courseName + '.\n'
+
             // html:"<h3>Ankit Patel</h3>"+Date.now(),
           };
         }
