@@ -1,31 +1,78 @@
 {{> includes/hero hero-title="Exam Result"}}
 <div class="container__cstm">
 
-  <div>
+  <h3>
     Exam Result
-  </div>
+  </h3>
 
   <div id="exam">
 
-    <form id="basicExamForm">
-      <div class="card py-3 px-5 mb-4">
-        <h4 class="mb-3 exam-qns">
-          Blockchasin Basic Result
-        </h4>
-        <ul>
-          <li>
-            <span>Attempts:</span> {{{local.examBasic.attempts}}}
-            <span>marks:</span> {{{local.examBasic.marks}}}
-          </li>
+    <form id="">
+      {{#if exam.examBasic }}
+        <div class="card py-3 px-5 mb-4">
+          <h3 class="mb-3 exam-qns"style="color:#2073D4;">
+            Blockchasin Basic Result
+          </h3>
+          <ul>
+            <li style="display: flex;flex-direction:column">
+             <strong> <span>Attempts:</span></strong> {{{data.local.examBasic.attempts}}}
+              <strong><span>marks:</span></strong> {{{data.local.examBasic.marks}}}
+              <strong><span>Percent:</span></strong> {{{percent}}} %
+              {{#if examStatus}}
+                <span>Exam Status:</span> <span class="greenText"><strong>Pass</strong></span>
+              {{else}}
+                <span>Exam Status:</span> <span class="redText"><strong>Fail</strong></span>
+              {{/if}}
+            </li>
+          </ul>
           
-        </ul>
-        
-      </div>
-      <ul>
+        </div>
+      {{else if exam.examAdvanced}}
+        <div class="card py-3 px-5 mb-4" >
+          <h3 class="mb-3 exam-qns"style="color:#2073D4;">
+            Blockchain Advanced Result
+          </h3>
+          <ul>
+            <li style="display: flex;flex-direction:column">
+              <strong><span>Attempts:</span></strong> {{{data.local.examAdvanced.attempts}}}
+              <strong><span>marks:</span></strong> {{{data.local.examAdvanced.marks}}}
+              <strong><span>Percent:</span></strong> {{{percent}}} %
+              {{#if examStatus}}
+                <span>Exam Status:</span> <span class="greenText"><strong>Pass</strong></span>
+              {{else}}
+                <span>Exam Status:</span> <span class="redText"><strong>Fail</strong></span>
+              {{/if}}
+            </li>
+            
+          </ul>
+          
+        </div>
+      {{else if exam.examProfessional}}
+        <div class="card py-3 px-5 mb-4">
+          <h4 class="mb-3 exam-qns">
+            Blockchasin Professional Result
+          </h4>
+          <ul>
+            <li style="display: flex;flex-direction:column">
+              <span>Attempts:</span> {{{data.local.examProfessional.attempts}}}
+              <span>marks:</span> {{{data.local.examProfessional.marks}}}
+              <span>Percent:</span> {{{percent}}} %
+              {{#if examStatus}}
+                <span>Exam Status:</span> <span class="greenText"><strong>Pass</strong></span>
+              {{else}}
+                <span>Exam Status:</span> <span class="redText"><strong>Fail</strong></span>
+              {{/if}}
+            </li>
+            
+          </ul>
+          
+        </div>
+      {{/if}}
+     {{!--<ul>
           <li>
             <span><strong>we can shortly send your certifiacte in your Maild ID</strong></span>
           </li>
-        </ul>
+        </ul>--}} 
       {{!-- <div class="text-right">
         <input id="exam-submit" type="submit" class="btn btn-primary py-2 mt-4 text-white" value="Submit your answers">
       </div> --}}

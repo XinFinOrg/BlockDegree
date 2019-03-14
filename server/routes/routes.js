@@ -39,19 +39,38 @@ module.exports = function (app, passport) {
     )(req, res, next);
   });
   
-  app.get('/auth/google', (req, res, next) => {
-    passport.authenticate('google', {
-      scope: ["profile", "email"]
-    })
+  // app.get('/auth/google', (req, res, next) => {
+  //   passport.authenticate('google', {
+  //     scope: ["profile", "email"]
+  //   })
+  // });
+
+  // app.get('/auth/google/callback', (req, res, next) => {
+  //   passport.authenticate('google', {
+  //     successRedirect: '/blockchain-basic-exam',
+  //     failureRedirect: '/'
+  //   })
+  // })
+
+  app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+  }));
+
+  // callback route for google to redirect to
+  app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
+      res.send(req.user);
+      res.redirect('/blockchain-basic-exam');
   });
 
-  app.get('/auth/google/callback', (req, res, next) => {
-    passport.authenticate('google', {
-      successRedirect: '/blockchain-basic-exam',
-      failureRedirect: '/'
-    })
-  })
+  app.get('/auth/github', passport.authenticate('github', {
+    scope: ['profile', 'email']
+  }));
 
+  // callback route for github to redirect to
+  app.get('/auth/github/callback', passport.authenticate('github'), (req, res) => {
+      res.send(req.user);
+      res.redirect('/blockchain-basic-exam');
+  });
   app.post("/register", (req, res, next) => {
     passport.authenticate(
       "local-signup",
@@ -206,8 +225,8 @@ module.exports = function (app, passport) {
           payment_method: "paypal"
         },
         redirect_urls: {
-          // return_url: "http://78.129.212.204:3000/suc",
-          // cancel_url: "http://78.129.212.204:3000/err"
+       //return_url: "http://www.blockdegree.org/suc",
+         // cancel_url: "http://www.blockdegree.org/err"
           return_url: "http://localhost:3000/suc",
           cancel_url: "http://localhost:3000/err"
         },
@@ -361,12 +380,82 @@ module.exports = function (app, passport) {
     if (examName === "basic") {
       User.findOne({ 'local.email': req.user.local.email}).then((result, error) => {
         console.log('result basic:', result, error);
-        res.render('examResult', result);
+        const examTotal = 50;
+        let obtainedMarks = result.local.examBasic.marks;
+
+        let percent = (obtainedMarks * 100) / examTotal;
+        let examStatus;
+        if(percent >= 60) {
+          examStatus = true;
+        } else if (percent < 60) {
+          examStatus = false;
+        }
+        let jsonData = {
+          "exam": {
+            "examBasic": true,
+            "examAdvanced": false,
+            "examProfessional": false
+          },
+          "data": result,
+          "obtainedMarks": obtainedMarks,
+          "percent": percent,
+          "examStatus": examStatus
+        };
+        console.log('examResult json:', jsonData)
+        res.render('examResult', jsonData);
       });
     } else if (examName === "advanced") {
-      res.render('examResult', jsonData);
+      User.findOne({ 'local.email': req.user.local.email}).then((result, error) => {
+        console.log('result advanced:', result, error);
+        const examTotal = 50;
+        let obtainedMarks = result.local.examAdvanced.marks;
+
+        let percent = (obtainedMarks * 100) / examTotal;
+        let examStatus;
+        if(percent >= 60) {
+          examStatus = true;
+        } else if (percent < 60) {
+          examStatus = false;
+        }
+        let jsonData = {
+          "exam": {
+            "examBasic": false,
+            "examAdvanced": true,
+            "examProfessional": false
+          },
+          "data": result,
+          "obtainedMarks": obtainedMarks,
+          "percent": percent,
+          "examStatus": examStatus
+        };
+        res.render('examResult', jsonData);
+      });
     } else if (examName === "professional") {
-      res.render('examResult', jsonData);
+      User.findOne({ 'local.email': req.user.local.email}).then((result, error) => {
+        console.log('result professional:', result, error);
+        const examTotal = 50;
+        let obtainedMarks = result.local.examProfessional.marks;
+
+        let percent = (obtainedMarks * 100) / examTotal;
+        let examStatus;
+        if(percent >= 60) {
+          examStatus = true;
+        } else if (percent < 60) {
+          examStatus = false;
+        }
+        let jsonData = {
+          "exam": {
+            "examBasic": false,
+            "examAdvanced": false,
+            "examProfessional": true
+          },
+          "data": result,
+          "obtainedMarks": obtainedMarks,
+          "percent": percent,
+          "examStatus": examStatus
+        };
+        res.render('examResult', jsonData);
+      });
     }
   });
 
@@ -390,7 +479,7 @@ module.exports = function (app, passport) {
     })
   });
 
-  app.get('/blockchain-professional-exam', isLoggedIn, function (req, res) {
+  app.get('/blockchain-profesional-exam', isLoggedIn, function (req, res) {
     readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-professional.json'), (err, json) => {
       if (err) { throw err; }
       console.log('test quetions professional:', json);
@@ -405,8 +494,10 @@ module.exports = function (app, passport) {
     console.log(req.user);
     console.log(req.user.local.examBasic.attempts);
     const request = JSON.parse(JSON.stringify(req.body, null, 2));
-    console.log('request', request);
+    console.log('requestffff', examName);
     let attempts = req.user.local.examBasic.attempts;
+    let attemptsAdvanced = req.user.local.examAdvanced.attempts;
+    let attemptsProfessional = req.user.local.examProfessional.attempts;
     if (examName === "basic") {
       if (attempts != null && attempts < 3 ) {
         questions.findOne({ exam: "firstExam" }).then((result, error) => {
@@ -435,39 +526,62 @@ module.exports = function (app, passport) {
         });
       }
     } else if (examName === "advanced") {
-      if (req.user.examAdvanced.attempts) {
+      if (attemptsAdvanced != null && attemptsAdvanced < 3 ) {
         questions.findOne({ exam: "firstExam" }).then((result, error) => {
+          console.log('advanced result', result);
+          console.log('advanced result:::', result.questionsAdvanced)
           for (let index = 0; index < result.questionsAdvanced.length; index++) {
             if (parseInt(req.body[index]) + 1 == result.questionsAdvanced[index].answer) {
               marks++;
             }
           }
-          req.user.local.examAdvanced.attempts += 1;
+          attemptsAdvanced += 1;
           console.log("Marks", marks);
-          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examAdvanced.attempts":marks,"local.examAdvanced.marks":marks}}, {upsert: false},(err, doc) => {
+          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examAdvanced.attempts":attemptsAdvanced,"local.examAdvanced.marks":marks}}, {upsert: false},(err, doc) => {
             if (err) {
               console.log("Something wrong when updating data!");
             }
             console.log(doc);
+            res.redirect('/exam-result');
           });
         });
+      } else if (attemptsAdvanced >= 3) {
+        attemptsAdvanced = 0;
+        User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examAdvanced.attempts":attemptsAdvanced,"local.examAdvanced.marks":marks,"local.payment.course_2": false}}, {upsert: false},(err, doc) => {
+          if (err) {
+            console.log("Something went wrong when updating data!");
+            res.send({ status: 'false', message: info });
+          }
+          res.redirect('/exam-result');
+        });
       }
-    } else if (examName === "professional") {
-      if (req.user.examProfessional.attempts) {
+    } else if (examName === "profesional") {
+      if (attemptsProfessional != null && attemptsProfessional < 3 ) {
         questions.findOne({ exam: "firstExam" }).then((result, error) => {
           for (let index = 0; index < result.questionsProfessional.length; index++) {
             if (parseInt(req.body[index]) + 1 == result.questionsProfessional[index].answer) {
               marks++;
             }
           }
-          req.user.local.examProfessional.attempts += 1;
+          attemptsProfessional += 1;
           console.log("Marks", marks);
-          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examProfessional.attempts":marks, "local.examProfessional.marks":marks}}, {upsert: false},(err, doc) => {
+          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examProfessional.attempts":attemptsProfessional, "local.examProfessional.marks":marks}}, {upsert: false},(err, doc) => {
+            console.log('err?', err)
             if (err) {
               console.log("Something wrong when updating data!");
             }
-            console.log(doc);
+            res.redirect('/exam-result');
           });
+        });
+      } else if (attemptsProfessional >= 3) {
+        attemptsProfessional = 0;
+        User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examProfessional.attempts":attemptsProfessional,"local.examProfessional.marks":marks,"local.payment.course_3": false}}, {upsert: false},(err, doc) => {
+          console.log('err2?', err)
+          if (err) {
+            console.log("Something went wrong when updating data!");
+            res.send({ status: 'false', message: info });
+          }
+          res.redirect('/exam-result');
         });
       }
     }

@@ -7,6 +7,8 @@ var questionSchema = mongoose.Schema({
     exam : String,
     questions : Array,
     questionsBasic: Array,
+    questionsAdvanced: Array,
+    questionsProfessional: Array
 });
 
 // create the model for users and expose it to our app

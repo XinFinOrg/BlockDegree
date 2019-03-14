@@ -1,5 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var GithubStrategy = require('passport-github').Strategy;
 var User = require('./models/user');
 var Token = require('./models/tokenVerification');
 const emailer = require('../emailer/impl');
@@ -109,7 +110,62 @@ module.exports = function (passport) {
             });
 
         }));
+        // Github login
 
+        passport.use('github', new GithubStrategy({
+            clientID: configAuth.githubAuth.clientID,
+            clientSecret: configAuth.githubAuth.clientSecret,
+            callbackURL: configAuth.githubAuth.callbackURL,
+            scope: 'user:email'
+          },
+          function (token, refreshToken, profile, done) {
+            console.log('GitHubStrategy',profile);
+            process.nextTick(function() {
+                User.findOne({
+                    'local.email': profile.emails[0].value
+                }, function(err, user) {
+                    console.log('github callback', user, err);
+                    if(user){
+                        // already have this user
+                        console.log('user is: ', user);
+                        done(null, user);
+                    } else {
+                        var newUser = new User();
+                        newUser.local.email = profile.emails[0].value;
+                        // newUser.local.password = newUser.generateHash(password);
+                        newUser.local.payment.course_1 = false;
+                        newUser.local.payment.course_2 = false;
+                        newUser.local.payment.course_3 = false;
+                        newUser.local.examBasic.attempts = 0;
+                        newUser.local.examBasic.marks = 0;
+                        newUser.local.examAdvanced.attempts = 0;
+                        newUser.local.examAdvanced.marks = 0;
+                        newUser.local.examProfessional.attempts = 0;
+                        newUser.local.examProfessional.marks = 0;
+                        newUser.save(function (err) {
+                            if (err) {
+                                console.log("Error:", err)
+                                throw err;
+                            }
+
+                            // var token = new Token({ email: email, token: crypto.randomBytes(16).toString('hex') });
+                            // token.save(function (err) {
+                            //     if (err) {
+                            //         console.log(err)
+                            //         return done(null, false, "token errror")
+                            //     }
+                            //     console.log(email, token)
+                            //     emailer.sendTokenMail(email, token, req, 'signup');
+                            //     return done(null, newUser);
+                            // });
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            });
+        }));
+
+// Google Login
     passport.use('google', new GoogleStrategy({
 
         clientID: configAuth.googleAuth.clientID,
@@ -121,9 +177,45 @@ module.exports = function (passport) {
             console.log('googlestrategy',profile);
             process.nextTick(function() {
                 User.findOne({
-                    'local.email': profile.email[0].value
-                }, function(res, err) {
-                    console.log('google callback', res, err)
+                    'local.email': profile.emails[0].value
+                }, function(err, user) {
+                    console.log('google callback', user, err);
+                    if(user){
+                        // already have this user
+                        console.log('user is: ', user);
+                        done(null, user);
+                    } else {
+                        var newUser = new User();
+                        newUser.local.email = profile.emails[0].value;
+                        // newUser.local.password = newUser.generateHash(password);
+                        newUser.local.payment.course_1 = false;
+                        newUser.local.payment.course_2 = false;
+                        newUser.local.payment.course_3 = false;
+                        newUser.local.examBasic.attempts = 0;
+                        newUser.local.examBasic.marks = 0;
+                        newUser.local.examAdvanced.attempts = 0;
+                        newUser.local.examAdvanced.marks = 0;
+                        newUser.local.examProfessional.attempts = 0;
+                        newUser.local.examProfessional.marks = 0;
+                        newUser.save(function (err) {
+                            if (err) {
+                                console.log("Error:", err)
+                                throw err;
+                            }
+
+                            // var token = new Token({ email: email, token: crypto.randomBytes(16).toString('hex') });
+                            // token.save(function (err) {
+                            //     if (err) {
+                            //         console.log(err)
+                            //         return done(null, false, "token errror")
+                            //     }
+                            //     console.log(email, token)
+                            //     emailer.sendTokenMail(email, token, req, 'signup');
+                            //     return done(null, newUser);
+                            // });
+                            return done(null, newUser);
+                        });
+                    }
                 });
             });
         }));
