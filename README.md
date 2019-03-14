@@ -15,6 +15,7 @@ Entire Course access is free but Nominal fees will be charge, if you like to get
 Certification will be issue on XinFin Public Blockchain (More detail: XinFin.org).
 
 We invite Educational Institute to be part of Education Initiative.
+http://www.blockdegree.org
 
 # Free blockchain education resource
 __Learn how to become a blockchain professional__
@@ -73,6 +74,7 @@ You are ready to take on roles in the blockchain industry. Also, as blockchain i
 Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.html
 
 ## To do
+- [ ] Google & Github Login functionality
 - [X] Login functionality
 - [X] Pages for the link at footer
 - [X] Email sign up (only UI )(Backend )
@@ -80,7 +82,7 @@ Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.htm
 - [ ] Functionality for certificate page
 - [ ] Functionality for contact form
 - [X] Become partner button at university course offline
-- [ ] Previous and next arrow when use finish reading the documents
+- [X] Previous and next arrow when use finish reading the documents
 - [X] Content for become partner popup
 - [ ] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
 - [X] Code to read the images in folder for gallery and automatically generate it
