@@ -39,7 +39,8 @@ var transporter = nodemailer.createTransport({
             from: 'blockchain@xinfin.org',
             to: mail,
             subject: 'Login',
-            text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/?token=' + token.token + '.\n'
+            text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp://www.blockdegree.org/confirmation\/?token=' + token.token + '.\n'
+
 
           };
         } else if (type === 'course_1' || type === 'course_2' || type === 'course_3') {

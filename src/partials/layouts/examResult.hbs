@@ -19,9 +19,9 @@
               <strong><span>marks:</span></strong> {{{data.local.examBasic.marks}}}
               <strong><span>Percent:</span></strong> {{{percent}}} %
               {{#if examStatus}}
-                <span>Exam Status:</span> <span class="greenText"><strong>Pass</strong></span>
+                <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
               {{else}}
-                <span>Exam Status:</span> <span class="redText"><strong>Fail</strong></span>
+                <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
               {{/if}}
             </li>
           </ul>
@@ -38,9 +38,9 @@
               <strong><span>marks:</span></strong> {{{data.local.examAdvanced.marks}}}
               <strong><span>Percent:</span></strong> {{{percent}}} %
               {{#if examStatus}}
-                <span>Exam Status:</span> <span class="greenText"><strong>Pass</strong></span>
+                <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
               {{else}}
-                <span>Exam Status:</span> <span class="redText"><strong>Fail</strong></span>
+                <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
               {{/if}}
             </li>
             
@@ -49,18 +49,18 @@
         </div>
       {{else if exam.examProfessional}}
         <div class="card py-3 px-5 mb-4">
-          <h4 class="mb-3 exam-qns">
+          <h3 class="mb-3 exam-qns">
             Blockchasin Professional Result
-          </h4>
+          </h3>
           <ul>
             <li style="display: flex;flex-direction:column">
-              <span>Attempts:</span> {{{data.local.examProfessional.attempts}}}
-              <span>marks:</span> {{{data.local.examProfessional.marks}}}
-              <span>Percent:</span> {{{percent}}} %
+              <strong><span>Attempts:</span></strong> {{{data.local.examProfessional.attempts}}}
+              <strong>marks:</span></strong> {{{data.local.examProfessional.marks}}}
+              <strong><span>Percent:</span></strong> {{{percent}}} %
               {{#if examStatus}}
-                <span>Exam Status:</span> <span class="greenText"><strong>Pass</strong></span>
+                <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
               {{else}}
-                <span>Exam Status:</span> <span class="redText"><strong>Fail</strong></span>
+                <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
               {{/if}}
             </li>
             

@@ -225,10 +225,10 @@ module.exports = function (app, passport) {
           payment_method: "paypal"
         },
         redirect_urls: {
-       //return_url: "http://www.blockdegree.org/suc",
-         // cancel_url: "http://www.blockdegree.org/err"
-          return_url: "http://localhost:3000/suc",
-          cancel_url: "http://localhost:3000/err"
+       return_url: "http://www.blockdegree.org/suc",
+          cancel_url: "http://www.blockdegree.org/err"
+          //return_url: "http://localhost:3000/suc",
+          //cancel_url: "http://localhost:3000/err"
         },
         transactions: [
           {
@@ -479,8 +479,10 @@ module.exports = function (app, passport) {
     })
   });
 
-  app.get('/blockchain-profesional-exam', isLoggedIn, function (req, res) {
+  app.get('/blockchain-professional-exam', isLoggedIn, function (req, res) {
+    console.log('inside block prof')
     readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-professional.json'), (err, json) => {
+      console.log('block pro 2', err, json)
       if (err) { throw err; }
       console.log('test quetions professional:', json);
       res.render('blockchainProfessional', json)
@@ -555,7 +557,7 @@ module.exports = function (app, passport) {
           res.redirect('/exam-result');
         });
       }
-    } else if (examName === "profesional") {
+    } else if (examName === "professional") {
       if (attemptsProfessional != null && attemptsProfessional < 3 ) {
         questions.findOne({ exam: "firstExam" }).then((result, error) => {
           for (let index = 0; index < result.questionsProfessional.length; index++) {
