@@ -21,6 +21,46 @@ const utils = require("../utils.js");
 let { readJSONFile, isLoggedIn } = utils;
 
 module.exports = function (app, passport) {
+  var isPaymentSuccess = async function(req, res, next ) {
+    if(req.isAuthenticated()) {
+      const backUrl = req.url;
+      const examName = backUrl.split('/')[1].split('-')[1];
+      const email = req.user.local.email;
+      let payment_status;
+      console.log('ispaymentsuccess', examName  )
+      if (examName === "basic") {
+        await User.findOne({ "local.email": email }, function (err, user) {
+          payment_status = user.local.payment.course_1;
+          if(payment_status != true) {
+            res.redirect('/exams');
+          } else {
+            next();
+          }
+        });
+      } else if (examName === "advanced") {
+        await User.findOne({ "local.email": email }, function (err, user) {
+          payment_status = user.local.payment.course_2;
+          if(payment_status != true) {
+            res.redirect('/exams');
+          } else {
+            next();
+          }
+        });
+      } else if (examName === "professional") {
+        await User.findOne({ "local.email": email }, function (err, user) {
+          payment_status = user.local.payment.course_3;
+          if(payment_status != true) {
+            res.redirect('/exams');
+          } else {
+            next();
+          }
+        });
+      }
+    } else {
+      console.log('game of thrones')
+    }
+  }
+
   app.post("/login", (req, res, next) => {
     passport.authenticate(
       "local-login",
@@ -225,10 +265,10 @@ module.exports = function (app, passport) {
           payment_method: "paypal"
         },
         redirect_urls: {
-       return_url: "http://www.blockdegree.org/suc",
-          cancel_url: "http://www.blockdegree.org/err"
-          //return_url: "http://localhost:3000/suc",
-          //cancel_url: "http://localhost:3000/err"
+      // return_url: "http://www.blockdegree.org/suc",
+        //  cancel_url: "http://www.blockdegree.org/err"
+          return_url: "http://localhost:3000/suc",
+          cancel_url: "http://localhost:3000/err"
         },
         transactions: [
           {
@@ -463,7 +503,7 @@ module.exports = function (app, passport) {
     res.render('paymentSuccess');
   });
 
-  app.get('/blockchain-basic-exam', isLoggedIn, function (req, res) {
+  app.get('/blockchain-basic-exam', isPaymentSuccess, function (req, res) {
     readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-basic.json'), (err, json) => {
       if (err) { throw err; }
       console.log('test quetions basic:', json);
@@ -471,7 +511,7 @@ module.exports = function (app, passport) {
     })
   });
 
-  app.get('/blockchain-advanced-exam', isLoggedIn, function (req, res) {
+  app.get('/blockchain-advanced-exam', isPaymentSuccess, function (req, res) {
     readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-advanced.json'), (err, json) => {
       if (err) { throw err; }
       console.log('test quetions advanced:', json);
@@ -479,7 +519,7 @@ module.exports = function (app, passport) {
     })
   });
 
-  app.get('/blockchain-professional-exam', isLoggedIn, function (req, res) {
+  app.get('/blockchain-professional-exam', isPaymentSuccess, function (req, res) {
     console.log('inside block prof')
     readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-professional.json'), (err, json) => {
       console.log('block pro 2', err, json)
@@ -590,6 +630,7 @@ module.exports = function (app, passport) {
 
 
   });
+  
 
 
   app.get('/confirmation', function (req, res) {

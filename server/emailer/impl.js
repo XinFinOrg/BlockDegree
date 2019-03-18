@@ -39,8 +39,7 @@ var transporter = nodemailer.createTransport({
             from: 'blockchain@xinfin.org',
             to: mail,
             subject: 'Login',
-            text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp://www.blockdegree.org/confirmation\/?token=' + token.token + '.\n'
-
+            text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/?token=' + token.token + '.\n'
 
           };
         } else if (type === 'course_1' || type === 'course_2' || type === 'course_3') {
@@ -56,7 +55,8 @@ var transporter = nodemailer.createTransport({
             from: 'info@blockdegree.org',
             to: mail,
             subject: 'Payment Successful',
-            text:'Hello,\n\n' + 'Your payment is completed for ' + courseName + ' : \nhttp://www.blockdegree.org/' + courseName + '.\n'
+            text:'Hello,\n\n' + 'Your payment is completed for ' + courseName + ' : \nhttp:\/\/' + req.headers.host + '/' + courseName + '.\n'
+
 
             // html:"<h3>Ankit Patel</h3>"+Date.now(),
           };
