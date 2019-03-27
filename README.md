@@ -79,7 +79,7 @@ Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.htm
 - [X] Pages for the link at footer
 - [X] Email sign up (only UI )(Backend )
 - [X] Enroll today, start lesson.
-- [ ] Functionality for certificate page
+- [ ] Functionality for IPFS Hash through certificate page
 - [ ] Functionality for contact form
 - [X] Become partner button at university course offline
 - [X] Previous and next arrow when use finish reading the documents
