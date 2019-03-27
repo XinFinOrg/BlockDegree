@@ -26,7 +26,8 @@ var userSchema = mongoose.Schema({
         examProfessional : {
             attempts : Number,
             marks : Number
-        }
+        },
+        certificateHash: { type: String }
     },
     facebook         : {
         id           : String,

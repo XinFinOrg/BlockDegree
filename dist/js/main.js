@@ -217,5 +217,11 @@ $(document).ready(function() {
          })
     })
   }
+
+  $('#getCertiFromHash').click(function(e) {
+    e.preventDefault();
+    const hash = $('#txHash').val();
+    window.location = `https://gateway.ipfs.io/ipfs/`+ hash +``;
+  });
   
 });

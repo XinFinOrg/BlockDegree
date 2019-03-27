@@ -18,6 +18,7 @@
              <strong> <span>Attempts:</span></strong> {{{data.local.examBasic.attempts}}}
               <strong><span>marks:</span></strong> {{{data.local.examBasic.marks}}}
               <strong><span>Percent:</span></strong> {{{percent}}} %
+              <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
               {{#if examStatus}}
                 <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
               {{else}}
@@ -25,7 +26,7 @@
               {{/if}}
             </li>
           </ul>
-          
+
         </div>
       {{else if exam.examAdvanced}}
         <div class="card py-3 px-5 mb-4" >
@@ -37,15 +38,16 @@
               <strong><span>Attempts:</span></strong> {{{data.local.examAdvanced.attempts}}}
               <strong><span>marks:</span></strong> {{{data.local.examAdvanced.marks}}}
               <strong><span>Percent:</span></strong> {{{percent}}} %
+              <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
               {{#if examStatus}}
                 <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
               {{else}}
                 <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
               {{/if}}
             </li>
-            
+
           </ul>
-          
+
         </div>
       {{else if exam.examProfessional}}
         <div class="card py-3 px-5 mb-4">
@@ -57,22 +59,23 @@
               <strong><span>Attempts:</span></strong> {{{data.local.examProfessional.attempts}}}
               <strong>marks:</span></strong> {{{data.local.examProfessional.marks}}}
               <strong><span>Percent:</span></strong> {{{percent}}} %
+              <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
               {{#if examStatus}}
                 <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
               {{else}}
                 <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
               {{/if}}
             </li>
-            
+
           </ul>
-          
+
         </div>
       {{/if}}
      {{!--<ul>
           <li>
             <span><strong>we can shortly send your certifiacte in your Maild ID</strong></span>
           </li>
-        </ul>--}} 
+        </ul>--}}
       {{!-- <div class="text-right">
         <input id="exam-submit" type="submit" class="btn btn-primary py-2 mt-4 text-white" value="Submit your answers">
       </div> --}}

@@ -8,6 +8,13 @@ var PaymentLogs = require("../config/models/payment_logs");
 var questions = require("../config/models/question");
 const emailer = require('../emailer/impl');
 var crypto = require('crypto');
+const IPFS = require('ipfs-http-client')
+var ejs=require('ejs');
+const ipfs = new IPFS({
+  host: 'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https'
+})
 
 paypal.configure({
   mode: "sandbox", //sandbox or live
@@ -78,7 +85,7 @@ module.exports = function (app, passport) {
       }
     )(req, res, next);
   });
-  
+
   // app.get('/auth/google', (req, res, next) => {
   //   passport.authenticate('google', {
   //     scope: ["profile", "email"]
@@ -183,15 +190,15 @@ module.exports = function (app, passport) {
               "course_2": user.local.payment.course_2,
               "course_3": user.local.payment.course_3,
             },
-            'json': json  
+            'json': json
           }
           console.log('examlist data:::', examListData)
           res.render("examList", examListData);
         }
       );
     });
-    
-    
+
+
     // readJSONFile(
     //   path.join(process.cwd(), "/dist/data/courses.json"),
     //   (err, json) => {
@@ -220,7 +227,7 @@ module.exports = function (app, passport) {
   //   );
   // });
 
-  
+
 
   app.post("/answers", (req, res, next) => {
     // check the verification of user answers
@@ -265,10 +272,10 @@ module.exports = function (app, passport) {
           payment_method: "paypal"
         },
         redirect_urls: {
-      // return_url: "http://www.blockdegree.org/suc",
-        //  cancel_url: "http://www.blockdegree.org/err"
-          return_url: "http://localhost:3000/suc",
-          cancel_url: "http://localhost:3000/err"
+      return_url: "http://www.blockdegree.org/suc",
+          cancel_url: "http://www.blockdegree.org/err"
+          //return_url: "http://localhost:3000/suc",
+          //cancel_url: "http://localhost:3000/err"
         },
         transactions: [
           {
@@ -425,11 +432,6 @@ module.exports = function (app, passport) {
 
         let percent = (obtainedMarks * 100) / examTotal;
         let examStatus;
-        if(percent >= 60) {
-          examStatus = true;
-        } else if (percent < 60) {
-          examStatus = false;
-        }
         let jsonData = {
           "exam": {
             "examBasic": true,
@@ -439,24 +441,44 @@ module.exports = function (app, passport) {
           "data": result,
           "obtainedMarks": obtainedMarks,
           "percent": percent,
-          "examStatus": examStatus
         };
+        if(percent >= 60) {
+          examStatus = true;
+          let d= new Date();
+          let date = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear();
+          ejs.renderFile(__dirname+'/certificate.ejs', {
+            name:  req.user.local.email,
+            course: "Certified Blockchain Basic Expert",
+            score: percent,
+            date: date
+          }, (err, data) => {
+            let buffer = Buffer.from(data, 'utf-8');
+            ipfs.add(buffer, (err, ipfsHash) => {
+              console.log(ipfsHash);
+              result.certificateHash=ipfsHash[0].hash;
+              jsonData.certificateHash=ipfsHash[0].hash;
+              jsonData.examStatus= examStatus;
+              result.save();
+              res.render('examResult', jsonData);
+            });
+          })
+
+        } else if (percent < 60) {
+          examStatus = false;
+          jsonData.examStatus= examStatus;
+          res.render('examResult', jsonData);
+        }
+
         console.log('examResult json:', jsonData)
-        res.render('examResult', jsonData);
+
       });
     } else if (examName === "advanced") {
       User.findOne({ 'local.email': req.user.local.email}).then((result, error) => {
         console.log('result advanced:', result, error);
         const examTotal = 50;
         let obtainedMarks = result.local.examAdvanced.marks;
-
         let percent = (obtainedMarks * 100) / examTotal;
         let examStatus;
-        if(percent >= 60) {
-          examStatus = true;
-        } else if (percent < 60) {
-          examStatus = false;
-        }
         let jsonData = {
           "exam": {
             "examBasic": false,
@@ -466,23 +488,46 @@ module.exports = function (app, passport) {
           "data": result,
           "obtainedMarks": obtainedMarks,
           "percent": percent,
-          "examStatus": examStatus
         };
-        res.render('examResult', jsonData);
+
+        if(percent >= 60) {
+          examStatus = true;
+
+          let d= new Date();
+          let date = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear();
+          ejs.renderFile(__dirname+'/certificate.ejs', {
+            name:  req.user.local.email,
+            course: "Certified Bitcoin Blockchain Expert",
+            score: percent,
+            date: date
+          }, (err, data) => {
+            let buffer = Buffer.from(data, 'utf-8');
+            ipfs.add(buffer, (err, ipfsHash) => {
+              console.log(ipfsHash);
+              result.certificateHash=ipfsHash[0].hash;
+              jsonData.certificateHash=ipfsHash[0].hash;
+              jsonData.examStatus= examStatus;
+              result.save();
+              res.render('examResult', jsonData);
+            });
+          })
+
+        } else if (percent < 60) {
+          examStatus = false;
+          jsonData.examStatus= examStatus;
+          res.render('examResult', jsonData);
+        }
+
+        console.log('examResult json:', jsonData)
+
       });
     } else if (examName === "professional") {
       User.findOne({ 'local.email': req.user.local.email}).then((result, error) => {
         console.log('result professional:', result, error);
         const examTotal = 50;
         let obtainedMarks = result.local.examProfessional.marks;
-
         let percent = (obtainedMarks * 100) / examTotal;
         let examStatus;
-        if(percent >= 60) {
-          examStatus = true;
-        } else if (percent < 60) {
-          examStatus = false;
-        }
         let jsonData = {
           "exam": {
             "examBasic": false,
@@ -492,9 +537,37 @@ module.exports = function (app, passport) {
           "data": result,
           "obtainedMarks": obtainedMarks,
           "percent": percent,
-          "examStatus": examStatus
         };
-        res.render('examResult', jsonData);
+        if(percent >= 60) {
+          examStatus = true;
+
+          let d= new Date();
+          let date = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear();
+          ejs.renderFile(__dirname+'/certificate.ejs', {
+            name:  req.user.local.email,
+            course: "examProfessional",
+            score: percent,
+            date: date
+          }, (err, data) => {
+            let buffer = Buffer.from(data, 'utf-8');
+            ipfs.add(buffer, (err, ipfsHash) => {
+              console.log(ipfsHash);
+              result.certificateHash=ipfsHash[0].hash;
+              jsonData.certificateHash=ipfsHash[0].hash;
+              jsonData.examStatus= examStatus;
+              result.save();
+              res.render('examResult', jsonData);
+            });
+          })
+
+        } else if (percent < 60) {
+          examStatus = false;
+          jsonData.examStatus= examStatus;
+          res.render('examResult', jsonData);
+        }
+
+        console.log('examResult json:', jsonData)
+
       });
     }
   });
@@ -630,7 +703,7 @@ module.exports = function (app, passport) {
 
 
   });
-  
+
 
 
   app.get('/confirmation', function (req, res) {
