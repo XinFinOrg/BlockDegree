@@ -9,6 +9,7 @@ var questions = require("../config/models/question");
 const emailer = require('../emailer/impl');
 var crypto = require('crypto');
 const IPFS = require('ipfs-http-client')
+
 var ejs=require('ejs');
 const ipfs = new IPFS({
   host: 'ipfs.infura.io',
@@ -132,7 +133,10 @@ module.exports = function (app, passport) {
 
   app.get("/logout", function (req, res) {
     req.logout();
-    res.redirect("/");
+    req.session.destroy(function (err) {
+      if (err) { return next(err); }
+      res.redirect("/");
+    });
   });
 
   app.get("/courses/:courseName", isLoggedIn, function (req, res) {
@@ -174,7 +178,8 @@ module.exports = function (app, passport) {
         writeup/copy: string
       }]
       ***/
-     console.log('local exam ')
+     console.log('local exam ');
+
     User.findOne({ "local.email": req.user.local.email }, function (err, user) {
       if(err) { throw err };
       readJSONFile(
@@ -272,10 +277,10 @@ module.exports = function (app, passport) {
           payment_method: "paypal"
         },
         redirect_urls: {
-      return_url: "http://www.blockdegree.org/suc",
-          cancel_url: "http://www.blockdegree.org/err"
-          //return_url: "http://localhost:3000/suc",
-          //cancel_url: "http://localhost:3000/err"
+      // return_url: "http://www.blockdegree.org/suc",
+        //  cancel_url: "http://www.blockdegree.org/err"
+          return_url: "http://localhost:3000/suc",
+          cancel_url: "http://localhost:3000/err"
         },
         transactions: [
           {
@@ -444,8 +449,10 @@ module.exports = function (app, passport) {
         };
         if(percent >= 60) {
           examStatus = true;
-          let d= new Date();
-          let date = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear();
+          let d = new Date();
+       let date = d.toLocaleDateString('en-GB', {
+       day: 'numeric', month: 'long', year: 'numeric'
+      });
           ejs.renderFile(__dirname+'/certificate.ejs', {
             name:  req.user.local.email,
             course: "Certified Blockchain Basic Expert",
@@ -492,9 +499,10 @@ module.exports = function (app, passport) {
 
         if(percent >= 60) {
           examStatus = true;
-
-          let d= new Date();
-          let date = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear();
+          let d = new Date();
+          let date = d.toLocaleDateString('en-GB', {
+            day: 'numeric', month: 'long', year: 'numeric'
+          });
           ejs.renderFile(__dirname+'/certificate.ejs', {
             name:  req.user.local.email,
             course: "Certified Bitcoin Blockchain Expert",
@@ -540,9 +548,10 @@ module.exports = function (app, passport) {
         };
         if(percent >= 60) {
           examStatus = true;
-
-          let d= new Date();
-          let date = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear();
+          let d = new Date();
+          let date = d.toLocaleDateString('en-GB', {
+            day: 'numeric', month: 'long', year: 'numeric'
+          });
           ejs.renderFile(__dirname+'/certificate.ejs', {
             name:  req.user.local.email,
             course: "examProfessional",
