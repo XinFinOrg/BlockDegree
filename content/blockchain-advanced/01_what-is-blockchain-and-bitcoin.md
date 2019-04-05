@@ -27,3 +27,4 @@ __Bitcoin__: Bitcoin is a public blockchain. Bitcoin users in general maintain t
 __Blockchain__:  Blockchain can be public, private, or hybrid. Depending on the requirements of the users or organisations, different type of blockchain technology will be used. When implementing blockchain technology, organisations will need to understand how the integration of blockchain technology can comply with the existing requirements and practices.
 
 In most cases, the identity of the users who are involved in the transactions need to be known. On this account, industry practices like know your customers and anti money laundering will need to be integrated to the blockchain solution. Therefore, the transactions recorded in the blockchain ledger are designed to be understood by the various business units.  
+

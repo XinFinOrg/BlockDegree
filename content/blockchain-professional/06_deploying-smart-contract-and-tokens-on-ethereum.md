@@ -64,6 +64,8 @@ https://docs.google.com/document/d/1v9Oow11P7WfDBUHwesD-bercqH4jOE_8bWtobssx8ro/
 After that copy on ABI (Web3deploy)
 <img src="/img/courses/bc-pro/op3.png" alt="geth-download"/>
 
+ABI is the binary interface of the application. ABI is an interface between two software modules, one of which is often at the machine code level. In Ethereum, basically, you can encode Solidity contracts for EVM and, conversely, read data from transactions.
+
 Copy of the ->var Coincontract =web3.eth.contract………. etc.
 
 Copy of the ->var coin= coinContract.new …………. Etc.

@@ -53,7 +53,7 @@ $(document).ready(function() {
             'class': '',
             'id': ''
         });
-        $('body').append($mobile_nav);
+        $('body').prepend($mobile_nav);
         $('body').prepend('<button type="button" id="mobile-nav-toggle"><i class="lnr lnr-menu"></i></button>');
         $('body').append('<div id="mobile-body-overly"></div>');
         $('#mobile-nav').find('.menu-has-children').prepend('<i class="lnr lnr-chevron-down"></i>');
@@ -210,8 +210,10 @@ $(document).ready(function() {
 
   if($('#userAuth-btn').attr('href') == '/logout') {
     $('#userAuth-btn').on('click', (e) => {
+     
       $.get(e.target.pathname)
         .done(() => {
+           
             localStorage.setItem('hasUser', false);
             localStorage.setItem('email', '');
          })
@@ -225,3 +227,6 @@ $(document).ready(function() {
   });
   
 });
+
+         
+      

@@ -5,6 +5,12 @@ template: courseContent.hbs
 courseIdx: 2
 ---
 Now that everything is set up properly, let's continue building out the smart contact by listing out the candidates that will run in the election. We need a way to store multiple candidates, and store multiple attributes about each candidate. We want to keep track of a candidate's id, name, and vote count. Here is how we will model the candidate:
+
+The Solidity compiler automatically creates a JSON file that contains the contract metadata (information about the current contract).
+####What is Solidity?
+Solidity is known as an agreement based, abnormal state programming language. This stage has comparative grammar to the scripting language of JavaScript. Strength as a programming language is made to upgrade the Ethereum Virtual Machine. Solidity is statically composed scripting language which does the way toward confirming and upholding the requirements at incorporate time rather than run-time.
+
+Version Pragma is the assertion of the form of the Solidity compiler that the specific code should utilize.
 <div class="precode">~/election/contracts/election.sol</div>
 
 ```javascript

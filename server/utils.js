@@ -15,6 +15,7 @@ function readJSONFile(filename, callback) {
   });
 }
 
+
 function isLoggedIn(req, res, next ) {
   console.log('req.isAuthenticated():', req.isAuthenticated(), req.params)
   if (req.isAuthenticated()) {
