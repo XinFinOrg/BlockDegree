@@ -2,7 +2,7 @@
   "courses": [
     {
       "title": "101 - Blockchain basic course for engineer",
-      "price" : "29.00",
+      "price" : "9.99",
       "type" : "course_1",
       "video": "https://www.youtube.com/embed/jLaqms1IHWE",
       "duration": "3 days",
@@ -60,7 +60,7 @@
     },
     {
       "title": "102 - Blockchain advanced course for engineer",
-      "price" : "49.00",
+      "price" : "9.99",
       "type" : "course_2",
       "video": "https://www.youtube.com/embed/oSP-taqLWPQ",
       "duration": "3 days",
@@ -95,7 +95,7 @@
     },
     {
       "title": "103 - Blockchain professional course for engineer",
-      "price" : "59.00",
+      "price" : "9.99",
       "type" : "course_3",
       "video": "https://www.youtube.com/embed/jLaqms1IHWE",
       "duration": "3 days",

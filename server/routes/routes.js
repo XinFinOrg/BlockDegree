@@ -18,11 +18,9 @@ const ipfs = new IPFS({
 })
 
 paypal.configure({
-  mode: "sandbox", //sandbox or live
-  client_id:
-    "AR8oYc8pYp90H_9qN6JcjvSgS5nbCq_hFvc5ue4Twzdh-ZefahoeLmVKEem2OxbLNlK2nM-Zv74F3iPI",
-  client_secret:
-    "ELBjQfb3aGNze4S-wbaHHndGmv4DQzqfOoeu1NAphrOwdwxHSjaHLR_zP-u4hBLGJPAyCXdTPAFD8BKk"
+  mode: "live", //sandbox or live
+  client_id:process.env.client_id,
+  client_secret:process.env.client_secret
 });
 
 const utils = require("../utils.js");
@@ -434,7 +432,7 @@ module.exports = function (app, passport) {
         console.log('result basic:', result, error);
         const examTotal = 50;
         let obtainedMarks = result.local.examBasic.marks;
-
+        
         let percent = (obtainedMarks * 100) / examTotal;
         let examStatus;
         let jsonData = {
@@ -534,6 +532,7 @@ module.exports = function (app, passport) {
         console.log('result professional:', result, error);
         const examTotal = 50;
         let obtainedMarks = result.local.examProfessional.marks;
+        console.log('obtainedMarks>>>>>>>', obtainedMarks)
         let percent = (obtainedMarks * 100) / examTotal;
         let examStatus;
         let jsonData = {
@@ -601,7 +600,7 @@ module.exports = function (app, passport) {
     })
   });
 
-  app.get('/blockchain-professional-exam', isPaymentSuccess, function (req, res) {
+  app.get('/blockchain-professional-exam', function (req, res) {
     console.log('inside block prof')
     readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-professional.json'), (err, json) => {
       console.log('block pro 2', err, json)
@@ -683,7 +682,7 @@ module.exports = function (app, passport) {
       if (attemptsProfessional != null && attemptsProfessional < 3 ) {
         questions.findOne({ exam: "firstExam" }).then((result, error) => {
           for (let index = 0; index < result.questionsProfessional.length; index++) {
-            if (parseInt(req.body[index]) + 1 == result.questionsProfessional[index].answer) {
+            if (parseInt(request[index]) + 1 == result.questionsProfessional[index].answer) {
               marks++;
             }
           }

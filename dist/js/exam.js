@@ -70,6 +70,7 @@ $(function() {
       }      
     }
     console.log('data', JSON.stringify(ansArray));
+    alert('wait')
     $.ajax({
       type: "POST",
       url: '/postExam',

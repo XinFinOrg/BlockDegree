@@ -8,7 +8,9 @@ courseIdx: 2
 Follow the instructions from the <a href="https://geth.ethereum.org/downloads/" target="_blonk">official Geth website</a> to download geth as per your requirement and your operating system.
 
 <img src="/img/courses/bc-pro/qa1.png" alt="geth-download"/>
+
 Geth is a multipurpose order line apparatus that runs a full Ethereum hub executed in Go. It offers three interfaces: the direction line subcommands and choices, a Json-rpc server and an intelligent comfort.
+
 #### Check that geth is installed
 <div class="precode">shell</div>
 
