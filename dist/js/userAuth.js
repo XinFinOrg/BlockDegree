@@ -2,6 +2,7 @@ if(typeof jQuery != 'undefined') {
   $(document).ready(function(){
     let loginForm = $('#form-login'),
         registerForm = $('#form-register'),
+       
         formMessages = $('.form-messages');
 
     if(loginForm) {

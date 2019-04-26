@@ -8,6 +8,7 @@ var PaymentLogs = require("../config/models/payment_logs");
 var questions = require("../config/models/question");
 const emailer = require('../emailer/impl');
 var crypto = require('crypto');
+
 const IPFS = require('ipfs-http-client')
 
 var ejs=require('ejs');
@@ -17,10 +18,19 @@ const ipfs = new IPFS({
   protocol: 'https'
 })
 
+//paypal.configure({
+//  mode: "sandbox", //sandbox or live
+ // client_id:    "AR8oYc8pYp90H_9qN6JcjvSgS5nbCq_hFvc5ue4Twzdh-ZefahoeLmVKEem2OxbLNlK2nM-Zv74F3iPI",
+  //process.env.client_id,
+ // client_secret: "ELBjQfb3aGNze4S-wbaHHndGmv4DQzqfOoeu1NAphrOwdwxHSjaHLR_zP-u4hBLGJPAyCXdTPAFD8BKk"//process.env.client_secret
+//});
+
 paypal.configure({
   mode: "live", //sandbox or live
-  client_id:process.env.client_id,
-  client_secret:process.env.client_secret
+  client_id:
+    "ActAo_owzENeRQct8dgkXOZ4c1U_adE_i0JOph3QjJWLHWbSrj8bY0bYjn98F06moUhTAJYuJ6i8sKKX",
+  client_secret:
+    "EGqCuRXqjli8HXdL83rvOro4xZMGjQ2B7kIy6Mh0JWfX3iXqNnPekQ_WNNhtI7_Z5ZphG4r16Oy188Ya"
 });
 
 const utils = require("../utils.js");
@@ -43,8 +53,8 @@ module.exports = function (app, passport) {
             next();
           }
         });
-      } else if (examName === "advanced") {
-        await User.findOne({ "local.email": email }, function (err, user) {
+      } else if (examName === "advanced"){
+        await User.findOne({ "local.email": email }, function (err, user){
           payment_status = user.local.payment.course_2;
           if(payment_status != true) {
             res.redirect('/exams');
@@ -85,6 +95,55 @@ module.exports = function (app, passport) {
     )(req, res, next);
   });
 
+  app.post("/forgotPassword", (req, res,) => {
+    User.findOne({ 'local.email': req.body.email }).then(result => {
+      console.log('data', result)
+      if (result == null) {
+        res.send("User not found")
+      } else if (result.local.password == null) {
+        res.send("Password")
+      } else {
+        emailer.forgotPasswordMailer(result.local.email,result.local.password);
+        // res.send("success")
+      }
+    })
+  }),
+
+  app.post("/resetPassword", (req, res) => {
+    console.log(req.body)
+    console.log("ankit patel", result)
+    User.findOne({
+      where: {
+        'local.email': req.body.email
+      }
+    }).then(result => {
+      if (!bcrypt.compareSync(result.dataValues.uniqueId, req.body.resetId)) { console.log("false") }
+      else {
+        console.log("true")
+        res.render("resetPassword", { email: result.dataValues.email })
+      }
+    })
+  }),
+
+  app.post('/updatePassword', (req, res) => {
+    console.log('fcgvhj',req.body)
+    var data = JSON.stringify(req.body);
+    var dataupdate = JSON.parse(data);
+    console.log(data,dataupdate);
+    const backUrl = req.header('Referer');
+    userobj = new User();
+    hash = userobj.generateHash(dataupdate.password);
+    console.log("body:",dataupdate.password, backUrl.email)
+    User.findOneAndUpdate({ 'local.password': dataupdate.token},{"local.password":hash}, {upsert: false},(err, doc) => {
+      if (err) {
+        console.log("Something went wrong when updating data!",err);
+        res.send({ status: 'false', message: info });
+      }
+      res.redirect('/');
+    });
+  }),
+  
+
   // app.get('/auth/google', (req, res, next) => {
   //   passport.authenticate('google', {
   //     scope: ["profile", "email"]
@@ -97,6 +156,7 @@ module.exports = function (app, passport) {
   //     failureRedirect: '/'
   //   })
   // })
+ 
 
   app.get('/auth/google', passport.authenticate('google', {
     scope: ['profile', 'email']

@@ -1,4 +1,5 @@
 const nodemailerAuth = require("../config/auth").nodemailerAuth;
+var User = require('../config/models/user');
 var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
     host: 'mail001.dakghar.in',
@@ -36,7 +37,7 @@ var transporter = nodemailer.createTransport({
 
         if(type === 'signup' || type === 'resend') {
           mailOptions = {
-            from: 'blockchain@xinfin.org',
+            from: 'blockdegree@xinfin.org',
             to: mail,
             subject: 'Login',
          //text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/?token=' + token.token + '.\n'
@@ -58,11 +59,11 @@ var transporter = nodemailer.createTransport({
             subject: 'Payment Successfull',
             //text:'Hello,\n\n' + 'Your payment is completed for ' + courseName + ' : \nhttp:\/\/' + req.headers.host + '/' + courseName + '.\n'
           text:'Hello,\n\n' + 'Your payment is completed for ' + courseName + ' : \nhttp://www.blockdegree.org/' + courseName + '.\n'
+        };
+      }
 
-
-            // html:"<h3>Ankit Patel</h3>"+Date.now(),
-          };
-        }
+            //html:"<h3>Ankit Patel</h3>"+Date.now(),
+         
 
         return new Promise(function(resolve,reject){
             
@@ -77,5 +78,28 @@ var transporter = nodemailer.createTransport({
               });
         });
     },
+    forgotPasswordMailer: function (mail,token) {
+      console.log('mail', mail)
+      return new Promise(function(resolve,reject){
+        var link = "http://localhost:3000/resetPassword?&email=" + token;
 
- }
+        var mailOptions = {
+          from: 'info@blockdegree.org',
+          to: mail,
+          subject: 'Forgot Password',
+          //text:'Hello,\n\n' + 'Your payment is completed for ' + courseName + ' : \nhttp:\/\/' + req.headers.host + '/' + courseName + '.\n'
+          text: link
+        };  
+        
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+              console.log(error)
+            reject(error);
+          } else {
+            console.log("Email sent: " + info.response);
+            resolve(info);
+          }
+        });
+      });
+    },
+  }

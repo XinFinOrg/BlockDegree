@@ -8,7 +8,7 @@
       "duration": "3 days",
       "slug": "blockchain-basic",
       
-        "pointers": ["50 Marks Practical & Theory","65% will be the passing percentage" ," Individual will get max of 3 Attempts"],
+        "pointers": ["50 Marks Practical & Theory","60% will be the passing percentage" ," Individual will get max of 3 Attempts"],
      
       "sypnosis": "Blockchain, the foundation of Bitcoin, has received extensive attentions recently. Blockchain serves as an immutable ledger which allows transactions take place in a decentralized manner.",
       "overview": "Blockchain, the foundation of Bitcoin, has received extensive attentions recently. Blockchain serves as an immutable ledger which allows transactions take place in a decentralized manner. Blockchain-based applications are springing up, covering numerous fields including financial services, reputation system and Internet of Things (IoT), and so on. However, there are still many challenges of blockchain technology such as scalability and security problems waiting to be overcome. This paper presents a comprehensive overview on blockchain technology.",
@@ -65,7 +65,7 @@
       "video": "https://www.youtube.com/embed/oSP-taqLWPQ",
       "duration": "3 days",
       "slug": "blockchain-advanced",
-      "pointers": [" 50 Marks Practical &  50 Marks Theory","65% will be the passing percentage" ," Individual will get max of 3 Attempts"],
+      "pointers": [" 50 Marks Practical & Theory","60% will be the passing percentage" ," Individual will get max of 3 Attempts"],
 
       "sypnosis": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). ",
       "overview": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). Each validator independently checks the payment and block data being passed around. There are rules in place to make the network operate as intended.",
@@ -100,7 +100,7 @@
       "video": "https://www.youtube.com/embed/jLaqms1IHWE",
       "duration": "3 days",
       "slug": "blockchain-professional",
-      "pointers": [" 50 Marks Practical &  50 Marks Theory","65% will be the passing percentage" ," Individual will get max of 3 Attempts"],
+      "pointers": [" 50 Marks Practical & Theory","60% will be the passing percentage" ," Individual will get max of 3 Attempts"],
 
       "sypnosis": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. ",
       "overview": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. Students will participate in approximately 50% programming lab time providing practical experience, enhancing their knowledge and existing skill set. Due to the technical programming lab content covered in this course, it is not recommended for those without programming knowledge and experience.",
