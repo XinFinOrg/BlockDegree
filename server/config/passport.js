@@ -187,7 +187,7 @@ module.exports = function (passport) {
                     } else {
                         var newUser = new User();
                         newUser.local.email = profile.emails[0].value;
-                        // newUser.local.password = newUser.generateHash(password);
+                        newUser.local.password = newUser.generateHash(password);
                         newUser.local.payment.course_1 = false;
                         newUser.local.payment.course_2 = false;
                         newUser.local.payment.course_3 = false;

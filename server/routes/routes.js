@@ -18,20 +18,19 @@ const ipfs = new IPFS({
   protocol: 'https'
 })
 
-//paypal.configure({
-//  mode: "sandbox", //sandbox or live
- // client_id:    "AR8oYc8pYp90H_9qN6JcjvSgS5nbCq_hFvc5ue4Twzdh-ZefahoeLmVKEem2OxbLNlK2nM-Zv74F3iPI",
-  //process.env.client_id,
- // client_secret: "ELBjQfb3aGNze4S-wbaHHndGmv4DQzqfOoeu1NAphrOwdwxHSjaHLR_zP-u4hBLGJPAyCXdTPAFD8BKk"//process.env.client_secret
-//});
-
 paypal.configure({
+ mode: "sandbox", //sandbox or live
+  client_id:    "AR8oYc8pYp90H_9qN6JcjvSgS5nbCq_hFvc5ue4Twzdh-ZefahoeLmVKEem2OxbLNlK2nM-Zv74F3iPI",
+  client_secret: "ELBjQfb3aGNze4S-wbaHHndGmv4DQzqfOoeu1NAphrOwdwxHSjaHLR_zP-u4hBLGJPAyCXdTPAFD8BKk"
+});
+
+/*paypal.configure({
   mode: "live", //sandbox or live
   client_id:
     "ActAo_owzENeRQct8dgkXOZ4c1U_adE_i0JOph3QjJWLHWbSrj8bY0bYjn98F06moUhTAJYuJ6i8sKKX",
   client_secret:
     "EGqCuRXqjli8HXdL83rvOro4xZMGjQ2B7kIy6Mh0JWfX3iXqNnPekQ_WNNhtI7_Z5ZphG4r16Oy188Ya"
-});
+});*/
 
 const utils = require("../utils.js");
 let { readJSONFile, isLoggedIn } = utils;
@@ -97,14 +96,16 @@ module.exports = function (app, passport) {
 
   app.post("/forgotPassword", (req, res,) => {
     User.findOne({ 'local.email': req.body.email }).then(result => {
-      console.log('data', result)
+      console.log('ankit', result)
       if (result == null) {
         res.send("User not found")
+        console.log('ankit', result)
+
       } else if (result.local.password == null) {
         res.send("Password")
       } else {
-        emailer.forgotPasswordMailer(result.local.email,result.local.password);
-        // res.send("success")
+        emailer.forgotPasswordMailer(result.local.email,result.local.password, res);
+        
       }
     })
   }),
@@ -144,18 +145,18 @@ module.exports = function (app, passport) {
   }),
   
 
-  // app.get('/auth/google', (req, res, next) => {
-  //   passport.authenticate('google', {
-  //     scope: ["profile", "email"]
-  //   })
-  // });
+  app.get('/auth/google', (req, res, next) => {
+     passport.authenticate('google', {
+      scope: ["profile", "email"]
+    })
+  });
 
-  // app.get('/auth/google/callback', (req, res, next) => {
-  //   passport.authenticate('google', {
-  //     successRedirect: '/blockchain-basic-exam',
-  //     failureRedirect: '/'
-  //   })
-  // })
+  app.get('/auth/google/callback', (req, res, next) => {
+     passport.authenticate('google', {
+       successRedirect: '/blockchain-basic-exam',
+       failureRedirect: '/'
+     })
+   })
  
 
   app.get('/auth/google', passport.authenticate('google', {

@@ -30,12 +30,15 @@ function getUrlVars() {
 function submitForm(form) {
   let errMsg = form.errMsg,
       accessMsg = form.accessMsg;
-
-  let formData = {
-      'email': $('input[name=email]').val(),
-      'password': $('input[name=password]').val()
-    },
-    query = null;
+    
+  let formData = {};
+  if(form[0].id === 'form-fp') {
+    formData.email = $('#fp-email').val()
+  } else {
+    formData.email = $('input[name=email]').val(),
+    formData.password = $('input[name=password]').val()
+  }
+  query = null;
 
   if (getUrlVars()['from']) {
     query = getUrlVars()['from'];
@@ -48,6 +51,7 @@ function submitForm(form) {
     dataType: 'json',
   })
   .done((res) => {
+    console.log('res>>>>>', res)
     if(res.status == false) {
       $('.form-messages').removeClass('d-none alert-success');
       $('.form-messages').addClass('alert-danger');
@@ -56,9 +60,14 @@ function submitForm(form) {
       localStorage.setItem('hasUser', true);
       window.location = '/courses/' + query;
     } else {
+      console.log('res true>>>>>>', accessMsg)
       $('.form-messages').addClass('alert-success');
       $('.form-messages').removeClass('d-none alert-danger');
       $('.form-messages').html(accessMsg);
+      if($(form).attr('action') == '/forgotpassword') {
+        console.log('>>>>>>>>>>', form.fp.value)
+        form.fp.value = "";
+      }
       if(accessMsg.includes('login')){
         if($(form).attr('action') == '/signup') {
           form.email.value = "";

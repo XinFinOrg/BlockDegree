@@ -2,8 +2,19 @@ if(typeof jQuery != 'undefined') {
   $(document).ready(function(){
     let loginForm = $('#form-login'),
         registerForm = $('#form-register'),
-       
+        fpForm = $('#form-fp'),
         formMessages = $('.form-messages');
+
+        if(fpForm) {
+          let fp = document.getElementById("fp-email")
+          fpForm.fp = fp
+          fpForm.errMsg = 'This Email Id Already Register. Please check your input.'
+          fpForm.accessMsg = "Reset Password Link Sent";
+          fpForm.on('submit', (e) => {
+            e.preventDefault();
+            new submitForm(fpForm);
+          })
+        }
 
     if(loginForm) {
       loginForm.errMsg = "Cannot login. Please try again";

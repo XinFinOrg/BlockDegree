@@ -78,7 +78,7 @@ var transporter = nodemailer.createTransport({
               });
         });
     },
-    forgotPasswordMailer: function (mail,token) {
+    forgotPasswordMailer: function (mail,token,res) {
       console.log('mail', mail)
       return new Promise(function(resolve,reject){
         var link = "http://localhost:3000/resetPassword?&email=" + token;
@@ -97,7 +97,8 @@ var transporter = nodemailer.createTransport({
             reject(error);
           } else {
             console.log("Email sent: " + info.response);
-            resolve(info);
+            // resolve(info);
+            res.send({status: 'true'})
           }
         });
       });
