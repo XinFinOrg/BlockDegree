@@ -168,7 +168,7 @@ module.exports = function (app, passport) {
   // callback route for google to redirect to
   app.get('/auth/google/callback', passport.authenticate('google', {
     failureRedirect: '/login',
-    successRedirect: '/login'
+    successRedirect: '/'
   }));
   
   // callback route for github to redirect to
