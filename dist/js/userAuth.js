@@ -9,7 +9,8 @@ if(typeof jQuery != 'undefined') {
           let fp = document.getElementById("fp-email")
           fpForm.fp = fp
           fpForm.errMsg = 'This Email Id Already Register. Please check your input.'
-          fpForm.accessMsg = "Reset Password Link Sent";
+          fpForm.accessMsg = "Reset Password Link Sent Please check your mail ";
+          
           fpForm.on('submit', (e) => {
             e.preventDefault();
             new submitForm(fpForm);
@@ -17,8 +18,10 @@ if(typeof jQuery != 'undefined') {
         }
 
     if(loginForm) {
-      loginForm.errMsg = "Cannot login. Please try again";
+      loginForm.errMsg = "Oops! Wrong password.";
+      loginForm.errAcc = "Account doesn't exit"
       loginForm.accessMsg = "You are login";
+      
       let preMsg = "Please login to access the course";
 
       if(getUrlVars()['from']) {

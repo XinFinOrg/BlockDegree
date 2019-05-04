@@ -53,9 +53,15 @@ function submitForm(form) {
   .done((res) => {
     console.log('res>>>>>', res)
     if(res.status == false) {
-      $('.form-messages').removeClass('d-none alert-success');
-      $('.form-messages').addClass('alert-danger');
-      $('.form-messages').html(errMsg);
+      if(res.message == "No user found.") {
+        $('.form-messages').removeClass('d-none alert-success');
+        $('.form-messages').addClass('alert-danger');
+        $('.form-messages').html("No User Found.");  
+      } else {
+        $('.form-messages').removeClass('d-none alert-success');
+        $('.form-messages').addClass('alert-danger');
+        $('.form-messages').html(errMsg);
+      }
     } else if (query) {
       localStorage.setItem('hasUser', true);
       window.location = '/courses/' + query;
@@ -66,7 +72,7 @@ function submitForm(form) {
       $('.form-messages').html(accessMsg);
       if($(form).attr('action') == '/forgotpassword') {
         console.log('>>>>>>>>>>', form.fp.value)
-        form.fp.value = "";
+        form.fp.value = ""
       }
       if(accessMsg.includes('login')){
         if($(form).attr('action') == '/signup') {
@@ -82,6 +88,8 @@ function submitForm(form) {
     }
   })
 };
+
+
 
 $(document).ready(function () {
   if(window.location.href.indexOf("login") > -1) {

@@ -83,9 +83,11 @@ module.exports = function (app, passport) {
         session: true
       },
       async (err, user, info) => {
+        console.log('login1111>>>>>>', user)
         req.logIn(user, function (err) {
           if (err) {
-            return next(err);
+             //return next(err);
+           console.log('login err>>>>>>>>>>>', err)
           }
           res.send({ status: user, message: info });
           console.log("user logged in", user, info);
@@ -145,18 +147,18 @@ module.exports = function (app, passport) {
   }),
   
 
-  app.get('/auth/google', (req, res, next) => {
-     passport.authenticate('google', {
-      scope: ["profile", "email"]
-    })
-  });
+  // app.get('/auth/google', (req, res, next) => {
+  //   passport.authenticate('google', {
+  //     scope: ["profile", "email"]
+  //   })
+  // });
 
-  app.get('/auth/google/callback', (req, res, next) => {
-     passport.authenticate('google', {
-       successRedirect: '/blockchain-basic-exam',
-       failureRedirect: '/'
-     })
-   })
+  // app.get('/auth/google/callback', (req, res, next) => {
+  //    passport.authenticate('google', {
+  //      successRedirect: '/blockchain-basic-exam',
+  //      failureRedirect: '/'
+  //    })
+  //  })
  
 
   app.get('/auth/google', passport.authenticate('google', {
@@ -164,20 +166,25 @@ module.exports = function (app, passport) {
   }));
 
   // callback route for google to redirect to
-  app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
-      res.send(req.user);
-      res.redirect('/blockchain-basic-exam');
-  });
+  app.get('/auth/google/callback', passport.authenticate('google', {
+    failureRedirect: '/login',
+    successRedirect: '/login'
+  }));
+  
+  // callback route for github to redirect to
 
   app.get('/auth/github', passport.authenticate('github', {
     scope: ['profile', 'email']
   }));
 
-  // callback route for github to redirect to
-  app.get('/auth/github/callback', passport.authenticate('github'), (req, res) => {
-      res.send(req.user);
-      res.redirect('/blockchain-basic-exam');
-  });
+  app.get('/auth/github/callback', passport.authenticate('github', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+  }));
+
+
+
+
   app.post("/register", (req, res, next) => {
     passport.authenticate(
       "local-signup",
@@ -507,11 +514,18 @@ module.exports = function (app, passport) {
           "percent": percent,
         };
         if(percent >= 60) {
+          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examBasic.attempts":0,"local.payment.course_1": false}}, {upsert: false},(err, doc) => {
+            if (err) {
+              console.log("Something went wrong when updating data!");
+              res.send({ status: 'false', message: info });
+            }
+            // res.redirect('/exam-result');
+          });
           examStatus = true;
           let d = new Date();
-       let date = d.toLocaleDateString('en-GB', {
-       day: 'numeric', month: 'long', year: 'numeric'
-      });
+          let date = d.toLocaleDateString('en-GB', {
+            day: 'numeric', month: 'long', year: 'numeric'
+          });
           ejs.renderFile(__dirname+'/certificate.ejs', {
             name:  req.user.local.email,
             course: "Certified Blockchain Basic Expert",
@@ -557,6 +571,13 @@ module.exports = function (app, passport) {
         };
 
         if(percent >= 60) {
+          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examAdvanced.attempts":0,"local.payment.course_2": false}}, {upsert: false},(err, doc) => {
+            if (err) {
+              console.log("Something went wrong when updating data!");
+              res.send({ status: 'false', message: info });
+            }
+            // res.redirect('/exam-result');
+          });
           examStatus = true;
           let d = new Date();
           let date = d.toLocaleDateString('en-GB', {
@@ -607,6 +628,13 @@ module.exports = function (app, passport) {
           "percent": percent,
         };
         if(percent >= 60) {
+          User.findOneAndUpdate({ 'local.email': req.user.local.email},{$set:{"local.examProfessional.attempts":0,"local.payment.course_3": false}}, {upsert: false},(err, doc) => {
+            if (err) {
+              console.log("Something went wrong when updating data!");
+              res.send({ status: 'false', message: info });
+            }
+            // res.redirect('/exam-result');
+          });
           examStatus = true;
           let d = new Date();
           let date = d.toLocaleDateString('en-GB', {
@@ -661,7 +689,7 @@ module.exports = function (app, passport) {
     })
   });
 
-  app.get('/blockchain-professional-exam', function (req, res) {
+  app.get('/blockchain-professional-exam', isPaymentSuccess, function (req, res) {
     console.log('inside block prof')
     readJSONFile(path.join(process.cwd(), '/server/protected/blockchain-professional.json'), (err, json) => {
       console.log('block pro 2', err, json)
@@ -801,6 +829,7 @@ module.exports = function (app, passport) {
 
 
   app.post('/resend', function (req, res, next) {
+    console.log('resend>>>>>>>>>>')
     User.findOne({ email: req.body.email }, function (err, user) {
       if (!user) return res.status(400).send({ msg: 'We were unable to find a user with that email.' });
       if (user.isVerified) return res.status(400).send({ msg: 'This account has already been verified. Please log in.' });

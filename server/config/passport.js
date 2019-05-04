@@ -72,7 +72,9 @@ module.exports = function (passport) {
                                     return done(null, false, "token errror")
                                 }
                                 console.log(email, token)
-                                emailer.sendTokenMail(email, token, req, 'signup');
+                                emailer.sendTokenMail(email, token, req, 'signup')
+                                .then(res => console.log('emailer res>>>>>', res))
+                                .catch(err => console.log('emailer err>>>>', err));
                                 return done(null, newUser);
                             });
                         });
@@ -99,6 +101,7 @@ module.exports = function (passport) {
             User.findOne({ 'local.email': email }, function (err, user) {
                 if (err)
                     return done(err);
+                    
                 else if (!user)
                     return done(null, false, 'No user found.');
                 else if (!user.validPassword(password))
@@ -106,6 +109,7 @@ module.exports = function (passport) {
                 else if (!user.local.isVerified)
                     return done(null, false, 'User is not verified, Please check your email');
                 return done(null, user);
+                
 
             });
 
@@ -118,8 +122,10 @@ module.exports = function (passport) {
             callbackURL: configAuth.githubAuth.callbackURL,
             scope: 'user:email'
           },
-          function (token, refreshToken, profile, done) {
-            console.log('GitHubStrategy',profile);
+          function (token, refreshToken, profile, done) 
+          
+          {
+            console.log('GitHubStrategy',profile, token);
             process.nextTick(function() {
                 User.findOne({
                     'local.email': profile.emails[0].value
@@ -166,18 +172,20 @@ module.exports = function (passport) {
         }));
 
 // Google Login
-    passport.use('google', new GoogleStrategy({
+    passport.use(new GoogleStrategy({
 
         clientID: configAuth.googleAuth.clientID,
         clientSecret: configAuth.googleAuth.clientSecret,
         callbackURL: configAuth.googleAuth.callbackURL,
     
         },
-        function (token, refreshToken, profile, done) {
-            console.log('googlestrategy',profile);
+        
+        function (token, refreshToken, profile, done){
+            // console.log('googlestrategy', profile.emails[0], token);
+        try{
             process.nextTick(function() {
-                User.findOne({
-                    'local.email': profile.emails[0].value
+                console.log('abah>>>>>>' )
+                User.findOne({'local.email': profile.emails[0].value
                 }, function(err, user) {
                     console.log('google callback', user, err);
                     if(user){
@@ -186,8 +194,9 @@ module.exports = function (passport) {
                         done(null, user);
                     } else {
                         var newUser = new User();
+                        // set all of the relevant information
                         newUser.local.email = profile.emails[0].value;
-                        newUser.local.password = newUser.generateHash(password);
+                        // newUser.local.password = newUser.generateHash(password);
                         newUser.local.payment.course_1 = false;
                         newUser.local.payment.course_2 = false;
                         newUser.local.payment.course_3 = false;
@@ -197,6 +206,7 @@ module.exports = function (passport) {
                         newUser.local.examAdvanced.marks = 0;
                         newUser.local.examProfessional.attempts = 0;
                         newUser.local.examProfessional.marks = 0;
+                        console.log('new user>>>>>>>>>>', newUser)
                         newUser.save(function (err) {
                             if (err) {
                                 console.log("Error:", err)
@@ -214,10 +224,15 @@ module.exports = function (passport) {
                             //     return done(null, newUser);
                             // });
                             return done(null, newUser);
-                        });
+                        });  
                     }
                 });
             });
+        }
+        catch(e){
+            console.log("Error",e);
+        }   
         }));
 
-};
+}; 
+

@@ -41,7 +41,7 @@ var transporter = nodemailer.createTransport({
             to: mail,
             subject: 'Login',
          //text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/?token=' + token.token + '.\n'
-            text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttps://www.blockdegree.org/confirmation\/?token=' + token.token + '.\n'
+            text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttps://www.blockdegree.org/confirmation\/?token=' + token.token + '.\n' + 'Free Blockchain Course with Online Certification.. This exam comprises of theory and practical Question, to be completed within 45 minutes. The minimum passing score of the exam is above 60%. Upon passing of the exam, you will be entitled to receive a certification of competence, which will be added to the Xinfin blockchain. With the certificate… ' + '.\n'
 
           };
         } else if (type === 'course_1' || type === 'course_2' || type === 'course_3') {
