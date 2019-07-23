@@ -172,7 +172,7 @@ module.exports = function (passport) {
         }));
 
 // Google Login
-  passport.use(new GoogleStrategy({
+    passport.use(new GoogleStrategy({
 
         clientID: configAuth.googleAuth.clientID,
         clientSecret: configAuth.googleAuth.clientSecret,
@@ -181,7 +181,7 @@ module.exports = function (passport) {
         },
         
         function (token, refreshToken, profile, done){
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', configAuth.googleAuth.callbackURL);
+            // console.log('googlestrategy', profile.emails[0], token);
         try{
             process.nextTick(function() {
                 console.log('abah>>>>>>' )
@@ -235,3 +235,4 @@ module.exports = function (passport) {
         }));
 
 }; 
+

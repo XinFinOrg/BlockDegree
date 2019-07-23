@@ -1,0 +1,71 @@
+{{> includes/hero hero-title="Exams"}}
+<div class="container__cstm">
+  {{!-- This is exam list --}}
+  
+  <div class="row" id="exams__list">
+    {{#each json.courses as |course index|}}
+    <div class="col-sm-4 single-exam__course">
+      <div class="card height--full">
+        <div class="card-body row align-items-end mx-0 p-0">
+          <h3 class="card-title px-3 py-4 text-center mb-0">{{this.title}}</h3>
+          <div class="card-text p-2 px-sm-4 py-sm-5 width--full">
+            {{#each pointers as |point| }}
+            &#10004; {{ point }}<br>
+            {{/each}}
+            {{this.text}}
+            {{!-- Here is some example text --}}
+            <!--- Replace with text data {{this.text}}--->
+          </div>
+          <!--- Replace with a href data or write post function, depending on logic --->
+          <div class="card-price width--full text-center">
+            <h2 class="pb-4 text-white">${{this.price}}</h2>
+            {{#if (lookup ../data this.type) }}
+              <button onclick="takeExam({{this.type}})" class="btn text-body" data-price="{{this.price}}" id="{{this.type}}">
+                Take Exam
+              </button>
+            {{else}}
+              <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body" data-price="{{this.price}}" id="{{this.type}}">
+                Start The Free Course
+              </button>
+            {{/if}}  
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+
+  </div>
+</div>
+
+<script type="text/javascript">
+function takeExam(slug) {
+  if(slug.id === "course_1") {
+    window.location = '/blockchain-basic-exam'
+  } else if(slug.id === "course_2") {
+    window.location = '/blockchain-advanced-exam'
+  } else if(slug.id === "course_3") {
+    window.location = '/blockchain-professional-exam'
+  } else {
+    window.location = '/'
+  }
+  
+}
+
+function pay(course_id,price) {
+  const email = localStorage.getItem('email');
+  $.ajax({
+    url : "/pay",
+    method : 'post',
+    data : {'email' : email, 'course_id' : course_id.id, 'price' : price},
+    success : function(data) {
+      console.log(data);
+      if(data.status=='200')
+      window.location.href = data.link;
+      else
+      alert(data.message);
+    }
+  });
+}
+
+</script>

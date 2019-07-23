@@ -1,0 +1,39 @@
+{{#> base pageClass="nav--sticky"}}
+  {{> layouts/base}}
+  {{#*inline "body-block"}}
+  <div class="form-messages alert alert-danger d-none" role="alert"></div>
+  <div class="container__cstm">
+    <div class="row justify-content-center">
+
+      <div class="form-content" id="form-register" method="post" action="/signup">
+        <!-- Login Form -->
+        <form class="p-4">
+          <h2 class="mb-3">Register</h2>
+          <div class="text-left pl-4">
+            <label for="email" class="mb-0 pt-2">Email</label>
+          </div>
+          <input type="email" id="email" class="p-2" name="email" required>
+          <div class="text-left pl-4">
+            <label for="password" class="mb-0 pt-2">Password</label>
+          </div>
+          <input type="password" id="password" class="p-2" name="password" required>
+          <div class="text-left pl-4">
+            <label for="cfm-password" class="mb-0">Confirm your password</label>
+          </div>
+          <input type="password" id="cfm-password" class="p-2" name="cfm-password" required>
+          <input type="submit" class="btn btn-primary py-2 mt-4 text-white" value="Register">
+        </form>
+
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+          <a class="underlineHover" href="/login">Already a user? Login here</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {{/inline}}
+    <<script src="/js/userAuth.js"></script>
+  {{#*inline "scripts-block"}}
+  {{/inline}}
+{{/base}}

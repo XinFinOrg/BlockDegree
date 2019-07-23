@@ -18,19 +18,19 @@ const ipfs = new IPFS({
   protocol: 'https'
 })
 
-/*paypal.configure({
+paypal.configure({
  mode: "sandbox", //sandbox or live
   client_id:    "AR8oYc8pYp90H_9qN6JcjvSgS5nbCq_hFvc5ue4Twzdh-ZefahoeLmVKEem2OxbLNlK2nM-Zv74F3iPI",
   client_secret: "ELBjQfb3aGNze4S-wbaHHndGmv4DQzqfOoeu1NAphrOwdwxHSjaHLR_zP-u4hBLGJPAyCXdTPAFD8BKk"
-});*/
+});
 
-paypal.configure({
+/*paypal.configure({
   mode: "live", //sandbox or live
   client_id:
     "ActAo_owzENeRQct8dgkXOZ4c1U_adE_i0JOph3QjJWLHWbSrj8bY0bYjn98F06moUhTAJYuJ6i8sKKX",
   client_secret:
     "EGqCuRXqjli8HXdL83rvOro4xZMGjQ2B7kIy6Mh0JWfX3iXqNnPekQ_WNNhtI7_Z5ZphG4r16Oy188Ya"
-});
+});*/
 
 const utils = require("../utils.js");
 let { readJSONFile, isLoggedIn } = utils;

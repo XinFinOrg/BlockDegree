@@ -14,7 +14,7 @@ var cors = require('cors');
 var app = express();
 
 var configDB = require('./config/database.js');
-mongoose.connect(configDB.url,{useNewUrlParser:true});
+mongoose.connect(configDB.url);
 require('./config/passport')(passport);
 
 // view engine setup
