@@ -13,6 +13,18 @@ module.exports = {
       'clientSecret': 'j_ID0onuJWnYsybEGYww2TZH',
       'callbackURL': 'https://www.blockdegree.org/auth/google/callback'
     },
+
+    'twitterAuth': {
+      'clientID': '938380571674-01qovhu0coj7cov9vaqg8fjsih2e7tc4.apps.googleusercontent.com',
+      'clientSecret': 'j_ID0onuJWnYsybEGYww2TZH',
+      'callbackURL': 'https://www.blockdegree.org/auth/google/callback'
+    },
+
+    'facebookAuth': {
+      'clientID': '938380571674-01qovhu0coj7cov9vaqg8fjsih2e7tc4.apps.googleusercontent.com',
+      'clientSecret': 'j_ID0onuJWnYsybEGYww2TZH',
+      'callbackURL': 'https://www.blockdegree.org/auth/google/callback'
+    },
  
     
     

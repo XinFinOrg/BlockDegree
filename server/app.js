@@ -17,6 +17,8 @@ var configDB = require('./config/database.js');
 mongoose.connect(configDB.url,{useNewUrlParser:true});
 require('./config/passport')(passport);
 
+mongoose.set('useCreateIndex', true);
+
 // view engine setup
 app.engine('hbs', hbs({
   extname: 'hbs',
@@ -50,7 +52,11 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-require('./routes/routes.js')(app, passport);
+require('./routes/routes.js')(app)
+require('./routes/authRoutes')(app)
+require('./routes/examRoutes')(app)
+// require('./routes/paymentRoutes')(app) // Not working; need to make a further dive.
+require('./routes/contentRoutes')(app)
 
 // catch 404 and render 404 page
 app.use('*', function(req, res) {
