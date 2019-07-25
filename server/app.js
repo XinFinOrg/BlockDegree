@@ -17,6 +17,8 @@ var configDB = require('./config/database.js');
 mongoose.connect(configDB.url,{useNewUrlParser:true});
 require('./config/passport')(passport);
 
+mongoose.set('useCreateIndex', true);
+
 // view engine setup
 app.engine('hbs', hbs({
   extname: 'hbs',
@@ -35,6 +37,8 @@ app.use(cookieParser());
 app.use(express.static('dist', { extensions: ['html', 'htm'] }));
 app.use(express.static('server/protected/courses', { extensions: ['html', 'htm'] }));
 app.use(cors());
+require('dotenv').config();
+
 
 // required for passport
 app.use(session({ 
@@ -50,7 +54,11 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-require('./routes/routes.js')(app, passport);
+require('./routes/routes.js')(app)
+require('./routes/authRoutes')(app)
+require('./routes/examRoutes')(app)
+// require('./routes/paymentRoutes')(app) // Not working; need to make a further dive.
+require('./routes/contentRoutes')(app)
 
 // catch 404 and render 404 page
 app.use('*', function(req, res) {
@@ -68,6 +76,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen('3000', console.log('server started'))
+app.listen(process.env.PORT, console.log('server started'))
 
 module.exports = app;
