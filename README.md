@@ -1,8 +1,10 @@
 # Blockdegree - Dev Branch
 
-This is the dev branch for blockdegree.  
-Following are the tasks to do : 
+<img src="https://img.shields.io/badge/deploy--ready-no-red" />  
 
+This is the dev branch for blockdegree. 
+
+Following are the tasks to do : 
 ### TO DO 
 - [ ] Login with Facebook ( App credentials error )
 - [ ] Update Schema of the database and recursively change the DB interactions
