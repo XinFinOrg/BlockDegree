@@ -3,6 +3,7 @@ var User = require("../config/models/user");
 var questions = require("../config/models/question");
 var ejs = require("ejs");
 const utils = require("../utils.js");
+var crypto = require("crypto");
 
 const ipfsClient = require("ipfs-http-client");
 
@@ -16,6 +17,36 @@ const localClient = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
 
 let { readJSONFile } = utils;
 
+function pushOnlyOnce(arr, obj) {
+  currLen = arr.length;
+  console.log("Current length in Function: ", currLen);
+  arr.push(obj);
+  arr.length = currLen + 1;
+  console.log("New length in Function: ", arr.length);
+  return arr;
+}
+
+function getQuery(user) {
+  var emailValue = "";
+  var emailKey = "";
+  var query = {};
+  if (user.local.email != "") {
+    emailValue = user.local.email;
+    emailKey = "local.email";
+  } else if (user.google.email != "") {
+    emailValue = user.google.email;
+    emailKey = "google.email";
+  } else if (user.twitter.email != "") {
+    emailValue = user.twitter.email;
+    emailKey = "twitter.email";
+  } else if (user.facebook.email != "") {
+    emailValue = user.facebook.email;
+    emailKey = "faceboook.email";
+  }
+  query[emailKey] = emailValue;
+  return query;
+}
+
 exports.submitExam = (req, res, next) => {
   var marks = 0;
   const backUrl = req.header("Referer");
@@ -27,23 +58,8 @@ exports.submitExam = (req, res, next) => {
   let attempts = req.user.examData.examBasic.attempts;
   let attemptsAdvanced = req.user.examData.examAdvanced.attempts;
   let attemptsProfessional = req.user.examData.examProfessional.attempts;
-  var emailValue = "";
-  var emailKey = "";
   var query = {};
-  if (req.user.local.email != "") {
-    emailValue = req.user.local.email;
-    emailKey = "local.email";
-  } else if (req.user.google.email != "") {
-    emailValue = req.user.google.email;
-    emailKey = "google.email";
-  } else if (req.user.twitter.email != "") {
-    emailValue = req.user.twitter.email;
-    emailKey = "twitter.email";
-  } else if (req.user.facebook.email != "") {
-    emailValue = req.user.facebook.email;
-    emailKey = "faceboook.email";
-  }
-  query[emailKey] = emailValue;
+  query = getQuery(req.user);
 
   if (examName === "basic") {
     if (attempts != null && attempts < 3) {
@@ -55,11 +71,12 @@ exports.submitExam = (req, res, next) => {
           ) {
             // marks++;
           }
+          // Cheatcode activated
           marks++;
         }
         attempts += 1;
         User.findOneAndUpdate(
-          { emailKey: emailValue },
+          query,
           {
             $set: {
               "examData.examBasic.attempts": attempts,
@@ -98,7 +115,11 @@ exports.submitExam = (req, res, next) => {
       );
     }
   } else if (examName === "advanced") {
+    console.log("inside advanced");
+
     if (attemptsAdvanced != null && attemptsAdvanced < 3) {
+      console.log("valid attempt");
+
       questions.findOne({ exam: "firstExam" }).then((result, error) => {
         console.log("advanced result", result);
         console.log("advanced result:::", result.questionsAdvanced);
@@ -107,8 +128,10 @@ exports.submitExam = (req, res, next) => {
             parseInt(req.body[index]) + 1 ==
             result.questionsAdvanced[index].answer
           ) {
-            marks++;
+            // marks++;
           }
+          //Cheatcode activated
+          marks++;
         }
         attemptsAdvanced += 1;
         console.log("Marks", marks);
@@ -163,8 +186,10 @@ exports.submitExam = (req, res, next) => {
             parseInt(request[index]) + 1 ==
             result.questionsProfessional[index].answer
           ) {
-            marks++;
+            // marks++;
           }
+          // Cheatcode activated
+          marks++;
         }
         attemptsProfessional += 1;
         console.log("Marks", marks);
@@ -240,7 +265,7 @@ exports.getAdvancedExam = (req, res) => {
 exports.getProfessionalExam = (req, res) => {
   console.log("inside block prof");
   readJSONFile(
-    path.join(process.cwd(), "/server/protected/blockchain-professional.json"),
+    path.join(process.cwd(), "/server/protected/blockchain-Professional.json"),
     (err, json) => {
       console.log("block pro 2", err, json);
       if (err) {
@@ -255,6 +280,8 @@ exports.getProfessionalExam = (req, res) => {
 exports.getExamResult = (req, res) => {
   const backUrl = req.header("Referer");
 
+  console.log("CALLED EXAM RESULT $99");
+
   var name = "";
 
   if (req.user.local.email != "") {
@@ -267,12 +294,16 @@ exports.getExamResult = (req, res) => {
     name = req.user.facebook.name;
   }
 
+  var query = {};
+  query = getQuery(req.user);
+
   const examName = backUrl.split("/")[3].split("-")[1];
   if (examName === "basic") {
     User.findOne(query).then((result, error) => {
       console.log("result basic:", result, error);
       const examTotal = 50;
       let obtainedMarks = result.examData.examBasic.marks;
+      console.log("FIRST LEVEL IF #99");
 
       let percent = (obtainedMarks * 100) / examTotal;
       let examStatus;
@@ -287,22 +318,6 @@ exports.getExamResult = (req, res) => {
         percent: percent
       };
       if (percent >= 60) {
-        User.findOneAndUpdate(
-          query,
-          {
-            $set: {
-              "examData.examBasic.attempts": 0,
-              "examData.payment.course_1": false
-            }
-          },
-          { upsert: false },
-          (err, doc) => {
-            if (err) {
-              console.log("Something went wrong when updating data!");
-              res.send({ status: "false", message: info });
-            }
-          }
-        );
         examStatus = true;
         let d = new Date();
         let date = d.toLocaleDateString("en-GB", {
@@ -313,6 +328,7 @@ exports.getExamResult = (req, res) => {
         ejs.renderFile(
           __dirname + "/certificate.ejs",
           {
+            rndDgt: crypto.randomBytes(32).toString("hex"),
             name: name,
             course: "Certified Blockchain Basic Expert",
             score: percent,
@@ -320,11 +336,44 @@ exports.getExamResult = (req, res) => {
           },
           (err, data) => {
             let buffer = Buffer.from(data, "utf-8");
-            localClient.add(buffer, (err, ipfsHash) => {
+            localClient.add(buffer, async (err, ipfsHash) => {
+              if (err != null) {
+                // handle IPFS error
+              }
               console.log(ipfsHash);
-              result.certificateHash = ipfsHash[0].hash;
+              // User.findOneAndUpdate(
+              //   query,
+              //   {
+              //     $set: {
+              //       "examData.examBasic.attempts": 0,
+              //       "examData.payment.course_1": false
+              //     }
+              //     // $addToSet: { "examData.certificateHash": ipfsHash[0].hash }
+              //   },
+              //   { upsert: false },
+              //   (err, doc) => {
+              //     if (err) {
+              //       console.log("Something went wrong when updating data!");
+              //       res.send({ status: "false", message: info });
+              //     }
+              //   }
+              // );
               jsonData.certificateHash = ipfsHash[0].hash;
               jsonData.examStatus = examStatus;
+              // console.log("Before shit goes down: ",result.examData.certificateHash);
+
+              // result.examData.certificateHash = pushOnlyOnce(result.examData.certificateHash,ipfsHash[0].hash)
+              console.log("Called: ", result.examData.certificateHash);
+
+              result.examData.examBasic.attempts = 0;
+              result.examData.payment.course_1 = false;
+              var obj = {}
+              obj["timestamp"]=Date.now();
+              obj["marks"]=obtainedMarks;
+              obj["total"]=examTotal;
+              obj["hash"]=ipfsHash[0].hash;
+              obj["examType"]="basic";
+              result.examData.certificateHash.push(obj)
               result.save();
               res.render("examResult", jsonData);
             });
@@ -357,23 +406,22 @@ exports.getExamResult = (req, res) => {
       };
 
       if (percent >= 60) {
-        User.findOneAndUpdate(
-          query,
-          {
-            $set: {
-              "examData.examAdvanced.attempts": 0,
-              "examData.payment.course_2": false
-            }
-          },
-          { upsert: false },
-          (err, doc) => {
-            if (err) {
-              console.log("Something went wrong when updating data!");
-              res.send({ status: "false", message: info });
-            }
-            // res.redirect('/exam-result');
-          }
-        );
+        // User.findOneAndUpdate(
+        //   query,
+        //   {
+        //     $set: {
+        //       "examData.examAdvanced.attempts": 0,
+        //       "examData.payment.course_2": false
+        //     }
+        //   },
+        //   { upsert: false },
+        //   (err, doc) => {
+        //     if (err) {
+        //       console.log("Something went wrong when updating data!");
+        //       res.send({ status: "false", message: info });
+        //     }
+        //   }
+        // );
         examStatus = true;
         let d = new Date();
         let date = d.toLocaleDateString("en-GB", {
@@ -384,6 +432,7 @@ exports.getExamResult = (req, res) => {
         ejs.renderFile(
           __dirname + "/certificate.ejs",
           {
+            rndDgt: crypto.randomBytes(32).toString("hex"),
             name: name,
             course: "Certified Bitcoin Blockchain Expert",
             score: percent,
@@ -393,8 +442,16 @@ exports.getExamResult = (req, res) => {
             let buffer = Buffer.from(data, "utf-8");
             localClient.add(buffer, (err, ipfsHash) => {
               console.log(ipfsHash);
-              result.certificateHash = ipfsHash[0].hash;
-              jsonData.certificateHash = ipfsHash[0].hash;
+              // result.examData.certificateHash.advanced.push(ipfsHash[0].hash);
+              result.examData.examAdvanced.attempts = 0;
+              result.examData.payment.course_2 = false;
+              var obj = {}
+              obj["timestamp"]=Date.now();
+              obj["marks"]=obtainedMarks;
+              obj["total"]=examTotal;
+              obj["hash"]=ipfsHash[0].hash;
+              obj["examType"]="advanced";
+              result.examData.certificateHash.push(obj)
               jsonData.examStatus = examStatus;
               result.save();
               res.render("examResult", jsonData);
@@ -428,23 +485,22 @@ exports.getExamResult = (req, res) => {
         percent: percent
       };
       if (percent >= 60) {
-        User.findOneAndUpdate(
-          query,
-          {
-            $set: {
-              "examData.examProfessional.attempts": 0,
-              "examData.payment.course_3": false
-            }
-          },
-          { upsert: false },
-          (err, doc) => {
-            if (err) {
-              console.log("Something went wrong when updating data!");
-              res.send({ status: "false", message: info });
-            }
-            // res.redirect('/exam-result');
-          }
-        );
+        // User.findOneAndUpdate(
+        //   query,
+        //   {
+        //     $set: {
+        //       "examData.examProfessional.attempts": 0,
+        //       "examData.payment.course_3": false
+        //     }
+        //   },
+        //   { upsert: false },
+        //   (err, doc) => {
+        //     if (err) {
+        //       console.log("Something went wrong when updating data!");
+        //       res.send({ status: "false", message: info });
+        //     }
+        //   }
+        // );
         examStatus = true;
         let d = new Date();
         let date = d.toLocaleDateString("en-GB", {
@@ -455,6 +511,7 @@ exports.getExamResult = (req, res) => {
         ejs.renderFile(
           __dirname + "/certificate.ejs",
           {
+            rndDgt: crypto.randomBytes(32).toString("hex"),
             name: name,
             course: "examProfessional",
             score: percent,
@@ -464,11 +521,22 @@ exports.getExamResult = (req, res) => {
             let buffer = Buffer.from(data, "utf-8");
             localClient.add(buffer, (err, ipfsHash) => {
               console.log(ipfsHash);
-              result.certificateHash = ipfsHash[0].hash;
-              jsonData.certificateHash = ipfsHash[0].hash;
+              // result.certificateHash = ipfsHash[0].hash;
+              // result.examData.certificateHash.professional.push(
+              //   ipfsHash[0].hash
+              // );
+              result.examData.examProfessional.attempts = 0;
+              result.examData.payment.course_3 = false;
               jsonData.examStatus = examStatus;
+              var obj = {}
+              obj["timestamp"]=Date.now();
+              obj["marks"]=obtainedMarks;
+              obj["total"]=examTotal;
+              obj["hash"]=ipfsHash[0].hash;
+              obj["examType"]="professional";
+              result.examData.certificateHash.push(obj)
               result.save();
-              res.render("examResult", jsonData);
+              res.render("examResult", jsonData); // makes re-load the screen, should be partial rendering.
             });
           }
         );
@@ -485,23 +553,8 @@ exports.getExamResult = (req, res) => {
 
 exports.getExamStatus = (req, res) => {
   console.log("local exam ");
-  var emailValue = "";
-  var emailKey = "";
   var query = {};
-  if (req.user.local.email != "") {
-    emailValue = req.user.local.email;
-    emailKey = "local.email";
-  } else if (req.user.google.email != "") {
-    emailValue = req.user.google.email;
-    emailKey = "google.email";
-  } else if (req.user.twitter.email != "") {
-    emailValue = req.user.twitter.email;
-    emailKey = "twitter.email";
-  } else if (req.user.facebook.email != "") {
-    emailValue = req.user.facebook.email;
-    emailKey = "faceboook.email";
-  }
-  query[emailKey] = emailValue;
+  query = getQuery(req.user);
   User.findOne(query, function(err, user) {
     if (err) {
       throw err;

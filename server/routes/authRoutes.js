@@ -165,7 +165,8 @@ module.exports = app => {
     "/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
     (req, res) => {
-      res.redirect("/");
+      var url = req.session.redirectTo || "/"
+      res.redirect(url);
     }
   );
 
@@ -174,14 +175,19 @@ module.exports = app => {
     passport.authenticate("facebook", {
       successRedirect: "/",
       failureRedirect: "/login"
-    })
+    }),
+    (req, res) => {
+      backUrl = req.session.redirectTo | "/"
+      res.redirect(backUrl);
+    }
   );
 
   app.get(
     "/auth/twitter/callback",
     passport.authenticate("twitter", { failureRedirect: "/login" }),
     (req, res) => {
-      res.redirect("/");
+      backUrl = req.session.redirectTo | "/"
+      res.redirect(backUrl);
     }
   );
 
@@ -189,7 +195,8 @@ module.exports = app => {
     "/auth/linkedin/callback",
     passport.authenticate("linkedin", { failureRedirect: "/login" }),
     (req, res) => {
-      res.redirect("/");
+      backUrl = req.session.redirectTo | "/"
+      res.redirect(backUrl);
     }
   );
 };

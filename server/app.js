@@ -16,7 +16,6 @@ var app = express();
 var configDB = require('./config/database.js');
 mongoose.connect(configDB.url,{useNewUrlParser:true});
 require('./config/passport')(passport);
-
 mongoose.set('useCreateIndex', true);
 
 // view engine setup
@@ -37,8 +36,6 @@ app.use(cookieParser());
 app.use(express.static('dist', { extensions: ['html', 'htm'] }));
 app.use(express.static('server/protected/courses', { extensions: ['html', 'htm'] }));
 app.use(cors());
-require('dotenv').config();
-
 
 // required for passport
 app.use(session({ 
@@ -54,6 +51,7 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
+require('./routes/routes.js')(app)
 require('./routes/routes.js')(app)
 require('./routes/authRoutes')(app)
 require('./routes/examRoutes')(app)
@@ -75,7 +73,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-app.listen(process.env.PORT, console.log('server started'))
+app.listen("3000", console.log('server started'))
 
 module.exports = app;

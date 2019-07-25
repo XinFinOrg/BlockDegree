@@ -29,14 +29,14 @@ function newDefaultUser() {
         marks: 0
       },
       examAdvanced: {
-        attempts: Number,
-        marks: Number
+        attempts: 0,
+        marks: 0
       },
       examProfessional: {
         attempts: 0,
         marks: 0
       },
-      certificateHash: ""
+      certificateHash: {}
     },
     facebook: {
       id: "",
@@ -165,7 +165,8 @@ module.exports = function(passport) {
         newUser.google.id = profile.id;
         newUser.google.email = profile.emails[0].value;
         newUser.google.name = profile._json.name;
-
+        newUser.google.accessToken = accessToken;
+        newUser.google.refreshToken = refreshToken;
         const user = await new User(newUser).save();
         return done(null, user);
       }
@@ -219,6 +220,8 @@ module.exports = function(passport) {
         newUser.twitter.id = profile.id;
         newUser.twitter.name = profile.displayName;
         newUser.twitter.email = profile.emails[0].value;
+        newUser.twitter.accessToken = accessToken;
+        newUser.twitter.refreshToken = refreshToken;
         const user = await new User(newUser).save();
         done(null, user);
       }

@@ -11,16 +11,38 @@ const IPFS = require("ipfs-http-client");
 
 var ejs = require("ejs");
 
+function getQuery(user) {
+     var email = "";
+    var emailKey = "";
+    var query = {};
+    if (user.local.email != "") {
+      email = user.local.email;
+      emailKey="local.email";
+    } else if (user.google.email != "") {
+      email = user.google.email;
+      emailKey="google.email";
+    } else if (user.twitter.email != "") {
+      email = user.twitter.email;
+      emailKey="twitter.email";
+    } else if (user.facebook.email != "") {
+      email = user.facebook.email;
+      emailKey="facebook.email";
+    }
+    query[emailKey]=email;
+    return query
+}
+
 module.exports = async function(req, res, next) {
   if (req.isAuthenticated()) {
     const backUrl = req.url;
     const examName = backUrl.split("/")[1].split("-")[1];
-    const email = req.user.local.email;
+    query = getQuery(req.user);
+
     let payment_status;
     console.log("ispaymentsuccess", examName);
     if (examName === "basic") {
-      await User.findOne({ "local.email": email }, function(err, user) {
-        payment_status = user.local.payment.course_1;
+      await User.findOne(query, function(err, user) {
+        payment_status = user.examData.payment.course_1;
         if (payment_status != true) {
           res.redirect("/exams");
         } else {
@@ -28,8 +50,8 @@ module.exports = async function(req, res, next) {
         }
       });
     } else if (examName === "advanced") {
-      await User.findOne({ "local.email": email }, function(err, user) {
-        payment_status = user.local.payment.course_2;
+      await User.findOne(query, function(err, user) {
+        payment_status = user.examData.payment.course_2;
         if (payment_status != true) {
           res.redirect("/exams");
         } else {
@@ -37,8 +59,8 @@ module.exports = async function(req, res, next) {
         }
       });
     } else if (examName === "professional") {
-      await User.findOne({ "local.email": email }, function(err, user) {
-        payment_status = user.local.payment.course_3;
+      await User.findOne(query, function(err, user) {
+        payment_status = user.examData.payment.course_3;
         if (payment_status != true) {
           res.redirect("/exams");
         } else {

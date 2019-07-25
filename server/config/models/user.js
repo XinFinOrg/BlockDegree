@@ -20,23 +20,32 @@ var userSchema = mongoose.Schema({
       attempts: Number,
       marks: Number
     },
-    certificateHash: [{ type: String }]
+    certificateHash: [{
+      timestamp : String,
+      marks : Number,
+      total:Number,
+      examType : String,
+      hash : String
+    }]
   },
   facebook: {
     id: String,
-    token: String,
+    accessToken: String,
+    refreshToken: String,
     name: String,
     email: String
   },
   twitter: {
     id: String,
-    token: String,
+    accessToken: String,
+    refreshToken: String,
     name: String,
     email: String
   },
   google: {
     id: String,
-    token: String,
+    accessToken: String,
+    refreshToken: String,
     email: String,
     name: String
   },
@@ -45,7 +54,7 @@ var userSchema = mongoose.Schema({
     email: String,
     password: String,
     isVerified: { type: Boolean, default: false }
-  },
+  }
 });
 
 // generating a hash

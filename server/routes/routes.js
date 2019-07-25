@@ -14,14 +14,35 @@ paypal.configure({
   client_secret: process.env.PAYPAL_CLIENT_SECRET_SANDBOX
 });
 
-paypal.configure({
-  mode: "live", //sandbox or live
-  client_id: process.env.PAYPAL_CLIENT_ID_LIVE,
-  client_secret: process.env.PAYPAL_CLIENT_SECRET_LIVE
-});
+// paypal.configure({
+//   mode: "live", //sandbox or live
+//   client_id: process.env.PAYPAL_CLIENT_ID_LIVE,
+//   client_secret: process.env.PAYPAL_CLIENT_SECRET_LIVE
+// });
 
 const utils = require("../utils.js");
 let { isLoggedIn } = utils;
+
+function getQuery(user) {
+  var email = "";
+ var emailKey = "";
+ var query = {};
+ if (user.local.email != "") {
+   email = user.local.email;
+   emailKey="local.email";
+ } else if (user.google.email != "") {
+   email = user.google.email;
+   emailKey="google.email";
+ } else if (user.twitter.email != "") {
+   email = user.twitter.email;
+   emailKey="twitter.email";
+ } else if (user.facebook.email != "") {
+   email = user.facebook.email;
+   emailKey="facebook.email";
+ }
+ query[emailKey]=email;
+ return query,email;
+}
 
 module.exports = function(app) {
   // What is this endpoint for ?
@@ -33,19 +54,14 @@ module.exports = function(app) {
   app.post("/pay", isLoggedIn, cors(), async (req, res) => {
     var price = req.body.price;
     var email = "";
-    if (req.user.local.email != "") {
-      email = req.user.local.email;
-    } else if (req.user.google.email != "") {
-      email = req.user.google.email;
-    } else if (req.user.twitter.email != "") {
-      email = req.user.twitter.email;
-    } else if (req.user.facebook.email != "") {
-      email = req.user.facebook.email;
-    }
+    var query = {};
+    
+    query,email = getQuery(req.user)
+
     var course_id = req.body.course_id;
     var payment_status;
 
-    await User.findOne({ "local.email": email }, function(err, user) {
+    await User.findOne(query, function(err, user) {
       if (course_id == "course_1") {
         payment_status = user.examData.payment.course_1;
       } else if (course_id == "course_2") {
@@ -139,6 +155,9 @@ module.exports = function(app) {
     var paymentId = req.query.paymentId;
     var payerId = { payer_id: req.query.PayerID };
     var order;
+    var query = {};
+    var emailValue = "";
+    query,emailValue = getQuery(req.user)
 
     paypal.payment.execute(paymentId, payerId, function(error, payment) {
       if (error) {
@@ -177,7 +196,7 @@ module.exports = function(app) {
                   console.error(error);
                 } else {
                   console.log("ORDER CAPTURE SUCCESS");
-                  User.findOne({ "local.email": email }, function(err, user) {
+                  User.findOne(query, function(err, user) {
                     if (course_id == "course_1")
                       user.examData.payment.course_1 = true;
                     else if (course_id == "course_2")
@@ -216,6 +235,10 @@ module.exports = function(app) {
   E-mail verification services
 */
   app.get("/confirmation", function(req, res) {
+
+    
+    query,emailValue = getQuery(req.user);
+    
     console.log("In confirmation", req.query.token);
     Token.findOne({ token: req.query.token }, function(err, token) {
       if (!token)
@@ -226,19 +249,19 @@ module.exports = function(app) {
         });
       console.log("token mapped email:", token.email);
       // If we found a token, find a matching user
-      User.findOne({ "local.email": token.email }, function(err, user) {
+      User.findOne(query, function(err, user) {
         if (!user)
           return res
             .status(400)
             .send({ msg: "We were unable to find a user for this token." });
-        if (user.local.isVerified)
+        if (user.examData.isVerified)
           return res.status(400).send({
             type: "already-verified",
             msg: "This user has already been verified."
           });
 
         // Verify and save the user
-        user.local.isVerified = true;
+        user.examData.isVerified = true;
         user.save(function(err) {
           if (err) {
             console.log("ajdgakc", err.message);
