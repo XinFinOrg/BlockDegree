@@ -55,17 +55,17 @@ module.exports = app => {
   });
 
   app.post("/forgotPassword", (req, res) => {
-    User.findOne({ "local.email": req.body.email }).then(result => {
+    User.findOne({ "email": req.body.email }).then(result => {
       console.log("ankit", result);
-      if (result == null) {
+      if (result == null || result.auth.local.password=="") {
         res.send("User not found");
         console.log("ankit", result);
-      } else if (result.local.password == null) {
+      } else if (result.auth.local.password == null) {
         res.send("Password");
       } else {
         emailer.forgotPasswordMailer(
-          result.local.email,
-          result.local.password,
+          result.auth.local.email,
+          result.auth.local.password,
           res
         );
       }
@@ -77,7 +77,7 @@ module.exports = app => {
     console.log("ankit patel", result);
     User.findOne({
       where: {
-        "local.email": req.body.email
+        "email": req.body.email
       }
     }).then(result => {
       if (!bcrypt.compareSync(result.dataValues.uniqueId, req.body.resetId)) {
@@ -90,7 +90,6 @@ module.exports = app => {
   });
 
   app.post("/updatePassword", (req, res) => {
-    console.log("fcgvhj", req.body);
     var data = JSON.stringify(req.body);
     var dataupdate = JSON.parse(data);
     console.log(data, dataupdate);
@@ -99,8 +98,8 @@ module.exports = app => {
     hash = userobj.generateHash(dataupdate.password);
     console.log("body:", dataupdate.password, backUrl.email);
     User.findOneAndUpdate(
-      { "local.password": dataupdate.token },
-      { "local.password": hash },
+      { "auth.local.password": dataupdate.token },
+      { "auth.local.password": hash },
       { upsert: false },
       (err, doc) => {
         if (err) {
@@ -130,35 +129,7 @@ module.exports = app => {
 
   app.get(
     "/auth/linkedin",
-    passport.authenticate("linkedin", {
-      profileFields: [
-        "email-address",
-        "id",
-        "first-name",
-        "last-name",
-        "picture-url",
-        "picture-urls::(original)",
-        "formatted-name",
-        "maiden-name",
-        "phonetic-first-name",
-        "phonetic-last-name",
-        "formatted-phonetic-name",
-        "headline",
-        "location:(name,country:(code))",
-        "industry",
-        "distance",
-        "relation-to-viewer:(distance,connections)",
-        "num-connections",
-        "num-connections-capped",
-        "summary",
-        "specialties",
-        "positions",
-        "site-standard-profile-request",
-        "api-standard-profile-request:(headers,url)",
-        "public-profile-url"
-      ],
-      scope: ["r_basicprofile", "r_emailaddress"]
-    })
+    passport.authenticate("linkedin")
   );
 
   app.get(
@@ -171,13 +142,13 @@ module.exports = app => {
   );
 
   app.get(
-    "/auth/facebook/callback",
+    "https://localhost:3000/auth/facebook/callback",
     passport.authenticate("facebook", {
       successRedirect: "/",
       failureRedirect: "/login"
     }),
     (req, res) => {
-      backUrl = req.session.redirectTo | "/"
+      backUrl = req.session.redirectTo || "/"
       res.redirect(backUrl);
     }
   );
@@ -186,7 +157,9 @@ module.exports = app => {
     "/auth/twitter/callback",
     passport.authenticate("twitter", { failureRedirect: "/login" }),
     (req, res) => {
-      backUrl = req.session.redirectTo | "/"
+      backUrl = req.session.redirectTo || "/"
+      console.log(backUrl);
+      
       res.redirect(backUrl);
     }
   );
@@ -195,7 +168,8 @@ module.exports = app => {
     "/auth/linkedin/callback",
     passport.authenticate("linkedin", { failureRedirect: "/login" }),
     (req, res) => {
-      backUrl = req.session.redirectTo | "/"
+      console.log("caught call back")
+      backUrl = req.session.redirectTo || "/"
       res.redirect(backUrl);
     }
   );

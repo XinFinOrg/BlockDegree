@@ -9,56 +9,63 @@ require("dotenv").config();
 
 const facebookStrategy = require("passport-facebook").Strategy;
 const twitterStrategy = require("passport-twitter").Strategy;
+const linkedinStrategy = require("passport-linkedin-oauth2").Strategy;
 
 function newDefaultUser() {
   return new User({
-    local: {
-      name: "",
-      email: "",
-      password: "",
-      isVerified: false
+    email:"",
+  name: "",
+  examData: {
+    payment: {
+      course_1: false,
+      course_2: false,
+      course_3: false
     },
-    examData: {
-      payment: {
-        course_1: false,
-        course_2: false,
-        course_3: false
-      },
-      examBasic: {
-        attempts: 0,
-        marks: 0
-      },
-      examAdvanced: {
-        attempts: 0,
-        marks: 0
-      },
-      examProfessional: {
-        attempts: 0,
-        marks: 0
-      },
-      certificateHash: {}
+    examBasic: {
+      attempts: 0,
+      marks: 0
     },
+    examAdvanced: {
+      attempts: 0,
+      marks: 0
+    },
+    examProfessional: {
+      attempts: 0,
+      marks: 0
+    },
+    certificateHash: [{
+      timestamp : "",
+      marks : 0,
+      total:0,
+      examType : "",
+      hash : ""
+    }]
+  },
+  auth : {
     facebook: {
       id: "",
-    accessToken: "",
-    refreshToken: "",
-    name: "",
-    email: ""
+      accessToken: "",
+      refreshToken: ""
     },
     twitter: {
       id: "",
-      accessToken: "",
-      refreshToken: "",
-      name: "",
-      email: ""
+      token: "",
+      tokenSecret: ""
     },
     google: {
       id: "",
-    accessToken: "",
-    refreshToken: "",
-    email: "",
-    name: ""
+      accessToken: "",
+      refreshToken: ""
+    },
+    local: {
+      password: "",
+      isVerified: false
+    },
+    linkedin : {
+      accessToken:"",
+      id : ""
     }
+  }
   });
 }
 
@@ -82,20 +89,28 @@ module.exports = function(passport) {
       function(req, email, password, done) {
         console.log(req.body, email, password);
         process.nextTick(function() {
-          User.findOne({ "local.email": email }, function(err, user) {
+          User.findOne({ "email": email }, function(err, user) {
             if (err) {
               console.log("some error", err);
               return done(err);
             }
 
             if (user) {
-              console.log("email already taken");
-              return done(null, false, "That email is already taken.");
+              console.log(user.auth.local.password);
+              
+              if (user.auth.local.password!=""){
+                console.log("email already taken");
+                return done(null, false, "That email is already taken.");
+              }else{
+                console.log("email registered to another social");
+                return done(null, false, "This email is registered to another one of the socials below.");
+              }
+              
             } else {
               console.log("in method creating user");
               var newUser = newDefaultUser();
-              newUser.local.email = email;
-              newUser.local.password = newUser.generateHash(password);
+              newUser.email = email;
+              newUser.auth.local.password = newUser.generateHash(password);
               newUser.save(function(err) {
                 if (err) {
                   console.log("Error:", err);
@@ -134,12 +149,12 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       function(req, email, password, done) {
-        User.findOne({ "local.email": email }, function(err, user) {
+        User.findOne({ "email": email }, function(err, user) {
           if (err) return done(err);
           else if (!user) return done(null, false, "No user found.");
           else if (!user.validPassword(password))
             return done(null, false, "Oops! Wrong password.");
-          else if (!user.local.isVerified)
+          else if (!user.auth.local.isVerified)
             return done(
               null,
               false,
@@ -160,16 +175,22 @@ module.exports = function(passport) {
         callbackURL: "/auth/google/callback"
       },
       async (accessToken, refreshToken, profile, done) => {
-        const existingUser = await User.findOne({ "google.id": profile.id });
+        const existingUser = await User.findOne({ email: profile.emails[0].value });
         if (existingUser) {
+          if (existingUser.auth.google.accessToken==""){
+            // store google credentials.
+            existingUser.auth.google.accessToken=accessToken;
+            existingUser.auth.google.refreshToken=refreshToken;
+            existingUser.auth.google.id=profile.id;
+          }
           return done(null, existingUser);
         }
         newUser = newDefaultUser();
-        newUser.google.id = profile.id;
-        newUser.google.email = profile.emails[0].value;
-        newUser.google.name = profile._json.name;
-        newUser.google.accessToken = accessToken;
-        newUser.google.refreshToken = refreshToken;
+        newUser.auth.google.id = profile.id;
+        newUser.email = profile.emails[0].value;
+        newUser.name = profile._json.name;
+        newUser.auth.google.accessToken = accessToken;
+        newUser.auth.google.refreshToken = refreshToken;
         const user = await new User(newUser).save();
         return done(null, user);
       }
@@ -182,7 +203,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: "/auth/facebook/callback"
+        callbackURL: "https://localhost:3000/auth/facebook/callback"
       },
       async (accessToken, refreshToken, profile, done) => {
         const existingUser = await User.findOne({ "facebook.id": profile.id });
@@ -192,7 +213,7 @@ module.exports = function(passport) {
         console.log("Profile Name: ", profile);
 
         newUser = newDefaultUser();
-        newUser.facebook.id = profile.id;
+        newUser.auth.facebook.id = profile.id;
         // newUser.google.email = profile.emails[0].value;
         // newUser.google.name = profile._json.name;
 
@@ -220,17 +241,44 @@ module.exports = function(passport) {
         }
         console.log("Twitter Profile: ", profile);
         newUser = newDefaultUser();
-        newUser.twitter.id = profile.id;
-        newUser.twitter.name = profile.displayName;
-        newUser.twitter.email = profile.emails[0].value;
-        newUser.twitter.accessToken = accessToken;
-        newUser.twitter.refreshToken = refreshToken;
+        newUser.auth.twitter.id = profile.id;
+        newUser.name = profile.displayName;
+        newUser.email = profile.emails[0].value;
+        newUser.auth.twitter.token = token;
+        newUser.auth.twitter.tokenSecret = tokenSecret;
         const user = await new User(newUser).save();
         done(null, user);
       }
     )
   );
-};
+
+  passport.use(
+    new linkedinStrategy(
+      {
+        clientID: process.env.LINKEDIN_CLIENT,
+        clientSecret: process.env.LINKEDIN_SECRET,
+        callbackURL: "http://localhost:3000/auth/linkedin/callback",
+        scope: ["r_liteprofile", "r_emailaddress"]
+      },
+      async ( accessToken, refreshToken, profile, done) => {
+
+        process.nextTick(async function () {
+          // To keep the example simple, the user's LinkedIn profile is returned to
+          // represent the logged-in user. In a typical application, you would want
+          // to associate the LinkedIn account with a user record in your database,
+          // and return that user instead.        
+          newUser = newDefaultUser();
+          newUser.auth.linkedin.id = profile.id;
+          newUser.name = profile.displayName;
+          newUser.email = profile.emails[0].value;
+          newUser.auth.linkedin.accessToken = accessToken;
+          const user = await new User(newUser).save();
+          return done(null, user);
+        });       
+      }
+    )
+  );
+}; 
 
 // Github login
 

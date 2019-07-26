@@ -53,15 +53,15 @@ module.exports = function(app) {
 
   app.post("/pay", isLoggedIn, cors(), async (req, res) => {
     var price = req.body.price;
-    var email = "";
-    var query = {};
+    var email = req.user.email;
+    // var query = {};
     
-    query,email = getQuery(req.user)
+    // query,email = getQuery(req.user)
 
     var course_id = req.body.course_id;
     var payment_status;
 
-    await User.findOne(query, function(err, user) {
+    await User.findOne({email:email}, function(err, user) {
       if (course_id == "course_1") {
         payment_status = user.examData.payment.course_1;
       } else if (course_id == "course_2") {
@@ -157,7 +157,7 @@ module.exports = function(app) {
     var order;
     var query = {};
     var emailValue = "";
-    query,emailValue = getQuery(req.user)
+    // query,emailValue = getQuery(req.user)
 
     paypal.payment.execute(paymentId, payerId, function(error, payment) {
       if (error) {
@@ -196,7 +196,7 @@ module.exports = function(app) {
                   console.error(error);
                 } else {
                   console.log("ORDER CAPTURE SUCCESS");
-                  User.findOne(query, function(err, user) {
+                  User.findOne({email:req.user.email}, function(err, user) {
                     if (course_id == "course_1")
                       user.examData.payment.course_1 = true;
                     else if (course_id == "course_2")

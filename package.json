@@ -51,8 +51,9 @@
     "express": "~4.16.0",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
+    "html-to-image": "^0.1.1",
     "http-errors": "~1.6.2",
-    "ipfs-http-client": "^30.1.0",
+    "ipfs-http-client": "^33.1.0",
     "joi": "^14.3.1",
     "mongoose": "^5.4.7",
     "morgan": "~1.9.0",
@@ -62,8 +63,12 @@
     "passport-github": "^1.1.0",
     "passport-google-oauth": "^1.0.0",
     "passport-google-oauth20": "^2.0.0",
+    "passport-linkedin": "^1.0.0",
+    "passport-linkedin-oauth2": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "paypal-rest-sdk": "^1.8.1"
+    "paypal-rest-sdk": "^1.8.1",
+    "puppeteer": "^1.19.0",
+    "twit": "^2.2.11"
   }
 }

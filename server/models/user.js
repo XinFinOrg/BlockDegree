@@ -2,6 +2,8 @@ var mongoose = require("mongoose");
 var bcrypt = require("bcrypt-nodejs");
 
 var userSchema = mongoose.Schema({
+  email:{type : String,unique : true, required: true},
+  name: String,
   examData: {
     payment: {
       course_1: Boolean,
@@ -28,32 +30,30 @@ var userSchema = mongoose.Schema({
       hash : String
     }]
   },
-  facebook: {
-    id: String,
-    accessToken: String,
-    refreshToken: String,
-    name: String,
-    email: String
-  },
-  twitter: {
-    id: String,
-    accessToken: String,
-    refreshToken: String,
-    name: String,
-    email: String
-  },
-  google: {
-    id: String,
-    accessToken: String,
-    refreshToken: String,
-    email: String,
-    name: String
-  },
-  local: {
-    name: String,
-    email: String,
-    password: String,
-    isVerified: { type: Boolean, default: false }
+  auth : {
+    facebook: {
+      id: String,
+      accessToken: String,
+      refreshToken: String
+    },
+    twitter: {
+      id: String,
+      token: String,
+      tokenSecret: String
+    },
+    google: {
+      id: String,
+      accessToken: String,
+      refreshToken: String
+    },
+    local: {
+      password: String,
+      isVerified: { type: Boolean, default: false }
+    },
+    linkedin : {
+      accessToken:String,
+      id : String
+    }
   }
 });
 
