@@ -17,7 +17,7 @@ Following are the tasks to do :
 - [x] Fix re-loading of the '/exam-result' resulting in two copies of data being pushed
 - [ ] Maintain atomicity of transactions ( exam submission, payments )
 - [ ] Delay of 5+ seconds for payment redirection
-- [ ] Enable exam results to share on socials
+- [x] Enable exam results to share on socials ( Twitter, Facebook done; Linkedin left )
 - [X] Directly post on twitter ( required ? )
 
 ### TO DO ( SECOND BATCH )
