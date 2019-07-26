@@ -9,74 +9,100 @@
 
     <form id="">
       {{#if exam.examBasic }}
-        <div class="card py-3 px-5 mb-4">
-          <h3 class="mb-3 exam-qns"style="color:#2073D4;">
-            Blockchasin Basic Result
-          </h3>
-          <ul>
-            <li style="display: flex;flex-direction:column">
-             <strong> <span>Attempts:</span></strong> {{{data.local.examBasic.attempts}}}
-              <strong><span>marks:</span></strong> {{{data.local.examBasic.marks}}}
-              <strong><span>Percent:</span></strong> {{{percent}}} %
-              <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
-              {{#if examStatus}}
-                <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
-              {{else}}
-                <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
-              {{/if}}
-            </li>
-          </ul>
+      <div class="card py-3 px-5 mb-4">
+        <h3 class="mb-3 exam-qns" style="color:#2073D4;">
+          Blockchasin Basic Result
+        </h3>
+        <ul>
+          <li style="display: flex;flex-direction:column">
+            <strong><span>Attempts:</span></strong> {{{total}}}
+            <strong><span>marks:</span></strong> {{{obtainedMarks}}}
+            <strong><span>Percent:</span></strong> {{{percent}}} %
+            <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
+            {{#if examStatus}}
+            <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
+            <div class="fb-share-button" data-href="https://blockdegree.org" data-layout="button_count"
+              data-size="large"><a target="_blank"
+                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
+                class="fb-xfbml-parse-ignore">FB-Share</a></div>
+            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world"
+              data-size="large">
+              Tweet</a>
+            {{else}}
+            <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
+            {{/if}}
+          </li>
+        </ul>
 
-        </div>
-<input class="ITR" type="button"   value="Retake Exam" onclick="window.location.href='https://blockdegree.org/blockchain-basic-exam'" />
+      </div>
+      <input class="ITR" type="button" value="Retake Exam"
+        onclick="window.location.href='https://blockdegree.org/blockchain-basic-exam'" />
       {{else if exam.examAdvanced}}
-        <div class="card py-3 px-5 mb-4" >
-          <h3 class="mb-3 exam-qns"style="color:#2073D4;">
-            Blockchain Advanced Result
-          </h3>
-          <ul>
-            <li style="display: flex;flex-direction:column">
-              <strong><span>Attempts:</span></strong> {{{data.local.examAdvanced.attempts}}}
-              <strong><span>marks:</span></strong> {{{data.local.examAdvanced.marks}}}
-              <strong><span>Percent:</span></strong> {{{percent}}} %
-              <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
-              {{#if examStatus}}
-                <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
-              {{else}}
-                <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
-              {{/if}}
-            </li>
+      <div class="card py-3 px-5 mb-4">
+        <h3 class="mb-3 exam-qns" style="color:#2073D4;">
+          Blockchain Advanced Result
+        </h3>
+        <ul>
+          <li style="display: flex;flex-direction:column">
+            <strong><span>Attempts:</span></strong> {{{total}}}
+            <strong><span>marks:</span></strong> {{{obtainedMarks}}}
+            <strong><span>Percent:</span></strong> {{{percent}}} %
+            <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
+            {{#if examStatus}}
+            <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
+            <div class="fb-share-button" data-href="https://blockdegree.org" data-layout="button_count"
+              data-size="large"><a target="_blank"
+                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
+                class="fb-xfbml-parse-ignore">FB-Share</a></div>
+            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world"
+              data-size="large">
+              Tweet</a>
 
-          </ul>
+            {{else}}
+            <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
+            {{/if}}
+          </li>
 
-        </div>
-<input class="ITR" type="button"   value="Retake Exam" onclick="window.location.href='https://blockdegree.org/blockchain-advanced-exam'" />
+        </ul>
+
+      </div>
+      <input class="ITR" type="button" value="Retake Exam"
+        onclick="window.location.href='https://blockdegree.org/blockchain-advanced-exam'" />
 
       {{else if exam.examProfessional}}
-        <div class="card py-3 px-5 mb-4">
-          <h3 class="mb-3 exam-qns">
-            Blockchasin Professional Result
-          </h3>
-          <ul>
-            <li style="display: flex;flex-direction:column">
-              <strong><span>Attempts:</span></strong> {{{data.local.examProfessional.attempts}}}
-              <strong>marks:</span></strong> {{{data.local.examProfessional.marks}}}
-              <strong><span>Percent:</span></strong> {{{percent}}} %
-              <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
-              {{#if examStatus}}
-                <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
-              {{else}}
-                <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
-              {{/if}}
-            </li>
+      <div class="card py-3 px-5 mb-4">
+        <h3 class="mb-3 exam-qns">
+          Blockchasin Professional Result
+        </h3>
+        <ul>
+          <li style="display: flex;flex-direction:column">
+            <strong><span>Attempts:</span></strong> {{{total}}}
+            <strong><span>marks:</span></strong> {{{obtainedMarks}}}
+            <strong><span>Percent:</span></strong> {{{percent}}} %
+            <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
+            {{#if examStatus}}
+            <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
+            <div class="fb-share-button" data-href="https://blockdegree.org" data-layout="button_count"
+              data-size="large"><a target="_blank"
+                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
+                class="fb-xfbml-parse-ignore">FB-Share</a></div>
+            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world"
+              data-size="large">
+              Tweet</a>
 
-          </ul>
+            {{else}}
+            <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
+            {{/if}}
+          </li>
 
-        </div>
-<input class="ITR" type="button"   value="Retake Exam" onclick="window.location.href='https://blockdegree.org/blockchain-professional-exam'" />
+        </ul>
+
+      </div>
+      <input class="ITR" type="button" value="Retake Exam"
+        onclick="window.location.href='https://blockdegree.org/blockchain-professional-exam'" />
 
       {{/if}}
-     {{!--<ul>
+      {{!--<ul>
           <li>
             <span><strong>we can shortly send your certifiacte in your Maild ID</strong></span>
           </li>

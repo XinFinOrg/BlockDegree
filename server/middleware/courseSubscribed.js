@@ -11,32 +11,32 @@ const IPFS = require("ipfs-http-client");
 
 var ejs = require("ejs");
 
-function getQuery(user) {
-     var email = "";
-    var emailKey = "";
-    var query = {};
-    if (user.local.email != "") {
-      email = user.local.email;
-      emailKey="local.email";
-    } else if (user.google.email != "") {
-      email = user.google.email;
-      emailKey="google.email";
-    } else if (user.twitter.email != "") {
-      email = user.twitter.email;
-      emailKey="twitter.email";
-    } else if (user.facebook.email != "") {
-      email = user.facebook.email;
-      emailKey="facebook.email";
-    }
-    query[emailKey]=email;
-    return query
-}
+// function getQuery(user) {
+//      var email = "";
+//     var emailKey = "";
+//     var query = {};
+//     if (user.email != "") {
+//       email = user.local.email;
+//       emailKey="local.email";
+//     } else if (user.google.email != "") {
+//       email = user.google.email;
+//       emailKey="google.email";
+//     } else if (user.twitter.email != "") {
+//       email = user.twitter.email;
+//       emailKey="twitter.email";
+//     } else if (user.facebook.email != "") {
+//       email = user.facebook.email;
+//       emailKey="facebook.email";
+//     }
+//     query[emailKey]=email;
+//     return query
+// }
 
 module.exports = async function(req, res, next) {
   if (req.isAuthenticated()) {
     const backUrl = req.url;
     const examName = backUrl.split("/")[1].split("-")[1];
-    query = getQuery(req.user);
+    query = {email:req.user.email};
 
     let payment_status;
     console.log("ispaymentsuccess", examName);

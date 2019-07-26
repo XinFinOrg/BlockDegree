@@ -301,7 +301,8 @@ exports.getExamResult = (req, res) => {
         },
         data: result,
         obtainedMarks: obtainedMarks,
-        percent: percent
+        percent: percent,
+        total:examTotal
       };
       if (percent >= 60) {
         examStatus = true;
@@ -372,6 +373,7 @@ exports.getExamResult = (req, res) => {
       console.log("result advanced:", result, error);
       const examTotal = 50;
       let obtainedMarks = result.examData.examAdvanced.marks;
+      console.log("obtained marks",obtainedMarks)
       let percent = (obtainedMarks * 100) / examTotal;
       let examStatus;
       let jsonData = {
@@ -382,6 +384,7 @@ exports.getExamResult = (req, res) => {
         },
         data: result,
         obtainedMarks: obtainedMarks,
+        total:examTotal,
         percent: percent
       };
 
@@ -436,7 +439,8 @@ exports.getExamResult = (req, res) => {
             result.examData.certificateHash[
               result.examData.certificateHash.length - 1
             ].hash;
-          jsonData.examStatus = examStatus;
+          jsonData.examStatus = true;
+          console.log("JSON in second return: ",jsonData)
           res.render("examResult", jsonData);
         }
       } else if (percent < 60) {
@@ -461,7 +465,8 @@ exports.getExamResult = (req, res) => {
         },
         data: result,
         obtainedMarks: obtainedMarks,
-        percent: percent
+        percent: percent,
+        total:examTotal
       };
       if (percent >= 60) {
         if (
@@ -494,9 +499,12 @@ exports.getExamResult = (req, res) => {
               let buffer = Buffer.from(data, "utf-8");
               localClient.add(buffer, (err, ipfsHash) => {
                 console.log(ipfsHash);
+                jsonData.data=result;
+                jsonData.marks=obtainedMarks;
+                jsonData.percent=percent;
                 result.examData.examProfessional.attempts = 0;
                 result.examData.payment.course_3 = false;
-                jsonData.examStatus = examStatus;
+                jsonData.examStatus = true;
                 jsonData.certificateHash = ipfsHash[0].hash;
                 var obj = {};
                 obj["timestamp"] = Date.now();
@@ -515,7 +523,7 @@ exports.getExamResult = (req, res) => {
             result.examData.certificateHash[
               result.examData.certificateHash.length - 1
             ].hash;
-          jsonData.examStatus = examStatus;
+          jsonData.examStatus = true;
           res.render("examResult", jsonData);
         }
       } else if (percent < 60) {
