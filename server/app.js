@@ -15,7 +15,7 @@ var app = express();
 
 var configDB = require('./config/database.js');
 mongoose.connect(configDB.url,{useNewUrlParser:true});
-require('./config/passport')(passport);
+require('./services/passport')(passport);
 mongoose.set('useCreateIndex', true);
 
 // view engine setup

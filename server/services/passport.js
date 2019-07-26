@@ -1,8 +1,8 @@
 var LocalStrategy = require("passport-local").Strategy;
 const googleStrategy = require("passport-google-oauth20").Strategy;
-var GithubStrategy = require("passport-github").Strategy;
-var User = require("./models/user");
-var Token = require("./models/tokenVerification");
+// var GithubStrategy = require("passport-github").Strategy;
+var User = require("../models/user");
+var Token = require("../models/tokenVerification");
 const emailer = require("../emailer/impl");
 var crypto = require("crypto");
 require("dotenv").config();
@@ -40,21 +40,24 @@ function newDefaultUser() {
     },
     facebook: {
       id: "",
-      token: "",
-      name: "",
-      email: ""
+    accessToken: "",
+    refreshToken: "",
+    name: "",
+    email: ""
     },
     twitter: {
       id: "",
-      token: "",
+      accessToken: "",
+      refreshToken: "",
       name: "",
-      username: ""
+      email: ""
     },
     google: {
       id: "",
-      token: "",
-      email: "",
-      name: ""
+    accessToken: "",
+    refreshToken: "",
+    email: "",
+    name: ""
     }
   });
 }

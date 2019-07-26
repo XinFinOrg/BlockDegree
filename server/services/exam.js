@@ -1,6 +1,6 @@
 const path = require("path");
-var User = require("../config/models/user");
-var questions = require("../config/models/question");
+var User = require("../models/user");
+var questions = require("../models/question");
 var ejs = require("ejs");
 const utils = require("../utils.js");
 var crypto = require("crypto");
@@ -280,8 +280,6 @@ exports.getProfessionalExam = (req, res) => {
 exports.getExamResult = (req, res) => {
   const backUrl = req.header("Referer");
 
-  console.log("CALLED EXAM RESULT $99");
-
   var name = "";
 
   if (req.user.local.email != "") {
@@ -300,11 +298,8 @@ exports.getExamResult = (req, res) => {
   const examName = backUrl.split("/")[3].split("-")[1];
   if (examName === "basic") {
     User.findOne(query).then((result, error) => {
-      console.log("result basic:", result, error);
       const examTotal = 50;
       let obtainedMarks = result.examData.examBasic.marks;
-      console.log("FIRST LEVEL IF #99");
-
       let percent = (obtainedMarks * 100) / examTotal;
       let examStatus;
       let jsonData = {
@@ -317,7 +312,7 @@ exports.getExamResult = (req, res) => {
         obtainedMarks: obtainedMarks,
         percent: percent
       };
-      if (percent >= 60) {
+      if (percent >= 60) {        
         examStatus = true;
         let d = new Date();
         let date = d.toLocaleDateString("en-GB", {
@@ -340,41 +335,20 @@ exports.getExamResult = (req, res) => {
               if (err != null) {
                 // handle IPFS error
               }
-              console.log(ipfsHash);
-              // User.findOneAndUpdate(
-              //   query,
-              //   {
-              //     $set: {
-              //       "examData.examBasic.attempts": 0,
-              //       "examData.payment.course_1": false
-              //     }
-              //     // $addToSet: { "examData.certificateHash": ipfsHash[0].hash }
-              //   },
-              //   { upsert: false },
-              //   (err, doc) => {
-              //     if (err) {
-              //       console.log("Something went wrong when updating data!");
-              //       res.send({ status: "false", message: info });
-              //     }
-              //   }
-              // );
               jsonData.certificateHash = ipfsHash[0].hash;
-              jsonData.examStatus = examStatus;
-              // console.log("Before shit goes down: ",result.examData.certificateHash);
-
-              // result.examData.certificateHash = pushOnlyOnce(result.examData.certificateHash,ipfsHash[0].hash)
-              console.log("Called: ", result.examData.certificateHash);
-
-              result.examData.examBasic.attempts = 0;
-              result.examData.payment.course_1 = false;
-              var obj = {}
-              obj["timestamp"]=Date.now();
-              obj["marks"]=obtainedMarks;
-              obj["total"]=examTotal;
-              obj["hash"]=ipfsHash[0].hash;
-              obj["examType"]="basic";
-              result.examData.certificateHash.push(obj)
-              result.save();
+              jsonData.examStatus = examStatus;              
+              if (result.examData.certificateHash[result.examData.certificateHash.length-1].timestamp==undefined || Date.now()-result.examData.certificateHash[result.examData.certificateHash.length-1].timestamp > 5000){
+                result.examData.examBasic.attempts = 0;
+                result.examData.payment.course_1 = false;
+                var obj = {};
+                obj["timestamp"] = Date.now();
+                obj["marks"] = obtainedMarks;
+                obj["total"] = examTotal;
+                obj["hash"] = ipfsHash[0].hash;
+                obj["examType"] = "basic";
+                result.examData.certificateHash.push(obj);
+                result.save();
+              }
               res.render("examResult", jsonData);
             });
           }
@@ -384,8 +358,6 @@ exports.getExamResult = (req, res) => {
         jsonData.examStatus = examStatus;
         res.render("examResult", jsonData);
       }
-
-      console.log("examResult json:", jsonData);
     });
   } else if (examName === "advanced") {
     User.findOne(query).then((result, error) => {
@@ -406,22 +378,6 @@ exports.getExamResult = (req, res) => {
       };
 
       if (percent >= 60) {
-        // User.findOneAndUpdate(
-        //   query,
-        //   {
-        //     $set: {
-        //       "examData.examAdvanced.attempts": 0,
-        //       "examData.payment.course_2": false
-        //     }
-        //   },
-        //   { upsert: false },
-        //   (err, doc) => {
-        //     if (err) {
-        //       console.log("Something went wrong when updating data!");
-        //       res.send({ status: "false", message: info });
-        //     }
-        //   }
-        // );
         examStatus = true;
         let d = new Date();
         let date = d.toLocaleDateString("en-GB", {
@@ -441,19 +397,19 @@ exports.getExamResult = (req, res) => {
           (err, data) => {
             let buffer = Buffer.from(data, "utf-8");
             localClient.add(buffer, (err, ipfsHash) => {
-              console.log(ipfsHash);
-              // result.examData.certificateHash.advanced.push(ipfsHash[0].hash);
+              if (result.examData.certificateHash[result.examData.certificateHash.length-1].timestamp==undefined || Date.now()-result.examData.certificateHash[result.examData.certificateHash.length-1].timestamp > 5000){
               result.examData.examAdvanced.attempts = 0;
               result.examData.payment.course_2 = false;
-              var obj = {}
-              obj["timestamp"]=Date.now();
-              obj["marks"]=obtainedMarks;
-              obj["total"]=examTotal;
-              obj["hash"]=ipfsHash[0].hash;
-              obj["examType"]="advanced";
-              result.examData.certificateHash.push(obj)
-              jsonData.examStatus = examStatus;
+              var obj = {};
+              obj["timestamp"] = Date.now();
+              obj["marks"] = obtainedMarks;
+              obj["total"] = examTotal;
+              obj["hash"] = ipfsHash[0].hash;
+              obj["examType"] = "advanced";
+              result.examData.certificateHash.push(obj);
               result.save();
+              }
+              jsonData.examStatus = examStatus;
               res.render("examResult", jsonData);
             });
           }
@@ -463,8 +419,6 @@ exports.getExamResult = (req, res) => {
         jsonData.examStatus = examStatus;
         res.render("examResult", jsonData);
       }
-
-      console.log("examResult json:", jsonData);
     });
   } else if (examName === "professional") {
     User.findOne(query).then((result, error) => {
@@ -485,22 +439,6 @@ exports.getExamResult = (req, res) => {
         percent: percent
       };
       if (percent >= 60) {
-        // User.findOneAndUpdate(
-        //   query,
-        //   {
-        //     $set: {
-        //       "examData.examProfessional.attempts": 0,
-        //       "examData.payment.course_3": false
-        //     }
-        //   },
-        //   { upsert: false },
-        //   (err, doc) => {
-        //     if (err) {
-        //       console.log("Something went wrong when updating data!");
-        //       res.send({ status: "false", message: info });
-        //     }
-        //   }
-        // );
         examStatus = true;
         let d = new Date();
         let date = d.toLocaleDateString("en-GB", {
@@ -521,20 +459,16 @@ exports.getExamResult = (req, res) => {
             let buffer = Buffer.from(data, "utf-8");
             localClient.add(buffer, (err, ipfsHash) => {
               console.log(ipfsHash);
-              // result.certificateHash = ipfsHash[0].hash;
-              // result.examData.certificateHash.professional.push(
-              //   ipfsHash[0].hash
-              // );
               result.examData.examProfessional.attempts = 0;
               result.examData.payment.course_3 = false;
               jsonData.examStatus = examStatus;
-              var obj = {}
-              obj["timestamp"]=Date.now();
-              obj["marks"]=obtainedMarks;
-              obj["total"]=examTotal;
-              obj["hash"]=ipfsHash[0].hash;
-              obj["examType"]="professional";
-              result.examData.certificateHash.push(obj)
+              var obj = {};
+              obj["timestamp"] = Date.now();
+              obj["marks"] = obtainedMarks;
+              obj["total"] = examTotal;
+              obj["hash"] = ipfsHash[0].hash;
+              obj["examType"] = "professional";
+              result.examData.certificateHash.push(obj);
               result.save();
               res.render("examResult", jsonData); // makes re-load the screen, should be partial rendering.
             });
@@ -552,7 +486,7 @@ exports.getExamResult = (req, res) => {
 };
 
 exports.getExamStatus = (req, res) => {
-  console.log("local exam ");
+  console.log("local exam: ");
   var query = {};
   query = getQuery(req.user);
   User.findOne(query, function(err, user) {

@@ -1,5 +1,5 @@
 const nodemailerAuth = require("../config/auth").nodemailerAuth;
-var User = require("../config/models/user");
+var User = require("../models/user");
 var nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
   host: "mail001.dakghar.in",

@@ -1,4 +1,4 @@
-var User = require("../config/models/user");
+var User = require("../models/user");
 const emailer = require("../emailer/impl");
 const passport = require("passport");
 
