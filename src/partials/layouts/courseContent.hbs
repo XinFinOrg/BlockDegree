@@ -1,0 +1,31 @@
+\{{#> base}}
+
+  \{{> layouts/base pageClass="course-module"}}
+    \{{#*inline "body-block"}}
+      \{{> includes/hero hero-title="{{parent}}"}}
+        <div class="row mx-0">
+          <div class="col-12 col-sm-4 px-0">
+            \{{#> sidebar}}
+            \{{> layouts/modSidebar sidebarId={{courseIdx}} }}
+            \{{/sidebar}}
+          </div>
+
+          <div class="col-12 col-sm-8 p-4 module-content">
+            <div class="container py-2">
+              <h2 id="{{title}}">{{{ title }}}</h2>
+              <div>{{{ contents }}}</div>
+              <div id="next-page" class="text-center text-sm-right"></div>
+              \{{#> certBlock}}
+              \{{> layouts/certBlock }}
+              \{{/certBlock}}
+            </div>
+          </div>
+      </div>
+    </section>
+    \{{/inline}}
+
+    \{{#*inline "scripts-block"}}
+      <script src="/js/modMenu.js"></script>
+      <script src="/js/cachedMenu.js"></script>
+    \{{/inline}}
+\{{/base}}

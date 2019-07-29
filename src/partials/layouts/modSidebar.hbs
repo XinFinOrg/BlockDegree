@@ -1,0 +1,66 @@
+<!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
+<nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id={{{sidebarId}}} style="background: #fafbfc;">
+  <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
+  <div id="mod__details">
+    <script id="module-template" type="text/x-handlebars-template">
+
+      \{{#with courses.[{{{sidebarId}}}] }}
+
+        \{{#each curriculum as |ccm|}}
+
+          \{{#if ccm.sub-topic}}
+          <ul id="acc__mod-\{{@index}}"> \{{else}}
+          <ul> \{{/if}}
+
+              <!-- Heading -->
+              <li
+                \{{#if ccm.sub-topic}}
+                  id="\{{url ccm.topic}}"
+                  class="with-child"
+                  data-toggle="collapse"
+                  data-target="#sub-\{{@index}}"
+                  aria-expandeded="false"
+                \{{/if}}>
+                <div class="row px-2 py-3">
+                  <div class="col-10">
+                    <a href="\{{url ccm.topic}}">
+                      <h4 class="mod__heading"> \{{ccm.topic}}</h4>
+                    </a>
+                  </div>
+                  \{{#if ccm.sub-topic}}
+                    <div class="col-1 arrow"
+                         id="\{{url ccm.topic}}"
+                         class="with-child"
+                         data-toggle="collapse"
+                         data-target="#sub-\{{@index}}"
+                         aria-expanded="false">
+                       &#x25BC;
+                   </div>
+                 \{{/if}}
+               </div>
+              </li>
+              <!-- End heading -->
+
+              <!-- Start sub-heading if there is -->
+              \{{#if ccm.sub-topic}}
+                <ul id="sub-\{{@index}}" class="collapse side-nav__child">
+
+                  \{{#each ccm.sub-topic as |sub|}}
+                    <li class="pl-4 py-3">
+                      <a id="\{{url sub}}" href="\{{url ccm.topic}}#\{{url sub}}">
+                        <h5 class="mod__sub-heading">\{{sub}}</h5>
+                      </a>
+                    </li> \{{/each}}
+
+                </ul>
+              \{{/if}}
+              <!-- End sub-heading if there is -->
+
+            </ul>
+          \{{/each}}
+        \{{/with}}
+
+
+    </script>
+  </div>
+</nav>

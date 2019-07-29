@@ -1,0 +1,124 @@
+{{#> base}}
+  {{> layouts/base title="Blockchain events"}}
+
+  {{#*inline "body-block"}}
+    {{> includes/hero hero-title="Events"}}
+
+    <div class="container__cstm">
+      <div>
+        <h2 class="mb-2">Our past events</h2>
+        <div class="events__carousel" id="events">
+          <script id="event-template" type="text/x-handlebars-template">
+            \{{#each events}}
+            <div class="event__single">
+              <img src="img/\{{image}}" class="card-img-top border-bottom p-2"
+                   style="height: 150px; width: auto; object-fit:contain;" />
+              <div class="p-2">
+                <h5 class="card-title mb-0">\{{name}}</h5>
+                <p class="mb-3"><em class="text-muted">\{{date}}</em></p>
+                <p class="card-text">\{{overview}}</p>
+              </div>
+            </div>
+            \{{/each}}
+          </script>
+        </div>
+      </div>
+
+      <div class="pt-5">
+        <h2 class="mb-2">Our gallery</h2>
+        <div id="gallery">
+
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-6">
+                <a href="img/kj1.jpg" class="img-gal">
+                  <div class="single-imgs relative">
+                    <div class="overlay overlay-bg"></div>
+                    <div class="relative">
+                      <img class="img-fluid" src="img/kj1.jpg" alt="">
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-6">
+                <a href="img/kstart1.jpeg" class="img-gal">
+                  <div class="single-imgs relative">
+                    <div class="overlay overlay-bg"></div>
+                    <div class="relative">
+                      <img class="img-fluid" src="img/kstart1.jpeg" alt="">
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4">
+                <a href="img/kstart2.jpeg" class="img-gal">
+                  <div class="single-imgs relative">
+                    <div class="overlay overlay-bg"></div>
+                    <div class="relative">
+                      <img class="img-fluid" src="img/kstart2.jpeg" alt="">
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4">
+                <a href="img/kstart3.jpeg" class="img-gal">
+                  <div class="single-imgs relative">
+                    <div class="overlay overlay-bg"></div>
+                    <div class="relative">
+                      <img class="img-fluid" src="img/kstart3.jpeg" alt="">
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4">
+                <a href="img/kstart4.jpeg"  class="img-gal">
+                  <div class="single-imgs relative">
+                    <div class="overlay overlay-bg"></div>
+                    <div class="relative">
+                      <img class="img-fluid" src="img/kstart4.jpeg" alt="">
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-5">
+                <a href="img/spit234.jpeg" class="img-gal">
+                  <div class="single-imgs relative">
+                    <div class="overlay overlay-bg"></div>
+                    <div class="relative">
+                      <img class="img-fluid" src="img/spit234.jpeg" alt="">
+                    </div>
+                  </div>
+                 </a>
+              </div>
+              <div class="col-lg-7">
+                <a href="img/spit236.jpeg" class="img-gal">
+                  <div class="single-imgs relative">
+                    <div class="overlay overlay-bg"></div>
+                    <div  class="relative">
+                      <img class="img-fluid" src="img/spit236.jpeg" alt="">
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-7">
+                <a href="img/1_PM0paOgnyZrmYHH3djku7Q.jpeg" class="img-gal">
+                  <div class="single-imgs relative">
+                    <div class="overlay overlay-bg"></div>
+                    <div  class="relative">
+                      <img class="img-fluid" src="img/1_PM0paOgnyZrmYHH3djku7Q.jpeg" alt="">
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  {{/inline}}
+
+  {{#*inline "scripts-block"}}
+  <script src="js/events.js"></script>
+  {{/inline}}
+{{/base}}

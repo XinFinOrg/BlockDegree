@@ -1,0 +1,36 @@
+<div class="container main-menu">
+  <div class="row align-items-center justify-content-between d-flex">
+    <div id="logo">
+      <a href="/"><img src="/img/brand/XinFin_transparent.png" alt="xinfin blockchain education training" /></a>
+    </div>
+
+    <nav id="nav-menu-container">
+      <ul class="nav-menu">
+        <li class="menu-has-children"><a href="" class="py-1">Online Blockchain Training</a>
+          <ul id="nav-sub-1">
+            <script id="nav-submenu-template" type="text/template">
+              \{{#each courses}}
+                <li><a href="/\{{slug}}" data-toggle="moda" data-target="#exampleModal" data-whatever="@getbootstra">
+                  \{{title}}
+                </a></li>
+              \{{/each}}
+            </script>
+          </ul>
+        </li>
+        <li><a href="/university-courses" class="py-1">University Course Offline</a></li>
+        <li><a href="/Upload-Certificate" class="py-1">Upload Certificate </a></li>
+        <li><a href="/events" class="py-1">Event</a></li>
+        <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
+        <li><a href="/contact" class="py-1">Contact Us</a></li>
+        <li id="login-btn">
+          <script id="nav-login" type="text/template">
+            <a id="userAuth-btn" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"
+               href="\{{#if this}}/logout\{{else}}/login\{{/if}}">
+              \{{#if this}}Logout\{{else}}Login\{{/if}}
+            </a>
+          </script>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

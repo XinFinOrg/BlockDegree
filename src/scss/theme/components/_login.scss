@@ -1,0 +1,136 @@
+// University modal pop up
+.ui-widget-header  {
+  background: transparent;
+  border: 0;
+  border-bottom: 3px solid #5fbae9;
+}
+
+#partner-form {
+  display: none;
+}
+
+/* STRUCTURE */
+.form-messages {
+  position: relative;
+  top: 20px;
+  width: 80%;
+  left: 10%;
+  @include media-breakpoint-up(sm) {
+    position: absolute;
+    top: 100px;
+  }
+}
+
+.form-content {
+  border-top: 3px solid $btn__gradient--stop-1;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border-radius: 10px 10px 10px 10px;
+  background: #fff;
+  padding: 30px;
+  width: 90%;
+  max-width: 450px;
+  position: relative;
+  padding: 0px;
+  -webkit-box-shadow: 5px 6px 30px -5px rgba(0,0,0,0.3);
+  box-shadow: 5px 6px 30px -5px rgba(0,0,0,0.3);
+  text-align: center;
+
+  h2.inactive {
+    color: #cccccc;
+  }
+
+  h2.active {
+    color: #0d0d0d;
+    border-bottom: 2px solid #5fbae9;
+  }
+
+  input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
+    background-color: #39ace7;
+  }
+
+  input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
+    -moz-transform: scale(0.95);
+    -webkit-transform: scale(0.95);
+    -o-transform: scale(0.95);
+    -ms-transform: scale(0.95);
+    transform: scale(0.95);
+  }
+
+  input[type=text], input[type=email], input[type=password] {
+    background-color: #f6f6f6;
+    border: none;
+    color: #0d0d0d;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px;
+    width: 90%;
+    border: 2px solid #f6f6f6;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+
+    &:focus {
+      background-color: #fff;
+      border-bottom: 2px solid #5fbae9;
+    }
+
+    &:placeholder {
+      color: #cccccc;
+    }
+  }
+
+
+  input[type=submit] {
+    margin: 5px;
+    width: 90%;
+  }
+}
+
+#formFooter {
+  background-color: #f6f6f6;
+  border-top: 1px solid #dce8f1;
+  padding: 25px;
+  text-align: center;
+  -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
+}
+
+/* Simple CSS3 Fade-in Animation */
+.underlineHover:after {
+  display: block;
+  left: 20%;
+  bottom: -10px;
+  width: 0;
+  height: 2px;
+  background-color: #56baed;
+  position: relative;
+  content: "";
+  transition: width 0.2s;
+}
+
+
+
+.underlineHover:hover {
+  color: #0d0d0d;
+}
+
+.underlineHover:hover:after{
+  width: 60%;
+}
+
+
+
+/* OTHERS */
+
+*:focus {
+    outline: none;
+}
+
+#icon {
+  width:60%;
+}

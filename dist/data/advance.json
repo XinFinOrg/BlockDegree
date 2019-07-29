@@ -1,0 +1,30 @@
+{
+    "title": "102 - Blockchain advanced course for engineer",
+    "video": "https://www.youtube.com/embed/oSP-taqLWPQ",
+    "duration": "3 days",
+    "slug": "blockchain-advanced",
+    "sypnosis": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). ",
+    "overview": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). Each validator independently checks the payment and block data being passed around. There are rules in place to make the network operate as intended.",
+    "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
+    "prerequisites": ["Necessary: Basic knowledge in JavaScript / HTML", "Basic knowledge in C++ / Java, data types", "Advantageous: Basic knowledge with git repositories"],
+    "curriculum": [
+      {
+        "topic": "What is blockchain and Bitcoin?"
+      },
+      {
+        "topic": "How Does Bitcoin Work?",
+        "sub-topic": ["Balances - blockchain", "Transactions - private keys", "Processing Mining"]
+      },
+      {
+        "topic": "Cryptography",
+        "sub-topic": ["Hashing"]
+      },
+      {
+        "topic": "What is Proof-Of-Work",
+        "sub-topic": ["Minting", "Decntralised", "Safe and secure system", "Increased capacity"]
+      },
+      {
+        "topic": "How to create and join public bitcoin blockchain?"
+      }
+    ]
+  }

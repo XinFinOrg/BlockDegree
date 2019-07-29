@@ -1,0 +1,28 @@
+/* =================================== */
+/*  Gallery Page Styles
+/* =================================== */
+
+
+#gallery {
+    .single-imgs{
+        img{
+            margin: 20px 0;
+            width:100%;
+            @include media-breakpoint-up(sm){
+              height: 300px;
+              object-fit: cover;
+            }
+        }
+        .overlay-bg{
+            background: rgba($primary-color,.85);
+            opacity: 0;
+            @include transition();
+            z-index: 2;
+        }
+        &:hover{
+            .overlay-bg{
+                opacity:1;
+            }
+        }
+    }
+}

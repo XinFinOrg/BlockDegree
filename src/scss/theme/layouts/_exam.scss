@@ -1,0 +1,78 @@
+.exam-choice {
+  display: inline-block;
+  position: relative;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+  &:hover {
+    color: $primary-color;
+
+    input[type="radio"] {
+      cursor: pointer;
+      border: 2px solid $btn--secondary;
+    }
+  }
+
+  input[type="radio"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 15px;
+    width: 15px;
+    position: relative;
+    border-radius: 100%;
+    margin-right: 10px;
+    top: 2px;
+    border: 2px solid $text--muted-color;
+
+    &:checked {
+      background-color: $btn--secondary;
+      border: 2px solid transparent;
+
+      & + label {
+        color: $primary-color;
+      }
+    }
+  }
+
+  label {
+    cursor: pointer;
+  }
+}
+
+#exams__list {
+  .card-title {
+    color: white;
+  }
+
+  .card-price {
+    padding: 60px 10px;
+
+    .btn {
+      @include transition(all 0.4s);
+      position: relative;
+      width: 80%;
+      padding: 15px 10px;
+      background: white;
+
+      &:hover {
+        box-shadow: rgba(0,0,0,0.7) 0px 10px 35px -5px;
+      }
+    }
+  }
+
+  .single-exam__course:nth-child(3n+1) .card-title,
+  .single-exam__course:nth-child(3n+1) .card-price {
+    background: $btn__gradient--stop-1;
+  }
+  .single-exam__course:nth-child(3n+2) .card-title,
+  .single-exam__course:nth-child(3n+2) .card-price {
+    background: $primary-color;
+  }
+  .single-exam__course:nth-child(3n+3) .card-title,
+  .single-exam__course:nth-child(3n+3) .card-price {
+    background: #F75C03;
+  }
+}
