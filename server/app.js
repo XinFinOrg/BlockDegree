@@ -57,7 +57,7 @@ require('./routes/examRoutes')(app)
 // require('./routes/paymentRoutes')(app) // Not working; need to make a further dive.
 require('./routes/contentRoutes')(app)
 require('./routes/emailVeriRoutes')(app);
-// require('./routes/shareSocialsRoutes')(app)
+require('./routes/shareSocialsRoutes')(app)
 
 // catch 404 and render 404 page
 app.use('*', function(req, res) {

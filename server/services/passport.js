@@ -258,15 +258,19 @@ module.exports = function(passport) {
         clientID: process.env.LINKEDIN_CLIENT,
         clientSecret: process.env.LINKEDIN_SECRET,
         callbackURL: "http://localhost:3000/auth/linkedin/callback",
-        scope: ["r_liteprofile", "r_emailaddress"]
+        scope: ["r_liteprofile", "r_emailaddress","w_member_social"]
       },
       async ( accessToken, refreshToken, profile, done) => {
-
+        
         process.nextTick(async function () {
           // To keep the example simple, the user's LinkedIn profile is returned to
           // represent the logged-in user. In a typical application, you would want
           // to associate the LinkedIn account with a user record in your database,
-          // and return that user instead.        
+          // and return that user instead.  
+          const existingUser = await User.findOne({ "email": profile.emails[0].value });
+        if (existingUser) {
+          return done(null, existingUser);
+        }      
           newUser = newDefaultUser();
           newUser.auth.linkedin.id = profile.id;
           newUser.name = profile.displayName;
