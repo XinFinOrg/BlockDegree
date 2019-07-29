@@ -17,7 +17,7 @@ Following are the tasks to do :
 - [ ] Maintain atomicity of transactions ( exam submission, payments )
 - [x] Delay of 5+ seconds for payment redirection ( will be addressed by loading-icon )
 - [X] Directly post on twitter ( required ? ) 
-- [ ] Share on socials ( Facebook | Twitter | Linkedin )
+- [x] Share on socials ( Twitter | Linkedin | Facebook )
 - [ ] Local download of the certificate
 - [ ] API to retrive certificate hashes of a user 
 - [ ] Fix login button's JS ( UI )
