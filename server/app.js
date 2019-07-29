@@ -51,12 +51,12 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-require('./routes/routes.js')(app)
-require('./routes/routes.js')(app)
+require('./routes/paymentRoutes.js')(app)
 require('./routes/authRoutes')(app)
 require('./routes/examRoutes')(app)
 // require('./routes/paymentRoutes')(app) // Not working; need to make a further dive.
 require('./routes/contentRoutes')(app)
+require('./routes/emailVeriRoutes')(app);
 // require('./routes/shareSocialsRoutes')(app)
 
 // catch 404 and render 404 page

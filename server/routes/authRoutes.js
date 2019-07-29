@@ -55,6 +55,8 @@ module.exports = app => {
   });
 
   app.post("/forgotPassword", (req, res) => {
+    console.log("called forgot password");
+    
     User.findOne({ "email": req.body.email }).then(result => {
       console.log("ankit", result);
       if (result == null || result.auth.local.password=="") {
@@ -64,7 +66,7 @@ module.exports = app => {
         res.send("Password");
       } else {
         emailer.forgotPasswordMailer(
-          result.auth.local.email,
+          result.email,
           result.auth.local.password,
           res
         );
@@ -74,7 +76,6 @@ module.exports = app => {
 
   app.post("/resetPassword", (req, res) => {
     console.log(req.body);
-    console.log("ankit patel", result);
     User.findOne({
       where: {
         "email": req.body.email
@@ -90,6 +91,8 @@ module.exports = app => {
   });
 
   app.post("/updatePassword", (req, res) => {
+    console.log("called update password");
+    
     var data = JSON.stringify(req.body);
     var dataupdate = JSON.parse(data);
     console.log(data, dataupdate);

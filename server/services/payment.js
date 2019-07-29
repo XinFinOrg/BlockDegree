@@ -11,11 +11,13 @@ var ejs = require("ejs");
 const utils = require("../utils.js");
 let { isLoggedIn } = utils;
 
-
 exports.payPaypalSuccess = (req, res, next) => {
   var paymentId = req.query.paymentId;
   var payerId = { payer_id: req.query.PayerID };
   var order;
+  var query = {};
+  var emailValue = "";
+  // query,emailValue = getQuery(req.user)
 
   paypal.payment.execute(paymentId, payerId, function(error, payment) {
     if (error) {
@@ -54,13 +56,13 @@ exports.payPaypalSuccess = (req, res, next) => {
                 console.error(error);
               } else {
                 console.log("ORDER CAPTURE SUCCESS");
-                User.findOne({ "local.email": email }, function(err, user) {
+                User.findOne({ email: req.user.email }, function(err, user) {
                   if (course_id == "course_1")
-                    user.local.payment.course_1 = true;
+                    user.examData.payment.course_1 = true;
                   else if (course_id == "course_2")
-                    user.local.payment.course_2 = true;
+                    user.examData.payment.course_2 = true;
                   else if (course_id == "course_3")
-                    user.local.payment.course_3 = true;
+                    user.examData.payment.course_3 = true;
                   user.save();
                   PaymentLogs.findOne(
                     { payment_id: invoice_number, email: email },
@@ -87,17 +89,21 @@ exports.payPaypalSuccess = (req, res, next) => {
 
 exports.payPaypal = async (req, res) => {
   var price = req.body.price;
-  var email = req.user.local.email;
+  var email = req.user.email;
+  // var query = {};
+
+  // query,email = getQuery(req.user)
+
   var course_id = req.body.course_id;
   var payment_status;
 
-  await User.findOne({ "local.email": email }, function(err, user) {
+  await User.findOne({ email: email }, function(err, user) {
     if (course_id == "course_1") {
-      payment_status = user.local.payment.course_1;
+      payment_status = user.examData.payment.course_1;
     } else if (course_id == "course_2") {
-      payment_status = user.local.payment.course_2;
+      payment_status = user.examData.payment.course_2;
     } else if (course_id == "course_3") {
-      payment_status = user.local.payment.course_3;
+      payment_status = user.examData.payment.course_3;
     }
   });
 
