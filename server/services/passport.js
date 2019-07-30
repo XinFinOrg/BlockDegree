@@ -211,18 +211,33 @@ module.exports = function(passport) {
       {
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: "https://localhost:3000/auth/facebook/callback",
-        passReqToCallback: true
+        callbackURL: "/auth/facebook/callback",
+        passReqToCallback: true,
+        profileFields: ["id", "emails", "name"]
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        const existingUser = await User.findOne({ "facebook.id": profile.id });
-        if (existingUser) {
-          return done(null, existingUser);
+        // console.log(profile);
+
+        if (req.user) {
+          if (
+            req.user.auth.facebook.id == "" ||
+            req.user.auth.facebook.id == undefined
+          ) {
+            let user = await User.findOne({ email: req.user.email });
+            user.auth.facebook.id = profile.id;
+            user.auth.facebook.accessToken = accessToken;
+            user.auth.facebook.refreshToken = refreshToken;
+            user.save();
+            return done(null, user);
+          }
         }
         console.log("Profile Name: ", profile);
 
         newUser = newDefaultUser();
+        newUser.email=profile.emails[0].value;
         newUser.auth.facebook.id = profile.id;
+        newUser.auth.facebook.accessToken = accessToken;
+        newUser.auth.facebook.refreshToken = refreshToken || "";
         // newUser.google.email = profile.emails[0].value;
         // newUser.google.name = profile._json.name;
 
@@ -292,14 +307,15 @@ module.exports = function(passport) {
       },
       async (req, accessToken, refreshToken, profile, done) => {
         process.nextTick(async function() {
-          // To keep the example simple, the user's LinkedIn profile is returned to
-          // represent the logged-in user. In a typical application, you would want
-          // to associate the LinkedIn account with a user record in your database,
-          // and return that user instead.
           const existingUser = await User.findOne({
-            email: profile.emails[0].value
+            email: req.user.email
           });
           if (existingUser) {
+            if (existingUser.auth.linkedin==""||existingUser.auth.linkedin==undefined){
+              // store the linkedin credentials
+              existingUser.auth.linkedin.id=profile.id;
+              existingUser.auth.linkedin.accessToken=accessToken;
+            }
             return done(null, existingUser);
           }
           newUser = newDefaultUser();
@@ -315,59 +331,3 @@ module.exports = function(passport) {
   );
 };
 
-// Github login
-
-// passport.use('github', new GithubStrategy({
-//     clientID: configAuth.githubAuth.clientID,
-//     clientSecret: configAuth.githubAuth.clientSecret,
-//     callbackURL: configAuth.githubAuth.callbackURL,
-//     scope: 'user:email'
-//   },
-//   function (token, refreshToken, profile, done)
-
-//   {
-//     console.log('GitHubStrategy',profile, token);
-//     process.nextTick(function() {
-//         User.findOne({
-//             'local.email': profile.emails[0].value
-//         }, function(err, user) {
-//             console.log('github callback', user, err);
-//             if(user){
-//                 // already have this user
-//                 console.log('user is: ', user);
-//                 done(null, user);
-//             } else {
-//                 var newUser = new User();
-//                 newUser.local.email = profile.emails[0].value;
-//                 // newUser.local.password = newUser.generateHash(password);
-//                 newUser.local.payment.course_1 = false;
-//                 newUser.local.payment.course_2 = false;
-//                 newUser.local.payment.course_3 = false;
-//                 newUser.local.examBasic.attempts = 0;
-//                 newUser.local.examBasic.marks = 0;
-//                 newUser.local.examAdvanced.attempts = 0;
-//                 newUser.local.examAdvanced.marks = 0;
-//                 newUser.local.examProfessional.attempts = 0;
-//                 newUser.local.examProfessional.marks = 0;
-//                 newUser.save(function (err) {
-//                     if (err) {
-//                         console.log("Error:", err)
-//                         throw err;
-//                     }
-
-//                     // var token = new Token({ email: email, token: crypto.randomBytes(16).toString('hex') });
-//                     // token.save(function (err) {
-//                     //     if (err) {
-//                     //         console.log(err)
-//                     //         return done(null, false, "token errror")
-//                     //     }
-//                     //     console.log(email, token)
-//                     //     emailer.sendTokenMail(email, token, req, 'signup');
-//                     //     return done(null, newUser);
-//                     // });
-//                     return done(null, newUser);
-//                 });
-//             }
-//         });
-//     });
-// }));

@@ -165,9 +165,7 @@ exports.postLinkedin = async (req, res) => {
   res.json({posted:true,error:null,status:response.status});
 };
 
-exports.postFacebook = async (req,res) => {
-  
-}
+exports.postFacebook = async (req,res) => {}
 
 // Not wokring
 // Isuue in uploading the image to the uploadURL; tried cURL, httpie, axios

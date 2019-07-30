@@ -38,7 +38,22 @@ exports.getAllCertificates = async (req, res) => {
   });
 };
 
-exports.getCertificatesForAnExam = async (req, res) => {};
+exports.getCertificatesFromCourse = async (req, res) => {
+  if (req.body.course=="" || req.body.course==undefined){
+    res.status(400).json({error:"bad request: req.body.course id empty / undefined",status:400});
+  } 
+  const course = req.body.course;
+  const user = await User.findOne({email:  req.user.email}).catch(err => {
+    res.status(500).json({error:"DB is under maintainence pls try again after sometime",status:500});
+  })
+  var certificateHash = [{}]
+  for (obj of user.examData.certificateHash ){
+    if (obj.examType==course){
+      certificateHash.push(obj)
+    }
+  }
+  res.status(200).json({certificateHash:certificateHash,status:200,error:null})
+};
 
 // Very heavy process
 // get_user -> validate_hash -> get_user -> fetch_hash_frpm_IPFS -> get_screenshot -> save_screenshot -> send_screenshot -> delete_screenshot
