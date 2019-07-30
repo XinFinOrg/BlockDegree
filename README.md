@@ -9,7 +9,7 @@ Following are the tasks to do :
 - [x] First Restructuring codebase ( corrected way to use credentials etc.)
 - [x] Login with Google, Twitter, Linkedin
 - [x] Different js-services for different types of services ( auth, content, payment )
-- [ ] Fix login with Facebook 
+- [x] Fix login with Facebook 
 - [X] Update Schema of the database and recursively change the DB interactions
 - [x] Get 'payment' service working
 - [x] Relocate passport to service directory
@@ -24,6 +24,8 @@ Following are the tasks to do :
 - [ ] Fix login button's JS ( UI )
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI )
+
+- [ ] Complete testing and fixing the bugs found 
 
 ### TO DO ( SECOND BATCH )
 - [ ] Make IPFS module scale across machines, monitor usage per api-call
