@@ -15,11 +15,12 @@ Following are the tasks to do :
 - [x] Relocate passport to service directory
 - [x] Fix re-loading of the '/exam-result' resulting in two copies of data being pushed
 - [ ] Maintain atomicity of transactions ( exam submission, payments )
-- [x] Delay of 5+ seconds for payment redirection ( will be addressed by loading-icon )
+- [ ] Try to make a better structure for getting a PNG from hash ( currently huge 6 sec delay )
+- [x] Fix for Delay of 5+ seconds for payment redirection ( will be addressed by loading-icon )
 - [X] Directly post on twitter ( required ? ) 
 - [x] Share on socials ( Twitter | Linkedin | Facebook )
-- [ ] Local download of the certificate
-- [ ] API to retrive certificate hashes of a user 
+- [x] Local download of the certificate
+- [x] API to retrive certificate hashes of a user 
 - [ ] Fix login button's JS ( UI )
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI )
