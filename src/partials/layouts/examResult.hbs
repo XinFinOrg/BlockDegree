@@ -21,6 +21,17 @@
             <strong><span>Certificate Hash:</span></strong> {{{certificateHash}}}
             {{#if examStatus}}
             <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
+
+             <form target="_blank" method="post" action="/api/downloadCertificate">
+                <input type="text" placeholder="Enter hash" name="hash" hidden />
+                <input type="submit" hidden/>
+              </form>
+
+                <form target="_blank" method="post" action="/api/downloadCertificate">
+                <input type="text" placeholder="Enter hash" name="hash"  />
+                <input type="submit" />
+              </form>
+
             <div class="fb-share-button" data-href="https://blockdegree.org" data-layout="button_count"
               data-size="large"><a target="_blank"
                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"

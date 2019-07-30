@@ -7,7 +7,6 @@ const axios = require("axios");
 const curl = new (require("curl-request"))();
 var exec = require("child_process").exec;
 var FormData = require("form-data");
-const passport = require("../services/passport");
 
 require("dotenv").config();
 
