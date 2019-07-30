@@ -29,14 +29,22 @@
               data-size="large">
               Tweet</a>
 
+            {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
             <p>
-              Post With Certificate:
-              <div>
-                <a href="/api/shareOnTwitter">Post On Twitter</a>
-              </div>
-              <div>
-                <a href="/api/shareOnLinkedin">Post on Linkedin</a>
-              </div>
+              Post on Socials:
+              <br>
+              <form target="_blank" method="post" action="/api/shareOnTwitter" >
+                <input type="hidden" placeholder="Enter post status" name="msg" />
+                <input type="hidden" />
+              </form>
+              <form target="_blank" method="post" action="/api/shareOnTwitter">
+                <input type="text" placeholder="Enter post status" name="msg" />
+                <input type="submit" />
+              </form>
+              <form target="_blank" method="post" action="/api/shareOnLinkedin">
+                <input type="text" placeholder="Enter post status" name="msg" />
+                <input type="submit" />
+              </form>
             </p>
             {{else}}
             <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
@@ -67,14 +75,22 @@
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world"
               data-size="large">
               Tweet</a>
+            {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
             <p>
-              Post With Certificate:
-              <div>
-                <a href="/api/shareOnTwitter">Post On Twitter</a>
-              </div>
-              <div>
-                <a href="/api/shareOnLinkedin">Post on Linkedin</a>
-              </div>
+              Post on Socials:
+              <br>
+              <form target="_blank" method="post" action="/api/shareOnTwitter" >
+                <input type="hidden" placeholder="Enter post status" name="msg" />
+                <input type="hidden" />
+              </form>
+              <form target="_blank" method="post" action="/api/shareOnTwitter">
+                <input type="text" placeholder="Enter post status" name="msg" />
+                <input type="submit" />
+              </form>
+              <form target="_blank" method="post" action="/api/shareOnLinkedin">
+                <input type="text" placeholder="Enter post status" name="msg" />
+                <input type="submit" />
+              </form>
             </p>
 
             {{else}}
@@ -108,14 +124,23 @@
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world"
               data-size="large">
               Tweet</a>
+            {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
             <p>
-              Post With Certificate:
-              <div>
-                <a href="/api/shareOnTwitter">Post On Twitter</a>
-              </div>
-              <div>
-                <a href="/api/shareOnLinkedin">Post on Linkedin</a>
-              </div>
+              Post on Socials:
+              <br>
+              <form target="_blank" method="post" action="/api/shareOnTwitter" >
+                <input type="hidden" placeholder="Enter post status" name="msg" />
+                <input type="hidden" />
+              </form>
+
+              <form target="_blank" method="post" action="/api/shareOnTwitter">
+                <input type="text" placeholder="Enter post status" name="msg" />
+                <input type="submit" />
+              </form>
+              <form target="_blank" method="post" action="/api/shareOnLinkedin">
+                <input type="text" placeholder="Enter post status" name="msg" />
+                <input type="submit" />
+              </form>
             </p>
             {{else}}
             <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>

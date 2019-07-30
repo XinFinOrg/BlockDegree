@@ -7,6 +7,7 @@ const axios = require("axios");
 const curl = new (require("curl-request"))();
 var exec = require("child_process").exec;
 var FormData = require("form-data");
+const passport = require("../services/passport");
 
 require("dotenv").config();
 
@@ -19,6 +20,10 @@ const xinfinClient = new ipfsClient({
 const localClient = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
 
 exports.postTwitter = async (req, res) => {
+  console.log("Called share on twitter");
+  if (!req.user){
+    res.redirect('/login')
+  }
   const user = await User.findOne({ email: req.user.email });
   if (!user) {
     res.redirect("/login");
@@ -29,8 +34,15 @@ exports.postTwitter = async (req, res) => {
     user.auth.twitter.tokenSecret == "" ||
     user.auth.twitter.tokenSecret == undefined
   ) {
-    res.redirect("/auth/linkedin");
+    res.redirect("/auth/twitter");
   }
+  const hash =
+    req.body.hash ||
+    user.examData.certificateHash[user.examData.certificateHash.length - 1]
+      .hash;
+  const msg =
+    req.body.msg ||
+    "Hey, I just got certified in blockchain from Blockdegree.org !!";
   var config = getTwitterConfig(
     process.env.TWITTER_CLIENT_ID,
     process.env.TWITTER_CLIENT_SECRET,
@@ -40,7 +52,7 @@ exports.postTwitter = async (req, res) => {
   var T = new twit(config);
   var imgHTML = "";
 
-  localClient.get(req.body.hash, (err, files) => {
+  localClient.get(hash, (err, files) => {
     if (err) {
       res.json({ uploaded: false, error: err });
     }
@@ -71,8 +83,7 @@ exports.postTwitter = async (req, res) => {
             T.post(
               "statuses/update",
               {
-                status:
-                  "Hey, I just got certified in blockchain from Blockdegree.org !!",
+                status: msg,
                 media_ids: new Array(data.media_id_string)
               },
               function(err, data, response) {
@@ -94,6 +105,7 @@ exports.postTwitter = async (req, res) => {
       });
     });
   });
+  res.json({ uploaded: true, error: null });
 };
 
 exports.postLinkedin = async (req, res) => {
@@ -107,7 +119,8 @@ exports.postLinkedin = async (req, res) => {
     user.auth.linkedin.id == "" ||
     user.auth.linkedin.id == undefined
   ) {
-    res.redirect("/auth/linkedin");
+    // set twitter credentials ans post.
+    res.redirect('/auth/linkedin');
   }
   const msg =
     req.body.msg ||
@@ -127,18 +140,35 @@ exports.postLinkedin = async (req, res) => {
           shareCommentary: {
             text: msg
           },
-          shareMediaCategory: "NONE"
+          shareMediaCategory: "ARTICLE",
+          media: [
+            {
+              status: "READY",
+              description: {
+                text: "Blockdegree - XinFin's opensource blockchain training"
+              },
+              originalUrl: "https://blockdegree.org/",
+              title: {
+                text: "XinFin's Blockchain Training"
+              }
+            }
+          ]
         }
       },
       visibility: {
         "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
       }
     }
+  }).catch(err => {
+    throw err;
   });
-  console.log(response);
-  res.send(response);
+  console.log(response.status);
+  res.json({posted:true,error:null,status:response.status});
 };
 
+exports.postFacebook = async (req,res) => {
+  
+}
 
 // Not wokring
 // Isuue in uploading the image to the uploadURL; tried cURL, httpie, axios
@@ -146,7 +176,7 @@ exports.postLinkedin = async (req, res) => {
 exports.uploadImageLinkedin = async (req, res) => {
   // set the credentials from req.user;
   const authToken = "";
-  const personURN = ""
+  const personURN = "";
   var response = await axios({
     method: "post",
     url: "https://api.linkedin.com/v2/assets?action=registerUpload",
@@ -188,9 +218,6 @@ exports.uploadImageLinkedin = async (req, res) => {
   // })
 
   // exec(`http POST ${uploadURL}  @/home/rudresh/test.png "Authorization:Bearer ${authToken}"`);
-
-
-
 
   const resp = await axios({
     method: "post",
