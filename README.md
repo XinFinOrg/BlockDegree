@@ -21,7 +21,8 @@ Following are the tasks to do :
 - [x] Share on socials ( Twitter | Linkedin | Facebook )
 - [x] Local download of the certificate
 - [x] API to retrive certificate hashes of a user 
-- [ ] Fix login button's JS ( UI )
+- [ ] Make social login e-mail independent ( incorporate phone users )
+- [ ] Fix login button's JS ( UI; API is preesent )
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI )
 
