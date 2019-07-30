@@ -139,9 +139,14 @@ exports.postLinkedin = async (req, res) => {
   res.send(response);
 };
 
+
+// Not wokring
+// Isuue in uploading the image to the uploadURL; tried cURL, httpie, axios
+// Error: status code 400, bad request error
 exports.uploadImageLinkedin = async (req, res) => {
-  const authToken =
-    "AQUKu3weSiEovLSgn6Pf3a5Kk064ZXLbR7Bu4AuJwR_-q5kR4h1aTe1cNFE9ybc6rUr2F3Teeo2qFY6-a3GjhS8zyySmTXVHOwF5t8UJBKHG8l8f6_o_-7VE_Yiz99Jnii7FhtIYMuGpojdiSXucbV6HWeU-hTKz-RCzFdhCIliz_lvsb1bE2Ih6fEi3qDGxFTSwmgRpjRhhGTBwujCwGODAGXDumhGfyq7snzAZ6vNiRGHh3D1XR5ewEVHAnEOJ-uket8Wo5Riq0eSFtRrwHSmmJZx4YsHZNfcdIBfhUu3ggSyxD_p-IiooOcMvK0TURxPZqw_3fvsbgrnbMVOZ4XI6LJe0WA";
+  // set the credentials from req.user;
+  const authToken = "";
+  const personURN = ""
   var response = await axios({
     method: "post",
     url: "https://api.linkedin.com/v2/assets?action=registerUpload",
@@ -152,7 +157,7 @@ exports.uploadImageLinkedin = async (req, res) => {
     data: {
       registerUploadRequest: {
         recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
-        owner: "urn:li:person:-FqORa2gNz",
+        owner: `urn:li:person:${personURN}`,
         serviceRelationships: [
           {
             relationshipType: "OWNER",
@@ -174,13 +179,15 @@ exports.uploadImageLinkedin = async (req, res) => {
   console.log("ASSET: ", asset);
   console.log("UploadURL : ", uploadURL);
 
+  // This code below is th issue; ugcPosts is working fine.
+
   // exec(`curl -i --upload-file /home/rudresh/test.png --header "Authorization: Bearer ${authToken}" '${uploadURL}'`,(err,stdout,stderr) => {
   //   if (err!=null){
   //     throw err
   //   }
   // })
 
-  exec(`http POST ${uploadURL}  @/home/rudresh/test.png "Authorization:Bearer ${authToken}"`);
+  // exec(`http POST ${uploadURL}  @/home/rudresh/test.png "Authorization:Bearer ${authToken}"`);
 
 
 
@@ -190,10 +197,10 @@ exports.uploadImageLinkedin = async (req, res) => {
     url: "https://api.linkedin.com/v2/ugcPosts",
     headers: {
       "X-Restli-Protocol-Version": "2.0.0",
-      Authorization: `Bearer AQUKu3weSiEovLSgn6Pf3a5Kk064ZXLbR7Bu4AuJwR_-q5kR4h1aTe1cNFE9ybc6rUr2F3Teeo2qFY6-a3GjhS8zyySmTXVHOwF5t8UJBKHG8l8f6_o_-7VE_Yiz99Jnii7FhtIYMuGpojdiSXucbV6HWeU-hTKz-RCzFdhCIliz_lvsb1bE2Ih6fEi3qDGxFTSwmgRpjRhhGTBwujCwGODAGXDumhGfyq7snzAZ6vNiRGHh3D1XR5ewEVHAnEOJ-uket8Wo5Riq0eSFtRrwHSmmJZx4YsHZNfcdIBfhUu3ggSyxD_p-IiooOcMvK0TURxPZqw_3fvsbgrnbMVOZ4XI6LJe0WA`
+      Authorization: `Bearer ${authToken}`
     },
     data: {
-      author: "urn:li:person:-FqORa2gNz",
+      author: `urn:li:person:${personURN}`,
       lifecycleState: "PUBLISHED",
       specificContent: {
         "com.linkedin.ugc.ShareContent": {
@@ -234,10 +241,10 @@ exports.uploadImageLinkedin = async (req, res) => {
 //       url: "https://api.linkedin.com/v2/ugcPosts",
 //       headers: {
 //         "X-Restli-Protocol-Version": "2.0.0",
-//         Authorization: `Bearer AQUKu3weSiEovLSgn6Pf3a5Kk064ZXLbR7Bu4AuJwR_-q5kR4h1aTe1cNFE9ybc6rUr2F3Teeo2qFY6-a3GjhS8zyySmTXVHOwF5t8UJBKHG8l8f6_o_-7VE_Yiz99Jnii7FhtIYMuGpojdiSXucbV6HWeU-hTKz-RCzFdhCIliz_lvsb1bE2Ih6fEi3qDGxFTSwmgRpjRhhGTBwujCwGODAGXDumhGfyq7snzAZ6vNiRGHh3D1XR5ewEVHAnEOJ-uket8Wo5Riq0eSFtRrwHSmmJZx4YsHZNfcdIBfhUu3ggSyxD_p-IiooOcMvK0TURxPZqw_3fvsbgrnbMVOZ4XI6LJe0WA`
+//         Authorization: `Bearer ${authToken}`
 //       },
 //       data: {
-//         "author": "urn:li:person:-FqORa2gNz",
+//         "author": "urn:li:person:${personURN}",
 //         "lifecycleState": "PUBLISHED",
 //         "specificContent": {
 //             "com.linkedin.ugc.ShareContent": {
