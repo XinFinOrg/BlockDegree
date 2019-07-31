@@ -11,17 +11,18 @@ var ejs = require("ejs");
 const utils = require("../utils.js");
 let { isLoggedIn } = utils;
 
+// Need to understand the complete flow and handle erros, unexpected shutdowns, inaccessible 3rd party.
+
 exports.payPaypalSuccess = (req, res, next) => {
   var paymentId = req.query.paymentId;
   var payerId = { payer_id: req.query.PayerID };
   var order;
-  var query = {};
-  var emailValue = "";
-  // query,emailValue = getQuery(req.user)
 
   paypal.payment.execute(paymentId, payerId, function(error, payment) {
     if (error) {
+      // Error in executing a payment.
       console.error(JSON.stringify(error));
+      res.status(400).json(JSON.stringify(error));
     } else {
       if (
         payment.state === "approved" &&
@@ -47,6 +48,7 @@ exports.payPaypalSuccess = (req, res, next) => {
         ) {
           if (error) {
             console.error(JSON.stringify(error));
+            // res.status(500).json(JSON.stringify(error))
           } else {
             paypal.order.capture(order, capture_details, function(
               error,
@@ -54,9 +56,14 @@ exports.payPaypalSuccess = (req, res, next) => {
             ) {
               if (error) {
                 console.error(error);
+                res.status(500).json(JSON.stringify(error))
               } else {
                 console.log("ORDER CAPTURE SUCCESS");
                 User.findOne({ email: req.user.email }, function(err, user) {
+                  if (err!=null){
+                    // res.status(500).json({error:JSON.stringify(err),msg:"database under maintenance"})
+                    console.error(`Error: user not found || ${err}`)
+                  }
                   if (course_id == "course_1")
                     user.examData.payment.course_1 = true;
                   else if (course_id == "course_2")
@@ -64,7 +71,7 @@ exports.payPaypalSuccess = (req, res, next) => {
                   else if (course_id == "course_3")
                     user.examData.payment.course_3 = true;
                   user.save();
-                  PaymentLogs.findOne(
+                  await PaymentLogs.findOne(
                     { payment_id: invoice_number, email: email },
                     function(err, payment_log) {
                       payment_log.payment_status = true;
@@ -90,14 +97,13 @@ exports.payPaypalSuccess = (req, res, next) => {
 exports.payPaypal = async (req, res) => {
   var price = req.body.price;
   var email = req.user.email;
-  // var query = {};
-
-  // query,email = getQuery(req.user)
-
   var course_id = req.body.course_id;
   var payment_status;
 
   await User.findOne({ email: email }, function(err, user) {
+    if (err!=null){
+      console.error(`Can't find user | access db; Err : ${err}`)
+    }
     if (course_id == "course_1") {
       payment_status = user.examData.payment.course_1;
     } else if (course_id == "course_2") {
@@ -154,7 +160,6 @@ exports.payPaypal = async (req, res) => {
 
     paypal.payment.create(payReq, function(error, payment) {
       var links = {};
-
       if (error) {
         console.error(JSON.stringify(error));
       } else {
