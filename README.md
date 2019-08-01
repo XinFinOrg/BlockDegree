@@ -20,7 +20,7 @@ Following are the tasks to do :
 - [x] Share on socials ( Twitter | Linkedin | Facebook )
 - [x] Local download of the certificate
 - [x] API to retrive certificate hashes of a user 
-- [ ] Make social login e-mail independent ( incorporate phone users )
+- [x] Make login handle no-email ( Shift from email-index to id-index )
 - [ ] Fix login button's JS ( UI; API is preesent )
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI )
