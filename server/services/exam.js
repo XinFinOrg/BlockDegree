@@ -6,7 +6,6 @@ const utils = require("../utils.js");
 var crypto = require("crypto");
 
 const ipfsClient = require("ipfs-http-client");
-
 const xinfinClient = new ipfsClient({
   host: "ipfs.xinfin.network",
   port: 443,
@@ -29,7 +28,7 @@ exports.submitExam = (req, res, next) => {
   let attemptsAdvanced = req.user.examData.examAdvanced.attempts;
   let attemptsProfessional = req.user.examData.examProfessional.attempts;
   var query = {};
-  query = {email:req.user.email};
+  query = { email: req.user.email };
 
   if (examName === "basic") {
     if (attempts != null && attempts < 3) {
@@ -249,22 +248,9 @@ exports.getProfessionalExam = (req, res) => {
 
 exports.getExamResult = (req, res) => {
   const backUrl = req.header("Referer");
-
   var name = req.user.name;
-
-  // if (req.user.local.email != "") {
-  //   name = req.user.local.name;
-  // } else if (req.user.google.email != "") {
-  //   name = req.user.google.name;
-  // } else if (req.user.twitter.email != "") {
-  //   name = req.user.twitter.name;
-  // } else if (req.user.facebook.email != "") {
-  //   name = req.user.facebook.name;
-  // }
-
   var query = {};
-  query = {email:req.user.email};
-
+  query = { email: req.user.email };
   const examName = backUrl.split("/")[3].split("-")[1];
   if (examName === "basic") {
     User.findOne(query).then((result, error) => {
@@ -281,12 +267,11 @@ exports.getExamResult = (req, res) => {
         data: result,
         obtainedMarks: obtainedMarks,
         percent: percent,
-        total:examTotal
+        total: examTotal
       };
       if (percent >= 60) {
         examStatus = true;
         let d = new Date();
-
         if (
           result.examData.certificateHash[
             result.examData.certificateHash.length - 1
@@ -312,10 +297,24 @@ exports.getExamResult = (req, res) => {
               date: date
             },
             (err, data) => {
+              if (err != null) {
+                res
+                  .status(500)
+                  .json({
+                    error: err,
+                    info: "error in rendering the ejs-template",
+                    status: 500
+                  });
+              }
               let buffer = Buffer.from(data, "utf-8");
               localClient.add(buffer, async (err, ipfsHash) => {
                 if (err != null) {
-                  // handle IPFS error
+                  res
+                    .status(500)
+                    .json({
+                      error: err,
+                      info: "error in adding file-buffer to IPFS"
+                    });
                 }
                 jsonData.certificateHash = ipfsHash[0].hash;
                 jsonData.examStatus = examStatus;
@@ -349,10 +348,8 @@ exports.getExamResult = (req, res) => {
     });
   } else if (examName === "advanced") {
     User.findOne(query).then((result, error) => {
-      console.log("result advanced:", result, error);
       const examTotal = 50;
       let obtainedMarks = result.examData.examAdvanced.marks;
-      console.log("obtained marks",obtainedMarks)
       let percent = (obtainedMarks * 100) / examTotal;
       let examStatus;
       let jsonData = {
@@ -363,10 +360,9 @@ exports.getExamResult = (req, res) => {
         },
         data: result,
         obtainedMarks: obtainedMarks,
-        total:examTotal,
+        total: examTotal,
         percent: percent
       };
-
       if (percent >= 60) {
         if (
           result.examData.certificateHash[
@@ -395,8 +391,26 @@ exports.getExamResult = (req, res) => {
               date: date
             },
             (err, data) => {
+              if (err != null) {
+                res
+                  .status(500)
+                  .json({
+                    error: err,
+                    info: "error in rendering the ejs-template",
+                    status: 500
+                  });
+              }
               let buffer = Buffer.from(data, "utf-8");
               localClient.add(buffer, (err, ipfsHash) => {
+                if (err != null) {
+                  res
+                    .status(500)
+                    .json({
+                      error: err,
+                      info: "error in adding file-buffer to IPFS",
+                      status: 500
+                    });
+                }
                 jsonData.examStatus = examStatus;
                 jsonData.certificateHash = ipfsHash[0].hash;
                 result.examData.examAdvanced.attempts = 0;
@@ -419,7 +433,7 @@ exports.getExamResult = (req, res) => {
               result.examData.certificateHash.length - 1
             ].hash;
           jsonData.examStatus = true;
-          console.log("JSON in second return: ",jsonData)
+          console.log("JSON in second return: ", jsonData);
           res.render("examResult", jsonData);
         }
       } else if (percent < 60) {
@@ -430,10 +444,8 @@ exports.getExamResult = (req, res) => {
     });
   } else if (examName === "professional") {
     User.findOne(query).then((result, error) => {
-      console.log("result professional:", result, error);
       const examTotal = 50;
       let obtainedMarks = result.examData.examProfessional.marks;
-      console.log("obtainedMarks>>>>>>>", obtainedMarks);
       let percent = (obtainedMarks * 100) / examTotal;
       let examStatus;
       let jsonData = {
@@ -445,7 +457,7 @@ exports.getExamResult = (req, res) => {
         data: result,
         obtainedMarks: obtainedMarks,
         percent: percent,
-        total:examTotal
+        total: examTotal
       };
       if (percent >= 60) {
         if (
@@ -475,12 +487,30 @@ exports.getExamResult = (req, res) => {
               date: date
             },
             (err, data) => {
+              if (err != null) {
+                res
+                  .status(500)
+                  .json({
+                    error: err,
+                    info: "error in rendering the ejs-template",
+                    status: 500
+                  });
+              }
               let buffer = Buffer.from(data, "utf-8");
               localClient.add(buffer, (err, ipfsHash) => {
+                if (err != null) {
+                  res
+                    .status(500)
+                    .json({
+                      error: err,
+                      info: "error in adding file-buffer to IPFS",
+                      status: 500
+                    });
+                }
                 console.log(ipfsHash);
-                jsonData.data=result;
-                jsonData.marks=obtainedMarks;
-                jsonData.percent=percent;
+                jsonData.data = result;
+                jsonData.marks = obtainedMarks;
+                jsonData.percent = percent;
                 result.examData.examProfessional.attempts = 0;
                 result.examData.payment.course_3 = false;
                 jsonData.examStatus = true;
@@ -517,18 +547,29 @@ exports.getExamResult = (req, res) => {
 exports.getExamStatus = (req, res) => {
   console.log("local exam: ");
   var query = {};
-  query = {email:req.user.email};
+  query = { email: req.user.email };
   User.findOne(query, function(err, user) {
-    if (err) {
-      throw err;
+    if (err != null) {
+      res
+        .status(500)
+        .json({
+          error: err,
+          info: "error in fetching the user from DB",
+          status: 500
+        });
     }
     readJSONFile(
       path.join(process.cwd(), "/dist/data/courses.json"),
       (err, json) => {
-        if (err) {
-          throw err;
+        if (err != null) {
+          res
+            .status(500)
+            .json({
+              error: err,
+              info: "error in fetching the course content",
+              status: 500
+            });
         }
-
         const examListData = {
           data: {
             course_1: user.examData.payment.course_1,

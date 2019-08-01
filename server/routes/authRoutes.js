@@ -44,7 +44,6 @@ module.exports = app => {
         console.log("login1111>>>>>>", user);
         req.logIn(user, function(err) {
           if (err) {
-            //return next(err);
             console.log("login err>>>>>>>>>>>", err);
           }
           res.send({ status: user, message: info });
@@ -56,12 +55,9 @@ module.exports = app => {
 
   app.post("/forgotPassword", (req, res) => {
     console.log("called forgot password");
-    
-    User.findOne({ "email": req.body.email }).then(result => {
-      console.log("ankit", result);
-      if (result == null || result.auth.local.password=="") {
+    User.findOne({ email: req.body.email }).then(result => {
+      if (result == null || result.auth.local.password == "") {
         res.send("User not found");
-        console.log("ankit", result);
       } else if (result.auth.local.password == null) {
         res.send("Password");
       } else {
@@ -78,7 +74,7 @@ module.exports = app => {
     console.log(req.body);
     User.findOne({
       where: {
-        "email": req.body.email
+        email: req.body.email
       }
     }).then(result => {
       if (!bcrypt.compareSync(result.dataValues.uniqueId, req.body.resetId)) {
@@ -92,7 +88,6 @@ module.exports = app => {
 
   app.post("/updatePassword", (req, res) => {
     console.log("called update password");
-    
     var data = JSON.stringify(req.body);
     var dataupdate = JSON.parse(data);
     console.log(data, dataupdate);
@@ -130,49 +125,65 @@ module.exports = app => {
 
   app.get("/auth/twitter", passport.authenticate("twitter"));
 
-  app.get(
-    "/auth/linkedin",
-    passport.authenticate("linkedin")
-  );
+  app.get("/auth/linkedin", passport.authenticate("linkedin"));
 
-  app.get(
-    "/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
-    (req, res) => {
-      var url = req.session.redirectTo || "/"
-      res.redirect(url);
-    }
-  );
+  app.get("/auth/google/callback", (req, res) => {
+    passport.authenticate(
+      "google",
+      { failureRedirect: "/login" },
+      (err, user) => {
+        console.log(`Hit google callback ${err} ${user.email}`);
+        if (err != null) {
+          res.status(400).json(err);
+        }
+        var url = req.session.redirectTo || "/";
+        res.redirect(url);
+      }
+    )(req, res);
+  });
 
-  app.get(
-    "/auth/facebook/callback",
-    passport.authenticate("facebook", {
-      failureRedirect: "/login"
-    }),
-    (req, res) => {
-      backUrl = req.session.redirectTo || "/"
-      res.redirect(backUrl);
-    }
-  );
+  app.get("/auth/facebook/callback", (req, res) => {
+    passport.authenticate(
+      "facebook",
+      { failureRedirect: "/login" },
+      (err, user) => {
+        console.log(`Hit facebook callback ${err} ${user.email}`);
+        if (err != null) {
+          res.status(400).json(err);
+        }
+        var url = req.session.redirectTo || "/";
+        res.redirect(url);
+      }
+    )(req, res);
+  });
 
-  app.get(
-    "/auth/twitter/callback",
-    passport.authenticate("twitter", { failureRedirect: "/login" }),
-    (req, res) => {
-      backUrl = req.session.redirectTo || "/"
-      console.log(backUrl);
-      
-      res.redirect(backUrl);
-    }
-  );
+  app.get("/auth/twitter/callback", (req, res) => {
+    passport.authenticate(
+      "twitter",
+      { failureRedirect: "/login" },
+      (err, user) => {
+        console.log(`Hit twitter callback ${err} ${user.email}`);
+        if (err != null) {
+          res.status(400).json(err);
+        }
+        var url = req.session.redirectTo || "/";
+        res.redirect(url);
+      }
+    )(req, res);
+  });
 
-  app.get(
-    "/auth/linkedin/callback",
-    passport.authenticate("linkedin", { failureRedirect: "/login" }),
-    (req, res) => {
-      console.log("caught call back")
-      backUrl = req.session.redirectTo || "/"
-      res.redirect(backUrl);
-    }
-  );
+  app.get("/auth/linkedin/callback", (req, res) => {
+    passport.authenticate(
+      "linkedin",
+      { failureRedirect: "/login" },
+      (err, user) => {
+        console.log(`Hit linkedin callback ${err} ${user.email}`);
+        if (err != null) {
+          res.status(400).json(err);
+        }
+        var url = req.session.redirectTo || "/";
+        res.redirect(url);
+      }
+    )(req, res);
+  });
 };

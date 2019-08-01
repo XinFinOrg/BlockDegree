@@ -185,12 +185,14 @@ module.exports = function(passport) {
         });
         if (existingUser) {
           if (existingUser.auth.google.accessToken == "") {
-            // store google credentials.
             existingUser.auth.google.accessToken = accessToken;
             existingUser.auth.google.refreshToken = refreshToken;
             existingUser.auth.google.id = profile.id;
           }
           return done(null, existingUser);
+        }
+        if (profile.emails.length<1) {
+          done({error:"email-id not associated",status:400},null)
         }
         newUser = newDefaultUser();
         newUser.auth.google.id = profile.id;
@@ -215,8 +217,6 @@ module.exports = function(passport) {
         profileFields: ["id", "emails", "name"]
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        // console.log(profile);
-
         if (req.user) {
           if (
             req.user.auth.facebook.id == "" ||
@@ -230,19 +230,15 @@ module.exports = function(passport) {
             return done(null, user);
           }
         }
-        console.log("Profile Name: ", profile);
-
+        if (profile.emails.length<1) {
+          done({error:"email-id not associated",status:400},null)
+        }
         newUser = newDefaultUser();
         newUser.email=profile.emails[0].value;
         newUser.auth.facebook.id = profile.id;
         newUser.auth.facebook.accessToken = accessToken;
         newUser.auth.facebook.refreshToken = refreshToken || "";
-        // newUser.google.email = profile.emails[0].value;
-        // newUser.google.name = profile._json.name;
-
         const user = await new User(newUser).save();
-        // console.log("Google login profile: ",profile)
-        // const user = await new User({ googleId: profile.id }).save();
         return done(null, user);
       }
     )
@@ -259,9 +255,6 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       async (req, token, tokenSecret, profile, done) => {
-        console.log("Query: ", req.query);
-        console.log("Param: ", req.params);
-        console.log("URL: ", req.url);
         if (req.user) {
           if (
             req.user.auth.twitter.id == "" ||
@@ -281,8 +274,9 @@ module.exports = function(passport) {
         if (existingUser) {
           return done(null, existingUser);
         }
-
-        // console.log("Twitter Profile: ", profile);
+        if (profile.emails.length<1) {
+          done({error:"email-id not associated",status:400},null)
+        }
         newUser = newDefaultUser();
         newUser.auth.twitter.id = profile.id;
         newUser.name = profile.displayName;
@@ -295,6 +289,7 @@ module.exports = function(passport) {
     )
   );
 
+  // Login with Linkedin
   passport.use(
     new linkedinStrategy(
       {
@@ -311,11 +306,13 @@ module.exports = function(passport) {
           });
           if (existingUser) {
             if (existingUser.auth.linkedin==""||existingUser.auth.linkedin==undefined){
-              // store the linkedin credentials
               existingUser.auth.linkedin.id=profile.id;
               existingUser.auth.linkedin.accessToken=accessToken;
             }
             return done(null, existingUser);
+          }
+          if (profile.emails.length<1) {
+            done({error:"email-id not associated",status:400},null)
           }
           newUser = newDefaultUser();
           newUser.auth.linkedin.id = profile.id;

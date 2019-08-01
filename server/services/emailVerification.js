@@ -13,7 +13,7 @@ exports.confirmEmail = function(req, res) {
       });
     console.log("token mapped email:", token.email);
     // If we found a token, find a matching user
-    User.findOne({email:token.email}, function(err, user) {
+    User.findOne({ email: token.email }, function(err, user) {
       if (!user)
         return res
           .status(400)
@@ -23,7 +23,6 @@ exports.confirmEmail = function(req, res) {
           type: "already-verified",
           msg: "This user has already been verified."
         });
-
       // Verify and save the user
       user.auth.local.isVerified = true;
       user.save(function(err) {
@@ -50,19 +49,16 @@ exports.resendEmail = function(req, res, next) {
       return res.status(400).send({
         msg: "This account has already been verified. Please log in."
       });
-
     // Create a verification token, save it, and send email
     var token = new Token({
       _userId: user._id,
       token: crypto.randomBytes(16).toString("hex")
     });
-
     // Save the token
     token.save(function(err) {
       if (err) {
         return res.status(500).send({ msg: err.message });
       }
-
       // Send the email
       emailer.sendTokenMail(req.body.email, token, req, "resend");
     });

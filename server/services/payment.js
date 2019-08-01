@@ -58,7 +58,7 @@ exports.payPaypalSuccess = (req, res, next) => {
                 res.status(500).json(JSON.stringify(error))
               } else {
                 console.log("ORDER CAPTURE SUCCESS");
-                User.findOne({ email: req.user.email }, function(err, user) {
+                User.findOne({ email: req.user.email }, async function(err, user) {
                   if (err!=null){
                     // res.status(500).json({error:JSON.stringify(err),msg:"database under maintenance"})
                     console.error(`Error: user not found || ${err}`)
