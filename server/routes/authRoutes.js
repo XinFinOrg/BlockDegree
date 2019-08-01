@@ -176,8 +176,8 @@ module.exports = app => {
     passport.authenticate(
       "linkedin",
       { failureRedirect: "/login" },
-      (err, user) => {
-        console.log(`Hit linkedin callback ${err} ${user.email}`);
+      (err, currUser) => {
+        console.log(`Hit linkedin callback ${err} ${currUser.email}`);
         if (err != null) {
           res.status(400).json(err);
         }

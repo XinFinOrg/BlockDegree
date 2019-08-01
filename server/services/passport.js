@@ -180,19 +180,27 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {
+        if (req.user) {
+          if (
+            req.user.auth.google.id == "" ||
+            req.user.auth.google.id == undefined
+          ) {
+            let user = await User.findOne({ email: req.user.email });
+            user.auth.google.id = profile.id;
+            user.auth.google.accessToken = accessToken;
+            user.auth.google.refreshToken = refreshToken;
+            user.save();
+            return done(null, user);
+          }
+        }
         const existingUser = await User.findOne({
-          email: profile.emails[0].value
+          "auth.google.id": profile.id
         });
         if (existingUser) {
-          if (existingUser.auth.google.accessToken == "") {
-            existingUser.auth.google.accessToken = accessToken;
-            existingUser.auth.google.refreshToken = refreshToken;
-            existingUser.auth.google.id = profile.id;
-          }
           return done(null, existingUser);
         }
-        if (profile.emails.length<1) {
-          done({error:"email-id not associated",status:400},null)
+        if (profile.emails.length < 1) {
+          done({ error: "email-id not associated", status: 400 }, null);
         }
         newUser = newDefaultUser();
         newUser.auth.google.id = profile.id;
@@ -230,11 +238,17 @@ module.exports = function(passport) {
             return done(null, user);
           }
         }
-        if (profile.emails.length<1) {
-          done({error:"email-id not associated",status:400},null)
+        const existingUser = await User.findOne({
+          "auth.facebook.id": profile.id
+        });
+        if (existingUser) {
+          done(null, user);
+        }
+        if (profile.emails.length < 1) {
+          done({ error: "email-id not associated", status: 400 }, null);
         }
         newUser = newDefaultUser();
-        newUser.email=profile.emails[0].value;
+        newUser.email = profile.emails[0].value;
         newUser.auth.facebook.id = profile.id;
         newUser.auth.facebook.accessToken = accessToken;
         newUser.auth.facebook.refreshToken = refreshToken || "";
@@ -269,13 +283,13 @@ module.exports = function(passport) {
           }
         }
         const existingUser = await User.findOne({
-          email: profile.emails[0].value
+          "auth.twitter.id": profile.id
         });
         if (existingUser) {
           return done(null, existingUser);
         }
-        if (profile.emails.length<1) {
-          done({error:"email-id not associated",status:400},null)
+        if (profile.emails.length < 1) {
+          done({ error: "email-id not associated", status: 400 }, null);
         }
         newUser = newDefaultUser();
         newUser.auth.twitter.id = profile.id;
@@ -301,18 +315,21 @@ module.exports = function(passport) {
       },
       async (req, accessToken, refreshToken, profile, done) => {
         process.nextTick(async function() {
+          if (req.user) {
+            let user = await User.findOne({ email: req.user.email });
+            user.auth.linkedin.id = profile.id;
+            user.auth.linkedin.accessToken = token;
+            user.save();
+            return done(null, user);
+          }
           const existingUser = await User.findOne({
-            email: req.user.email
+            "auth.linkedin.id": profile.id
           });
           if (existingUser) {
-            if (existingUser.auth.linkedin==""||existingUser.auth.linkedin==undefined){
-              existingUser.auth.linkedin.id=profile.id;
-              existingUser.auth.linkedin.accessToken=accessToken;
-            }
             return done(null, existingUser);
           }
-          if (profile.emails.length<1) {
-            done({error:"email-id not associated",status:400},null)
+          if (profile.emails.length < 1) {
+            done({ error: "email-id not associated", status: 400 }, null);
           }
           newUser = newDefaultUser();
           newUser.auth.linkedin.id = profile.id;
@@ -326,4 +343,3 @@ module.exports = function(passport) {
     )
   );
 };
-
