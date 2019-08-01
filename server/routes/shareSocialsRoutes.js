@@ -1,10 +1,11 @@
 var shareServices = require("../services/shareSocials");
+const requireLogin = require("../middleware/requireLogin");
 
 module.exports = app => {
 
-    app.post("/api/shareOnTwitter",shareServices.postTwitter);
-    app.post("/api/shareOnLinkedin",shareServices.postLinkedin);
-    app.post("/api/shareOnFacebook",shareServices.postFacebook);
+    app.post("/api/shareOnTwitter",requireLogin,shareServices.postTwitter);
+    app.post("/api/shareOnLinkedin",requireLogin,shareServices.postLinkedin);
+    app.post("/api/shareOnFacebook",requireLogin,shareServices.postFacebook);
     // Not working : issue in uploading image to uploadURL; tried cURL, HTTPie, axios
-    app.post("/api/uploadImageLinkedin",shareServices.uploadImageLinkedin);
+    app.post("/api/uploadImageLinkedin",requireLogin,shareServices.uploadImageLinkedin);
 }

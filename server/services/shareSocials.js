@@ -18,11 +18,11 @@ const localClient = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
 exports.postTwitter = async (req, res) => {
   console.log("Called share on twitter");
   if (!req.user){
-    res.redirect('/login')
+    return res.redirect('/login')
   }
   const user = await User.findOne({ email: req.user.email });
   if (!user) {
-    res.redirect("/login");
+    return res.redirect("/login");
   }
   if (
     user.auth.twitter.token == "" ||
@@ -30,7 +30,7 @@ exports.postTwitter = async (req, res) => {
     user.auth.twitter.tokenSecret == "" ||
     user.auth.twitter.tokenSecret == undefined
   ) {
-    res.redirect("/auth/twitter");
+    return res.redirect("/auth/twitter");
   }
   const hash =
     req.body.hash ||
@@ -39,11 +39,14 @@ exports.postTwitter = async (req, res) => {
   const msg =
     req.body.msg ||
     "Hey, I just got certified in blockchain from Blockdegree.org !!";
+    console.log("User: ",user);
+    const currUser = await User.findOne({email:req.user.email});
+    console.log("User: ",currUser)
   var config = getTwitterConfig(
     process.env.TWITTER_CLIENT_ID,
     process.env.TWITTER_CLIENT_SECRET,
-    user.auth.twitter.token,
-    user.auth.twitter.tokenSecret
+    currUser.auth.twitter.token,
+    currUser.auth.twitter.tokenSecret
   );
   var T = new twit(config);
   var imgHTML = "";
@@ -101,13 +104,13 @@ exports.postTwitter = async (req, res) => {
       });
     });
   });
-  res.json({ uploaded: true, error: null });
+  return res.json({ uploaded: true, error: null });
 };
 
 exports.postLinkedin = async (req, res) => {
   const user = await User.findOne({ email: req.user.email });
   if (!user) {
-    res.redirect("/login");
+    return res.redirect("/login");
   }
   if (
     user.auth.linkedin.accessToken == "" ||
@@ -115,8 +118,8 @@ exports.postLinkedin = async (req, res) => {
     user.auth.linkedin.id == "" ||
     user.auth.linkedin.id == undefined
   ) {
-    // set twitter credentials ans post.
-    res.redirect('/auth/linkedin');
+    // set linkedin credentials and post.
+    return res.redirect('/auth/linkedin');
   }
   const msg =
     req.body.msg ||
@@ -159,7 +162,7 @@ exports.postLinkedin = async (req, res) => {
     throw err;
   });
   console.log(response.status);
-  res.json({posted:true,error:null,status:response.status});
+  return res.json({posted:true,error:null,status:response.status});
 };
 
 exports.postFacebook = async (req,res) => {}

@@ -136,8 +136,18 @@ module.exports = app => {
         if (err != null) {
           res.status(400).json(err);
         }
-        var url = req.session.redirectTo || "/";
-        res.redirect(url);
+        req.logIn(user, err => {
+          if (err != null) {
+            console.log(`Error while logging in ${err}`);
+            res.redirect("/login");
+          }
+          console.log(`User ${user.email} logged in.`);
+          var url = req.session.redirectTo || "/";
+          if (url == "/login" || url == "/exam-result") {
+            url = "/";
+          }
+          res.redirect(url);
+        });
       }
     )(req, res);
   });
@@ -151,8 +161,18 @@ module.exports = app => {
         if (err != null) {
           res.status(400).json(err);
         }
-        var url = req.session.redirectTo || "/";
-        res.redirect(url);
+        req.logIn(user, err => {
+          if (err != null) {
+            console.log(`Error while logging in ${err}`);
+            res.redirect("/login");
+          }
+          console.log(`User ${user.email} logged in.`);
+          var url = req.session.redirectTo || "/";
+          if (url == "/login" || url == "/exam-result") {
+            url = "/";
+          }
+          res.redirect(url);
+        });
       }
     )(req, res);
   });
@@ -166,8 +186,18 @@ module.exports = app => {
         if (err != null) {
           res.status(400).json(err);
         }
-        var url = req.session.redirectTo || "/";
-        res.redirect(url);
+        req.logIn(user, err => {
+          if (err != null) {
+            console.log(`Error while logging in ${err}`);
+            res.redirect("/login");
+          }
+          console.log(`User ${user.email} logged in.`);
+          var url = req.session.redirectTo || "/";
+          if (url == "/login" || url == "/exam-result") {
+            url = "/";
+          }
+          res.redirect(url);
+        });
       }
     )(req, res);
   });
@@ -176,13 +206,23 @@ module.exports = app => {
     passport.authenticate(
       "linkedin",
       { failureRedirect: "/login" },
-      (err, currUser) => {
-        console.log(`Hit linkedin callback ${err} ${currUser.email}`);
+      (err, user) => {
+        console.log(`Hit linkedin callback ${err} ${user.email}`);
         if (err != null) {
           res.status(400).json(err);
         }
-        var url = req.session.redirectTo || "/";
-        res.redirect(url);
+        req.logIn(user, err => {
+          if (err != null) {
+            console.log(`Error while logging in ${err}`);
+            res.redirect("/login");
+          }
+          console.log(`User ${user.email} logged in.`);
+          var url = req.session.redirectTo || "/";
+          if (url == "/login" || url == "/exam-result") {
+            url = "/";
+          }
+          res.redirect(url);
+        });
       }
     )(req, res);
   });
