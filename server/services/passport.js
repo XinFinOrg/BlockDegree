@@ -1,6 +1,5 @@
 var LocalStrategy = require("passport-local").Strategy;
 const googleStrategy = require("passport-google-oauth20").Strategy;
-// var GithubStrategy = require("passport-github").Strategy;
 var User = require("../models/user");
 var Token = require("../models/tokenVerification");
 const emailer = require("../emailer/impl");

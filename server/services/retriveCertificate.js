@@ -84,7 +84,6 @@ exports.downloadCertificate = async (req, res) => {
   if (!user) {
     res.redirect("/login");
   }
-//   console.log(user);
 
   for (obj of user.examData.certificateHash) {
     if (obj.hash == hash) {

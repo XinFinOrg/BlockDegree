@@ -17,27 +17,6 @@ const localClient = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
 
 let { readJSONFile } = utils;
 
-// function getQuery(user) {
-//   var emailValue = "";
-//   var emailKey = "";
-//   var query = {};
-//   if (user.local.email != "") {
-//     emailValue = user.local.email;
-//     emailKey = "local.email";
-//   } else if (user.google.email != "") {
-//     emailValue = user.google.email;
-//     emailKey = "google.email";
-//   } else if (user.twitter.email != "") {
-//     emailValue = user.twitter.email;
-//     emailKey = "twitter.email";
-//   } else if (user.facebook.email != "") {
-//     emailValue = user.facebook.email;
-//     emailKey = "faceboook.email";
-//   }
-//   query[emailKey] = emailValue;
-//   return query;
-// }
-
 exports.submitExam = (req, res, next) => {
   var marks = 0;
   const backUrl = req.header("Referer");

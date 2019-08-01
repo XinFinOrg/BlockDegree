@@ -4,9 +4,6 @@ var puppeteer = require("puppeteer");
 var fs = require("fs");
 const User = require("../models/user");
 const axios = require("axios");
-const curl = new (require("curl-request"))();
-var exec = require("child_process").exec;
-var FormData = require("form-data");
 
 require("dotenv").config();
 

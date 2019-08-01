@@ -9,7 +9,6 @@ var crypto = require("crypto");
 const IPFS = require("ipfs-http-client");
 var ejs = require("ejs");
 const utils = require("../utils.js");
-let { isLoggedIn } = utils;
 
 // Need to understand the complete flow and handle erros, unexpected shutdowns, inaccessible 3rd party.
 
