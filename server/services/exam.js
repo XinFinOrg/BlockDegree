@@ -6,13 +6,21 @@ const utils = require("../utils.js");
 var crypto = require("crypto");
 
 const ipfsClient = require("ipfs-http-client");
-const xinfinClient = new ipfsClient({
-  host: "ipfs.xinfin.network",
-  port: 443,
-  protocol: "https"
-});
 
-const localClient = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
+var clientIPFS=""
+
+if (process.env.IPFS_NETWORK=="local"){
+  clientIPFS = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
+}else{
+  clientIPFS = new ipfsClient({
+    host: "ipfs.xinfin.network",
+    port: 443,
+    protocol: "https"
+  });
+}
+
+
+
 
 let { readJSONFile } = utils;
 
@@ -307,7 +315,7 @@ exports.getExamResult = (req, res) => {
                   });
               }
               let buffer = Buffer.from(data, "utf-8");
-              localClient.add(buffer, async (err, ipfsHash) => {
+              clientIPFS.add(buffer, async (err, ipfsHash) => {
                 if (err != null) {
                   res
                     .status(500)
@@ -401,7 +409,7 @@ exports.getExamResult = (req, res) => {
                   });
               }
               let buffer = Buffer.from(data, "utf-8");
-              localClient.add(buffer, (err, ipfsHash) => {
+              clientIPFS.add(buffer, (err, ipfsHash) => {
                 if (err != null) {
                   res
                     .status(500)
@@ -497,7 +505,7 @@ exports.getExamResult = (req, res) => {
                   });
               }
               let buffer = Buffer.from(data, "utf-8");
-              localClient.add(buffer, (err, ipfsHash) => {
+              clientIPFS.add(buffer, (err, ipfsHash) => {
                 if (err != null) {
                   res
                     .status(500)

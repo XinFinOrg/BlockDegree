@@ -7,6 +7,8 @@ const axios = require("axios");
 
 require("dotenv").config();
 
+var clientIPFS = "";
+
 const xinfinClient = new ipfsClient({
   host: "ipfs.xinfin.network",
   port: 443,
@@ -14,6 +16,13 @@ const xinfinClient = new ipfsClient({
 });
 
 const localClient = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
+
+if (process.env.IPFS_NETWORK=="local"){
+  clientIPFS=localClient
+}
+else{
+  clientIPFS=xinfinClient
+}
 
 exports.postTwitter = async (req, res) => {
   console.log("Called share on twitter");
@@ -51,7 +60,7 @@ exports.postTwitter = async (req, res) => {
   var T = new twit(config);
   var imgHTML = "";
 
-  localClient.get(hash, (err, files) => {
+  clientIPFS.get(hash, (err, files) => {
     if (err) {
       res.json({ uploaded: false, error: err });
     }

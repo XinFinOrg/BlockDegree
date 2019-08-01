@@ -3,6 +3,8 @@ var ipfsClient = require("ipfs-http-client");
 var puppeteer = require("puppeteer");
 var fs = require("fs");
 
+var clientIPFS = "";
+
 const xinfinClient = new ipfsClient({
   host: "ipfs.xinfin.network",
   port: 443,
@@ -10,6 +12,12 @@ const xinfinClient = new ipfsClient({
 });
 
 const localClient = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
+
+if (process.env.IPFS_NETWORK=="local"){
+  clientIPFS=localClient
+}else{
+  clientIPFS=xinfinClient
+}
 
 exports.getAllCertificates = async (req, res) => {
   const user = await User.findOne({ email: req.user.email }).catch(err => {
@@ -87,7 +95,7 @@ exports.downloadCertificate = async (req, res) => {
   }
   for (obj of user.examData.certificateHash) {
     if (obj.hash == hash) {
-      localClient.get(hash, (err, files) => {
+      clientIPFS.get(hash, (err, files) => {
         if (err) {
           res.json({ uploaded: false, error: err });
         }
