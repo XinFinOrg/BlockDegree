@@ -25,7 +25,7 @@ Following are the tasks to do :
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI )
 - [ ] Complete testing and fixing the bugs found 
-- [ ] Remove unnecessary node dependencies
+- [x] Remove unnecessary node dependencies
 
 ### TO DO ( SECOND BATCH )
 - [ ] Scale course, instructor, university addition 
