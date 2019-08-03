@@ -12,9 +12,8 @@ var hbs = require( 'express-handlebars');
 var cors = require('cors');
 
 var app = express();
-
-var configDB = require('./config/database.js');
-mongoose.connect(configDB.url,{useNewUrlParser:true});
+require("dotenv").config();
+mongoose.connect(process.env.DATABASE_URI,{useNewUrlParser:true});
 require('./services/passport')(passport);
 mongoose.set('useCreateIndex', true);
 

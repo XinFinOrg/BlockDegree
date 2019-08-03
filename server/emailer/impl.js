@@ -1,10 +1,13 @@
-const nodemailerAuth = require("../config/auth").nodemailerAuth;
+require("dotenv").config();
 var User = require("../models/user");
 var nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
   host: "mail001.dakghar.in",
   port: 25,
-  auth: nodemailerAuth
+  auth: {
+    user: process.env.NODEMAILER_USER_ID,
+    pass: process.env.NODEMAILER_USER_PASS
+  }
 });
 
 module.exports = {
