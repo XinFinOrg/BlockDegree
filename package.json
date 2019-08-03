@@ -67,6 +67,7 @@
     "passport-twitter": "^1.0.4",
     "paypal-rest-sdk": "^1.8.1",
     "puppeteer": "^1.19.0",
+    "qrcode": "^1.4.1",
     "twit": "^2.2.11"
   }
 }

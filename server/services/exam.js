@@ -4,23 +4,21 @@ var questions = require("../models/question");
 var ejs = require("ejs");
 const utils = require("../utils.js");
 var crypto = require("crypto");
+const renderCertificate = require("../helpers/renderCertificate");
 
 const ipfsClient = require("ipfs-http-client");
 
-var clientIPFS=""
+var clientIPFS = "";
 
-if (process.env.IPFS_NETWORK=="local"){
+if (process.env.IPFS_NETWORK == "local") {
   clientIPFS = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
-}else{
+} else {
   clientIPFS = new ipfsClient({
     host: "ipfs.xinfin.network",
     port: 443,
     protocol: "https"
   });
 }
-
-
-
 
 let { readJSONFile } = utils;
 
@@ -295,49 +293,111 @@ exports.getExamResult = (req, res) => {
             month: "long",
             year: "numeric"
           });
-          ejs.renderFile(
-            __dirname + "/certificate.ejs",
-            {
-              rndDgt: crypto.randomBytes(32).toString("hex"),
-              name: name,
-              course: "Certified Blockchain Basic Expert",
-              score: percent,
-              date: date
-            },
-            (err, data) => {
-              if (err != null) {
+          // ejs.renderFile(
+          //   __dirname + "/certificate.ejs",
+          //   {
+          //     rndDgt: crypto.randomBytes(32).toString("hex"),
+          //     name: name,
+          //     course: "Certified Blockchain Basic Expert",
+          //     score: percent,
+          //     date: date
+          //   },
+          //   (err, data) => {
+          //     if (err != null) {
+          //       res
+          //         .status(500)
+          //         .json({
+          //           error: err,
+          //           info: "error in rendering the ejs-template",
+          //           status: 500
+          //         });
+          //     }
+          //     let buffer = Buffer.from(data, "utf-8");
+          //     clientIPFS.add(buffer, async (err, ipfsHash) => {
+          //       if (err != null) {
+          //         res
+          //           .status(500)
+          //           .json({
+          //             error: err,
+          //             info: "error in adding file-buffer to IPFS"
+          //           });
+          //       }
+          //       jsonData.certificateHash = ipfsHash[0].hash;
+          //       jsonData.examStatus = examStatus;
+          //       result.examData.examBasic.attempts = 0;
+          //       result.examData.payment.course_1 = false;
+          //       var obj = {};
+          //       obj["timestamp"] = Date.now();
+          //       obj["marks"] = obtainedMarks;
+          //       obj["total"] = examTotal;
+          //       obj["hash"] = ipfsHash[0].hash;
+          //       obj["examType"] = "basic";
+          //       result.examData.certificateHash.push(obj);
+          //       result.save();
+          //       res.render("examResult", jsonData);
+          //     });
+          //   }
+          // );
+
+          // Initial Certificate - certificate which will be referred to.
+          renderCertificate.renderForIPFSHash(
+            name,
+            percent,
+            "basic",
+            date,
+            bothRender => {
+              console.log(bothRender);
+
+              if (!bothRender.uploaded) {
                 res
                   .status(500)
-                  .json({
-                    error: err,
-                    info: "error in rendering the ejs-template",
-                    status: 500
-                  });
-              }
-              let buffer = Buffer.from(data, "utf-8");
-              clientIPFS.add(buffer, async (err, ipfsHash) => {
-                if (err != null) {
-                  res
-                    .status(500)
-                    .json({
-                      error: err,
-                      info: "error in adding file-buffer to IPFS"
-                    });
-                }
-                jsonData.certificateHash = ipfsHash[0].hash;
+                  .json({ error: bothRender.error, info: bothRender.info });
+              } else {
+                jsonData.certificateHash = bothRender.hash[1];
                 jsonData.examStatus = examStatus;
                 result.examData.examBasic.attempts = 0;
                 result.examData.payment.course_1 = false;
                 var obj = {};
-                obj["timestamp"] = Date.now();
-                obj["marks"] = obtainedMarks;
-                obj["total"] = examTotal;
-                obj["hash"] = ipfsHash[0].hash;
-                obj["examType"] = "basic";
-                result.examData.certificateHash.push(obj);
+                for (let currHash of bothRender.hash) {
+                  obj["timestamp"] = Date.now();
+                  obj["marks"] = obtainedMarks;
+                  obj["total"] = examTotal;
+                  obj["hash"] = currHash;
+                  obj["examType"] = "basic";
+                  result.examData.certificateHash.push(obj);
+                }
                 result.save();
                 res.render("examResult", jsonData);
-              });
+                // Certificate with  QR-HASH
+                // renderCertificate.renderForIPFSHash(
+                //   name,
+                //   percent,
+                //   "basic",
+                //   date,
+                //   firstRender.hash,
+                //   secondRender => {
+                //     if (!secondRender.uploaded) {
+                //       res
+                //         .status(500)
+                //         .json({ error: secondRender.error, info: secondRender.info });
+                //     } else {
+                //       jsonData.certificateHash = secondRender.hash;
+                //       jsonData.examStatus = examStatus;
+                //       result.examData.examBasic.attempts = 0;
+                //       result.examData.payment.course_1 = false;
+                //       var obj = {};
+                //       obj["timestamp"] = Date.now();
+                //       obj["marks"] = obtainedMarks;
+                //       obj["total"] = examTotal;
+                //       obj["hash"] = secondRender.hash;
+                //       obj["examType"] = "basic";
+                //       result.examData.certificateHash.push(obj);
+                //       result.save();
+                //       res.render("examResult", jsonData);
+                //     }
+                //   }
+                // );
+              }
             }
           );
         } else {
@@ -372,6 +432,7 @@ exports.getExamResult = (req, res) => {
         percent: percent
       };
       if (percent >= 60) {
+        // Push the certificate to the IPFS
         if (
           result.examData.certificateHash[
             result.examData.certificateHash.length - 1
@@ -389,50 +450,78 @@ exports.getExamResult = (req, res) => {
             month: "long",
             year: "numeric"
           });
-          ejs.renderFile(
-            __dirname + "/certificate.ejs",
-            {
-              rndDgt: crypto.randomBytes(32).toString("hex"),
-              name: name,
-              course: "Certified Bitcoin Blockchain Expert",
-              score: percent,
-              date: date
-            },
-            (err, data) => {
-              if (err != null) {
+
+          renderCertificate.renderForIPFSHash(
+            name,
+            percent,
+            "advanced",
+            date,
+            bothRender => {
+              console.log(bothRender);
+
+              if (!bothRender.uploaded) {
                 res
                   .status(500)
-                  .json({
-                    error: err,
-                    info: "error in rendering the ejs-template",
-                    status: 500
-                  });
-              }
-              let buffer = Buffer.from(data, "utf-8");
-              clientIPFS.add(buffer, (err, ipfsHash) => {
-                if (err != null) {
-                  res
-                    .status(500)
-                    .json({
-                      error: err,
-                      info: "error in adding file-buffer to IPFS",
-                      status: 500
-                    });
-                }
+                  .json({ error: bothRender.error, info: bothRender.info });
+              } else {
+                jsonData.certificateHash = bothRender.hash[1];
                 jsonData.examStatus = examStatus;
-                jsonData.certificateHash = ipfsHash[0].hash;
                 result.examData.examAdvanced.attempts = 0;
-                result.examData.payment.course_2 = false;
+                result.examData.payment.course_1 = false;
                 var obj = {};
-                obj["timestamp"] = Date.now();
-                obj["marks"] = obtainedMarks;
-                obj["total"] = examTotal;
-                obj["hash"] = ipfsHash[0].hash;
-                obj["examType"] = "advanced";
-                result.examData.certificateHash.push(obj);
+                for (let currHash of bothRender.hash) {
+                  obj["timestamp"] = Date.now();
+                  obj["marks"] = obtainedMarks;
+                  obj["total"] = examTotal;
+                  obj["hash"] = currHash;
+                  obj["examType"] = "advanced";
+                  result.examData.certificateHash.push(obj);
+                }
                 result.save();
                 res.render("examResult", jsonData);
-              });
+              }
+              // ejs.renderFile(
+              //   __dirname + "/certificate.ejs",
+              //   {
+              //     rndDgt: crypto.randomBytes(32).toString("hex"),
+              //     name: name,
+              //     course: "Certified Bitcoin Blockchain Expert",
+              //     score: percent,
+              //     date: date
+              //   },
+              //   (err, data) => {
+              //     if (err != null) {
+              //       res.status(500).json({
+              //         error: err,
+              //         info: "error in rendering the ejs-template",
+              //         status: 500
+              //       });
+              //     }
+              //     let buffer = Buffer.from(data, "utf-8");
+              //     clientIPFS.add(buffer, (err, ipfsHash) => {
+              //       if (err != null) {
+              //         res.status(500).json({
+              //           error: err,
+              //           info: "error in adding file-buffer to IPFS",
+              //           status: 500
+              //         });
+              //       }
+              //       jsonData.examStatus = examStatus;
+              //       jsonData.certificateHash = ipfsHash[0].hash;
+              //       result.examData.examAdvanced.attempts = 0;
+              //       result.examData.payment.course_2 = false;
+              //       var obj = {};
+              //       obj["timestamp"] = Date.now();
+              //       obj["marks"] = obtainedMarks;
+              //       obj["total"] = examTotal;
+              //       obj["hash"] = ipfsHash[0].hash;
+              //       obj["examType"] = "advanced";
+              //       result.examData.certificateHash.push(obj);
+              //       result.save();
+              //       res.render("examResult", jsonData);
+              //     });
+              //   }
+              // );
             }
           );
         } else {
@@ -485,56 +574,85 @@ exports.getExamResult = (req, res) => {
             month: "long",
             year: "numeric"
           });
-          ejs.renderFile(
-            __dirname + "/certificate.ejs",
-            {
-              rndDgt: crypto.randomBytes(32).toString("hex"),
-              name: name,
-              course: "examProfessional",
-              score: percent,
-              date: date
-            },
-            (err, data) => {
-              if (err != null) {
+
+          renderCertificate.renderForIPFSHash(
+            name,
+            percent,
+            "professional",
+            date,
+            bothRender => {
+              console.log(bothRender);
+
+              if (!bothRender.uploaded) {
                 res
                   .status(500)
-                  .json({
-                    error: err,
-                    info: "error in rendering the ejs-template",
-                    status: 500
-                  });
-              }
-              let buffer = Buffer.from(data, "utf-8");
-              clientIPFS.add(buffer, (err, ipfsHash) => {
-                if (err != null) {
-                  res
-                    .status(500)
-                    .json({
-                      error: err,
-                      info: "error in adding file-buffer to IPFS",
-                      status: 500
-                    });
-                }
-                console.log(ipfsHash);
-                jsonData.data = result;
-                jsonData.marks = obtainedMarks;
-                jsonData.percent = percent;
+                  .json({ error: bothRender.error, info: bothRender.info });
+              } else {
+                jsonData.certificateHash = bothRender.hash[1];
+                jsonData.examStatus = examStatus;
                 result.examData.examProfessional.attempts = 0;
-                result.examData.payment.course_3 = false;
-                jsonData.examStatus = true;
-                jsonData.certificateHash = ipfsHash[0].hash;
+                result.examData.payment.course_1 = false;
                 var obj = {};
-                obj["timestamp"] = Date.now();
-                obj["marks"] = obtainedMarks;
-                obj["total"] = examTotal;
-                obj["hash"] = ipfsHash[0].hash;
-                obj["examType"] = "professional";
-                result.examData.certificateHash.push(obj);
+                for (let currHash of bothRender.hash) {
+                  obj["timestamp"] = Date.now();
+                  obj["marks"] = obtainedMarks;
+                  obj["total"] = examTotal;
+                  obj["hash"] = currHash;
+                  obj["examType"] = "professional";
+                  result.examData.certificateHash.push(obj);
+                }
                 result.save();
-                res.render("examResult", jsonData); // makes re-load the screen, should be partial rendering.
-              });
+                res.render("examResult", jsonData);
+              }
             }
           );
+
+          // ejs.renderFile(
+          //   __dirname + "/certificate.ejs",
+          //   {
+          //     rndDgt: crypto.randomBytes(32).toString("hex"),
+          //     name: name,
+          //     course: "examProfessional",
+          //     score: percent,
+          //     date: date
+          //   },
+          //   (err, data) => {
+          //     if (err != null) {
+          //       res.status(500).json({
+          //         error: err,
+          //         info: "error in rendering the ejs-template",
+          //         status: 500
+          //       });
+          //     }
+          //     let buffer = Buffer.from(data, "utf-8");
+          //     clientIPFS.add(buffer, (err, ipfsHash) => {
+          //       if (err != null) {
+          //         res.status(500).json({
+          //           error: err,
+          //           info: "error in adding file-buffer to IPFS",
+          //           status: 500
+          //         });
+          //       }
+          //       console.log(ipfsHash);
+          //       jsonData.data = result;
+          //       jsonData.marks = obtainedMarks;
+          //       jsonData.percent = percent;
+          //       result.examData.examProfessional.attempts = 0;
+          //       result.examData.payment.course_3 = false;
+          //       jsonData.examStatus = true;
+          //       jsonData.certificateHash = ipfsHash[0].hash;
+          //       var obj = {};
+          //       obj["timestamp"] = Date.now();
+          //       obj["marks"] = obtainedMarks;
+          //       obj["total"] = examTotal;
+          //       obj["hash"] = ipfsHash[0].hash;
+          //       obj["examType"] = "professional";
+          //       result.examData.certificateHash.push(obj);
+          //       result.save();
+          //       res.render("examResult", jsonData); // makes re-load the screen, should be partial rendering.
+          //     });
+          //   }
+          // );
         } else {
           jsonData.certificateHash =
             result.examData.certificateHash[
@@ -558,25 +676,21 @@ exports.getExamStatus = (req, res) => {
   query = { email: req.user.email };
   User.findOne(query, function(err, user) {
     if (err != null) {
-      res
-        .status(500)
-        .json({
-          error: err,
-          info: "error in fetching the user from DB",
-          status: 500
-        });
+      res.status(500).json({
+        error: err,
+        info: "error in fetching the user from DB",
+        status: 500
+      });
     }
     readJSONFile(
       path.join(process.cwd(), "/dist/data/courses.json"),
       (err, json) => {
         if (err != null) {
-          res
-            .status(500)
-            .json({
-              error: err,
-              info: "error in fetching the course content",
-              status: 500
-            });
+          res.status(500).json({
+            error: err,
+            info: "error in fetching the course content",
+            status: 500
+          });
         }
         const examListData = {
           data: {
