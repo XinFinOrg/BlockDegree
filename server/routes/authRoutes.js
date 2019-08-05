@@ -226,4 +226,17 @@ module.exports = app => {
       }
     )(req, res);
   });
+
+  app.get("/getAuthStatus",(req,res) => {
+    const user = User.findOne({email:req.user.email}).catch(err => {
+      console.error(err);
+      res.status(500).json({error:err,status:500,info:"error while looking up the database for the user"})
+    })
+    res.status(200).json({
+      localAuth:user.auth.local.password!="",
+      twitterAuth:user.auth.twitter.id!="",
+      facebookAuth:user.auth.facebook.id!="",
+      googleAuth:user.auth.google.id!=""
+    })
+  })
 };
