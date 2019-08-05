@@ -5,10 +5,14 @@ const utils = require("../utils.js");
 const renderCertificate = require("../helpers/renderCertificate");
 
 const examTypes = {
-  "basic":{courseName:"examBasic",questionName:"questionsBasic"},
-  "advanced":{courseName:"examAdvanced",questionName:"questionsAdvanced"},
-  "professional":{courseName:"examProfessional",questionName:"questionsProfessional"}
-}
+  basic: { courseName: "examBasic", questionName: "questionsBasic",coursePayment_id:"course_1" },
+  advanced: { courseName: "examAdvanced", questionName: "questionsAdvanced",coursePayment_id:"course_2" },
+  professional: {
+    courseName: "examProfessional",
+    questionName: "questionsProfessional",
+    coursePayment_id:"course_3"
+  },
+};
 
 let { readJSONFile } = utils;
 
@@ -249,33 +253,49 @@ exports.getExamResult = (req, res) => {
   query = { email: req.user.email };
   const examName = backUrl.split("/")[3].split("-")[1];
 
-  User.findOne(query).then(async (user,err) => {
-    if (err){
-      res.status(500).json({error:err,status:500,info:`error while looking up the DB`})
-    }else{
-      const ques = await questions.findOne({exam:"firstExam"}).catch(err => res.status(500).json({error:err,status:500,info:"error looking up questions db"}));
+  User.findOne(query).then(async (user, err) => {
+    if (err) {
+      res
+        .status(500)
+        .json({
+          error: err,
+          status: 500,
+          info: `error while looking up the DB`
+        });
+    } else {
+      const ques = await questions
+        .findOne({ exam: "firstExam" })
+        .catch(err =>
+          res
+            .status(500)
+            .json({
+              error: err,
+              status: 500,
+              info: "error looking up questions db"
+            })
+        );
       const totalQuestions = ques[examTypes[examName].questionName].length;
       const marksObtained = user.examData[examTypes[examName].courseName].marks;
-      const percentObtained = marksObtained*100 / totalQuestions;
+      const percentObtained = (marksObtained * 100) / totalQuestions;
       let examStatus;
       let jsonData = {
         exam: {
-          examBasic: examName=="basic",
-          examAdvanced: examName=="advanced",
-          examProfessional: examName=="professional"
+          examBasic: examName == "basic",
+          examAdvanced: examName == "advanced",
+          examProfessional: examName == "professional"
         },
         data: user,
         obtainedMarks: marksObtained,
         percent: percentObtained,
         total: totalQuestions
-      }
-      if (percentObtained > 60){
+      };
+      if (percentObtained > 60) {
         // Yeah!
         examStatus = true;
         let d = new Date();
         // This is prevents dual addition of the same object based on the timestamp of the previous addition
         if (
-          user.examData.certificateHash[
+          user.examData.certificateHash.length == 0 || user.examData.certificateHash[
             user.examData.certificateHash.length - 1
           ].timestamp == undefined ||
           Date.now() -
@@ -289,8 +309,8 @@ exports.getExamResult = (req, res) => {
             month: "long",
             year: "numeric"
           });
-          console.log(jsonData)
-          console.log(examTypes[examName].courseName)
+          console.log(jsonData);
+          console.log(examTypes[examName].courseName);
           // Post the 2 certificates
           renderCertificate.renderForIPFSHash(
             name,
@@ -308,36 +328,35 @@ exports.getExamResult = (req, res) => {
                 jsonData.certificateHash = bothRender.hash[1];
                 jsonData.examStatus = examStatus;
                 user.examData[examTypes[examName].courseName].attempts = 0;
-                user.examData.payment.course_1 = false;
+                user.examData.payment[examTypes[examName].coursePayment_id] = false;
                 var obj = {};
-                for (let currHash of bothRender.hash) {
-                  obj["timestamp"] = Date.now();
-                  obj["marks"] = marksObtained;
-                  obj["total"] = totalQuestions;
-                  obj["hash"] = currHash;
-                  obj["examType"] = examName;
-                  user.examData.certificateHash.push(obj);
-                }
+                obj["timestamp"] = Date.now();
+                obj["marks"] = marksObtained;
+                obj["total"] = totalQuestions;
+                obj["headlessHash"] = bothRender.hash[0];
+                obj["clientHash"] = bothRender.hash[1];
+                obj["examType"] = examName;
+                user.examData.certificateHash.push(obj);
                 user.save();
                 res.render("examResult", jsonData);
-              }});
-
-
-        }else{
+              }
+            }
+          );
+        } else {
           jsonData.certificateHash =
-          user.examData.certificateHash[
-            user.examData.certificateHash.length - 1
-          ].hash;
-        jsonData.examStatus = examStatus;
-        res.render("examResult", jsonData);
+            user.examData.certificateHash[
+              user.examData.certificateHash.length - 1
+            ].clientHash;
+          jsonData.examStatus = examStatus;
+          res.render("examResult", jsonData);
         }
-      }else{
+      } else {
         // No!
         jsonData.examStatus = false;
         res.render("examResult", jsonData);
       }
     }
-  })
+  });
 };
 
 exports.getExamStatus = (req, res) => {

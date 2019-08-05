@@ -27,7 +27,8 @@ var userSchema = mongoose.Schema({
       marks : Number,
       total:Number,
       examType : String,
-      hash : String
+      headlessHash: String,
+      clientHash : String,
     }]
   },
   auth : {

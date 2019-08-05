@@ -32,15 +32,7 @@ function newDefaultUser() {
         attempts: 0,
         marks: 0
       },
-      certificateHash: [
-        {
-          timestamp: "",
-          marks: 0,
-          total: 0,
-          examType: "",
-          hash: ""
-        }
-      ]
+      certificateHash: [{}]
     },
     auth: {
       facebook: {

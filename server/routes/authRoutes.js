@@ -1,6 +1,7 @@
 var User = require("../models/user");
 const emailer = require("../emailer/impl");
 const passport = require("passport");
+const requireLogin = require("../middleware/requireLogin");
 
 module.exports = app => {
   app.get("/logout", function(req, res) {
@@ -227,7 +228,10 @@ module.exports = app => {
     )(req, res);
   });
 
-  app.get("/getAuthStatus",(req,res) => {
+  app.get("/api/getAuthStatus",requireLogin,(req,res) => {
+    if (!req.user){
+      res.redirect("/login");
+    }
     const user = User.findOne({email:req.user.email}).catch(err => {
       console.error(err);
       res.status(500).json({error:err,status:500,info:"error while looking up the database for the user"})
