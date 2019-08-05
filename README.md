@@ -24,7 +24,7 @@ Following are the tasks to do :
 - [ ] To create helper functions for repeated codes across files ( ongoing )
 - [ ] To create functions for repeated codes ( eg: in exam.js )
 - [x] Implement a dual certification system 
-- [ ] Store student-data on a smart contract on blockchain
+- [ ] Store student-data on a smart contract on blockchain ( high priority )
 - [ ] Fix login button's JS ( UI; API is present )
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI )
