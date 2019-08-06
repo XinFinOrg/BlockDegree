@@ -21,10 +21,12 @@ Following are the tasks to do :
 - [x] Local download of the certificate
 - [x] API to retrive certificate hashes of a user 
 - [x] Make login handle no-email ( TODO: Shift from email-index to id-index )
-- [ ] To create helper functions for repeated codes across files ( ongoing )
-- [ ] To create functions for repeated codes ( eg: in exam.js )
+- [x] To create helper functions for repeated codes across files ( ongoing )
+- [x] To create functions for repeated codes ( eg: in exam.js )
+- [x] Integrate blockchain with SC
+- [ ] Address the delay caused due to blockchain inclusion
 - [x] Implement a dual certification system 
-- [ ] Store student-data on a smart contract on blockchain ( high priority )
+- [x] Store student-data on a smart contract on blockchain ( high priority )
 - [ ] Fix login button's JS ( UI; API is present )
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI )
