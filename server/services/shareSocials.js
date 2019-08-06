@@ -44,7 +44,7 @@ exports.postTwitter = async (req, res) => {
   const hash =
     req.body.hash ||
     user.examData.certificateHash[user.examData.certificateHash.length - 1]
-      .hash;
+      .clientHash;
   const msg =
     req.body.msg ||
     "Hey, I just got certified in blockchain from Blockdegree.org !!";

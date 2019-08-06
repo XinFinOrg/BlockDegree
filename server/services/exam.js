@@ -3,15 +3,24 @@ var User = require("../models/user");
 const questions = require("../models/question");
 const utils = require("../utils.js");
 const renderCertificate = require("../helpers/renderCertificate");
+const blockchainHelper = require("../helpers/blockchainHelpers");
 
 const examTypes = {
-  basic: { courseName: "examBasic", questionName: "questionsBasic",coursePayment_id:"course_1" },
-  advanced: { courseName: "examAdvanced", questionName: "questionsAdvanced",coursePayment_id:"course_2" },
+  basic: {
+    courseName: "examBasic",
+    questionName: "questionsBasic",
+    coursePayment_id: "course_1"
+  },
+  advanced: {
+    courseName: "examAdvanced",
+    questionName: "questionsAdvanced",
+    coursePayment_id: "course_2"
+  },
   professional: {
     courseName: "examProfessional",
     questionName: "questionsProfessional",
-    coursePayment_id:"course_3"
-  },
+    coursePayment_id: "course_3"
+  }
 };
 
 let { readJSONFile } = utils;
@@ -255,25 +264,19 @@ exports.getExamResult = (req, res) => {
 
   User.findOne(query).then(async (user, err) => {
     if (err) {
-      res
-        .status(500)
-        .json({
+      res.status(500).json({
+        error: err,
+        status: 500,
+        info: `error while looking up the DB`
+      });
+    } else {
+      const ques = await questions.findOne({ exam: "firstExam" }).catch(err =>
+        res.status(500).json({
           error: err,
           status: 500,
-          info: `error while looking up the DB`
-        });
-    } else {
-      const ques = await questions
-        .findOne({ exam: "firstExam" })
-        .catch(err =>
-          res
-            .status(500)
-            .json({
-              error: err,
-              status: 500,
-              info: "error looking up questions db"
-            })
-        );
+          info: "error looking up questions db"
+        })
+      );
       const totalQuestions = ques[examTypes[examName].questionName].length;
       const marksObtained = user.examData[examTypes[examName].courseName].marks;
       const percentObtained = (marksObtained * 100) / totalQuestions;
@@ -295,7 +298,8 @@ exports.getExamResult = (req, res) => {
         let d = new Date();
         // This is prevents dual addition of the same object based on the timestamp of the previous addition
         if (
-          user.examData.certificateHash.length == 0 || user.examData.certificateHash[
+          user.examData.certificateHash.length == 0 ||
+          user.examData.certificateHash[
             user.examData.certificateHash.length - 1
           ].timestamp == undefined ||
           Date.now() -
@@ -328,7 +332,9 @@ exports.getExamResult = (req, res) => {
                 jsonData.certificateHash = bothRender.hash[1];
                 jsonData.examStatus = examStatus;
                 user.examData[examTypes[examName].courseName].attempts = 0;
-                user.examData.payment[examTypes[examName].coursePayment_id] = false;
+                user.examData.payment[
+                  examTypes[examName].coursePayment_id
+                ] = false;
                 var obj = {};
                 obj["timestamp"] = Date.now();
                 obj["marks"] = marksObtained;
@@ -338,7 +344,28 @@ exports.getExamResult = (req, res) => {
                 obj["examType"] = examName;
                 user.examData.certificateHash.push(obj);
                 user.save();
-                res.render("examResult", jsonData);
+                res.render("examResult", jsonData, (err, html) => {
+                  if (err != null) {
+                    res
+                      .status(500)
+                      .json({
+                        error: err,
+                        info: "error while rendering the result",
+                        status: 500
+                      });
+                  }
+                  res.send(html);
+                  var examData = {
+                    courseName: examName,
+                    userName: user.name,
+                    timestamp: "" + obj["timestamp"],
+                    marksObtained: marksObtained,
+                    totalQuestions: totalQuestions,
+                    headlessHash: bothRender.hash[0],
+                    clientHash: bothRender.hash[1]
+                  };
+                  blockchainHelper.addToSC(examData, user.email);
+                });
               }
             }
           );

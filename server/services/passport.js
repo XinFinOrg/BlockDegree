@@ -14,6 +14,7 @@ function newDefaultUser() {
   return new User({
     email: "",
     name: "",
+    pubKey:"",
     examData: {
       payment: {
         course_1: false,
