@@ -3,7 +3,7 @@ var User = require("../models/user");
 const questions = require("../models/question");
 const utils = require("../utils.js");
 const renderCertificate = require("../helpers/renderCertificate");
-const blockchainHelper = require("../helpers/blockchainHelpers");
+// const blockchainHelper = require("../helpers/blockchainHelpers");
 
 const examTypes = {
   basic: {
@@ -306,7 +306,7 @@ exports.getExamResult = (req, res) => {
             user.examData.certificateHash[
               user.examData.certificateHash.length - 1
             ].timestamp >
-            5000
+            3600000 // 1 HR freeze time
         ) {
           let date = d.toLocaleDateString("en-GB", {
             day: "numeric",
@@ -344,28 +344,16 @@ exports.getExamResult = (req, res) => {
                 obj["examType"] = examName;
                 user.examData.certificateHash.push(obj);
                 user.save();
-                res.render("examResult", jsonData, (err, html) => {
-                  if (err != null) {
-                    res
-                      .status(500)
-                      .json({
-                        error: err,
-                        info: "error while rendering the result",
-                        status: 500
-                      });
-                  }
-                  res.send(html);
-                  var examData = {
-                    courseName: examName,
-                    userName: user.name,
-                    timestamp: "" + obj["timestamp"],
-                    marksObtained: marksObtained,
-                    totalQuestions: totalQuestions,
-                    headlessHash: bothRender.hash[0],
-                    clientHash: bothRender.hash[1]
-                  };
-                  blockchainHelper.addToSC(examData, user.email);
-                });
+                res.render("examResult", jsonData);
+                // blockchainHelper.addToSC({
+                //   courseName:examName,
+                //   userName:user.name,
+                //   timestamp:""+obj["timestamp"],
+                //   marksObtained:marksObtained,
+                //   totalQuestions:totalQuestions,
+                //   headlessHash:bothRender.hash[0],
+                //   clientHash:bothRender.hash[1]
+                // },user.email)
               }
             }
           );

@@ -37,7 +37,7 @@ exports.addToSC = async (examData, email) => {
   var rawTransaction = {
     from: coinbase_acnt,
     gasPrice: web3.utils.toHex(20 * 1e9),
-    gasLimit: web3.utils.toHex(2100000),
+    gasLimit: web3.utils.toHex(210000),
     to: process.env.CONTRACT_ADDR,
     value: "0x0",
     data: contract.methods
@@ -82,7 +82,7 @@ async function createKeystore(emailId) {
   keythereum.exportToFile(keyObj, "./server/keystore");
   const pubKey = web3.eth.accounts.privateKeyToAccount(dk.privateKey).address;
   user.pubKey = pubKey;
-  user.save();
+  await user.save();
   return pubKey;
 }
 
