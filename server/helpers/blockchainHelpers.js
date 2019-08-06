@@ -53,7 +53,7 @@ exports.addToSC = async (examData, email) => {
       )
       .encodeABI(),
     nonce: web3.utils.toHex(count),
-    chainId: 989899
+    chainId: process.env.BLOCKCHAIN_CHAINID
   };
 
   var transaction = new EthereumTx(rawTransaction);
