@@ -234,7 +234,7 @@ module.exports = function(passport) {
           }
           return done(null, req.user);
         }
-        const existingUser = await User.findOne({
+        var existingUser = await User.findOne({
           "auth.facebook.id": profile.id
         });
         if (existingUser) {
@@ -347,7 +347,7 @@ module.exports = function(passport) {
             }
             return done(null, req.user);
           }
-          const existingUser = await User.findOne({
+          var existingUser = await User.findOne({
             "auth.linkedin.id": profile.id
           });
           if (existingUser) {
