@@ -12,10 +12,10 @@ var hbs = require( 'express-handlebars');
 var cors = require('cors');
 
 var app = express();
-
-var configDB = require('./config/database.js');
-mongoose.connect(configDB.url,{useNewUrlParser:true});
-require('./config/passport')(passport);
+require("dotenv").config();
+mongoose.connect(process.env.DATABASE_URI,{useNewUrlParser:true});
+require('./services/passport')(passport);
+mongoose.set('useCreateIndex', true);
 
 // view engine setup
 app.engine('hbs', hbs({
@@ -50,7 +50,15 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-require('./routes/routes.js')(app, passport);
+require('./routes/paymentRoutes.js')(app)
+require('./routes/authRoutes')(app)
+require('./routes/examRoutes')(app)
+// require('./routes/paymentRoutes')(app) // Not working; need to make a further dive.
+require('./routes/contentRoutes')(app)
+require('./routes/emailVeriRoutes')(app);
+require('./routes/shareSocialsRoutes')(app);
+require('./routes/certificateRoutes')(app);
+// require("./routes/testRoutes")(app);
 
 // catch 404 and render 404 page
 app.use('*', function(req, res) {
@@ -67,7 +75,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-app.listen('3000', console.log('server started'))
+app.listen("3000", console.log('server started'))
 
 module.exports = app;
