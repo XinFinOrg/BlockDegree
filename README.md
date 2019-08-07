@@ -2,8 +2,9 @@
 
 <img src="https://img.shields.io/badge/deploy--ready-no-red" />
 
-<img src="https://img.shields.io/badge/tested-no-red" />
+<img src="https://img.shields.io/badge/tested-ongoing-blue" />
 <img src="https://img.shields.io/badge/uat--ready-yes-green" />  
+<img src="https://img.shields.io/badge/UI--ready-ongoing-blue" />  
 
 This is the uat branch for blockdegree. 
 
