@@ -20,7 +20,14 @@ module.exports = app => {
   });
 
   app.get("/api/current_user", (req, res) => {
-    res.send(req.user);
+    console.log("HIT current user");
+    
+    if (req.user){
+      res.json({status:true});
+    }
+    else{
+      res.json({status:false})
+    }
   });
 
   app.post("/signup", (req, res, next) => {
@@ -128,7 +135,7 @@ module.exports = app => {
 
   app.get("/auth/linkedin", passport.authenticate("linkedin"));
 
-  app.get("/auth/google/callback", (req, res) => {
+  app.get("/auth/google/callback", (req, res, next) => {
     passport.authenticate(
       "google",
       { failureRedirect: "/login" },
@@ -147,10 +154,12 @@ module.exports = app => {
           if (url == "/login" || url == "/exam-result") {
             url = "/";
           }
+          // res.send({status:user,info:"msg"})
           res.redirect(url);
+          // next();
         });
       }
-    )(req, res);
+    )(req, res,next);
   });
 
   app.get("/auth/facebook/callback", (req, res) => {
