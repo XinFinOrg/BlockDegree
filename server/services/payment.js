@@ -121,8 +121,8 @@ exports.payPaypal = async (req, res) => {
         payment_method: "paypal"
       },
       redirect_urls: {
-        return_url: "http://uat.blockdegree.org/suc",
-        cancel_url: "http://uat.blockdegree.org/err"
+        return_url: "http://ga.blockdegree.org:3001/suc",
+        cancel_url: "http://ga.blockdegree.org:3001/err"
       },
       transactions: [
         {
