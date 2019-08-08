@@ -20,6 +20,7 @@ This is the uat branch for blockdegree.
 Following are the tasks to do : 
 ### TO DO 
 - [x] Fix login button's JS ( UI; API is present )
+- [x] Contact Us mail service
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI - DATTABHAI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI - DATTABHAI )
 - [ ] Complete testing and fixing the bugs found 
