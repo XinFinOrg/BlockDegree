@@ -19,9 +19,9 @@ This is the uat branch for blockdegree.
 
 Following are the tasks to do : 
 ### TO DO 
-- [ ] Fix login button's JS ( UI; API is present )
-- [ ] Add a loading icon to address the delay in paypal payment redirection ( UI )
-- [ ] Fix the div tag's height change Enroll -> Take Exam ( UI )
+- [x] Fix login button's JS ( UI; API is present )
+- [ ] Add a loading icon to address the delay in paypal payment redirection ( UI - DATTABHAI )
+- [ ] Fix the div tag's height change Enroll -> Take Exam ( UI - DATTABHAI )
 - [ ] Complete testing and fixing the bugs found 
 - [ ] Remove unnecessary node dependencies
 - [ ] Add a simple error page to account for all errors
