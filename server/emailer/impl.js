@@ -96,7 +96,7 @@ module.exports = {
   forgotPasswordMailer: function(mail, token, res) {
     console.log("mail", mail);
     return new Promise(function(resolve, reject) {
-      var link = "http://ga.blockdegree.org:3001/resetPassword?&email=" + token;
+      var link = "http://localhost:3000/resetPassword?&email=" + token;
       var mailOptions = {
         from: "info@blockdegree.org",
         to: mail,
