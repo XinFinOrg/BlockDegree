@@ -13,15 +13,15 @@ This is the uat branch for blockdegree.
 1. Clone the repository
 2. run `npm install`; provide root access if permission denied like this : `sudo npm install --allow-root --unsafe-perm=true`
 3. Run the commnad `gulp build`
-4. Start MongoDB, local ipfs network ( if a local setup )
+4. Start MongoDB, local ipfs network ( if a local setup; for local set IPFS env = local )
 5. Create a `.env` file as per the file `.env.example` given in the repo & set your cerdential with appropriate callbacks
 6. To start: `npm run start` 
 
 Following are the tasks to do : 
 ### TO DO 
-- [ ] Fix login button's JS ( UI; API is present )
-- [ ] Add a loading icon to address the delay in paypal payment redirection ( UI )
-- [ ] Fix the div tag's height change Enroll -> Take Exam ( UI )
+- [x] Fix login button's JS ( UI; API is present )
+- [ ] Add a loading icon to address the delay in paypal payment redirection ( UI - DATTABHAI )
+- [ ] Fix the div tag's height change Enroll -> Take Exam ( UI - DATTABHAI )
 - [ ] Complete testing and fixing the bugs found 
 - [ ] Remove unnecessary node dependencies
 - [ ] Add a simple error page to account for all errors
