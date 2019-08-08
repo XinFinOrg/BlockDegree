@@ -20,8 +20,13 @@ module.exports = app => {
   });
 
   app.get("/api/current_user", (req, res) => {
-    res.send(req.user);
-  });
+    console.log("HIT current user");
+    if (req.user){
+      res.json({status:true});
+    }
+    else{
+      res.json({status:false})
+    }  });
 
   app.post("/signup", (req, res, next) => {
     passport.authenticate(

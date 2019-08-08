@@ -49,13 +49,24 @@ Handlebars.registerHelper("inc", function(value, options) {
 // Special case for login button
 (function (){
   if(document.getElementById('login-btn') != null) {
-    let content = document.getElementById('login-btn'),
-        user = localStorage.getItem('hasUser') == 'true' ? true : false;
+    let content = document.getElementById('login-btn')
 
-      let source = document.getElementById('nav-login').innerHTML,
-          template = Handlebars.compile(source);
-
-      content.innerHTML = template(user);
+        $.ajax({
+          type: "GET",
+          url: '/api/current_user',
+          dataType: 'json',
+          success : function(result) {
+            console.log(`result: ${result}`)
+            console.log(`status: ${result.status}`)
+            let source = document.getElementById('nav-login').innerHTML,
+            template = Handlebars.compile(source);
+            content.innerHTML = template( result.status);
+          },
+          error: function(err) {
+            console.log(err);
+            window.location = '/';
+          }
+        });
     };
 })();
 
