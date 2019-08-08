@@ -14,7 +14,7 @@ function newDefaultUser() {
   return new User({
     email: "",
     name: "",
-    pubKey:"",
+    timestamp:"",
     examData: {
       payment: {
         course_1: false,
@@ -105,8 +105,11 @@ module.exports = function(passport) {
               }
             } else {
               console.log("in method creating user");
+              console.log(`Body: ${req.body}`)
               var newUser = newDefaultUser();
               newUser.email = email;
+              newUser.name = req.body.firstName + req.body.lastName;
+              newUser.timestamp=Date.now()
               newUser.auth.local.password = newUser.generateHash(password);
               newUser.save(function(err) {
                 if (err) {
@@ -203,6 +206,7 @@ module.exports = function(passport) {
         newUser.name = profile._json.name;
         newUser.auth.google.accessToken = accessToken;
         newUser.auth.google.refreshToken = refreshToken;
+        newUser.timestamp=Date.now()
         const user = await new User(newUser).save();
         done(null, user);
       }
@@ -259,6 +263,7 @@ module.exports = function(passport) {
         newUser.auth.facebook.id = profile.id;
         newUser.auth.facebook.accessToken = accessToken;
         newUser.auth.facebook.refreshToken = refreshToken || "";
+        newUser.timestamp=Date.now()
         const user = await new User(newUser).save();
         done(null, user);
       }
@@ -316,6 +321,7 @@ module.exports = function(passport) {
         newUser.email = profile.emails[0].value;
         newUser.auth.twitter.token = token;
         newUser.auth.twitter.tokenSecret = tokenSecret;
+        newUser.timestamp=Date.now()
         const user = await new User(newUser).save();
         done(null, user);
       }
@@ -374,6 +380,7 @@ module.exports = function(passport) {
           newUser.name = profile.displayName;
           newUser.email = profile.emails[0].value;
           newUser.auth.linkedin.accessToken = accessToken;
+          newUser.timestamp=Date.now()
           const user = await new User(newUser).save();
           return done(null, user);
         });
