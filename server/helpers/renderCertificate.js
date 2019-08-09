@@ -77,7 +77,7 @@ exports.renderForIPFSHash = (name, percent, examType, date, callback) => {
   if (hash == "") {
     return callback({ uploaded: false, error: "bad parameters", hash: "" });
   }
-  const dataURL = await qrcode.toDataURL(hash);
+  const dataURL = await qrcode.toDataURL(`https://ipfs-gateway.xinfin.network/${hash}`);// or the domain of where its hosted
   ejs.renderFile(
     __dirname + "/certificateWithQR.ejs",
     {

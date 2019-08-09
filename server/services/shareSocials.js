@@ -26,6 +26,7 @@ else{
 
 exports.postTwitter = async (req, res) => {
   console.log("Called share on twitter");
+  console.log(req.body)
   if (!req.user){
     return res.redirect('/login')
   }
@@ -132,7 +133,7 @@ exports.postLinkedin = async (req, res) => {
   }
   const msg =
     req.body.msg ||
-    "Hey I just completed this awesome course on blockchain, check it out blockdegree.org !!";
+    `Hey I just completed this awesome course on blockchain, check it out ipfs-gateway.xinfin.network/${req.body.hash} !!`;
   const response = await axios({
     method: "post",
     url: "https://api.linkedin.com/v2/ugcPosts",
