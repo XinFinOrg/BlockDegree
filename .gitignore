@@ -5,6 +5,8 @@ server/protected/courses
 dist/*.html
 .env
 
+data.json
+
 server/config/localKeys.js
 server/config/prodKeys.js
 server/config/keys.js
