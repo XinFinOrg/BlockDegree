@@ -15,7 +15,11 @@ This is the uat branch for blockdegree.
 3. Run the commnad `gulp build`
 4. Start MongoDB, local ipfs network ( if a local setup; for local set IPFS env = local )
 5. Create a `.env` file as per the file `.env.example` given in the repo & set your cerdential with appropriate callbacks
-6. To start: `npm run start` 
+6. To start: `npm run start`  
+
+### BUGS
+Following are the bugs, to be solved asap : 
+- [ ] Course 2, 3 payment not being updated
 
 Following are the tasks to do : 
 ### TO DO 
@@ -27,5 +31,8 @@ Following are the tasks to do :
 - [ ] Remove unnecessary node dependencies
 - [ ] Add a simple error page to account for all errors
 - [ ] Display buttons on the /exam-result page as per auth response
-- [ ] Update article URL for linkedin, twitter post
+- [x] Update article URL for linkedin, twitter post
+- [x] API to enable migration
+- [x] Blockdegree User stats API ( priv. repo ) 
+- [ ] Extract timestamp out of exported data from MongoDB
 
