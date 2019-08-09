@@ -105,7 +105,6 @@ module.exports = function(passport) {
               }
             } else {
               console.log("in method creating user");
-              console.log(`Body: ${req.body}`)
               var newUser = newDefaultUser();
               newUser.email = email;
               newUser.name = req.body.firstName + req.body.lastName;
