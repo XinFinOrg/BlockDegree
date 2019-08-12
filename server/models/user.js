@@ -4,12 +4,8 @@ var bcrypt = require("bcrypt-nodejs");
 var userSchema = mongoose.Schema({
   email:{type : String,unique : true, required: true},
   name: String,
-<<<<<<< HEAD
-  timestamp:String,
-=======
   created:String,
   lastActive:String,
->>>>>>> local
   examData: {
     payment: {
       course_1: Boolean,
