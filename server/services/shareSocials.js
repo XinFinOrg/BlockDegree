@@ -4,30 +4,31 @@ var puppeteer = require("puppeteer");
 var fs = require("fs");
 const User = require("../models/user");
 const axios = require("axios");
+const BitlyClient = require("bitly").BitlyClient;
 
 require("dotenv").config();
 
-var clientIPFS = "";
+// Rate  Limited 1000 calls per hour
+const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
 
+var clientIPFS = "";
 const xinfinClient = new ipfsClient({
   host: "ipfs.xinfin.network",
   port: 443,
   protocol: "https"
 });
-
 const localClient = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
-
-if (process.env.IPFS_NETWORK=="local"){
-  clientIPFS=localClient
-}
-else{
-  clientIPFS=xinfinClient
+if (process.env.IPFS_NETWORK == "local") {
+  clientIPFS = localClient;
+} else if (process.env.IPFS_NETWORK == "xinfin") {
+  clientIPFS = xinfinClient;
 }
 
 exports.postTwitter = async (req, res) => {
   console.log("Called share on twitter");
-  if (!req.user){
-    return res.redirect('/login')
+  console.log(req.body);
+  if (!req.user) {
+    return res.redirect("/login");
   }
   const user = await User.findOne({ email: req.user.email });
   if (!user) {
@@ -45,12 +46,27 @@ exports.postTwitter = async (req, res) => {
     req.body.hash ||
     user.examData.certificateHash[user.examData.certificateHash.length - 1]
       .clientHash;
+  let fullURL = "";
+  let shortURL = "";
+  if (process.env.IPFS_NETWORK == "local") {
+    fullURL = `http://localhost:3000/ipfs/${hash}`;
+  } else if (process.env.IPFS_NETWORK == "xinfin") {
+    fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
+  }
+
+  try {
+    shortURL = await bitly.shorten(fullURL);
+  } catch (e) {
+    console.error(`Error while shortning the URL ${fullURL}; Error: ${e}`);
+    shortURL = fullURL;
+  }
+
   const msg =
     req.body.msg ||
-    "Hey, I just got certified in blockchain from Blockdegree.org !!";
-    console.log("User: ",user);
-    const currUser = await User.findOne({email:req.user.email});
-    console.log("User: ",currUser)
+    `Hey, I just got certified in blockchain from Blockdegree.org & got this certi ${
+      shortURL.url
+    } !!`;
+  const currUser = await User.findOne({ email: req.user.email });
   var config = getTwitterConfig(
     process.env.TWITTER_CLIENT_ID,
     process.env.TWITTER_CLIENT_SECRET,
@@ -128,11 +144,27 @@ exports.postLinkedin = async (req, res) => {
     user.auth.linkedin.id == undefined
   ) {
     // set linkedin credentials and post.
-    return res.redirect('/auth/linkedin');
+    return res.redirect("/auth/linkedin");
+  }
+  let fullURL = "";
+  let shortURL = "";
+  if (process.env.IPFS_NETWORK == "local") {
+    fullURL = `http://localhost:3000/ipfs/${hash}`;
+  } else if (process.env.IPFS_NETWORK == "xinfin") {
+    fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
+  }
+  try {
+    shortURL = await bitly.shorten(fullURL);
+  } catch (e) {
+    console.error(`Error while shortning the URL ${fullURL}; Error: ${e}`);
+    shortURL = fullURL;
+    console.log(`Using full URL for ${req.user.email} Link: ${shortURL.url}`);
   }
   const msg =
     req.body.msg ||
-    "Hey I just completed this awesome course on blockchain, check it out blockdegree.org !!";
+    `Hey I just completed this awesome course on blockchain from blockdegree.org, check it out ${
+      shortURL.url
+    } !!`;
   const response = await axios({
     method: "post",
     url: "https://api.linkedin.com/v2/ugcPosts",
@@ -171,10 +203,10 @@ exports.postLinkedin = async (req, res) => {
     throw err;
   });
   console.log(response.status);
-  return res.json({posted:true,error:null,status:response.status});
+  return res.json({ posted: true, error: null, status: response.status });
 };
 
-exports.postFacebook = async (req,res) => {}
+exports.postFacebook = async (req, res) => {};
 
 // Not wokring
 // Isuue in uploading the image to the uploadURL; tried cURL, httpie, axios

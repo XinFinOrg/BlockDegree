@@ -14,7 +14,12 @@ function newDefaultUser() {
   return new User({
     email: "",
     name: "",
+<<<<<<< HEAD
     timestamp:"",
+=======
+    created:"",
+    lastActive:"",
+>>>>>>> local
     examData: {
       payment: {
         course_1: false,
@@ -110,6 +115,8 @@ module.exports = function(passport) {
               newUser.name = req.body.firstName + req.body.lastName;
               newUser.timestamp=Date.now()
               newUser.auth.local.password = newUser.generateHash(password);
+              newUser.created=Date.now();
+              newUser.lastActive=Date.now();
               newUser.save(function(err) {
                 if (err) {
                   console.log("Error:", err);
@@ -148,7 +155,7 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       function(req, email, password, done) {
-        User.findOne({ email: email }, function(err, user) {
+        User.findOne({ email: email }, async function(err, user) {
           if (err) return done(err);
           else if (!user) return done(null, false, "No user found.");
           else if (!user.validPassword(password))
@@ -159,6 +166,8 @@ module.exports = function(passport) {
               false,
               "User is not verified, Please check your email"
             );
+          user.lastActive=Date.now();
+          await user.save();
           return done(null, user);
         });
       }
@@ -171,7 +180,8 @@ module.exports = function(passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://ga.blockdegree.org:3001/auth/google/callback",
+        callbackURL: `${process.env.HOST}/auth/google/callback`,
+
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {
@@ -184,9 +194,13 @@ module.exports = function(passport) {
             user.auth.google.id = profile.id;
             user.auth.google.accessToken = accessToken;
             user.auth.google.refreshToken = refreshToken;
+            user.lastActive=Date.now();
             user.save();
             return done(null,user)
           }
+          let user = await User.findOne({ email: req.user.email });
+          user.lastActive=Date.now();
+          user.save();
           return done(null, req.user);
         }
         const existingUser = await User.findOne({
@@ -194,6 +208,8 @@ module.exports = function(passport) {
         });
         if (existingUser) {
           // console.log(` In passport verification ${existingUser.email}`)
+          existingUser.lastActive=Date.now();
+          existingUser.save();
           return done(null, existingUser);
         }
         if (profile.emails.length < 1) {
@@ -205,9 +221,16 @@ module.exports = function(passport) {
         newUser.name = profile._json.name;
         newUser.auth.google.accessToken = accessToken;
         newUser.auth.google.refreshToken = refreshToken;
+<<<<<<< HEAD
         newUser.timestamp=Date.now()
         const user = await new User(newUser).save();
         done(null, user);
+=======
+        newUser.created=Date.now();
+        newUser.lastActive=Date.now();
+        newUser.save();
+        done(null, newUser);
+>>>>>>> local
       }
     )
   );
@@ -218,7 +241,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: "http://ga.blockdegree.org:3001/auth/facebook/callback",
+        callbackURL: `${process.env.HOST}/auth/facebook/callback`,
         passReqToCallback: true,
         profileFields: ["id", "emails", "name"]
       },
@@ -232,9 +255,13 @@ module.exports = function(passport) {
             user.auth.facebook.id = profile.id;
             user.auth.facebook.accessToken = accessToken;
             user.auth.facebook.refreshToken = refreshToken;
+            user.lastActive = Date.now();
             user.save();
             return done(null, user);
           }
+          let user = await User.findOne({ email: req.user.email });
+          user.lastActive=Date.now();
+          user.save();
           return done(null, req.user);
         }
         var existingUser = await User.findOne({
@@ -254,6 +281,7 @@ module.exports = function(passport) {
             user.auth.facebook.id = profile.id;
             user.auth.facebook.accessToken = accessToken;
             user.auth.facebook.refreshToken = refreshToken || "";
+            user.lastActive=Date.now();
             user.save();
             return done(null, user);
         }
@@ -262,9 +290,16 @@ module.exports = function(passport) {
         newUser.auth.facebook.id = profile.id;
         newUser.auth.facebook.accessToken = accessToken;
         newUser.auth.facebook.refreshToken = refreshToken || "";
+<<<<<<< HEAD
         newUser.timestamp=Date.now()
         const user = await new User(newUser).save();
         done(null, user);
+=======
+        newUser.created=Date.now();
+        newUser.lastActive=Date.now();
+        newUser.save();
+        done(null, newUser);
+>>>>>>> local
       }
     )
   );
@@ -289,6 +324,7 @@ module.exports = function(passport) {
             user.auth.twitter.id = profile.id;
             user.auth.twitter.token = token;
             user.auth.twitter.tokenSecret = tokenSecret;
+            user.lastActive=Date.now();
             user.save();
             return done(null, user);
           }
@@ -298,6 +334,8 @@ module.exports = function(passport) {
           "auth.twitter.id": profile.id
         });
         if (existingUser) {
+          existingUser.lastActive=Date.now();
+          existingUser.save();
           return done(null, existingUser);
         }
         if (profile.emails.length < 1) {
@@ -311,6 +349,7 @@ module.exports = function(passport) {
             user.auth.twitter.id = profile.id;
             user.auth.twitter.token = token;
             user.auth.twitter.tokenSecret = tokenSecret;
+            user.lastActive=Date.now();
             user.save();
             return done(null, user);
         }
@@ -320,9 +359,16 @@ module.exports = function(passport) {
         newUser.email = profile.emails[0].value;
         newUser.auth.twitter.token = token;
         newUser.auth.twitter.tokenSecret = tokenSecret;
+<<<<<<< HEAD
         newUser.timestamp=Date.now()
         const user = await new User(newUser).save();
         done(null, user);
+=======
+        newUser.created=Date.now();
+        newUser.lastActive=Date.now();
+        newUser.save();
+        done(null, newUser);
+>>>>>>> local
       }
     )
   );
@@ -333,7 +379,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.LINKEDIN_CLIENT,
         clientSecret: process.env.LINKEDIN_SECRET,
-        callbackURL: "http://ga.blockdegree.org:3001/auth/linkedin/callback",
+        callbackURL: `${process.env.HOST}/auth/facebook/callback`,
         scope: ["r_liteprofile", "r_emailaddress", "w_member_social"],
         passReqToCallback: true
       },
@@ -347,6 +393,7 @@ module.exports = function(passport) {
               let user = await User.findOne({ email: req.user.email });
               user.auth.linkedin.id = profile.id;
               user.auth.linkedin.accessToken = accessToken;
+              user.lastActive=Date.now();
               user.save();
               return done(null, user);
             }
@@ -356,6 +403,8 @@ module.exports = function(passport) {
             "auth.linkedin.id": profile.id
           });
           if (existingUser) {
+            existingUser.lastActive=Date.now();
+            existingUser.save();
             return done(null, existingUser);
           }
           if (profile.emails.length < 1) {
@@ -371,6 +420,7 @@ module.exports = function(passport) {
             let user = await User.findOne({ email: profile.emails[0].value });
               user.auth.linkedin.id = profile.id;
               user.auth.linkedin.accessToken = accessToken;
+              user.lastActive=Date.now();
               user.save();
               return done(null, user);
           }
@@ -379,9 +429,16 @@ module.exports = function(passport) {
           newUser.name = profile.displayName;
           newUser.email = profile.emails[0].value;
           newUser.auth.linkedin.accessToken = accessToken;
+<<<<<<< HEAD
           newUser.timestamp=Date.now()
           const user = await new User(newUser).save();
           return done(null, user);
+=======
+          newUser.created=Date.now();
+          newUser.lastActive=Date.now();
+          newUser.save();
+          return done(null, newUser);
+>>>>>>> local
         });
       }
     )
