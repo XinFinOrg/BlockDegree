@@ -14,12 +14,8 @@ function newDefaultUser() {
   return new User({
     email: "",
     name: "",
-<<<<<<< HEAD
-    timestamp:"",
-=======
     created:"",
     lastActive:"",
->>>>>>> local
     examData: {
       payment: {
         course_1: false,
@@ -221,16 +217,10 @@ module.exports = function(passport) {
         newUser.name = profile._json.name;
         newUser.auth.google.accessToken = accessToken;
         newUser.auth.google.refreshToken = refreshToken;
-<<<<<<< HEAD
-        newUser.timestamp=Date.now()
-        const user = await new User(newUser).save();
-        done(null, user);
-=======
         newUser.created=Date.now();
         newUser.lastActive=Date.now();
         newUser.save();
         done(null, newUser);
->>>>>>> local
       }
     )
   );
@@ -290,16 +280,10 @@ module.exports = function(passport) {
         newUser.auth.facebook.id = profile.id;
         newUser.auth.facebook.accessToken = accessToken;
         newUser.auth.facebook.refreshToken = refreshToken || "";
-<<<<<<< HEAD
-        newUser.timestamp=Date.now()
-        const user = await new User(newUser).save();
-        done(null, user);
-=======
         newUser.created=Date.now();
         newUser.lastActive=Date.now();
         newUser.save();
         done(null, newUser);
->>>>>>> local
       }
     )
   );
@@ -359,16 +343,10 @@ module.exports = function(passport) {
         newUser.email = profile.emails[0].value;
         newUser.auth.twitter.token = token;
         newUser.auth.twitter.tokenSecret = tokenSecret;
-<<<<<<< HEAD
-        newUser.timestamp=Date.now()
-        const user = await new User(newUser).save();
-        done(null, user);
-=======
         newUser.created=Date.now();
         newUser.lastActive=Date.now();
         newUser.save();
         done(null, newUser);
->>>>>>> local
       }
     )
   );
@@ -429,16 +407,10 @@ module.exports = function(passport) {
           newUser.name = profile.displayName;
           newUser.email = profile.emails[0].value;
           newUser.auth.linkedin.accessToken = accessToken;
-<<<<<<< HEAD
-          newUser.timestamp=Date.now()
-          const user = await new User(newUser).save();
-          return done(null, user);
-=======
           newUser.created=Date.now();
           newUser.lastActive=Date.now();
           newUser.save();
           return done(null, newUser);
->>>>>>> local
         });
       }
     )

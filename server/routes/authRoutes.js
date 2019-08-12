@@ -21,21 +21,14 @@ module.exports = app => {
 
   app.get("/api/current_user", (req, res) => {
     console.log("HIT current user");
-<<<<<<< HEAD
-=======
     
->>>>>>> local
     if (req.user){
       res.json({status:true});
     }
     else{
       res.json({status:false})
-<<<<<<< HEAD
-    }  });
-=======
     }
   });
->>>>>>> local
 
   app.post("/signup", (req, res, next) => {
     passport.authenticate(
