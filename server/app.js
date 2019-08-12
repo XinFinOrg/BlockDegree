@@ -59,10 +59,6 @@ require('./routes/emailVeriRoutes')(app);
 require('./routes/shareSocialsRoutes')(app);
 require('./routes/certificateRoutes')(app);
 require('./routes/contactUsRoutes')(app);
-<<<<<<< HEAD
-// require("./routes/testRoutes")(app);
-=======
->>>>>>> local
 
 // catch 404 and render 404 page
 app.use('*', function(req, res) {
