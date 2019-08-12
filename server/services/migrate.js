@@ -64,31 +64,41 @@ exports.migrateFrom = (req, res) => {
   dataArr.forEach(async obj => {
     const objJSON = await JSON.parse(obj);
     const newUser = newDefaultUser();
-    // newUser.created = objJSON._id.$oid.getTimestamp();
+    newUser._id = objJSON._id.$oid;
 
     try {
-        newUser.email = objJSON.local.email;
-        newUser.auth.local.password = objJSON.local.password;
-        newUser.auth.local.isVerified=objJSON.local.isVerified;
-        newUser.examData.payment.course_1 = objJSON.local.payment.course_1;
-        newUser.examData.payment.course_2 = objJSON.local.payment.course_2;
-        newUser.examData.payment.course_3 = objJSON.local.payment.course_3;
-    
-        newUser.examData.examBasic.marks = Number(objJSON.local.examBasic.marks.$numberInt);
-        newUser.examData.examBasic.attempts = Number(objJSON.local.examBasic.attempts.$numberInt);
-    
-        newUser.examData.examAdvanced.marks = Number(objJSON.local.examAdvanced.marks.$numberInt);
-        newUser.examData.examAdvanced.attempts = Number(objJSON.local.examAdvanced.attempts.$numberInt);
-    
-        newUser.examData.examProfessional.marks = Number(objJSON.local.examProfessional.marks.$numberInt);
-        newUser.examData.examProfessional.attempts= Number(objJSON.local.examProfessional.attempts.$numberInt);
-    
-        newUser.save();
+      newUser.email = objJSON.local.email;
+      newUser.auth.local.password = objJSON.local.password;
+      newUser.auth.local.isVerified = objJSON.local.isVerified;
+      newUser.examData.payment.course_1 = objJSON.local.payment.course_1;
+      newUser.examData.payment.course_2 = objJSON.local.payment.course_2;
+      newUser.examData.payment.course_3 = objJSON.local.payment.course_3;
+
+      newUser.examData.examBasic.marks = Number(
+        objJSON.local.examBasic.marks.$numberInt
+      );
+      newUser.examData.examBasic.attempts = Number(
+        objJSON.local.examBasic.attempts.$numberInt
+      );
+
+      newUser.examData.examAdvanced.marks = Number(
+        objJSON.local.examAdvanced.marks.$numberInt
+      );
+      newUser.examData.examAdvanced.attempts = Number(
+        objJSON.local.examAdvanced.attempts.$numberInt
+      );
+
+      newUser.examData.examProfessional.marks = Number(
+        objJSON.local.examProfessional.marks.$numberInt
+      );
+      newUser.examData.examProfessional.attempts = Number(
+        objJSON.local.examProfessional.attempts.$numberInt
+      );
+
+      newUser.save();
+    } catch (e) {
+      console.log(`Caught error ${e} for ${objJSON.local.email}`);
     }
-    catch(e) {
-        console.log(`Caught error ${e} for ${objJSON.local.email}`)
-    }
-   
   });
-  res.status(200).json({"ok":true})
+  res.status(200).json({ ok: true });
 };
