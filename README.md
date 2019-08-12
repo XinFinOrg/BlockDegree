@@ -15,16 +15,28 @@ This is the uat branch for blockdegree.
 3. Run the commnad `gulp build`
 4. Start MongoDB, local ipfs network ( if a local setup; for local set IPFS env = local )
 5. Create a `.env` file as per the file `.env.example` given in the repo & set your cerdential with appropriate callbacks
-6. To start: `npm run start` 
+6. To start: `npm run start`  
+
+### BUGS
+Following are the bugs, to be solved asap : 
+- [ ] Course 2, 3 payment not being updated
 
 Following are the tasks to do : 
 ### TO DO 
 - [x] Fix login button's JS ( UI; API is present )
+<<<<<<< HEAD
+=======
+- [x] Contact Us mail service
+>>>>>>> local
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI - DATTABHAI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI - DATTABHAI )
 - [ ] Complete testing and fixing the bugs found 
 - [ ] Remove unnecessary node dependencies
 - [ ] Add a simple error page to account for all errors
 - [ ] Display buttons on the /exam-result page as per auth response
-- [ ] Update article URL for linkedin, twitter post
+- [x] Update article URL for linkedin, twitter post
+- [x] API to enable migration
+- [x] Blockdegree User stats API ( priv. repo ) 
+- [ ] Extract timestamp out of exported data from MongoDB
+- [ ] Notify users on 1 HR gap between giving exams ( UI )
 

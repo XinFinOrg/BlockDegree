@@ -49,7 +49,6 @@ module.exports = {
           "/confirmation/?token=" +
           token.token +
           ".\n"
-        // text:'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttps://www.blockdegree.org/confirmation\/?token=' + token.token + '.\n' + 'Free Blockchain Course with Online Certification.. This exam comprises of theory and practical Question, to be completed within 45 minutes. The minimum passing score of the exam is above 60%. Upon passing of the exam, you will be entitled to receive a certification of competence, which will be added to the Xinfin blockchain. With the certificate… ' + '.\n'
       };
     } else if (
       type === "course_1" ||
@@ -73,7 +72,7 @@ module.exports = {
           "Hello,\n\n" +
           "Your payment is completed for " +
           courseName +
-          " : \nhttp://www.blockdegree.org/" +
+          ` : \n${process.env.HOST}/` +
           courseName +
           ".\n"
       };
@@ -96,12 +95,11 @@ module.exports = {
   forgotPasswordMailer: function(mail, token, res) {
     console.log("mail", mail);
     return new Promise(function(resolve, reject) {
-      var link = "http://ga.blockdegree.org:3001/resetPassword?&email=" + token;
+      var link = `${process.env.HOST}/resetPassword?&email=` + token;
       var mailOptions = {
         from: "info@blockdegree.org",
         to: mail,
         subject: "Forgot Password",
-        //text:'Hello,\n\n' + 'Your payment is completed for ' + courseName + ' : \nhttp:\/\/' + req.headers.host + '/' + courseName + '.\n'
         text: link
       };
 
@@ -111,7 +109,6 @@ module.exports = {
           reject(error);
         } else {
           console.log("Email sent: " + info.response);
-          // resolve(info);
           res.send({ status: "true" });
         }
       });

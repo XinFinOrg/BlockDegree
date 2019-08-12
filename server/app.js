@@ -59,7 +59,10 @@ require('./routes/emailVeriRoutes')(app);
 require('./routes/shareSocialsRoutes')(app);
 require('./routes/certificateRoutes')(app);
 require('./routes/contactUsRoutes')(app);
+<<<<<<< HEAD
 // require("./routes/testRoutes")(app);
+=======
+>>>>>>> local
 
 // catch 404 and render 404 page
 app.use('*', function(req, res) {
@@ -76,6 +79,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-app.listen("3001", console.log('server started'))
+app.listen("3000", console.log('server started'))
 
 module.exports = app;
