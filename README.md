@@ -35,4 +35,5 @@ Following are the tasks to do :
 - [x] API to enable migration
 - [x] Blockdegree User stats API ( priv. repo ) 
 - [ ] Extract timestamp out of exported data from MongoDB
+- [ ] Notify users on 1 HR gap between giving exams ( UI )
 
