@@ -256,6 +256,7 @@ exports.getProfessionalExam = (req, res) => {
 };
 
 exports.getExamResult = (req, res) => {
+  console.log(`called the exam-result endpoint by ${req.user.email} at ${Date.now()}`)
   const backUrl = req.header("Referer");
   var name = req.user.name;
   var query = {};
@@ -296,25 +297,19 @@ exports.getExamResult = (req, res) => {
         // Yeah!
         examStatus = true;
         let d = new Date();
+        console.log(`Last Attemp timestamp : ${findLastAttempt(user,examName)}`)
         // This is prevents dual addition of the same object based on the timestamp of the previous addition
         if (
-          user.examData.certificateHash.length == 0 ||
-          user.examData.certificateHash[
-            user.examData.certificateHash.length - 1
-          ].timestamp == undefined ||
+          findLastAttempt(user,examName)==null ||
           Date.now() -
-            user.examData.certificateHash[
-              user.examData.certificateHash.length - 1
-            ].timestamp >
-            3600000 // 1 HR freeze time
+          findLastAttempt(user,examName) >
+            10000 // 10 second freeze time between giving exams
         ) {
           let date = d.toLocaleDateString("en-GB", {
             day: "numeric",
             month: "long",
             year: "numeric"
           });
-          console.log(jsonData);
-          console.log(examTypes[examName].courseName);
           // Post the 2 certificates
           renderCertificate.renderForIPFSHash(
             name,
@@ -322,8 +317,6 @@ exports.getExamResult = (req, res) => {
             examName,
             date,
             bothRender => {
-              console.log(bothRender);
-
               if (!bothRender.uploaded) {
                 res
                   .status(500)
@@ -410,3 +403,13 @@ exports.getExamStatus = (req, res) => {
     );
   });
 };
+
+function findLastAttempt(user, examName) {
+  let certiCount = user.examData.certificateHash.length;
+  for (let i=certiCount-1;i>=0;i--){
+    if (user.examData.certificateHash[i].examType==examName){
+      return user.examData.certificateHash[i].timestamp;
+    }
+  }
+  return null
+}
