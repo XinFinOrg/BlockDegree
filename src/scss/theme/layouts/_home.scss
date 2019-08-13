@@ -130,7 +130,8 @@
       position: absolute;
       width: 100%!important;
       height: 100%;
-      @include linear-gradient(60deg, rgba(#fff, 80%), rgba(#fff, 0.3));
+      /*@include linear-gradient(60deg, rgba(#fff, 80%), rgba(#fff, 0.3));*/
+	  @include linear-gradient(60deg, rgba(#00265e, 0.2));
       @include media-breakpoint-up(md) {
         width: 80%;
       }
@@ -153,6 +154,7 @@
         font-weight: 600;
         line-height: 1em;
         margin-top: 10px;
+		color: $white;
         @include media-breakpoint-down(md) {
             font-size: 36px;
         }

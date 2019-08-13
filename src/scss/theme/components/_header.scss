@@ -210,16 +210,35 @@
   padding: 0 8px 0px 8px;
   text-decoration: none;
   display: inline-block;
-  color: #002844;
+  /*color: #002844;*/
+  color: $white;
   font-weight:500;
   font-size: 12px;
   text-transform: uppercase;
   outline: none;
 }
 
+/*.nav-menu li:hover > a{
+  color: $primary-color;
+}*/
+
+
+/*-- Scrolled Nav css --*/
+.header-scrolled .nav-menu a{color: #002844;}
 .nav-menu li:hover > a{
+  color: $white;
+}
+
+.header-scrolled .nav-menu li:hover > a{
   color: $primary-color;
 }
+
+.logo-dark {display: none;}
+.header-scrolled .logo-dark {display: block;}
+.header-scrolled .logo-white {display: none;}
+/*-- Scrolled Nav css --*/
+
+
 
 .nav-menu > li {
   margin-left: 10px;
