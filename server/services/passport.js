@@ -108,6 +108,8 @@ module.exports = function(passport) {
               console.log("in method creating user");
               var newUser = newDefaultUser();
               newUser.email = email;
+              newUser.name = req.body.firstName + req.body.lastName;
+              newUser.timestamp = Date.now();
               newUser.auth.local.password = newUser.generateHash(password);
               newUser.created = Date.now();
               newUser.lastActive = Date.now();
@@ -174,7 +176,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `${process.env.HOST}/auth/google/callback`,
+        callbackURL: "/auth/google/callback",
 
         passReqToCallback: true
       },
@@ -229,7 +231,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: `${process.env.HOST}/auth/facebook/callback`,
+        callbackURL: "/auth/facebook/callback",
         passReqToCallback: true,
         profileFields: ["id", "emails", "name"]
       },
@@ -360,7 +362,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.LINKEDIN_CLIENT,
         clientSecret: process.env.LINKEDIN_SECRET,
-        callbackURL: `${process.env.HOST}/auth/linkedin/callback`,
+        callbackURL: "auth/linkedin/callback",
         scope: ["r_liteprofile", "r_emailaddress", "w_member_social"],
         passReqToCallback: true
       },

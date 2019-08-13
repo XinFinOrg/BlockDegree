@@ -26,7 +26,10 @@ Following are the bugs, to be solved asap :
 Following are the tasks to do : 
 ### TO DO 
 - [x] Fix login button's JS ( UI; API is present )
+<<<<<<< HEAD
+=======
 - [x] Contact Us mail service
+>>>>>>> local
 - [ ] Add a loading icon to address the delay in paypal payment redirection ( UI - DATTABHAI )
 - [ ] Fix the div tag's height change Enroll -> Take Exam ( UI - DATTABHAI )
 - [ ] Complete testing and fixing the bugs found 
