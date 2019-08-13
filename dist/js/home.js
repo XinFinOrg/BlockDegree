@@ -2,7 +2,8 @@
 if(typeof jQuery != 'undefined') {
   $(document).ready(function() {
     $('.contributors__carousel').slick({
-      slidesToShow: 4,
+      infinite: true,
+	  slidesToShow: 4,
       slidesToScroll: 1,
       autoplay: true,
       autoplaySpeed: 2000,

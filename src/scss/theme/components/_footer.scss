@@ -23,7 +23,9 @@
         font-weight: 300;
         background: #f9f9ff;
         padding-left: 20px;
-        border-radius: 0;
+        border: 1px solid #ccc;
+    	border-top-left-radius: 50px;
+    	border-bottom-left-radius: 50px;
         font-size: 14px;
         line-height: normal!important;
         color:$black;
@@ -51,7 +53,7 @@
         cursor: pointer;
     }
     .info {
-        margin-top: 25px;
+        margin-top: 5px;
         font-size: 12px;
         &.valid {
             color: green;
@@ -60,9 +62,10 @@
             color: red;
         }
     }
-    .btn{
+    .btn {
        font-size: 1.2rem;
-       border-radius:0;
+	   border-top-right-radius: 50px;
+       border-bottom-right-radius: 50px;
        background:$primary-color;
        color: white;
 
@@ -70,7 +73,7 @@
          background: $btn--secondary;
        }
 
-       .lnr{
+       .lnr {
         line-height:inherit;
         font-size:13px;
         padding: 0px 4px;
@@ -131,14 +134,15 @@
 
     .footer-social{
         a{
-            background: rgba(255, 255, 255, 0.1);
+            background: #f9f9ff;
             width: 30px;
             height: 30px;
+			border-radius: 50%;
             display: inline-block;
             text-align: center;
             @include transition();
             i{
-                vertical-align: bottom;
+                vertical-align: middle;
             }
             &:hover{
                 background-color:$primary-color;

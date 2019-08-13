@@ -234,7 +234,11 @@ $(document).ready(function() {
     window.location = `https://ipfs-gateway.xinfin.network/` + hash +``;
   });
   
+  
+  //Login form toggle
+  $('.login-with-mail').on('click',function(){
+      $('.login-form-block').stop().slideToggle();
+  });
+  
 });
-
-         
       
