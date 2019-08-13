@@ -6,6 +6,19 @@
       height: 40vh;
     }
   }
+  .hero-banner {
+  	padding-top: 100px;
+  }
+  .courses-banner-bg {
+  	background: url(' /img/hero-course.jpg ') center/cover;
+  }
+  .hero-banner h1 {
+  	font-size: 38px;
+	line-height: 36px!important;
+  }
+  .hero-banner p {
+  	line-height: 1.4rem!important;
+  }
 }
 
 // Single module page: Course content
