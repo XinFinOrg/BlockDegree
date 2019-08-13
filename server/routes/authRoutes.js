@@ -49,7 +49,13 @@ module.exports = app => {
         session: true
       },
       async (err, user, info) => {
-        console.log("login1111>>>>>>", user);
+        if (user==false){
+          // login not done
+          // return info
+          console.log(info)
+          return res.send({ status: user, message: info });
+          // console.log("user logged in", user, info);
+        }
         req.logIn(user, function(err) {
           if (err) {
             console.log("login err>>>>>>>>>>>", err);
@@ -139,10 +145,9 @@ module.exports = app => {
     passport.authenticate(
       "google",
       { failureRedirect: "/login" },
-      (err, user) => {
-        console.log(`Hit google callback ${err} ${user.email}`);
-        if (err != null) {
-          res.status(400).json(err);
+      (err, user, info) => {
+        if (user == null) {
+          return res.send({ status: user, message: info });
         }
         req.logIn(user, err => {
           if (err != null) {
@@ -166,10 +171,9 @@ module.exports = app => {
     passport.authenticate(
       "facebook",
       { failureRedirect: "/login" },
-      (err, user) => {
-        console.log(`Hit facebook callback ${err} ${user.email}`);
-        if (err != null) {
-          res.status(400).json(err);
+      (err, user, info) => {
+        if (user == null) {
+          return res.send({ status: user, message: info });
         }
         req.logIn(user, err => {
           if (err != null) {
@@ -191,10 +195,9 @@ module.exports = app => {
     passport.authenticate(
       "twitter",
       { failureRedirect: "/login" },
-      (err, user) => {
-        console.log(`Hit twitter callback ${err} ${user.email}`);
-        if (err != null) {
-          res.status(400).json(err);
+      (err, user, info) => {
+        if (user == null) {
+          return res.send({ status: user, message: info });
         }
         req.logIn(user, err => {
           if (err != null) {
@@ -216,10 +219,9 @@ module.exports = app => {
     passport.authenticate(
       "linkedin",
       { failureRedirect: "/login" },
-      (err, user) => {
-        console.log(`Hit linkedin callback ${err} ${user.email}`);
-        if (err != null) {
-          res.status(400).json(err);
+      (err, user, info) => {
+        if (user == null) {
+          return res.send({ status: user, message: info });
         }
         req.logIn(user, err => {
           if (err != null) {
