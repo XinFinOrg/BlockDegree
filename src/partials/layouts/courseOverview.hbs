@@ -16,24 +16,31 @@
     {{/head-block}}
   </head>
 
-  <body class="courses nav--sticky">
+  <!--<body class="courses nav--sticky">-->
+  <body class="courses">
     <header id="header">
       {{> includes/nav}}
     </header>
 
     <section id="course__info">
-      <div class="hero-banner bg-primary">
+      <div class="hero-banner courses-banner-bg bg-primary">
         <div class="container">
           <div class="row align-items-center">
-              <div class="col-12 col-sm-6 p-4">
-                <iframe width="100%" height="315" src="{{video}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div class="col-12 col-sm-6 p-4">
-                <h1 class="text-white" style="font-size: 40px;">{{title}}</h1>
-                <div class="text-white">
-                  <p>{{sypnosis}}</p>
+              <div class="col-12 col-md-6 p-4">
+                <!--<iframe width="100%" height="315" src="{{video}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
+				
+				<div class="embed-responsive embed-responsive-16by9 embed-div">
+					<iframe class="embed-responsive-item" src="{{video}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+				</div>
 
-                  <p>{{duration}}</p>
+              </div>
+              <div class="col-12 col-md-6 p-4">
+                <!--<h1 class="text-white" style="font-size: 38px;">{{title}}</h1>-->
+				<h1 class="text-white mb-3">{{title}}</h1>
+                <div class="text-white">
+                  <p class="mb-3">{{sypnosis}}</p>
+
+                  <p class="mb-3">{{duration}}</p>
                 </div>
                 <a href="/courses/{{slug}}"><button type="button" class="btn btn-gradient enroll-btn">
                   Start The Free Course
