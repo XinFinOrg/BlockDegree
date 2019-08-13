@@ -1,7 +1,7 @@
 {
   "courses": [
     {
-      "title": "101 - Blockchain basic course for engineer",
+      "title": "101 - Blockchain Basic Course for Engineer",
       "price" : "9.99",
       "type" : "course_1",
       "video": "https://www.youtube.com/embed/jLaqms1IHWE",
@@ -59,7 +59,7 @@
       ]
     },
     {
-      "title": "102 - Blockchain advanced course for engineer",
+      "title": "102 - Blockchain Advanced Course for Engineer",
       "price" : "9.99",
       "type" : "course_2",
       "video": "https://www.youtube.com/embed/oSP-taqLWPQ",
@@ -94,7 +94,7 @@
       ]
     },
     {
-      "title": "103 - Blockchain professional course for engineer",
+      "title": "103 - Blockchain Professional Course for Engineer",
       "price" : "9.99",
       "type" : "course_3",
       "video": "https://www.youtube.com/embed/jLaqms1IHWE",

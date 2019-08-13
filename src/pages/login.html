@@ -5,27 +5,42 @@
   <div class="container__cstm">
     <div class="row justify-content-center">
 
-      <div class="form-content" >
+      <div class="form-content">
+        <div class="p-4">
+        <h2 class="mb-3">Login</h2>
+        <p class="pb-1 mb-0">Login with your social media account</p>
+          <div class="text-center social-btn">
+            <a href="auth/facebook" class="btn btn-primary btn-lg btn-block"><i class="fa fa-facebook"></i> Login with <b>Facebook</b></a>
+            <a href="auth/twitter" class="btn btn-info btn-lg btn-block"><i class="fa fa-twitter"></i> Login with <b>Twitter</b></a>
+			<a href="auth/linkedin" class="btn btn-linkedin btn-lg btn-block"><i class="fa fa-linkedin"></i> Login with <b>LinkedIn</b></a>
+            <a href="auth/google" class="btn btn-danger btn-lg btn-block"><i class="fa fa-google"></i> Login with <b>Google</b></a>
+          </div>
+          <div class="or-seperator"><b>or</b></div>
+         <h3 class="login-with-mail pb-1">Login with email</h3>
+         
         <!-- Login Form -->
-        <form class="p-4 " id="form-login" method="post" action="/login">
-          <h2 class="mb-3">Login</h2>
-          <div class="text-left pl-4">
+        <form class="login-form-block mt-1" id="form-login" method="post" action="/login">
+          <!--<div class="text-left pl-4">
             <label for="email" class="mb-0">Email</label>
-          </div>
-          <input type="email" id="email" class="p-2" name="email" required>
-          <div class="text-left pl-4">
+          </div>-->
+          <input type="email" id="email" name="email" placeholder="Email" required>
+          <!--<div class="text-left pl-4">
             <label for="password" class="mb-0 pt-2">Password</label>
-          </div>
-          <input type="password" id="password" class="p-2" name="password" required>
+          </div>-->
+          <input type="password" id="password" name="password" placeholder="Password" required>
+          
           <div class="pl-2"><a href="forgotpassword.html">Forgot Password?</a></div>
-          <input type="submit" class="btn btn-primary py-2 mt-4 text-white" value="Log In">
+          
+          <input type="submit" class="btn btn-primary py-2 mt-2 text-white" value="Log In">
         </form>
+        </div>
 
-           <!-- Login with Google, Facebook, Twitter; need icons -->
+        <!-- Login with Google, Facebook, Twitter; need icons 
            <a href="auth/facebook">Facebook  </a><span>||</span>
            <a href="auth/twitter">  Twitter  </a><span>||</span>
            <a href="auth/linkedin">  Linkedin  </a><span>||</span>
            <a href="auth/google">Google</a>
+        <!-- Login with Google, Facebook, Twitter; need icons -->
 
         <!-- Remind Passowrd -->
         <div id="formFooter">

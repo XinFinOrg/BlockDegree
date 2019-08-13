@@ -2,20 +2,25 @@ button {
   white-space: normal;
 }
 
+.btn {
+  box-shadow:none!important;
+}
+
 .btn-primary {
   background: $btn--primary;
   white-space: normal;
 }
 
 .btn-cstm-rounded {
-  border-radius: 25px;
+  border-radius: 50px;
   white-space: normal;
+  padding: 8px 20px!important;
 }
 
 .btn-gradient {
   @include linear-gradient(45deg, $btn__gradient--stop-1, $btn__gradient--stop-2);
   border: 1px solid transparent;
-  border-radius: 0;
+  border-radius: 50px;
   color: white;
   padding: 10px 45px;
   white-space: normal;
@@ -25,6 +30,14 @@ button {
     color: $btn__gradient--stop-2;
     border: 1px solid $btn__gradient--stop-2;
   }
+}
+
+.btn-linkedin {
+  background: #0077b5;
+}
+
+.btn-linkedin:hover {
+  background: #02689d;
 }
 
 .bg-gradient {

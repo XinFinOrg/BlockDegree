@@ -34,7 +34,17 @@
   -webkit-box-shadow: 5px 6px 30px -5px rgba(0,0,0,0.3);
   box-shadow: 5px 6px 30px -5px rgba(0,0,0,0.3);
   text-align: center;
-
+  
+  h3 {
+    cursor:pointer;
+	font-size: 18px;
+    font-weight: 300;
+  }
+  
+  h2 {
+    font-weight: 400;
+  }
+  
   h2.inactive {
     color: #cccccc;
   }
@@ -43,18 +53,22 @@
     color: #0d0d0d;
     border-bottom: 2px solid #5fbae9;
   }
+  
+  .login-form-block {
+    display: none;
+  }
 
-  input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
+  input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
     background-color: #39ace7;
   }
 
-  input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
+  /*input[type=button]:active, input[type=submit]:active, input[type=reset]:active {
     -moz-transform: scale(0.95);
     -webkit-transform: scale(0.95);
     -o-transform: scale(0.95);
     -ms-transform: scale(0.95);
     transform: scale(0.95);
-  }
+  }*/
 
   input[type=text], input[type=email], input[type=password] {
     background-color: #f6f6f6;
@@ -64,19 +78,21 @@
     display: inline-block;
     font-size: 16px;
     margin: 5px;
+	margin-bottom: 0.5rem;
+	padding: 10px 20px;
     width: 90%;
-    border: 2px solid #f6f6f6;
+    border: 1px solid #ccc;
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
     -webkit-border-radius: 5px 5px 5px 5px;
-    border-radius: 5px 5px 5px 5px;
+    border-radius: 50px;
 
-    &:focus {
+    &:focus, &:hover {
       background-color: #fff;
-      border-bottom: 2px solid #5fbae9;
+      border-color: #2073D4;
     }
 
     &:placeholder {
@@ -86,15 +102,22 @@
 
 
   input[type=submit] {
-    margin: 5px;
+    padding: 12px!important;
+	margin: 5px;
     width: 90%;
+	border: none;
+	border-radius: 50px;
+  }
+  
+  input[type=submit]:hover {
+	border: none;
   }
 }
 
 #formFooter {
   background-color: #f6f6f6;
   border-top: 1px solid #dce8f1;
-  padding: 25px;
+  padding: 15px 25px 15px 25px;
   text-align: center;
   -webkit-border-radius: 0 0 10px 10px;
   border-radius: 0 0 10px 10px;
@@ -104,7 +127,7 @@
 .underlineHover:after {
   display: block;
   left: 20%;
-  bottom: -10px;
+  bottom: -5px;
   width: 0;
   height: 2px;
   background-color: #56baed;
@@ -133,4 +156,57 @@
 
 #icon {
   width:60%;
+}
+
+
+/* LOGIN SOCIAL */
+
+.social-btn {
+	width: 90%;
+    display: inline-block;
+}
+.social-btn .btn {
+    color: #fff;
+    padding: 10px;
+	margin: 10px 0;
+    font-size: 15px;
+    text-indent: 10px;
+    font-weight: normal;
+    border: none;
+	border-radius: 50px;
+    text-align: center;
+}
+.social-btn .btn i {
+    margin-right: 9px;
+    font-size: 20px;
+    min-width: 25px;
+    position: relative;
+    top: 2px;
+}
+.social-btn b {
+   color: #FFFFFF;
+   font-weight: 500;
+}
+.or-seperator {
+    width: 90%;
+    display: inline-block;
+	margin: 30px 0 0px;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+}
+.or-seperator b {
+    padding: 0 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    text-align: center;
+    line-height: 40px;
+    color: #222;
+	background: #fff;
+    display: inline-block;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    position: relative;
+    top: -22px;
+    z-index: 1;
 }
