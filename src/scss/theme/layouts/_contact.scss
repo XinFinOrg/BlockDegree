@@ -27,9 +27,13 @@
     }
     .form-area {
         .form-control{
-            &:focus{
+            background-color: #f6f6f6;
+			border: 1px solid #ccc;
+			&:focus, &:hover {
                 box-shadow: none!important;
-                border-color:#ced4da!important;
+                /*border-color:#ced4da!important;*/
+				background-color: #fff;
+                border-color: #2073D4;
             }
         }
         input {
@@ -37,22 +41,26 @@
         }
         input,
         textarea {
-            border-radius: 0;
+            border-radius: 50px;
             font-size: 13px!important;
         }
         textarea {
             height: 190px;
             margin-top: 0px;
             padding: 15px;
+			border-radius: 20px;
         }
         .genric-btn {
             @include transition();
-            border-radius: 0!important;
+            border-radius: 50px!important;
             font-size: 14px;
             text-transform: uppercase!important;
             &:hover {
-                border: 1px solid $primary-color;
-                color: $primary-color!important;
+                /*border: 1px solid $primary-color;
+                color: $primary-color!important;*/
+				color: $white;
+				background-color: #39ace7;
+				border-color: #39ace7;
             }
         }
     }

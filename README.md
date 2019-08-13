@@ -19,7 +19,9 @@ This is the uat branch for blockdegree.
 
 ### BUGS
 Following are the bugs, to be solved asap : 
-- [ ] Course 2, 3 payment not being updated
+- [x] Course 2, 3 payment not being updated
+- [ ] Redirect to / from /login sometimes (UI)
+- [ ] Forwading headers in IIS reverse proxy ( hosting )
 
 Following are the tasks to do : 
 ### TO DO 
@@ -37,6 +39,7 @@ Following are the tasks to do :
 - [x] Update article URL for linkedin, twitter post
 - [x] API to enable migration
 - [x] Blockdegree User stats API ( priv. repo ) 
-- [ ] Extract timestamp out of exported data from MongoDB
-- [ ] Notify users on 1 HR gap between giving exams ( UI )
+- [x] Extract timestamp out of exported data from MongoDB
+- [x] Notify users on 1 HR gap between giving exams ( Not required )
+- [x] Track the course visits of the users 
 
