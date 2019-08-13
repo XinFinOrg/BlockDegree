@@ -110,6 +110,7 @@ module.exports = function(passport) {
               newUser.email = email;
               newUser.name = req.body.firstName + req.body.lastName;
               newUser.timestamp = Date.now();
+              newUser.timestamp=Date.now()
               newUser.auth.local.password = newUser.generateHash(password);
               newUser.created = Date.now();
               newUser.lastActive = Date.now();
