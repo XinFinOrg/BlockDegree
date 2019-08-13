@@ -108,7 +108,7 @@ module.exports = function(passport) {
               console.log("in method creating user");
               var newUser = newDefaultUser();
               newUser.email = email;
-              newUser.name = req.body.firstName + req.body.lastName;
+              newUser.name = req.body.firstName + " " + req.body.lastName;
               newUser.timestamp = Date.now();
               newUser.auth.local.password = newUser.generateHash(password);
               newUser.created = Date.now();
@@ -153,10 +153,18 @@ module.exports = function(passport) {
       function(req, email, password, done) {
         User.findOne({ email: email }, async function(err, user) {
           if (err) return done(err);
-          else if (!user) return done(null, false, "No user found.");
-          else if (!user.validPassword(password))
+          if (!user) return done(null, false, "No user found.");
+          if (user.auth.local.password == "") {
+            console.log("Proper call");
+            return done(
+              null,
+              false,
+              "Email associated with a existing social login."
+            );
+          }
+          if (!user.validPassword(password))
             return done(null, false, "Oops! Wrong password.");
-          else if (!user.auth.local.isVerified)
+          if (!user.auth.local.isVerified)
             return done(
               null,
               false,
@@ -199,6 +207,7 @@ module.exports = function(passport) {
           user.save();
           return done(null, req.user);
         }
+        // find user by google id
         const existingUser = await User.findOne({
           "auth.google.id": profile.id
         });
@@ -208,8 +217,28 @@ module.exports = function(passport) {
           existingUser.save();
           return done(null, existingUser);
         }
+
+        // email registered
+        if (profile.emails.length > 0) {
+          const linkEmail = await User.findOne({
+            email: profile.emails[0].value
+          });
+          if (linkEmail) {
+            linkEmail.auth.google.id = profile.id;
+            linkEmail.auth.google.accessToken = accessToken;
+            linkEmail.auth.google.refreshToken = refreshToken;
+            linkEmail.lastActive = Date.now();
+            linkEmail.save();
+            return done(null, linkEmail);
+          }
+        }
+
         if (profile.emails.length < 1) {
-          return done({ error: "email-id not associated", status: 400 }, null);
+          return done(
+            null,
+            false,
+            "no email-id not associated with this social account"
+          );
         }
         newUser = newDefaultUser();
         newUser.auth.google.id = profile.id;
@@ -262,8 +291,28 @@ module.exports = function(passport) {
           existingUser.save();
           return done(null, user);
         }
+
+        // email registered
+        if (profile.emails.length > 0) {
+          const linkEmail = await User.findOne({
+            email: profile.emails[0].value
+          });
+          if (linkEmail) {
+            linkEmail.auth.facebook.id = profile.id;
+            linkEmail.auth.facebook.accessToken = accessToken;
+            linkEmail.auth.facebook.refreshToken = refreshToken || "";
+            linkEmail.lastActive = Date.now();
+            linkEmail.save();
+            done(null, linkEmail);
+          }
+        }
+
         if (profile.emails.length < 1) {
-          return done({ error: "email-id not associated", status: 400 }, null);
+          return done(
+            null,
+            false,
+            "no email-id not associated with this social account"
+          );
         }
         existingUser = await User.findOne({
           email: profile.emails[0].value
@@ -301,6 +350,7 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       async (req, token, tokenSecret, profile, done) => {
+        console.log("called twitter auth")
         if (req.user) {
           if (
             req.user.auth.twitter.id == "" ||
@@ -327,8 +377,28 @@ module.exports = function(passport) {
           existingUser.save();
           return done(null, existingUser);
         }
+
+        // Link auths via email
+        if (profile.emails.length > 0) {
+          const linkEmail = await User.findOne({
+            email: profile.emails[0].value
+          });
+          if (linkEmail) {
+            linkEmail.auth.twitter.id = profile.id;
+            linkEmail.auth.twitter.token = token;
+            linkEmail.auth.twitter.tokenSecret = tokenSecret;
+            linkEmail.lastActive = Date.now();
+            linkEmail.save();
+            return done(null, user);
+          }
+        }
+
         if (profile.emails.length < 1) {
-          return done({ error: "email-id not associated", status: 400 }, null);
+          return done(
+            null,
+            false,
+            "no email-id not associated with this social account"
+          );
         }
         existingUser = await User.findOne({
           email: profile.emails[0].value
@@ -362,7 +432,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.LINKEDIN_CLIENT,
         clientSecret: process.env.LINKEDIN_SECRET,
-        callbackURL: "auth/linkedin/callback",
+        callbackURL: "/auth/linkedin/callback",
         scope: ["r_liteprofile", "r_emailaddress", "w_member_social"],
         passReqToCallback: true
       },
@@ -393,10 +463,26 @@ module.exports = function(passport) {
             existingUser.save();
             return done(null, existingUser);
           }
+
+          if (profile.emails.length > 0) {
+            const linkEmail = await User.findOne({
+              email: profile.emails[0].value
+            });
+            if (linkEmail) {
+              linkEmail.auth.twitter.id = profile.id;
+              linkEmail.auth.twitter.token = token;
+              linkEmail.auth.twitter.tokenSecret = tokenSecret;
+              linkEmail.lastActive = Date.now();
+              linkEmail.save();
+              return done(null, user);
+            }
+          }
+
           if (profile.emails.length < 1) {
             return done(
-              { error: "email-id not associated", status: 400 },
-              null
+              null,
+              false,
+              "no email-id not associated with this social account"
             );
           }
           existingUser = await User.findOne({

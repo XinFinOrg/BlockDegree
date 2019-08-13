@@ -19,7 +19,7 @@ if(typeof jQuery != 'undefined') {
 
     if(loginForm) {
       loginForm.errMsg = "Oops! Wrong password.";
-      loginForm.errAcc = "Account doesn't exit"
+      loginForm.errAcc = "Account doesn't exit";
       loginForm.accessMsg = "You are login";
       
       let preMsg = "Please login to access the course";
@@ -38,11 +38,14 @@ if(typeof jQuery != 'undefined') {
 
     if(registerForm) {
       let pw = document.getElementById("password"),
+          firstName = document.getElementById("firstName"),
+          lastName = document.getElementById("lastName")
           cfmPw = document.getElementById("cfm-password");
-
       registerForm.email = document.getElementById('email');
       registerForm.password = pw;
       registerForm.cfmPw = cfmPw;
+      registerForm.lastName=lastName;
+      registerForm.firstName=firstName;
 
       registerForm.errMsg = 'This Email Id Already Register. Please check your input.'
       registerForm.accessMsg ='Please check your mail and Verify your mail address   <a href="/login">Login</a>to get access to the free content'
