@@ -146,6 +146,10 @@ exports.postLinkedin = async (req, res) => {
     // set linkedin credentials and post.
     return res.redirect("/auth/linkedin");
   }
+  const hash =
+  req.body.hash ||
+  user.examData.certificateHash[user.examData.certificateHash.length - 1]
+    .clientHash;
   let fullURL = "";
   let shortURL = "";
   if (process.env.IPFS_NETWORK == "local") {
