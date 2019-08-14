@@ -1,4 +1,4 @@
-# Blockdegree - UAT Branch
+# Blockdegree - UI-dev Branch
 
 <img src="https://img.shields.io/badge/deploy--ready-no-red" />
 
@@ -6,7 +6,7 @@
 <img src="https://img.shields.io/badge/uat--ready-yes-green" />  
 <img src="https://img.shields.io/badge/UI--ready-ongoing-blue" />  
 
-This is the uat branch for blockdegree. 
+This is the UI-dev branch for blockdegree. 
 
 ## Setup
 
