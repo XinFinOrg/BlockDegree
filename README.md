@@ -21,7 +21,7 @@ This is the UI-dev branch for blockdegree.
 Following are the bugs, to be solved asap : 
 - [x] Course 2, 3 payment not being updated
 - [ ] Redirect to / from /login sometimes (UI) - issue with browser cookies
-- [ ] Forwading headers in IIS reverse proxy ( hosting )
+- [x] Forwading headers in IIS reverse proxy ( hosting -> shifted to Nginx, need to write complete URLs for callbacks )
 
 Following are the tasks to do : 
 ### TO DO 
@@ -40,5 +40,5 @@ Following are the tasks to do :
 - [x] Notify users on 1 HR gap between giving exams ( Not required )
 - [x] Track the course visits of the users 
 - [x] Set up user profile, must include { photo, email, name, education details }
-- [ ] Setup two different certis one according to Uni. pattern, one including details of the user+exam
+- [ ] Setup two different certis one according to Uni. pattern, one including details of the user+exam ( UI )
 
