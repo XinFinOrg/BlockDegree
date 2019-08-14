@@ -39,6 +39,6 @@ Following are the tasks to do :
 - [x] Extract timestamp out of exported data from MongoDB
 - [x] Notify users on 1 HR gap between giving exams ( Not required )
 - [x] Track the course visits of the users 
-- [ ] Set up user profile, must include { photo, email, name, education details }
+- [x] Set up user profile, must include { photo, email, name, education details }
 - [ ] Setup two different certis one according to Uni. pattern, one including details of the user+exam
 
