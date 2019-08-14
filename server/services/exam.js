@@ -221,6 +221,7 @@ exports.getBasicExam = (req, res) => {
       if (err) {
         throw err;
       }
+      json = scrambleQuestions(json);
       console.log("test quetions basic:", json);
       res.render("blockchainBasic", json);
     }
@@ -234,6 +235,7 @@ exports.getAdvancedExam = (req, res) => {
       if (err) {
         throw err;
       }
+      json = scrambleQuestions(json);
       console.log("test quetions advanced:", json);
       res.render("blockchainAdvanced", json);
     }
@@ -249,6 +251,7 @@ exports.getProfessionalExam = (req, res) => {
       if (err) {
         throw err;
       }
+      json = scrambleQuestions(json);
       console.log("test quetions professional:", json);
       res.render("blockchainProfessional", json);
     }
@@ -412,4 +415,17 @@ function findLastAttempt(user, examName) {
     }
   }
   return null
+}
+
+function scrambleQuestions(jsonData) {
+  let scrambledData = jsonData;
+  const len = jsonData.exam.length;
+  for (let i=0;i<len-1;i++){
+    const x = Math.floor(Math.random()*(len-1));
+    const y = Math.floor(Math.random()*(len-1));
+    let tmp = scrambledData.exam[x];
+    scrambledData.exam[x]=scrambledData.exam[y];
+    scrambledData.exam[y]=tmp;
+  }
+  return scrambledData;
 }
