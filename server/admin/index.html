@@ -1,0 +1,54 @@
+<html>
+    <h1>
+        Don't fear, Admin is here.
+    </h1>
+
+    <p>
+
+        <!-- Form for adding new promo-code -->
+        <form action="/admin/newPromoCode" method="POST">
+            <h3>Add Promo Code</h3>
+            <div>
+                CodeName : 
+                <input type="text" name="codeName" placeholder="enter the codename" >
+            </div>
+            <div>
+                Discount Amount : 
+                <input type="number" name="discAmt" placeholder="enter the discount amount" >
+            </div>
+            <div>
+                Purpose for new code : 
+                <input type="text" name="purpose" placeholder="enter the purpose" >
+            </div> 
+            <div>
+                Promo-code access ?<br>
+                <input type="radio" name="restricted" id="restricted" value="true">restricted<br>
+                <input type="radio" name="restricted" id="unrestricted" value="false">unrestricted
+            </div>
+            <input type="submit" value="OK">
+        </form>
+      
+    </p>
+    <p>
+        <!-- Form for making promo-code active -->
+        <form action="/admin/activatePromoCode" method="POST">
+            <h3>Activate Promo Code</h3>
+            <div>
+                CodeName : 
+                <input type="text" name="codeName" placeholder="enter the codename" >
+            </div>
+            <input type="submit" value="OK">
+        </form>
+    </p>
+    <p>
+            <!-- Form for making promo-code inactive -->
+            <form action="/admin/deactivatePromoCode" method="POST">
+                <h3>Deactivate Promo Code</h3>
+                <div>
+                    CodeName : 
+                    <input type="text" name="codeName" placeholder="enter the codename" >
+                </div>
+                <input type="submit" value="OK">
+            </form>
+        </p>        
+</html>
