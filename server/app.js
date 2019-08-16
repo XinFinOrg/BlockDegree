@@ -10,6 +10,7 @@ var bodyParser = require("body-parser");
 var session = require("express-session");
 var hbs = require("express-handlebars");
 var cors = require("cors");
+var fs = require("fs");
 
 var app = express();
 require("dotenv").config();
@@ -85,6 +86,13 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
-app.listen("3000", console.log("server started"));
+
+app.listen("3000", () => {
+  console.log("server started");
+});
+
+if (!fs.existsSync("./tmp")) {
+  fs.mkdirSync("./tmp");
+}
 
 module.exports = app;
