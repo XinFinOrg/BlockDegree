@@ -240,6 +240,20 @@
 
 
 
+/*-- Sticky White Nav css --*/
+.nav--sticky .nav-menu a{color: #002844;}
+
+.nav--sticky .nav-menu li:hover > a{
+  color: $primary-color;
+}
+
+.nav--sticky .logo-white {display: none;}
+
+.nav--sticky .logo-dark {display: block;}
+/*-- Sticky White Nav css --*/
+
+
+
 .nav-menu > li {
   margin-left: 10px;
 }
