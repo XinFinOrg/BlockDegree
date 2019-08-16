@@ -9,6 +9,7 @@ var crypto = require("crypto");
 const IPFS = require("ipfs-http-client");
 var ejs = require("ejs");
 const utils = require("../utils.js");
+const promoCodeService = require("../services/promoCodes");
 
 // Need to understand the complete flow and handle erros, unexpected shutdowns, inaccessible 3rd party.
 
@@ -55,13 +56,16 @@ exports.payPaypalSuccess = (req, res, next) => {
             ) {
               if (error) {
                 console.error(error);
-                res.status(500).json(JSON.stringify(error))
+                res.status(500).json(JSON.stringify(error));
               } else {
                 console.log("ORDER CAPTURE SUCCESS");
-                User.findOne({ email: req.user.email }, async function(err, user) {
-                  if (err!=null){
+                User.findOne({ email: req.user.email }, async function(
+                  err,
+                  user
+                ) {
+                  if (err != null) {
                     // res.status(500).json({error:JSON.stringify(err),msg:"database under maintenance"})
-                    console.error(`Error: user not found || ${err}`)
+                    console.error(`Error: user not found || ${err}`);
                   }
                   if (course_id == "course_1")
                     user.examData.payment.course_1 = true;
@@ -98,10 +102,19 @@ exports.payPaypal = async (req, res) => {
   var email = req.user.email;
   var course_id = req.body.course_id;
   var payment_status;
-
-  await User.findOne({ email: email }, function(err, user) {
-    if (err!=null){
-      console.error(`Can't find user | access db; Err : ${err}`)
+  const discObj = await promoCodeService.usePromoCode(req);
+  console.log(discObj);
+  console.log(typeof price);
+  console.log(`Price Before : ${price}`);
+  console.log(`Discount Price : ${discObj.discAmt}`);
+  if (discObj.error == null) {
+    // all good, can avail promo-code discount
+    price = price - discObj.discAmt;
+  }
+  console.log(`Price After : ${price}`);
+  await User.findOne({ email: email }, async function(err, user) {
+    if (err != null) {
+      console.error(`Can't find user | access db; Err : ${err}`);
     }
     if (course_id == "course_1") {
       payment_status = user.examData.payment.course_1;
@@ -109,6 +122,15 @@ exports.payPaypal = async (req, res) => {
       payment_status = user.examData.payment.course_2;
     } else if (course_id == "course_3") {
       payment_status = user.examData.payment.course_3;
+    }
+    if (price <= 0) {
+      // free course !!
+      if (!payment_status) {
+        // if already not paid
+        user.examData.payment[payment_status] = true;
+        user.save();
+        res.redirect("/exams");
+      }
     }
   });
 

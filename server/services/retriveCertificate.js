@@ -94,7 +94,7 @@ exports.downloadCertificate = async (req, res) => {
     res.redirect("/login");
   }
   for (obj of user.examData.certificateHash) {
-    if (obj.hash == hash) {
+    if (obj.hash!=undefined && obj.hash == hash) {
       clientIPFS.get(hash, (err, files) => {
         if (err) {
           res.json({ uploaded: false, error: err });

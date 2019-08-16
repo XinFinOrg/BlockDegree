@@ -29,6 +29,7 @@
               Take Exam
             </button>
             {{else}}
+            <input type="text" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName"><br>
             <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body" data-price="{{this.price}}"
               id="{{this.type}}">
               Enroll
@@ -60,10 +61,13 @@
 
   function pay(course_id, price) {
     const email = localStorage.getItem('email');
+    const codeName = document.getElementById(course_id.id + "codeName").value;
+    console.log(course_id.id + "codeName");
+    console.log(codeName);
     $.ajax({
       url: "/pay",
       method: 'post',
-      data: { 'email': email, 'course_id': course_id.id, 'price': price },
+      data: { 'email': email, 'course_id': course_id.id, 'price': price, codeName: codeName },
       success: function (data) {
         console.log(data);
         if (data.status == '200')

@@ -16,6 +16,7 @@ function newDefaultUser() {
     name: "",
     created: "",
     lastActive: "",
+    profile:{},
     examData: {
       payment: {
         course_1: false,
