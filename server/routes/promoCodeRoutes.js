@@ -11,4 +11,5 @@ module.exports = app => {
     app.post("/admin/addAllowedUser",requireLogin,requireAdmin,promoCodeServices.addAllowedUser);
     // user uses promo code
     app.post("/api/usePromoCode",requireLogin,promoCodeServices.usePromoCode);
+    app.post("/api/checkCode",requireLogin,promoCodeServices.checkCode);
 }
