@@ -21,7 +21,7 @@
             {{#if (lookup ../data this.type) }}
             <h2 class="pb-4 text-white"></h2>
             {{else}}
-            <h2 class="pb-4 text-white">${{this.price}}</h2>
+            <h2 class="pb-4 text-white" id="curr_price">${{this.price}}</h2>
             {{/if}}
             {{#if (lookup ../data this.type) }}
             <button onclick="takeExam({{this.type}})" class="btn text-body" data-price="{{this.price}}"
@@ -29,7 +29,10 @@
               Take Exam
             </button>
             {{else}}
-            <input type="text" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName"><br>
+            <div>
+              <input type="text" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName">
+              <input type="button" onclick="checkCode({{this.type}},{{this.price}})">
+            </div>
             <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body" data-price="{{this.price}}"
               id="{{this.type}}">
               Enroll
@@ -76,6 +79,31 @@
           alert(data.message);
       }
     });
+  }
+
+  function checkCode(course_id,price) {
+    const codeName = document.getElementById(course_id.id + "codeName").value;
+    $.ajax({
+      url: "/api/checkCode",
+      method: "post",
+      data: { codeName: codeName },
+      success: (result) => {
+        console.log(result);
+        if (result.error == null) {
+          const finalAmt = parseFloat(price) - parseFloat(result.discAmt);
+          if (finalAmt < 0) {
+            // free course
+            document.getElementById("curr_price").innerHTML = "$0";
+          }
+          else {
+            document.getElementById("curr_price").innerHTML = "$" + finalAmt;
+          }
+        }
+        else {
+          alert(result.error);
+        }
+      }
+    })
   }
 
 </script>
