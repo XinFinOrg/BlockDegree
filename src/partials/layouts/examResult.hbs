@@ -29,7 +29,7 @@
 
             <form target="_blank" method="post" action="/api/downloadCertificate">
               <input type="text" placeholder="Enter hash" name="hash" />
-              <input type="submit" />
+              <input type="submit" value="download" />
             </form>
 
             <div class="fb-share-button" data-href="https://blockdegree.org" data-layout="button_count"
@@ -88,6 +88,15 @@
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world"
               data-size="large">
               Tweet</a>
+              <form target="_blank" method="post" action="/api/downloadCertificate">
+              <input type="text" placeholder="Enter hash" name="hash" hidden />
+              <input type="submit" hidden />
+            </form>
+
+            <form target="_blank" method="post" action="/api/downloadCertificate">
+              <input type="text" placeholder="Enter hash" name="hash" />
+              <input type="submit" value="download" />
+            </form>
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
             <p>
               Post on Socials:
@@ -139,6 +148,15 @@
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hey%20I%20just%20completed%this%20awesome%20course%20from%20%20blockdegree.org!!!"
               data-size="large">
               Tweet</a>
+              <form target="_blank" method="post" action="/api/downloadCertificate">
+              <input type="text" placeholder="Enter hash" name="hash" hidden />
+              <input type="submit" hidden />
+            </form>
+
+            <form target="_blank" method="post" action="/api/downloadCertificate">
+              <input type="text" placeholder="Enter hash" name="hash" />
+              <input type="submit" value="download" />
+            </form>
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
             <p>
               Post on Socials:

@@ -8,7 +8,7 @@ module.exports = app => {
     app.post("/admin/deactivatePromoCode",requireLogin,requireAdmin,promoCodeServices.deactivatePromoCode);
     app.post("/admin/restrictPromoCode",requireLogin,requireAdmin,promoCodeServices.restrictPromoCode);
     app.post("/admin/unrestrictPromoCode",requireLogin,requireAdmin,promoCodeServices.unrestrictPromoCode);
-    app.post("/admin/deactivatePromoCode",requireLogin,requireAdmin,promoCodeServices.addAllowedUser);
+    app.post("/admin/addAllowedUser",requireLogin,requireAdmin,promoCodeServices.addAllowedUser);
     // user uses promo code
     app.post("/api/usePromoCode",requireLogin,promoCodeServices.usePromoCode);
 }

@@ -30,7 +30,7 @@ exports.addPromoCode = async (req, res) => {
     created: "" + Date.now(),
     lastUsed: "",
     users: [{}],
-    restricted: req.body.restricted=="restricted",
+    restricted: req.body.restricted == "true",
     allowedUsers: [{}]
   });
   await newPromoCode.save();
@@ -104,20 +104,27 @@ exports.usePromoCode = async req => {
   if (!currPromoCode.status) {
     return { error: `Promo-code ${codeName} no longer valid` };
   }
+  console.log(currPromoCode.allowedUsers);
   if (currPromoCode.restricted) {
-    currPromoCode.allowedUsers.every(async (user, i) => {
-      if (user.email == req.user.email) {
+    for (var i = 0; i < currPromoCode.allowedUsers.length; i++) {
+      let user = currPromoCode.allowedUsers[i];
+      if (
+        user.email != "" &&
+        user.email != undefined &&
+        user.email == req.user.email
+      ) {
         currPromoCode.lastUsed = Date.now();
         currPromoCode.count += 1;
         let discAmt = parseFloat(currPromoCode.discAmt);
-        console.log(currPromoCode.discAmt)
-        console.log(discAmt)
         user.count += 1;
-        currPromoCode.allowedUsers[i] = user;
-        currPromoCode.save();
+        await PromoCode.updateOne(
+          { codeName: codeName, "allowedUsers.email":user.email },
+          { $set: { "allowedUsers.$.count": user.count,"allowedUsers.$.lastUsed":Date.now() } }
+        );
+        console.log("saved");
         return { error: null, msg: "all ok", discAmt: discAmt };
       }
-    });
+    }
     return { error: `User ${req.user.email} not allowed`, msg: "not ok" };
   }
   currPromoCode.lastUsed = Date.now();
@@ -184,7 +191,7 @@ exports.unrestrictPromoCode = async (req, res) => {
   return { error: null, msg: `Promo-code ${codeName} is now un-restricted !` };
 };
 
-exports.addAllowedUser = async (req,res) => {
+exports.addAllowedUser = async (req, res) => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
     res.status(400), json({ error: "Bad request" });
   }
@@ -203,11 +210,12 @@ exports.addAllowedUser = async (req,res) => {
   let user = {
     email: email,
     count: 0,
-    created: Date.now()
+    created: Date.now(),
+    lastUsed: ""
   };
   await PromoCode.updateOne(
     { codeName: codeName },
-    { $push: { allowedUser: user } }
+    { $push: { allowedUsers: user } }
   );
   res.status(200).json({ error: null, msg: "all ok" });
 };

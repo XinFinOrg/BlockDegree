@@ -50,5 +50,44 @@
                 </div>
                 <input type="submit" value="OK">
             </form>
-        </p>        
+        </p>     
+        
+        <p>
+            <!-- Form for making promo-code inactive -->
+            <form action="/admin/restrictPromoCode" method="POST">
+                <h3>Restrict Promo Code</h3>
+                <div>
+                    CodeName : 
+                    <input type="text" name="codeName" placeholder="enter the codename" >
+                </div>
+                <input type="submit" value="OK">
+            </form>
+        </p>  
+        
+        <p>
+            <!-- Form for making promo-code inactive -->
+            <form action="/admin/unrestrictPromoCode" method="POST">
+                <h3>Un-Restrict Promo Code</h3>
+                <div>
+                    CodeName : 
+                    <input type="text" name="codeName" placeholder="enter the codename" >
+                </div>
+                <input type="submit" value="OK">
+            </form>
+        </p> 
+        <p>
+            <!-- Form for making promo-code inactive -->
+            <form action="/admin/addAllowedUser" method="POST">
+                <h3>Allow User for restricted Promo Code</h3>
+                <div>
+                    User email : 
+                    <input type="text" name="email" placeholder="enter the user email" >
+                </div>
+                <div>
+                    CodeName : 
+                    <input type="text" name="codeName" placeholder="enter the codename" >
+                </div>
+                <input type="submit" value="OK">
+            </form>
+        </p>   
 </html>
