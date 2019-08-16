@@ -112,27 +112,30 @@ exports.payPaypal = async (req, res) => {
     price = price - discObj.discAmt;
   }
   console.log(`Price After : ${price}`);
-  await User.findOne({ email: email }, async function(err, user) {
+  const user = await User.findOne({ email: email }, function(err) {
     if (err != null) {
       console.error(`Can't find user | access db; Err : ${err}`);
     }
-    if (course_id == "course_1") {
-      payment_status = user.examData.payment.course_1;
-    } else if (course_id == "course_2") {
-      payment_status = user.examData.payment.course_2;
-    } else if (course_id == "course_3") {
-      payment_status = user.examData.payment.course_3;
-    }
-    if (price <= 0) {
-      // free course !!
-      if (!payment_status) {
-        // if already not paid
-        user.examData.payment[payment_status] = true;
-        user.save();
-        res.redirect("/exams");
-      }
-    }
   });
+  if (course_id == "course_1") {
+    payment_status = user.examData.payment.course_1;
+  } else if (course_id == "course_2") {
+    payment_status = user.examData.payment.course_2;
+  } else if (course_id == "course_3") {
+    payment_status = user.examData.payment.course_3;
+  }
+  if (price <= 0) {
+    // free course !!
+    if (!payment_status) {
+      // if already not paid
+      user.examData.payment[course_id] = true;
+      user.save();
+      return res.send({
+        status: 400,
+        message: "Course has been availed for free!"
+      });
+    }
+  }
 
   if (payment_status != true) {
     invoice_number =
