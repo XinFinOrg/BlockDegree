@@ -41,24 +41,12 @@
               Tweet</a>
 
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
-            <p>
+            <p id="social_wrap">
               Post on Socials:
-              <br>
-              <form target="_blank" method="post" action="/api/shareOnTwitter">
-                <input type="hidden" placeholder="Enter post status" name="msg" />
-                <input type="hidden" />
-              </form>
-              <form target="_blank" method="post" action="/api/shareOnTwitter">
-                <input type="text" placeholder="Enter post status" name="msg" />
-                <input type="text" value={{certificateHash}} name="hash" />
-                <input type="submit" />
-              </form>
-              <form target="_blank" method="post" action="/api/shareOnLinkedin">
-                <input type="text" placeholder="Enter post status" name="msg" />
-                <input type="text" value={{certificateHash}} name="hash" />
-                <input type="submit" />
-              </form>
             </p>
+            <div>
+              <button type="button" onclick="checkAuth()">Recheck-auths</button>
+            </div>
             {{else}}
             <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
             {{/if}}
@@ -88,7 +76,7 @@
             <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world"
               data-size="large">
               Tweet</a>
-              <form target="_blank" method="post" action="/api/downloadCertificate">
+            <form target="_blank" method="post" action="/api/downloadCertificate">
               <input type="text" placeholder="Enter hash" name="hash" hidden />
               <input type="submit" hidden />
             </form>
@@ -98,25 +86,12 @@
               <input type="submit" value="download" />
             </form>
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
-            <p>
+            <p id="social_wrap">
               Post on Socials:
-              <br>
-              <form target="_blank" method="post" action="/api/shareOnTwitter">
-                <input type="hidden" placeholder="Enter post status" name="msg" />
-                <input type="hidden" />
-              </form>
-              <form target="_blank" method="post" action="/api/shareOnTwitter">
-                <input type="text" placeholder="Enter post status" name="msg" />
-                <input type="text" value={{certificateHash}} name="hash" />
-                <input type="submit" />
-              </form>
-              <form target="_blank" method="post" action="/api/shareOnLinkedin">
-                <input type="text" placeholder="Enter post status" name="msg" />
-                <input type="text" value={{certificateHash}} name="hash" />
-                <input type="submit" />
-              </form>
             </p>
-
+            <div>
+              <button type="button" onclick="checkAuth()">Recheck-auths</button>
+            </div>
             {{else}}
             <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
             {{/if}}
@@ -145,10 +120,11 @@
               data-size="large"><a target="_blank"
                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
                 class="fb-xfbml-parse-ignore">FB-Share</a></div>
-            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hey%20I%20just%20completed%this%20awesome%20course%20from%20%20blockdegree.org!!!"
+            <a class="twitter-share-button"
+              href="https://twitter.com/intent/tweet?text=Hey%20I%20just%20completed%this%20awesome%20course%20from%20%20blockdegree.org!!!"
               data-size="large">
               Tweet</a>
-              <form target="_blank" method="post" action="/api/downloadCertificate">
+            <form target="_blank" method="post" action="/api/downloadCertificate">
               <input type="text" placeholder="Enter hash" name="hash" hidden />
               <input type="submit" hidden />
             </form>
@@ -158,25 +134,12 @@
               <input type="submit" value="download" />
             </form>
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
-            <p>
+            <p id="social_wrap">
               Post on Socials:
-              <br>
-              <form target="_blank" method="post" action="/api/shareOnTwitter">
-                <input type="hidden" placeholder="Enter post status" name="msg" />
-                <input type="hidden" />
-              </form>
-
-              <form target="_blank" method="post" action="/api/shareOnTwitter">
-                <input type="text" placeholder="Enter post status" name="msg" />
-                <input type="text" value={{certificateHash}} name="hash"/>
-                <input type="submit" />
-              </form>
-              <form target="_blank" method="post" action="/api/shareOnLinkedin">
-                <input type="text" placeholder="Enter post status" name="msg" />
-                <input type="text" value={{certificateHash}} name="hash"/>
-                <input type="submit" />
-              </form>
             </p>
+            <div>
+              <button type="button" onclick="checkAuth()">Recheck-auths</button>
+            </div>
             {{else}}
             <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
             {{/if}}
@@ -202,3 +165,53 @@
 
 </div>
 <script src="/js/exam.js"></script>
+
+<script>
+
+
+  window.onload = function () {
+    checkAuth();
+  }
+
+  function checkAuth() {
+    console.log("called")
+    $.ajax({
+      url: "/api/getAuthStatus",
+      method: "post",
+      data: {},
+      success: (result) => {
+        let retHTML = '<form target="_blank" method="post" action="/api/shareOnTwitter">' +
+          '                <input type="hidden" placeholder="Enter post status" name="msg" />' +
+          '                <input type="hidden" />' +
+          '              </form>'
+        console.log(result)
+        if (result.twitterAuth) {
+          // signed in with twitter, show share button
+          retHTML += '<form target="_blank" method="post" action="/api/shareOnTwitter">' +
+            '                <input type="text" placeholder="Enter post status" name="msg" />' +
+            '                <input type="text" value={{certificateHash}} name="hash" />' +
+            '                <input type="submit" />' +
+            '              </form>'
+        } else {
+          retHTML += '<a href="/auth/twitter" target="_blank">' +
+            'AuthTwitter' +
+            '</a>';
+        }
+        if (result.linkedinAuth) {
+          retHTML += '              <form target="_blank" method="post" action="/api/shareOnLinkedin">' +
+            '                <input type="text" placeholder="Enter post status" name="msg" />' +
+            '                <input type="text" value={{certificateHash}} name="hash" />' +
+            '                <input type="submit" />' +
+            '              </form>'
+        }
+        else {
+          retHTML += '<a href="/auth/linkedin" target="_blank">' +
+            'AuthLinkedin' +
+            '</a>';
+        }
+        document.getElementById("social_wrap").innerHTML = retHTML;
+      }
+    })
+  }
+
+</script>
