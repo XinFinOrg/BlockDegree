@@ -27,12 +27,11 @@ Following are the tasks to do :
 ### TO DO 
 - [x] Fix login button's JS ( UI; API is present )
 - [x] Contact Us mail service
-- [ ] Add a loading icon to address the delay in paypal payment redirection ( UI - DATTABHAI )
-- [ ] Fix the div tag's height change Enroll -> Take Exam ( UI - DATTABHAI )
-- [ ] Complete testing and fixing the bugs found 
+- [ ] /exams page : examList -> hide promo button, loading icon on enroll
+- [ ] /exam-result -> loading icon for download ( make it asynchronous )
 - [ ] Remove unnecessary node dependencies
 - [ ] Add a simple error page to account for all errors
-- [ ] Display buttons on the /exam-result page as per auth response
+- [x] Display buttons on the /exam-result page as per auth response
 - [x] Update article URL for linkedin, twitter post
 - [x] API to enable migration
 - [x] Blockdegree User stats API ( priv. repo ) 
