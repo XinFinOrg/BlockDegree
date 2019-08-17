@@ -28,7 +28,7 @@ Following are the tasks to do :
 - [x] Fix login button's JS ( UI; API is present )
 - [x] Contact Us mail service
 - [ ] /exams page : examList -> hide promo button, loading icon on enroll
-- [ ] /exam-result -> loading icon for download ( make it asynchronous )
+- [x] /exam-result -> loading icon for download ( make it asynchronous; icon left )
 - [ ] Remove unnecessary node dependencies
 - [ ] Add a simple error page to account for all errors
 - [x] Display buttons on the /exam-result page as per auth response
