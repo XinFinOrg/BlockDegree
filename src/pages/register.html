@@ -1,51 +1,91 @@
 {{#> base pageClass="nav--sticky"}}
-  {{> layouts/base}}
-  {{#*inline "body-block"}}
-  <div class="form-messages alert alert-danger d-none" role="alert"></div>
-  <div class="container__cstm">
-    <div class="row justify-content-center">
+{{> layouts/base}}
+{{#*inline "body-block"}}
+<div class="form-messages alert alert-danger d-none" role="alert"></div>
+<div class="container__cstm">
+  <div class="row justify-content-center">
+    <div class="form-content" id="form-register" method="post" action="/signup">
+      <!-- Login Form -->
+      <form class="p-4">
+        <h2 class="mb-3">Register</h2>
 
-      <div class="form-content" id="form-register" method="post" action="/signup">
-        <!-- Login Form -->
-        <form class="p-4">
-          <h2 class="mb-3">Register</h2>
-          
-          <input type="text" id="firstName" class="" name="firstName" placeholder="First Name" required>
-          <input type="text" id="lastName" class="" name="lastName" placeholder="Last Name" required>
-          
-          <!--<div class="text-left pl-4">
+        <input
+          type="text"
+          id="firstName"
+          class=""
+          name="firstName"
+          placeholder="First Name"
+          required
+        />
+        <div id="invalidFN" name="invalidFN"></div>
+        <input
+          type="text"
+          id="lastName"
+          class=""
+          name="lastName"
+          placeholder="Last Name"
+          required
+        />
+        <div id="invalidLN" name="invalidLN"></div>
+
+        <!--<div class="text-left pl-4">
             <label for="email" class="mb-0 pt-2">Email</label>
           </div>-->
-          <input type="email" id="email" class="" name="email" placeholder="Email" required>
-          <!--<div class="text-left pl-4">
+        <input
+          type="email"
+          id="email"
+          class=""
+          name="email"
+          placeholder="Email"
+          required
+        />
+        <!--<div class="text-left pl-4">
             <label for="password" class="mb-0 pt-2">Password</label>
           </div>-->
-          <input type="password" id="password" class="" name="password" placeholder="Password" required>
-          <!--<div class="text-left pl-4">
+        <input
+          type="password"
+          id="password"
+          class=""
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <!--<div class="text-left pl-4">
             <label for="cfm-password" class="mb-0">Confirm your password</label>
           </div>-->
-          <input type="password" id="cfm-password" class="" name="cfm-password" placeholder="Confirm password" required>
+        <div id="invalidPwd" name="invalidPwd"></div>
+        <input
+          type="password"
+          id="cfm-password"
+          class=""
+          name="cfm-password"
+          placeholder="Confirm password"
+          required
+        />
 
-          <input type="submit" class="btn btn-primary py-2 mt-3 text-white" value="Register">
-          
-          <!-- Login with Google, Facebook, Twitter; need icons 
+        <input
+          type="submit"
+          class="btn btn-primary py-2 mt-3 text-white"
+          value="Register"
+        />
+
+        <!-- Login with Google, Facebook, Twitter; need icons 
           <a href="/auth/facebook">Facebook  </a><span>||</span>
           <a href="/auth/twitter">  Twitter  </a><span>||</span>
           <a href="auth/linkedin">  Linkedin  </a><span>||</span>
           <a href="/auth/google">Google</a>
           <!-- Login with Google, Facebook, Twitter; need icons -->
-        </form>
+      </form>
 
-        <!-- Remind Password -->
-        <div id="formFooter">
-          <a class="underlineHover" href="/login">Already a user? Login here</a>
-        </div>
-
+      <!-- Remind Password -->
+      <div id="formFooter">
+        <a class="underlineHover" href="/login">Already a user? Login here</a>
       </div>
     </div>
   </div>
-  {{/inline}}
-    <script src="/js/userAuth.js"></script>
-  {{#*inline "scripts-block"}}
-  {{/inline}}
+</div>
+{{/inline}}
+<script src="/js/userAuth.js"></script>
+{{#*inline "scripts-block"}}
+{{/inline}}
 {{/base}}

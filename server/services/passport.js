@@ -92,7 +92,6 @@ module.exports = function(passport) {
             }
 
             if (user) {
-              console.log(user.auth.local.password);
 
               if (user.auth.local.password != "") {
                 console.log("email already taken");
@@ -106,6 +105,8 @@ module.exports = function(passport) {
                 );
               }
             } else {
+              // Validating user
+              
               console.log("in method creating user");
               var newUser = newDefaultUser();
               newUser.email = email;
