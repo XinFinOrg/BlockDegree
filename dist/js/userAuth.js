@@ -23,7 +23,11 @@ if (typeof jQuery != "undefined") {
       loginForm.errAcc = "Account doesn't exit";
       loginForm.accessMsg = "You are login";
 
-      let preMsg = "Please login to access the course";
+      let preMsg = "Please login to access the course",
+        emInfo = document.getElementById("invalidEm"),
+        email = document.getElementById("email");
+
+      let validEm = false;
 
       if (getUrlVars()["from"]) {
         $(".form-messages").addClass("alert-info");
@@ -31,9 +35,21 @@ if (typeof jQuery != "undefined") {
         $(".form-messages").html(preMsg);
       }
 
+      email.onkeyup = () => {
+        validEm = false;
+        if (validateEmail(email.value)) {
+          validEm = true;
+          emInfo.innerHTML = "";
+        } else {
+          emInfo.innerHTML = "enter a valid email";
+        }
+      };
+
       loginForm.on("submit", e => {
         e.preventDefault();
-        new submitForm(loginForm);
+        if (validEm){
+          new submitForm(loginForm);
+        }
       });
     }
 
@@ -44,10 +60,12 @@ if (typeof jQuery != "undefined") {
         pwdInfo = document.getElementById("invalidPwd"),
         fnInfo = document.getElementById("invalidFN"),
         lnInfo = document.getElementById("invalidLN"),
+        emInfo = document.getElementById("invalidEmail"),
         cfmPw = document.getElementById("cfm-password");
       registerForm.email = document.getElementById("email");
       let validPWD = false,
         validFN = false,
+        validEm = false,
         validLN = false;
       registerForm.password = pw;
       registerForm.cfmPw = cfmPw;
@@ -75,55 +93,89 @@ if (typeof jQuery != "undefined") {
       pw.onkeyup = () => {
         let upperCaseLetters = /[A-Z]/g;
         let numbers = /[0-9]/g;
+        validPWD = false;
         pwdInfo.innerHTML = "";
-        if (!pwdInput.value.match(numbers)) {
+        if (!pw.value.match(numbers)) {
           pwdInfo.innerHTML = "Atleast One Number";
         }
-        if (!pwdInput.value.match(numbers)) {
+        if (!pw.value.match(upperCaseLetters)) {
           pwdInfo.innerHTML = "Atlest One Uppercase";
         }
-        if (pwdInput.value.length < 8) {
+        if (pw.value.length < 8) {
           pwdInfo.innerHTML = "Atlest 8 characters";
         }
         if (
-          pwdInput.value.match(numbers) &&
-          pwdInput.value.match(numbers) &&
-          pwdInput.value.length < 8
+          pw.value.match(numbers) &&
+          pw.value.match(numbers) &&
+          pw.value.length >= 8
         ) {
           validPWD = true;
+        }
+      };
+
+      registerForm.email.onkeyup = () => {
+        emInfo.innerHTML = "";
+        validEm = false;
+        if (validateEmail(registerForm.email.value)) {
+          validEm = true;
+          return (emInfo.innerHTML = "");
+        } else {
+          return (emInfo.innerHTML = "invalid email");
         }
       };
 
       // FirstName validation
       firstName.onkeyup = () => {
         fnInfo.innerHTML = "";
+        validFN = false;
         let onlyWhiteSpace = "^\\s+$";
-        let anyWhitespace = ".*s.*";
+        let anyWhitespace = ".*\\s.*";
+        let onlyLetter = "^[a-zA-Z]+$";
+        if (!firstName.value.match(onlyLetter)) {
+          return (fnInfo.innerHTML = "name should consist fo only letters");
+        }
         if (
           firstName.value.match(onlyWhiteSpace) ||
           firstName.value.match(anyWhitespace)
         ) {
           // Has a whitespace
-          fnInfo.innerHTML = "no space allowed in first-name";
-        } else {
-          validFN = true;
+          return (fnInfo.innerHTML = "no space allowed in first-name");
         }
+        if (firstName.value.length < 2) {
+          return (fnInfo.innerHTML = "name too short");
+        }
+        if (firstName.value.length > 20) {
+          return (fnInfo.innerHTML = "name too long");
+        }
+        validFN = true;
       };
+
+      
 
       // LastName validation
       lastName.onkeyup = () => {
         lnInfo.innerHTML = "";
+        validLN = false;
         let onlyWhiteSpace = "^\\s+$";
-        let anyWhitespace = ".*s.*";
+        let anyWhitespace = ".*\\s.*";
+        let onlyLetter = "^[a-zA-Z]+$";
+        if (!lastName.value.match(onlyLetter)) {
+          return (lnInfo.innerHTML = "name should consist fo only letters");
+        }
         if (
-          firstName.value.match(onlyWhiteSpace) ||
-          firstName.value.match(anyWhitespace)
+          lastName.value.match(onlyWhiteSpace) ||
+          lastName.value.match(anyWhitespace)
         ) {
           // Has a whitespace
-          lnInfo.innerHTML = "no space allowed in last-name";
-        } else {
-          validLN = true;
+          return (lnInfo.innerHTML = "no space allowed in last-name");
         }
+        if (lastName.value.length < 2) {
+          return (lnInfo.innerHTML = "name too short");
+        }
+        if (lastName.value.length > 20) {
+          return (lnInfo.innerHTML = "name too long");
+        }
+        validLN = true;
       };
 
       pw.addEventListener("input", e => {
@@ -138,4 +190,8 @@ if (typeof jQuery != "undefined") {
       });
     }
   });
+  function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
 }

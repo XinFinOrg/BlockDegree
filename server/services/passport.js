@@ -16,7 +16,7 @@ function newDefaultUser() {
     name: "",
     created: "",
     lastActive: "",
-    profile:{},
+    profile: {},
     examData: {
       payment: {
         course_1: false,
@@ -92,7 +92,6 @@ module.exports = function(passport) {
             }
 
             if (user) {
-
               if (user.auth.local.password != "") {
                 console.log("email already taken");
                 return done(null, false, "That email is already taken.");
@@ -106,13 +105,28 @@ module.exports = function(passport) {
               }
             } else {
               // Validating user
-              
+              let validEm = validateEmail(email),
+              validPwd = validatePWD(password),
+              validFN = validateName(req.body.firstName),
+              validLN = validateName(req.body.lastName);
+              if (!validEm.valid){
+                return done(null,false,"Invalid Email");
+              }
+              if (!validPwd.valid){
+                return done(null,false,validPwd.msg);
+              }
+              if (!validFN.valid){
+                return done(null,false,validFN.msg);
+              }
+              if (!validLN.valid){
+                return done(null,false,validLN.msg);
+              }
               console.log("in method creating user");
               var newUser = newDefaultUser();
               newUser.email = email;
               newUser.name = req.body.firstName + " " + req.body.lastName;
               newUser.timestamp = Date.now();
-              newUser.timestamp=Date.now()
+              newUser.timestamp = Date.now();
               newUser.auth.local.password = newUser.generateHash(password);
               newUser.created = Date.now();
               newUser.lastActive = Date.now();
@@ -154,6 +168,14 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       function(req, email, password, done) {
+        let validEm = validateEmail(email),
+        validPWD = validatePWD(password);
+        if (!validEm.valid){
+          return done(null,false,"Invalid email");
+        }
+        if (!validPWD.valid){
+          return done(null,false,validPWD.msg);
+        }
         User.findOne({ email: email }, async function(err, user) {
           if (err) return done(err);
           if (!user) return done(null, false, "No user found.");
@@ -353,7 +375,7 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       async (req, token, tokenSecret, profile, done) => {
-        console.log("called twitter auth")
+        console.log("called twitter auth");
         if (req.user) {
           if (
             req.user.auth.twitter.id == "" ||
@@ -513,3 +535,55 @@ module.exports = function(passport) {
     )
   );
 };
+
+function validateEmail(email) {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return { valid: re.test(email) };
+}
+
+function validatePWD(pwd) {
+  let upperCaseLetters = /[A-Z]/g;
+  let numbers = /[0-9]/g;
+  let validPWD = false;
+  let msg;
+  if (!pwd.match(numbers)) {
+    msg = "Atleast One Number";
+  }
+  if (!pwd.match(upperCaseLetters)) {
+    msg = "Atlest One Uppercase";
+  }
+  if (pwd.length < 8) {
+    msg = "Atlest 8 characters";
+  }
+  if (pwd.match(numbers) && pwd.match(numbers) && pwd.length >= 8) {
+    validPWD = true;
+    msg = null;
+  }
+  return { msg: msg, valid: validPWD };
+}
+
+function validateName(name) {
+  let validFN = true;
+  let onlyWhiteSpace = "^\\s+$";
+  let anyWhitespace = ".*\\s.*";
+  let onlyLetter = "^[a-zA-Z]+$";
+  let msg;
+  if (!name.match(onlyLetter)) {
+    msg = "name should consist fo only letters";
+    validFN = false;
+  }
+  if (name.match(onlyWhiteSpace) || name.match(anyWhitespace)) {
+    // Has a whitespace
+    msg = "no space allowed in first-name";
+    validFN = false;
+  }
+  if (name.length < 2) {
+    msg = "name too short";
+    validFN = false;
+  }
+  if (name.length > 20) {
+    msg = "name too long";
+    validFN = false;
+  }
+  return { msg: msg, valid: validFN };
+}
