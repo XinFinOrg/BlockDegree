@@ -20,7 +20,7 @@ This is the UI-dev branch for blockdegree.
 ### BUGS
 Following are the bugs, to be solved asap : 
 - [x] Course 2, 3 payment not being updated
-- [ ] Redirect to / from /login sometimes (UI) - issue with browser cookies
+- [x] Redirect to / from /login sometimes (UI) - issue with browser cookies
 - [x] Forwading headers in IIS reverse proxy ( hosting -> shifted to Nginx, need to write complete URLs for callbacks )
 
 Following are the tasks to do : 
