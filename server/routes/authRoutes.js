@@ -21,12 +21,11 @@ module.exports = app => {
 
   app.get("/api/current_user", (req, res) => {
     console.log("HIT current user");
-    
-    if (req.user){
-      res.json({status:true});
-    }
-    else{
-      res.json({status:false})
+
+    if (req.user) {
+      res.json({ status: true });
+    } else {
+      res.json({ status: false });
     }
   });
 
@@ -49,10 +48,10 @@ module.exports = app => {
         session: true
       },
       async (err, user, info) => {
-        if (user==false){
+        if (user == false) {
           // login not done
           // return info
-          console.log(info)
+          console.log(info);
           return res.send({ status: user, message: info });
           // console.log("user logged in", user, info);
         }
@@ -164,7 +163,7 @@ module.exports = app => {
           // next();
         });
       }
-    )(req, res,next);
+    )(req, res, next);
   });
 
   app.get("/auth/facebook/callback", (req, res) => {
@@ -239,19 +238,26 @@ module.exports = app => {
     )(req, res);
   });
 
-  app.get("/api/getAuthStatus",requireLogin,(req,res) => {
-    if (!req.user){
+  app.post("/api/getAuthStatus", requireLogin, async (req, res) => {
+    if (!req.user) {
       res.redirect("/login");
     }
-    const user = User.findOne({email:req.user.email}).catch(err => {
+    const user = await User.findOne({ email: req.user.email }).catch(err => {
       console.error(err);
-      res.status(500).json({error:err,status:500,info:"error while looking up the database for the user"})
-    })
+      res
+        .status(500)
+        .json({
+          error: err,
+          status: 500,
+          info: "error while looking up the database for the user"
+        });
+    });
     res.status(200).json({
-      localAuth:user.auth.local.password!="",
-      twitterAuth:user.auth.twitter.id!="",
-      facebookAuth:user.auth.facebook.id!="",
-      googleAuth:user.auth.google.id!=""
-    })
-  })
+      localAuth: user.auth.local.password != "",
+      twitterAuth: user.auth.twitter.id != "",
+      facebookAuth: user.auth.facebook.id != "",
+      googleAuth: user.auth.google.id != "",
+      linkedinAuth: user.auth.linkedin.id != ""
+    });
+  });
 };

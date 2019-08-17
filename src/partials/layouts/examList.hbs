@@ -21,7 +21,7 @@
             {{#if (lookup ../data this.type) }}
             <h2 class="pb-4 text-white"></h2>
             {{else}}
-            <h2 class="pb-4 text-white" id="curr_price">${{this.price}}</h2>
+            <h2 class="pb-4 text-white" id="{{this.type}}curr_price">${{this.price}}</h2>
             {{/if}}
             {{#if (lookup ../data this.type) }}
             <button onclick="takeExam({{this.type}})" class="btn text-body" data-price="{{this.price}}"
@@ -31,7 +31,7 @@
             {{else}}
             <div>
               <input type="text" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName">
-              <input type="button" onclick="checkCode({{this.type}},{{this.price}})">
+              <button type="button" onclick="checkCode({{this.type}},{{this.price}})">Apply Code</button>
             </div>
             <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body" data-price="{{this.price}}"
               id="{{this.type}}">
@@ -75,13 +75,15 @@
         console.log(data);
         if (data.status == '200')
           window.location.href = data.link;
-        else
-          alert(data.message);
+        else if (data.status == "201")
+          if (!alert(data.message)) { window.location.reload(); }
+          else
+            alert(data.message);
       }
     });
   }
 
-  function checkCode(course_id,price) {
+  function checkCode(course_id, price) {
     const codeName = document.getElementById(course_id.id + "codeName").value;
     $.ajax({
       url: "/api/checkCode",
@@ -93,10 +95,10 @@
           const finalAmt = parseFloat(price) - parseFloat(result.discAmt);
           if (finalAmt < 0) {
             // free course
-            document.getElementById("curr_price").innerHTML = "$0";
+            document.getElementById(course_id.id + "curr_price").innerHTML = "$0";
           }
           else {
-            document.getElementById("curr_price").innerHTML = "$" + finalAmt;
+            document.getElementById(course_id.id + "curr_price").innerHTML = "$" + finalAmt;
           }
         }
         else {

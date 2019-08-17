@@ -131,7 +131,7 @@ exports.payPaypal = async (req, res) => {
       user.examData.payment[course_id] = true;
       user.save();
       return res.send({
-        status: 400,
+        status: 201,
         message: "Course has been availed for free!"
       });
     }
