@@ -55,17 +55,16 @@ exports.postTwitter = async (req, res) => {
   }
 
   try {
-    shortURL = await bitly.shorten(fullURL);
+    let shortUrlObj = await bitly.shorten(fullURL);
+    shortURL = shortUrlObj.url;
   } catch (e) {
-    console.error(`Error while shortning the URL ${fullURL}; Error: ${e}`);
+    console.error(`Error while shortning the URL ${fullURL} Error: ${e}`);
     shortURL = fullURL;
   }
 
   const msg =
     req.body.msg ||
-    `Hey, I just got certified in blockchain from Blockdegree.org & got this certi ${
-      shortURL.url
-    } !!`;
+    `Hey, I just got certified in blockchain from Blockdegree.org & got this certi ${shortURL} !!`;
   const currUser = await User.findOne({ email: req.user.email });
   var config = getTwitterConfig(
     process.env.TWITTER_CLIENT_ID,
@@ -103,6 +102,7 @@ exports.postTwitter = async (req, res) => {
           if (err) {
             console.log("ERROR:");
             console.log(err);
+            res.json({ uploaded: false, error: err });
           } else {
             T.post(
               "statuses/update",
@@ -113,6 +113,7 @@ exports.postTwitter = async (req, res) => {
               function(err, data, response) {
                 if (err) {
                   console.log("ERROR: ", err);
+                  res.json({ uploaded: false, error: err });
                 } else {
                   console.log("Posted the status!");
                 }
@@ -147,9 +148,9 @@ exports.postLinkedin = async (req, res) => {
     return res.redirect("/auth/linkedin");
   }
   const hash =
-  req.body.hash ||
-  user.examData.certificateHash[user.examData.certificateHash.length - 1]
-    .clientHash;
+    req.body.hash ||
+    user.examData.certificateHash[user.examData.certificateHash.length - 1]
+      .clientHash;
   let fullURL = "";
   let shortURL = "";
   if (process.env.IPFS_NETWORK == "local") {
@@ -158,17 +159,16 @@ exports.postLinkedin = async (req, res) => {
     fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
   }
   try {
-    shortURL = await bitly.shorten(fullURL);
+    let shortUrlObj = await bitly.shorten(fullURL);
+    shortURL = shortUrlObj.url;
   } catch (e) {
     console.error(`Error while shortning the URL ${fullURL}; Error: ${e}`);
     shortURL = fullURL;
-    console.log(`Using full URL for ${req.user.email} Link: ${shortURL.url}`);
+    console.log(`Using full URL for ${req.user.email} Link: ${shortURL}`);
   }
   const msg =
     req.body.msg ||
-    `Hey I just completed this awesome course on blockchain from blockdegree.org, check it out ${
-      shortURL.url
-    } !!`;
+    `Hey I just completed this awesome course on blockchain from blockdegree.org, check it out ${shortURL} !!`;
   const response = await axios({
     method: "post",
     url: "https://api.linkedin.com/v2/ugcPosts",
@@ -204,10 +204,10 @@ exports.postLinkedin = async (req, res) => {
       }
     }
   }).catch(err => {
-    throw err;
+    res.json({ uploaded: false, error: err });
   });
   console.log(response.status);
-  return res.json({ posted: true, error: null, status: response.status });
+  return res.json({ uploaded: true, error: null, status: response.status });
 };
 
 exports.postFacebook = async (req, res) => {};
