@@ -106,20 +106,20 @@ module.exports = function(passport) {
             } else {
               // Validating user
               let validEm = validateEmail(email),
-              validPwd = validatePWD(password),
-              validFN = validateName(req.body.firstName),
-              validLN = validateName(req.body.lastName);
-              if (!validEm.valid){
-                return done(null,false,"Invalid Email");
+                validPwd = validatePWD(password),
+                validFN = validateName(req.body.firstName),
+                validLN = validateName(req.body.lastName);
+              if (!validEm.valid) {
+                return done(null, false, "Invalid Email");
               }
-              if (!validPwd.valid){
-                return done(null,false,validPwd.msg);
+              if (!validPwd.valid) {
+                return done(null, false, validPwd.msg);
               }
-              if (!validFN.valid){
-                return done(null,false,validFN.msg);
+              if (!validFN.valid) {
+                return done(null, false, validFN.msg);
               }
-              if (!validLN.valid){
-                return done(null,false,validLN.msg);
+              if (!validLN.valid) {
+                return done(null, false, validLN.msg);
               }
               console.log("in method creating user");
               var newUser = newDefaultUser();
@@ -168,14 +168,11 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       function(req, email, password, done) {
-        let validEm = validateEmail(email),
-        validPWD = validatePWD(password);
-        if (!validEm.valid){
-          return done(null,false,"Invalid email");
+        let validEm = validateEmail(email);
+        if (!validEm.valid) {
+          return done(null, false, "Invalid email");
         }
-        if (!validPWD.valid){
-          return done(null,false,validPWD.msg);
-        }
+
         User.findOne({ email: email }, async function(err, user) {
           if (err) return done(err);
           if (!user) return done(null, false, "No user found.");

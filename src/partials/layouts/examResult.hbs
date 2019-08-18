@@ -23,7 +23,6 @@
             <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
 
             <div>
-              <input type="text" placeholder="Enter hash" name="hash" id="down_hash" />
               <button type="button" onclick="downloadImage()">Download</button>
             </div>
             <div class="fb-share-button" data-href="https://blockdegree.org" data-layout="button_count"
@@ -71,7 +70,6 @@
               data-size="large">
               Tweet</a>
             <div>
-              <input type="text" placeholder="Enter hash" name="hash" id="down_hash" />
               <button type="button" onclick="downloadImage()">Download</button>
             </div>
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
@@ -114,7 +112,6 @@
               data-size="large">
               Tweet</a>
             <div>
-              <input type="text" placeholder="Enter hash" name="hash" id="down_hash" />
               <button type="button" onclick="downloadImage()">Download</button>
             </div>
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
@@ -208,7 +205,7 @@
       }
     };
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send($.param({ hash: hash }));
+    xhr.send($.param({ hash: {{certificateHash}} }));
   }
 
   function checkAuth() {
@@ -218,6 +215,8 @@
       method: "post",
       data: {},
       success: (result) => {
+        // setting up a hidden html.
+        // to be replaced by : pop-up modal for post, async call to /api/shareSocial and  
         let retHTML = '<form target="_blank" method="post" action="/api/shareOnTwitter">' +
           '                <input type="hidden" placeholder="Enter post status" name="msg" />' +
           '                <input type="hidden" />' +
@@ -225,31 +224,72 @@
         console.log(result)
         if (result.twitterAuth) {
           // signed in with twitter, show share button
-          retHTML += '<form target="_blank" method="post" action="/api/shareOnTwitter">' +
-            '                <input type="text" placeholder="Enter post status" name="msg" />' +
-            '                <input type="text" value={{certificateHash}} name="hash" />' +
-            '                <input type="submit" />' +
-            '              </form>'
+          retHTML += '<div>' +
+            '<button type="button" onclick="postOnTwitter()" >' +
+            'Post On Twitter' +
+            '</button>' +
+            '</div>';
         } else {
-          retHTML += '<a href="/auth/twitter" target="_blank">' +
-            'AuthTwitter' +
-            '</a>';
+          retHTML += '<div>' +
+            '<button type="button" onclick="handleAuthTwitter()">Auth-Twitter</button>' +
+            '</div>';
         }
         if (result.linkedinAuth) {
-          retHTML += '              <form target="_blank" method="post" action="/api/shareOnLinkedin">' +
-            '                <input type="text" placeholder="Enter post status" name="msg" />' +
-            '                <input type="text" value={{certificateHash}} name="hash" />' +
-            '                <input type="submit" />' +
-            '              </form>'
+          retHTML += '<div>' +
+            '<button type="button" onclick="postOnLinkedin()" >' +
+            'Post On Linkedin' +
+            '</button>' +
+            '</div>';
         }
         else {
-          retHTML += '<a href="/auth/linkedin" target="_blank">' +
-            'AuthLinkedin' +
-            '</a>';
+          retHTML += '<div>' +
+            '<button type="button" onclick="handleAuthLinkedin()">Auth-Linkedin</button>' +
+            '</div>';
         }
         document.getElementById("social_wrap").innerHTML = retHTML;
       }
     })
   }
 
+  function postOnTwitter() {
+    $.ajax({
+      method: 'post',
+      url: '/api/shareOnTwitter',
+      data: { hash: "{{certificateHash}}" },
+      success: (result) => {
+        console.log(result);
+        if (result.uploaded) {
+          alert("Posted on Twitter!");
+        }
+        else {
+          alert("Oops, error occured while posting!")
+        }
+      }
+    });
+  }
+
+  function postOnLinkedin() {
+    $.ajax({
+      method: 'post',
+      url: '/api/shareOnLinkedin',
+      data: { hash: "{{certificateHash}}" },
+      success: (result) => {
+        console.log(result);
+        if (result.uploaded) {
+          alert("Posted on Linkedin!");
+        }
+        else {
+          alert("Oops, error occured while posting!")
+        }
+      }
+    });
+  }
+
+  function handleAuthTwitter() {
+    let win = window.open("http://localhost:3000/auth/twitter?close=true", 'newwin', 'height=600px,width=600px');
+  }
+
+  function handleAuthLinkedin() {
+    var win = window.open("http://localhost:3000/auth/linkedin?close=true", 'newwin', 'height=600px,width=600px');
+  }
 </script>

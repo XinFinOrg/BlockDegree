@@ -2,6 +2,7 @@ var User = require("../models/user");
 const emailer = require("../emailer/impl");
 const passport = require("passport");
 const requireLogin = require("../middleware/requireLogin");
+const handleClose = require("../middleware/handleClose");
 
 module.exports = app => {
   app.get("/logout", function(req, res) {
@@ -136,9 +137,9 @@ module.exports = app => {
     })
   );
 
-  app.get("/auth/twitter", passport.authenticate("twitter"));
+  app.get("/auth/twitter", handleClose, passport.authenticate("twitter"));
 
-  app.get("/auth/linkedin", passport.authenticate("linkedin"));
+  app.get("/auth/linkedin", handleClose, passport.authenticate("linkedin"));
 
   app.get("/auth/google/callback", (req, res, next) => {
     passport.authenticate(
@@ -201,9 +202,12 @@ module.exports = app => {
         req.logIn(user, err => {
           if (err != null) {
             console.log(`Error while logging in ${err}`);
-            res.redirect("/login");
+            return res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
+          if (req.session.closeOnCallback) {
+            return res.redirect("/closeCallback");
+          }
           var url = req.session.redirectTo || "/";
           if (url == "/login" || url == "/exam-result") {
             url = "/";
@@ -228,6 +232,9 @@ module.exports = app => {
             res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
+          if (req.session.closeOnCallback) {
+            return res.redirect("/closeCallback");
+          }
           var url = req.session.redirectTo || "/";
           if (url == "/login" || url == "/exam-result") {
             url = "/";
@@ -244,13 +251,11 @@ module.exports = app => {
     }
     const user = await User.findOne({ email: req.user.email }).catch(err => {
       console.error(err);
-      res
-        .status(500)
-        .json({
-          error: err,
-          status: 500,
-          info: "error while looking up the database for the user"
-        });
+      res.status(500).json({
+        error: err,
+        status: 500,
+        info: "error while looking up the database for the user"
+      });
     });
     res.status(200).json({
       localAuth: user.auth.local.password != "",
