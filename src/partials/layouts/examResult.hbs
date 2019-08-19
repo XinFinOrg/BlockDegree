@@ -23,23 +23,17 @@
             <strong><span>Exam Status:</span></strong> <span class="greenText"><strong>Pass</strong></span>
 
             <div>
-              <button type="button" onclick="downloadImage()">Download</button>
+              <button type="button" onclick="downloadImage()">Download</button><br>
+              <img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="loading_download">
             </div>
             <div class="fb-share-button" data-href="https://blockdegree.org" data-layout="button_count"
               data-size="large"><a target="_blank"
                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
                 class="fb-xfbml-parse-ignore">FB-Share</a></div>
-            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world"
-              data-size="large">
-              Tweet</a>
-
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
             <p id="social_wrap">
               Post on Socials:
             </p>
-            <div>
-              <button type="button" onclick="checkAuth()">Recheck-auths</button>
-            </div>
             {{else}}
             <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
             {{/if}}
@@ -66,19 +60,17 @@
               data-size="large"><a target="_blank"
                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
                 class="fb-xfbml-parse-ignore">FB-Share</a></div>
-            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world"
-              data-size="large">
-              Tweet</a>
             <div>
               <button type="button" onclick="downloadImage()">Download</button>
+              <img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="loading_download"
+                style="display:none">
+
             </div>
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
             <p id="social_wrap">
               Post on Socials:
             </p>
-            <div>
-              <button type="button" onclick="checkAuth()">Recheck-auths</button>
-            </div>
+
             {{else}}
             <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
             {{/if}}
@@ -107,20 +99,15 @@
               data-size="large"><a target="_blank"
                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
                 class="fb-xfbml-parse-ignore">FB-Share</a></div>
-            <a class="twitter-share-button"
-              href="https://twitter.com/intent/tweet?text=Hey%20I%20just%20completed%this%20awesome%20course%20from%20%20blockdegree.org!!!"
-              data-size="large">
-              Tweet</a>
             <div>
               <button type="button" onclick="downloadImage()">Download</button>
+              <img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="loading_download"
+                style="display:none">
             </div>
             {{!-- Ideally we dont want to use a form for this, need to use asynchronous requests, something like what react does --}}
             <p id="social_wrap">
               Post on Socials:
             </p>
-            <div>
-              <button type="button" onclick="checkAuth()">Recheck-auths</button>
-            </div>
             {{else}}
             <strong><span>Exam Status:</span></strong> <span class="redText"><strong>Fail</strong></span>
             {{/if}}
@@ -150,21 +137,20 @@
 <script>
 
 
+  const msg = "Hey, I just got certified in blockchain from Blockdegree.org, check it out !!"
+
   window.onload = function () {
     checkAuth();
   }
 
   async function downloadImage() {
     console.log("inside download");
-    let hash_input = document.getElementById("down_hash");
-    hash_input.innerHTML = "Loading . . ."
-    const hash = hash_input.value;
+    document.getElementById("loading_download").style = "width:30px;height:30px;display:inline";
     var xhr = new XMLHttpRequest();
     xhr.open('POST', "/api/downloadCertificate", true);
     xhr.responseType = 'arraybuffer';
     xhr.onload = function () {
       if (this.status === 200) {
-        hash_input.innerHTML = "ok"
         var filename = "";
         var disposition = xhr.getResponseHeader('Content-Disposition');
         if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -181,6 +167,7 @@
           // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
           window.navigator.msSaveBlob(blob, filename);
         } else {
+          document.getElementById('loading_download').style = "display:none";
           var URL = window.URL || window.webkitURL;
           var downloadUrl = URL.createObjectURL(blob);
 
@@ -191,6 +178,7 @@
             if (typeof a.download === 'undefined') {
               window.location = downloadUrl;
             } else {
+
               a.href = downloadUrl;
               a.download = filename;
               document.body.appendChild(a);
@@ -199,13 +187,11 @@
           } else {
             window.location = downloadUrl;
           }
-
-          setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100);
         }
       }
     };
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send($.param({ hash: {{certificateHash}} }));
+    xhr.send($.param({ hash: "{{ certificateHash }}" }));
   }
 
   function checkAuth() {
@@ -224,22 +210,69 @@
         console.log(result)
         if (result.twitterAuth) {
           // signed in with twitter, show share button
-          retHTML += '<div>' +
-            '<button type="button" onclick="postOnTwitter()" >' +
-            'Post On Twitter' +
-            '</button>' +
-            '</div>';
+          retHTML += '<button type="button" class="btn btn-info btn-lg" onclick="showImageModal()" data-toggle="modal" data-target="#postTwitter">Post Twitter</button>' +
+            '' +
+            '  <!-- Modal -->' +
+            '  <div class="modal fade" id="postTwitter" role="dialog">' +
+            '    <div class="modal-dialog">' +
+            '    ' +
+            '      <!-- Modal content-->' +
+            '      <div class="modal-content">' +
+            '        <div class="modal-header">' +
+            '          <h4 class="modal-title">Twitter Post</h4>' +
+            '          <button type="button" class="close" data-dismiss="modal">×</button>' +
+            '        </div>' +
+            '<div><input type ="checkbox" id="certiLinkTwitter" >Include link to certificate<br></div> ' +
+            '        <div class="modal-body">' +
+            '          <p>' + '<textarea cols="30" rows="3" id="postMSGTwitter" >' + msg + '</textarea>' +
+            '          <div>' +
+            '<div><img src="/img/gif/loading_block.gif" style="width:400px;height:350px;" id="modalImage" ></div>' +
+            '            <button type="button" onclick="postTweet()">Post On Twitter ' +
+            '            </button>' +
+            '          </div>' +
+            '        </div>' +
+            '' +
+            '        <div class="modal-footer">' +
+            '          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+            '        </div>' +
+            '      </div>' +
+            '      ' +
+            '    </div>' +
+            '  </div>';
         } else {
           retHTML += '<div>' +
             '<button type="button" onclick="handleAuthTwitter()">Auth-Twitter</button>' +
             '</div>';
         }
         if (result.linkedinAuth) {
-          retHTML += '<div>' +
-            '<button type="button" onclick="postOnLinkedin()" >' +
-            'Post On Linkedin' +
-            '</button>' +
-            '</div>';
+          retHTML += '<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#postLinkedin">Post Linkedin</button>' +
+            '' +
+            '  <!-- Modal -->' +
+            '  <div class="modal fade" id="postLinkedin" role="dialog">' +
+            '    <div class="modal-dialog">' +
+            '    ' +
+            '      <!-- Modal content-->' +
+            '      <div class="modal-content">' +
+            '        <div class="modal-header">' +
+            '          <h4 class="modal-title">Linkedin Post</h4>' +
+            '          <button type="button" class="close" data-dismiss="modal">×</button>' +
+            '        </div>' +
+            '<div><input type ="checkbox" id="certiLinkLinkedin" >Include link to certificate<br></div> ' +
+            '        <div class="modal-body">' +
+            '          <p>' + '<textarea cols="30" rows="3" id="postMSGLinkedin" >' + msg + '</textarea>' +
+            '          <div>' +
+            '            <button type="button" onclick="postLinkedin()">Post On Linkedin ' +
+            '            </button>' +
+            '          </div>' +
+            '        </div>' +
+            '' +
+            '        <div class="modal-footer">' +
+            '          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+            '        </div>' +
+            '      </div>' +
+            '      ' +
+            '    </div>' +
+            '  </div>';
         }
         else {
           retHTML += '<div>' +
@@ -251,28 +284,70 @@
     })
   }
 
-  function postOnTwitter() {
-    $.ajax({
-      method: 'post',
-      url: '/api/shareOnTwitter',
-      data: { hash: "{{certificateHash}}" },
-      success: (result) => {
-        console.log(result);
-        if (result.uploaded) {
-          alert("Posted on Twitter!");
+  function showImageModal() {
+    console.log("inside download");
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "/api/downloadCertificate", true);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = function () {
+      if (this.status === 200) {
+        var filename = "";
+        var disposition = xhr.getResponseHeader('Content-Disposition');
+        if (disposition && disposition.indexOf('attachment') !== -1) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
         }
-        else {
-          alert("Oops, error occured while posting!")
+        var type = xhr.getResponseHeader('Content-Type');
+
+        var blob = typeof File === 'function'
+          ? new File([this.response], filename, { type: type })
+          : new Blob([this.response], { type: type });
+        if (typeof window.navigator.msSaveBlob !== 'undefined') {
+          // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+          window.navigator.msSaveBlob(blob, filename);
+        } else {
+          var URL = window.URL || window.webkitURL;
+          document.querySelector("#modalImage").src = URL.createObjectURL(blob);
         }
       }
-    });
+    };
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send($.param({ hash: "{{ certificateHash }}" }));
   }
 
-  function postOnLinkedin() {
+  function postTweet() {
+    let userMSG = document.getElementById("postMSGTwitter").value;
+    let certiLink = document.getElementById("certiLinkTwitter").checked;
+    if (userMSG.length > 260) {
+      alert("Max length is 260 ");
+    }
+    else {
+      $.ajax({
+        method: 'post',
+        url: '/api/shareOnTwitter',
+        data: { hash: "{{certificateHash}}", certiLink: certiLink, msg: userMSG },
+        success: (result) => {
+          console.log(result);
+          if (result.uploaded) {
+            alert("Posted on Twitter!");
+          }
+          else {
+            alert("Oops, error occured while posting!")
+          }
+        }
+      });
+    }
+    $('#postTwitter').modal('hide');
+  }
+
+  function postLinkedin() {
+    let userMSG = document.getElementById("postMSGLinkedin").value;
+    let certiLink = document.getElementById("certiLinkLinkedin").checked;
     $.ajax({
       method: 'post',
       url: '/api/shareOnLinkedin',
-      data: { hash: "{{certificateHash}}" },
+      data: { hash: "{{certificateHash}}", msg: userMSG, certiLink: certiLink },
       success: (result) => {
         console.log(result);
         if (result.uploaded) {
@@ -283,6 +358,7 @@
         }
       }
     });
+    $('#postLinkedin').modal('hide');
   }
 
   function handleAuthTwitter() {

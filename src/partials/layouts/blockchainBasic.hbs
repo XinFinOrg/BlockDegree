@@ -27,7 +27,8 @@
       </div>
       {{/each}}
       <div class="text-right">
-        <input id="exam-submit" type="submit" class="btn btn-primary py-2 mt-4 text-white" value="Submit your answers">
+        <input id="exam-submit" type="submit" class="btn btn-primary py-2 mt-4 text-white"
+          onclick="this.disabled=true; this.value='Sending…';" value="Submit your answers">
       </div>
     </form>
   </div>
