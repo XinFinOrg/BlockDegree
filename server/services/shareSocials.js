@@ -49,7 +49,7 @@ exports.postTwitter = async (req, res) => {
   let fullURL = "";
   let shortURL = "";
   if (process.env.IPFS_NETWORK == "local") {
-    fullURL = `http://localhost:3000/ipfs/${hash}`;
+    fullURL = `http://localhost:8081/ipfs/${hash}`;
   } else if (process.env.IPFS_NETWORK == "xinfin") {
     fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
   }
@@ -62,9 +62,12 @@ exports.postTwitter = async (req, res) => {
     shortURL = fullURL;
   }
 
-  const msg =
+  let msg =
     req.body.msg ||
-    `Hey, I just got certified in blockchain from Blockdegree.org & got this certi ${shortURL} !!`;
+    `Hey, I just got certified in blockchain from Blockdegree.org. Check it out!!`;
+  if (req.body.certiLink == "true") {
+    msg += `\n Link : ${shortURL} `;
+  }
   const currUser = await User.findOne({ email: req.user.email });
   var config = getTwitterConfig(
     process.env.TWITTER_CLIENT_ID,
@@ -134,6 +137,7 @@ exports.postTwitter = async (req, res) => {
 };
 
 exports.postLinkedin = async (req, res) => {
+  console.log(req.body);
   const user = await User.findOne({ email: req.user.email });
   if (!user) {
     return res.redirect("/login");
@@ -166,9 +170,12 @@ exports.postLinkedin = async (req, res) => {
     shortURL = fullURL;
     console.log(`Using full URL for ${req.user.email} Link: ${shortURL}`);
   }
-  const msg =
+  let msg =
     req.body.msg ||
-    `Hey I just completed this awesome course on blockchain from blockdegree.org, check it out ${shortURL} !!`;
+    `Hey, I just got certified in blockchain from Blockdegree.org. Check it out!!`;
+  if (req.body.certiLink == "true") {
+    msg += `\n Link : ${shortURL} `;
+  }
   const response = await axios({
     method: "post",
     url: "https://api.linkedin.com/v2/ugcPosts",
