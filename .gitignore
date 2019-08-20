@@ -21,3 +21,4 @@ server/routes/testRoutes.js
 
 questions
 *.bak
+*.config.js
