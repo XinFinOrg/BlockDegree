@@ -156,7 +156,11 @@ module.exports = app => {
           }
           console.log(`User ${user.email} logged in.`);
           var url = req.session.redirectTo || "/";
-          if (url == "/login" || url == "/exam-result") {
+          if (
+            url == "/login" ||
+            url == "/exam-result" ||
+            url.startsWith("/api")
+          ) {
             url = "/";
           }
           // res.send({status:user,info:"msg"})
@@ -182,7 +186,11 @@ module.exports = app => {
           }
           console.log(`User ${user.email} logged in.`);
           var url = req.session.redirectTo || "/";
-          if (url == "/login" || url == "/exam-result") {
+          if (
+            url == "/login" ||
+            url == "/exam-result" ||
+            url.startsWith("/api")
+          ) {
             url = "/";
           }
           res.redirect(url);
@@ -209,7 +217,11 @@ module.exports = app => {
             return res.redirect("/closeCallback");
           }
           var url = req.session.redirectTo || "/";
-          if (url == "/login" || url == "/exam-result") {
+          if (
+            url == "/login" ||
+            url == "/exam-result" ||
+            url.startsWith("/api")
+          ) {
             url = "/";
           }
           res.redirect(url);
@@ -236,7 +248,11 @@ module.exports = app => {
             return res.redirect("/closeCallback");
           }
           var url = req.session.redirectTo || "/";
-          if (url == "/login" || url == "/exam-result") {
+          if (
+            url == "/login" ||
+            url == "/exam-result" ||
+            url.startsWith("/api")
+          ) {
             url = "/";
           }
           res.redirect(url);

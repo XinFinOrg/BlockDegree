@@ -12,6 +12,15 @@
 
 }}
 
+<p id="card_wrap"></p>
+
+<div>
+  <button type="button" onclick="getAllCertificates()">
+    Get My certificates
+  </button>
+</div>
+<br />
+
 {{/inline}}
 
 {{#*inline "scripts-block"}}
@@ -19,3 +28,92 @@
 {{/inline}}
 
 {{/base}}
+
+<script>
+  function generateCard(
+    examName,
+    marks,
+    total,
+    date,
+    clientHash,
+    headlessHash
+  ) {
+    return (
+      "<div >" +
+      '            <span style="width: 100px;">Exam Name</span>:<span style="width: 100px;">' +
+      examName +
+      "</span><br>" +
+      '            <span style="width: 100px;">Marks Obtained</span>:<span style="width: 100px;">' +
+      marks +
+      "</span><br>" +
+      '            <span style="width: 100px;">Total Questions</span>:<span style="width: 100px;">' +
+      total +
+      "</span><br>" +
+      '            <span style="width: 100px;">Date</span>:<span style="width: 100px;">' +
+      new Date(date) +
+      "</span><br>" +
+      '            <span style="width: 100px;">Certificate</span>:<span style="width: 100px;">' +
+      clientHash +
+      "</span><br>" +
+      '            <span style="width: 100px;">Document</span>:<span style="width: 100px;">' +
+      headlessHash +
+      "</span>" +
+      "      </div><br>"
+    );
+  }
+
+  function getAllCertificates() {
+    let card_wrap = document.getElementById("card_wrap");
+    let retHTML = "";
+    console.log("called");
+    $.ajax({
+      url: "/api/getAuthStatus",
+      method: "post",
+      data: {},
+      success: auth => {
+        if (
+          auth.twitterAuth ||
+          auth.localAuth ||
+          auth.facebookAuth ||
+          auth.googleAuth ||
+          auth.linkedinAuth
+        ) {
+          // is logged in
+          $.ajax({
+            method: "get",
+            url: "/api/getAllCertificates",
+            success: result => {
+              console.log("result");
+              console.log(result);
+              if (result.msg == "ok") {
+                if (result.certificateHash.length < 1) {
+                  return alert("No certifiacates found!");
+                }
+                for (let i = 1; i < result.certificateHash.length; i++) {
+                  let currCerti = result.certificateHash[i];
+                  // console.log(currCerti);
+                  retHTML += generateCard(
+                    currCerti.examType,
+                    currCerti.marks,
+                    currCerti.total,
+                    currCerti.timestamp,
+                    currCerti.clientHash,
+                    currCerti.headlessHash
+                  );
+                  console.log(retHTML);
+                }
+                card_wrap.innerHTML = retHTML;
+              } else {
+                alert("Error");
+                exit();
+              }
+            }
+          });
+        } else {
+          alert("Please login !");
+          exit();
+        }
+      }
+    });
+  }
+</script>
