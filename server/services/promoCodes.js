@@ -228,31 +228,31 @@ exports.addAllowedUser = async (req, res) => {
 exports.checkCode = async (req, res) => {
   console.log("Request Body : ", req.body);
   if (req.body.codeName == undefined || req.body.codeName == "") {
-    res.status(400).json({ error: "Bad request" });
+    return res.status(400).json({ error: "Bad request" });
   }
   let codeName = req.body.codeName;
   let currPromoCode = await PromoCode.findOne({ codeName: codeName }).catch(
     e => {
-      res
+      return res
         .status(500)
         .json({ error: "Internal error while accessing promo-code" });
     }
   );
   if (currPromoCode == null) {
-    res.status(200).json({ error: `no promo-code ${codeName} exists` });
+    return res.status(200).json({ error: `no promo-code ${codeName} exists` });
   }
   if (!currPromoCode.status){
-    res.json({error:"code not active"});
+    return res.json({error:"code not active"});
   }
   if (currPromoCode.restricted) {
     // check if the user has access
     for (var i = 0; i < currPromoCode.allowedUsers.length; i++) {
       if (currPromoCode.allowedUsers[i].email == req.user.email) {
         console.log("Inside match")
-        res.json({ error: null, discAmt: currPromoCode.discAmt });
+        return res.json({ error: null, discAmt: currPromoCode.discAmt });
       }
     }
-    res.json({ error: "You don't have access to this code." });
+    return res.json({ error: "You don't have access to this code." });
   }
   res.json({error:null,discAmt:currPromoCode.discAmt})
 };
