@@ -158,7 +158,7 @@ exports.postLinkedin = async (req, res) => {
   let fullURL = "";
   let shortURL = "";
   if (process.env.IPFS_NETWORK == "local") {
-    fullURL = `http://localhost:3000/ipfs/${hash}`;
+    fullURL = `http://localhost:8081/ipfs/${hash}`;
   } else if (process.env.IPFS_NETWORK == "xinfin") {
     fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
   }

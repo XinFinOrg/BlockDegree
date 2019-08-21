@@ -53,10 +53,8 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(request[index]) + 1 ==
                 result.questionsBasic[index].answer
               ) {
-                // marks++;
+                marks++;
               }
-              // Cheatcode activated
-              marks++;
             }
             attempts += 1;
             User.findOneAndUpdate(
@@ -116,10 +114,8 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(req.body[index]) + 1 ==
                 result.questionsAdvanced[index].answer
               ) {
-                // marks++;
+                marks++;
               }
-              //Cheatcode activated
-              marks++;
             }
             attemptsAdvanced += 1;
             console.log("Marks", marks);
@@ -174,10 +170,8 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(request[index]) + 1 ==
                 result.questionsProfessional[index].answer
               ) {
-                // marks++;
-              }
-              // Cheatcode activated
-              marks++;
+                marks++;
+              }                          
             }
             attemptsProfessional += 1;
             console.log("Marks", marks);
