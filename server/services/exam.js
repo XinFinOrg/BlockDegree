@@ -313,7 +313,7 @@ exports.getExamResult = async (req, res) => {
     percent: percentObtained,
     total: totalQuestions
   };
-  if (percentObtained > 60) {
+  if (percentObtained >= 60) {
     // Yeah!
     examStatus = true;
     let d = new Date();
