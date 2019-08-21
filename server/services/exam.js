@@ -275,7 +275,14 @@ exports.getExamResult = async (req, res) => {
     `called the exam-result endpoint by ${req.user.email} at ${Date.now()}`
   );
   const backUrl = req.header("Referer");
-  var name = req.user.name;
+  let name ="";
+  if (req.user.name=="" || req.user.name==undefined){
+    // old email id.
+    name = req.user.email;
+  }
+  else{
+    name = req.user.name;
+  }
   var query = {};
   query = { email: req.user.email };
   const examName = backUrl.split("/")[3].split("-")[1];
