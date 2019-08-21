@@ -240,5 +240,12 @@ $(document).ready(function() {
       $('.login-form-block').stop().slideToggle();
   });
   
+
+  //Course price code toggle
+  $('.promoCode-btn').on('click',function(){
+      $('.promoCode-block').stop().slideToggle();
+  });
+
+  
 });
       
