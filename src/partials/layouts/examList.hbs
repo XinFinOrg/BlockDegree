@@ -4,11 +4,11 @@
 
   <div class="row" id="exams__list">
     {{#each json.courses as |course index|}}
-    <div class="col-sm-4 single-exam__course">
+    <div class="col-lg-4 col-md-4 single-exam__course mb-4">
       <div class="card height--full">
-        <div class="card-body row align-items-end mx-0 p-0">
-          <h3 class="card-title px-3 py-4 text-center mb-0">{{this.title}}</h3>
-          <div class="card-text p-2 px-sm-4 py-sm-5 width--full">
+        <div class="card-body row mx-0 p-0">
+          <h3 class="card-title p-4 text-center mb-0">{{this.title}}</h3>
+          <div class="card-text p-4 px-sm-4 py-5 width--full">
             {{#each pointers as |point| }}
             &#10004; {{ point }}<br>
             {{/each}}
@@ -21,7 +21,7 @@
             {{#if (lookup ../data this.type) }}
             <h2 class="pb-4 text-white"></h2>
             {{else}}
-            <h2 class="pb-4 text-white" id="{{this.type}}curr_price">${{this.price}}</h2>
+            <h2 class="pb-3 text-white" id="{{this.type}}curr_price">${{this.price}}</h2>
             {{/if}}
             {{#if (lookup ../data this.type) }}
             <button onclick="takeExam({{this.type}})" class="btn text-body" data-price="{{this.price}}"
@@ -29,14 +29,25 @@
               Take Exam
             </button>
             {{else}}
-            <div>
+            <!--<div>
               <input type="text" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName">
               <button type="button" onclick="checkCode({{this.type}},{{this.price}})">Apply Code</button>
-            </div>
-            <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body" data-price="{{this.price}}"
+            </div>-->
+			
+			<div class="promoCode-block">
+				<div class="input-group mb-3">
+					<input type="text" class="form-control" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName">
+					<div class="input-group-append">
+						<button type="button" class="btn btn-dark" onclick="checkCode({{this.type}},{{this.price}})">Apply</button>
+					</div>
+				</div>
+			</div>
+			
+            <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body btn-light mb-3" data-price="{{this.price}}"
               id="{{this.type}}">
-              Enroll
+              ENROLL
             </button>
+			<div class="promoCode-btn">*Apply promo code</div>
             {{/if}}
 
           </div>

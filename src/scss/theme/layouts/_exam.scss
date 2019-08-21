@@ -43,29 +43,53 @@
 }
 
 #exams__list {
+  .card {
+    border-radius: 10px;
+	border: none;
+	background-color: #f1f5f7;
+  }
   .card-title {
-    color: white;
+    font-size:20px;
+	color: white;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	width: 100%;
+	
+	  @media (min-width: 1200px) {}
+	  @media (min-width: 992px) and (max-width: 1199.98px) {font-size:16px;}
+	  @media (min-width: 768px) and (max-width: 991.98px) {font-size:16px;}
+	  @media (min-width: 576px) and (max-width: 767.98px) {font-size:16px;}
+	  @media (max-width: 575.98px) {font-size:18px;}
   }
 
   .card-price {
-    padding: 60px 10px;
-
+    padding: 20px;
+	/*min-height: 230px;*/
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	width: 100%;
+	
     .btn {
       @include transition(all 0.4s);
       position: relative;
-      width: 80%;
-      padding: 15px 10px;
-      background: white;
+      width: 100%;
+      padding: 10px 15px;
+      background: rgba(255,255,255,1);
+	  border-radius: 50px;
 
       &:hover {
-        box-shadow: rgba(0,0,0,0.7) 0px 10px 35px -5px;
+		box-shadow: rgba(0,0,0,0.5) 0px 10px 25px -5px!important;
       }
     }
+	
+	h2 {
+	  min-height: 52px;
+	}
   }
 
   .single-exam__course:nth-child(3n+1) .card-title,
   .single-exam__course:nth-child(3n+1) .card-price {
-    background: $btn__gradient--stop-1;
+    background: #1abc9c;
   }
   .single-exam__course:nth-child(3n+2) .card-title,
   .single-exam__course:nth-child(3n+2) .card-price {
@@ -73,6 +97,65 @@
   }
   .single-exam__course:nth-child(3n+3) .card-title,
   .single-exam__course:nth-child(3n+3) .card-price {
-    background: #F75C03;
+    background: #fe6c6c;
+  }
+  
+  .promoCode-block {
+    display: none;
+  }
+  
+  .promoCode-btn {
+    font-size: 14px;
+	color: rgba(255,255,255,0.6);
+	padding: 0px;
+	margin: 0px;
+	line-height: 16px;
+	
+	&:hover {
+	  cursor: pointer;
+	  color: rgba(255,255,255,1);
+	}
+  }  
+
+  .input-group .btn {
+    @include transition(all 0.4s);
+	width: 100%;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+	background: rgba(0,0,0,0.3)!important;
+	border: none;
+	padding: 10px 15px;
+	
+	&:hover {
+		background: rgba(0,0,0,0.2)!important;
+		box-shadow: none!important;
+      }
+  }
+  
+  .input-group {
+    width: 100%;
+    margin: 0 auto;
+ 
+	  input {
+		@include transition(all 0.4s);
+		border-top-left-radius: 50px;
+		border-bottom-left-radius: 50px;
+		border-top-right-radius: 0px;
+		border-bottom-right-radius: 0px;
+		background: rgba(255,255,255,0.9)!important;
+		border: none;
+		padding: .375rem 1rem!important;
+		font-size: 0.9rem;
+		height: 46px;
+		
+		&:hover,
+		&:focus,
+		&:active {
+		  background: rgba(255,255,255,1)!important;
+		  box-shadow: none!important;
+		}
+	  }
   }
 }
