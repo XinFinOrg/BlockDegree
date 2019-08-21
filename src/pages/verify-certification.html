@@ -12,14 +12,23 @@
 
 }}
 
-<p id="card_wrap"></p>
-
 <div>
-  <button type="button" onclick="getAllCertificates()">
-    Get My certificates
-  </button>
+  <input
+    type="text"
+    id="certiHash"
+    placeholder="Enter the hash to open certificate"
+  />
+  <button type="button" onclick="openCertiByHash()">Open Certificate</button>
+  <a href="" style="display: none" target="_blank" id="openCerti"></a>
+  <p id="card_wrap"></p>
+
+  <div>
+    <button type="button" onclick="getAllCertificates()">
+      Get My certificates
+    </button>
+  </div>
+  <br />
 </div>
-<br />
 
 {{/inline}}
 
@@ -50,7 +59,7 @@
       total +
       "</span><br>" +
       '            <span style="width: 100px;">Date</span>:<span style="width: 100px;">' +
-      new Date(Long.parseLong(date)) +
+      new Date(parseFloat(date)) +
       "</span><br>" +
       '            <span style="width: 100px;">Certificate</span>:<span style="width: 100px;">' +
       clientHash +
@@ -62,6 +71,78 @@
     );
   }
 
+  function openCertiByHash() {
+    let hash = document.getElementById("certiHash").value;
+    let openCerti = document.getElementById("openCerti");
+    let found = false;
+
+    $.ajax({
+      url: "/api/getAuthStatus",
+      method: "post",
+      data: {},
+      success: async auth => {
+        if (
+          auth.twitterAuth ||
+          auth.localAuth ||
+          auth.facebookAuth ||
+          auth.googleAuth ||
+          auth.linkedinAuth
+        ) {
+          // logged in
+          $.ajax({
+            method: "get",
+            url: "/api/getAllCertificates",
+            success: result => {
+              console.log("result");
+              console.log(result);
+              if (result.msg == "ok") {
+                let certificates = result.certificateHash;
+                console.log("Certificates : ");
+                console.log(certificates);
+                if (
+                  certificates != null &&
+                  certificates != "" &&
+                  certificates != undefined
+                ) {
+                  for (let i = 1; i < certificates.length; i++) {
+                    if (
+                      certificates[i].clientHash == hash ||
+                      certificates[i].headlessHash == hash
+                    ) {
+                      console.log(i);
+                      openCerti.setAttribute(
+                        "href",
+                        `https://ipfs-gateway.xinfin.network/${hash}`
+                      );
+                      openCerti.click();
+                      found = true;
+                      return;
+                    }
+                  }
+                  if (!found) {
+                    alert("Given hash is not associated to your account");
+                    openCerti.setAttribute(
+                      "href",
+                      `https://ipfs-gateway.xinfin.network/${hash}`
+                    );
+                    openCerti.click();
+                    return;
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          openCerti.setAttribute(
+            "href",
+            `https://ipfs-gateway.xinfin.network/${hash}`
+          );
+          openCerti.click();
+        }
+      }
+    });
+  }
+
   function getAllCertificates() {
     let card_wrap = document.getElementById("card_wrap");
     let retHTML = "";
@@ -70,7 +151,7 @@
       url: "/api/getAuthStatus",
       method: "post",
       data: {},
-      success: auth => {
+      success: async auth => {
         if (
           auth.twitterAuth ||
           auth.localAuth ||
@@ -86,11 +167,9 @@
               console.log("result");
               console.log(result);
               if (result.msg == "ok") {
-                if (result.certificateHash.length < 1) {
-                  return alert("No certifiacates found!");
-                }
-                for (let i = 1; i < result.certificateHash.length; i++) {
-                  let currCerti = result.certificateHash[i];
+                let allCerti = result.certificateHash;
+                for (let i = 1; i < allCerti.length; i++) {
+                  let currCerti = allCerti[i];
                   // console.log(currCerti);
                   retHTML += generateCard(
                     currCerti.examType,
@@ -104,8 +183,9 @@
                 }
                 card_wrap.innerHTML = retHTML;
               } else {
-                alert("Error");
-                exit();
+                return alert(
+                  `Error while fetching certificates: ${result.msg}`
+                );
               }
             }
           });
