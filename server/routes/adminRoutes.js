@@ -18,20 +18,21 @@ module.exports = app => {
   // app.get("/api/migrate", migrationService.migrateFrom);
 
   // Set migration dates
-  app.get(
-    "/api/setMigrationDates",
-    requireLogin,
-    requrieAdmin,
-    async (req, res) => {
-      const users = await User.find({});
-      users.forEach(async user => {
-        let userDate = new Date(user._id.getTimestamp());
-        user.created = userDate.getTime();
-        await user.save();
-      });
-      res.json({ msg: "ok" });
-    }
-  );
+  // migration complete
+  // app.get(
+  //   "/api/setMigrationDates",
+  //   requireLogin,
+  //   requrieAdmin,
+  //   async (req, res) => {
+  //     const users = await User.find({});
+  //     users.forEach(async user => {
+  //       let userDate = new Date(user._id.getTimestamp());
+  //       user.created = userDate.getTime();
+  //       await user.save();
+  //     });
+  //     res.json({ msg: "ok" });
+  //   }
+  // );
 
   app.get(
     "/api/getAllTimestamp",
