@@ -34,7 +34,7 @@
               <button type="button" onclick="checkCode({{this.type}},{{this.price}})">Apply Code</button>
             </div>-->
 			
-			<div class="promoCode-block">
+			<div class="promoCode-block" id="{{this.type}}PromoCodeBlock">
 				<div class="input-group mb-3">
 					<input type="text" class="form-control" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName">
 					<div class="input-group-append">
@@ -47,7 +47,7 @@
               id="{{this.type}}">
               ENROLL
             </button>
-			<div class="promoCode-btn">*Apply promo code</div>
+			<div class="promoCode-btn" id="{{this.type}}PromoCodeBtn">*Apply promo code</div>
             {{/if}}
 
           </div>
