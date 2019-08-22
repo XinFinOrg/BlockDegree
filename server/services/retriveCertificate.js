@@ -105,8 +105,8 @@ exports.downloadCertificate = async (req, res) => {
           const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
           const page = await browser.newPage();
           await page.setViewport({
-            width: 960,
-            height: 760,
+            width: 800,
+            height: 600,
             deviceScaleFactor: 1
           });
           await page.setContent(imgHTML);
