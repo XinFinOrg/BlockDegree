@@ -80,6 +80,7 @@
     const codeName = document.getElementById(course_id.id + "codeName").value;
     console.log(course_id.id + "codeName");
     console.log(codeName);
+    $(`#${course_id.id}`).attr("disabled", true);
     $.ajax({
       url: "/pay",
       method: 'post',
