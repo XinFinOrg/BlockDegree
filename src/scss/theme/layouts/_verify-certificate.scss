@@ -5,3 +5,66 @@
     height: 200px;
   }
 }
+
+#verify-certificate {
+  .card {
+  
+    .card-body {
+	
+      .list-group-item {
+        padding-left: 0px;
+		
+	    span {
+	      font-weight: 500;
+	    }
+	  }
+    }
+  }
+}
+
+
+.social-sharing a {
+    color: #FFFFFF;
+	width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+	-webkit-transform: scale(0.9);     
+     -moz-transform: scale(0.9);
+     -o-transform: scale(0.9);
+     -webkit-transition-duration: 0.5s;
+     -moz-transition-duration: 0.5s;
+     -o-transition-duration: 0.5s;
+}	
+.social-sharing a:hover {
+     -webkit-transform: scale(1);
+     -moz-transform: scale(1);
+     -o-transform: scale(1);
+ }
+ 
+/*-- Multicoloured Hover Variations --*/
+.social-fb {
+	background-color: rgba(59,89,152,0.8);
+} 
+.social-fb:hover {
+	background-color: rgba(59,89,152,1);
+}
+.social-tw {
+	background-color: rgba(29,161,242,0.8);
+}
+.social-tw:hover {
+	background-color: rgba(29,161,242,1);
+}
+.social-li {
+	background-color: rgba(0,119,181,0.8);
+}
+.social-li:hover {
+	background-color: rgba(0,119,181,1);
+}
+.social-g+ {
+	background-color: rgba(221,75,57,0.8);
+}
+.social-g+:hover {
+	background-color: rgba(221,75,57,1);
+}
