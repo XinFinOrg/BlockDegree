@@ -118,6 +118,9 @@ section img {
     width: 100%;
     height: 100%;
     position: absolute;
-    @include linear-gradient(60deg, rgba($overlay__gradient--stop-1, 0.85), rgba($overlay__gradient--stop-2, 0.85));
+    /*@include linear-gradient(60deg, rgba($overlay__gradient--stop-1, 0.85), rgba($overlay__gradient--stop-2, 0.85));*/	
+	background-image: -webkit-linear-gradient(to bottom, #00265e 0%, #54462f 100%);
+	background-image: linear-gradient(to bottom, #00265e 0%, #54462f 100%);
+	opacity: 0.6;
   }
 }

@@ -23,13 +23,13 @@
 
 // Single module page: Course content
 .course-module {
-  #header {
+  /*#header {
     background: white;
     border-bottom: 1px solid #ced4da;
     @include media-breakpoint-up(sm) {
       position: sticky;
     }
-  }
+  }*/
 
   .module-content {
     h1, h2, h3, h4, h5 {

@@ -6,5 +6,16 @@
     .img-body {
       height: 110px;
     }
+	.border {
+	  border-radius: 10px;
+	  
+	  .card {
+	    background-color: transparent;
+	    
+		h4 {
+		  font-weight: 500;
+		}
+	  }
+	}
   }
 }
