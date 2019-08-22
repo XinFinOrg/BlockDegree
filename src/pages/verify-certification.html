@@ -20,6 +20,7 @@
   />
   <button type="button" onclick="openCertiByHash()">Open Certificate</button>
   <a href="" style="display: none" target="_blank" id="openCerti"></a>
+  <p id="setName"></p>
   <p id="card_wrap"></p>
 
   <div>
@@ -39,6 +40,57 @@
 {{/base}}
 
 <script>
+  $(document).ready(() => {
+    $.ajax({
+      method: "post",
+      url: "/api/getAuthStatus",
+      data: {},
+      success: auths => {
+        if (
+          auths.localAuth ||
+          auths.twitterAuth ||
+          auths.facebookAuth ||
+          auths.googleAuth ||
+          auths.linkedinAuth
+        ) {
+          //logged in
+          $.ajax({
+            method: "get",
+            url: "/api/isNameRegistered",
+            success: result => {
+              console.log(result);
+              if (!result.isSet) {
+                document.getElementById("setName").innerHTML =
+                  "<div>" +
+                  '<input type="text" id="fullName" placeholder="Enter Fill Name">' +
+                  '<button type="button" onclick="callSetName()" >Set Name</button>' +
+                  "</div>";
+              }
+            }
+          });
+        } else {
+          return;
+        }
+      }
+    });
+  });
+
+  // let fullNameElement = document.getElementById("fullName");
+  // fullNameElement.onkeyup = () => {
+
+  // }
+  function callSetName() {
+    $.ajax({
+      method: "post",
+      url: "/api/setName",
+      data: { fullName: document.getElementById("fullName").value },
+      success: result => {
+        alert(`Msg : ${result.msg}`);
+        document.location.reload();
+      }
+    });
+  }
+
   function generateCard(
     examName,
     marks,
