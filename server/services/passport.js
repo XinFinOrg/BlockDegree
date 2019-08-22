@@ -411,7 +411,7 @@ module.exports = function(passport) {
             linkEmail.auth.twitter.tokenSecret = tokenSecret;
             linkEmail.lastActive = Date.now();
             linkEmail.save();
-            return done(null, user);
+            return done(null, linkEmail);
           }
         }
 
@@ -496,7 +496,7 @@ module.exports = function(passport) {
               linkEmail.auth.twitter.tokenSecret = tokenSecret;
               linkEmail.lastActive = Date.now();
               linkEmail.save();
-              return done(null, user);
+              return done(null, linkEmail);
             }
           }
 
