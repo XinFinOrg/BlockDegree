@@ -311,7 +311,7 @@ module.exports = function(passport) {
         if (existingUser) {
           existingUser.lastActive = Date.now();
           existingUser.save();
-          return done(null, user);
+          return done(null, existingUser);
         }
 
         // email registered
