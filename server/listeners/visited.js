@@ -14,8 +14,9 @@ const newVisited = (email, ip, course) => {
   });
 };
 
-let visitedCourseHandler = (user_email, course) => {
+let visitedCourseHandler = (req, course) => {
   setImmediate(async () => {
+    let user_email = req.user.email;
     console.log(`Inside the visited course handler ${user_email} ${course}`);
     const fromIP = req.headers["x-forwarded-for"] || req.ip;
     const existingStat = await Visited.findOne({
