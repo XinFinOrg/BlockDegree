@@ -25,13 +25,14 @@ let visitedCourseHandler = (user_email, course) => {
     if (existingStat) {
       // not first time user, simple update the count
       existingStat.count += 1;
+      existingStat.lastVisit = Date.now();
       await existingStat.save();
-      return;
     } else {
       // New user, create new stat & set count to 1
       let newStat = newVisited(user_email, fromIP, course);
+      newStat.firstVisit = Date.now();
+      newStat.lastVisit = Date.now();
       await newStat.save();
-      return;
     }
   });
 };
@@ -49,11 +50,13 @@ let visitedCourseCurriculum = (req, courseCurriculum) => {
       if (existingStat) {
         // not first time user, simple update the count
         existingStat.count += 1;
+        existingStat.lastVisit = Date.now();
         await existingStat.save();
-        return;
       } else {
         // New user, create new stat & set count to 1
         let newStat = newVisited(req.user.email, fromIP, courseCurriculum);
+        newStat.firstVisit = Date.now();
+        newStat.lastVisit = Date.now();
         await newStat.save();
       }
     } else {
@@ -66,10 +69,13 @@ let visitedCourseCurriculum = (req, courseCurriculum) => {
       if (existingStat) {
         // stat exists, update the count
         existingStat.count += 1;
+        existingStat.lastVisit = Date.now();
         await existingStat.save();
       } else {
         // new stat, create one & set count to 1
         let newStat = newVisited("", fromIP, courseCurriculum);
+        newStat.firstVisit = Date.now();
+        newStat.lastVisit = Date.now();
         await newStat.save();
       }
     }
