@@ -157,15 +157,14 @@ $(document).ready(function() {
     }
   });
 
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+            $('#header').addClass('header-scrolled');
+        } else {
+            $('#header').removeClass('header-scrolled');
+        }
+    });
   //------- Header Scroll Class  js --------//
-
-  $(window).scroll(function() {
-    if ($(this).scrollTop() > 100) {
-      $("#header").addClass("header-scrolled");
-    } else {
-      $("#header").removeClass("header-scrolled");
-    }
-  });
 
   //------- Mailchimp js --------//
   $("#mc_embed_signup")

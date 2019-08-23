@@ -1,16 +1,8 @@
 {{#> base}}
-
 {{> layouts/base title="Verify certification"}}
 
 {{#*inline "body-block"}}
-
-{{> includes/hero
-
-      hero-title="Verify certification"
-
-      hero-copy="Boost your credentials with our blockchain certification"
-
-}}
+{{> includes/hero hero-title="Verify certification" hero-copy="Boost your credentials with our blockchain certification"}}
 
 <div>
   <input
@@ -21,8 +13,11 @@
   <button type="button" onclick="openCertiByHash()">Open Certificate</button>
   <a href="" style="display: none" target="_blank" id="openCerti"></a>
   <p id="setName"></p>
-  <p id="card_wrap"></p>
-
+  <div class="bg-white py-3">
+    <div class="container py-5" id="verify-certificate">
+      <div class="row" id="card_wrap"></div>
+    </div>
+  </div>
   <div>
     <button type="button" onclick="getAllCertificates()">
       Get My certificates
@@ -100,26 +95,57 @@
     headlessHash
   ) {
     return (
-      "<div >" +
-      '            <span style="width: 100px;">Exam Name</span>:<span style="width: 100px;">' +
+      '<div class="col-lg-4 col-md-4">' +
+      '            		<div class="card">' +
+      '              			<div class="card-body">' +
+      '							<ul class="list-group list-group-flush">' +
+      '								<li class="list-group-item"><span>Exam Name :' +
       examName +
-      "</span><br>" +
-      '            <span style="width: 100px;">Marks Obtained</span>:<span style="width: 100px;">' +
+      "</span> </li>" +
+      '								<li class="list-group-item"><span>Marks Obtained :' +
       marks +
-      "</span><br>" +
-      '            <span style="width: 100px;">Total Questions</span>:<span style="width: 100px;">' +
+      "</span> </li>" +
+      '                                <li class="list-group-item"><span>Total Questions :' +
       total +
-      "</span><br>" +
-      '            <span style="width: 100px;">Date</span>:<span style="width: 100px;">' +
+      "</span> </li>" +
+      '                                <li class="list-group-item"><span>Date :' +
       new Date(parseFloat(date)) +
-      "</span><br>" +
-      '            <span style="width: 100px;">Certificate</span>:<span style="width: 100px;">' +
+      "</span> </li>" +
+      '                                <li class="list-group-item"><span>Certificate :' +
       clientHash +
-      "</span><br>" +
-      '            <span style="width: 100px;">Document</span>:<span style="width: 100px;">' +
+      "</span> </li>" +
+      '                                <li class="list-group-item"><span>Document :' +
       headlessHash +
-      "</span>" +
-      "      </div><br>"
+      "</span> </li>" +
+      "          					</ul>                            " +
+      '                            <p class="social-sharing mt-3 mb-0 float-right">Share on : ' +
+      '                                <a class="social-fb" href="#"><i class="fa fa-facebook social"></i></a>' +
+      '                                <a class="social-tw" href="#"><i class="fa fa-twitter social"></i></a>' +
+      "							</p>" +
+      "						</div>" +
+      "					</div>" +
+      "				</div>"
+
+      // "<div >" +
+      // '            <span style="width: 100px;">Exam Name</span>:<span style="width: 100px;">' +
+      // examName +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Marks Obtained</span>:<span style="width: 100px;">' +
+      // marks +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Total Questions</span>:<span style="width: 100px;">' +
+      // total +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Date</span>:<span style="width: 100px;">' +
+      // new Date(parseFloat(date)) +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Certificate</span>:<span style="width: 100px;">' +
+      // clientHash +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Document</span>:<span style="width: 100px;">' +
+      // headlessHash +
+      // "</span>" +
+      // "      </div><br>"
     );
   }
 
