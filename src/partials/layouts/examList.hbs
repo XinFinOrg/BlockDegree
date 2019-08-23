@@ -33,21 +33,23 @@
               <input type="text" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName">
               <button type="button" onclick="checkCode({{this.type}},{{this.price}})">Apply Code</button>
             </div>-->
-			
-			<div class="promoCode-block">
-				<div class="input-group mb-3">
-					<input type="text" class="form-control" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName">
-					<div class="input-group-append">
-						<button type="button" class="btn btn-dark" onclick="checkCode({{this.type}},{{this.price}})">Apply</button>
-					</div>
-				</div>
-			</div>
-			
-            <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body btn-light mb-3" data-price="{{this.price}}"
-              id="{{this.type}}">
+
+            <div class="promoCode-block" id="{{this.type}}PromoCodeBlock">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="codeName" placeholder="promo-code (optional)"
+                  id="{{this.type}}codeName">
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-dark"
+                    onclick="checkCode({{this.type}},{{this.price}})">Apply</button>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body btn-light mb-3"
+              data-price="{{this.price}}" id="{{this.type}}">
               ENROLL
             </button>
-			<div class="promoCode-btn">*Apply promo code</div>
+            <div class="promoCode-btn" id="{{this.type}}PromoCodeBtn">*Apply promo code</div>
             {{/if}}
 
           </div>
@@ -78,6 +80,7 @@
     const codeName = document.getElementById(course_id.id + "codeName").value;
     console.log(course_id.id + "codeName");
     console.log(codeName);
+    $(`#${course_id.id}`).attr("disabled", true);
     $.ajax({
       url: "/pay",
       method: 'post',
@@ -103,7 +106,7 @@
       success: (result) => {
         console.log(result);
         if (result.error == null) {
-          const finalAmt = parseFloat(price) - parseFloat(result.discAmt);
+          const finalAmt = Math.round((parseFloat(price) - parseFloat(result.discAmt)) * 100) / 100;
           if (finalAmt < 0) {
             // free course
             document.getElementById(course_id.id + "curr_price").innerHTML = "$0";

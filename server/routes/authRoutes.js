@@ -156,7 +156,11 @@ module.exports = app => {
           }
           console.log(`User ${user.email} logged in.`);
           var url = req.session.redirectTo || "/";
-          if (url == "/login" || url == "/exam-result") {
+          if (
+            url == "/login" ||
+            url == "/exam-result" ||
+            url.startsWith("/api")
+          ) {
             url = "/";
           }
           // res.send({status:user,info:"msg"})
@@ -182,7 +186,11 @@ module.exports = app => {
           }
           console.log(`User ${user.email} logged in.`);
           var url = req.session.redirectTo || "/";
-          if (url == "/login" || url == "/exam-result") {
+          if (
+            url == "/login" ||
+            url == "/exam-result" ||
+            url.startsWith("/api")
+          ) {
             url = "/";
           }
           res.redirect(url);
@@ -209,7 +217,11 @@ module.exports = app => {
             return res.redirect("/closeCallback");
           }
           var url = req.session.redirectTo || "/";
-          if (url == "/login" || url == "/exam-result") {
+          if (
+            url == "/login" ||
+            url == "/exam-result" ||
+            url.startsWith("/api")
+          ) {
             url = "/";
           }
           res.redirect(url);
@@ -236,7 +248,11 @@ module.exports = app => {
             return res.redirect("/closeCallback");
           }
           var url = req.session.redirectTo || "/";
-          if (url == "/login" || url == "/exam-result") {
+          if (
+            url == "/login" ||
+            url == "/exam-result" ||
+            url.startsWith("/api")
+          ) {
             url = "/";
           }
           res.redirect(url);
@@ -264,5 +280,30 @@ module.exports = app => {
       googleAuth: user.auth.google.id != "",
       linkedinAuth: user.auth.linkedin.id != ""
     });
+  });
+
+  app.get("/api/isNameRegistered", requireLogin, async (req, res) => {
+    const user = await User.findOne({ email: req.user.email }).catch(e =>
+      console.error(
+        `Exception while looking up the user:${req.user.email} err : ${e}`
+      )
+    );
+    if (user) {
+      console.log(user.name != undefined && user.name != "");
+      res.json({ isSet: user.name != undefined && user.name != "" });
+    }
+  });
+
+  app.post("/api/setName", requireLogin, async (req, res) => {
+    const user = await User.findOne({ email: req.user.email }).catch(e => {
+      console.error(`Error : ${e}`);
+      return res.json({ msg: `error : ${e}` });
+    });
+    if (user == null) {
+      return res.json({ msg: `no such user` });
+    }
+    user.name = req.body.fullName;
+    await user.save();
+    res.json({ msg: `Name set: ${req.body.fullName}` });
   });
 };

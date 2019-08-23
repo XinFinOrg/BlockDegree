@@ -1,20 +1,24 @@
 var paypal = require("paypal-rest-sdk");
 var cors = require("cors");
 
-
+require("dotenv").config();
 const requireLogin = require("../middleware/requireLogin");
 const paymentService = require("../services/payment");
-paypal.configure({
-  mode: "sandbox", //sandbox or live
-  client_id: process.env.PAYPAL_CLIENT_ID_SANDBOX,
-  client_secret: process.env.PAYPAL_CLIENT_SECRET_SANDBOX
-});
-
-// paypal.configure({
-//   mode: "live", //sandbox or live
-//   client_id: process.env.PAYPAL_CLIENT_ID_LIVE,
-//   client_secret: process.env.PAYPAL_CLIENT_SECRET_LIVE
-// });
+let paymentConfig = {};
+if (process.env.PAYMENT == "live") {
+  paymentConfig = {
+    mode: "live", //sandbox or live
+    client_id: process.env.PAYPAL_CLIENT_ID_LIVE,
+    client_secret: process.env.PAYPAL_CLIENT_SECRET_LIVE
+  };
+} else if (process.env.PAYMENT == "sandbox") {
+  paymentConfig = {
+    mode: "sandbox", //sandbox or live
+    client_id: process.env.PAYPAL_CLIENT_ID_SANDBOX,
+    client_secret: process.env.PAYPAL_CLIENT_SECRET_SANDBOX
+  };
+}
+paypal.configure(paymentConfig);
 
 module.exports = function(app) {
   // What is this endpoint for ?

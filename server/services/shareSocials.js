@@ -85,11 +85,11 @@ exports.postTwitter = async (req, res) => {
     files.forEach(async file => {
       var localPath = "tmp/" + file.path + ".png";
       imgHTML = file.content.toString("utf-8");
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
       const page = await browser.newPage();
       await page.setViewport({
-        width: 960,
-        height: 760,
+        width: 800,
+        height: 600,
         deviceScaleFactor: 1
       });
       await page.setContent(imgHTML);
@@ -158,7 +158,7 @@ exports.postLinkedin = async (req, res) => {
   let fullURL = "";
   let shortURL = "";
   if (process.env.IPFS_NETWORK == "local") {
-    fullURL = `http://localhost:3000/ipfs/${hash}`;
+    fullURL = `http://localhost:8081/ipfs/${hash}`;
   } else if (process.env.IPFS_NETWORK == "xinfin") {
     fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
   }

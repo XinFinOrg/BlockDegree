@@ -1,38 +1,277 @@
 {{#> base}}
-  {{> layouts/base title="Verify certification"}}
+{{> layouts/base title="Verify certification"}}
 
-  {{#*inline "body-block"}}
-  {{> includes/hero hero-title="Verify certification" hero-copy="Boost your credentials with our blockchain certification"}}
+{{#*inline "body-block"}}
+{{> includes/hero hero-title="Verify certification" hero-copy="Boost your credentials with our blockchain certification"}}
 
-	<div class="bg-white py-3">
-		<div class="container py-5" id="verify-certificate">
-			<div class="row">
-				
-                <div class="col-lg-4 col-md-4">
-            		<div class="card">
-              			<div class="card-body">
-							<ul class="list-group list-group-flush">
-								<li class="list-group-item"><span>Exam Name :</span> </li>
-								<li class="list-group-item"><span>Marks Obtained :</span> </li>
-                                <li class="list-group-item"><span>Total Questions :</span> </li>
-                                <li class="list-group-item"><span>Date :</span> </li>
-                                <li class="list-group-item"><span>Certificate :</span> </li>
-                                <li class="list-group-item"><span>Document :</span> </li>
-          					</ul>                            
-                            <p class="social-sharing mt-3 mb-0 float-right">Share on : 
-                                <a class="social-fb" href="#"><i class="fa fa-facebook social"></i></a>
-                                <a class="social-tw" href="#"><i class="fa fa-twitter social"></i></a>
-							</p>
-						</div>
-					</div>
-				</div>
-                
-                
+<div>
+  <input
+    type="text"
+    id="certiHash"
+    placeholder="Enter the hash to open certificate"
+  />
+  <button type="button" onclick="openCertiByHash()">Open Certificate</button>
+  <a href="" style="display: none" target="_blank" id="openCerti"></a>
+  <p id="setName"></p>
+  <div class="bg-white py-3">
+    <div class="container py-5" id="verify-certificate">
+      <div class="row" id="card_wrap"></div>
+    </div>
+  </div>
+  <div>
+    <button type="button" onclick="getAllCertificates()">
+      Get My certificates
+    </button>
+  </div>
+  <br />
+</div>
 
-			</div>
-		</div>
-	</div>
+{{/inline}}
 
-    {{/inline}}
+{{#*inline "scripts-block"}}
+
+{{/inline}}
 
 {{/base}}
+
+<script>
+  $(document).ready(() => {
+    $.ajax({
+      method: "post",
+      url: "/api/getAuthStatus",
+      data: {},
+      success: auths => {
+        if (
+          auths.localAuth ||
+          auths.twitterAuth ||
+          auths.facebookAuth ||
+          auths.googleAuth ||
+          auths.linkedinAuth
+        ) {
+          //logged in
+          $.ajax({
+            method: "get",
+            url: "/api/isNameRegistered",
+            success: result => {
+              console.log(result);
+              if (!result.isSet) {
+                document.getElementById("setName").innerHTML =
+                  "<div>" +
+                  '<input type="text" id="fullName" placeholder="Enter Fill Name">' +
+                  '<button type="button" onclick="callSetName()" >Set Name</button>' +
+                  "</div>";
+              }
+            }
+          });
+        } else {
+          return;
+        }
+      }
+    });
+  });
+
+  // let fullNameElement = document.getElementById("fullName");
+  // fullNameElement.onkeyup = () => {
+
+  // }
+  function callSetName() {
+    $.ajax({
+      method: "post",
+      url: "/api/setName",
+      data: { fullName: document.getElementById("fullName").value },
+      success: result => {
+        alert(`Msg : ${result.msg}`);
+        document.location.reload();
+      }
+    });
+  }
+
+  function generateCard(
+    examName,
+    marks,
+    total,
+    date,
+    clientHash,
+    headlessHash
+  ) {
+    return (
+      '<div class="col-lg-4 col-md-4">' +
+      '            		<div class="card">' +
+      '              			<div class="card-body">' +
+      '							<ul class="list-group list-group-flush">' +
+      '								<li class="list-group-item"><span>Exam Name :' +
+      examName +
+      "</span> </li>" +
+      '								<li class="list-group-item"><span>Marks Obtained :' +
+      marks +
+      "</span> </li>" +
+      '                                <li class="list-group-item"><span>Total Questions :' +
+      total +
+      "</span> </li>" +
+      '                                <li class="list-group-item"><span>Date :' +
+      new Date(parseFloat(date)) +
+      "</span> </li>" +
+      '                                <li class="list-group-item"><span>Certificate :' +
+      clientHash +
+      "</span> </li>" +
+      '                                <li class="list-group-item"><span>Document :' +
+      headlessHash +
+      "</span> </li>" +
+      "          					</ul>                            " +
+      '                            <p class="social-sharing mt-3 mb-0 float-right">Share on : ' +
+      '                                <a class="social-fb" href="#"><i class="fa fa-facebook social"></i></a>' +
+      '                                <a class="social-tw" href="#"><i class="fa fa-twitter social"></i></a>' +
+      "							</p>" +
+      "						</div>" +
+      "					</div>" +
+      "				</div>"
+
+      // "<div >" +
+      // '            <span style="width: 100px;">Exam Name</span>:<span style="width: 100px;">' +
+      // examName +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Marks Obtained</span>:<span style="width: 100px;">' +
+      // marks +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Total Questions</span>:<span style="width: 100px;">' +
+      // total +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Date</span>:<span style="width: 100px;">' +
+      // new Date(parseFloat(date)) +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Certificate</span>:<span style="width: 100px;">' +
+      // clientHash +
+      // "</span><br>" +
+      // '            <span style="width: 100px;">Document</span>:<span style="width: 100px;">' +
+      // headlessHash +
+      // "</span>" +
+      // "      </div><br>"
+    );
+  }
+
+  function openCertiByHash() {
+    let hash = document.getElementById("certiHash").value;
+    let openCerti = document.getElementById("openCerti");
+    let found = false;
+
+    $.ajax({
+      url: "/api/getAuthStatus",
+      method: "post",
+      data: {},
+      success: async auth => {
+        if (
+          auth.twitterAuth ||
+          auth.localAuth ||
+          auth.facebookAuth ||
+          auth.googleAuth ||
+          auth.linkedinAuth
+        ) {
+          // logged in
+          $.ajax({
+            method: "get",
+            url: "/api/getAllCertificates",
+            success: result => {
+              console.log("result");
+              console.log(result);
+              if (result.msg == "ok") {
+                let certificates = result.certificateHash;
+                console.log("Certificates : ");
+                console.log(certificates);
+                if (
+                  certificates != null &&
+                  certificates != "" &&
+                  certificates != undefined
+                ) {
+                  for (let i = 1; i < certificates.length; i++) {
+                    if (
+                      certificates[i].clientHash == hash ||
+                      certificates[i].headlessHash == hash
+                    ) {
+                      console.log(i);
+                      openCerti.setAttribute(
+                        "href",
+                        `https://ipfs-gateway.xinfin.network/${hash}`
+                      );
+                      openCerti.click();
+                      found = true;
+                      return;
+                    }
+                  }
+                  if (!found) {
+                    alert("Given hash is not associated to your account");
+                    openCerti.setAttribute(
+                      "href",
+                      `https://ipfs-gateway.xinfin.network/${hash}`
+                    );
+                    openCerti.click();
+                    return;
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          openCerti.setAttribute(
+            "href",
+            `https://ipfs-gateway.xinfin.network/${hash}`
+          );
+          openCerti.click();
+        }
+      }
+    });
+  }
+
+  function getAllCertificates() {
+    let card_wrap = document.getElementById("card_wrap");
+    let retHTML = "";
+    console.log("called");
+    $.ajax({
+      url: "/api/getAuthStatus",
+      method: "post",
+      data: {},
+      success: async auth => {
+        if (
+          auth.twitterAuth ||
+          auth.localAuth ||
+          auth.facebookAuth ||
+          auth.googleAuth ||
+          auth.linkedinAuth
+        ) {
+          // is logged in
+          $.ajax({
+            method: "get",
+            url: "/api/getAllCertificates",
+            success: result => {
+              console.log("result");
+              console.log(result);
+              if (result.msg == "ok") {
+                let allCerti = result.certificateHash;
+                for (let i = 1; i < allCerti.length; i++) {
+                  let currCerti = allCerti[i];
+                  // console.log(currCerti);
+                  retHTML += generateCard(
+                    currCerti.examType,
+                    currCerti.marks,
+                    currCerti.total,
+                    currCerti.timestamp,
+                    currCerti.clientHash,
+                    currCerti.headlessHash
+                  );
+                  console.log(retHTML);
+                }
+                card_wrap.innerHTML = retHTML;
+              } else {
+                return alert(
+                  `Error while fetching certificates: ${result.msg}`
+                );
+              }
+            }
+          });
+        } else {
+          alert("Please login !");
+          exit();
+        }
+      }
+    });
+  }
+</script>

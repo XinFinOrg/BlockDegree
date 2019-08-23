@@ -1,9 +1,9 @@
 // slick carousel
-if(typeof jQuery != 'undefined') {
+if (typeof jQuery != "undefined") {
   $(document).ready(function() {
-    $('.contributors__carousel').slick({
+    $(".contributors__carousel").slick({
       infinite: true,
-	  slidesToShow: 4,
+      slidesToShow: 4,
       slidesToScroll: 1,
       autoplay: true,
       autoplaySpeed: 2000,
@@ -23,6 +23,36 @@ if(typeof jQuery != 'undefined') {
           }
         }
       ]
+    });
+
+    $.ajax({
+      method: "post",
+      url: "/api/getAuthStatus",
+      data: {},
+      success: auths => {
+        if (
+          auths.localAuth ||
+          auths.twitterAuth ||
+          auths.facebookAuth ||
+          auths.googleAuth ||
+          auths.linkedinAuth
+        ) {
+          //logged in
+          $.ajax({
+            method: "get",
+            url: "/api/isNameRegistered",
+            success: result => {
+              console.log(result);
+              if (!result.isSet) {
+                alert("Name is not set, please set your name!");
+                document.location.href = `/verify-certification`;
+              }
+            }
+          });
+        } else {
+          return;
+        }
+      }
     });
   });
 }

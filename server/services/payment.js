@@ -112,6 +112,8 @@ exports.payPaypal = async (req, res) => {
     price = price - discObj.discAmt;
   }
   console.log(`Price After : ${price}`);
+  price = Math.round(parseFloat(price) * 100) / 100;
+  console.log(`Price : ${price}`);
   const user = await User.findOne({ email: email }, function(err) {
     if (err != null) {
       console.error(`Can't find user | access db; Err : ${err}`);
