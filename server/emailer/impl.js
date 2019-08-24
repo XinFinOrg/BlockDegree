@@ -44,8 +44,7 @@ module.exports = {
         subject: "Login",
         text:
           "Hello,\n\n" +
-          "Please verify your account by clicking the link: \nhttp://" +
-          req.headers.host +
+          "Please verify your account by clicking the link: \nhttps://www.blockdegree.org" +
           "/confirmation/?token=" +
           token.token +
           ".\n"
