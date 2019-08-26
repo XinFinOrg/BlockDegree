@@ -147,7 +147,7 @@ $(document).ready(function() {
 
 
 
-    //------- Header Scroll Class  js --------//
+    //------- Header Scroll Class js --------//
 
     $(window).scroll(function() {
         if ($(this).scrollTop() > 50) {
@@ -156,6 +156,17 @@ $(document).ready(function() {
             $('#header').removeClass('header-scrolled');
         }
     });
+	
+
+    //------- Header Scroll Mobile nav toggle i Class js --------//
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+            $('#mobile-nav-toggle i').addClass('scrolled-mobile-nav-toggle');
+        } else {
+            $('#mobile-nav-toggle i').removeClass('scrolled-mobile-nav-toggle');
+        }
+    });
+	
 
     //------- Mailchimp js --------//
     $('#mc_embed_signup').find('form').ajaxChimp();
