@@ -236,6 +236,10 @@
 .logo-dark {display: none;}
 .header-scrolled .logo-dark {display: block;}
 .header-scrolled .logo-white {display: none;}
+
+.scrolled-mobile-nav-toggle {
+  color: #222!important;
+}
 /*-- Scrolled Nav css --*/
 
 
@@ -310,12 +314,12 @@
 }
 
 #mobile-nav-toggle i {
-  color: $text-color;
+  color: #FFFFFF;
   font-weight: 900;
 }
 
 .mobile-nav-active #mobile-nav-toggle i {
-  color: white;
+  color: white!important;
 }
 
 @media (max-width: 960px) {

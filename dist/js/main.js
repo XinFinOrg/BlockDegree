@@ -136,6 +136,9 @@ $(document).ready(function() {
     }
   });
 
+
+    //------- Header Scroll Class js --------//
+
   $(document).ready(function() {
     $("html, body").hide();
 
@@ -157,6 +160,7 @@ $(document).ready(function() {
     }
   });
 
+
     $(window).scroll(function() {
         if ($(this).scrollTop() > 50) {
             $('#header').addClass('header-scrolled');
@@ -164,7 +168,21 @@ $(document).ready(function() {
             $('#header').removeClass('header-scrolled');
         }
     });
+
+	
+
+    //------- Header Scroll Mobile nav toggle i Class js --------//
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+            $('#mobile-nav-toggle i').addClass('scrolled-mobile-nav-toggle');
+        } else {
+            $('#mobile-nav-toggle i').removeClass('scrolled-mobile-nav-toggle');
+        }
+    });
+	
+
   //------- Header Scroll Class  js --------//
+
 
   //------- Mailchimp js --------//
   $("#mc_embed_signup")
