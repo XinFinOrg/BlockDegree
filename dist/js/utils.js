@@ -36,13 +36,13 @@ function submitForm(form) {
   let formData = {};
   if (form[0].id === "form-fp") {
     formData.email = $("#fp-email").val();
-  }if (form[0].id === "form-register") {
-    (formData.firstName = $("input[name=firstName]").val()),
-    (formData.lastName = $("input[name=lastName]").val()),
-    (formData.email = $("input[name=email]").val()),
-    (formData.password = $("input[name=password]").val());
   }
-  else {
+  if (form[0].id === "form-register") {
+    (formData.firstName = $("input[name=firstName]").val()),
+      (formData.lastName = $("input[name=lastName]").val()),
+      (formData.email = $("input[name=email]").val()),
+      (formData.password = $("input[name=password]").val());
+  } else {
     (formData.email = $("input[name=email]").val()),
       (formData.password = $("input[name=password]").val());
   }
@@ -80,6 +80,8 @@ function submitForm(form) {
           form.email.value = "";
           form.password.value = "";
           form.cfmPw.value = "";
+          form.lastName.value = "";
+          form.firstName.value = "";
         } else {
           localStorage.setItem("hasUser", true);
           localStorage.setItem("email", $("input[name=email]").val());
