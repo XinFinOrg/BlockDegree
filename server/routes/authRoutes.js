@@ -72,8 +72,8 @@ module.exports = app => {
     User.findOne({ email: req.body.email }).then(result => {
       if (result == null || result.auth.local.password == "") {
         res.send("User not found");
-      } else if (result.auth.local.password == null) {
-        res.send("Password");
+      } else if (result.auth.local.password == null || result.auth.local.password == "") {
+        res.send("Hmm, looks like you are signed in with a social account.");
       } else {
         emailer.forgotPasswordMailer(
           result.email,
