@@ -84,18 +84,19 @@ exports.getByLastActiveDay = async (req, res) => {
   res.status(200).json(retTimestamp);
 };
 
-exports.getMostActive = async (req, res) => {
-  const timeWindow = req.body.days * (1000 * 3600 * 24);
-  const users = await User.find({});
-  let retUser = [];
-  users.forEach(async user => {
-    if (parseFloat(user.lastActive) - parseFloat(user.created) <= timeWindow) {
-      // active-ness falls in the window range
-      retUser.push({
-        email: user.email,
-        time: parseFloat(user.lastActive) - parseFloat(user.created)
-      });
-    }
-  });
-  res.status(200).json(retUser);
-};
+// exports.getMostActive = async (req, res) => {
+//   const timeWindow = req.body.days * (1000 * 3600 * 24);
+//   const users = await User.find({});
+//   const today = new Date();
+//   let retUser = [];
+//   users.forEach(async user => {
+//     if (parseFloat(today.getTime()) - parseFloat(user.lastActive()) <= timeWindow) {
+//       // active-ness falls in the window range
+//       retUser.push({
+//         email: user.email,
+//         time: parseFloat(user.lastActive) - parseFloat(user.created)
+//       });
+//     }
+//   });
+//   res.status(200).json(retUser);
+// };

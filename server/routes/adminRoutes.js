@@ -59,10 +59,10 @@ module.exports = app => {
     userStatsService.getByLastActiveDay
   );
 
-  app.post(
-    "/admin/getMostActive",
-    requireLogin,
-    requrieAdmin,
-    userStatsService.getMostActive
-  );
+  // app.post(
+  //   "/admin/getMostActive",
+  //   requireLogin,
+  //   requrieAdmin,
+  //   userStatsService.getMostActive
+  // );
 };

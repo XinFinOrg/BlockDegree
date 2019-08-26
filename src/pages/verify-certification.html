@@ -30,6 +30,7 @@
               </div>
 		</div>
 	</div>
+
 </div>
 
 
@@ -137,33 +138,33 @@
     headlessHash
   ) {
     return (
-      '<div class="col-lg-4 col-md-4">' +
+      '<div class="col-lg-6 col-md-6">' +
       '            		<div class="card">' +
       '              			<div class="card-body">' +
       '							<ul class="list-group list-group-flush">' +
-      '								<li class="list-group-item"><span>Exam Name :' +
+      '								<li class="list-group-item"><span>Exam Name : ' +
       examName +
       "</span> </li>" +
-      '								<li class="list-group-item"><span>Marks Obtained :' +
+      '								<li class="list-group-item"><span>Marks Obtained : ' +
       marks +
       "</span> </li>" +
-      '                                <li class="list-group-item"><span>Total Questions :' +
+      '                                <li class="list-group-item"><span>Total Questions : ' +
       total +
       "</span> </li>" +
-      '                                <li class="list-group-item"><span>Date :' +
+      '                                <li class="list-group-item"><span>Date : ' +
       new Date(parseFloat(date)) +
       "</span> </li>" +
-      '                                <li class="list-group-item"><span>Certificate :' +
+      '                                <li class="list-group-item"><span>Certificate : ' +
       clientHash +
       "</span> </li>" +
-      '                                <li class="list-group-item"><span>Document :' +
+      '                                <li class="list-group-item"><span>Document : ' +
       headlessHash +
       "</span> </li>" +
       "          					</ul>                            " +
-      '                            <p class="social-sharing mt-3 mb-0 float-right">Share on : ' +
-      '                                <a class="social-fb" href="#"><i class="fa fa-facebook social"></i></a>' +
-      '                                <a class="social-tw" href="#"><i class="fa fa-twitter social"></i></a>' +
-      "							</p>" +
+      // '                            <p class="social-sharing mt-3 mb-0 float-right">Share on : ' +
+      // '                                <a class="social-fb" href="#"><i class="fa fa-linkedin social"></i></a>' +
+      // '                                <a class="social-tw" href="#"><i class="fa fa-twitter social"></i></a>' +
+      // "							</p>" +
       "						</div>" +
       "					</div>" +
       "				</div>"
@@ -265,6 +266,7 @@
 
   function getAllCertificates() {
     let card_wrap = document.getElementById("card_wrap");
+    document.getElementById("card_wrapping_container").style = "display:block";
     let retHTML = "";
     console.log("called");
     $.ajax({
@@ -299,7 +301,6 @@
                     currCerti.clientHash,
                     currCerti.headlessHash
                   );
-                  console.log(retHTML);
                 }
                 card_wrap.innerHTML = retHTML;
               } else {
@@ -310,6 +311,8 @@
             }
           });
         } else {
+          document.getElementById("card_wrapping_container").style =
+            "display:none";
           alert("Please login !");
           exit();
         }

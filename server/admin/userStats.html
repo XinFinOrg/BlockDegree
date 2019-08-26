@@ -31,7 +31,7 @@
       </button>
     </div>
 
-    <div>
+    <!-- <div>
       <input
         type="number"
         id="days_most_active"
@@ -40,7 +40,7 @@
       <button type="button" onclick="getUserLastNActive()">
         Active N Days Window
       </button>
-    </div>
+    </div> -->
 
     <div>
       <p id="mainTable"></p>
@@ -109,25 +109,25 @@
       });
     }
 
-    function getMostActive() {
-      document.getElementById("mainTable").innerHTML = "";
-      $.ajax({
-        method: "post",
-        url: "/api/getMostActive",
-        data: { days: document.getElementById("days_most_active").value },
-        success: result => {
-          console.log(result);
-          let retHTML = '<table style="width:100%">';
-          retHTML += "<tr><th>EMAIL</th><th>LAST ACTIVE WINDOW</th></tr>";
-          for (let i = 0; i < result.length; i++) {
-            retHTML += `<tr><td>${result[i].email}</td><td>${
-              result[i].time
-            }</td></tr>`;
-          }
-          retHTML += "</table> ";
-          document.getElementById("mainTable").innerHTML = retHTML;
-        }
-      });
-    }
+    // function getMostActive() {
+    //   document.getElementById("mainTable").innerHTML = "";
+    //   $.ajax({
+    //     method: "post",
+    //     url: "/api/getMostActive",
+    //     data: { days: document.getElementById("days_most_active").value },
+    //     success: result => {
+    //       console.log(result);
+    //       let retHTML = '<table style="width:100%">';
+    //       retHTML += "<tr><th>EMAIL</th><th>LAST ACTIVE WINDOW</th></tr>";
+    //       for (let i = 0; i < result.length; i++) {
+    //         retHTML += `<tr><td>${result[i].email}</td><td>${
+    //           result[i].time
+    //         }</td></tr>`;
+    //       }
+    //       retHTML += "</table> ";
+    //       document.getElementById("mainTable").innerHTML = retHTML;
+    //     }
+    //   });
+    // }
   </script>
 </html>
