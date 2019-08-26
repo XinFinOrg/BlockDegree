@@ -71,7 +71,7 @@ module.exports = {
           "Hello,\n\n" +
           "Your payment is completed for " +
           courseName +
-          ` : \n${process.env.HOST}/` +
+          ` : \nhttps://www.blockdegree.org/` +
           courseName +
           ".\n"
       };
@@ -94,7 +94,7 @@ module.exports = {
   forgotPasswordMailer: function(mail, token, res) {
     console.log("mail", mail);
     return new Promise(function(resolve, reject) {
-      var link = `${process.env.HOST}/resetPassword?&email=` + token;
+      var link = `https://www.blockdegree.org/resetPassword?&email=` + token;
       var mailOptions = {
         from: "info@blockdegree.org",
         to: mail,
