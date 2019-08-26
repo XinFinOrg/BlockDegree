@@ -53,10 +53,8 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(request[index]) + 1 ==
                 result.questionsBasic[index].answer
               ) {
-                // marks++;
+                marks++;
               }
-              // Cheatcode activated
-              marks++;
             }
             attempts += 1;
             User.findOneAndUpdate(
@@ -116,10 +114,8 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(req.body[index]) + 1 ==
                 result.questionsAdvanced[index].answer
               ) {
-                // marks++;
+                marks++;
               }
-              //Cheatcode activated
-              marks++;
             }
             attemptsAdvanced += 1;
             console.log("Marks", marks);
@@ -174,10 +170,8 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(request[index]) + 1 ==
                 result.questionsProfessional[index].answer
               ) {
-                // marks++;
-              }
-              // Cheatcode activated
-              marks++;
+                marks++;
+              }                          
             }
             attemptsProfessional += 1;
             console.log("Marks", marks);
@@ -233,7 +227,7 @@ exports.getBasicExam = (req, res) => {
       if (err) {
         throw err;
       }
-      json = scrambleQuestions(json);
+      // json = scrambleQuestions(json);
       console.log("test quetions basic:", json);
       res.render("blockchainBasic", json);
     }
@@ -247,7 +241,7 @@ exports.getAdvancedExam = (req, res) => {
       if (err) {
         throw err;
       }
-      json = scrambleQuestions(json);
+      // json = scrambleQuestions(json);
       console.log("test quetions advanced:", json);
       res.render("blockchainAdvanced", json);
     }
@@ -263,7 +257,7 @@ exports.getProfessionalExam = (req, res) => {
       if (err) {
         throw err;
       }
-      json = scrambleQuestions(json);
+      // json = scrambleQuestions(json);
       console.log("test quetions professional:", json);
       res.render("blockchainProfessional", json);
     }
@@ -275,7 +269,14 @@ exports.getExamResult = async (req, res) => {
     `called the exam-result endpoint by ${req.user.email} at ${Date.now()}`
   );
   const backUrl = req.header("Referer");
-  var name = req.user.name;
+  let name ="";
+  if (req.user.name=="" || req.user.name==undefined){
+    // old email id.
+    name = req.user.email;
+  }
+  else{
+    name = req.user.name;
+  }
   var query = {};
   query = { email: req.user.email };
   const examName = backUrl.split("/")[3].split("-")[1];
@@ -312,7 +313,7 @@ exports.getExamResult = async (req, res) => {
     percent: percentObtained,
     total: totalQuestions
   };
-  if (percentObtained > 60) {
+  if (percentObtained >= 60) {
     // Yeah!
     examStatus = true;
     let d = new Date();

@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <button type="button" onclick="getUserLastQuater()">
+        Get User Last Quater
+      </button>
+    </div>
+
+    <div>
+      <input
+        type="number"
+        id="days_last_created"
+        placeholder="enter number of days"
+      />
+      <button type="button" onclick="getUsersLastNDays()">
+        Created Last N Days
+      </button>
+    </div>
+
+    <div>
+      <input
+        type="number"
+        id="days_last_active"
+        placeholder="enter number of days"
+      />
+      <button type="button" onclick="getUserLastNActive()">
+        Active Last N Days
+      </button>
+    </div>
+
+    <div>
+      <input
+        type="number"
+        id="days_most_active"
+        placeholder="enter number of days"
+      />
+      <button type="button" onclick="getUserLastNActive()">
+        Active N Days Window
+      </button>
+    </div>
+
+    <div>
+      <p id="mainTable"></p>
+    </div>
+  </body>
+  <script>
+    function getUserLastQuater() {
+      document.getElementById("mainTable").innerHTML = "";
+      $.ajax({
+        method: "get",
+        url: "/api/getUserLastQuater",
+        success: result => {
+          console.log(result);
+          let retHTML = '<table style="width:100%">';
+          retHTML += "<tr><th>EMAIL</th><th>CREATION TIME</th></tr>";
+          for (let i = 0; i < result.length; i++) {
+            retHTML += `<tr><td>${result[i].email}</td><td>${
+              result[i].time
+            }</td></tr>`;
+          }
+          retHTML += "</table> ";
+          document.getElementById("mainTable").innerHTML = retHTML;
+        }
+      });
+    }
+
+    function getUsersLastNDays() {
+      document.getElementById("mainTable").innerHTML = "";
+      $.ajax({
+        method: "post",
+        url: "/api/lastNDaysCreated",
+        data: { days: document.getElementById("days_last_created").value },
+        success: result => {
+          console.log(result);
+          let retHTML = '<table style="width:100%">';
+          retHTML += "<tr><th>EMAIL</th><th>CREATION TIME</th></tr>";
+          for (let i = 0; i < result.length; i++) {
+            retHTML += `<tr><td>${result[i].email}</td><td>${
+              result[i].time
+            }</td></tr>`;
+          }
+          retHTML += "</table> ";
+          document.getElementById("mainTable").innerHTML = retHTML;
+        }
+      });
+    }
+
+    function getUserLastNActive() {
+      document.getElementById("mainTable").innerHTML = "";
+      $.ajax({
+        method: "post",
+        url: "/api/lastNDaysActive",
+        data: { days: document.getElementById("days_last_active").value },
+        success: result => {
+          console.log(result);
+          let retHTML = '<table style="width:100%">';
+          retHTML += "<tr><th>EMAIL</th><th>LAST ACTIVE TIME</th></tr>";
+          for (let i = 0; i < result.length; i++) {
+            retHTML += `<tr><td>${result[i].email}</td><td>${
+              result[i].time
+            }</td></tr>`;
+          }
+          retHTML += "</table> ";
+          document.getElementById("mainTable").innerHTML = retHTML;
+        }
+      });
+    }
+
+    function getMostActive() {
+      document.getElementById("mainTable").innerHTML = "";
+      $.ajax({
+        method: "post",
+        url: "/api/getMostActive",
+        data: { days: document.getElementById("days_most_active").value },
+        success: result => {
+          console.log(result);
+          let retHTML = '<table style="width:100%">';
+          retHTML += "<tr><th>EMAIL</th><th>LAST ACTIVE WINDOW</th></tr>";
+          for (let i = 0; i < result.length; i++) {
+            retHTML += `<tr><td>${result[i].email}</td><td>${
+              result[i].time
+            }</td></tr>`;
+          }
+          retHTML += "</table> ";
+          document.getElementById("mainTable").innerHTML = retHTML;
+        }
+      });
+    }
+  </script>
+</html>
