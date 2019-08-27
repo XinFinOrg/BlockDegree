@@ -11,7 +11,7 @@
       {{#if exam.examBasic }}
       <div class="card py-3 px-5 mb-4">
         <h3 class="mb-3 exam-qns" style="color:#2073D4;">
-          Blockchasin Basic Result
+          Blockchain Basic Result
         </h3>
         <ul>
           <li style="display: flex;flex-direction:column">
@@ -85,7 +85,7 @@
       {{else if exam.examProfessional}}
       <div class="card py-3 px-5 mb-4">
         <h3 class="mb-3 exam-qns">
-          Blockchasin Professional Result
+          Blockchain Professional Result
         </h3>
         <ul>
           <li style="display: flex;flex-direction:column">
@@ -142,6 +142,18 @@
   window.onload = function () {
     checkAuth();
   }
+
+  window.addEventListener(
+    "message",
+    function (event) {
+      console.log(event.origin);
+      if (event.origin == "https://www.blockdegree.org") {
+        console.log("Praise thee Lord!");
+        checkAuth();
+      }
+    },
+    false
+  );
 
   async function downloadImage() {
     console.log("inside download");

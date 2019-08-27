@@ -47,7 +47,7 @@ if (typeof jQuery != "undefined") {
 
       loginForm.on("submit", e => {
         e.preventDefault();
-        if (validEm){
+        if (validEm) {
           new submitForm(loginForm);
         }
       });
@@ -149,8 +149,6 @@ if (typeof jQuery != "undefined") {
         }
         validFN = true;
       };
-
-      
 
       // LastName validation
       lastName.onkeyup = () => {

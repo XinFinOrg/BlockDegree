@@ -353,6 +353,7 @@ module.exports = function(passport) {
         newUser.auth.facebook.id = profile.id;
         newUser.auth.facebook.accessToken = accessToken;
         newUser.auth.facebook.refreshToken = refreshToken || "";
+        newUser.name = profile.displayName;
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();

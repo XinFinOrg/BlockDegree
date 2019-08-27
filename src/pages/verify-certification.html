@@ -4,68 +4,55 @@
 {{#*inline "body-block"}}
 {{> includes/hero hero-title="Verify certification" hero-copy="Boost your credentials with our blockchain certification"}}
 
-	<div class="bg-white py-3">
-  		<div class="container py-5" id="verify-certificate">
-  			<div class="row">
-              <div class="col-lg-6 offset-lg-3 text-center">
-              <div class="input-group mb-3">
-                <input type="text" id="certiHash" class="form-control" placeholder="Enter the hash to open certificate">
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-dark" onclick="openCertiByHash()">Open Certificate</button>
-                </div>
-              </div>
-              <a href="" style="display: none" target="_blank" id="openCerti"></a>
-              
-              <div id="setName"></div>
-              
-              <div class="bg-white py-3" id="card_wrapping_container" style="display: none">
-                <div class="container py-5" id="verify-certificate">
-                  <div class="row" id="card_wrap"></div>
-                </div>
-              </div>
-              <div>
-                <button type="button" class="btn btn-primary text-white" onclick="getAllCertificates()">Get My Certificates</button>
-              </div>
-              <br>
-              </div>
-		</div>
-	</div>
+<div class="bg-white py-3">
+  <div class="container py-5" id="verify-certificate">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-3 text-center">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            id="certiHash"
+            class="form-control"
+            placeholder="Enter the hash to open certificate"
+          />
+          <div class="input-group-append">
+            <button
+              type="button"
+              class="btn btn-dark"
+              onclick="openCertiByHash()"
+            >
+              Open Certificate
+            </button>
+          </div>
+        </div>
+        <a href="" style="display: none" target="_blank" id="openCerti"></a>
 
+        <div id="setName"></div>
+
+        <div
+          class="bg-white py-3"
+          id="card_wrapping_container"
+          style="display: none"
+        >
+          <div class="container py-5" id="verify-certificate">
+            <div class="row" id="card_wrap"></div>
+          </div>
+        </div>
+        <div>
+          <button
+            type="button"
+            class="btn btn-primary text-white"
+            onclick="getAllCertificates()"
+          >
+            Get My Certificates
+          </button>
+        </div>
+        <br />
+      </div>
+    </div>
+  </div>
 </div>
-
-
-
-
-	<div class="bg-white py-3">
-  		<div class="container py-5" id="verify-certificate">
-  			<div class="row">
-  				
-                  <div class="col-lg-4 col-md-4">
-              		<div class="card">
-                			<div class="card-body">
-  							<ul class="list-group list-group-flush">
-  								<li class="list-group-item"><span>Exam Name :</span> </li>
-  								<li class="list-group-item"><span>Marks Obtained :</span> </li>
-                                  <li class="list-group-item"><span>Total Questions :</span> </li>
-                                  <li class="list-group-item"><span>Date :</span> </li>
-                                  <li class="list-group-item"><span>Certificate :</span> </li>
-                                  <li class="list-group-item"><span>Document :</span> </li>
-            					</ul>                            
-                              <p class="social-sharing mt-3 mb-0 float-right">Share on : 
-                                  <a class="social-fb" href="#"><i class="fa fa-facebook social"></i></a>
-                                  <a class="social-tw" href="#"><i class="fa fa-twitter social"></i></a>
-  							</p>
-  						</div>
-  					</div>
-  				</div>
-                  
-                  
-  
-  			</div>
-  		</div>
-  	</div>
-    
-    
+</div>
 
 {{/inline}}
 
@@ -100,8 +87,8 @@
                   "<div class='input-group mb-3'>" +
                   '<input type="text" class="form-control" id="fullName" placeholder="Enter Fill Name">' +
                   "<div class='input-group-append'>" +
-				  '<button type="button" class="btn btn-dark" onclick="callSetName()" >Set Name</button>' +
-				  "</div>" +
+                  '<button type="button" class="btn btn-dark" onclick="callSetName()" >Set Name</button>' +
+                  "</div>" +
                   "</div>";
               }
             }
