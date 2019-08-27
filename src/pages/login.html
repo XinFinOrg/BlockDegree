@@ -12,7 +12,10 @@
           <a href="auth/facebook" class="btn btn-primary btn-lg btn-block"
             ><i class="fa fa-facebook"></i> Login with <b>Facebook</b></a
           >
-          <button onclick="handleAuthTwitter()" class="btn btn-info btn-lg btn-block">
+          <button
+            onclick="handleAuthTwitter()"
+            class="btn btn-info btn-lg btn-block"
+          >
             <i class="fa fa-twitter"></i> Login with <b>Twitter</b>
           </button>
           <a href="auth/linkedin" class="btn btn-linkedin btn-lg btn-block"
@@ -89,8 +92,15 @@
   window.onload = function() {
     checkAuth();
   };
-   function handleAuthTwitter() {
-    let win = window.open("https://www.blockdegree.org/auth/twitter?close=true", 'newwin', 'height=600px,width=600px');
+  function handleAuthTwitter() {
+    let win = window.open(
+      "https://www.blockdegree.org/auth/twitter?close=true",
+      "newwin",
+      "height=600px,width=600px"
+    );
+    win.onclose = () => {
+      document.location.reload();
+    }
   }
   function checkAuth() {
     console.log("called");
