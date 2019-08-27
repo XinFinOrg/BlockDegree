@@ -85,11 +85,9 @@ if (typeof jQuery != "undefined") {
         }
       }
 
-      if (cfmPw) {
-        cfmPw.addEventListener("input", e => {
-          validatePw();
-        });
-      }
+      cfmPw.addEventListener("input", e => {
+        validatePw();
+      });
 
       // PWD validation
       pw.onkeyup = () => {
@@ -127,60 +125,56 @@ if (typeof jQuery != "undefined") {
       };
 
       // FirstName validation
-      if (firstName) {
-        firstName.onkeyup = () => {
-          fnInfo.innerHTML = "";
-          validFN = false;
-          let onlyWhiteSpace = "^\\s+$";
-          let anyWhitespace = ".*\\s.*";
-          let onlyLetter = "^[a-zA-Z]+$";
-          if (!firstName.value.match(onlyLetter)) {
-            return (fnInfo.innerHTML = "name should consist fo only letters");
-          }
-          if (
-            firstName.value.match(onlyWhiteSpace) ||
-            firstName.value.match(anyWhitespace)
-          ) {
-            // Has a whitespace
-            return (fnInfo.innerHTML = "no space allowed in first-name");
-          }
-          if (firstName.value.length < 2) {
-            return (fnInfo.innerHTML = "name too short");
-          }
-          if (firstName.value.length > 20) {
-            return (fnInfo.innerHTML = "name too long");
-          }
-          validFN = true;
-        };
-      }
+      firstName.onkeyup = () => {
+        fnInfo.innerHTML = "";
+        validFN = false;
+        let onlyWhiteSpace = "^\\s+$";
+        let anyWhitespace = ".*\\s.*";
+        let onlyLetter = "^[a-zA-Z]+$";
+        if (!firstName.value.match(onlyLetter)) {
+          return (fnInfo.innerHTML = "name should consist fo only letters");
+        }
+        if (
+          firstName.value.match(onlyWhiteSpace) ||
+          firstName.value.match(anyWhitespace)
+        ) {
+          // Has a whitespace
+          return (fnInfo.innerHTML = "no space allowed in first-name");
+        }
+        if (firstName.value.length < 2) {
+          return (fnInfo.innerHTML = "name too short");
+        }
+        if (firstName.value.length > 20) {
+          return (fnInfo.innerHTML = "name too long");
+        }
+        validFN = true;
+      };
 
       // LastName validation
-      if (lastName) {
-        lastName.onkeyup = () => {
-          lnInfo.innerHTML = "";
-          validLN = false;
-          let onlyWhiteSpace = "^\\s+$";
-          let anyWhitespace = ".*\\s.*";
-          let onlyLetter = "^[a-zA-Z]+$";
-          if (!lastName.value.match(onlyLetter)) {
-            return (lnInfo.innerHTML = "name should consist fo only letters");
-          }
-          if (
-            lastName.value.match(onlyWhiteSpace) ||
-            lastName.value.match(anyWhitespace)
-          ) {
-            // Has a whitespace
-            return (lnInfo.innerHTML = "no space allowed in last-name");
-          }
-          if (lastName.value.length < 2) {
-            return (lnInfo.innerHTML = "name too short");
-          }
-          if (lastName.value.length > 20) {
-            return (lnInfo.innerHTML = "name too long");
-          }
-          validLN = true;
-        };
-      }
+      lastName.onkeyup = () => {
+        lnInfo.innerHTML = "";
+        validLN = false;
+        let onlyWhiteSpace = "^\\s+$";
+        let anyWhitespace = ".*\\s.*";
+        let onlyLetter = "^[a-zA-Z]+$";
+        if (!lastName.value.match(onlyLetter)) {
+          return (lnInfo.innerHTML = "name should consist fo only letters");
+        }
+        if (
+          lastName.value.match(onlyWhiteSpace) ||
+          lastName.value.match(anyWhitespace)
+        ) {
+          // Has a whitespace
+          return (lnInfo.innerHTML = "no space allowed in last-name");
+        }
+        if (lastName.value.length < 2) {
+          return (lnInfo.innerHTML = "name too short");
+        }
+        if (lastName.value.length > 20) {
+          return (lnInfo.innerHTML = "name too long");
+        }
+        validLN = true;
+      };
 
       pw.addEventListener("input", e => {
         validatePw();
