@@ -104,7 +104,7 @@ module.exports = app => {
     }
   });
 
-  app.post("/updatePassword", (req, res) => {
+  app.post("/updatePassword", async (req, res) => {
     console.log("called update password");
     // console.log(req.url)
     var data = JSON.stringify(req.body);
@@ -118,20 +118,12 @@ module.exports = app => {
       token = params[1];
       userobj = new User();
       hash = userobj.generateHash(dataupdate.password);
-      User.findOneAndUpdate(
-        { "auth.local.password": token },
-        { "auth.local.password": hash },
-        { upsert: false },
-        (err, doc) => {
-          if (err) {
-            console.log("Something went wrong when updating data!", err);
-            res.send({ status: "false", message: info });
-          } else {
-            console.log("All ok!");
-          }
-          res.redirect("/");
-        }
-      );
+      console.log(token);
+      let user = await User.findOne({ "auth.local.password": token });
+      console.log("Found User:  ", user);
+      user.auth.local.password = hash;
+      await user.save();
+      res.redirect("/");
     }
   });
 
