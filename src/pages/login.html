@@ -96,6 +96,7 @@
   window.addEventListener(
     "message",
     function(event) {
+      console.log(event.origin);
       if (event.origin == "https://www.blockdegree.org") {
         console.log("Praise thee Lord!");
         checkAuth();
