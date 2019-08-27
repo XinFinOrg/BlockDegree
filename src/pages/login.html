@@ -93,6 +93,17 @@
     checkAuth();
   };
 
+  window.addEventListener(
+    "message",
+    function(event) {
+      if (event.origin == "https://www.blockdegree.org") {
+        console.log("Praise thee Lord!");
+        checkAuth();
+      }
+    },
+    false
+  );
+
   function handleAuthTwitter() {
     let popup = window.open(
       "https://www.blockdegree.org/auth/twitter?close=true",

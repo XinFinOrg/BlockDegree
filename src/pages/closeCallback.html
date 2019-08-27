@@ -2,7 +2,7 @@
   <script>
     if (window.opener != null && !window.opener.closed) {
       console.log("in window opener !");
-      window.opener.checkAuth();
+      window.opener.postMessage("pepePls", "*");
       open(location, "_self").close();
     }
   </script>
