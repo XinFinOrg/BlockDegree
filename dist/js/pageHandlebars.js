@@ -81,7 +81,7 @@ Handlebars.registerHelper("inc", function(value, options) {
       },
       error: function(err) {
         console.log(err);
-        window.location = "/";
+        // window.location = "/";
       }
     });
   }
