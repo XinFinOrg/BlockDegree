@@ -143,6 +143,18 @@
     checkAuth();
   }
 
+  window.addEventListener(
+    "message",
+    function (event) {
+      console.log(event.origin);
+      if (event.origin == "https://www.blockdegree.org") {
+        console.log("Praise thee Lord!");
+        checkAuth();
+      }
+    },
+    false
+  );
+
   async function downloadImage() {
     console.log("inside download");
     document.getElementById("loading_download").style = "width:30px;height:30px;display:inline";
