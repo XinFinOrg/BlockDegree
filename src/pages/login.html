@@ -12,9 +12,9 @@
           <a href="auth/facebook" class="btn btn-primary btn-lg btn-block"
             ><i class="fa fa-facebook"></i> Login with <b>Facebook</b></a
           >
-          <a href="auth/twitter" class="btn btn-info btn-lg btn-block"
-            ><i class="fa fa-twitter"></i> Login with <b>Twitter</b></a
-          >
+          <button onclick="handleAuthTwitter()" class="btn btn-info btn-lg btn-block">
+            <i class="fa fa-twitter"></i> Login with <b>Twitter</b>
+          </button>
           <a href="auth/linkedin" class="btn btn-linkedin btn-lg btn-block"
             ><i class="fa fa-linkedin"></i> Login with <b>LinkedIn</b></a
           >
@@ -59,7 +59,7 @@
           <div class="pl-2">
             <a href="forgotpassword.html">Forgot Password?</a>
           </div>
-          
+
           <input
             type="submit"
             class="btn btn-primary py-2 mt-2 text-white"
@@ -85,6 +85,40 @@
 {{/inline}}
 
 {{#*inline "scripts-block"}}
+<script>
+  window.onload = function() {
+    checkAuth();
+  };
+   function handleAuthTwitter() {
+    let win = window.open("https://www.blockdegree.org/auth/twitter?close=true", 'newwin', 'height=600px,width=600px');
+  }
+  function checkAuth() {
+    console.log("called");
+    $.ajax({
+      url: "/api/getAuthStatus",
+      method: "post",
+      data: {},
+      success: result => {
+        //   localAuth: user.auth.local.password != "",
+        // twitterAuth: user.auth.twitter.id != "",
+        // facebookAuth: user.auth.facebook.id != "",
+        // googleAuth: user.auth.google.id != "",
+        // linkedinAuth: user.auth.linkedin.id != ""
+        if (
+          result.twitterAuth ||
+          result.googleAuth ||
+          result.localAuth ||
+          result.facebookAuth ||
+          result.linkedinAuth
+        ) {
+          // user is logged in, redirect.
+          location.replace("https://www.blockdegree.org");
+        }
+        // signed in with twitter, show share button
+      }
+    });
+  }
+</script>
 <script src="/js/userAuth.js"></script>
 {{/inline}}
 {{/base}}
