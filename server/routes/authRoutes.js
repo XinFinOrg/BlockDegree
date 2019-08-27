@@ -126,9 +126,8 @@ module.exports = app => {
           if (err) {
             console.log("Something went wrong when updating data!", err);
             res.send({ status: "false", message: info });
-          }
-          else{
-            console.log("All ok!")
+          } else {
+            console.log("All ok!");
           }
           res.redirect("/");
         }
@@ -237,7 +236,7 @@ module.exports = app => {
           ) {
             url = "/";
           }
-          res.redirect(url);
+          res.redirect(req.protocol + "://" + req.get("host") + url);
         });
       }
     )(req, res);

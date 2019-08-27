@@ -4,7 +4,7 @@
       console.log("in window opener !");
       window.opener.checkAuth();
       console.log("called parent func ! ");
-      window.close();
+      open(location, "_self").close();
     }
   </script>
 </html>

@@ -367,7 +367,7 @@ module.exports = function(passport) {
       {
         consumerKey: process.env.TWITTER_CLIENT_ID,
         consumerSecret: process.env.TWITTER_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/twitter/callback",
+        callbackURL: "/auth/twitter/callback",
         includeEmail: true,
         passReqToCallback: true
       },
