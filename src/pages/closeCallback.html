@@ -2,8 +2,7 @@
   <script>
     if (window.opener != null && !window.opener.closed) {
       console.log("in window opener !");
-      parent.window.opener.checkAuth();
-      console.log("called parent func ! ");
+      window.opener.checkAuth();
       open(location, "_self").close();
     }
   </script>

@@ -92,16 +92,15 @@
   window.onload = function() {
     checkAuth();
   };
+
   function handleAuthTwitter() {
-    let win = window.open(
+    let popup = window.open(
       "https://www.blockdegree.org/auth/twitter?close=true",
       "newwin",
       "height=600px,width=600px"
     );
-    win.onclose = () => {
-      document.location.reload();
-    }
   }
+
   function checkAuth() {
     console.log("called");
     $.ajax({
