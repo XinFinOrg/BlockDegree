@@ -6,6 +6,7 @@
 /*-------- start footer Area -------------*/
 
 .footer-area {
+  padding-top: 30px;
   background-color: $bg__footer;
   border-bottom: 1px solid $primary-color;
   border-top: 1px solid #ced4da;
@@ -121,7 +122,9 @@
 }
 
 .footer-bottom{
-    .footer-social{
+    margin-top: 30px;
+	
+	.footer-social{
         text-align: right;
         @media(max-width: 991px){
             text-align:left;
