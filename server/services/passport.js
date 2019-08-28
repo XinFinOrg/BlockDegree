@@ -492,9 +492,9 @@ module.exports = function(passport) {
               email: profile.emails[0].value
             });
             if (linkEmail) {
-              linkEmail.auth.twitter.id = profile.id;
-              linkEmail.auth.twitter.token = token;
-              linkEmail.auth.twitter.tokenSecret = tokenSecret;
+              linkEmail.auth.linkedin.id = profile.id;
+              linkEmail.auth.linkedin.token = token;
+              linkEmail.auth.linkedin.tokenSecret = tokenSecret;
               linkEmail.lastActive = Date.now();
               linkEmail.save();
               return done(null, linkEmail);

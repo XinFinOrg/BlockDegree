@@ -26,14 +26,36 @@
         <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
         <li><a href="/contact" class="py-1">Contact Us</a></li>
         <li id="login-btn">
-          <script id="nav-login" type="text/template">
+          {{!-- <script id="nav-login" type="text/template">
             <a id="userAuth-btn" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"
                href="\{{#if this}}/logout\{{else}}/login\{{/if}}">
               \{{#if this}}Logout\{{else}}Login\{{/if}}
             </a>
-          </script>
+          </script> --}}
+          <a id="nav-login" style="display: none" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">
+          </a>
+        </li>
         </li>
       </ul>
     </nav>
   </div>
 </div>
+
+<script>
+  window.onload = async () => {
+    let loginButton = document.getElementById("nav-login");
+    let resp = await fetch("/api/current_user");
+    let respJSON = await resp.json();
+    if (respJSON.status) {
+      //is logged in
+      loginButton.innerHTML = "Logout"
+      loginButton.setAttribute("href", "/logout");
+      loginButton.style = "display:inline"
+    }
+    else {
+      loginButton.innerHTML = "Login"
+      loginButton.setAttribute("href", "/login");
+      loginButton.style = "display:inline"
+    }
+  }
+</script>
