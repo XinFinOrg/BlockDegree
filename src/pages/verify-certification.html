@@ -25,7 +25,6 @@
             </button>
           </div>
         </div>
-        <a href="" style="display: none" target="_blank" id="openCerti"></a>
 
         <div id="setName"></div>
 
@@ -181,7 +180,6 @@
 
   function openCertiByHash() {
     let hash = document.getElementById("certiHash").value;
-    let openCerti = document.getElementById("openCerti");
     let found = false;
 
     $.ajax({
@@ -217,23 +215,21 @@
                       certificates[i].clientHash == hash ||
                       certificates[i].headlessHash == hash
                     ) {
-                      console.log(i);
-                      openCerti.setAttribute(
-                        "href",
-                        `https://ipfs-gateway.xinfin.network/${hash}`
-                      );
-                      openCerti.click();
-                      found = true;
+                      window.open(
+                        `https://ipfs-gateway.xinfin.network/${hash}`,
+      "newwin",
+      "height=700px,width=900px"
+    );
                       return;
                     }
                   }
                   if (!found) {
                     alert("Given hash is not associated to your account");
-                    openCerti.setAttribute(
-                      "href",
-                      `https://ipfs-gateway.xinfin.network/${hash}`
-                    );
-                    openCerti.click();
+                    window.open(
+                        `https://ipfs-gateway.xinfin.network/${hash}`,
+      "newwin",
+      "height=700px,width=900px"
+    );
                     return;
                   }
                 }
@@ -241,11 +237,11 @@
             }
           });
         } else {
-          openCerti.setAttribute(
-            "href",
-            `https://ipfs-gateway.xinfin.network/${hash}`
-          );
-          openCerti.click();
+          window.open(
+                        `https://ipfs-gateway.xinfin.network/${hash}`,
+      "newwin",
+      "height=700px,width=900px"
+    );
         }
       }
     });
