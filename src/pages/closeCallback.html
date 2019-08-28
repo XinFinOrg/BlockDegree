@@ -2,9 +2,8 @@
   <script>
     if (window.opener != null && !window.opener.closed) {
       console.log("in window opener !");
-      window.opener.checkAuth();
-      console.log("called parent func ! ");
-      window.close();
+      window.opener.postMessage("pepePls", "*");
+      open(location, "_self").close();
     }
   </script>
 </html>

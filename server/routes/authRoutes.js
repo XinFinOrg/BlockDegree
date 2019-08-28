@@ -3,6 +3,8 @@ const emailer = require("../emailer/impl");
 const passport = require("passport");
 const requireLogin = require("../middleware/requireLogin");
 const handleClose = require("../middleware/handleClose");
+const path = require("path");
+const bcrypt = require("bcrypt-nodejs");
 
 module.exports = app => {
   app.get("/logout", function(req, res) {
@@ -87,43 +89,42 @@ module.exports = app => {
     });
   });
 
-  app.post("/resetPassword", (req, res) => {
-    console.log(req.body);
-    User.findOne({
-      where: {
-        email: req.body.email
-      }
-    }).then(result => {
-      if (!bcrypt.compareSync(result.dataValues.uniqueId, req.body.resetId)) {
-        console.log("false");
-      } else {
-        console.log("true");
-        res.render("resetPassword", { email: result.dataValues.email });
-      }
-    });
+  app.get("/resetpassword", async (req, res) => {
+    console.log(req.url);
+    console.log("inside reset password");
+    const token = req.query.email;
+    const user = await User.findOne({ "auth.local.password": token });
+    console.log(user);
+    if (user != null) {
+      // user is found
+      console.log(user);
+      res.sendFile("./resetpassword.html", {
+        root: path.join(__dirname, "../../dist")
+      });
+    }
   });
 
-  app.post("/updatePassword", (req, res) => {
+  app.post("/updatePassword", async (req, res) => {
     console.log("called update password");
+    // console.log(req.url)
     var data = JSON.stringify(req.body);
     var dataupdate = JSON.parse(data);
     console.log(data, dataupdate);
     const backUrl = req.header("Referer");
-    userobj = new User();
-    hash = userobj.generateHash(dataupdate.password);
-    console.log("body:", dataupdate.password, backUrl.email);
-    User.findOneAndUpdate(
-      { "auth.local.password": dataupdate.token },
-      { "auth.local.password": hash },
-      { upsert: false },
-      (err, doc) => {
-        if (err) {
-          console.log("Something went wrong when updating data!", err);
-          res.send({ status: "false", message: info });
-        }
-        res.redirect("/");
-      }
-    );
+    console.log("BackURL:", backUrl);
+    const params = backUrl.split("=");
+    let token;
+    if (params.length > 1) {
+      token = params[1];
+      userobj = new User();
+      hash = userobj.generateHash(dataupdate.password);
+      console.log(token);
+      let user = await User.findOne({ "auth.local.password": token });
+      console.log("Found User:  ", user);
+      user.auth.local.password = hash;
+      await user.save();
+      res.redirect("/");
+    }
   });
 
   app.get(
@@ -227,7 +228,7 @@ module.exports = app => {
           ) {
             url = "/";
           }
-          res.redirect(url);
+          res.redirect(req.protocol + "://" + req.get("host") + url);
         });
       }
     )(req, res);
