@@ -493,8 +493,7 @@ module.exports = function(passport) {
             });
             if (linkEmail) {
               linkEmail.auth.linkedin.id = profile.id;
-              linkEmail.auth.linkedin.token = token;
-              linkEmail.auth.linkedin.tokenSecret = tokenSecret;
+              linkEmail.auth.linkedin.accessToken = accessToken;
               linkEmail.lastActive = Date.now();
               linkEmail.save();
               return done(null, linkEmail);
