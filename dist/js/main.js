@@ -238,21 +238,21 @@ $(document).ready(function() {
     });
   }
 
-  if ($("#userAuth-btn").attr("href") == "/logout") {
-    $("#userAuth-btn").on("click", e => {
-      $.get(e.target.pathname).done(() => {
-        localStorage.setItem("hasUser", false);
-        localStorage.setItem("email", "");
-      });
-    });
+  // if ($("#userAuth-btn").attr("href") == "/logout") {
+  //   $("#userAuth-btn").on("click", e => {
+  //     $.get(e.target.pathname).done(() => {
+  //       localStorage.setItem("hasUser", false);
+  //       localStorage.setItem("email", "");
+  //     });
+  //   });
 
-    $("#mobile-nav #userAuth-btn").on("click", e => {
-      $.get(e.target.pathname).done(() => {
-        localStorage.setItem("hasUser", false);
-        localStorage.setItem("email", "");
-      });
-    });
-  }
+  //   $("#mobile-nav #userAuth-btn").on("click", e => {
+  //     $.get(e.target.pathname).done(() => {
+  //       localStorage.setItem("hasUser", false);
+  //       localStorage.setItem("email", "");
+  //     });
+  //   });
+  // }
 
   $("#getCertiFromHash").click(function(e) {
     e.preventDefault();

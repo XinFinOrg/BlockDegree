@@ -64,7 +64,7 @@ function submitForm(form) {
       $(".form-messages").addClass("alert-danger");
       $(".form-messages").html(res.message);
     } else if (query) {
-      localStorage.setItem("hasUser", true);
+      // localStorage.setItem("hasUser", true);
       window.location = "/courses/" + query;
     } else {
       console.log("res true>>>>>>", accessMsg);
@@ -83,7 +83,7 @@ function submitForm(form) {
           form.lastName.value = "";
           form.firstName.value = "";
         } else {
-          localStorage.setItem("hasUser", true);
+          // localStorage.setItem("hasUser", true);
           localStorage.setItem("email", $("input[name=email]").val());
           window.location = "/";
         }
@@ -93,10 +93,10 @@ function submitForm(form) {
 }
 
 $(document).ready(function() {
-  if (window.location.href.indexOf("login") > -1) {
-    if (localStorage.getItem("hasUser") === "true") {
-      window.location = "/";
-    } else {
-    }
-  }
+  // if (window.location.href.indexOf("login") > -1) {
+  //   if (localStorage.getItem("hasUser") === "true") {
+  //     window.location = "/";
+  //   } else {
+  //   }
+  // }
 });
