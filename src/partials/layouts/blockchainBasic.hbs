@@ -1,22 +1,20 @@
 {{> includes/hero hero-title="Blockchain Basic Exam"}}
 <div class="container__cstm">
 
-  <div>
-    Blockchain Basic Exam
-  </div>
+  <div class="exam-heading">Blockchain Basic Exam</div>
 
   <div id="exam">
 
     <form id="basicExamForm">
       {{#each exam}}
-      <div class="card py-3 px-5 mb-4">
+      <div class="card bg-light py-3 px-4 mb-4">
         <h4 id="q{{@index}}" class="mb-3 exam-qns">
           {{this.question}}
         </h4>
 
         <div class="row">
           {{#each choices as |choice| }}
-          <div class="col-12 col-sm-6">
+          <div class="col-12 col-md-6">
             <div class="exam-choice">
               <input type="radio" id="q{{@../index}}-c{{@index}}" name="{{@../index}}" value="{{@index}}" />
               <label for="q{{@../index}}-c{{@index}}">{{choice}}</label>
