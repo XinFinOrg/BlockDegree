@@ -4,43 +4,58 @@
 {{#*inline "body-block"}}
 {{> includes/hero hero-title="Verify certification" hero-copy="Boost your credentials with our blockchain certification"}}
 
-	<div class="bg-white py-3">
-		<div class="container py-5" id="verify-certificate">
-  			<div class="row">
-              <div class="col-lg-6 offset-lg-3 text-center">
-              <div class="input-group mb-3">
-                <input type="text" id="certiHash" class="form-control" placeholder="Enter the hash to open certificate">
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-dark" onclick="openCertiByHash()">Open Certificate</button>
-                </div>
-              </div>
-              <a href="" style="display: none" target="_blank" id="openCerti"></a>
-              
-              <div id="setName"></div>
-              
-              <!--<div class="bg-white py-3" id="card_wrapping_container" style="display: none">
+<div class="bg-white py-3">
+  <div class="container py-5" id="verify-certificate">
+    <div class="row">
+      <div class="col-lg-6 offset-lg-3 text-center">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            id="certiHash"
+            class="form-control"
+            placeholder="Enter the hash to open certificate"
+          />
+          <div class="input-group-append">
+            <button
+              type="button"
+              class="btn btn-dark"
+              onclick="openCertiByHash()"
+            >
+              Open Certificate
+            </button>
+          </div>
+        </div>
+        <a href="" style="display: none" target="_blank" id="openCerti"></a>
+
+        <div id="setName"></div>
+
+        <!--<div class="bg-white py-3" id="card_wrapping_container" style="display: none">
                 <div class="container py-5" id="verify-certificate">
                   <div class="row" id="card_wrap"></div>
                 </div>
               </div>-->
-              
-              <div>
-                <button type="button" class="btn btn-primary text-white" onclick="getAllCertificates()">Get My Certificates</button>
-              </div>
-              </div>
-			</div>
-		</div>
-	</div>
-    
-	<div class="bg-white" id="card_wrapping_container" style="display: none">
-		<div class="container py-5" id="verify-certificate">
-			<div class="row" id="card_wrap"></div>
-		</div>
-	</div>
-    
-    
-    
-    <!--<div class="bg-white py-3">
+
+        <div>
+          <button
+            type="button"
+            class="btn btn-primary text-white"
+            onclick="getAllCertificates()"
+          >
+            Get My Certificates
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bg-white" id="card_wrapping_container" style="display: none">
+  <div class="container py-5" id="verify-certificate">
+    <div class="row" id="card_wrap"></div>
+  </div>
+</div>
+
+<!--<div class="bg-white py-3">
   		<div class="container py-5" id="verify-certificate">
   			<div class="row">
   				
@@ -66,10 +81,6 @@
   			</div>
   		</div>
   	</div>-->
-
-
-
-
 
 {{/inline}}
 
@@ -147,17 +158,29 @@
       '              			<div class="card-body bg-light">' +
       '							<ul class="list-group list-group-flush">' +
       '								<li class="list-group-item"><span>Exam Name : ' +
-      "</span>"+      examName +" </li>" +
+      "</span>" +
+      examName +
+      " </li>" +
       '								<li class="list-group-item"><span>Marks Obtained : ' +
-      "</span>"+      marks +" </li>" +
+      "</span>" +
+      marks +
+      " </li>" +
       '                                <li class="list-group-item"><span>Total Questions : ' +
-      "</span>"+      total +" </li>" +
+      "</span>" +
+      total +
+      " </li>" +
       '                                <li class="list-group-item"><span>Date : ' +
-      "</span>"+      new Date(parseFloat(date)) +" </li>" +
+      "</span>" +
+      new Date(parseFloat(date)) +
+      " </li>" +
       '                                <li class="list-group-item"><span>Certificate : ' +
-      "</span>"+      clientHash +" </li>" +
+      "</span>" +
+      clientHash +
+      " </li>" +
       '                                <li class="list-group-item"><span>Document : ' +
-      "</span>"+      headlessHash +" </li>" +
+      "</span>" +
+      headlessHash +
+      " </li>" +
       "          					</ul>                            " +
       // '                            <p class="social-sharing mt-3 mb-0 float-right">Share on : ' +
       // '                                <a class="social-fb" href="#"><i class="fa fa-linkedin social"></i></a>' +
@@ -192,6 +215,11 @@
 
   function openCertiByHash() {
     let hash = document.getElementById("certiHash").value;
+    console.log(`Hash length: ${hash.length}`);
+    if (!validateHash(hash)) {
+      alert("Invalid Hash!");
+      return;
+    }
     let found = false;
 
     $.ajax({
@@ -229,19 +257,19 @@
                     ) {
                       window.open(
                         `https://ipfs-gateway.xinfin.network/${hash}`,
-      "newwin",
-      "height=700px,width=900px"
-    );
+                        "newwin",
+                        "height=700px,width=900px"
+                      );
                       return;
                     }
                   }
                   if (!found) {
                     alert("Given hash is not associated to your account");
                     window.open(
-                        `https://ipfs-gateway.xinfin.network/${hash}`,
-      "newwin",
-      "height=700px,width=900px"
-    );
+                      `https://ipfs-gateway.xinfin.network/${hash}`,
+                      "newwin",
+                      "height=700px,width=900px"
+                    );
                     return;
                   }
                 }
@@ -250,13 +278,24 @@
           });
         } else {
           window.open(
-                        `https://ipfs-gateway.xinfin.network/${hash}`,
-      "newwin",
-      "height=700px,width=900px"
-    );
+            `https://ipfs-gateway.xinfin.network/${hash}`,
+            "newwin",
+            "height=700px,width=900px"
+          );
         }
       }
     });
+  }
+
+  function validateHash(hash) {
+    let onlyAphaNumeric = "/^[0-9a-zA-Z]+$/";
+    if (!hash.match(onlyAphaNumeric)) {
+      return false;
+    }
+    if (hash.length == 46) {
+      return true;
+    }
+    return false;
   }
 
   function getAllCertificates() {

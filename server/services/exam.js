@@ -55,7 +55,6 @@ exports.submitExam = async (req, res, next) => {
               ) {
                 marks++;
               }
-              //marks++;
             }
             attempts += 1;
             User.findOneAndUpdate(
@@ -117,7 +116,6 @@ exports.submitExam = async (req, res, next) => {
               ) {
                 marks++;
               }
-              //marks++;
             }
             attemptsAdvanced += 1;
             console.log("Marks", marks);
@@ -173,8 +171,7 @@ exports.submitExam = async (req, res, next) => {
                 result.questionsProfessional[index].answer
               ) {
                 marks++;
-              }  
-              //marks++;                        
+              }
             }
             attemptsProfessional += 1;
             console.log("Marks", marks);
@@ -219,7 +216,7 @@ exports.submitExam = async (req, res, next) => {
           );
         }
       }
-    } 
+    }
   }
 };
 
@@ -272,19 +269,18 @@ exports.getExamResult = async (req, res) => {
     `called the exam-result endpoint by ${req.user.email} at ${Date.now()}`
   );
   const backUrl = req.header("Referer");
-  let name ="";
-  if (req.user.name=="" || req.user.name==undefined){
+  let name = "";
+  if (req.user.name == "" || req.user.name == undefined) {
     // old email id.
     name = req.user.email;
-  }
-  else{
+  } else {
     name = req.user.name;
   }
   var query = {};
   query = { email: req.user.email };
   const examName = backUrl.split("/")[3].split("-")[1];
 
-  const user = await User.findOne(query).catch( err => {
+  const user = await User.findOne(query).catch(err => {
     if (err) {
       res.status(500).json({
         error: err,
@@ -326,8 +322,8 @@ exports.getExamResult = async (req, res) => {
       findLastAttempt(user, examName) == null ||
       Date.now() - findLastAttempt(user, examName) > 10000 // 10 second freeze time between giving exams
     ) {
-      if (user.examData.payment[examTypes[examName].coursePayment_id]!=true){
-        return res.redirect("/exams")
+      if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
+        return res.redirect("/exams");
       }
       let date = d.toLocaleDateString("en-GB", {
         day: "numeric",
