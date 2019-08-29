@@ -492,9 +492,8 @@ module.exports = function(passport) {
               email: profile.emails[0].value
             });
             if (linkEmail) {
-              linkEmail.auth.twitter.id = profile.id;
-              linkEmail.auth.twitter.token = token;
-              linkEmail.auth.twitter.tokenSecret = tokenSecret;
+              linkEmail.auth.linkedin.id = profile.id;
+              linkEmail.auth.linkedin.accessToken = accessToken;
               linkEmail.lastActive = Date.now();
               linkEmail.save();
               return done(null, linkEmail);
@@ -567,7 +566,7 @@ function validateName(name) {
   let onlyLetter = "^[a-zA-Z]+$";
   let msg;
   if (!name.match(onlyLetter)) {
-    msg = "name should consist fo only letters";
+    msg = "name should consist of only letters";
     validFN = false;
   }
   if (name.match(onlyWhiteSpace) || name.match(anyWhitespace)) {

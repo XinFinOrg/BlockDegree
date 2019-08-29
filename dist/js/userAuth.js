@@ -132,7 +132,7 @@ if (typeof jQuery != "undefined") {
         let anyWhitespace = ".*\\s.*";
         let onlyLetter = "^[a-zA-Z]+$";
         if (!firstName.value.match(onlyLetter)) {
-          return (fnInfo.innerHTML = "name should consist fo only letters");
+          return (fnInfo.innerHTML = "name should consist of only letters");
         }
         if (
           firstName.value.match(onlyWhiteSpace) ||
@@ -158,7 +158,7 @@ if (typeof jQuery != "undefined") {
         let anyWhitespace = ".*\\s.*";
         let onlyLetter = "^[a-zA-Z]+$";
         if (!lastName.value.match(onlyLetter)) {
-          return (lnInfo.innerHTML = "name should consist fo only letters");
+          return (lnInfo.innerHTML = "name should consist of only letters");
         }
         if (
           lastName.value.match(onlyWhiteSpace) ||
