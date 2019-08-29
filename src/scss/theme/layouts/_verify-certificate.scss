@@ -10,9 +10,11 @@
   .card {
   
     .card-body {
-	
+	  border-radius: .25rem;
+	  
       .list-group-item {
         padding-left: 0px;
+		background-color: transparent;
 		
 	    span {
 	      font-weight: 500;

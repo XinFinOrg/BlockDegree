@@ -55,6 +55,7 @@ exports.submitExam = async (req, res, next) => {
               ) {
                 marks++;
               }
+              //marks++;
             }
             attempts += 1;
             User.findOneAndUpdate(
@@ -116,6 +117,7 @@ exports.submitExam = async (req, res, next) => {
               ) {
                 marks++;
               }
+              //marks++;
             }
             attemptsAdvanced += 1;
             console.log("Marks", marks);
@@ -171,7 +173,8 @@ exports.submitExam = async (req, res, next) => {
                 result.questionsProfessional[index].answer
               ) {
                 marks++;
-              }                          
+              }  
+              //marks++;                        
             }
             attemptsProfessional += 1;
             console.log("Marks", marks);
