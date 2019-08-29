@@ -36,18 +36,13 @@ module.exports = {
     console.log("sendTokenMail:", type, mail);
 
     var mailOptions;
-
+    let link = "https://www.blockdegree.org/confirmation/?token=" + token.token;
     if (type === "signup" || type === "resend") {
       mailOptions = {
         from: "blockdegree@xinfin.org",
         to: mail,
         subject: "Login",
-        text:
-          "Hello,\n\n" +
-          "Please verify your account by clicking the link: \nhttps://www.blockdegree.org" +
-          "/confirmation/?token=" +
-          token.token +
-          ".\n"
+        html: `<div>Click on the link to confirm email address : <a href="${link}">Link</a></div>`
       };
     } else if (
       type === "course_1" ||
@@ -99,7 +94,7 @@ module.exports = {
         from: "info@blockdegree.org",
         to: mail,
         subject: "Forgot Password",
-        text: link
+        html: `<a href="${link}">Link</a>`
       };
 
       transporter.sendMail(mailOptions, function(error, info) {
