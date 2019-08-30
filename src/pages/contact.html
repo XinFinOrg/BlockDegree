@@ -27,6 +27,7 @@
           <div class="row">
             <div class="col-lg-6 form-group">
               <input
+                id="name"
                 name="name"
                 placeholder="Enter your name"
                 onfocus="this.placeholder = ''"
@@ -35,8 +36,10 @@
                 required=""
                 type="text"
               />
+              <div id="nameInfo"></div>
 
               <input
+                id="email"
                 name="email"
                 placeholder="Enter email address"
                 pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
@@ -46,8 +49,10 @@
                 required=""
                 type="email"
               />
+              <div id="emailInfo"></div>
 
               <input
+                id="subject"
                 name="subject"
                 placeholder="Enter subject"
                 onfocus="this.placeholder = ''"
@@ -56,9 +61,11 @@
                 required=""
                 type="text"
               />
+              <div id="subInfo"></div>
             </div>
             <div class="col-lg-6 form-group">
               <textarea
+                id="message"
                 class="common-textarea form-control"
                 name="message"
                 placeholder="Enter Messege"
@@ -66,6 +73,7 @@
                 onblur="this.placeholder = 'Enter Messege'"
                 required=""
               ></textarea>
+              <div id="messageInfo"></div>
             </div>
             <div class="col-lg-12">
               <div class="alert-msg" style="text-align: left;"></div>
@@ -79,6 +87,7 @@
     </div>
   </section>
 </div>
+<script src="/js/mail-script.js"></script>
 {{/inline}}
 
 {{#*inline "scripts-block"}}

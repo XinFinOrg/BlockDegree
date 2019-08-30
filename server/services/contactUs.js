@@ -9,9 +9,9 @@ service: 'gmail',
 });
 
 exports.contactUs = async (req, res) => {
-  console.log("in contactUs");
-  console.log(req.body);
-  res.redirect("/contact");
+  // console.log("in contactUs");
+  // console.log(req.body);
+  res.json({message:"ok"});
   let info = await transporter.sendMail({
     from: process.env.SUPP_EMAILER_ID, 
     to: process.env.SUPP_EMAIL_ID, // support email id for blockdegree
