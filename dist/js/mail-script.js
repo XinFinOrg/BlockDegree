@@ -21,7 +21,7 @@ $(document).ready(function() {
 
   name.onkeyup = () => {
     isNameValid = false;
-    nameInfo.innerHTML = "";
+    nameInfo.innerHTML = "&nbsp";
     if (!validateName(name.value)) {
       nameInfo.innerHTML = "Invalid name";
     } else {
@@ -30,7 +30,7 @@ $(document).ready(function() {
   };
   subject.onkeyup = () => {
     isSubValid = false;
-    subInfo.innerHTML = "";
+    subInfo.innerHTML = "&nbsp";
     if (!noSpace(subject.value)) {
       subInfo.innerHTML = "Invalid Subject";
     } else {
@@ -48,7 +48,7 @@ $(document).ready(function() {
   };
   email.onkeyup = () => {
     isEmailValid = false;
-    emailInfo.innerHTML = "";
+    emailInfo.innerHTML = "&nbsp";
     if (!validateEmail(email.value)) {
       emailInfo.innerHTML = "Invalid Email";
     } else {

@@ -32,12 +32,11 @@
                 placeholder="Enter your name"
                 onfocus="this.placeholder = ''"
                 onblur="this.placeholder = 'Enter your name'"
-                class="common-input mb-20 form-control"
+                class="common-input form-control"
                 required=""
                 type="text"
               />
-              <div id="nameInfo"></div>
-
+              <div style="text-align: left;color: red" id="nameInfo">&nbsp</div>
               <input
                 id="email"
                 name="email"
@@ -45,11 +44,17 @@
                 pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
                 onfocus="this.placeholder = ''"
                 onblur="this.placeholder = 'Enter email address'"
-                class="common-input mb-20 form-control"
+                class="common-input form-control"
                 required=""
                 type="email"
               />
-              <div id="emailInfo"></div>
+              <div
+                color="red"
+                style="text-align: left;color: red"
+                id="emailInfo"
+              >
+                &nbsp
+              </div>
 
               <input
                 id="subject"
@@ -61,7 +66,9 @@
                 required=""
                 type="text"
               />
-              <div id="subInfo"></div>
+              <div color="red" style="text-align: left;color: red" id="subInfo">
+                &nbsp
+              </div>
             </div>
             <div class="col-lg-6 form-group">
               <textarea
@@ -73,7 +80,11 @@
                 onblur="this.placeholder = 'Enter Messege'"
                 required=""
               ></textarea>
-              <div id="messageInfo"></div>
+              <div
+                color="red"
+                style="text-align: left;color: red"
+                id="messageInfo"
+              ></div>
             </div>
             <div class="col-lg-12">
               <div class="alert-msg" style="text-align: left;"></div>
