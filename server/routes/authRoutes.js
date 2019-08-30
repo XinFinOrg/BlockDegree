@@ -69,24 +69,27 @@ module.exports = app => {
     )(req, res, next);
   });
 
-  app.post("/forgotPassword", (req, res) => {
+  app.post("/forgotPassword", async (req, res) => {
     console.log("called forgot password");
-    User.findOne({ email: req.body.email }).then(result => {
-      if (result == null) {
-        res.send("User not found");
-      } else if (
-        result.auth.local.password == null ||
-        result.auth.local.password == ""
-      ) {
-        res.send("Hmm, looks like you are signed in with a social account.");
-      } else {
-        emailer.forgotPasswordMailer(
-          result.email,
-          result.auth.local.password,
-          res
-        );
-      }
-    });
+    let result = await User.findOne({ email: req.body.email });
+    if (result == null) {
+      res.json({ message: "user not found", status: false });
+    } else if (
+      result.auth.local.password == null ||
+      result.auth.local.password == ""
+    ) {
+      res.json({
+        message: "Hmm, looks like you are signed in with a social account.",
+        status: false
+      });
+    } else {
+      emailer.forgotPasswordMailer(
+        result.email,
+        result.auth.local.password,
+        res
+      );
+      res.json({ message: "email sent", status: true });
+    }
   });
 
   app.get("/resetpassword", async (req, res) => {
