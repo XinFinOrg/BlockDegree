@@ -150,6 +150,12 @@ module.exports = app => {
       "google",
       { failureRedirect: "/login" },
       (err, user, info) => {
+        if (err != null) {
+          console.log(`Error: ${err}`);
+          return res.render("displayError", {
+            error: err
+          });
+        }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
@@ -180,6 +186,12 @@ module.exports = app => {
       "facebook",
       { failureRedirect: "/login" },
       (err, user, info) => {
+        if (err != null) {
+          console.log(`Error: ${err}`);
+          return res.render("displayError", {
+            error: err
+          });
+        }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
@@ -208,6 +220,14 @@ module.exports = app => {
       "twitter",
       { failureRedirect: "/login" },
       (err, user, info) => {
+        console.log("Inside error is not null: ", err, user, info);
+        if (err != null) {
+          console.log("Inside error is not null: ", err, user, info);
+          console.log(`Error: ${err}`);
+          return res.render("displayError", {
+            error: err
+          });
+        }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
@@ -239,6 +259,13 @@ module.exports = app => {
       "linkedin",
       { failureRedirect: "/login" },
       (err, user, info) => {
+        if (err != null) {
+          console.log("Inside error is not null: ", err, user, info);
+          console.log(`Error: ${err}`);
+          return res.render("displayError", {
+            error: err
+          });
+        }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
