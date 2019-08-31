@@ -62,7 +62,8 @@ exports.submitExam = async (req, res, next) => {
               {
                 $set: {
                   "examData.examBasic.attempts": attempts,
-                  "examData.examBasic.marks": marks
+                  "examData.examBasic.marks": marks,
+                  "examData.payment.course_1": attempts > 2
                 }
               },
               { upsert: false },
@@ -98,13 +99,12 @@ exports.submitExam = async (req, res, next) => {
         }
       } else if (examName === "advanced") {
         console.log("inside advanced");
-
+        // console.log(attemptsAdvanced);
         if (attemptsAdvanced != null && attemptsAdvanced < 3) {
-          console.log("valid attempt");
-
+          // console.log("valid attempt");
           questions.findOne({ exam: "firstExam" }).then((result, error) => {
-            console.log("advanced result", result);
-            console.log("advanced result:::", result.questionsAdvanced);
+            // console.log("advanced result", result);
+            // console.log("advanced result:::", result.questionsAdvanced);
             for (
               let index = 0;
               index < result.questionsAdvanced.length;
@@ -124,7 +124,8 @@ exports.submitExam = async (req, res, next) => {
               {
                 $set: {
                   "examData.examAdvanced.attempts": attemptsAdvanced,
-                  "examData.examAdvanced.marks": marks
+                  "examData.examAdvanced.marks": marks,
+                  "examData.payment.course_2": attemptsAdvanced > 2
                 }
               },
               { upsert: false },
@@ -180,7 +181,8 @@ exports.submitExam = async (req, res, next) => {
               {
                 $set: {
                   "examData.examProfessional.attempts": attemptsProfessional,
-                  "examData.examProfessional.marks": marks
+                  "examData.examProfessional.marks": marks,
+                  "examData.payment.course_3": attemptsProfessional > 2
                 }
               },
               { upsert: false },
@@ -228,7 +230,7 @@ exports.getBasicExam = (req, res) => {
         throw err;
       }
       // json = scrambleQuestions(json);
-      console.log("test quetions basic:", json);
+      // console.log("test quetions basic:", json);
       res.render("blockchainBasic", json);
     }
   );
@@ -242,23 +244,23 @@ exports.getAdvancedExam = (req, res) => {
         throw err;
       }
       // json = scrambleQuestions(json);
-      console.log("test quetions advanced:", json);
+      // console.log("test quetions advanced:", json);
       res.render("blockchainAdvanced", json);
     }
   );
 };
 
 exports.getProfessionalExam = (req, res) => {
-  console.log("inside block prof");
+  // console.log("inside block prof");
   readJSONFile(
     path.join(process.cwd(), "/server/protected/blockchain-Professional.json"),
     (err, json) => {
-      console.log("block pro 2", err, json);
+      // console.log("block pro 2", err, json);
       if (err) {
         throw err;
       }
       // json = scrambleQuestions(json);
-      console.log("test quetions professional:", json);
+      // console.log("test quetions professional:", json);
       res.render("blockchainProfessional", json);
     }
   );
@@ -413,7 +415,7 @@ exports.getExamStatus = (req, res) => {
           },
           json: json
         };
-        console.log("examlist data:::", examListData);
+        // console.log("examlist data:::", examListData);
         res.render("examList", examListData);
       }
     );

@@ -26,9 +26,9 @@ module.exports = app => {
     console.log("HIT current user");
 
     if (req.user) {
-      res.json({ status: true });
+      res.json({ status: true, user: req.user });
     } else {
-      res.json({ status: false });
+      res.json({ status: false, user: null });
     }
   });
 
@@ -132,6 +132,7 @@ module.exports = app => {
 
   app.get(
     "/auth/google",
+    handleClose,
     passport.authenticate("google", {
       scope: ["profile ", "email"]
     })
@@ -139,6 +140,7 @@ module.exports = app => {
 
   app.get(
     "/auth/facebook",
+    handleClose,
     passport.authenticate("facebook", {
       scope: ["public_profile", "email"]
     })
@@ -168,6 +170,9 @@ module.exports = app => {
             res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
+          if (req.session.closeOnCallback) {
+            return res.redirect("/closeCallback");
+          }
           var url = req.session.redirectTo || "/";
           if (
             url == "/login" ||
@@ -204,6 +209,9 @@ module.exports = app => {
             res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
+          if (req.session.closeOnCallback) {
+            return res.redirect("/closeCallback");
+          }
           var url = req.session.redirectTo || "/";
           if (
             url == "/login" ||
