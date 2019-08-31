@@ -26,9 +26,9 @@ module.exports = app => {
     console.log("HIT current user");
 
     if (req.user) {
-      res.json({ status: true });
+      res.json({ status: true, user: req.user });
     } else {
-      res.json({ status: false });
+      res.json({ status: false, user: null });
     }
   });
 
@@ -69,24 +69,27 @@ module.exports = app => {
     )(req, res, next);
   });
 
-  app.post("/forgotPassword", (req, res) => {
+  app.post("/forgotPassword", async (req, res) => {
     console.log("called forgot password");
-    User.findOne({ email: req.body.email }).then(result => {
-      if (result == null) {
-        res.send("User not found");
-      } else if (
-        result.auth.local.password == null ||
-        result.auth.local.password == ""
-      ) {
-        res.send("Hmm, looks like you are signed in with a social account.");
-      } else {
-        emailer.forgotPasswordMailer(
-          result.email,
-          result.auth.local.password,
-          res
-        );
-      }
-    });
+    let result = await User.findOne({ email: req.body.email });
+    if (result == null) {
+      res.json({ message: "user not found", status: false });
+    } else if (
+      result.auth.local.password == null ||
+      result.auth.local.password == ""
+    ) {
+      res.json({
+        message: "Hmm, looks like you are signed in with a social account.",
+        status: false
+      });
+    } else {
+      emailer.forgotPasswordMailer(
+        result.email,
+        result.auth.local.password,
+        res
+      );
+      res.json({ message: "email sent", status: true });
+    }
   });
 
   app.get("/resetpassword", async (req, res) => {
@@ -129,6 +132,7 @@ module.exports = app => {
 
   app.get(
     "/auth/google",
+    handleClose,
     passport.authenticate("google", {
       scope: ["profile ", "email"]
     })
@@ -136,6 +140,7 @@ module.exports = app => {
 
   app.get(
     "/auth/facebook",
+    handleClose,
     passport.authenticate("facebook", {
       scope: ["public_profile", "email"]
     })
@@ -150,6 +155,12 @@ module.exports = app => {
       "google",
       { failureRedirect: "/login" },
       (err, user, info) => {
+        if (err != null) {
+          console.log(`Error: ${err}`);
+          return res.render("displayError", {
+            error: err
+          });
+        }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
@@ -159,6 +170,9 @@ module.exports = app => {
             res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
+          if (req.session.closeOnCallback) {
+            return res.redirect("/closeCallback");
+          }
           var url = req.session.redirectTo || "/";
           if (
             url == "/login" ||
@@ -180,6 +194,12 @@ module.exports = app => {
       "facebook",
       { failureRedirect: "/login" },
       (err, user, info) => {
+        if (err != null) {
+          console.log(`Error: ${err}`);
+          return res.render("displayError", {
+            error: err
+          });
+        }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
@@ -189,6 +209,9 @@ module.exports = app => {
             res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
+          if (req.session.closeOnCallback) {
+            return res.redirect("/closeCallback");
+          }
           var url = req.session.redirectTo || "/";
           if (
             url == "/login" ||
@@ -208,6 +231,14 @@ module.exports = app => {
       "twitter",
       { failureRedirect: "/login" },
       (err, user, info) => {
+        console.log("Inside error is not null: ", err, user, info);
+        if (err != null) {
+          console.log("Inside error is not null: ", err, user, info);
+          console.log(`Error: ${err}`);
+          return res.render("displayError", {
+            error: err
+          });
+        }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
@@ -239,6 +270,13 @@ module.exports = app => {
       "linkedin",
       { failureRedirect: "/login" },
       (err, user, info) => {
+        if (err != null) {
+          console.log("Inside error is not null: ", err, user, info);
+          console.log(`Error: ${err}`);
+          return res.render("displayError", {
+            error: err
+          });
+        }
         if (user == null) {
           return res.send({ status: user, message: info });
         }

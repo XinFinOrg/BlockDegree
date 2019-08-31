@@ -69,7 +69,7 @@ $(function() {
         ansArray.push(ans); 
       }      
     }
-    console.log('data', JSON.stringify(ansArray));
+    // console.log('data', JSON.stringify(ansArray));
     
     $.ajax({
       type: "POST",

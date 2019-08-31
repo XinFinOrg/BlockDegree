@@ -55,15 +55,15 @@ exports.submitExam = async (req, res, next) => {
               ) {
                 marks++;
               }
-              //marks++;
             }
             attempts += 1;
             User.findOneAndUpdate(
               query,
               {
                 $set: {
-                  "examData.examBasic.attempts": attempts,
-                  "examData.examBasic.marks": marks
+                  "examData.examBasic.attempts": attempts > 2 ? 0 : attempts,
+                  "examData.examBasic.marks": marks,
+                  "examData.payment.course_1": attempts <= 2
                 }
               },
               { upsert: false },
@@ -99,13 +99,12 @@ exports.submitExam = async (req, res, next) => {
         }
       } else if (examName === "advanced") {
         console.log("inside advanced");
-
+        // console.log(attemptsAdvanced);
         if (attemptsAdvanced != null && attemptsAdvanced < 3) {
-          console.log("valid attempt");
-
+          // console.log("valid attempt");
           questions.findOne({ exam: "firstExam" }).then((result, error) => {
-            console.log("advanced result", result);
-            console.log("advanced result:::", result.questionsAdvanced);
+            // console.log("advanced result", result);
+            // console.log("advanced result:::", result.questionsAdvanced);
             for (
               let index = 0;
               index < result.questionsAdvanced.length;
@@ -117,7 +116,6 @@ exports.submitExam = async (req, res, next) => {
               ) {
                 marks++;
               }
-              //marks++;
             }
             attemptsAdvanced += 1;
             console.log("Marks", marks);
@@ -125,8 +123,10 @@ exports.submitExam = async (req, res, next) => {
               query,
               {
                 $set: {
-                  "examData.examAdvanced.attempts": attemptsAdvanced,
-                  "examData.examAdvanced.marks": marks
+                  "examData.examAdvanced.attempts":
+                    attemptsAdvanced > 2 ? 0 : attemptsAdvanced,
+                  "examData.examAdvanced.marks": marks,
+                  "examData.payment.course_2": attemptsAdvanced <= 2
                 }
               },
               { upsert: false },
@@ -173,8 +173,7 @@ exports.submitExam = async (req, res, next) => {
                 result.questionsProfessional[index].answer
               ) {
                 marks++;
-              }  
-              //marks++;                        
+              }
             }
             attemptsProfessional += 1;
             console.log("Marks", marks);
@@ -182,8 +181,10 @@ exports.submitExam = async (req, res, next) => {
               query,
               {
                 $set: {
-                  "examData.examProfessional.attempts": attemptsProfessional,
-                  "examData.examProfessional.marks": marks
+                  "examData.examProfessional.attempts":
+                    attemptsProfessional > 2 ? 0 : attemptsProfessional,
+                  "examData.examProfessional.marks": marks,
+                  "examData.payment.course_3": attemptsProfessional <= 2
                 }
               },
               { upsert: false },
@@ -219,7 +220,7 @@ exports.submitExam = async (req, res, next) => {
           );
         }
       }
-    } 
+    }
   }
 };
 
@@ -231,7 +232,7 @@ exports.getBasicExam = (req, res) => {
         throw err;
       }
       // json = scrambleQuestions(json);
-      console.log("test quetions basic:", json);
+      // console.log("test quetions basic:", json);
       res.render("blockchainBasic", json);
     }
   );
@@ -245,23 +246,23 @@ exports.getAdvancedExam = (req, res) => {
         throw err;
       }
       // json = scrambleQuestions(json);
-      console.log("test quetions advanced:", json);
+      // console.log("test quetions advanced:", json);
       res.render("blockchainAdvanced", json);
     }
   );
 };
 
 exports.getProfessionalExam = (req, res) => {
-  console.log("inside block prof");
+  // console.log("inside block prof");
   readJSONFile(
     path.join(process.cwd(), "/server/protected/blockchain-Professional.json"),
     (err, json) => {
-      console.log("block pro 2", err, json);
+      // console.log("block pro 2", err, json);
       if (err) {
         throw err;
       }
       // json = scrambleQuestions(json);
-      console.log("test quetions professional:", json);
+      // console.log("test quetions professional:", json);
       res.render("blockchainProfessional", json);
     }
   );
@@ -272,19 +273,18 @@ exports.getExamResult = async (req, res) => {
     `called the exam-result endpoint by ${req.user.email} at ${Date.now()}`
   );
   const backUrl = req.header("Referer");
-  let name ="";
-  if (req.user.name=="" || req.user.name==undefined){
+  let name = "";
+  if (req.user.name == "" || req.user.name == undefined) {
     // old email id.
     name = req.user.email;
-  }
-  else{
+  } else {
     name = req.user.name;
   }
   var query = {};
   query = { email: req.user.email };
   const examName = backUrl.split("/")[3].split("-")[1];
 
-  const user = await User.findOne(query).catch( err => {
+  const user = await User.findOne(query).catch(err => {
     if (err) {
       res.status(500).json({
         error: err,
@@ -326,8 +326,8 @@ exports.getExamResult = async (req, res) => {
       findLastAttempt(user, examName) == null ||
       Date.now() - findLastAttempt(user, examName) > 10000 // 10 second freeze time between giving exams
     ) {
-      if (user.examData.payment[examTypes[examName].coursePayment_id]!=true){
-        return res.redirect("/exams")
+      if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
+        return res.redirect("/exams");
       }
       let date = d.toLocaleDateString("en-GB", {
         day: "numeric",
@@ -417,7 +417,7 @@ exports.getExamStatus = (req, res) => {
           },
           json: json
         };
-        console.log("examlist data:::", examListData);
+        // console.log("examlist data:::", examListData);
         res.render("examList", examListData);
       }
     );

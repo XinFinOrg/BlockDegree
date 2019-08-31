@@ -216,6 +216,18 @@ module.exports = function(passport) {
             req.user.auth.google.id == "" ||
             req.user.auth.google.id == undefined
           ) {
+            // check if the credentials are associated with any other user.
+            let otherUser = await User.findOne({
+              "auth.google.id": profile.id
+            });
+            if (otherUser != null) {
+              // this set of credentials are associated with another account, show error
+              return done(
+                "credentials are already taken by other account, please try logging in with other account.",
+                null,
+                "credentials are already taken by other account, please try logging in with other account."
+              );
+            }
             let user = await User.findOne({ email: req.user.email });
             user.auth.google.id = profile.id;
             user.auth.google.accessToken = accessToken;
@@ -257,8 +269,8 @@ module.exports = function(passport) {
 
         if (profile.emails.length < 1) {
           return done(
+            "no email-id not associated with this social account",
             null,
-            false,
             "no email-id not associated with this social account"
           );
         }
@@ -292,6 +304,18 @@ module.exports = function(passport) {
             req.user.auth.facebook.id == "" ||
             req.user.auth.facebook.id == undefined
           ) {
+            // check if the credentials are associated with any other user.
+            let otherUser = await User.findOne({
+              "auth.facebook.id": profile.id
+            });
+            if (otherUser != null) {
+              // this set of credentials are associated with another account, show error
+              return done(
+                "credentials are already taken by other account, please try logging in with other account.",
+                null,
+                "credentials are already taken bt ither account, please try logging in with other account."
+              );
+            }
             let user = await User.findOne({ email: req.user.email });
             user.auth.facebook.id = profile.id;
             user.auth.facebook.accessToken = accessToken;
@@ -331,8 +355,8 @@ module.exports = function(passport) {
 
         if (profile.emails.length < 1) {
           return done(
+            "no email-id not associated with this social account",
             null,
-            false,
             "no email-id not associated with this social account"
           );
         }
@@ -379,6 +403,20 @@ module.exports = function(passport) {
             req.user.auth.twitter.id == "" ||
             req.user.auth.twitter.id == undefined
           ) {
+            // check if the credentials are associated with any other user.
+            let otherUser = await User.findOne({
+              "auth.twitter.id": profile.id
+            });
+            if (otherUser != null) {
+              // this set of credentials are associated with another account, show error
+              return done(
+                "credentials are already taken by other account, please try logging in with other account.",
+                null,
+                "credentials are already taken bt ither account, please try logging in with other account."
+              );
+            }
+
+            // add credentials
             let user = await User.findOne({ email: req.user.email });
             user.auth.twitter.id = profile.id;
             user.auth.twitter.token = token;
@@ -418,8 +456,8 @@ module.exports = function(passport) {
 
         if (profile.emails.length < 1) {
           return done(
+            "no email-id not associated with this social account",
             null,
-            false,
             "no email-id not associated with this social account"
           );
         }
@@ -466,6 +504,21 @@ module.exports = function(passport) {
               req.user.auth.linkedin.id == "" ||
               req.user.auth.linkedin.id == undefined
             ) {
+              // check if the credentials are associated with any other user.
+              let otherUser = await User.findOne({
+                "auth.linkedin.id": profile.id
+              });
+              if (otherUser != null) {
+                // this set of credentials are associated with another account, show error
+                return done(
+                  "credentials are already taken by other account, please try logging in with other account.",
+                  null,
+                  "credentials are already taken bt ither account, please try logging in with other account."
+                );
+              }
+
+              // add credentials
+
               let user = await User.findOne({ email: req.user.email });
               user.auth.linkedin.id = profile.id;
               user.auth.linkedin.accessToken = accessToken;
@@ -502,8 +555,8 @@ module.exports = function(passport) {
 
           if (profile.emails.length < 1) {
             return done(
+              "no email-id not associated with this social account",
               null,
-              false,
               "no email-id not associated with this social account"
             );
           }

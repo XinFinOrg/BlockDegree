@@ -27,12 +27,11 @@ exports.confirmEmail = function(req, res) {
       user.auth.local.isVerified = true;
       user.save(function(err) {
         if (err) {
-          console.log("ajdgakc", err.message);
-          return res.status(500).send({ msg: err.message });
+          return res.render("displayError", { error: err });
         }
         console.log("Success");
-        // res.status(200).send("The account has been verified. Please log in.");
-        res.redirect(200, "/login");
+        // res.status(200).json({message:"ok",status:true});
+        res.redirect("/login");
       });
     });
   });

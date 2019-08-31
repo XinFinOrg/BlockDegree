@@ -64,9 +64,8 @@
         </ul>-->
 		
         </div>
-      </div>
-      
-	  <button class="ITR btn btn-primary" type="button" onclick="window.location.href='https://www.blockdegree.org/blockchain-basic-exam'" /><i class="fa fa-arrow-left"></i> Retake Exam</button>
+      </div>      
+	  <button class="ITR btn btn-primary" type="button" onclick="window.location.replace('https://www.blockdegree.org/blockchain-basic-exam')" /><i class="fa fa-arrow-left"></i> Retake Exam</button>
       
 	  {{else if exam.examAdvanced}}
 	  
@@ -100,6 +99,7 @@
         </p>
 		
 		<!--<ul>
+
           <li style="display: flex;flex-direction:column">
             <strong><span>Total Questions:</span></strong> {{{total}}}
             <strong><span>marks:</span></strong> {{{obtainedMarks}}}
@@ -130,7 +130,7 @@
         </ul>-->
         </div>
       </div>
-      <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.href='https://www.blockdegree.org/blockchain-advanced-exam'" />-->
+      <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.replace('https://www.blockdegree.org/blockchain-advanced-exam')" />-->
       <button class="ITR btn btn-primary" type="button" onclick="window.location.href='https://www.blockdegree.org/blockchain-advanced-exam'" /><i class="fa fa-arrow-left"></i> Retake Exam</button>
       
 	  {{else if exam.examProfessional}}
@@ -165,6 +165,7 @@
         </p>
 		
 		<!--<ul>
+
           <li style="display: flex;flex-direction:column">
             <strong><span>Total Questions:</span></strong> {{{total}}}
             <strong><span>marks:</span></strong> {{{obtainedMarks}}}
@@ -194,8 +195,9 @@
 		
         </div>
       </div>
-      <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.href='https://www.blockdegree.org/blockchain-professional-exam'" />-->
+      <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.replace('https://www.blockdegree.org/blockchain-professional-exam')" />-->
       <button class="ITR btn btn-primary" type="button" onclick="window.location.href='https://www.blockdegree.org/blockchain-professional-exam'" /><i class="fa fa-arrow-left"></i> Retake Exam</button>
+
       {{/if}}
       {{!--<ul>
           <li>

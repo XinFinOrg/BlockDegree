@@ -9,21 +9,30 @@
         <h2 class="mb-3">Login</h2>
         <p class="pb-1 mb-0">Login with your social media account</p>
         <div class="text-center social-btn">
-          <a href="auth/facebook" class="btn btn-primary btn-lg btn-block"
-            ><i class="fa fa-facebook"></i> Login with <b>Facebook</b></a
+          <button
+            onclick="handleAuthFacebook()"
+            class="btn btn-primary btn-lg btn-block"
           >
+            <i class="fa fa-facebook"></i> Login with <b>Facebook</b>
+          </button>
           <button
             onclick="handleAuthTwitter()"
             class="btn btn-info btn-lg btn-block"
           >
             <i class="fa fa-twitter"></i> Login with <b>Twitter</b>
           </button>
-          <a href="auth/linkedin" class="btn btn-linkedin btn-lg btn-block"
-            ><i class="fa fa-linkedin"></i> Login with <b>LinkedIn</b></a
+          <button
+            onclick="handleAuthLinkedin()"
+            class="btn btn-linkedin btn-lg btn-block"
           >
-          <a href="auth/google" class="btn btn-danger btn-lg btn-block"
-            ><i class="fa fa-google"></i> Login with <b>Google</b></a
+            <i class="fa fa-linkedin"></i> Login with <b>LinkedIn</b>
+          </button>
+          <button
+            onclick="handleAuthGoogle()"
+            class="btn btn-danger btn-lg btn-block"
           >
+            <i class="fa fa-google"></i> Login with <b>Google</b>
+          </button>
         </div>
         <div class="or-seperator"><b>or</b></div>
         <h3 class="login-with-mail pb-1">Login with email</h3>
@@ -96,18 +105,36 @@
   window.addEventListener(
     "message",
     function(event) {
-      console.log(event.origin);
       if (event.origin == "https://www.blockdegree.org") {
-        console.log("Praise thee Lord!");
         checkAuth();
       }
     },
     false
   );
-
+  function handleAuthGoogle() {
+    let popup = window.open(
+      "https://www.blockdegree.org/auth/google?close=true",
+      "newwin",
+      "height=600px,width=600px"
+    );
+  }
+  function handleAuthFacebook() {
+    let popup = window.open(
+      "https://www.blockdegree.org/auth/facebook?close=true",
+      "newwin",
+      "height=600px,width=600px"
+    );
+  }
   function handleAuthTwitter() {
     let popup = window.open(
       "https://www.blockdegree.org/auth/twitter?close=true",
+      "newwin",
+      "height=600px,width=600px"
+    );
+  }
+  function handleAuthLinkedin() {
+    let popup = window.open(
+      "https://www.blockdegree.org/auth/linkedin?close=true",
       "newwin",
       "height=600px,width=600px"
     );
