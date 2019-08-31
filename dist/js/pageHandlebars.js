@@ -55,37 +55,37 @@ Handlebars.registerHelper("inc", function(value, options) {
 });
 
 // Special case for login button
-(function() {
-  if (document.getElementById("login-btn") != null) {
-    let content = document.getElementById("login-btn");
+// (function() {
+//   if (document.getElementById("login-btn") != null) {
+//     let content = document.getElementById("login-btn");
 
-    $.ajax({
-      type: "POST",
-      url: "/api/getAuthStatus",
-      success: function(result) {
-        if (
-          result.googleAuth ||
-          result.twitterAuth ||
-          result.facebookAuth ||
-          result.linkedinAuth ||
-          result.localAuth
-        ) {
-          let source = document.getElementById("nav-login").innerHTML,
-            template = Handlebars.compile(source);
-          content.innerHTML = template(true);
-        } else {
-          let source = document.getElementById("nav-login").innerHTML,
-            template = Handlebars.compile(source);
-          content.innerHTML = template(false);
-        }
-      },
-      error: function(err) {
-        console.log(err);
-        // window.location = "/";
-      }
-    });
-  }
-})();
+//     $.ajax({
+//       type: "POST",
+//       url: "/api/getAuthStatus",
+//       success: function(result) {
+//         if (
+//           result.googleAuth ||
+//           result.twitterAuth ||
+//           result.facebookAuth ||
+//           result.linkedinAuth ||
+//           result.localAuth
+//         ) {
+//           let source = document.getElementById("nav-login").innerHTML,
+//             template = Handlebars.compile(source);
+//           content.innerHTML = template(true);
+//         } else {
+//           let source = document.getElementById("nav-login").innerHTML,
+//             template = Handlebars.compile(source);
+//           content.innerHTML = template(false);
+//         }
+//       },
+//       error: function(err) {
+//         console.log(err);
+//         // window.location = "/";
+//       }
+//     });
+//   }
+// })();
 
 // runHandlebars(id, dataSrc, src)
 runHandlebars("nav-sub-1", "/data/courses.json", "nav-submenu-template");
