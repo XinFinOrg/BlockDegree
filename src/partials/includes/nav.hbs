@@ -22,7 +22,7 @@
           </ul>
         </li>
         <li><a href="/exams" class="py-1">Take Exam</a></li>
-        <li><a href="/profile" class="py-1">Profile</a></li>
+        <li><a href="/profile" id="profile-btn" style="display: none;" class="py-1">Profile</a></li>
         <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
         <li><a href="/contact" class="py-1">Contact Us</a></li>
         <li id="login-btn">
@@ -39,7 +39,9 @@
 
   $(async function () {
     console.log("called");
-    let loginButton = document.getElementById("nav-login");
+    let loginButton = document.getElementById("nav-login"),
+      profileBtn = document.getElementById("profile-btn");
+
     let resp = await fetch("/api/current_user");
     let respJSON = await resp.json();
     if (respJSON.status) {
@@ -47,6 +49,7 @@
       loginButton.innerHTML = "Logout";
       loginButton.setAttribute("href", "/logout");
       loginButton.style = "display:inline";
+      profileBtn.style = "display:block";
     } else {
       loginButton.innerHTML = "Login";
       loginButton.setAttribute("href", "/login");
