@@ -63,7 +63,7 @@ exports.submitExam = async (req, res, next) => {
                 $set: {
                   "examData.examBasic.attempts": attempts,
                   "examData.examBasic.marks": marks,
-                  "examData.payment.course_1": attempts > 2
+                  "examData.payment.course_1": attempts <= 2
                 }
               },
               { upsert: false },
@@ -125,7 +125,7 @@ exports.submitExam = async (req, res, next) => {
                 $set: {
                   "examData.examAdvanced.attempts": attemptsAdvanced,
                   "examData.examAdvanced.marks": marks,
-                  "examData.payment.course_2": attemptsAdvanced > 2
+                  "examData.payment.course_2": attemptsAdvanced <= 2
                 }
               },
               { upsert: false },
@@ -182,7 +182,7 @@ exports.submitExam = async (req, res, next) => {
                 $set: {
                   "examData.examProfessional.attempts": attemptsProfessional,
                   "examData.examProfessional.marks": marks,
-                  "examData.payment.course_3": attemptsProfessional > 2
+                  "examData.payment.course_3": attemptsProfessional <= 2
                 }
               },
               { upsert: false },
