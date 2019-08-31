@@ -1,3 +1,104 @@
+/*------ Exam result css -----*/
+.exam-result-heading {
+	  font-size: 20px;
+	  font-weight: 500;
+	  margin-bottom: 20px;
+	}
+
+#exam {	
+	
+	.btn-primary {padding: 8px 22px; border-radius: 50px; border: none!important;}
+	.btn-primary:hover {background-color: #2196f3;}
+	
+	.card-body {
+	  border-radius: .25rem;
+	  
+		.exam-result-subHeading {
+		  color: #0a4886;
+		  font-size: 20px;
+		  font-weight: 400;
+		  margin-bottom: 25px!important;
+		  background-color: #e1eaff;
+		  margin: -1.25rem;
+		  padding: 15px;
+		  border-top-left-radius: .25rem;
+		  border-top-right-radius: .25rem;
+		}
+	  
+	  .list-group-item {
+        font-size: 18px;     
+		padding-left: 0px;
+		background-color: transparent;
+		
+	    span {
+	      font-weight: 500;
+	    }
+	  }
+		  p {margin-bottom: 10px;}
+		  .redText {color: #ff0000!important;}
+		  .greenText {color: #04a62a;}
+		  .fw-6 {font-weight: 600;}
+		  .btn-primary {padding: 8px 22px; border-radius: 50px; border: none!important;}
+		  .btn-primary a {color: #FFFFFF;}
+		  .btn-download {color: #FFFFFF!important; background-color: #FF8348!important;padding: 8px 22px; border-radius: 50px!important; border: none;}
+	      .btn-download:hover {background-color: #eb4f05;}
+		  
+		  .social-sharing {
+		   border-radius: 50%;
+		   -webkit-transition-duration: 0.5s;
+		   -moz-transition-duration: 0.5s;
+		   -o-transition-duration: 0.5s;
+		  }	
+		  .social-sharing a {width:inherit; height: inherit;}
+		 
+		 /*-- Multicoloured Hover Variations --*/
+		 .social-fb {
+			color: #FFFFFF;
+			background-color: rgba(59,89,152,0.8);
+			border-radius: 50px;
+			border: none;
+		 } 
+		 .social-fb:hover {
+			background-color: rgba(59,89,152,1);
+		 }
+		 .social-tw {
+			color: #FFFFFF;
+			background-color: rgba(29,161,242,0.8);
+			border-radius: 50px;
+			border: none;
+		 }
+		 .social-tw:hover {
+			background-color: rgba(29,161,242,1);
+		 }
+		 .social-li {
+			color: #FFFFFF;
+			background-color: rgba(0,119,181,0.8);
+			border-radius: 50px;
+			border: none;
+		 }
+		 .social-li:hover {
+			background-color: rgba(0,119,181,1);
+		 }
+		 .social-g+ {
+			color: #FFFFFF;
+			background-color: rgba(221,75,57,0.8);
+			border-radius: 50px;
+			border: none;
+		 }
+		 .social-g+:hover {
+			background-color: rgba(221,75,57,1);
+		 }
+	}
+}
+
+#postTwitter {
+
+	textarea {width: 100%!important; background-color: #f6f6f6; border: 1px solid #ccc; padding: 10px; border-radius: 6px;}
+	textarea:focus, textarea:hover {box-shadow: none!important; background-color: #fff; border-color: #2073D4;}
+}
+
+/*------ Exam result css -----*/
+
 .exam-heading {
   font-size: 24px;
   font-weight: 500;
@@ -36,7 +137,7 @@
 			top: 0;
 			width: 18px;
 			height: 18px;
-			border: 1px solid #989da2;
+			border: 1px solid #788088;
 			border-radius: 100%;
 			background: #FFF;
 		}
@@ -179,7 +280,7 @@
   
   .promoCode-btn {
     font-size: 14px;
-	color: rgba(255,255,255,0.6);
+	color: rgba(255,255,255,0.8);
 	padding: 0px;
 	margin: 0px;
 	line-height: 16px;
