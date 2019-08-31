@@ -104,7 +104,7 @@ if (typeof jQuery != "undefined") {
                   "  <tr>" +
                   "    <th>Course Name</th>" +
                   "    <th>Payment Status</th>" +
-                  "    <th>Attempts Made</th>" +
+                  "    <th>Attempts Made (Total 3) </th>" +
                   "  </tr>" +
                   "  <tr>" +
                   "  <td>Basic</td>" +
