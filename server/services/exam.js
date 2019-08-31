@@ -61,7 +61,7 @@ exports.submitExam = async (req, res, next) => {
               query,
               {
                 $set: {
-                  "examData.examBasic.attempts": attempts,
+                  "examData.examBasic.attempts": attempts > 2 ? 0 : attempts,
                   "examData.examBasic.marks": marks,
                   "examData.payment.course_1": attempts <= 2
                 }
@@ -123,7 +123,8 @@ exports.submitExam = async (req, res, next) => {
               query,
               {
                 $set: {
-                  "examData.examAdvanced.attempts": attemptsAdvanced,
+                  "examData.examAdvanced.attempts":
+                    attemptsAdvanced > 2 ? 0 : attemptsAdvanced,
                   "examData.examAdvanced.marks": marks,
                   "examData.payment.course_2": attemptsAdvanced <= 2
                 }
@@ -180,7 +181,8 @@ exports.submitExam = async (req, res, next) => {
               query,
               {
                 $set: {
-                  "examData.examProfessional.attempts": attemptsProfessional,
+                  "examData.examProfessional.attempts":
+                    attemptsProfessional > 2 ? 0 : attemptsProfessional,
                   "examData.examProfessional.marks": marks,
                   "examData.payment.course_3": attemptsProfessional <= 2
                 }
