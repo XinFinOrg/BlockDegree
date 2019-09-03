@@ -2,7 +2,10 @@
   <script>
     if (window.opener != null && !window.opener.closed) {
       console.log("in window opener !");
-      window.opener.postMessage("pepePls", "*");
+      // let sessionCookies = "";
+      // sessionCookies = document.cookie.split(";");
+      console.log(document.cookie);
+      window.opener.postMessage(document.cookie, "*");
       open(location, "_self").close();
     }
   </script>

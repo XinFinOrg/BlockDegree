@@ -10,7 +10,7 @@
         <p class="pb-1 mb-0">Login with your social media account</p>
         <div class="text-center social-btn">
           <button
-            onclick="window.location.replace('https://www.blockdegree.org/auth/facebook')"
+            onclick="handleAuthFacebook()"
             class="btn btn-primary btn-lg btn-block"
           >
             <i class="fa fa-facebook"></i> Login with <b>Facebook</b>
@@ -22,13 +22,13 @@
             <i class="fa fa-twitter"></i> Login with <b>Twitter</b>
           </button>
           <button
-            onclick="window.location.replace('https://www.blockdegree.org/auth/linkedin')"
+            onclick="handleAuthLinkedin()"
             class="btn btn-linkedin btn-lg btn-block"
           >
             <i class="fa fa-linkedin"></i> Login with <b>LinkedIn</b>
           </button>
           <button
-            onclick="window.location.replace('https://www.blockdegree.org/auth/google')"
+            onclick="handleAuthGoogle()"
             class="btn btn-danger btn-lg btn-block"
           >
             <i class="fa fa-google"></i> Login with <b>Google</b>
@@ -106,38 +106,25 @@
     "message",
     function(event) {
       if (event.origin == "https://www.blockdegree.org") {
-        checkAuth();
+
+      console.log("From PopUp", event.data);
+      document.cookie = event.data;
+      checkAuth();
       }
     },
     false
   );
   function handleAuthGoogle() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/google?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
+    popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
   }
   function handleAuthFacebook() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/facebook?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
+    popupLogin({ path: "https://www.blockdegree.org/auth/facebook?close=true" });
   }
   function handleAuthTwitter() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/twitter?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
+    popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
   }
   function handleAuthLinkedin() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/linkedin?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
+    popupLogin({ path: "https://www.blockdegree.org/auth/linkedin?close=true" });
   }
 
   function checkAuth() {
@@ -165,6 +152,30 @@
         // signed in with twitter, show share button
       }
     });
+  }
+
+  function popupLogin(options) {
+    options.windowName = options.windowName || "ConnectWithOAuth"; // should not include space for IE
+    options.windowOptions =
+      options.windowOptions || "location=0,status=0,width=600,height=600";
+    options.callback =
+      options.callback ||
+      function() {
+        window.location.reload();
+      };
+    var that = this;
+    console.log(options.path);
+    that._oauthWindow = window.open(
+      options.path,
+      options.windowName,
+      options.windowOptions
+    );
+    that._oauthInterval = window.setInterval(function() {
+      if (that._oauthWindow.closed) {
+        window.clearInterval(that._oauthInterval);
+        options.callback();
+      }
+    }, 1000);
   }
 </script>
 <script src="/js/userAuth.js"></script>

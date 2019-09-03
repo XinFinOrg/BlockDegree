@@ -1,79 +1,84 @@
 {{#> base}}
-  {{> layouts/base}}
-  {{#*inline "body-block"}}
-  <!-- Start banner Area -->
-  <div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.3"></script>
-  <div class="banner-area relative" id="home">
-    <div class="container">
-      <div class="row fullscreen d-flex align-items-center justify-content-between">
-        <div class="banner-content text-white col-lg-9 col-md-12">
-          <h1 class="text-uppercase">
-            Become a Certified<br/> Blockchain Professional
-          </h1>
-          <div class="pt-10 pb-10">
-            <p class="mb-2">Equip yourself for the future. Advance your career.</p>
-            <p>Build a better decentralised world.</p>
+{{> layouts/base}}
+{{#*inline "body-block"}}
+<!-- Start banner Area -->
+<div id="fb-root"></div>
+<script
+  async
+  defer
+  crossorigin="anonymous"
+  src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.3"
+></script>
+<div class="banner-area relative" id="home">
+  <div class="container">
+    <div
+      class="row fullscreen d-flex align-items-center justify-content-between"
+    >
+      <div class="banner-content text-white col-lg-9 col-md-12">
+        <h1 class="text-uppercase">
+          Become a Certified<br />
+          Blockchain Professional
+        </h1>
+        <div class="pt-10 pb-10">
+          <p class="mb-2">
+            Equip yourself for the future. Advance your career.
+          </p>
+          <p>Build a better decentralised world.</p>
+        </div>
+        <a href="/blockchain-basic" class="btn btn-gradient"
+          >Start Learning Today</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End banner Area -->
+
+<!-- start abovefold area -->
+<div id="above-fold" class="bg-gradient">
+  <div class="container">
+    <div class="row py-3">
+      <div class="col-md-4 col-12">
+        <div class="row align-items-center pb-4 pb-md-0">
+          <div class="col-2">
+            <img src="img/home/icons/network.png" />
           </div>
-          <a href="/blockchain-basic" class="btn btn-gradient">Start Learning Today</a>
+          <div class="col-10 pl-3 text-white">
+            <strong>Step 1</strong>
+            <p class="mb-0">Read Free Course Material</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-12">
+        <div class="row align-items-center pb-4 pb-md-0">
+          <div class="col-2">
+            <img src="img/home/icons/network.png" />
+          </div>
+          <div class="col-10 pl-3 text-white">
+            <strong>Step 2</strong>
+            <p class="mb-0">Appear for Exam</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-12">
+        <div class="row align-items-center">
+          <div class="col-2">
+            <img src="img/home/icons/network.png" />
+          </div>
+          <div class="col-10 pl-3 text-white">
+            <strong>Step 3</strong>
+            <p class="mb-0">Get Certificate</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- End banner Area -->
+</div>
+<!-- end abovefold area -->
 
-  <!-- start abovefold area -->
-  <div id="above-fold" class="bg-gradient">
-    <div class="container">
-
-      <div class="row py-3">
-        <div class="col-md-4 col-12">
-          <div class="row align-items-center pb-4 pb-md-0">
-            <div class="col-2">
-              <img src="img/home/icons/network.png"/>
-            </div>
-            <div class="col-10 pl-3 text-white">
-              <strong>Step 1</strong>
-              <p class="mb-0">Read Free Course Material</p>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="col-md-4 col-12">
-          <div class="row align-items-center pb-4 pb-md-0">
-            <div class="col-2">
-              <img src="img/home/icons/network.png"/>
-            </div>
-            <div class="col-10 pl-3 text-white">
-              <strong>Step 2</strong>
-              <p class="mb-0">Appear for Exam</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4 col-12">
-          <div class="row align-items-center">
-            <div class="col-2">
-              <img src="img/home/icons/network.png"/>
-            </div>
-            <div class="col-10 pl-3 text-white">
-              <strong>Step 3</strong>
-              <p class="mb-0">Get Certificate</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-  <!-- end abovefold area -->
-  
-  
-  
-
-  <!-- Start technological partner Area 
+<!-- Start technological partner Area 
   <div class="container py-5 my-5">
     <div class="row align-items-center">
 
@@ -104,17 +109,13 @@
     </div>
   </div>
   <!-- End technological partner Area-->
-  
-  
-  
 
-  <!-- Start online class Area -->
-  <div class="bg-muted py-5">
-    <div class="container">
+<!-- Start online class Area -->
+<div class="bg-muted py-5">
+  <div class="container">
     <div class="py-2">
       <h2 class="text-center mb-3">Online Courses</h2>
       <div class="row course" id="courses">
-
         <script id="course-template" type="text/x-handlebars-template">
           \{{#each courses}}
             <div class="col-12 col-lg-4 text-white p-2 course__single">
@@ -130,78 +131,83 @@
             </div>
           \{{/each}}
         </script>
-
       </div>
     </div>
+  </div>
+</div>
+<!-- End online class Area -->
+
+<!-- Start Technological Partners Area -->
+<div class="container py-5">
+  <div class="row align-items-center">
+    <div class="col-lg-12">
+      <div class="title text-center">
+        <h2>Our Technological Partners</h2>
+      </div>
+    </div>
+
+    <div class="col-lg-12 mt-5 text-center">
+      <a href="https://Xinfin.org" target="_blank">
+        <img
+          src="img/partners/XinFin_dark.png"
+          class="img-fluid"
+          style="height: 150px;width:150px"
+        />
+      </a>
     </div>
   </div>
-  <!-- End online class Area -->
-  
-  
-  
-  <!-- Start Technological Partners Area -->
-  <div class="container py-5">
-    <div class="row align-items-center">
+</div>
+<!-- End Technological Partners Area-->
 
-      <div class="col-lg-12">
-        <div class="title text-center">
-          <h2>Our Technological Partners</h2>
+<!-- Start Contributors Area = inline code -->
+<div class="bg-muted pt-5">
+  <div class="container position-relative py-4">
+    <div class="contributors-block bg-white border content--rounded py-5">
+      <h2 class="text-center mb-4">Meet our Contributors</h2>
+      <div class="slider contributors_slider">
+        <div>
+          <div class="image">
+            <img
+              data-lazy="img/contributors/ankit.jpg"
+              class="rounded-circle mx-auto"
+            />
+          </div>
+          <h4 class="mt-3 text-center">Ankit Patel</h4>
+        </div>
+        <div>
+          <div class="image">
+            <img
+              data-lazy="img/contributors/0.jpg"
+              class="rounded-circle mx-auto"
+            />
+          </div>
+          <h4 class="mt-3 text-center">Puah Hui Ying (Wing)</h4>
+        </div>
+        <div>
+          <div class="image">
+            <img
+              data-lazy="img/contributors/marvin.png"
+              class="rounded-circle mx-auto"
+            />
+          </div>
+          <h4 class="mt-3 text-center">Marvin Das</h4>
+        </div>
+        <div>
+          <div class="image">
+            <img
+              data-lazy="img/contributors/rahulraj-nair.jpg"
+              class="rounded-circle mx-auto"
+            />
+          </div>
+          <h4 class="mt-3 text-center">Rahulraj Nair</h4>
         </div>
       </div>
-      
-      <div class="col-lg-12 mt-5 text-center">
-        <a href="https://Xinfin.org" target="_blank">
-          <img src="img/partners/XinFin_dark.png" class="img-fluid" style="height: 150px;width:150px">
-
-        </a>
-      </div>
-
     </div>
   </div>
-  <!-- End Technological Partners Area-->
-  
-  
-  
-  
-	<!-- Start Contributors Area = inline code -->
-    <div class="bg-muted pt-5">
-		<div class="container position-relative py-4">
-			<div class="contributors-block bg-white border content--rounded py-5">
-			<h2 class="text-center mb-4">Meet our Contributors</h2>
-				<div class="slider contributors_slider">                    
-                    <div>
-                        <div class="image">
-                            <img data-lazy="img/contributors/ankit.jpg" class="rounded-circle mx-auto" />
-                        </div>
-                        <h4 class="mt-3 text-center">Ankit Patel</h4>
-                    </div>
-                    <div>
-                        <div class="image">
-                            <img data-lazy="img/contributors/0.jpg" class="rounded-circle mx-auto" />
-                        </div>
-                        <h4 class="mt-3 text-center">Puah Hui Ying (Wing)</h4>
-                    </div>                   
-                    <div>
-                        <div class="image">
-                            <img data-lazy="img/contributors/marvin.png" class="rounded-circle mx-auto" />
-                        </div>
-                        <h4 class="mt-3 text-center">Marvin Das</h4>
-                    </div>                   
-                    <div>
-                        <div class="image">
-                            <img data-lazy="img/contributors/rahulraj-nair.jpg" class="rounded-circle mx-auto" />
-                        </div>
-                        <h4 class="mt-3 text-center">Rahulraj Nair</h4>
-                    </div>
-				</div>
-			</div>
-		</div>
-	</div>
-    <!-- End Contributors Area = inline code -->
-            
-            
+</div>
+<!-- End Contributors Area = inline code -->
 
-  <!-- Start contributors Area 
+<!-- Start contributors Area 
   <div class="bg-muted">
     <div class="container position-relative py-4">
       <div class="contributors bg-white border content--rounded py-5">
@@ -222,26 +228,32 @@
     </div>
   </div>
   <!-- End contributors Area -->
-  
-  <!-- Start Become a contributor Area -->
-  <div class="home__cta position-relative">
-    <div class="home__cta--container">
-      <div class="container">
-        <div class="row align-items-center text-center">
-          <div class="col-12 overlay__content text-white">
-            <h2 class="text-white">Become a Contributor</h2>
-            <p>Be part of the blockchain movement</p>
-            <a href="https://github.com/XinFinOrg/Blockchain_Tutorial-website" target="_blank"><button type="button" class="btn btn-outline-light px-5">Start Teaching</button></a>
-          </div>
+
+<!-- Start Become a contributor Area -->
+<div class="home__cta position-relative">
+  <div class="home__cta--container">
+    <div class="container">
+      <div class="row align-items-center text-center">
+        <div class="col-12 overlay__content text-white">
+          <h2 class="text-white">Become a Contributor</h2>
+          <p>Be part of the blockchain movement</p>
+          <a
+            href="https://github.com/XinFinOrg/Blockchain_Tutorial-website"
+            target="_blank"
+            ><button type="button" class="btn btn-outline-light px-5">
+              Start Teaching
+            </button></a
+          >
         </div>
       </div>
     </div>
   </div>
-  <!-- End Become a contributor Area -->
+</div>
+<!-- End Become a contributor Area -->
 
-  {{/inline}}
+{{/inline}}
 
-  {{#*inline "scripts-block"}}
-    <script src="/js/home.js"></script>
-  {{/inline}}
+{{#*inline "scripts-block"}}
+<script src="/js/home.js"></script>
+{{/inline}}
 {{/base}}
