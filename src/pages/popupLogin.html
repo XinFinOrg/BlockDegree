@@ -107,7 +107,7 @@
     function(event) {
       if (event.origin == "https://www.blockdegree.org") {
         console.log("From PopUp", event.data);
-        document.cookie = event.data;
+        document.cookie = event.data + ";path=/";
         checkAuth();
       }
     },
