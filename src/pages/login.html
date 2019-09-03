@@ -115,16 +115,20 @@
     false
   );
   function handleAuthGoogle() {
-    popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
+    window.location.replace("https://www.blockdegree.org/auth/google")
+    // popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
   }
   function handleAuthFacebook() {
-    popupLogin({ path: "https://www.blockdegree.org/auth/facebook?close=true" });
+    window.location.replace("https://www.blockdegree.org/auth/facebook")
+    // popupLogin({ path: "https://www.blockdegree.org/auth/facebook?close=true" });
   }
   function handleAuthTwitter() {
-    popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
+    window.location.replace("https://www.blockdegree.org/auth/twitter")
+    // popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
   }
   function handleAuthLinkedin() {
-    popupLogin({ path: "https://www.blockdegree.org/auth/linkedin?close=true" });
+    window.location.replace("https://www.blockdegree.org/auth/linkedin")
+    // popupLogin({ path: "https://www.blockdegree.org/auth/linkedin?close=true" });
   }
 
   function checkAuth() {
