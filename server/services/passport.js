@@ -206,7 +206,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/google/callback",
+        callbackURL: "http://localhost:3000/auth/google/callback",
 
         passReqToCallback: true
       },
@@ -294,7 +294,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/facebook/callback",
+        callbackURL: "http://localhost:3000/auth/facebook/callback",
         passReqToCallback: true,
         profileFields: ["id", "emails", "name"]
       },
@@ -392,7 +392,7 @@ module.exports = function(passport) {
       {
         consumerKey: process.env.TWITTER_CLIENT_ID,
         consumerSecret: process.env.TWITTER_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/twitter/callback",
+        callbackURL: "http://localhost:3000/auth/twitter/callback",
         includeEmail: true,
         passReqToCallback: true
       },
@@ -493,7 +493,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.LINKEDIN_CLIENT,
         clientSecret: process.env.LINKEDIN_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/linkedin/callback",
+        callbackURL: "http://localhost:3000/auth/linkedin/callback",
         scope: ["r_liteprofile", "r_emailaddress", "w_member_social"],
         passReqToCallback: true
       },

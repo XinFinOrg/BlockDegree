@@ -1,16 +1,112 @@
 {{#> base}}
 {{> layouts/base title="Blockchain events"}}
-
 {{#*inline "body-block"}}
-{{> includes/hero hero-title="Profile" hero-copy="View your profile"}}
+{{> includes/hero hero-title="Profile" hero-copy="View / Update your profile"}}
+  <div class="tab">   
+    <button id="view-profile-btn" class="tablinks" onclick="  openTab(event,'view_profile')">View Profile</button>
+    <button id="edit-profile-btn" class="tablinks" onclick="  openTab(event, 'edit_profile')">Edit</button>   
+  </div>
+  <div id="view_profile" class="tabcontent">
+    <h2>User Profile</h2>   
+          
+      <h3>Basic Details</h3>   
+      <table>   
+        <tr>   
+          <th>Field</th>   
+          <th>Value</th>   
+            
+        </tr>   
+        <tr>   
+          <td>Email-ID</td>   
+          <td id="emailId"></td>
+          
+      </tr>
+      <tr>   
+          <td>Full Name</td>
+          <td id="name"></td>
+        </tr>
+      </table>
+      <table>   
+      <h3>Socials</h3>
+      <table> 
+      <tr>   
+      <th>Social's Name</th>   
+      <th>Link Status</th>   
+      </tr>   
+      <tr>   
+      <td>Google</td>   
+      <td id="googleLink">
+      </td>   
+      </tr>   
+      <tr>   
+      <td>Facebook</td>   
+      <td id="facebookLink"></td>
+      </tr>
+      <tr>   
+      <td>Twitter</td>   
+      <td id="twitterLink">
+        </td>   
+      </tr>   
+      <tr>   
+      <td>Linkedin</td>   
+      <td id="linkedinLink"></td>
+      </tr>   
+      </table>   
+          
+      <h3>Payment Details</h3>  
+      <table>   
+        <tr>
+          <th>Course Name</th> 
+          <th>Payment Status</th>   
+          <th>Attempts Made (Total 3) </th> 
+      </tr>   
+        <tr>   
+        <td>Basic</td>   
+        <td id="basicStatus"></td>
+        <td id="basicAttempt"></td>
+        </tr>   
+        <tr>
+        <td>Advanced</td>
+        <td id="advancedStatus"></td>
+        <td id="advancedAttempt"></td>
+        </tr>   
+        <tr>
+        <td>Professional</td>
+        <td id="professionalStatus"></td>
+        <td id="professionalAttempt"></td>
+        </tr>   
+      </table>   
+    </div> 
 
-<div id="profile_wrap">&nbsp</div>
+    <div id="edit_profile" class="tabcontent">
+      <h2>Comming Soon</h2>
+    </div>
+</div>
+
+
+
+
+
+
+
 
 {{/inline}}
 {{#*inline "scripts-block"}}
 <script src="js/profile.js"></script>
 <script>
-  
+  function   openTab(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
 </script>
 {{/inline}}
 {{/base}}
