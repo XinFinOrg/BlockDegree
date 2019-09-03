@@ -105,7 +105,10 @@
   window.addEventListener(
     "message",
     function(event) {
-      if (event.origin == "https://www.blockdegree.org") {
+      if (
+        event.origin == "https://www.blockdegree.org" ||
+        event.origin == "https://blockdegree.org"
+      ) {
         console.log("From PopUp", event.data);
         document.cookie = event.data + ";path=/";
         checkAuth();
