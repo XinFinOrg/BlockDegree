@@ -335,17 +335,4 @@ module.exports = app => {
       res.json({ isSet: user.name != undefined && user.name != "" });
     }
   });
-
-  app.post("/api/setName", requireLogin, async (req, res) => {
-    const user = await User.findOne({ email: req.user.email }).catch(e => {
-      console.error(`Error : ${e}`);
-      return res.json({ msg: `error : ${e}` });
-    });
-    if (user == null) {
-      return res.json({ msg: `no such user` });
-    }
-    user.name = req.body.fullName;
-    await user.save();
-    res.json({ msg: `Name set: ${req.body.fullName}` });
-  });
 };
