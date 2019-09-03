@@ -132,7 +132,7 @@ module.exports = app => {
 
   app.get(
     "/auth/google",
-    // handleClose,
+    handleClose,
     passport.authenticate("google", {
       scope: ["profile ", "email"]
     })
@@ -140,15 +140,15 @@ module.exports = app => {
 
   app.get(
     "/auth/facebook",
-    // handleClose,
+    handleClose,
     passport.authenticate("facebook", {
       scope: ["public_profile", "email"]
     })
   );
 
-  app.get("/auth/twitter", passport.authenticate("twitter"));
+  app.get("/auth/twitter", handleClose, passport.authenticate("twitter"));
 
-  app.get("/auth/linkedin", passport.authenticate("linkedin"));
+  app.get("/auth/linkedin", handleClose, passport.authenticate("linkedin"));
 
   app.get("/auth/google/callback", (req, res, next) => {
     passport.authenticate(
