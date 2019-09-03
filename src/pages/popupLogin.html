@@ -1,0 +1,187 @@
+{{#> base pageClass="nav--sticky"}}
+{{> layouts/base}}
+{{#*inline "body-block"}}
+<div class="form-messages alert d-none" role="alert"></div>
+<div class="container__cstm">
+  <div class="row justify-content-center">
+    <div class="form-content">
+      <div class="p-4">
+        <h2 class="mb-3">Login</h2>
+        <p class="pb-1 mb-0">Login with your social media account</p>
+        <div class="text-center social-btn">
+          <button
+            onclick="handleAuthFacebook()"
+            class="btn btn-primary btn-lg btn-block"
+          >
+            <i class="fa fa-facebook"></i> Login with <b>Facebook</b>
+          </button>
+          <button
+            onclick="handleAuthTwitter()"
+            class="btn btn-info btn-lg btn-block"
+          >
+            <i class="fa fa-twitter"></i> Login with <b>Twitter</b>
+          </button>
+          <button
+            onclick="handleAuthLinkedin()"
+            class="btn btn-linkedin btn-lg btn-block"
+          >
+            <i class="fa fa-linkedin"></i> Login with <b>LinkedIn</b>
+          </button>
+          <button
+            onclick="handleAuthGoogle()"
+            class="btn btn-danger btn-lg btn-block"
+          >
+            <i class="fa fa-google"></i> Login with <b>Google</b>
+          </button>
+        </div>
+        <div class="or-seperator"><b>or</b></div>
+        <h3 class="login-with-mail pb-1">Login with email</h3>
+
+        <!-- Login Form -->
+        <form
+          class="login-form-block mt-1"
+          id="form-login"
+          method="post"
+          action="/login"
+        >
+          <!--<div class="text-left pl-4">
+            <label for="email" class="mb-0">Email</label>
+          </div>-->
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Email"
+            autocomplete="off"
+            required
+          />
+          <div id="invalidEm"></div>
+          <!--<div class="text-left pl-4">
+            <label for="password" class="mb-0 pt-2">Password</label>
+          </div>-->
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            autocomplete="off"
+            required
+          />
+
+          <div class="pl-2">
+            <a href="forgotpassword.html">Forgot Password?</a>
+          </div>
+
+          <input
+            type="submit"
+            class="btn btn-primary py-2 mt-2 text-white"
+            value="Log In"
+          />
+        </form>
+      </div>
+
+      <!-- Login with Google, Facebook, Twitter; need icons 
+           <a href="auth/facebook">Facebook  </a><span>||</span>
+           <a href="auth/twitter">  Twitter  </a><span>||</span>
+           <a href="auth/linkedin">  Linkedin  </a><span>||</span>
+           <a href="auth/google">Google</a>
+        <!-- Login with Google, Facebook, Twitter; need icons -->
+
+      <!-- Remind Passowrd -->
+      <div id="formFooter">
+        <a class="underlineHover" href="/register">New user? Register here</a>
+      </div>
+    </div>
+  </div>
+</div>
+{{/inline}}
+
+{{#*inline "scripts-block"}}
+<script>
+  window.onload = function() {
+    checkAuth();
+  };
+
+  window.addEventListener(
+    "message",
+    function(event) {
+      if (event.origin == "https://www.blockdegree.org") {
+
+      console.log("From PopUp", event.data);
+      document.cookie = event.data;
+      checkAuth();
+      }
+    },
+    false
+  );
+  function handleAuthGoogle() {
+    // window.location.replace("https://www.blockdegree.org/auth/google")
+    popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
+  }
+  function handleAuthFacebook() {
+    // window.location.replace("https://www.blockdegree.org/auth/facebook")
+    popupLogin({ path: "https://www.blockdegree.org/auth/facebook?close=true" });
+  }
+  function handleAuthTwitter() {
+    // window.location.replace("https://www.blockdegree.org/auth/twitter")
+    popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
+  }
+  function handleAuthLinkedin() {
+    // window.location.replace("https://www.blockdegree.org/auth/linkedin")
+    popupLogin({ path: "https://www.blockdegree.org/auth/linkedin?close=true" });
+  }
+
+  function checkAuth() {
+    console.log("called");
+    $.ajax({
+      url: "/api/getAuthStatus",
+      method: "post",
+      data: {},
+      success: result => {
+        //   localAuth: user.auth.local.password != "",
+        // twitterAuth: user.auth.twitter.id != "",
+        // facebookAuth: user.auth.facebook.id != "",
+        // googleAuth: user.auth.google.id != "",
+        // linkedinAuth: user.auth.linkedin.id != ""
+        if (
+          result.twitterAuth ||
+          result.googleAuth ||
+          result.localAuth ||
+          result.facebookAuth ||
+          result.linkedinAuth
+        ) {
+          // user is logged in, redirect.
+          location.replace("https://www.blockdegree.org");
+        }
+        // signed in with twitter, show share button
+      }
+    });
+  }
+
+  function popupLogin(options) {
+    options.windowName = options.windowName || "ConnectWithOAuth"; // should not include space for IE
+    options.windowOptions =
+      options.windowOptions || "location=0,status=0,width=600,height=600";
+    options.callback =
+      options.callback ||
+      function() {
+        window.location.reload();
+      };
+    var that = this;
+    console.log(options.path);
+    that._oauthWindow = window.open(
+      options.path,
+      options.windowName,
+      options.windowOptions
+    );
+    that._oauthInterval = window.setInterval(function() {
+      if (that._oauthWindow.closed) {
+        window.clearInterval(that._oauthInterval);
+        options.callback();
+      }
+    }, 1000);
+  }
+</script>
+<script src="/js/userAuth.js"></script>
+{{/inline}}
+{{/base}}
