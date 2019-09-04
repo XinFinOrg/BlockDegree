@@ -42,6 +42,9 @@ exports.postTwitter = async (req, res) => {
   ) {
     return res.redirect("/auth/twitter");
   }
+  if (req.body.hash == undefined || req.body.hash==""){
+    res.json({ uploaded: false, error: "No hash provided" });
+  }
   const hash =
     req.body.hash ||
     user.examData.certificateHash[user.examData.certificateHash.length - 1]
@@ -151,6 +154,9 @@ exports.postLinkedin = async (req, res) => {
     // set linkedin credentials and post.
     return res.redirect("/auth/linkedin");
   }
+  if (req.body.hash == undefined || req.body.hash==""){
+    res.json({ uploaded: false, error: "No hash provided" });
+  }
   const hash =
     req.body.hash ||
     user.examData.certificateHash[user.examData.certificateHash.length - 1]
@@ -198,7 +204,7 @@ exports.postLinkedin = async (req, res) => {
               description: {
                 text: "Blockdegree - XinFin's opensource blockchain training"
               },
-              originalUrl: "https://blockdegree.org/",
+              originalUrl: fullURL,
               title: {
                 text: "XinFin's Blockchain Training"
               }
