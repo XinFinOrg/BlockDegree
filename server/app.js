@@ -45,7 +45,7 @@ app.use(cors());
 // required for passport
 app.use(
   session({
-    secret: "itsmeakshayhere",
+    secret: "",
     resave: true,
     saveUninitialized: true,
     cookie: {
