@@ -211,7 +211,19 @@
   text-decoration: none;
   display: inline-block;
   /*color: #002844;*/
-  color: $white;
+  color: #FFFFFF;
+  font-weight:500;
+  font-size: 12px;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.nav-menu > li > div {
+  padding: 0 8px 0px 8px;
+  text-decoration: none;
+  display: inline-block;
+  /*color: #002844;*/
+  color: #FFFFFF;
   font-weight:500;
   font-size: 12px;
   text-transform: uppercase;
@@ -225,6 +237,7 @@
 
 /*-- Scrolled Nav css --*/
 .header-scrolled .nav-menu a{color: #002844;}
+.header-scrolled .nav-menu > li > div{color: #002844}
 .nav-menu li:hover > a{
   color: $white;
 }

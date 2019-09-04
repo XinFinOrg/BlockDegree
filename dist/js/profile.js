@@ -159,68 +159,77 @@ if (typeof jQuery != "undefined") {
 
   function handleUpdateLink(social) {
     console.log("inside update link");
-    $.ajax({
-      method: "get",
-      url: "/api/current_user",
-      success: result => {
-        if (result.status) {
-          // user is logged in
-          let user = result.user;
-          if (user.auth[social].id == undefined || user.auth[social].id == "") {
-            alert(`Social: ${social} is not linked to this account`);
-          } else {
-            $.ajax({
-              method: "post",
-              url: "/api/removeSocial",
-              data: { social },
-              success: result => {
-                if (result.status) {
-                  alert(
-                    "Successfully removed the social link, now pease login with new social"
-                  );
-                  switch (social) {
-                    case "google": {
-                      handleAuthGoogle();
-                      break;
+    if (
+      confirm(
+        `Warning: You are going to remove a social account linkeded to this account, you will no longer be able to login using this social account from ${social} after removing`
+      )
+    ) {
+      $.ajax({
+        method: "get",
+        url: "/api/current_user",
+        success: result => {
+          if (result.status) {
+            // user is logged in
+            let user = result.user;
+            if (
+              user.auth[social].id == undefined ||
+              user.auth[social].id == ""
+            ) {
+              alert(`Error: ${social} is not linked to this account`);
+            } else {
+              $.ajax({
+                method: "post",
+                url: "/api/removeSocial",
+                data: { social },
+                success: result => {
+                  if (result.status) {
+                    alert(
+                      "Successfully removed the social link, now pease login with new social"
+                    );
+                    switch (social) {
+                      case "google": {
+                        handleAuthGoogle();
+                        break;
+                      }
+                      case "twitter": {
+                        handleAuthTwitter();
+                        break;
+                      }
+                      case "facebook": {
+                        handleAuthFacebook();
+                        break;
+                      }
+                      case "linkedin": {
+                        handleAuthLinkedin();
+                        break;
+                      }
                     }
-                    case "twitter": {
-                      handleAuthTwitter();
-                      break;
-                    }
-                    case "facebook": {
-                      handleAuthFacebook();
-                      break;
-                    }
-                    case "linkedin": {
-                      handleAuthLinkedin();
-                      break;
-                    }
+                  } else {
+                    alert(`Cannot not remove: ${result.error}`);
                   }
-                } else {
-                  alert(`Cannot not remove: ${result.error}`);
+                },
+                error: err => {
+                  alert(
+                    "Error while making the call to the server, pls try again"
+                  );
+                  window.location.reload("https://www.blockdegree.org");
                 }
-              },
-              error: err => {
-                alert(
-                  "Error while making the call to the server, pls try again"
-                );
-                window.location.reload("https://www.blockdegree.org");
-              }
-            });
+              });
+            }
+          } else {
+            alert("Please log in to continue");
+            window.location.reload("https://www.blockdegree.org/login");
           }
-        } else {
-          alert("Please log in to continue");
+        },
+        error: err => {
+          alert("Error while getting current user");
           window.location.reload("https://www.blockdegree.org/login");
         }
-      },
-      error: err => {
-        alert("Error while getting current user");
-        window.location.reload("https://www.blockdegree.org/login");
-      }
-    });
+      });
+    }
   }
 
-  function handleRemoveLink() {
+  function handleRemoveLink(social) {
     console.log("inside remove link");
     $.ajax({
       method: "get",
@@ -230,28 +239,33 @@ if (typeof jQuery != "undefined") {
           // user is logged in
           let user = result.user;
           if (user.auth[social].id == undefined || user.auth[social].id == "") {
-            alert(`Social: ${social} is not linked to this account`);
+            alert(`Error: ${social} is not linked to this account`);
           } else {
-            $.ajax({
-              method: "post",
-              url: "/api/removeSocial",
-              data: { social },
-              success: result => {
-                if (result.status) {
+            if (
+              confirm(
+                `Warning: This social account from ${social} will be forever detached from your profile & you wont be able to login using this social.`
+              )
+            ) {
+              $.ajax({
+                method: "post",
+                url: "/api/removeSocial",
+                data: { social },
+                success: result => {
+                  if (result.status) {
+                    alert("Successfully removed the social link");
+                    checkAuth();
+                  } else {
+                    alert(`Cannot not remove: ${result.error}`);
+                  }
+                },
+                error: err => {
                   alert(
-                    "Successfully removed the social link, now pease login with new social"
+                    "Error while making the call to the server, pls try again"
                   );
-                } else {
-                  alert(`Cannot not remove: ${result.error}`);
+                  window.location.reload("https://www.blockdegree.org");
                 }
-              },
-              error: err => {
-                alert(
-                  "Error while making the call to the server, pls try again"
-                );
-                window.location.reload("https://www.blockdegree.org");
-              }
-            });
+              });
+            }
           }
         } else {
           alert("Please log in to continue");
@@ -263,35 +277,6 @@ if (typeof jQuery != "undefined") {
         window.location.reload("https://www.blockdegree.org/login");
       }
     });
-  }
-
-  function handleAuthGoogle() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/google?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
-  }
-  function handleAuthFacebook() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/facebook?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
-  }
-  function handleAuthTwitter() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/twitter?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
-  }
-  function handleAuthLinkedin() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/linkedin?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
   }
 
   window.addEventListener(
@@ -311,29 +296,43 @@ if (typeof jQuery != "undefined") {
       url: "/api/getAuthStatus",
       data: {},
       success: auths => {
+        // get & update view-profile links
         let googleLink = document.getElementById("googleLink"),
           facebookLink = document.getElementById("facebookLink"),
           twitterLink = document.getElementById("twitterLink"),
           linkedinLink = document.getElementById("linkedinLink");
+        let edit_googleLink = document.getElementById("edit_googleLink"),
+          edit_facebookLink = document.getElementById("edit_facebookLink"),
+          edit_twitterLink = document.getElementById("edit_twitterLink"),
+          edit_linkedinLink = document.getElementById("edit_linkedinLink");
+        // get & update edit-profile links
         if (auths.googleAuth) {
           googleLink.innerHTML = "yes";
+          edit_googleLink.innerHTML = "yes";
         } else {
           googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
+          edit_googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
         }
         if (auths.facebookAuth) {
           facebookLink.innerHTML = "yes";
+          edit_facebookLink.innerHTML = "yes";
         } else {
           facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
+          edit_facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
         }
         if (auths.twitterAuth) {
           twitterLink.innerHTML = "yes";
+          edit_twitterLink.innerHTML = "yes";
         } else {
           twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
+          edit_twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
         }
         if (auths.linkedinAuth) {
           linkedinLink.innerHTML = "yes";
+          edit_linkedinLink.innerHTML = "yes";
         } else {
           linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
+          edit_linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
         }
       }
     });

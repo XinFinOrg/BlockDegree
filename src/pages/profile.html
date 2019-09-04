@@ -157,6 +157,50 @@
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
 }
+
+function handleAuthGoogle() {
+    // window.location.replace("https://www.blockdegree.org/auth/google")
+    popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
+  }
+  function handleAuthFacebook() {
+    // window.location.replace("https://www.blockdegree.org/auth/facebook")
+    popupLogin({
+      path: "https://www.blockdegree.org/auth/facebook?close=true"
+    });
+  }
+  function handleAuthTwitter() {
+    // window.location.replace("https://www.blockdegree.org/auth/twitter")
+    popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
+  }
+  function handleAuthLinkedin() {
+    // window.location.replace("https://www.blockdegree.org/auth/linkedin")
+    popupLogin({
+      path: "https://www.blockdegree.org/auth/linkedin?close=true"
+    });
+  }
+  function popupLogin(options) {
+    options.windowName = options.windowName || "ConnectWithOAuth"; // should not include space for IE
+    options.windowOptions =
+      options.windowOptions || "location=0,status=0,width=600,height=600";
+    options.callback =
+      options.callback ||
+      function() {
+        window.location.reload();
+      };
+    var that = this;
+    console.log(options.path);
+    that._oauthWindow = window.open(
+      options.path,
+      options.windowName,
+      options.windowOptions
+    );
+    that._oauthInterval = window.setInterval(function() {
+      if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
+        that._oauthWindow.location.href ==
+          "https://www.blockdegree.org/closeCallback";
+      }
+    }, 1000);
+  }
 </script>
 {{/inline}}
 {{/base}}
