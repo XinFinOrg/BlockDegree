@@ -90,6 +90,7 @@ exports.usePromoCode = async req => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
     return { error: "bad request" };
   }
+  let userEmail = req.user.email;
   let codeName = req.body.codeName;
   let currPromoCode = await PromoCode.findOne({ codeName: codeName }).catch(
     e => {
@@ -111,7 +112,7 @@ exports.usePromoCode = async req => {
       if (
         user.email != "" &&
         user.email != undefined &&
-        user.email == req.user.email
+        user.email == userEmail
       ) {
         currPromoCode.lastUsed = Date.now();
         currPromoCode.count += 1;
@@ -130,14 +131,45 @@ exports.usePromoCode = async req => {
         return { error: null, msg: "all ok", discAmt: discAmt };
       }
     }
-    return { error: `User ${req.user.email} not allowed`, msg: "not ok" };
+    return { error: `User ${userEmail} not allowed`, msg: "not ok" };
   }
   currPromoCode.lastUsed = Date.now();
   currPromoCode.count += 1;
   let userArr = currPromoCode.users;
   let discAmt = currPromoCode.discAmt;
+  let userExists = false;
+  let userIndex = 0;
+  for (let i = 0; i < userArr.length; i++) {
+    const currObjEmail = userArr[i];
+    if (currObjEmail.email == userEmail) {
+      userExists = true;
+      userIndex = i;
+    }
+  }
+  if (!userExists) {
+    let newUserObj = {};
+    newUserObj = {
+      email: userEmail,
+      count: 1,
+      firstUsed: Date.now(),
+      lastUsed: Date.now()
+    };
+    currPromoCode.users.push(newUserObj);
+  } else {
+    // update used count & last used date
+    let newCount = userArr[userIndex].count + 1;
+    await PromoCode.updateOne(
+      { codeName: codeName, "users.email": userEmail },
+      {
+        $set: {
+          "users.$.count": newCount,
+          "users.$.lastUsed": Date.now()
+        }
+      }
+    );
+  }
 
-  currPromoCode.users = userArr;
+  // currPromoCode.users = userArr;
   await currPromoCode.save();
   return { error: null, msg: "ok", discAmt: discAmt };
 };
@@ -241,18 +273,18 @@ exports.checkCode = async (req, res) => {
   if (currPromoCode == null) {
     return res.status(200).json({ error: `no promo-code ${codeName} exists` });
   }
-  if (!currPromoCode.status){
-    return res.json({error:"code not active"});
+  if (!currPromoCode.status) {
+    return res.json({ error: "code not active" });
   }
   if (currPromoCode.restricted) {
     // check if the user has access
     for (var i = 0; i < currPromoCode.allowedUsers.length; i++) {
       if (currPromoCode.allowedUsers[i].email == req.user.email) {
-        console.log("Inside match")
+        console.log("Inside match");
         return res.json({ error: null, discAmt: currPromoCode.discAmt });
       }
     }
     return res.json({ error: "You don't have access to this code." });
   }
-  res.json({error:null,discAmt:currPromoCode.discAmt})
+  res.json({ error: null, discAmt: currPromoCode.discAmt });
 };
