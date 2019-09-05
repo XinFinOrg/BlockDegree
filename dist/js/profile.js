@@ -1,166 +1,282 @@
 if (typeof jQuery != "undefined") {
   $(document).ready(() => {
-    let profileWrap = document.getElementById("profile_wrap");
-
     $.ajax({
-      method: "post",
-      url: "/api/getAuthStatus",
-      data: {},
-      success: auths => {
-        if (
-          auths.linkedinAuth ||
-          auths.facebookAuth ||
-          auths.twitterAuth ||
-          auths.googleAuth ||
-          auths.localAuth
-        ) {
-          $.ajax({
-            method: "get",
-            url: "/api/current_user",
-            success: result => {
-              if (result.status) {
-                // we have a profile
-                let userProfile = result.user;
-                profileWrap.innerHTML =
-                  "<style>" +
-                  "table {" +
-                  "  font-family: arial, sans-serif;" +
-                  "  border-collapse: collapse;" +
-                  "  width: 100%;" +
-                  "}" +
-                  "" +
-                  "td, th {" +
-                  "  border: 1px solid #dddddd;" +
-                  "  text-align: left;" +
-                  "  padding: 8px;" +
-                  "}" +
-                  "" +
-                  "tr:nth-child(even) {" +
-                  "  background-color: #dddddd;" +
-                  "}" +
-                  "</style>" +
-                  "<h2>User Profile</h2>" +
-                  "" +
-                  "<h3>Basic Details</h3>" +
-                  "<table>" +
-                  "  <tr>" +
-                  "    <th>Field</th>" +
-                  "    <th>Value</th>" +
-                  "   " +
-                  "  </tr>" +
-                  "  <tr>" +
-                  "    <td>Email-ID</td>" +
-                  `    <td id="emailId">${userProfile.email}</td>` +
-                  "    " +
-                  "  </tr>" +
-                  "  <tr>" +
-                  "    <td>Full Name</td>" +
-                  `    <td id="name">${userProfile.name}</td>` +
-                  "  </tr>" +
-                  "</table>" +
-                  "<table>" +
-                  "<h3>Socials</h3>" +
-                  "<table>" +
-                  "<tr>" +
-                  "<th>Social's Name</th>" +
-                  "<th>Link Status</th>" +
-                  "</tr>" +
-                  "<tr>" +
-                  "<td>Google</td>" +
-                  `<td id="googleLink">${
-                    auths.googleAuth
-                      ? "yes"
-                      : `<button onclick="handleAuthGoogle()">Link Google</button>`
-                  }</td>` +
-                  "</tr>" +
-                  "<tr>" +
-                  "<td>Facebook</td>" +
-                  `<td id="facebookLink">${
-                    auths.facebookAuth
-                      ? "yes"
-                      : `<button onclick="handleAuthFacebook()">Link Facebook</button>`
-                  }</td>` +
-                  "</tr>" +
-                  "<tr>" +
-                  "<td>Twitter</td>" +
-                  `<td id="twitterLink">${
-                    auths.twitterAuth
-                      ? "yes"
-                      : `<button onclick="handleAuthTwitter()">Link Twitter</button>`
-                  }</td>` +
-                  "</tr>" +
-                  "<tr>" +
-                  "<td>Linkedin</td>" +
-                  `<td id="linkedinLink">${
-                    auths.linkedinAuth
-                      ? "yes"
-                      : `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`
-                  }</td>` +
-                  "</tr>" +
-                  "</table>" +
-                  "" +
-                  "<h3>Payment Details</h3>" +
-                  "<table>" +
-                  "  <tr>" +
-                  "    <th>Course Name</th>" +
-                  "    <th>Payment Status</th>" +
-                  "    <th>Attempts Made (Total 3) </th>" +
-                  "  </tr>" +
-                  "  <tr>" +
-                  "  <td>Basic</td>" +
-                  `  <td id="basicStatus">${userProfile.examData.payment.course_1}</td>` +
-                  `  <td id="attemptLeftBasic">${userProfile.examData.examBasic.attempts}</td>` +
-                  "  </tr>" +
-                  "  <tr>" +
-                  "  <td>Advanced</td>" +
-                  `  <td id="advancedStatus">${userProfile.examData.payment.course_2}</td>` +
-                  `  <td id="attemptLeftAdvanced">${userProfile.examData.examAdvanced.attempts}</td>` +
-                  "  </tr>" +
-                  "  <tr>" +
-                  "  <td>Professional</td>" +
-                  `  <td id="professionalStatus">${userProfile.examData.payment.course_3}</td>` +
-                  `  <td id="attemptLeftProfessional">${userProfile.examData.examProfessional.attempts}</td>` +
-                  "  </tr>" +
-                  "</table>";
-              }
-            }
-          });
+      method: "get",
+      url: "/api/current_user",
+      success: result => {
+        if (!result.status) {
+          alert("You are not logged in, please visit after logging in");
+          window.location.replace("https://www.blockdegree.org/login");
         } else {
-          // is not logged in
-          profileWrap.innerHTML =
-            '<div>Please <a href="/login">log in</a> to view / edit this page.</div>';
+          // is logged in, set the parameter
+          let userProfile = result.user;
+          // getting elements in the view-profile page
+          let viewProfile = document.getElementById("view-profile-btn");
+          let emailID = document.getElementById("emailId"),
+            name = document.getElementById("name"),
+            googleLink = document.getElementById("googleLink"),
+            facebookLink = document.getElementById("facebookLink"),
+            twitterLink = document.getElementById("twitterLink"),
+            linkedinLink = document.getElementById("linkedinLink"),
+            basicStatus = document.getElementById("basicStatus"),
+            advancedStatus = document.getElementById("advancedStatus"),
+            professionalStatus = document.getElementById("professionalStatus"),
+            basicAttempts = document.getElementById("basicAttempt"),
+            advancedAttempts = document.getElementById("advancedAttempt"),
+            professionalAttempts = document.getElementById(
+              "professionalAttempt"
+            );
+          emailID.innerHTML = userProfile.email;
+          name.innerHTML = userProfile.name;
+          googleLink.innerHTML =
+            userProfile.auth.google.id != ""
+              ? "linked"
+              : '<button onclick="handleAuthGoogle()">Link Google</button>';
+          facebookLink.innerHTML =
+            userProfile.auth.facebook.id != ""
+              ? "linked"
+              : '<button onclick="handleAuthFacebook()">Link Facebook</button>';
+          twitterLink.innerHTML =
+            userProfile.auth.twitter.id != ""
+              ? "linked"
+              : '<button onclick="handleAuthTwitter()">Link Twitter</button>';
+          linkedinLink.innerHTML =
+            userProfile.auth.linkedin.id != ""
+              ? "linked"
+              : '<button onclick="handleAuthLinkedin()">Link Linkedin</button>';
+          basicStatus.innerHTML = userProfile.examData.payment.course_1
+            ? "Enrolled"
+            : "Not Paid";
+          advancedStatus.innerHTML = userProfile.examData.payment.course_2
+            ? "Enrolled"
+            : "Not Paid";
+          professionalStatus.innerHTML = userProfile.examData.payment.course_3
+            ? "Enrolled"
+            : "Not Paid";
+          basicAttempts.innerHTML = userProfile.examData.examBasic.attempts;
+          advancedAttempts.innerHTML =
+            userProfile.examData.examAdvanced.attempts;
+          professionalAttempts.innerHTML =
+            userProfile.examData.examProfessional.attempts;
+          viewProfile.click();
+
+          // getting elements in the edit-page
+          let edit_name = document.getElementById("edit_name"),
+            edit_email = document.getElementById("edit_email"),
+            edit_googleLink = document.getElementById("edit_googleLink"),
+            edit_facebookLink = document.getElementById("edit_facebookLink"),
+            edit_twitterLink = document.getElementById("edit_twitterLink"),
+            edit_linkedinLink = document.getElementById("edit_linkedinLink");
+          edit_email.value = userProfile.email;
+          edit_name.value = userProfile.name;
+          edit_googleLink.innerHTML =
+            userProfile.auth.google.id != ""
+              ? "linked"
+              : '<button onclick="handleAuthGoogle()">Link Google</button>';
+          edit_facebookLink.innerHTML =
+            userProfile.auth.facebook.id != ""
+              ? "linked"
+              : '<button onclick="handleAuthFacebook()">Link Facebook</button>';
+          edit_twitterLink.innerHTML =
+            userProfile.auth.twitter.id != ""
+              ? "linked"
+              : '<button onclick="handleAuthTwitter()">Link Twitter</button>';
+          edit_linkedinLink.innerHTML =
+            userProfile.auth.linkedin.id != ""
+              ? "linked"
+              : '<button onclick="handleAuthLinkedin()">Link Linkdedin</button>';
         }
       }
     });
   });
 
-  function handleAuthGoogle() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/google?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
+  function handleUpdateName() {
+    let newName = document.getElementById("edit_name").value;
+    let newNameTrim = newName.trim();
+    if (newNameTrim.length < 2) {
+      return alert("Invalid Name");
+    }
+    $.ajax({
+      method: "get",
+      url: "/api/current_user",
+      success: result => {
+        if (result.status) {
+          // is logged in
+          let currentUser = result.user;
+          if (currentUser.name == newNameTrim) {
+            alert("Same Name");
+          } else {
+            $.ajax({
+              method: "post",
+              url: "/api/setName",
+              data: { fullName: newNameTrim },
+              success: result => {
+                alert("New name set");
+                window.location.reload();
+              },
+              error: err => {
+                alert("Error while updating the name");
+              }
+            });
+          }
+        } else {
+          alert("You're not logged in");
+          window.location.replace("https://www.blockdegree.org/login");
+        }
+      },
+      error: err => {
+        alert("Error while getting the current user");
+        window.location.replace("https://www.blockdegree.org/login");
+      }
+    });
+    let trimName = newName.trim();
+    console.log("Current Name ", currentName);
+    console.log("Trim name ", trimName);
+    if (trimName.length < 2) {
+      alert("Invalid name");
+      return;
+    }
+    if (currentName == trimName) {
+      // they are same duh!
+      alert("New name same as old name");
+    } else {
+      $.ajax({
+        method: "post",
+        url: "/api/setName",
+        data: { fullName: trimName },
+        success: result => {
+          console.log(result);
+          alert("New name set!");
+          window.location.reload();
+        },
+        error: err => {
+          alert("Some Error Occured!");
+          console.log(err);
+        }
+      });
+    }
   }
-  function handleAuthFacebook() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/facebook?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
+
+  function handleUpdateLink(social) {
+    console.log("inside update link");
+    if (
+      confirm(
+        `Warning: You are going to remove a social account linkeded to this account, you will no longer be able to login using this social account from ${social} after removing`
+      )
+    ) {
+      $.ajax({
+        method: "get",
+        url: "/api/current_user",
+        success: result => {
+          if (result.status) {
+            // user is logged in
+            let user = result.user;
+            if (
+              user.auth[social].id == undefined ||
+              user.auth[social].id == ""
+            ) {
+              alert(`Error: ${social} is not linked to this account`);
+            } else {
+              $.ajax({
+                method: "post",
+                url: "/api/removeSocial",
+                data: { social },
+                success: result => {
+                  if (result.status) {
+                    alert(
+                      "Successfully removed the social link, now pease login with new social"
+                    );
+                    switch (social) {
+                      case "google": {
+                        handleAuthGoogle();
+                        break;
+                      }
+                      case "twitter": {
+                        handleAuthTwitter();
+                        break;
+                      }
+                      case "facebook": {
+                        handleAuthFacebook();
+                        break;
+                      }
+                      case "linkedin": {
+                        handleAuthLinkedin();
+                        break;
+                      }
+                    }
+                  } else {
+                    alert(`Cannot not remove: ${result.error}`);
+                  }
+                },
+                error: err => {
+                  alert(
+                    "Error while making the call to the server, pls try again"
+                  );
+                  window.location.reload("https://www.blockdegree.org");
+                }
+              });
+            }
+          } else {
+            alert("Please log in to continue");
+            window.location.reload("https://www.blockdegree.org/login");
+          }
+        },
+        error: err => {
+          alert("Error while getting current user");
+          window.location.reload("https://www.blockdegree.org/login");
+        }
+      });
+    }
   }
-  function handleAuthTwitter() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/twitter?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
-  }
-  function handleAuthLinkedin() {
-    let popup = window.open(
-      "https://www.blockdegree.org/auth/linkedin?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
+
+  function handleRemoveLink(social) {
+    console.log("inside remove link");
+    $.ajax({
+      method: "get",
+      url: "/api/current_user",
+      success: result => {
+        if (result.status) {
+          // user is logged in
+          let user = result.user;
+          if (user.auth[social].id == undefined || user.auth[social].id == "") {
+            alert(`Error: ${social} is not linked to this account`);
+          } else {
+            if (
+              confirm(
+                `Warning: This social account from ${social} will be forever detached from your profile & you wont be able to login using this social.`
+              )
+            ) {
+              $.ajax({
+                method: "post",
+                url: "/api/removeSocial",
+                data: { social },
+                success: result => {
+                  if (result.status) {
+                    alert("Successfully removed the social link");
+                    checkAuth();
+                  } else {
+                    alert(`Cannot not remove: ${result.error}`);
+                  }
+                },
+                error: err => {
+                  alert(
+                    "Error while making the call to the server, pls try again"
+                  );
+                  window.location.reload("https://www.blockdegree.org");
+                }
+              });
+            }
+          }
+        } else {
+          alert("Please log in to continue");
+          window.location.reload("https://www.blockdegree.org/login");
+        }
+      },
+      error: err => {
+        alert("Error while getting current user");
+        window.location.reload("https://www.blockdegree.org/login");
+      }
+    });
   }
 
   window.addEventListener(
@@ -180,29 +296,43 @@ if (typeof jQuery != "undefined") {
       url: "/api/getAuthStatus",
       data: {},
       success: auths => {
+        // get & update view-profile links
         let googleLink = document.getElementById("googleLink"),
           facebookLink = document.getElementById("facebookLink"),
           twitterLink = document.getElementById("twitterLink"),
           linkedinLink = document.getElementById("linkedinLink");
+        let edit_googleLink = document.getElementById("edit_googleLink"),
+          edit_facebookLink = document.getElementById("edit_facebookLink"),
+          edit_twitterLink = document.getElementById("edit_twitterLink"),
+          edit_linkedinLink = document.getElementById("edit_linkedinLink");
+        // get & update edit-profile links
         if (auths.googleAuth) {
           googleLink.innerHTML = "yes";
+          edit_googleLink.innerHTML = "yes";
         } else {
           googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
+          edit_googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
         }
         if (auths.facebookAuth) {
           facebookLink.innerHTML = "yes";
+          edit_facebookLink.innerHTML = "yes";
         } else {
           facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
+          edit_facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
         }
         if (auths.twitterAuth) {
           twitterLink.innerHTML = "yes";
+          edit_twitterLink.innerHTML = "yes";
         } else {
           twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
+          edit_twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
         }
         if (auths.linkedinAuth) {
           linkedinLink.innerHTML = "yes";
+          edit_linkedinLink.innerHTML = "yes";
         } else {
           linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
+          edit_linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
         }
       }
     });

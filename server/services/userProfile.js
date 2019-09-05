@@ -78,3 +78,60 @@ exports.deleteProfileEdu = async (req, res) => {
   user.save();
   res.json({ msg: "ok" });
 };
+
+exports.updateSocial = async (req, res) => {
+  // let user = await User.findOne({ email: req.user.email });
+};
+exports.removeSocial = async (req, res) => {
+  let social = req.body.social;
+  let user = await User.findOne({ email: req.user.email });
+  if (user != null) {
+    // found user
+    console.log(
+      `Request to remove social ${social} for user ${req.user.email}`
+    );
+    let couldRemove = false;
+    Object.keys(user.auth).forEach(currAuth => {
+      console.log(currAuth);
+      if (currAuth != social) {
+        Object.keys(user.auth[currAuth]).forEach(currKey => {
+          console.log(currKey);
+          if (currKey == "$init") return;
+          let currVal = user.auth[currAuth][currKey];
+          if (currVal == undefined || currVal == "" || currVal == "false") {
+            // monkaS
+          } else {
+            couldRemove = true;
+          }
+        });
+      }
+    });
+    if (!couldRemove) {
+      return res.json({
+        error: "looks like this is your only id, cannot delete",
+        status: false
+      });
+    }
+    if (user.auth[social] != undefined || user.auth[social].id != "") {
+      const authKeys = Object.keys(user.auth[social]);
+      authKeys.forEach(key => {
+        user.auth[social][key] = "";
+      });
+      await user.save();
+      return res.json({ message: "ok", status: true });
+    }
+  }
+};
+
+exports.setProfileName = async (req, res) => {
+  const user = await User.findOne({ email: req.user.email }).catch(e => {
+    console.error(`Error : ${e}`);
+    return res.render("displayError", { error: `error : ${e}` });
+  });
+  if (user == null) {
+    return res.render("displayError", { error: `no such user` });
+  }
+  user.name = req.body.fullName;
+  await user.save();
+  res.json({ msg: `Name set: ${req.body.fullName}` });
+};
