@@ -286,10 +286,9 @@ exports.getExamResult = async (req, res) => {
 
   const user = await User.findOne(query).catch(err => {
     if (err) {
-      res.status(500).json({
-        error: err,
-        status: 500,
-        info: `error while looking up the DB`
+      console.log("error: ", err);
+      res.render("displayError", {
+        error: "Its not you, its us. Please try again after sometime."
       });
     }
   });
@@ -342,9 +341,10 @@ exports.getExamResult = async (req, res) => {
         date,
         bothRender => {
           if (!bothRender.uploaded) {
-            res
-              .status(500)
-              .json({ error: bothRender.error, info: bothRender.info });
+            console.log("error:", bothRender);
+            return res.render("displayError", {
+              error: "Its not you, its us. Please try again after some time."
+            });
           } else {
             jsonData.certificateHash = bothRender.hash[1];
             jsonData.examStatus = examStatus;
@@ -393,20 +393,18 @@ exports.getExamStatus = (req, res) => {
   query = { email: req.user.email };
   User.findOne(query, function(err, user) {
     if (err != null) {
-      res.status(500).json({
-        error: err,
-        info: "error in fetching the user from DB",
-        status: 500
+      console.log("error:", err);
+      return res.render("displayError", {
+        error: "Its not you, its us. Please try again after sometime."
       });
     }
     readJSONFile(
       path.join(process.cwd(), "/dist/data/courses.json"),
       (err, json) => {
         if (err != null) {
-          res.status(500).json({
-            error: err,
-            info: "error in fetching the course content",
-            status: 500
+          console.log("error:", err);
+          return res.render("displayError", {
+            error: err
           });
         }
         const examListData = {

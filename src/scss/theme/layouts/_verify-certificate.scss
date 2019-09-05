@@ -1,123 +1,130 @@
 .ver-search-results-line {
-  padding: 10px;
-  border: 1px solid $border;
-  img {
-    height: 200px;
-  }
+	padding: 10px;
+	border: 1px solid $border;
+
+	img {
+		height: 200px;
+	}
 }
 
 #verify-certificate {
-  .card {
-  
-    .card-body {
-	  border-radius: .25rem;
-	  
-      .list-group-item {
-        padding-left: 0px;
-		background-color: transparent;
-		
-	    span {
-	      font-weight: 500;
-	    }
-	  }
-    }
-  }
-  
-  .btn-primary {
-  	padding: 12px 25px;
-    border-radius: 50px;
-  }
-  
-  
-    .input-group .btn {
-    @include transition(all 0.4s);
-	width: 100%;
-    border-top-right-radius: 50px;
-    border-bottom-right-radius: 50px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-	background: #2073D4;
-	border: none;
-	padding: 10px 15px;
-	
-	&:hover {
-		background: #39ace7;
-		box-shadow: none!important;
-      }
-  }
-  
-  .input-group {
-    width: 100%;
-    margin: 0 auto;
- 
-	  input {
-		@include transition(all 0.4s);
-		border-top-left-radius: 50px;
-		border-bottom-left-radius: 50px;
-		border-top-right-radius: 0px;
-		border-bottom-right-radius: 0px;
-		background: #f6f6f6;
-		border: 1px solid #ccc;
-		padding: .375rem 1rem!important;
-		font-size: 0.9rem;
-		height: 46px;
-		
-		&:hover,
-		&:focus,
-		&:active {
-		  background-color: #fff;
-          border-color: #2073D4;
-		  box-shadow: none!important;
+	.card {
+
+		.card-body {
+			border-radius: .25rem;
+
+			.list-group-item {
+				padding-left: 0px;
+				background-color: transparent;
+
+				span {
+					font-weight: 500;
+				}
+			}
 		}
-	  }
-  }
-  
+	}
+
+	.btn-primary {
+		padding: 12px 25px;
+		border-radius: 50px;
+	}
+
+
+	.input-group .btn {
+		@include transition(all 0.4s);
+		width: 100%;
+		border-top-right-radius: 50px;
+		border-bottom-right-radius: 50px;
+		border-top-left-radius: 0px;
+		border-bottom-left-radius: 0px;
+		background: #2073D4;
+		border: none;
+		padding: 10px 15px;
+
+		&:hover {
+			background: #39ace7;
+			box-shadow: none !important;
+		}
+	}
+
+	.input-group {
+		width: 100%;
+		margin: 0 auto;
+
+		input {
+			@include transition(all 0.4s);
+			border-top-left-radius: 50px;
+			border-bottom-left-radius: 50px;
+			border-top-right-radius: 0px;
+			border-bottom-right-radius: 0px;
+			background: #f6f6f6;
+			border: 1px solid #ccc;
+			padding: .375rem 1rem !important;
+			font-size: 0.9rem;
+			height: 46px;
+
+			&:hover,
+			&:focus,
+			&:active {
+				background-color: #fff;
+				border-color: #2073D4;
+				box-shadow: none !important;
+			}
+		}
+	}
+
 }
 
-
-
-.social-sharing a {
-    color: #FFFFFF;
+.social-sharing span {
+	color: #FFFFFF;
 	width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-	-webkit-transform: scale(0.9);     
-     -moz-transform: scale(0.9);
-     -o-transform: scale(0.9);
-     -webkit-transition-duration: 0.5s;
-     -moz-transition-duration: 0.5s;
-     -o-transition-duration: 0.5s;
-}	
-.social-sharing a:hover {
-     -webkit-transform: scale(1);
-     -moz-transform: scale(1);
-     -o-transform: scale(1);
+	height: 30px;
+	border-radius: 50%;
+	display: inline-block;
+	text-align: center;
+	-webkit-transform: scale(0.9);
+	-moz-transform: scale(0.9);
+	-o-transform: scale(0.9);
+	-webkit-transition-duration: 0.5s;
+	-moz-transition-duration: 0.5s;
+	-o-transition-duration: 0.5s;
 }
- 
+
+.social-sharing span:hover {
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-o-transform: scale(1);
+}
+
 /*-- Multicoloured Hover Variations --*/
 .social-fb {
-	background-color: rgba(59,89,152,0.8);
-} 
+	background-color: rgba(59, 89, 152, 0.8);
+}
+
 .social-fb:hover {
-	background-color: rgba(59,89,152,1);
+	background-color: rgba(59, 89, 152, 1);
 }
+
 .social-tw {
-	background-color: rgba(29,161,242,0.8);
+	background-color: rgba(29, 161, 242, 0.8);
 }
+
 .social-tw:hover {
-	background-color: rgba(29,161,242,1);
+	background-color: rgba(29, 161, 242, 1);
 }
+
 .social-li {
-	background-color: rgba(0,119,181,0.8);
+	background-color: rgba(0, 119, 181, 0.8);
 }
+
 .social-li:hover {
-	background-color: rgba(0,119,181,1);
+	background-color: rgba(0, 119, 181, 1);
 }
+
 .social-g+ {
-	background-color: rgba(221,75,57,0.8);
+	background-color: rgba(221, 75, 57, 0.8);
 }
+
 .social-g+:hover {
-	background-color: rgba(221,75,57,1);
+	background-color: rgba(221, 75, 57, 1);
 }

@@ -54,6 +54,116 @@
     <div class="row" id="card_wrap"></div>
   </div>
 </div>
+<button
+  type="button"
+  class="btn btn-primary social-tw"
+  onclick="showImageModal()"
+  data-toggle="modal"
+  data-target="#postTwitter"
+  style="display: none"
+  id="togglePostTwitter"
+>
+  <i class="fa fa-twitter social"></i> Post on Twitter
+</button>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="postTwitter"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Twitter Post</h3>
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <input type="checkbox" id="certiLinkTwitter" /> Include link to
+          Certificate<br />
+        </div>
+        <p><textarea cols="30" rows="3" id="postMSGTwitter"></textarea></p>
+        <div>
+          <div>
+            <img
+              src="/img/gif/loading_block.gif"
+              style="width:300px;height:300px;display:block;margin:0 auto;"
+              id="modalImage"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary social-tw mt-3"
+            onclick="postTweet()"
+          >
+            <i class="fa fa-twitter"></i> Post On Twitter
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<button
+  id="togglePostLinkedin"
+  type="button"
+  class="btn btn-primary social-li"
+  data-toggle="modal"
+  data-target="#postLinkedin"
+  style="display: none"
+>
+  Post Linkedin
+</button>
+<div
+  class="modal fade"
+  id="postLinkedin"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Linkedin Post</h3>
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <input type="checkbox" id="certiLinkLinkedin" /> Include link to
+          Certificate<br />
+        </div>
+        <p><textarea cols="30" rows="3" id="postMSGLinkedin"></textarea></p>
+        <div>
+          <button
+            type="button"
+            class="btn btn-primary social-li mt-3"
+            onclick="postLinkedin()"
+          >
+            <i class="fa fa-linkedin"></i> Post On Linkedin
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--<div class="bg-white py-3">
 
@@ -92,6 +202,10 @@
 {{/base}}
 
 <script>
+  let postLinkedinHash = "";
+  let postTwitterHash = "";
+  let msg =
+    "Hey, I just got certified in blockchain from Blockdegree.org, check it out !!";
   $(document).ready(() => {
     $.ajax({
       method: "post",
@@ -129,10 +243,21 @@
     });
   });
 
-  // let fullNameElement = document.getElementById("fullName");
-  // fullNameElement.onkeyup = () => {
-
-  // }
+  window.addEventListener("message", function(event) {
+    if (
+      event.origin == "https://www.blockdegree.org" ||
+      event.origin == "https://blockdegree.org"
+    ) {
+      console.log("message from popup.");
+      if (postLinkedinHash != "") {
+        // toggle linkedin modal
+        $("#togglePostLinkedin").click();
+      } else if (postTwitterHash != "") {
+        // toggle twitter modal
+        $("#togglePostTwitter").click();
+      }
+    }
+  });
   function callSetName() {
     $.ajax({
       method: "post",
@@ -183,10 +308,14 @@
       headlessHash +
       " </li>" +
       "          					</ul>                            " +
-      // '                            <p class="social-sharing mt-3 mb-0 float-right">Share on : ' +
-      // '                                <a class="social-fb" onclick="handleShareLinkdedin()" href="#"><i class="fa fa-linkedin social"></i></a>' +
-      // '                                <a class="social-tw" onclick="handleShareTwitter()" href="#"><i class="fa fa-twitter social"></i></a>' +
-      // "							</p>" +
+      '                            <p class="social-sharing mt-3 mb-0 float-right">' +
+      "Share on : " +
+      `                                <span class="social-li" onclick="handleShareLinkdedin('${clientHash}')"><i class="fa fa-linkedin social"></i></span>` +
+      `                                <span class="social-tw" onclick="handleShareTwitter('${clientHash}')" ><i class="fa fa-twitter social"></i></span>` +
+      " or " +
+      `                            <span class="social-li" onclick="downloadCertificate('${clientHash}')"><i class="fa fa-download"></i></span>` +
+      `<img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="${clientHash}loading_download">` +
+      "							</p>" +
       "						</div>" +
       "					</div>" +
       "				</div>"
@@ -355,17 +484,197 @@
     });
   }
 
-  function handleShareLinkdedin() {
+  async function downloadCertificate(hash) {
+    console.log("inside download");
+    document.getElementById(hash + "loading_download").style =
+      "width:30px;height:30px;display:inline";
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/downloadCertificate", true);
+    xhr.responseType = "arraybuffer";
+    xhr.onload = function() {
+      if (this.status === 200) {
+        var filename = "";
+        var disposition = xhr.getResponseHeader("Content-Disposition");
+        if (disposition && disposition.indexOf("attachment") !== -1) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1])
+            filename = matches[1].replace(/['"]/g, "");
+        }
+        var type = xhr.getResponseHeader("Content-Type");
+
+        var blob =
+          typeof File === "function"
+            ? new File([this.response], filename, { type: type })
+            : new Blob([this.response], { type: type });
+        if (typeof window.navigator.msSaveBlob !== "undefined") {
+          // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+          window.navigator.msSaveBlob(blob, filename);
+        } else {
+          var URL = window.URL || window.webkitURL;
+          var downloadUrl = URL.createObjectURL(blob);
+          document.getElementById(hash + "loading_download").style =
+            "display:none";
+          if (filename) {
+            // use HTML5 a[download] attribute to specify filename
+            var a = document.createElement("a");
+            // safari doesn't support this yet
+            if (typeof a.download === "undefined") {
+              window.location = downloadUrl;
+            } else {
+              a.href = downloadUrl;
+              a.download = filename;
+              document.body.appendChild(a);
+              a.click();
+            }
+          } else {
+            window.location = downloadUrl;
+          }
+        }
+      }
+    };
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send($.param({ hash: hash }));
+  }
+
+  function handleShareLinkdedin(hash) {
+    console.log("called handle linkedin share");
+    console.log(`hash: ${hash}`);
+    postLinkedinHash = hash;
     $.ajax({
       method: "post",
       url: "/api/getAuthStatus",
       data: {},
-      success: result => {},
+      success: result => {
+        let popUpWin;
+        if (!result.linkedinAuth) {
+          // has not linked its linkedin account,  first link the account and then continue.
+          popUpWin = handleAuthLinkedin();
+        } else {
+          $("#togglePostLinkedin").click();
+        }
+      },
       error: err => {
         alert(`Error: ${err}`);
       }
     });
   }
 
-  function handleShareTwitter() {}
+  function handleShareTwitter(hash) {
+    console.log("called handle twitter share");
+    console.log(`hash: ${hash}`);
+    postTwitterHash = hash;
+    $.ajax({
+      method: "post",
+      url: "/api/getAuthStatus",
+      data: {},
+      success: result => {
+        let popUpWin;
+        if (!result.twitterAuth) {
+          // has not linked its linkedin account,  first link the account and then continue.
+          popUpWin = handleAuthTwitter();
+        } else {
+          $("#togglePostTwitter").click();
+        }
+      },
+      error: err => {
+        alert(`Error: ${err}`);
+      }
+    });
+  }
+
+  function handleAuthTwitter() {
+    return window.open(
+      "https://www.blockdegree.org/auth/twitter?close=true",
+      "newwin",
+      "height=600px,width=600px"
+    );
+  }
+  function handleAuthLinkedin() {
+    return window.open(
+      "https://www.blockdegree.org/auth/linkedin?close=true",
+      "newwin",
+      "height=600px,width=600px"
+    );
+  }
+
+  function postTweet() {
+    let userMSG = document.getElementById("postMSGTwitter").value;
+    let certiLink = document.getElementById("certiLinkTwitter").checked;
+    if (userMSG.length > 260) {
+      alert("Max length is 260 ");
+    } else {
+      $.ajax({
+        method: "post",
+        url: "/api/shareOnTwitter",
+        data: { hash: postTwitterHash, certiLink: certiLink, msg: userMSG },
+        success: result => {
+          console.log(result);
+          if (result.uploaded) {
+            alert("Posted on Twitter!");
+          } else {
+            alert("Oops, error occured while posting!");
+          }
+        }
+      });
+    }
+    $("#postTwitter").modal("hide");
+  }
+
+  function showImageModal() {
+    console.log("inside download");
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/downloadCertificate", true);
+    xhr.responseType = "arraybuffer";
+    xhr.onload = function() {
+      if (this.status === 200) {
+        var filename = "";
+        var disposition = xhr.getResponseHeader("Content-Disposition");
+        if (disposition && disposition.indexOf("attachment") !== -1) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1])
+            filename = matches[1].replace(/['"]/g, "");
+        }
+        var type = xhr.getResponseHeader("Content-Type");
+
+        var blob =
+          typeof File === "function"
+            ? new File([this.response], filename, { type: type })
+            : new Blob([this.response], { type: type });
+        if (typeof window.navigator.msSaveBlob !== "undefined") {
+          // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+          window.navigator.msSaveBlob(blob, filename);
+        } else {
+          var URL = window.URL || window.webkitURL;
+          document.querySelector("#modalImage").src = URL.createObjectURL(blob);
+        }
+      }
+    };
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send($.param({ hash: postTwitterHash }));
+  }
+
+  function postLinkedin() {
+    let userMSG = document.getElementById("postMSGLinkedin").value;
+    let certiLink = document.getElementById("certiLinkLinkedin").checked;
+    $.ajax({
+      method: "post",
+      url: "/api/shareOnLinkedin",
+      data: { hash: postLinkedinHash, msg: userMSG, certiLink: certiLink },
+      success: result => {
+        console.log(result);
+        if (result.uploaded) {
+          alert("Posted on Linkedin!");
+        } else {
+          alert("Oops, error occured while posting!");
+        }
+        postLinkedinHash = "";
+      },
+      error: err => {
+        postLinkedinHash = "";
+      }
+    });
+    $("#postLinkedin").modal("hide");
+  }
 </script>
