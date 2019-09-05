@@ -8,35 +8,41 @@
     <form id="">
       {{#if exam.examBasic }}
       <div class="card mb-4">
-	    <div class="card-body bg-light">
-        <h3 class="exam-qns exam-result-subHeading">Blockchain Basic Result</h3>
-        
-		<ul class="list-group list-group-flush mb-4">
-          <li class="list-group-item border-top-0"><span>Total Questions :</span> {{{total}}}</li>
-		  <li class="list-group-item"><span>Marks :</span> {{{obtainedMarks}}}</li>
-		  <li class="list-group-item"><span>Percentage :</span> {{{percent}}} %</li>
-		  <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
-		  {{#if examStatus}}
-          <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span class="greenText fw-6">PASS</span></li>
-		  {{else}}
-          <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span class="redText fw-6">FAIL</span>
-          {{/if}}
-		</ul>
-		
-		<div>
-			<button type="button" class="btn btn-download mb-3" onclick="downloadImage()">Download <i class="fa fa-download"></i></button><br>
+        <div class="card-body bg-light">
+          <h3 class="exam-qns exam-result-subHeading">Blockchain Basic Result</h3>
+
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item border-top-0"><span>Total Questions :</span> {{{total}}}</li>
+            <li class="list-group-item"><span>Marks :</span> {{{obtainedMarks}}}</li>
+            <li class="list-group-item"><span>Percentage :</span> {{{percent}}} %</li>
+            <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
+            {{#if examStatus}}
+            <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span
+                class="greenText fw-6">PASS</span></li>
+            {{else}}
+            <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span
+                class="redText fw-6">FAIL</span>
+              {{/if}}
+          </ul>
+
+          <div>
+            <button type="button" class="btn btn-download mb-3" onclick="downloadImage()">Download <i
+                class="fa fa-download"></i></button><br>
             <img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="loading_download">
-        </div>
-		
-		<button class="fb-share-button btn btn-primary social-fb mb-2" data-href="https://blockdegree.org" data-layout="button_count" data-size="large">
-			<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore"><i class="fa fa-facebook"></i> Share on Facebook</a>
-		</button>
-		
-		<p id="social_wrap" class="social-sharing">
-			Post on Socials:
-        </p>
-		
-		<!--<ul>
+          </div>
+
+          <button class="fb-share-button btn btn-primary social-fb mb-2" data-href="https://blockdegree.org"
+            data-layout="button_count" data-size="large">
+            <a target="_blank"
+              href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
+              class="fb-xfbml-parse-ignore"><i class="fa fa-facebook"></i> Share on Facebook</a>
+          </button>
+
+          <p id="social_wrap" class="social-sharing">
+            Post on Socials:
+          </p>
+
+          <!--<ul>
 		  <li style="display: flex;flex-direction:column">
             <strong><span>Total Questions:</span></strong> {{{total}}}
             <strong><span>marks:</span></strong> {{{obtainedMarks}}}		
@@ -62,43 +68,51 @@
             {{/if}}
           </li>
         </ul>-->
-		
+
         </div>
-      </div>      
-	  <button class="ITR btn btn-primary" type="button" onclick="window.location.replace('https://www.blockdegree.org/blockchain-basic-exam')" /><i class="fa fa-arrow-left"></i> Retake Exam</button>
-      
-	  {{else if exam.examAdvanced}}
-	  
-	  <div class="card mb-4">
+      </div>
+      <button class="ITR btn btn-primary" type="button"
+        onclick="window.location.replace('https://www.blockdegree.org/blockchain-basic-exam')" /><i
+        class="fa fa-arrow-left"></i> Retake Exam</button>
+
+      {{else if exam.examAdvanced}}
+
+      <div class="card mb-4">
         <div class="card-body bg-light">
-		<h3 class="exam-qns exam-result-subHeading">Blockchain Advanced Result</h3>
-        
-		<ul class="list-group list-group-flush mb-4">
-          <li class="list-group-item border-top-0"><span>Total Questions :</span> {{{total}}}</li>
-		  <li class="list-group-item"><span>Marks :</span> {{{obtainedMarks}}}</li>
-		  <li class="list-group-item"><span>Percentage :</span> {{{percent}}} %</li>
-		  <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
-		  {{#if examStatus}}
-          <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span class="greenText fw-6">PASS</span></li>
-		  {{else}}
-          <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span class="redText fw-6">FAIL</span>
-          {{/if}}
-		</ul>
-		
-		<div>
-			<button type="button" class="btn btn-download mb-3" onclick="downloadImage()">Download <i class="fa fa-download"></i></button><br>
+          <h3 class="exam-qns exam-result-subHeading">Blockchain Advanced Result</h3>
+
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item border-top-0"><span>Total Questions :</span> {{{total}}}</li>
+            <li class="list-group-item"><span>Marks :</span> {{{obtainedMarks}}}</li>
+            <li class="list-group-item"><span>Percentage :</span> {{{percent}}} %</li>
+            <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
+            {{#if examStatus}}
+            <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span
+                class="greenText fw-6">PASS</span></li>
+            {{else}}
+            <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span
+                class="redText fw-6">FAIL</span>
+              {{/if}}
+          </ul>
+
+          <div>
+            <button type="button" class="btn btn-download mb-3" onclick="downloadImage()">Download <i
+                class="fa fa-download"></i></button><br>
             <img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="loading_download">
-        </div>
-		
-		<button class="fb-share-button btn btn-primary social-fb mb-2" data-href="https://blockdegree.org" data-layout="button_count" data-size="large">
-			<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore"><i class="fa fa-facebook"></i> Share on Facebook</a>
-		</button>
-		
-		<p id="social_wrap" class="social-sharing">
-			Post on Socials:			
-        </p>
-		
-		<!--<ul>
+          </div>
+
+          <button class="fb-share-button btn btn-primary social-fb mb-2" data-href="https://blockdegree.org"
+            data-layout="button_count" data-size="large">
+            <a target="_blank"
+              href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
+              class="fb-xfbml-parse-ignore"><i class="fa fa-facebook"></i> Share on Facebook</a>
+          </button>
+
+          <p id="social_wrap" class="social-sharing">
+            Post on Socials:
+          </p>
+
+          <!--<ul>
 
           <li style="display: flex;flex-direction:column">
             <strong><span>Total Questions:</span></strong> {{{total}}}
@@ -131,40 +145,52 @@
         </div>
       </div>
       <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.replace('https://www.blockdegree.org/blockchain-advanced-exam')" />-->
-      <button class="ITR btn btn-primary" type="button" onclick="window.location.replace('https://www.blockdegree.org/blockchain-advanced-exam')" /><i class="fa fa-arrow-left"></i> Retake Exam</button>
-      
-	  {{else if exam.examProfessional}}
-      
-	  <div class="card mb-4">
+      <button class="ITR btn btn-primary" type="button"
+        onclick="window.location.replace('https://www.blockdegree.org/blockchain-advanced-exam')" /><i
+        class="fa fa-arrow-left"></i> Retake Exam</button>
+
+      {{else if exam.examProfessional}}
+
+      <div class="card mb-4">
         <div class="card-body bg-light">
-		<h3 class="exam-qns exam-result-subHeading">Blockchain Professional Result</h3>
-        
-		<ul class="list-group list-group-flush mb-4">
-          <li class="list-group-item border-top-0"><span>Total Questions :</span> {{{total}}}</li>
-		  <li class="list-group-item"><span>Marks :</span> {{{obtainedMarks}}}</li>
-		  <li class="list-group-item"><span>Percentage :</span> {{{percent}}} %</li>
-		  <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
-		  {{#if examStatus}}
-          <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span class="greenText fw-6">PASS</span></li>
-		  {{else}}
-          <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span class="redText fw-6">FAIL</span>
-          {{/if}}
-		</ul>
-		
-		<div>
-			<button type="button" class="btn btn-download mb-3" onclick="downloadImage()">Download <i class="fa fa-download"></i></button><br>
+          <h3 class="exam-qns exam-result-subHeading">Blockchain Professional Result</h3>
+
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item border-top-0"><span>Total Questions :</span> {{{total}}}</li>
+            <li class="list-group-item"><span>Marks :</span> {{{obtainedMarks}}}</li>
+            <li class="list-group-item"><span>Percentage :</span> {{{percent}}} %</li>
+            <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
+            {{#if examStatus}}
+            <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span
+                class="greenText fw-6">PASS</span></li>
+            {{else}}
+            <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span
+                class="redText fw-6">FAIL</span>
+              {{/if}}
+          </ul>
+
+          {{#if examStatus}}
+          <div>
+            <button id="download-cert-btn" type="button" class="btn btn-download mb-3"
+              onclick="downloadImage()">Download <i class="fa fa-download"></i></button><br>
             <img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="loading_download">
-        </div>
-		
-		<button class="fb-share-button btn btn-primary social-fb mb-2" data-href="https://blockdegree.org" data-layout="button_count" data-size="large">
-			<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore"><i class="fa fa-facebook"></i> Share on Facebook</a>
-		</button>
-		
-		<p id="social_wrap" class="social-sharing">
-			Post on Socials:			
-        </p>
-		
-		<!--<ul>
+          </div>
+
+          <button id="fb-share-cert-btn" class="fb-share-button btn btn-primary social-fb mb-2"
+            data-href="https://blockdegree.org" data-layout="button_count" data-size="large">
+            <a target="_blank"
+              href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblockdegree.org%2F&amp;src=sdkpreparse"
+              class="fb-xfbml-parse-ignore"><i class="fa fa-facebook"></i> Share on Facebook</a>
+          </button>
+
+          <p id="social_wrap" class="social-sharing">
+            Post on Socials:
+          </p>
+          {{else}}
+          {{/if}}
+
+
+          <!--<ul>
 
           <li style="display: flex;flex-direction:column">
             <strong><span>Total Questions:</span></strong> {{{total}}}
@@ -192,11 +218,13 @@
           </li>
 
         </ul>-->
-		
+
         </div>
       </div>
       <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.replace('https://www.blockdegree.org/blockchain-professional-exam')" />-->
-      <button class="ITR btn btn-primary" type="button" onclick="window.location.replace('https://www.blockdegree.org/blockchain-professional-exam')" /><i class="fa fa-arrow-left"></i> Retake Exam</button>
+      <button class="ITR btn btn-primary" type="button"
+        onclick="window.location.replace('https://www.blockdegree.org/blockchain-professional-exam')" /><i
+        class="fa fa-arrow-left"></i> Retake Exam</button>
 
 
       {{/if}}
@@ -218,7 +246,6 @@
 
 
   const msg = "Hey, I just got certified in blockchain from Blockdegree.org, check it out !!"
-
   window.onload = function () {
     checkAuth();
   }
@@ -288,92 +315,96 @@
 
   function checkAuth() {
     console.log("called")
-    $.ajax({
-      url: "/api/getAuthStatus",
-      method: "post",
-      data: {},
-      success: (result) => {
-        // setting up a hidden html.
-        // to be replaced by : pop-up modal for post, async call to /api/shareSocial and  
-        let retHTML = '<form target="_blank" method="post" action="/api/shareOnTwitter">' +
-          '                <input type="hidden" placeholder="Enter post status" name="msg" />' +
-          '                <input type="hidden" />' +
-          '              </form>'
-        console.log(result)
-        if (result.twitterAuth) {
-          // signed in with twitter, show share button
-          retHTML += '<button type="button" class="btn btn-primary social-tw" onclick="showImageModal()" data-toggle="modal" data-target="#postTwitter"><i class="fa fa-twitter social"></i> Post on Twitter</button>' +
-            '' +
-            '  <!-- Modal -->' +
-            '  <div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
-            '    <div class="modal-dialog modal-dialog-centered" role="document">' +
-            '    ' +
-            '      <!-- Modal content-->' +
-            '      <div class="modal-content">' +
-            '        <div class="modal-header">' +
-            '          <h3 class="modal-title">Twitter Post</h3>' +
-            '          <button type="button" class="close" data-dismiss="modal">×</button>' +
-            '        </div>' +            
-            '        <div class="modal-body">' +
-            '          <div class="mb-3"><input type ="checkbox" id="certiLinkTwitter"> Include link to Certificate<br></div> ' +
-			'          <p>' + '<textarea cols="30" rows="3" id="postMSGTwitter" >' + msg + '</textarea>' +
-            '          <div>' +
-            '          <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;" id="modalImage" ></div>' +
-            '            <button type="button" class="btn btn-primary social-tw mt-3" onclick="postTweet()"><i class="fa fa-twitter"></i> Post On Twitter ' +
-            '            </button>' +
-            '          </div>' +
-            '        </div>' +
-            '' +
-            '        <div class="modal-footer">' +
-            '          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>' +
-            '        </div>' +
-            '      </div>' +
-            '      ' +
-            '    </div>' +
-            '  </div>';
-        } else {
-          retHTML += '<div>' +
-            '<button type="button" class="btn btn-primary social-tw mt-2" onclick="handleAuthTwitter()">Auth-Twitter</button>' +
-            '</div>';
+    let examStatus = "{{examStatus}}";
+    if (examStatus == "true") {
+      $.ajax({
+        url: "/api/getAuthStatus",
+        method: "post",
+        data: {},
+        success: (result) => {
+          // setting up a hidden html.
+          // to be replaced by : pop-up modal for post, async call to /api/shareSocial and  
+          let retHTML = '<form target="_blank" method="post" action="/api/shareOnTwitter">' +
+            '                <input type="hidden" placeholder="Enter post status" name="msg" />' +
+            '                <input type="hidden" />' +
+            '              </form>'
+          console.log(result)
+          if (result.twitterAuth) {
+            // signed in with twitter, show share button
+            retHTML += '<button type="button" class="btn btn-primary social-tw" onclick="showImageModal()" data-toggle="modal" data-target="#postTwitter"><i class="fa fa-twitter social"></i> Post on Twitter</button>' +
+              '' +
+              '  <!-- Modal -->' +
+              '  <div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
+              '    <div class="modal-dialog modal-dialog-centered" role="document">' +
+              '    ' +
+              '      <!-- Modal content-->' +
+              '      <div class="modal-content">' +
+              '        <div class="modal-header">' +
+              '          <h3 class="modal-title">Twitter Post</h3>' +
+              '          <button type="button" class="close" data-dismiss="modal">×</button>' +
+              '        </div>' +
+              '        <div class="modal-body">' +
+              '          <div class="mb-3"><input type ="checkbox" id="certiLinkTwitter"> Include link to Certificate<br></div> ' +
+              '          <p>' + '<textarea cols="30" rows="3" id="postMSGTwitter" >' + msg + '</textarea>' +
+              '          <div>' +
+              '          <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;" id="modalImage" ></div>' +
+              '            <button type="button" id="twitter-share-cert-btn" class="btn btn-primary social-tw mt-3" onclick="postTweet()"><i class="fa fa-twitter"></i> Post On Twitter ' +
+              '            </button>' +
+              '          </div>' +
+              '        </div>' +
+              '' +
+              '        <div class="modal-footer">' +
+              '          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>' +
+              '        </div>' +
+              '      </div>' +
+              '      ' +
+              '    </div>' +
+              '  </div>';
+          } else {
+            retHTML += '<div>' +
+              '<button type="button" id="twitter-auth-cert-btn" class="btn btn-primary social-tw mt-2" onclick="handleAuthTwitter()">Auth-Twitter</button>' +
+              '</div>';
+          }
+          if (result.linkedinAuth) {
+            retHTML += '<button type="button" class="btn btn-primary social-li" data-toggle="modal" data-target="#postLinkedin">Post on Linkedin</button>' +
+              '' +
+              '  <!-- Modal -->' +
+              '  <div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
+              '    <div class="modal-dialog modal-dialog-centered" role="document">' +
+              '    ' +
+              '      <!-- Modal content-->' +
+              '      <div class="modal-content">' +
+              '        <div class="modal-header">' +
+              '          <h3 class="modal-title">Linkedin Post</h3>' +
+              '          <button type="button" class="close" data-dismiss="modal">×</button>' +
+              '        </div>' +
+              '        <div class="modal-body">' +
+              '        <div class="mb-3"><input type ="checkbox" id="certiLinkLinkedin"> Include link to Certificate<br></div> ' +
+              '          <p>' + '<textarea cols="30" rows="3" id="postMSGLinkedin" >' + msg + '</textarea>' +
+              '          <div>' +
+              '            <button type="button" id="linkedin-share-cert-btn" class="btn btn-primary social-li mt-3" onclick="postLinkedin()"><i class="fa fa-linkedin"></i> Post On Linkedin ' +
+              '            </button>' +
+              '          </div>' +
+              '        </div>' +
+              '' +
+              '        <div class="modal-footer">' +
+              '          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>' +
+              '        </div>' +
+              '      </div>' +
+              '      ' +
+              '    </div>' +
+              '  </div>';
+          }
+          else {
+            retHTML += '<div>' +
+              '<button type="button" id="linkedin-auth-cert-btn" class="btn btn-primary social-li mt-2" onclick="handleAuthLinkedin()">Auth-Linkedin</button>' +
+              '</div>';
+          }
+          document.getElementById("social_wrap").innerHTML = retHTML;
         }
-        if (result.linkedinAuth) {
-          retHTML += '<button type="button" class="btn btn-primary social-li" data-toggle="modal" data-target="#postLinkedin">Post Linkedin</button>' +
-            '' +
-            '  <!-- Modal -->' +
-            '  <div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
-            '    <div class="modal-dialog modal-dialog-centered" role="document">' +
-            '    ' +
-            '      <!-- Modal content-->' +
-            '      <div class="modal-content">' +
-            '        <div class="modal-header">' +
-            '          <h3 class="modal-title">Linkedin Post</h3>' +
-            '          <button type="button" class="close" data-dismiss="modal">×</button>' +
-            '        </div>' +
-            '        <div class="modal-body">' +
-			'        <div class="mb-3"><input type ="checkbox" id="certiLinkLinkedin"> Include link to Certificate<br></div> ' +
-            '          <p>' + '<textarea cols="30" rows="3" id="postMSGLinkedin" >' + msg + '</textarea>' +
-            '          <div>' +
-            '            <button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()"><i class="fa fa-linkedin"></i> Post On Linkedin ' +
-            '            </button>' +
-            '          </div>' +
-            '        </div>' +
-            '' +
-            '        <div class="modal-footer">' +
-            '          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>' +
-            '        </div>' +
-            '      </div>' +
-            '      ' +
-            '    </div>' +
-            '  </div>';
-        }
-        else {
-          retHTML += '<div>' +
-            '<button type="button" class="btn btn-primary social-li mt-2" onclick="handleAuthLinkedin()">Auth-Linkedin</button>' +
-            '</div>';
-        }
-        document.getElementById("social_wrap").innerHTML = retHTML;
-      }
-    })
+      })
+    }
+
   }
 
   function showImageModal() {
