@@ -71,6 +71,10 @@ $(document).ready(function() {
           message: message.value.trim()
         },
         success: () => {
+          name.innerHTML = "";
+          email.innerHTML = "";
+          subject.innerHTML = "";
+          msg.innerHTML = "";
           window.alert("Message sent");
           window.location.reload();
         }
