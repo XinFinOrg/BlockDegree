@@ -71,6 +71,7 @@ $(document).ready(function() {
           message: message.value.trim()
         },
         success: () => {
+          form.reset();
           name.innerHTML = "";
           email.innerHTML = "";
           subject.innerHTML = "";
