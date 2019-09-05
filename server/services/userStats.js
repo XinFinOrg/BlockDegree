@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const PromoCode = require("../models/promo_code");
 
 exports.getAllUserTimestamp = async (req, res) => {
   const users = await User.find({});
@@ -22,14 +23,14 @@ exports.getUsersLastNDays = async (req, res) => {
   let retTimestamp = [];
   users.forEach(async user => {
     const email = getEmail(user);
-    const userDate = new Date(user._id.getTimestamp());
+    const userDate = user._id.getTimestamp();
     if (userDate.getTime() > today.getTime()) {
       // registered today, gets a pass
       retTimestamp.push({ email: email, time: userDate });
       count++;
       return;
     }
-    const timeDiff = Math.abs(today.getTime() - userDate.getTime());
+    const timeDiff = Math.abs(today.getTime() - userDate);
     if (timeDiff < timeWindow) {
       retTimestamp.push({ email: email, time: userDate });
       count++;
@@ -45,8 +46,8 @@ exports.getUserLastQuater = async (req, res) => {
   let currMonth = today.getMonth();
   users.forEach(user => {
     const email = getEmail(user);
-    const userDate = new Date(user._id.getTimestamp());
-    if (currMonth - userDate.getMonth() <= 3) {
+    const userDate = user._id.getTimestamp();
+    if (currMonth - new Date(userDate).getMonth() <= 3) {
       retUsers.push({ email: email, time: userDate });
     }
   });
@@ -67,14 +68,14 @@ exports.getByLastActiveDay = async (req, res) => {
   users.forEach(async user => {
     const email = getEmail(user);
     if (user.lastActive != "") {
-      const userDate = new Date(parseFloat(user.lastActive));
-      if (userDate.getTime() > today.getTime()) {
+      const userDate = parseFloat(user.lastActive);
+      if (userDate > today.getTime()) {
         // registered today, gets a pass
         console.log(user);
         retTimestamp.push({ email: email, time: userDate });
         return;
       }
-      const timeDiff = Math.abs(today.getTime() - userDate.getTime());
+      const timeDiff = Math.abs(today.getTime() - userDate);
       if (timeDiff < timeWindow) {
         retTimestamp.push({ email: email, time: userDate });
       }
@@ -83,6 +84,13 @@ exports.getByLastActiveDay = async (req, res) => {
   //   console.log(retTimestamp)
   res.status(200).json(retTimestamp);
 };
+
+exports.getUserListUsingCode = async () => {};
+exports.getAllCodes = async () => {};
+exports.getRestrictedCodes = async () => {};
+exports.getUnrestrictedCodes = async () => {};
+exports.getActiveCodes = async () => {};
+exports.getInActiveCodes = async () => {};
 
 // exports.getMostActive = async (req, res) => {
 //   const timeWindow = req.body.days * (1000 * 3600 * 24);

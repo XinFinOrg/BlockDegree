@@ -1,52 +1,128 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+      body {
+        font-family: "Lato", sans-serif;
+      }
+
+      table {
+        font-size: 15px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .sidenav {
+        height: 100%;
+        width: 200px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        padding-top: 20px;
+      }
+
+      .sidenav div {
+        padding: 6px 8px 6px 16px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #818181;
+        display: block;
+      }
+
+      .sidenav div:hover {
+        color: #f1f1f1;
+        background-color: #818181;
+        cursor: pointer;
+      }
+
+      .main {
+        margin-left: 230px;
+        font-size: 28px;
+        padding: 0px 10px;
+      }
+
+      @media screen and (max-height: 450px) {
+        .sidenav {
+          padding-top: 15px;
+        }
+        .sidenav div {
+          font-size: 15px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div>
-      <button type="button" onclick="getUserLastQuater()">
-        Get User Last Quater
-      </button>
+    <div class="sidenav">
+      <div onclick="openPage('byAcntAcnts')">Accounts</div>
+      <div onclick="openPage('byPromoCode')">Promocode</div>
+      <div onclick="openPage('bySiteTraffic')">Traffic</div>
     </div>
 
-    <div>
-      <input
-        type="number"
-        id="days_last_created"
-        placeholder="enter number of days"
-      />
-      <button type="button" onclick="getUsersLastNDays()">
-        Created Last N Days
-      </button>
-    </div>
+    <div class="main">
+      <section class="main-section">
+        <div id="byAcntAcnts" class="tabcontent" style="display:none">
+          <h2>Accounts</h2>
+          <div>
+            <button type="button" onclick="getUserLastQuater()">
+              Get User Last Quater
+            </button>
+          </div>
 
-    <div>
-      <input
-        type="number"
-        id="days_last_active"
-        placeholder="enter number of days"
-      />
-      <button type="button" onclick="getUserLastNActive()">
-        Active Last N Days
-      </button>
-    </div>
+          <div>
+            <input
+              type="number"
+              id="days_last_created"
+              placeholder="enter number of days"
+            />
+            <button type="button" onclick="getUsersLastNDays()">
+              Created Last N Days
+            </button>
+          </div>
 
-    <!-- <div>
-      <input
-        type="number"
-        id="days_most_active"
-        placeholder="enter number of days"
-      />
-      <button type="button" onclick="getUserLastNActive()">
-        Active N Days Window
-      </button>
-    </div> -->
-
-    <div>
-      <p id="mainTable"></p>
+          <div>
+            <input
+              type="number"
+              id="days_last_active"
+              placeholder="enter number of days"
+            />
+            <button type="button" onclick="getUserLastNActive()">
+              Active Last N Days
+            </button>
+          </div>
+          <div>
+            <p id="mainTable"></p>
+          </div>
+        </div>
+        <div id="byPromoCode" class="tabcontent" style="display:none">
+          <h2>PromoCode</h2>
+          <input
+            id="codename_users"
+            type="text"
+            placeholder="code-name ( case sensitive )"
+          />
+          <button onclick="getUserListUsingCode()">Get List</button>
+        </div>
+        <div id="bySiteTraffic" class="tabcontent" style="display:none">
+          <h2>Traffic</h2>
+        </div>
+      </section>
     </div>
   </body>
+
   <script>
+    function openPage(pageName) {
+      let allTabContent = document.getElementsByClassName("tabcontent");
+      for (let i = 0; i < allTabContent.length; i++) {
+        allTabContent[i].style.display = "none";
+      }
+      document.getElementById(pageName).style.display = "block";
+    }
+
     function getUserLastQuater() {
       document.getElementById("mainTable").innerHTML = "";
       $.ajax({
@@ -54,12 +130,12 @@
         url: "/api/getUserLastQuater",
         success: result => {
           console.log(result);
-          let retHTML = '<table style="width:100%">';
+          let retHTML = '<table style="width:100%,font:15px">';
           retHTML += "<tr><th>EMAIL</th><th>CREATION TIME</th></tr>";
           for (let i = 0; i < result.length; i++) {
-            retHTML += `<tr><td>${result[i].email}</td><td>${
+            retHTML += `<tr><td>${result[i].email}</td><td>${new Date(
               result[i].time
-            }</td></tr>`;
+            )}</td></tr>`;
           }
           retHTML += "</table> ";
           document.getElementById("mainTable").innerHTML = retHTML;
@@ -75,12 +151,12 @@
         data: { days: document.getElementById("days_last_created").value },
         success: result => {
           console.log(result);
-          let retHTML = '<table style="width:100%">';
+          let retHTML = '<table style="width:100%,font:15px">';
           retHTML += "<tr><th>EMAIL</th><th>CREATION TIME</th></tr>";
           for (let i = 0; i < result.length; i++) {
-            retHTML += `<tr><td>${result[i].email}</td><td>${
+            retHTML += `<tr><td>${result[i].email}</td><td>${new Date(
               result[i].time
-            }</td></tr>`;
+            )}</td></tr>`;
           }
           retHTML += "</table> ";
           document.getElementById("mainTable").innerHTML = retHTML;
@@ -96,12 +172,12 @@
         data: { days: document.getElementById("days_last_active").value },
         success: result => {
           console.log(result);
-          let retHTML = '<table style="width:100%">';
+          let retHTML = '<table style="width:100%,font:15px">';
           retHTML += "<tr><th>EMAIL</th><th>LAST ACTIVE TIME</th></tr>";
           for (let i = 0; i < result.length; i++) {
-            retHTML += `<tr><td>${result[i].email}</td><td>${
+            retHTML += `<tr><td>${result[i].email}</td><td>${new Date(
               result[i].time
-            }</td></tr>`;
+            )}</td></tr>`;
           }
           retHTML += "</table> ";
           document.getElementById("mainTable").innerHTML = retHTML;
@@ -109,25 +185,11 @@
       });
     }
 
-    // function getMostActive() {
-    //   document.getElementById("mainTable").innerHTML = "";
-    //   $.ajax({
-    //     method: "post",
-    //     url: "/api/getMostActive",
-    //     data: { days: document.getElementById("days_most_active").value },
-    //     success: result => {
-    //       console.log(result);
-    //       let retHTML = '<table style="width:100%">';
-    //       retHTML += "<tr><th>EMAIL</th><th>LAST ACTIVE WINDOW</th></tr>";
-    //       for (let i = 0; i < result.length; i++) {
-    //         retHTML += `<tr><td>${result[i].email}</td><td>${
-    //           result[i].time
-    //         }</td></tr>`;
-    //       }
-    //       retHTML += "</table> ";
-    //       document.getElementById("mainTable").innerHTML = retHTML;
-    //     }
-    //   });
-    // }
+    function getUserListUsingCode() {
+      let codeName = document.getElementById("codename_users").value;
+      if (codeName != undefined && codeName != null && codeName != "") {
+        
+      }
+    }
   </script>
 </html>
