@@ -1,5 +1,7 @@
 const User = require("../models/user");
 const PromoCode = require("../models/promo_code");
+const Visited = require("../models/visited");
+const PaymentLogs = require("../models/payment_logs");
 
 exports.getAllUserTimestamp = async (req, res) => {
   const users = await User.find({});
@@ -85,26 +87,156 @@ exports.getByLastActiveDay = async (req, res) => {
   res.status(200).json(retTimestamp);
 };
 
-exports.getUserListUsingCode = async () => {};
-exports.getAllCodes = async () => {};
-exports.getRestrictedCodes = async () => {};
-exports.getUnrestrictedCodes = async () => {};
-exports.getActiveCodes = async () => {};
-exports.getInActiveCodes = async () => {};
+exports.getUserListUsingCode = async (req, res) => {
+  if (req.body.codeName != "") {
+    let promoCode = await PromoCode.findOne({ codeName: req.body.codeName });
+    if (promoCode == null) {
+      res.json({
+        error: `No promocode ${promoCode} found`,
+        users: null,
+        status: false
+      });
+    }
+    if (!promoCode.restricted) {
+      // retrieve from users
+      res.json({
+        error: null,
+        users: promoCode.users,
+        status: true,
+        restricted: false
+      });
+    } else {
+      // retrieve from allowed user
+      res.json({
+        error: null,
+        users: promoCode.allowedUsers,
+        status: true,
+        restricted: true
+      });
+    }
+  } else {
+    res.json({
+      error: "Bad request",
+      status: false,
+      users: null,
+      restricted: null
+    });
+  }
+};
+exports.getAllCodes = async (req, res) => {
+  let allCodes = await PromoCode.find({});
+  res.json({ codes: allCodes });
+};
 
-// exports.getMostActive = async (req, res) => {
-//   const timeWindow = req.body.days * (1000 * 3600 * 24);
-//   const users = await User.find({});
-//   const today = new Date();
-//   let retUser = [];
-//   users.forEach(async user => {
-//     if (parseFloat(today.getTime()) - parseFloat(user.lastActive()) <= timeWindow) {
-//       // active-ness falls in the window range
-//       retUser.push({
-//         email: user.email,
-//         time: parseFloat(user.lastActive) - parseFloat(user.created)
-//       });
-//     }
-//   });
-//   res.status(200).json(retUser);
-// };
+exports.getVisits = async (req, res) => {
+  let allVisits = await Visited.find({ course: req.body.content });
+  if (allVisits == null) {
+    res.json({
+      status: false,
+      error: `No Such content (${req.body.content}) is registered`
+    });
+  } else {
+    res.json({ status: true, error: null, visits: allVisits });
+  }
+};
+// exports.getRestrictedCodes = async () => {};
+// exports.getUnrestrictedCodes = async () => {};
+// exports.getActiveCodes = async () => {};
+// exports.getInActiveCodes = async () => {};
+
+exports.getAllUserPaymentList = async (req, res) => {
+  let payPalSucList = {};
+  let codeUsageCount = {};
+  let allPaypalPayment = await PaymentLogs.find({ payment_status: true });
+  let allCodeUsage = await PromoCode.find({});
+  for (let i = 0; i < allPaypalPayment.length; i++) {
+    let currentLog = allPaypalPayment[i];
+    if (
+      payPalSucList[currentLog.email] == "" ||
+      payPalSucList[currentLog.email] == null ||
+      payPalSucList[currentLog.email] == undefined
+    ) {
+      // first encounter; create new object
+      let newObj = {};
+      newObj[currentLog.course_id] = 1;
+      payPalSucList[currentLog.email] = newObj;
+    } else {
+      // user object exists
+      payPalSucList[currentLog.email][currentLog.course_id] =
+        payPalSucList[currentLog.email][currentLog.course_id] == null
+          ? 1
+          : payPalSucList[currentLog.email][currentLog.course_id] + 1;
+    }
+  }
+  // console.log(payPalSucList);
+  for (let i = 0; i < allCodeUsage.length; i++) {
+    let currentCode = allCodeUsage[i];
+    for (let j = 1; j < currentCode.users.length; j++) {
+      let currentUser = currentCode.users[j];
+      if (
+        codeUsageCount[currentUser.email] == undefined ||
+        codeUsageCount[currentUser.email] == ""
+      ) {
+        // first encounter; create new object
+        let newObj = {};
+        newObj[currentCode.codeName] = currentUser.count;
+        codeUsageCount[currentUser.email] = newObj;
+      } else {
+        codeUsageCount[currentUser.email][currentCode.codeName] =
+          currentUser.count;
+      }
+    }
+    for (let j = 1; j < currentCode.allowedUsers.length; j++) {
+      let currentUser = currentCode.allowedUsers[j];
+      if (
+        codeUsageCount[currentUser.email] == undefined ||
+        codeUsageCount[currentUser.email] == ""
+      ) {
+        // first encounter; create new object
+        let newObj = {};
+        newObj[currentCode.codeName] = currentUser.count;
+        codeUsageCount[currentUser.email] = newObj;
+      } else {
+        codeUsageCount[currentUser.email][currentCode.codeName] =
+          currentUser.count;
+      }
+    }
+  }
+  // console.log(codeUsageCount);
+  let overAllList = [];
+  let payPalSucList_keys = Object.keys(payPalSucList);
+  let codeUsageCount_keys = Object.keys(codeUsageCount);
+  for (let i = 0; i < payPalSucList_keys.length; i++) {
+    let currentEmail = payPalSucList_keys[i];
+    let newObj = {
+      email: currentEmail,
+      payment: payPalSucList[currentEmail]
+    };
+    overAllList.push(newObj);
+  }
+  for (let i = 0; i < codeUsageCount_keys.length; i++) {
+    let currentEmail = codeUsageCount_keys[i];
+    let currentIndex = existsEmail(currentEmail, overAllList);
+    if (currentIndex >= 0) {
+      // exists, just update codes
+      overAllList[currentIndex].codes = codeUsageCount[currentEmail];
+    } else {
+      // user didn't pay via paypal, create newObj
+      let newObj = {};
+      newObj.email = currentEmail;
+      newObj.codes = codeUsageCount[currentEmail];
+      overAllList.push(newObj);
+    }
+  }
+  // console.log(overAllList);
+  res.json({ status: true, data: overAllList });
+};
+
+function existsEmail(email, overAllList) {
+  for (let j = 0; j < overAllList.length; j++) {
+    if (overAllList[j].email == email) {
+      return j;
+    }
+  }
+  return -1;
+}

@@ -30,7 +30,7 @@
         padding: 6px 8px 6px 16px;
         text-decoration: none;
         font-size: 18px;
-        color: #818181;
+        color: white;
         display: block;
       }
 
@@ -38,6 +38,18 @@
         color: #f1f1f1;
         background-color: #818181;
         cursor: pointer;
+      }
+
+      th {
+        max-width: 100%;
+        white-space: nowrap;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        background-color: #4caf50;
+        color: white;
+      }
+      tr:hover {
+        background-color: #ddd;
       }
 
       .main {
@@ -61,6 +73,8 @@
       <div onclick="openPage('byAcntAcnts')">Accounts</div>
       <div onclick="openPage('byPromoCode')">Promocode</div>
       <div onclick="openPage('bySiteTraffic')">Traffic</div>
+      <div onclick="openPage('byPayment')">Payment</div>
+      <div onclick="openPage('byCertificates')">Certificates</div>
     </div>
 
     <div class="main">
@@ -106,9 +120,37 @@
             placeholder="code-name ( case sensitive )"
           />
           <button onclick="getUserListUsingCode()">Get List</button>
+          <button onclick="getAllCodes()">Get All Codes</button>
+          <section id="promoCodeTable"></section>
         </div>
         <div id="bySiteTraffic" class="tabcontent" style="display:none">
           <h2>Traffic</h2>
+          <button onclick="getAllVisits('curri-blockchain-basic')">
+            Visited Curriculaum Basic
+          </button>
+          <button onclick="getAllVisits('curri-blockhain-advanced')">
+            Visited Curriculaum Advanced
+          </button>
+          <button onclick="getAllVisits('curri-blockchain-professional')">
+            Visited Curriculaum Professional
+          </button>
+          <br />
+          <button onclick="getAllVisits('basic')">
+            Visited Course Basic
+          </button>
+          <button onclick="getAllVisits('advanced')">
+            Visited Course Advanced
+          </button>
+          <button onclick="getAllVisits('professional')">
+            Visited Course Professional
+          </button>
+          <section id="trafficTable"></section>
+        </div>
+        <div id="byPayment" class="tabcontent" style="display:none">
+          <h2>Payment</h2>
+          <button type="button" onclick="getAllUserPaymentList()">
+            Get All Payments
+          </button>
         </div>
       </section>
     </div>
@@ -187,9 +229,132 @@
 
     function getUserListUsingCode() {
       let codeName = document.getElementById("codename_users").value;
+      console.log(codeName);
+      let promoCodeTable = document.getElementById("promoCodeTable");
       if (codeName != undefined && codeName != null && codeName != "") {
-        
+        $.ajax({
+          method: "post",
+          url: "/api/getUserListUsingCode",
+          data: { codeName: codeName },
+          success: result => {
+            console.log(result);
+            if (!result.status) {
+              alert(`Error:${result.error}`);
+            } else {
+              let retHtml = "<table>";
+              let userArr = result.users;
+              if (result.restricted) {
+                retHtml +=
+                  "<tr><th>Email</th><th>Count</th><th>Created</th><th>Last Used</th></tr>";
+                for (let i = 1; i < userArr.length; i++) {
+                  retHtml += `<tr><td>${userArr[i].email}</td><td>${
+                    userArr[i].count
+                  }</td><td>${new Date(userArr[i].created)}</td><td>${new Date(
+                    userArr[i].lastUsed
+                  )}</td></tr>`;
+                }
+              } else {
+                retHtml +=
+                  "<tr><th>Email</th><th>Count</th><th>First Used</th><th>Last Used</th></tr>";
+                for (let i = 1; i < userArr.length; i++) {
+                  retHtml += `<tr><td>${userArr[i].email}</td><td>${
+                    userArr[i].count
+                  }</td><td>${new Date(
+                    userArr[i].firstUsed
+                  )}</td><td>${new Date(userArr[i].lastUsed)}</td></tr>`;
+                }
+              }
+              promoCodeTable.innerHTML = retHtml + "</table>";
+            }
+          },
+          error: err => {
+            alert(`Error: ${err}`);
+          }
+        });
       }
+    }
+
+    function getAllCodes() {
+      let promoCodeTable = document.getElementById("promoCodeTable");
+      promoCodeTable.innerHTML = "";
+      $.ajax({
+        method: "get",
+        url: "/api/getAllCodes",
+        success: result => {
+          let allCodes = result.codes;
+          let retHTML = '<table style="width: 100%;">';
+          retHTML +=
+            "<tr><th>CodeName</th><th>Used Count</th><th>User Count</th><th>Status</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
+          for (let i = 0; i < allCodes.length; i++) {
+            let createdDate = new Date(parseFloat(allCodes[i].created));
+            let lastUsedDate = new Date(parseFloat(allCodes[i].lastUsed));
+            retHTML += `<tr><td>${allCodes[i].codeName}</td><td>${
+              allCodes[i].count
+            }</td><td>${allCodes[i].users.length - 1}</td><td>${
+              allCodes[i].status
+            }</td><td>${
+              allCodes[i].restricted
+            }</td><td>${createdDate.getDate()}/${createdDate.getMonth() +
+              1}/${lastUsedDate.getFullYear()}</td><td>${lastUsedDate.getDate()}/${lastUsedDate.getMonth() +
+              1}/${lastUsedDate.getFullYear()}</td></tr>`;
+          }
+          retHTML += "</table>";
+          promoCodeTable.innerHTML = retHTML;
+        },
+        error: err => {
+          alert(`Error: ${err}`);
+        }
+      });
+    }
+
+    function getAllVisits(content) {
+      let trafficTable = document.getElementById("trafficTable");
+      trafficTable.innerHTML = "";
+      let retHTML = "<table>";
+      retHTML +=
+        "<tr><th>Email</th><th>IP Address</th><th>Count</th><th>First Visit</th><th>Last Visit</th></tr>";
+      $.ajax({
+        method: "post",
+        url: "/api/getVisits",
+        data: { content: content },
+        success: result => {
+          if (result.status) {
+            console.log(result);
+            for (let i = 0; i < result.visits.length; i++) {
+              retHTML += `<tr><td>${
+                result.visits[i].email == undefined ||
+                result.visits[i].email == ""
+                  ? "NA"
+                  : result.visits[i].email
+              }</<td><td>${
+                result.visits[i].ip == undefined || result.visits[i].ip == ""
+                  ? "NA"
+                  : result.visits[i].ip
+              }</<td><td>${result.visits[i].count}</<td><td>${new Date(
+                parseFloat(result.visits[i].firstVisit)
+              )}</<td><td>${new Date(
+                parseFloat(result.visits[i].lastVisit)
+              )}</<td></tr>`;
+            }
+            retHTML += "</table>";
+            console.log(retHTML);
+            trafficTable.innerHTML = retHTML;
+          }
+        },
+        error: err => {
+          alert(`Error: ${err}`);
+        }
+      });
+    }
+
+    function getAllUserPaymentList() {
+      $.ajax({
+        method: "get",
+        url: "/api/getAllUserPaymentList",
+        success: result => {
+          console.log("result: ", result);
+        }
+      });
     }
   </script>
 </html>
