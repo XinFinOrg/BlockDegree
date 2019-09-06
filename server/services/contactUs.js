@@ -13,7 +13,7 @@ exports.contactUs = async (req, res) => {
   // console.log(req.body);
   res.json({ message: "ok" });
   let info = await transporter.sendMail({
-    from: process.env.SUPP_EMAILER_ID,
+    from: req.body.email,
     to: process.env.SUPP_EMAIL_ID, // support email id for blockdegree
     subject: `Supp. Req. from ${req.body.email}`,
     html: `<div>Name: ${req.body.name} <br> Email-ID: ${req.body.email} <br> Subject: ${req.body.subject} <br> Message: ${req.body.message}</div>`
