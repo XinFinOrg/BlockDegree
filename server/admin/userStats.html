@@ -128,7 +128,7 @@
           <button onclick="getAllVisits('curri-blockchain-basic')">
             Visited Curriculaum Basic
           </button>
-          <button onclick="getAllVisits('curri-blockhain-advanced')">
+          <button onclick="getAllVisits('curri-blockchain-advanced')">
             Visited Curriculaum Advanced
           </button>
           <button onclick="getAllVisits('curri-blockchain-professional')">
@@ -151,6 +151,7 @@
           <button type="button" onclick="getAllUserPaymentList()">
             Get All Payments
           </button>
+          <section id="paymentTable"></section>
         </div>
       </section>
     </div>
@@ -284,7 +285,7 @@
           let allCodes = result.codes;
           let retHTML = '<table style="width: 100%;">';
           retHTML +=
-            "<tr><th>CodeName</th><th>Used Count</th><th>User Count</th><th>Status</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
+            "<tr><th>CodeName</th><th>Used Count</th><th>User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
           for (let i = 0; i < allCodes.length; i++) {
             let createdDate = new Date(parseFloat(allCodes[i].created));
             let lastUsedDate = new Date(parseFloat(allCodes[i].lastUsed));
@@ -348,11 +349,65 @@
     }
 
     function getAllUserPaymentList() {
+      let paymentTable = document.getElementById("paymentTable");
+      let retHTML = "<table>";
+      retHTML +=
+        '<tr><th rowspan="2">Email</th><th colspan="2">Codes</th><th colspan="2">Payment</th></tr><tr><th>Code Name</th><th>Count</th><th>Course ID</th><th>Count</th></tr>';
       $.ajax({
         method: "get",
         url: "/api/getAllUserPaymentList",
         success: result => {
           console.log("result: ", result);
+          let data = result.data;
+          let codeKeys = [],
+            paymentKeys = [],
+            totCode = 0,
+            totPayment = 0;
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].codes != undefined) {
+              codeKeys = Object.keys(data[i].codes);
+              totCode = codeKeys.length;
+            } else {
+              (codeKeys = []), (totCode = 0);
+            }
+            if (data[i].payment != undefined) {
+              paymentKeys = Object.keys(data[i].payment);
+              totPayment = paymentKeys.length;
+            } else {
+              (paymentKeys = []), (totPayment = 0);
+            }
+            let rowSpan = totCode > totPayment ? totCode : totPayment;
+            console.log("Current Data: ", data[i]);
+            console.log(`Tot Code: ${totCode}`);
+            console.log(`Tot Payment: ${totPayment}`);
+            retHTML += `<tr><td rowspan="${rowSpan}">${
+              data[i].email
+            }></td><td>${totCode > 0 ? codeKeys[0] : "NA"}</td><td>${
+              totCode > 0 ? data[i].codes[codeKeys[0]] : "NA"
+            }</td><td>${totPayment > 0 ? paymentKeys[0] : "NA"}</td><td>${
+              totPayment > 0 ? data[i].payment[paymentKeys[0]] : "NA"
+            }</td></tr>`;
+            for (let maxIndex = 1; maxIndex < rowSpan; maxIndex++) {
+              // fillout the rowspan
+              console.log(
+                `Iteration ${maxIndex} code exists : ${totCode >=
+                  maxIndex} paymentIndex : ${totPayment >= maxIndex} `
+              );
+              retHTML += `<tr><td>${
+                totCode-1 >= maxIndex ? codeKeys[maxIndex] : "NA"
+              }</td><td>${
+                totCode-1 >= maxIndex ? data[i].codes[codeKeys[maxIndex]] : "NA"
+              }</td><td>${
+                totPayment-1 >= maxIndex ? paymentKeys[maxIndex] : "NA"
+              }</td><td>${
+                totPayment-1 >= maxIndex
+                  ? data[i].payment[paymentKeys[maxIndex]]
+                  : "NA"
+              }</td></tr>`;
+            }
+          }
+          retHTML += "</html>";
+          paymentTable.innerHTML = retHTML;
         }
       });
     }

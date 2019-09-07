@@ -82,8 +82,8 @@ module.exports = app => {
 
   app.get(
     "/api/getAllUserPaymentList",
-    // requireLogin,
-    // requrieAdmin,
+    requireLogin,
+    requrieAdmin,
     userStatsService.getAllUserPaymentList
   );
   // app.post(
