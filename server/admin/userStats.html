@@ -41,7 +41,6 @@
       }
 
       th {
-        max-width: 100%;
         white-space: nowrap;
         padding-top: 12px;
         padding-bottom: 12px;
@@ -152,6 +151,13 @@
             Get All Payments
           </button>
           <section id="paymentTable"></section>
+        </div>
+        <div id="byCertificates" class="tabcontent" style="display:none">
+          <h2>Certificates</h2>
+          <button type="button" onclick="getAllUserCertificates()">
+            Get Certificates By User
+          </button>
+          <section id="certificatesTable"></section>
         </div>
       </section>
     </div>
@@ -394,13 +400,15 @@
                   maxIndex} paymentIndex : ${totPayment >= maxIndex} `
               );
               retHTML += `<tr><td>${
-                totCode-1 >= maxIndex ? codeKeys[maxIndex] : "NA"
+                totCode - 1 >= maxIndex ? codeKeys[maxIndex] : "NA"
               }</td><td>${
-                totCode-1 >= maxIndex ? data[i].codes[codeKeys[maxIndex]] : "NA"
+                totCode - 1 >= maxIndex
+                  ? data[i].codes[codeKeys[maxIndex]]
+                  : "NA"
               }</td><td>${
-                totPayment-1 >= maxIndex ? paymentKeys[maxIndex] : "NA"
+                totPayment - 1 >= maxIndex ? paymentKeys[maxIndex] : "NA"
               }</td><td>${
-                totPayment-1 >= maxIndex
+                totPayment - 1 >= maxIndex
                   ? data[i].payment[paymentKeys[maxIndex]]
                   : "NA"
               }</td></tr>`;
@@ -408,6 +416,53 @@
           }
           retHTML += "</html>";
           paymentTable.innerHTML = retHTML;
+        }
+      });
+    }
+
+    function getAllUserCertificates() {
+      let certificatesTable = document.getElementById("certificatesTable");
+      let retHTML = "<table class='certificateTab'";
+      retHTML +=
+        "<tr><th rowspan='2'>Email</th><th colspan='4' >Certificates</th></tr><tr><th>Course Name</th><th>Client Hash</th><th>Document Hash</th><th>Timestamp</th></tr>";
+      $.ajax({
+        method: "get",
+        url: "/api/getAllUserCertificates",
+        success: result => {
+          if (!result.status) {
+            alert(`Error: ${result.error}`);
+          } else {
+            console.log(result);
+            let data = result.users;
+            for (let i = 0; i < data.length; i++) {
+              let currentUser = data[i];
+              let currentCertificates = currentUser.examData.certificateHash;
+              let rowSpan = currentCertificates.length;
+              retHTML += `<tr><td rowspan="${rowSpan}">${
+                currentUser.email
+              }</td><td>${currentCertificates[1].examType}</td><td>${
+                currentCertificates[1].clientHash
+              }</td><td>${
+                currentCertificates[1].headlessHash
+              }</td><td>${new Date(
+                parseFloat(currentCertificates[1].timestamp)
+              )}</td></tr>`;
+              for (let j = 2; j < rowSpan; j++) {
+                retHTML += `<tr><td>${
+                  currentCertificates[j].examType
+                }</td><td>${currentCertificates[j].clientHash}</td><td>${
+                  currentCertificates[1].headlessHash
+                }</td><td>${new Date(
+                  parseFloat(currentCertificates[j].timestamp)
+                )}</td></tr>`;
+              }
+            }
+            retHTML += "</table>";
+            certificatesTable.innerHTML = retHTML;
+          }
+        },
+        error: err => {
+          alert(`Error: ${err}`);
         }
       });
     }

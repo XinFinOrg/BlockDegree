@@ -216,7 +216,13 @@ exports.getAllUserPaymentList = async (req, res) => {
   }
   for (let i = 0; i < codeUsageCount_keys.length; i++) {
     let currentEmail = codeUsageCount_keys[i];
-    let currentIndex = existsEmail(currentEmail, overAllList);
+    let currentIndex = -1;
+    loop1: for (let j = 0; j < overAllList.length; j++) {
+      if (overAllList[j].email == currentEmail) {
+        currentIndex = j;
+        break loop1;
+      }
+    }
     if (currentIndex >= 0) {
       // exists, just update codes
       overAllList[currentIndex].codes = codeUsageCount[currentEmail];
@@ -232,11 +238,12 @@ exports.getAllUserPaymentList = async (req, res) => {
   res.json({ status: true, data: overAllList });
 };
 
-function existsEmail(email, overAllList) {
-  for (let j = 0; j < overAllList.length; j++) {
-    if (overAllList[j].email == email) {
-      return j;
-    }
+exports.getAllUserCertificates = async (req, res) => {
+  const allUsers = await User.find({
+    "examData.certificateHash.1": { $exists: true }
+  }).catch(e => res.json({ status: false, users: null, error: e }));
+  if (allUsers == null) {
+    res.json({ status: false, users: null, error: "No users found" });
   }
-  return -1;
-}
+  res.json({ status: true, users: allUsers });
+};

@@ -86,6 +86,13 @@ module.exports = app => {
     requrieAdmin,
     userStatsService.getAllUserPaymentList
   );
+
+  app.get(
+    "/api/getAllUserCertificates",
+    requireLogin,
+    requrieAdmin,
+    userStatsService.getAllUserCertificates
+  );
   // app.post(
   //   "/admin/getMostActive",
   //   requireLogin,
