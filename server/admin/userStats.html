@@ -107,6 +107,10 @@
               Active Last N Days
             </button>
           </div>
+          <br />
+          <span>Accounts Count:</span>
+          <span id="acntCount"></span>
+          <br />
           <div>
             <p id="mainTable"></p>
           </div>
@@ -120,6 +124,10 @@
           />
           <button onclick="getUserListUsingCode()">Get List</button>
           <button onclick="getAllCodes()">Get All Codes</button>
+          <br />
+          <span>Promo Code Count:</span>
+          <span id="promoCodeCount"></span>
+          <br />
           <section id="promoCodeTable"></section>
         </div>
         <div id="bySiteTraffic" class="tabcontent" style="display:none">
@@ -143,6 +151,9 @@
           <button onclick="getAllVisits('professional')">
             Visited Course Professional
           </button>
+          <br />
+          <span>Visit Count: </span><span id="visitCount"></span>
+          <br />
           <section id="trafficTable"></section>
         </div>
         <div id="byPayment" class="tabcontent" style="display:none">
@@ -150,6 +161,9 @@
           <button type="button" onclick="getAllUserPaymentList()">
             Get All Payments
           </button>
+          <br />
+          <span>Payment / Code Count: </span><span id="paymentCount"></span>
+          <br />
           <section id="paymentTable"></section>
         </div>
         <div id="byCertificates" class="tabcontent" style="display:none">
@@ -157,6 +171,9 @@
           <button type="button" onclick="getAllUserCertificates()">
             Get Certificates By User
           </button>
+          <br />
+          <span>Certificate Count: </span><span id="certCount"></span>
+          <br />
           <section id="certificatesTable"></section>
         </div>
       </section>
@@ -174,11 +191,13 @@
 
     function getUserLastQuater() {
       document.getElementById("mainTable").innerHTML = "";
+      let acntCount = document.getElementById("acntCount");
+      acntCount.innerHTML = "";
       $.ajax({
         method: "get",
         url: "/api/getUserLastQuater",
         success: result => {
-          console.log(result);
+          acntCount.innerHTML = result.length;
           let retHTML = '<table style="width:100%,font:15px">';
           retHTML += "<tr><th>EMAIL</th><th>CREATION TIME</th></tr>";
           for (let i = 0; i < result.length; i++) {
@@ -194,12 +213,14 @@
 
     function getUsersLastNDays() {
       document.getElementById("mainTable").innerHTML = "";
+      let acntCount = document.getElementById("acntCount");
+      acntCount.innerHTML = "";
       $.ajax({
         method: "post",
         url: "/api/lastNDaysCreated",
         data: { days: document.getElementById("days_last_created").value },
         success: result => {
-          console.log(result);
+          acntCount.innerHTML = result.length;
           let retHTML = '<table style="width:100%,font:15px">';
           retHTML += "<tr><th>EMAIL</th><th>CREATION TIME</th></tr>";
           for (let i = 0; i < result.length; i++) {
@@ -215,12 +236,14 @@
 
     function getUserLastNActive() {
       document.getElementById("mainTable").innerHTML = "";
+      let acntCount = document.getElementById("acntCount");
+      acntCount.innerHTML = "";
       $.ajax({
         method: "post",
         url: "/api/lastNDaysActive",
         data: { days: document.getElementById("days_last_active").value },
         success: result => {
-          console.log(result);
+          acntCount.innerHTML = result.length;
           let retHTML = '<table style="width:100%,font:15px">';
           retHTML += "<tr><th>EMAIL</th><th>LAST ACTIVE TIME</th></tr>";
           for (let i = 0; i < result.length; i++) {
@@ -236,7 +259,8 @@
 
     function getUserListUsingCode() {
       let codeName = document.getElementById("codename_users").value;
-      console.log(codeName);
+      let promoCodeCount = document.getElementById("promoCodeCount");
+      // console.log(codeName);
       let promoCodeTable = document.getElementById("promoCodeTable");
       if (codeName != undefined && codeName != null && codeName != "") {
         $.ajax({
@@ -244,12 +268,13 @@
           url: "/api/getUserListUsingCode",
           data: { codeName: codeName },
           success: result => {
-            console.log(result);
+            // console.log(result);
             if (!result.status) {
               alert(`Error:${result.error}`);
             } else {
               let retHtml = "<table>";
               let userArr = result.users;
+              promoCodeCount.innerHTML = userArr.length - 1;
               if (result.restricted) {
                 retHtml +=
                   "<tr><th>Email</th><th>Count</th><th>Created</th><th>Last Used</th></tr>";
@@ -289,6 +314,7 @@
         url: "/api/getAllCodes",
         success: result => {
           let allCodes = result.codes;
+          promoCodeCount.innerHTML = allCodes.length;
           let retHTML = '<table style="width: 100%;">';
           retHTML +=
             "<tr><th>CodeName</th><th>Used Count</th><th>User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
@@ -316,6 +342,8 @@
 
     function getAllVisits(content) {
       let trafficTable = document.getElementById("trafficTable");
+      let visitCount = document.getElementById("visitCount");
+      visitCount.innerHTML = "";
       trafficTable.innerHTML = "";
       let retHTML = "<table>";
       retHTML +=
@@ -326,7 +354,7 @@
         data: { content: content },
         success: result => {
           if (result.status) {
-            console.log(result);
+            visitCount.innerHTML = result.visits.length;
             for (let i = 0; i < result.visits.length; i++) {
               retHTML += `<tr><td>${
                 result.visits[i].email == undefined ||
@@ -344,7 +372,7 @@
               )}</<td></tr>`;
             }
             retHTML += "</table>";
-            console.log(retHTML);
+            // console.log(retHTML);
             trafficTable.innerHTML = retHTML;
           }
         },
@@ -356,6 +384,8 @@
 
     function getAllUserPaymentList() {
       let paymentTable = document.getElementById("paymentTable");
+      let paymentCount = document.getElementById("paymentCount");
+      paymentCount.innerHTML = "";
       let retHTML = "<table>";
       retHTML +=
         '<tr><th rowspan="2">Email</th><th colspan="2">Codes</th><th colspan="2">Payment</th></tr><tr><th>Code Name</th><th>Count</th><th>Course ID</th><th>Count</th></tr>';
@@ -363,12 +393,13 @@
         method: "get",
         url: "/api/getAllUserPaymentList",
         success: result => {
-          console.log("result: ", result);
+          // console.log("result: ", result);
           let data = result.data;
           let codeKeys = [],
             paymentKeys = [],
             totCode = 0,
             totPayment = 0;
+          paymentCount.innerHTML = result.data.length;
           for (let i = 0; i < data.length; i++) {
             if (data[i].codes != undefined) {
               codeKeys = Object.keys(data[i].codes);
@@ -383,9 +414,9 @@
               (paymentKeys = []), (totPayment = 0);
             }
             let rowSpan = totCode > totPayment ? totCode : totPayment;
-            console.log("Current Data: ", data[i]);
-            console.log(`Tot Code: ${totCode}`);
-            console.log(`Tot Payment: ${totPayment}`);
+            // console.log("Current Data: ", data[i]);
+            // console.log(`Tot Code: ${totCode}`);
+            // console.log(`Tot Payment: ${totPayment}`);
             retHTML += `<tr><td rowspan="${rowSpan}">${
               data[i].email
             }></td><td>${totCode > 0 ? codeKeys[0] : "NA"}</td><td>${
@@ -395,10 +426,10 @@
             }</td></tr>`;
             for (let maxIndex = 1; maxIndex < rowSpan; maxIndex++) {
               // fillout the rowspan
-              console.log(
-                `Iteration ${maxIndex} code exists : ${totCode >=
-                  maxIndex} paymentIndex : ${totPayment >= maxIndex} `
-              );
+              // console.log(
+              //   `Iteration ${maxIndex} code exists : ${totCode >=
+              //     maxIndex} paymentIndex : ${totPayment >= maxIndex} `
+              // );
               retHTML += `<tr><td>${
                 totCode - 1 >= maxIndex ? codeKeys[maxIndex] : "NA"
               }</td><td>${
@@ -422,6 +453,8 @@
 
     function getAllUserCertificates() {
       let certificatesTable = document.getElementById("certificatesTable");
+      let certificateCount = document.getElementById("certCount");
+      certificateCount.innerHTML = "";
       let retHTML = "<table class='certificateTab'";
       retHTML +=
         "<tr><th rowspan='2'>Email</th><th colspan='4' >Certificates</th></tr><tr><th>Course Name</th><th>Client Hash</th><th>Document Hash</th><th>Timestamp</th></tr>";
@@ -432,8 +465,9 @@
           if (!result.status) {
             alert(`Error: ${result.error}`);
           } else {
-            console.log(result);
+            // console.log(result);
             let data = result.users;
+            certificateCount.innerHTML = data.length;
             for (let i = 0; i < data.length; i++) {
               let currentUser = data[i];
               let currentCertificates = currentUser.examData.certificateHash;
