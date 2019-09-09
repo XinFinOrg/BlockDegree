@@ -1,65 +1,209 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+      body {
+        font-family: "Lato", sans-serif;
+      }
+
+      table {
+        font-size: 15px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .sidenav {
+        height: 100%;
+        width: 200px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        padding-top: 20px;
+      }
+
+      .sidenav div {
+        padding: 6px 8px 6px 16px;
+        text-decoration: none;
+        font-size: 18px;
+        color: white;
+        display: block;
+      }
+
+      .sidenav div:hover {
+        color: #f1f1f1;
+        background-color: #818181;
+        cursor: pointer;
+      }
+
+      th {
+        white-space: nowrap;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        background-color: #4caf50;
+        color: white;
+      }
+      tr:hover {
+        background-color: #ddd;
+      }
+
+      .main {
+        margin-left: 230px;
+        font-size: 28px;
+        padding: 0px 10px;
+      }
+
+      @media screen and (max-height: 450px) {
+        .sidenav {
+          padding-top: 15px;
+        }
+        .sidenav div {
+          font-size: 15px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div>
-      <button type="button" onclick="getUserLastQuater()">
-        Get User Last Quater
-      </button>
+    <div class="sidenav">
+      <div onclick="openPage('byAcntAcnts')">Accounts</div>
+      <div onclick="openPage('byPromoCode')">Promocode</div>
+      <div onclick="openPage('bySiteTraffic')">Traffic</div>
+      <div onclick="openPage('byPayment')">Payment</div>
+      <div onclick="openPage('byCertificates')">Certificates</div>
     </div>
 
-    <div>
-      <input
-        type="number"
-        id="days_last_created"
-        placeholder="enter number of days"
-      />
-      <button type="button" onclick="getUsersLastNDays()">
-        Created Last N Days
-      </button>
-    </div>
+    <div class="main">
+      <section class="main-section">
+        <div id="byAcntAcnts" class="tabcontent" style="display:none">
+          <h2>Accounts</h2>
+          <div>
+            <button type="button" onclick="getUserLastQuater()">
+              Get User Last Quater
+            </button>
+          </div>
 
-    <div>
-      <input
-        type="number"
-        id="days_last_active"
-        placeholder="enter number of days"
-      />
-      <button type="button" onclick="getUserLastNActive()">
-        Active Last N Days
-      </button>
-    </div>
+          <div>
+            <input
+              type="number"
+              id="days_last_created"
+              placeholder="enter number of days"
+            />
+            <button type="button" onclick="getUsersLastNDays()">
+              Created Last N Days
+            </button>
+          </div>
 
-    <!-- <div>
-      <input
-        type="number"
-        id="days_most_active"
-        placeholder="enter number of days"
-      />
-      <button type="button" onclick="getUserLastNActive()">
-        Active N Days Window
-      </button>
-    </div> -->
-
-    <div>
-      <p id="mainTable"></p>
+          <div>
+            <input
+              type="number"
+              id="days_last_active"
+              placeholder="enter number of days"
+            />
+            <button type="button" onclick="getUserLastNActive()">
+              Active Last N Days
+            </button>
+          </div>
+          <br />
+          <span>Accounts Count:</span>
+          <span id="acntCount"></span>
+          <br />
+          <div>
+            <p id="mainTable"></p>
+          </div>
+        </div>
+        <div id="byPromoCode" class="tabcontent" style="display:none">
+          <h2>PromoCode</h2>
+          <input
+            id="codename_users"
+            type="text"
+            placeholder="code-name ( case sensitive )"
+          />
+          <button onclick="getUserListUsingCode()">Get List</button>
+          <button onclick="getAllCodes()">Get All Codes</button>
+          <br />
+          <span>Promo Code Count:</span>
+          <span id="promoCodeCount"></span>
+          <br />
+          <section id="promoCodeTable"></section>
+        </div>
+        <div id="bySiteTraffic" class="tabcontent" style="display:none">
+          <h2>Traffic</h2>
+          <button onclick="getAllVisits('curri-blockchain-basic')">
+            Visited Curriculaum Basic
+          </button>
+          <button onclick="getAllVisits('curri-blockchain-advanced')">
+            Visited Curriculaum Advanced
+          </button>
+          <button onclick="getAllVisits('curri-blockchain-professional')">
+            Visited Curriculaum Professional
+          </button>
+          <br />
+          <button onclick="getAllVisits('basic')">
+            Visited Course Basic
+          </button>
+          <button onclick="getAllVisits('advanced')">
+            Visited Course Advanced
+          </button>
+          <button onclick="getAllVisits('professional')">
+            Visited Course Professional
+          </button>
+          <br />
+          <span>Visit Count: </span><span id="visitCount"></span>
+          <br />
+          <section id="trafficTable"></section>
+        </div>
+        <div id="byPayment" class="tabcontent" style="display:none">
+          <h2>Payment</h2>
+          <button type="button" onclick="getAllUserPaymentList()">
+            Get All Payments
+          </button>
+          <br />
+          <span>Payment / Code Count: </span><span id="paymentCount"></span>
+          <br />
+          <section id="paymentTable"></section>
+        </div>
+        <div id="byCertificates" class="tabcontent" style="display:none">
+          <h2>Certificates</h2>
+          <button type="button" onclick="getAllUserCertificates()">
+            Get Certificates By User
+          </button>
+          <br />
+          <span>Certificate Count: </span><span id="certCount"></span>
+          <br />
+          <section id="certificatesTable"></section>
+        </div>
+      </section>
     </div>
   </body>
+
   <script>
+    function openPage(pageName) {
+      let allTabContent = document.getElementsByClassName("tabcontent");
+      for (let i = 0; i < allTabContent.length; i++) {
+        allTabContent[i].style.display = "none";
+      }
+      document.getElementById(pageName).style.display = "block";
+    }
+
     function getUserLastQuater() {
       document.getElementById("mainTable").innerHTML = "";
+      let acntCount = document.getElementById("acntCount");
+      acntCount.innerHTML = "";
       $.ajax({
         method: "get",
         url: "/api/getUserLastQuater",
         success: result => {
-          console.log(result);
-          let retHTML = '<table style="width:100%">';
+          acntCount.innerHTML = result.length;
+          let retHTML = '<table style="width:100%,font:15px">';
           retHTML += "<tr><th>EMAIL</th><th>CREATION TIME</th></tr>";
           for (let i = 0; i < result.length; i++) {
-            retHTML += `<tr><td>${result[i].email}</td><td>${
+            retHTML += `<tr><td>${result[i].email}</td><td>${new Date(
               result[i].time
-            }</td></tr>`;
+            )}</td></tr>`;
           }
           retHTML += "</table> ";
           document.getElementById("mainTable").innerHTML = retHTML;
@@ -69,18 +213,20 @@
 
     function getUsersLastNDays() {
       document.getElementById("mainTable").innerHTML = "";
+      let acntCount = document.getElementById("acntCount");
+      acntCount.innerHTML = "";
       $.ajax({
         method: "post",
         url: "/api/lastNDaysCreated",
         data: { days: document.getElementById("days_last_created").value },
         success: result => {
-          console.log(result);
-          let retHTML = '<table style="width:100%">';
+          acntCount.innerHTML = result.length;
+          let retHTML = '<table style="width:100%,font:15px">';
           retHTML += "<tr><th>EMAIL</th><th>CREATION TIME</th></tr>";
           for (let i = 0; i < result.length; i++) {
-            retHTML += `<tr><td>${result[i].email}</td><td>${
+            retHTML += `<tr><td>${result[i].email}</td><td>${new Date(
               result[i].time
-            }</td></tr>`;
+            )}</td></tr>`;
           }
           retHTML += "</table> ";
           document.getElementById("mainTable").innerHTML = retHTML;
@@ -90,18 +236,20 @@
 
     function getUserLastNActive() {
       document.getElementById("mainTable").innerHTML = "";
+      let acntCount = document.getElementById("acntCount");
+      acntCount.innerHTML = "";
       $.ajax({
         method: "post",
         url: "/api/lastNDaysActive",
         data: { days: document.getElementById("days_last_active").value },
         success: result => {
-          console.log(result);
-          let retHTML = '<table style="width:100%">';
+          acntCount.innerHTML = result.length;
+          let retHTML = '<table style="width:100%,font:15px">';
           retHTML += "<tr><th>EMAIL</th><th>LAST ACTIVE TIME</th></tr>";
           for (let i = 0; i < result.length; i++) {
-            retHTML += `<tr><td>${result[i].email}</td><td>${
+            retHTML += `<tr><td>${result[i].email}</td><td>${new Date(
               result[i].time
-            }</td></tr>`;
+            )}</td></tr>`;
           }
           retHTML += "</table> ";
           document.getElementById("mainTable").innerHTML = retHTML;
@@ -109,25 +257,248 @@
       });
     }
 
-    // function getMostActive() {
-    //   document.getElementById("mainTable").innerHTML = "";
-    //   $.ajax({
-    //     method: "post",
-    //     url: "/api/getMostActive",
-    //     data: { days: document.getElementById("days_most_active").value },
-    //     success: result => {
-    //       console.log(result);
-    //       let retHTML = '<table style="width:100%">';
-    //       retHTML += "<tr><th>EMAIL</th><th>LAST ACTIVE WINDOW</th></tr>";
-    //       for (let i = 0; i < result.length; i++) {
-    //         retHTML += `<tr><td>${result[i].email}</td><td>${
-    //           result[i].time
-    //         }</td></tr>`;
-    //       }
-    //       retHTML += "</table> ";
-    //       document.getElementById("mainTable").innerHTML = retHTML;
-    //     }
-    //   });
-    // }
+    function getUserListUsingCode() {
+      let codeName = document.getElementById("codename_users").value;
+      let promoCodeCount = document.getElementById("promoCodeCount");
+      // console.log(codeName);
+      let promoCodeTable = document.getElementById("promoCodeTable");
+      if (codeName != undefined && codeName != null && codeName != "") {
+        $.ajax({
+          method: "post",
+          url: "/api/getUserListUsingCode",
+          data: { codeName: codeName },
+          success: result => {
+            // console.log(result);
+            if (!result.status) {
+              alert(`Error:${result.error}`);
+            } else {
+              let retHtml = "<table>";
+              let userArr = result.users;
+              promoCodeCount.innerHTML = userArr.length - 1;
+              if (result.restricted) {
+                retHtml +=
+                  "<tr><th>Email</th><th>Count</th><th>Created</th><th>Last Used</th></tr>";
+                for (let i = 1; i < userArr.length; i++) {
+                  retHtml += `<tr><td>${userArr[i].email}</td><td>${
+                    userArr[i].count
+                  }</td><td>${new Date(userArr[i].created)}</td><td>${new Date(
+                    userArr[i].lastUsed
+                  )}</td></tr>`;
+                }
+              } else {
+                retHtml +=
+                  "<tr><th>Email</th><th>Count</th><th>First Used</th><th>Last Used</th></tr>";
+                for (let i = 1; i < userArr.length; i++) {
+                  retHtml += `<tr><td>${userArr[i].email}</td><td>${
+                    userArr[i].count
+                  }</td><td>${new Date(
+                    userArr[i].firstUsed
+                  )}</td><td>${new Date(userArr[i].lastUsed)}</td></tr>`;
+                }
+              }
+              promoCodeTable.innerHTML = retHtml + "</table>";
+            }
+          },
+          error: err => {
+            alert(`Error: ${err}`);
+          }
+        });
+      }
+    }
+
+    function getAllCodes() {
+      let promoCodeTable = document.getElementById("promoCodeTable");
+      promoCodeTable.innerHTML = "";
+      $.ajax({
+        method: "get",
+        url: "/api/getAllCodes",
+        success: result => {
+          let allCodes = result.codes;
+          promoCodeCount.innerHTML = allCodes.length;
+          let retHTML = '<table style="width: 100%;">';
+          retHTML +=
+            "<tr><th>CodeName</th><th>Used Count</th><th>User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
+          for (let i = 0; i < allCodes.length; i++) {
+            let createdDate = new Date(parseFloat(allCodes[i].created));
+            let lastUsedDate = new Date(parseFloat(allCodes[i].lastUsed));
+            retHTML += `<tr><td>${allCodes[i].codeName}</td><td>${
+              allCodes[i].count
+            }</td><td>${allCodes[i].users.length - 1}</td><td>${
+              allCodes[i].status
+            }</td><td>${
+              allCodes[i].restricted
+            }</td><td>${createdDate.getDate()}/${createdDate.getMonth() +
+              1}/${lastUsedDate.getFullYear()}</td><td>${lastUsedDate.getDate()}/${lastUsedDate.getMonth() +
+              1}/${lastUsedDate.getFullYear()}</td></tr>`;
+          }
+          retHTML += "</table>";
+          promoCodeTable.innerHTML = retHTML;
+        },
+        error: err => {
+          alert(`Error: ${err}`);
+        }
+      });
+    }
+
+    function getAllVisits(content) {
+      let trafficTable = document.getElementById("trafficTable");
+      let visitCount = document.getElementById("visitCount");
+      visitCount.innerHTML = "";
+      trafficTable.innerHTML = "";
+      let retHTML = "<table>";
+      retHTML +=
+        "<tr><th>Email</th><th>IP Address</th><th>Count</th><th>First Visit</th><th>Last Visit</th></tr>";
+      $.ajax({
+        method: "post",
+        url: "/api/getVisits",
+        data: { content: content },
+        success: result => {
+          if (result.status) {
+            visitCount.innerHTML = result.visits.length;
+            for (let i = 0; i < result.visits.length; i++) {
+              retHTML += `<tr><td>${
+                result.visits[i].email == undefined ||
+                result.visits[i].email == ""
+                  ? "NA"
+                  : result.visits[i].email
+              }</<td><td>${
+                result.visits[i].ip == undefined || result.visits[i].ip == ""
+                  ? "NA"
+                  : result.visits[i].ip
+              }</<td><td>${result.visits[i].count}</<td><td>${new Date(
+                parseFloat(result.visits[i].firstVisit)
+              )}</<td><td>${new Date(
+                parseFloat(result.visits[i].lastVisit)
+              )}</<td></tr>`;
+            }
+            retHTML += "</table>";
+            // console.log(retHTML);
+            trafficTable.innerHTML = retHTML;
+          }
+        },
+        error: err => {
+          alert(`Error: ${err}`);
+        }
+      });
+    }
+
+    function getAllUserPaymentList() {
+      let paymentTable = document.getElementById("paymentTable");
+      let paymentCount = document.getElementById("paymentCount");
+      paymentCount.innerHTML = "";
+      let retHTML = "<table>";
+      retHTML +=
+        '<tr><th rowspan="2">Email</th><th colspan="2">Codes</th><th colspan="2">Payment</th></tr><tr><th>Code Name</th><th>Count</th><th>Course ID</th><th>Count</th></tr>';
+      $.ajax({
+        method: "get",
+        url: "/api/getAllUserPaymentList",
+        success: result => {
+          // console.log("result: ", result);
+          let data = result.data;
+          let codeKeys = [],
+            paymentKeys = [],
+            totCode = 0,
+            totPayment = 0;
+          paymentCount.innerHTML = result.data.length;
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].codes != undefined) {
+              codeKeys = Object.keys(data[i].codes);
+              totCode = codeKeys.length;
+            } else {
+              (codeKeys = []), (totCode = 0);
+            }
+            if (data[i].payment != undefined) {
+              paymentKeys = Object.keys(data[i].payment);
+              totPayment = paymentKeys.length;
+            } else {
+              (paymentKeys = []), (totPayment = 0);
+            }
+            let rowSpan = totCode > totPayment ? totCode : totPayment;
+            // console.log("Current Data: ", data[i]);
+            // console.log(`Tot Code: ${totCode}`);
+            // console.log(`Tot Payment: ${totPayment}`);
+            retHTML += `<tr><td rowspan="${rowSpan}">${
+              data[i].email
+            }></td><td>${totCode > 0 ? codeKeys[0] : "NA"}</td><td>${
+              totCode > 0 ? data[i].codes[codeKeys[0]] : "NA"
+            }</td><td>${totPayment > 0 ? paymentKeys[0] : "NA"}</td><td>${
+              totPayment > 0 ? data[i].payment[paymentKeys[0]] : "NA"
+            }</td></tr>`;
+            for (let maxIndex = 1; maxIndex < rowSpan; maxIndex++) {
+              // fillout the rowspan
+              // console.log(
+              //   `Iteration ${maxIndex} code exists : ${totCode >=
+              //     maxIndex} paymentIndex : ${totPayment >= maxIndex} `
+              // );
+              retHTML += `<tr><td>${
+                totCode - 1 >= maxIndex ? codeKeys[maxIndex] : "NA"
+              }</td><td>${
+                totCode - 1 >= maxIndex
+                  ? data[i].codes[codeKeys[maxIndex]]
+                  : "NA"
+              }</td><td>${
+                totPayment - 1 >= maxIndex ? paymentKeys[maxIndex] : "NA"
+              }</td><td>${
+                totPayment - 1 >= maxIndex
+                  ? data[i].payment[paymentKeys[maxIndex]]
+                  : "NA"
+              }</td></tr>`;
+            }
+          }
+          retHTML += "</html>";
+          paymentTable.innerHTML = retHTML;
+        }
+      });
+    }
+
+    function getAllUserCertificates() {
+      let certificatesTable = document.getElementById("certificatesTable");
+      let certificateCount = document.getElementById("certCount");
+      certificateCount.innerHTML = "";
+      let retHTML = "<table class='certificateTab'";
+      retHTML +=
+        "<tr><th rowspan='2'>Email</th><th colspan='4' >Certificates</th></tr><tr><th>Course Name</th><th>Client Hash</th><th>Document Hash</th><th>Timestamp</th></tr>";
+      $.ajax({
+        method: "get",
+        url: "/api/getAllUserCertificates",
+        success: result => {
+          if (!result.status) {
+            alert(`Error: ${result.error}`);
+          } else {
+            // console.log(result);
+            let data = result.users;
+            certificateCount.innerHTML = data.length;
+            for (let i = 0; i < data.length; i++) {
+              let currentUser = data[i];
+              let currentCertificates = currentUser.examData.certificateHash;
+              let rowSpan = currentCertificates.length;
+              retHTML += `<tr><td rowspan="${rowSpan}">${
+                currentUser.email
+              }</td><td>${currentCertificates[1].examType}</td><td>${
+                currentCertificates[1].clientHash
+              }</td><td>${
+                currentCertificates[1].headlessHash
+              }</td><td>${new Date(
+                parseFloat(currentCertificates[1].timestamp)
+              )}</td></tr>`;
+              for (let j = 2; j < rowSpan; j++) {
+                retHTML += `<tr><td>${
+                  currentCertificates[j].examType
+                }</td><td>${currentCertificates[j].clientHash}</td><td>${
+                  currentCertificates[1].headlessHash
+                }</td><td>${new Date(
+                  parseFloat(currentCertificates[j].timestamp)
+                )}</td></tr>`;
+              }
+            }
+            retHTML += "</table>";
+            certificatesTable.innerHTML = retHTML;
+          }
+        },
+        error: err => {
+          alert(`Error: ${err}`);
+        }
+      });
+    }
   </script>
 </html>
