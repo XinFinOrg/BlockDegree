@@ -59,6 +59,40 @@ module.exports = app => {
     userStatsService.getByLastActiveDay
   );
 
+  app.post(
+    "/api/getUserListUsingCode",
+    requireLogin,
+    requrieAdmin,
+    userStatsService.getUserListUsingCode
+  );
+
+  app.get(
+    "/api/getAllCodes",
+    requireLogin,
+    requrieAdmin,
+    userStatsService.getAllCodes
+  );
+
+  app.post(
+    "/api/getVisits",
+    requireLogin,
+    requrieAdmin,
+    userStatsService.getVisits
+  );
+
+  app.get(
+    "/api/getAllUserPaymentList",
+    requireLogin,
+    requrieAdmin,
+    userStatsService.getAllUserPaymentList
+  );
+
+  app.get(
+    "/api/getAllUserCertificates",
+    requireLogin,
+    requrieAdmin,
+    userStatsService.getAllUserCertificates
+  );
   // app.post(
   //   "/admin/getMostActive",
   //   requireLogin,
