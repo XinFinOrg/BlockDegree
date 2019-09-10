@@ -24,7 +24,7 @@
                 class="redText fw-6">FAIL</span>
               {{/if}}
           </ul>
-            {{#if examStatus}}
+          {{#if examStatus}}
           <div>
             <button type="button" class="btn btn-download mb-3" onclick="downloadImage()">Download <i
                 class="fa fa-download"></i></button><br>
@@ -251,6 +251,15 @@
   const msg = "Hey, I just got certified in blockchain from Blockdegree.org, check it out !!"
   window.onload = function () {
     checkAuth();
+  }
+
+  history.pushState(null, null, location.href);
+  window.onpopstate = function () {
+    history.go(1);
+  };
+
+  window.onbeforeunload = function (event) {
+    event.returnValue = "Something clever"
   }
 
   window.addEventListener(
