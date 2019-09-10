@@ -264,6 +264,9 @@
   color: $primary-color;
 }
 
+.nav--sticky .nav-menu > li > div{color: #002844;}
+
+
 .nav--sticky .logo-white {display: none;}
 
 .nav--sticky .logo-dark {display: block;}
@@ -303,6 +306,7 @@
   font-size: 12px;
   text-transform: none;
 }
+
 
 .nav-menu ul li:hover > a {
   color: $primary-color;
