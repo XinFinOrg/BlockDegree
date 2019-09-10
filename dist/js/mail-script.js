@@ -71,11 +71,10 @@ $(document).ready(function() {
           message: message.value.trim()
         },
         success: () => {
-          form.reset();
-          name.innerHTML = "";
-          email.innerHTML = "";
-          subject.innerHTML = "";
-          msg.innerHTML = "";
+          name.value = "";
+          subject.value = "";
+          email.value = "";
+          message.value = "";
           window.alert("Message sent");
           window.location.reload();
         }
