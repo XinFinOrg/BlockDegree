@@ -60,17 +60,13 @@ function submitForm(form) {
   }).done(res => {
     console.log("res>>>>>", res);
     if (res.status == false) {
-      $(".form-messages").removeClass("d-none alert-success");
-      $(".form-messages").addClass("alert-danger");
-      $(".form-messages").html(res.message);
+      $.notify({ message: res.message }, { type: "danger" });
     } else if (query) {
       // localStorage.setItem("hasUser", true);
       window.location = "/courses/" + query;
     } else {
       console.log("res true>>>>>>", accessMsg);
-      $(".form-messages").addClass("alert-success");
-      $(".form-messages").removeClass("d-none alert-danger");
-      $(".form-messages").html(accessMsg);
+      $.notify({ message: accessMsg }, { type: "success" });
       if ($(form).attr("action") == "/forgotpassword") {
         console.log(">>>>>>>>>>", form.fp.value);
         form.fp.value = "";

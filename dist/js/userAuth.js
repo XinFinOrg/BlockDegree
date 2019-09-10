@@ -30,9 +30,7 @@ if (typeof jQuery != "undefined") {
       let validEm = false;
 
       if (getUrlVars()["from"]) {
-        $(".form-messages").addClass("alert-info");
-        $(".form-messages").removeClass("d-none alert-danger");
-        $(".form-messages").html(preMsg);
+        $.notify({ message: preMsg });
       }
 
       email.onkeyup = () => {
