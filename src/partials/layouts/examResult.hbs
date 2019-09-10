@@ -24,7 +24,7 @@
                 class="redText fw-6">FAIL</span>
               {{/if}}
           </ul>
-
+            {{#if examStatus}}
           <div>
             <button type="button" class="btn btn-download mb-3" onclick="downloadImage()">Download <i
                 class="fa fa-download"></i></button><br>
@@ -41,6 +41,8 @@
           <p id="social_wrap" class="social-sharing">
             Post on Socials:
           </p>
+          {{else}}
+          {{/if}}
 
           <!--<ul>
 		  <li style="display: flex;flex-direction:column">
@@ -94,7 +96,7 @@
                 class="redText fw-6">FAIL</span>
               {{/if}}
           </ul>
-
+          {{#if examStatus}}
           <div>
             <button type="button" class="btn btn-download mb-3" onclick="downloadImage()">Download <i
                 class="fa fa-download"></i></button><br>
@@ -111,7 +113,8 @@
           <p id="social_wrap" class="social-sharing">
             Post on Socials:
           </p>
-
+          {{else}}
+          {{/if}}
           <!--<ul>
 
           <li style="display: flex;flex-direction:column">
