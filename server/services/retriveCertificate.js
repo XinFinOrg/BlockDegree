@@ -122,7 +122,6 @@ exports.downloadCertificate = async (req, res) => {
                     "Error while deleting te temp-file at: ",
                     localPath
                   );
-                  res.json({ uploaded: true, error: null });
                 }
               });
             });
