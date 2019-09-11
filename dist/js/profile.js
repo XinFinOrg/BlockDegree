@@ -31,19 +31,19 @@ if (typeof jQuery != "undefined") {
           googleLink.innerHTML =
             userProfile.auth.google.id != ""
               ? "linked"
-              : '<button onclick="handleAuthGoogle()">Link Google</button>';
+              : '<button class="btn btn-primary social-g+" onclick="handleAuthGoogle()"><i class="fa fa fa-link"></i> Link Google</button>';
           facebookLink.innerHTML =
             userProfile.auth.facebook.id != ""
               ? "linked"
-              : '<button onclick="handleAuthFacebook()">Link Facebook</button>';
+              : '<button class="btn btn-primary social-fb" onclick="handleAuthFacebook()"><i class="fa fa fa-link"></i> Link Facebook</button>';
           twitterLink.innerHTML =
             userProfile.auth.twitter.id != ""
               ? "linked"
-              : '<button onclick="handleAuthTwitter()">Link Twitter</button>';
+              : '<button class="btn btn-primary social-tw" onclick="handleAuthTwitter()"><i class="fa fa fa-link"></i> Link Twitter</button>';
           linkedinLink.innerHTML =
             userProfile.auth.linkedin.id != ""
               ? "linked"
-              : '<button onclick="handleAuthLinkedin()">Link Linkedin</button>';
+              : '<button class="btn btn-primary social-li" onclick="handleAuthLinkedin()"><i class="fa fa fa-link"></i> Link Linkedin</button>';
           basicStatus.innerHTML = userProfile.examData.payment.course_1
             ? "Enrolled"
             : "Not Paid";

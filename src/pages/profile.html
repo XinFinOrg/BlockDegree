@@ -1,207 +1,250 @@
 {{#> base}}
-
 {{> layouts/base title="Blockchain Profile"}}
 {{#*inline "body-block"}}
 {{> includes/hero hero-title="Profile" hero-copy="View / Update your profile"}}
-  <div class="tab">   
-    <button id="view-profile-btn" class="tablinks" onclick="  openTab(event,'view_profile')">View Profile</button>
-    <button id="edit-profile-btn" class="tablinks" onclick="  openTab(event, 'edit_profile')">Edit</button>   
-  </div>
-  <div id="view_profile" class="tabcontent">
-    <h2>User Profile</h2>   
-          
-      <h3>Basic Details</h3>   
-      <table>   
-        <tr>   
-          <th>Field</th>   
-          <th>Value</th>   
-            
-        </tr>   
-        <tr>   
-          <td>Email-ID</td>   
-          <td id="emailId"></td>
-          
-      </tr>
-      <tr>   
-          <td>Full Name</td>
-          <td id="name"></td>
-        </tr>
-      </table>
-      <table>   
-      <h3>Socials</h3>
-      <table> 
-      <tr>   
-      <th>Social's Name</th>   
-      <th>Link Status</th>   
-      </tr>   
-      <tr>   
-      <td>Google</td>   
-      <td id="googleLink">
-      </td>   
-      </tr>   
-      <tr>   
-      <td>Facebook</td>   
-      <td id="facebookLink"></td>
-      </tr>
-      <tr>   
-      <td>Twitter</td>   
-      <td id="twitterLink">
-        </td>   
-      </tr>   
-      <tr>   
-      <td>Linkedin</td>   
-      <td id="linkedinLink"></td>
-      </tr>   
-      </table>   
-          
-      <h3>Payment Details</h3>  
-      <table>   
-        <tr>
-          <th>Course Name</th> 
-          <th>Payment Status</th>   
-          <th>Attempts Made (Total 3) </th> 
-      </tr>   
-        <tr>   
-        <td>Basic</td>   
-        <td id="basicStatus"></td>
-        <td id="basicAttempt"></td>
-        </tr>   
-        <tr>
-        <td>Advanced</td>
-        <td id="advancedStatus"></td>
-        <td id="advancedAttempt"></td>
-        </tr>   
-        <tr>
-        <td>Professional</td>
-        <td id="professionalStatus"></td>
-        <td id="professionalAttempt"></td>
-        </tr>   
-      </table>   
-    </div> 
 
-    <div id="edit_profile" class="tabcontent">
-      <h2>User Profile</h2>   
-          
-      <h3>Basic Details</h3>   
-      <table>   
-        <tr>   
-          <th>Field</th>   
-          <th>Value</th>   
-            
-        </tr>   
-        <tr>   
-          <td>Email-ID</td>   
-          <td><input type="text" id="edit_email" disabled></td>
-          
-      </tr>
-      <tr>   
-          <td>Full Name</td>
-          <td><input type="text" id="edit_name" name="fullName">
-            <button type="button" style="float: right" onclick="handleUpdateName()">Update</button></td>
-        </tr>
-      </table>
-      <!-- <table>   
-      <h3>Socials</h3>
-      <table> 
-      <tr>   
-      <th>Social's Name</th>   
-      <th>Link Status</th>
-      <th>Remove / Update</th>   
-      </tr>   
-      <tr>   
-      <td>Google</td>   
-      <td id="edit_googleLink">
-      </td>   
-      <td><button type="button" onclick="handleRemoveLink('google')">Remove Social</button><button type="button" onclick="handleUpdateLink('google')">Update Social</button></td>
-      </tr>   
-      <tr>   
-      <td>Facebook</td>   
-      <td id="edit_facebookLink"></td>
-      <td><button type="button" onclick="handleRemoveLink('facebook')">Remove Social</button><button type="button" onclick="handleUpdateLink('facebook')">Update Social</button></td>
-      </tr>
-      <tr>   
-      <td>Twitter</td>   
-      <td id="edit_twitterLink">
-        </td>   
-        <td><button type="button" onclick="handleRemoveLink('twitter')">Remove Social</button><button type="button" onclick="handleUpdateLink('twitter')">Update Social</button></td>
-      </tr>   
-      <tr>   
-      <td>Linkedin</td>   
-      <td id="edit_linkedinLink"></td>
-      <td><button type="button" onclick="handleRemoveLink('linkedin')">Remove Social</button><button type="button" onclick="handleUpdateLink('linkedin')">Update Social</button></td>
-      </tr>   
-      </table>    -->
-      <br>
-    </div>
-
-
-
-
-
-
-
+<div id="profile">
+	<div class="tabbed-section">
+		<div class="container">
+			<div class="tab">
+				<button id="view-profile-btn" class="tablinks" onclick="openTab(event, 'view_profile')">View Profile</button>
+				<button id="edit-profile-btn" class="tablinks" onclick="openTab(event, 'edit_profile')">Edit Profile</button>
+			</div>
+		</div>
+	</div>
+	
+	<div class="bg-muted py-5">
+		<div class="container">
+			<div id="view_profile" class="tabcontent">
+				<h2 class="profile-Heading">User Profile</h2>
+		
+				<h3 class="profile-subHeading mt-4">Basic Details</h3>
+				<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+					<tr>
+						<th>Field</th>
+						<th>Value</th>
+		
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>Email-ID</td>
+						<td id="emailId"></td>
+		
+					</tr>
+					<tr>
+						<td>Full Name</td>
+						<td id="name"></td>
+					</tr>
+					</tbody>
+				</table>
+				</div>
+		
+				<h3 class="profile-subHeading mt-5">Socials</h3>
+				<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+					<tr>
+						<th>Social's Name</th>
+						<th>Link Status</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>Google</td>
+						<td id="googleLink">
+						</td>
+					</tr>
+					<tr>
+						<td>Facebook</td>
+						<td id="facebookLink"></td>
+					</tr>
+					<tr>
+						<td>Twitter</td>
+						<td id="twitterLink">
+						</td>
+					</tr>
+					<tr>
+						<td>Linkedin</td>
+						<td id="linkedinLink"></td>
+					</tr>
+					</tbody>
+				</table>
+				</div>
+		
+				<h3 class="profile-subHeading mt-5">Payment Details</h3>
+				<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+					<tr>
+						<th>Course Name</th>
+						<th>Payment Status</th>
+						<th>Attempts Made (Total 3) </th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>Basic</td>
+						<td id="basicStatus"></td>
+						<td id="basicAttempt"></td>
+					</tr>
+					<tr>
+						<td>Advanced</td>
+						<td id="advancedStatus"></td>
+						<td id="advancedAttempt"></td>
+					</tr>
+					<tr>
+						<td>Professional</td>
+						<td id="professionalStatus"></td>
+						<td id="professionalAttempt"></td>
+					</tr>
+					</tbody>
+				</table>
+				</div>
+			</div>
+		
+			<div id="edit_profile" class="tabcontent">
+				<h2 class="profile-Heading">Edit Profile</h2>
+		
+				<h3 class="profile-subHeading mt-5">Basic Details</h3>
+				<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+					<tr>
+						<th>Field</th>
+						<th>Value</th>		
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>Email-ID</td>
+						<td><input type="text" class="form-control" id="edit_email" disabled></td>
+		
+					</tr>
+					<tr>
+						<td>Full Name</td>
+						<td>
+							<input type="text" class="form-control" id="edit_name" name="fullName">
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+							<button type="button" class="btn btn-primary btn-update" onclick="handleUpdateName()">Update</button>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+				</div>
+		
+				<!-- <table>   
+			  <h3>Socials</h3>
+			  <table> 
+			  <tr>   
+			  <th>Social's Name</th>   
+			  <th>Link Status</th>
+			  <th>Remove / Update</th>   
+			  </tr>   
+			  <tr>   
+			  <td>Google</td>   
+			  <td id="edit_googleLink">
+			  </td>   
+			  <td><button type="button" onclick="handleRemoveLink('google')">Remove Social</button><button type="button" onclick="handleUpdateLink('google')">Update Social</button></td>
+			  </tr>   
+			  <tr>   
+			  <td>Facebook</td>   
+			  <td id="edit_facebookLink"></td>
+			  <td><button type="button" onclick="handleRemoveLink('facebook')">Remove Social</button><button type="button" onclick="handleUpdateLink('facebook')">Update Social</button></td>
+			  </tr>
+			  <tr>   
+			  <td>Twitter</td>   
+			  <td id="edit_twitterLink">
+				</td>   
+				<td><button type="button" onclick="handleRemoveLink('twitter')">Remove Social</button><button type="button" onclick="handleUpdateLink('twitter')">Update Social</button></td>
+			  </tr>   
+			  <tr>   
+			  <td>Linkedin</td>   
+			  <td id="edit_linkedinLink"></td>
+			  <td><button type="button" onclick="handleRemoveLink('linkedin')">Remove Social</button><button type="button" onclick="handleUpdateLink('linkedin')">Update Social</button></td>
+			  </tr>   
+			  </table>-->
+			</div>
+		</div>
+	</div>
+</div>
 
 {{/inline}}
 {{#*inline "scripts-block"}}
+
 <script src="js/profile.js"></script>
 <script>
-  function   openTab(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
+    function openTab(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
 
-function handleAuthGoogle() {
-    // window.location.replace("https://www.blockdegree.org/auth/google")
-    popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
-  }
-  function handleAuthFacebook() {
-    // window.location.replace("https://www.blockdegree.org/auth/facebook")
-    popupLogin({
-      path: "https://www.blockdegree.org/auth/facebook?close=true"
-    });
-  }
-  function handleAuthTwitter() {
-    // window.location.replace("https://www.blockdegree.org/auth/twitter")
-    popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
-  }
-  function handleAuthLinkedin() {
-    // window.location.replace("https://www.blockdegree.org/auth/linkedin")
-    popupLogin({
-      path: "https://www.blockdegree.org/auth/linkedin?close=true"
-    });
-  }
-  function popupLogin(options) {
-    options.windowName = options.windowName || "ConnectWithOAuth"; // should not include space for IE
-    options.windowOptions =
-      options.windowOptions || "location=0,status=0,width=600,height=600";
-    options.callback =
-      options.callback ||
-      function() {
-        window.location.reload();
-      };
-    var that = this;
-    console.log(options.path);
-    that._oauthWindow = window.open(
-      options.path,
-      options.windowName,
-      options.windowOptions
-    );
-    that._oauthInterval = window.setInterval(function() {
-      if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
-        that._oauthWindow.location.href ==
-          "https://www.blockdegree.org/closeCallback";
-      }
-    }, 1000);
-  }
+    function handleAuthGoogle() {
+        // window.location.replace("http://localhost:3000/auth/google")
+        popupLogin({
+            path: "http://localhost:3000/auth/google?close=true"
+        });
+    }
+
+    function handleAuthFacebook() {
+        // window.location.replace("http://localhost:3000/auth/facebook")
+        popupLogin({
+            path: "http://localhost:3000/auth/facebook?close=true"
+        });
+    }
+
+    function handleAuthTwitter() {
+        // window.location.replace("http://localhost:3000/auth/twitter")
+        popupLogin({
+            path: "http://localhost:3000/auth/twitter?close=true"
+        });
+    }
+
+    function handleAuthLinkedin() {
+        // window.location.replace("http://localhost:3000/auth/linkedin")
+        popupLogin({
+            path: "http://localhost:3000/auth/linkedin?close=true"
+        });
+    }
+
+    function popupLogin(options) {
+        options.windowName = options.windowName || "ConnectWithOAuth"; // should not include space for IE
+        options.windowOptions =
+            options.windowOptions || "location=0,status=0,width=600,height=600";
+        options.callback =
+            options.callback ||
+            function() {
+                window.location.reload();
+            };
+        var that = this;
+        console.log(options.path);
+        that._oauthWindow = window.open(
+            options.path,
+            options.windowName,
+            options.windowOptions
+        );
+        that._oauthInterval = window.setInterval(function() {
+            if (that._oauthWindow.location.href == "http://localhost:3000") {
+                that._oauthWindow.location.href ==
+                    "http://localhost:3000/closeCallback";
+            }
+        }, 1000);
+    }
 </script>
 {{/inline}}
 {{/base}}
