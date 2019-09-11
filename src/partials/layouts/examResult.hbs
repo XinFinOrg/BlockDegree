@@ -455,7 +455,7 @@
     let userMSG = document.getElementById("postMSGTwitter").value;
     let certiLink = document.getElementById("certiLinkTwitter").checked;
     if (userMSG.length > 260) {
-      alert("Max length is 260 ");
+      $.notify("Max length is 260 ", { type: "danger" });
     }
     else {
       $.ajax({
@@ -465,10 +465,9 @@
         success: (result) => {
           console.log(result);
           if (result.uploaded) {
-            alert("Posted on Twitter!");
-          }
-          else {
-            alert("Oops, error occured while posting!")
+            $.notify("Successfully posted on twitter!", { type: "success" });
+          } else {
+            $.notify("Oops, error occured while posting!", { type: "danger" });
           }
         }
       });
@@ -486,10 +485,9 @@
       success: (result) => {
         console.log(result);
         if (result.uploaded) {
-          alert("Posted on Linkedin!");
-        }
-        else {
-          alert("Oops, error occured while posting!")
+          $.notify("Successfully posted on linkedin!", { type: "success" });
+        } else {
+          $.notify("Oops, error occured while posting!", { type: "danger" });
         }
       }
     });

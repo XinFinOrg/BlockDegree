@@ -104,7 +104,7 @@ if (typeof jQuery != "undefined") {
           // is logged in
           let currentUser = result.user;
           if (currentUser.name == newNameTrim) {
-            alert("Same Name");
+            $.notify("Same Name", { type: "danger" });
           } else {
             $.ajax({
               method: "post",
@@ -115,7 +115,7 @@ if (typeof jQuery != "undefined") {
                 window.location.reload();
               },
               error: err => {
-                alert("Error while updating the name");
+                $.notify("Error while updating the name", { type: "danger" });
               }
             });
           }
@@ -239,7 +239,9 @@ if (typeof jQuery != "undefined") {
           // user is logged in
           let user = result.user;
           if (user.auth[social].id == undefined || user.auth[social].id == "") {
-            alert(`Error: ${social} is not linked to this account`);
+            $.notify(`Error: ${social} is not linked to this account`, {
+              type: "danger"
+            });
           } else {
             if (
               confirm(
@@ -252,7 +254,9 @@ if (typeof jQuery != "undefined") {
                 data: { social },
                 success: result => {
                   if (result.status) {
-                    alert("Successfully removed the social link");
+                    $.notify("Successfully removed the social link", {
+                      type: "success"
+                    });
                     checkAuth();
                   } else {
                     alert(`Cannot not remove: ${result.error}`);
@@ -282,9 +286,11 @@ if (typeof jQuery != "undefined") {
   window.addEventListener(
     "message",
     function(event) {
-      // if (event.origin == "https://www.blockdegree.org") {
-      checkAuth();
-      // }
+      console.log("Originating event: ", event.origin);
+      if (event.origin == "https://www.blockdegree.org") {
+        $.notify("Loggin linked!", { type: "success" });
+        checkAuth();
+      }
     },
     false
   );

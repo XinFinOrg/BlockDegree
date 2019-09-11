@@ -75,8 +75,10 @@ $(document).ready(function() {
           subject.value = "";
           email.value = "";
           message.value = "";
-          window.alert("Message sent");
-          window.location.reload();
+          $.notify(
+            "Message Sent! One of our employees will get back to you shortly.",
+            { type: "success" }
+          );
         }
       });
     }
