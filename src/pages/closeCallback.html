@@ -4,8 +4,7 @@
       console.log("in window opener !");
       // let sessionCookies = "";
       // sessionCookies = document.cookie.split(";");
-      console.log(document.cookie);
-      window.opener.postMessage(document.cookie, "*");
+      window.opener.postMessage("ok", "*");
       open(location, "_self").close();
     }
   </script>

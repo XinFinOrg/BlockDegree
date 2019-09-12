@@ -5,6 +5,7 @@ var fs = require("fs");
 const User = require("../models/user");
 const axios = require("axios");
 const BitlyClient = require("bitly").BitlyClient;
+var exec = require("child_process").exec;
 
 require("dotenv").config();
 
@@ -42,7 +43,7 @@ exports.postTwitter = async (req, res) => {
   ) {
     return res.redirect("/auth/twitter");
   }
-  if (req.body.hash == undefined || req.body.hash==""){
+  if (req.body.hash == undefined || req.body.hash == "") {
     res.json({ uploaded: false, error: "No hash provided" });
   }
   const hash =
@@ -88,7 +89,9 @@ exports.postTwitter = async (req, res) => {
     files.forEach(async file => {
       var localPath = "tmp/" + file.path + ".png";
       imgHTML = file.content.toString("utf-8");
-      const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+      const browser = await puppeteer.launch({
+        args: ["--no-sandbox", "--disable-setuid-sandbox"]
+      });
       const page = await browser.newPage();
       await page.setViewport({
         width: 800,
@@ -120,23 +123,36 @@ exports.postTwitter = async (req, res) => {
                 if (err) {
                   console.log("ERROR: ", err);
                   res.json({ uploaded: false, error: err });
+                  fs.unlink(localPath, err => {
+                    if (err != null) {
+                      console.log(
+                        "Error while deleting te temp-file at: ",
+                        localPath
+                      );
+                      // res.json({ uploaded: true, error: null });
+                    }
+                  });
                 } else {
                   console.log("Posted the status!");
+                  fs.unlink(localPath, err => {
+                    if (err != null) {
+                      console.log(
+                        "Error while deleting te temp-file at: ",
+                        localPath
+                      );
+                    } else {
+                      res.json({ uploaded: true, error: null });
+                    }
+                  });
                 }
               }
             );
           }
         });
-        fs.unlink(localPath, err => {
-          if (err != null) {
-            console.log("Error while deleting te temp-file at: ", localPath);
-            res.json({ uploaded: true, error: null });
-          }
-        });
       });
     });
   });
-  return res.json({ uploaded: true, error: null });
+  // return res.json({ uploaded: true, error: null });
 };
 
 exports.postLinkedin = async (req, res) => {
@@ -154,7 +170,7 @@ exports.postLinkedin = async (req, res) => {
     // set linkedin credentials and post.
     return res.redirect("/auth/linkedin");
   }
-  if (req.body.hash == undefined || req.body.hash==""){
+  if (req.body.hash == undefined || req.body.hash == "") {
     res.json({ uploaded: false, error: "No hash provided" });
   }
   const hash =
@@ -230,8 +246,51 @@ exports.postFacebook = async (req, res) => {};
 // Error: status code 400, bad request error
 exports.uploadImageLinkedin = async (req, res) => {
   // set the credentials from req.user;
-  const authToken = "";
-  const personURN = "";
+  const user = await User.findOne({ email: req.user.email });
+  if (!user) {
+    return res.redirect("/login");
+  }
+  if (
+    user.auth.linkedin.accessToken == "" ||
+    user.auth.linkedin.accessToken == undefined ||
+    user.auth.linkedin.id == "" ||
+    user.auth.linkedin.id == undefined
+  ) {
+    // set linkedin credentials and post.
+    return res.redirect("/auth/linkedin");
+  }
+  if (req.body.hash == undefined || req.body.hash == "") {
+    return res.json({ uploaded: false, error: "No hash provided" });
+  }
+  const hash =
+    req.body.hash ||
+    user.examData.certificateHash[user.examData.certificateHash.length - 1]
+      .clientHash;
+  let fullURL = "";
+  let shortURL = "";
+  if (process.env.IPFS_NETWORK == "local") {
+    fullURL = `http://localhost:8081/ipfs/${hash}`;
+  } else if (process.env.IPFS_NETWORK == "xinfin") {
+    fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
+  }
+  try {
+    let shortUrlObj = await bitly.shorten(fullURL);
+    shortURL = shortUrlObj.url;
+  } catch (e) {
+    console.error(`Error while shortning the URL ${fullURL}; Error: ${e}`);
+    shortURL = fullURL;
+    console.log(`Using full URL for ${req.user.email} Link: ${shortURL}`);
+  }
+  let msg =
+    req.body.msg ||
+    `Hey, I just got certified in blockchain from Blockdegree.org. Check it out!!`;
+  if (req.body.certiLink == "true") {
+    msg += `\n Link : ${shortURL} `;
+  }
+
+  // register an upload : will get upload URL
+  let authToken = user.auth.linkedin.accessToken;
+  let personURN = user.auth.linkedin.id;
   var response = await axios({
     method: "post",
     url: "https://api.linkedin.com/v2/assets?action=registerUpload",
@@ -253,6 +312,8 @@ exports.uploadImageLinkedin = async (req, res) => {
     }
   });
 
+  console.log("Response from register: ", response.status);
+
   // const uploadURL = response.data.value;
   const uploadMechnism =
     response.data.value.uploadMechanism[
@@ -263,100 +324,99 @@ exports.uploadImageLinkedin = async (req, res) => {
 
   console.log("ASSET: ", asset);
   console.log("UploadURL : ", uploadURL);
-
-  // This code below is th issue; ugcPosts is working fine.
-
-  // exec(`curl -i --upload-file /home/rudresh/test.png --header "Authorization: Bearer ${authToken}" '${uploadURL}'`,(err,stdout,stderr) => {
-  //   if (err!=null){
-  //     throw err
-  //   }
-  // })
-
-  // exec(`http POST ${uploadURL}  @/home/rudresh/test.png "Authorization:Bearer ${authToken}"`);
-
-  const resp = await axios({
-    method: "post",
-    url: "https://api.linkedin.com/v2/ugcPosts",
-    headers: {
-      "X-Restli-Protocol-Version": "2.0.0",
-      Authorization: `Bearer ${authToken}`
-    },
-    data: {
-      author: `urn:li:person:${personURN}`,
-      lifecycleState: "PUBLISHED",
-      specificContent: {
-        "com.linkedin.ugc.ShareContent": {
-          shareCommentary: {
-            text:
-              "Feeling inspired after meeting so many talented individuals at this year's conference. #talentconnect"
-          },
-          shareMediaCategory: "NONE",
-          media: [
-            {
-              status: "READY",
-              description: {
-                text: "Center stage!"
-              },
-              media: asset,
-              title: {
-                text: "LinkedIn Talent Connect 2018"
-              }
-            }
-          ]
-        }
-      },
-      visibility: {
-        "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-      }
+  let localPath = "";
+  clientIPFS.get(hash, (err, files) => {
+    if (err) {
+      return res.json({ uploaded: false, error: err });
     }
-  }).catch(err => {
-    throw err;
+    files.forEach(async file => {
+      localPath = "tmp/" + file.path + ".png";
+      imgHTML = file.content.toString("utf-8");
+      const browser = await puppeteer.launch({
+        args: ["--no-sandbox", "--disable-setuid-sandbox"]
+      });
+      const page = await browser.newPage();
+      await page.setViewport({
+        width: 800,
+        height: 600,
+        deviceScaleFactor: 1
+      });
+      await page.setContent(imgHTML);
+      await page.screenshot({ path: localPath });
+      browser.close().then(() => {
+        var os = new os_func();
+        console.log(`local path: ${localPath}`);
+        os.execCommand(
+          `curl -i --upload-file ${localPath} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
+          async function(returnValue) {
+            const resp = await axios({
+              method: "post",
+              url: "https://api.linkedin.com/v2/ugcPosts",
+              headers: {
+                "X-Restli-Protocol-Version": "2.0.0",
+                Authorization: `Bearer ${authToken}`
+              },
+              data: {
+                author: `urn:li:person:${personURN}`,
+                lifecycleState: "PUBLISHED",
+                specificContent: {
+                  "com.linkedin.ugc.ShareContent": {
+                    shareCommentary: {
+                      text: msg
+                    },
+                    shareMediaCategory: "IMAGE",
+                    media: [
+                      {
+                        status: "READY",
+                        description: {
+                          text: "Center stage!"
+                        },
+                        media: asset,
+                        title: {
+                          text: "LinkedIn Talent Connect 2018"
+                        }
+                      }
+                    ]
+                  }
+                },
+                visibility: {
+                  "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+                }
+              }
+            });
+            fs.unlink(localPath, e => {
+              if (e) {
+                return res.json({
+                  uploaded: false,
+                  error:
+                    "something's wrong, we'll look into it. Please try again after some time"
+                });
+              }
+              console.log(resp.status);
+              return res.json({
+                uploaded: resp.status == 201,
+                error: resp.status == 201 ? null : "Some error occured"
+              });
+            });
+          }
+        );
+      });
+    });
   });
-  console.log(resp.status);
 };
 
-// urn:li:digitalmediaAsset:C5122AQGhQP0CaqFy0Q
-// https://api.linkedin.com/mediaUpload/C5122AQGhQP0CaqFy0Q/feedshare-uploadedImage/0?ca=vector_feedshare&cn=uploads&m=AQI8zuih7FoSBwAAAWw99KEmX49-ic5bOYLgDL7s5U4Txdw4O0tGr9rihQ&app=8015375&sync=0&v=beta&ut=2AT8nijBFOSoQ1
+function os_func() {
+  this.execCommand = function(cmd, callback) {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
 
-// const resp =await axios({
-//       method: "post",
-//       url: "https://api.linkedin.com/v2/ugcPosts",
-//       headers: {
-//         "X-Restli-Protocol-Version": "2.0.0",
-//         Authorization: `Bearer ${authToken}`
-//       },
-//       data: {
-//         "author": "urn:li:person:${personURN}",
-//         "lifecycleState": "PUBLISHED",
-//         "specificContent": {
-//             "com.linkedin.ugc.ShareContent": {
-//                 "shareCommentary": {
-//                     "text": "Feeling inspired after meeting so many talented individuals at this year's conference. #talentconnect"
-//                 },
-//                 "shareMediaCategory": "IMAGE",
-//                 "media": [
-//                     {
-//                         "status": "READY",
-//                         "description": {
-//                             "text": "Center stage!"
-//                         },
-//                         "media": `${asset}`,
-//                         "title": {
-//                             "text": "LinkedIn Talent Connect 2018"
-//                         }
-//                     }
-//                 ]
-//             }
-//         },
-//         "visibility": {
-//             "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-//         }
-//     }
-//     }).catch(err => {console.error(err)});
-//  console.log(resp)
-
-// res.json()
-// };
+      callback(stdout);
+    });
+  };
+}
 
 function getTwitterConfig(consumerKey, consumerSecret, token, tokenSecret) {
   return {

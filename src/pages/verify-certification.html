@@ -57,7 +57,7 @@
 <button
   type="button"
   class="btn btn-primary social-tw"
-  onclick="showImageModal()"
+  onclick="showImageModal('Twitter')"
   data-toggle="modal"
   data-target="#postTwitter"
   style="display: none"
@@ -87,16 +87,32 @@
           <input type="checkbox" id="certiLinkTwitter" /> Include link to
           Certificate<br />
         </div>
-        <p><textarea cols="30" rows="3" id="postMSGTwitter"></textarea></p>
+        <p>
+          <textarea
+            onkeyup="checkCharacter()"
+            cols="30"
+            rows="3"
+            id="postMSGTwitter"
+          ></textarea>
+        </p>
+        <span style="float: right">
+          <span>Character Count ( Max 260 ):</span
+          ><span
+            style="padding-left:10px;padding-right: 10px"
+            id="charCount"
+          ></span>
+        </span>
+
         <div>
           <div>
             <img
               src="/img/gif/loading_block.gif"
               style="width:300px;height:300px;display:block;margin:0 auto;"
-              id="modalImage"
+              id="modalImageTwitter"
             />
           </div>
           <button
+            id="btn-postTweet"
             type="button"
             class="btn btn-primary social-tw mt-3"
             onclick="postTweet()"
@@ -115,6 +131,7 @@
   </div>
 </div>
 <button
+  onclick="showImageModal('Linkedin')"
   id="togglePostLinkedin"
   type="button"
   class="btn btn-primary social-li"
@@ -146,6 +163,13 @@
         </div>
         <p><textarea cols="30" rows="3" id="postMSGLinkedin"></textarea></p>
         <div>
+          <div>
+            <img
+              src="/img/gif/loading_block.gif"
+              style="width:300px;height:300px;display:block;margin:0 auto;"
+              id="modalImageLinkedin"
+            />
+          </div>
           <button
             type="button"
             class="btn btn-primary social-li mt-3"
@@ -204,8 +228,10 @@
 <script>
   let postLinkedinHash = "";
   let postTwitterHash = "";
-  let msg =
-    "Hey, I just got certified in blockchain from Blockdegree.org, check it out !!";
+
+  const msg =
+    "Hey, I just got certified in blockchain from Blockdegree.org, check it out !! Also use 'code10' to get free certificate !!! ";
+
   $(document).ready(() => {
     $.ajax({
       method: "post",
@@ -248,13 +274,15 @@
       event.origin == "https://www.blockdegree.org" ||
       event.origin == "https://blockdegree.org"
     ) {
-      console.log("message from popup.");
-      if (postLinkedinHash != "") {
-        // toggle linkedin modal
-        $("#togglePostLinkedin").click();
-      } else if (postTwitterHash != "") {
-        // toggle twitter modal
-        $("#togglePostTwitter").click();
+      if (event.data == "ok") {
+        console.log("message from popup.");
+        if (postLinkedinHash != "") {
+          // toggle linkedin modal
+          $("#togglePostLinkedin").click();
+        } else if (postTwitterHash != "") {
+          // toggle twitter modal
+          $("#togglePostTwitter").click();
+        }
       }
     }
   });
@@ -347,7 +375,7 @@
     let hash = document.getElementById("certiHash").value;
     console.log(`Hash length: ${hash.length}`);
     if (!validateHash(hash)) {
-      alert("Invalid Hash!");
+      $.notify("Invalid Hash", { type: "danger" });
       return;
     }
     let found = false;
@@ -394,7 +422,9 @@
                     }
                   }
                   if (!found) {
-                    alert("Given hash is not associated to your account");
+                    $.notify("Given hash is not associated to your account", {
+                      type: "warning"
+                    });
                     window.open(
                       `https://ipfs-gateway.xinfin.network/${hash}`,
                       "newwin",
@@ -468,16 +498,16 @@
                 }
                 card_wrap.innerHTML = retHTML;
               } else {
-                return alert(
-                  `Error while fetching certificates: ${result.msg}`
-                );
+                $.notify(`Error while fetching certificates: ${result.msg}`, {
+                  type: "danger"
+                });
               }
             }
           });
         } else {
           document.getElementById("card_wrapping_container").style =
             "display:none";
-          alert("Please login !");
+          $.notify("Please login", { type: "danger" });
           exit();
         }
       }
@@ -540,6 +570,7 @@
   function handleShareLinkdedin(hash) {
     console.log("called handle linkedin share");
     console.log(`hash: ${hash}`);
+    document.getElementById("postMSGLinkedin").innerHTML = msg;
     postLinkedinHash = hash;
     $.ajax({
       method: "post",
@@ -555,7 +586,10 @@
         }
       },
       error: err => {
-        alert(`Error: ${err}`);
+        $.notify(
+          "Oops looks like some error occurred, please try again after sometime.",
+          { type: "danger" }
+        );
       }
     });
   }
@@ -563,6 +597,10 @@
   function handleShareTwitter(hash) {
     console.log("called handle twitter share");
     console.log(`hash: ${hash}`);
+    document.getElementById("postMSGTwitter").innerHTML = msg;
+    document.getElementById("charCount").innerHTML = msg.normalize(
+      "NFC"
+    ).length;
     postTwitterHash = hash;
     $.ajax({
       method: "post",
@@ -578,7 +616,10 @@
         }
       },
       error: err => {
-        alert(`Error: ${err}`);
+        $.notify(
+          `Oops, some error has occured, please try againn after sometime`,
+          { type: "danger" }
+        );
       }
     });
   }
@@ -601,8 +642,9 @@
   function postTweet() {
     let userMSG = document.getElementById("postMSGTwitter").value;
     let certiLink = document.getElementById("certiLinkTwitter").checked;
+    $.notify("Your post is now being submitted, please wait a few seconds.");
     if (userMSG.length > 260) {
-      alert("Max length is 260 ");
+      $.notify("Max length is 260 ", { type: "danger" });
     } else {
       $.ajax({
         method: "post",
@@ -611,17 +653,22 @@
         success: result => {
           console.log(result);
           if (result.uploaded) {
-            alert("Posted on Twitter!");
+            $.notify("Successfully posted on twitter!", { type: "success" });
+            postTwitterHash = "";
           } else {
-            alert("Oops, error occured while posting!");
+            $.notify("Oops, error occured while posting!", { type: "danger" });
+            postTwitterHash = "";
           }
+        },
+        error: err => {
+          postTwitterHash = "";
         }
       });
     }
     $("#postTwitter").modal("hide");
   }
 
-  function showImageModal() {
+  function showImageModal(social) {
     console.log("inside download");
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/downloadCertificate", true);
@@ -647,17 +694,20 @@
           window.navigator.msSaveBlob(blob, filename);
         } else {
           var URL = window.URL || window.webkitURL;
-          document.querySelector("#modalImage").src = URL.createObjectURL(blob);
+          document.querySelector(
+            `#modalImage${social}`
+          ).src = URL.createObjectURL(blob);
         }
       }
     };
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send($.param({ hash: postTwitterHash }));
+    xhr.send($.param({ hash: postTwitterHash || postLinkedinHash }));
   }
 
   function postLinkedin() {
     let userMSG = document.getElementById("postMSGLinkedin").value;
     let certiLink = document.getElementById("certiLinkLinkedin").checked;
+    $.notify("Your post is now being submitted, please wait a few seconds.");
     $.ajax({
       method: "post",
       url: "/api/shareOnLinkedin",
@@ -665,9 +715,9 @@
       success: result => {
         console.log(result);
         if (result.uploaded) {
-          alert("Posted on Linkedin!");
+          $.notify("Successfully posted on linkedin!", { type: "success" });
         } else {
-          alert("Oops, error occured while posting!");
+          $.notify("Oops, error occured while posting!", { type: "danger" });
         }
         postLinkedinHash = "";
       },
@@ -675,6 +725,36 @@
         postLinkedinHash = "";
       }
     });
+    document.getElementById("postMSGLinkedin").value = msg;
     $("#postLinkedin").modal("hide");
+  }
+
+  $("#postLinkedin").on("hidden.bs.modal", function() {
+    postLinkedinHash = "";
+    document.getElementById("postMSGLinkedin").value = msg;
+    document.querySelector(`#modalImageLinkedin`).src =
+      "/img/gif/loading_block.gif";
+  });
+
+  $("#postTwitter").on("hidden.bs.modal", function() {
+    postTwitterHash = "";
+    document.getElementById("postMSGTwitter").value = msg;
+    document.querySelector(`#modalImageTwitter`).src =
+      "/img/gif/loading_block.gif";
+  });
+
+  function checkCharacter() {
+    let textMsg = document.getElementById("postMSGTwitter").value;
+    let count = textMsg.normalize("NFC").length;
+    document.getElementById("charCount").innerHTML = count;
+    if (textMsg.trim().length == 0 || count >= 260) {
+      document.getElementById("btn-postTweet").disabled = true;
+      document.getElementById("charCount").style =
+        "padding-left:10px;padding-right:10px;color:red";
+    } else {
+      document.getElementById("btn-postTweet").disabled = false;
+      document.getElementById("charCount").style =
+        "padding-left:10px;padding-right:10px;color:black";
+    }
   }
 </script>
