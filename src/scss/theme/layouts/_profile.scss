@@ -20,7 +20,7 @@
 		line-height: 65px;
 		margin-right: 40px;
 		font-size: 18px;
-		transition: all 1000ms ease-in-out;
+		transition: all 500ms ease-in-out;
 	}
 	
 	.tab button:after {
@@ -28,7 +28,7 @@
 		display: block;
 		width: 0%;
 		border-bottom: 3px solid #2073D4;
-		transition: all 1000ms ease-in-out;
+		transition: all 500ms ease-in-out;
 	}
 	
 	.tab button:hover:after {

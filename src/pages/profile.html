@@ -107,7 +107,6 @@
 		
 			<div id="edit_profile" class="tabcontent">
 				<h2 class="profile-Heading">Edit Profile</h2>
-		
 				<h3 class="profile-subHeading mt-5">Basic Details</h3>
 				<div class="table-responsive">
 				<table class="table table-hover">
@@ -195,30 +194,30 @@
     }
 
     function handleAuthGoogle() {
-        // window.location.replace("http://localhost:3000/auth/google")
+        // window.location.replace("https://www.blockdegree.org/auth/google")
         popupLogin({
-            path: "http://localhost:3000/auth/google?close=true"
+            path: "https://www.blockdegree.org/auth/google?close=true"
         });
     }
 
     function handleAuthFacebook() {
-        // window.location.replace("http://localhost:3000/auth/facebook")
+        // window.location.replace("https://www.blockdegree.org/auth/facebook")
         popupLogin({
-            path: "http://localhost:3000/auth/facebook?close=true"
+            path: "https://www.blockdegree.org/auth/facebook?close=true"
         });
     }
 
     function handleAuthTwitter() {
-        // window.location.replace("http://localhost:3000/auth/twitter")
+        // window.location.replace("https://www.blockdegree.org/auth/twitter")
         popupLogin({
-            path: "http://localhost:3000/auth/twitter?close=true"
+            path: "https://www.blockdegree.org/auth/twitter?close=true"
         });
     }
 
     function handleAuthLinkedin() {
-        // window.location.replace("http://localhost:3000/auth/linkedin")
+        // window.location.replace("https://www.blockdegree.org/auth/linkedin")
         popupLogin({
-            path: "http://localhost:3000/auth/linkedin?close=true"
+            path: "https://www.blockdegree.org/auth/linkedin?close=true"
         });
     }
 
@@ -239,9 +238,9 @@
             options.windowOptions
         );
         that._oauthInterval = window.setInterval(function() {
-            if (that._oauthWindow.location.href == "http://localhost:3000") {
+            if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
                 that._oauthWindow.location.href ==
-                    "http://localhost:3000/closeCallback";
+                    "https://www.blockdegree.org/closeCallback";
             }
         }, 1000);
     }
