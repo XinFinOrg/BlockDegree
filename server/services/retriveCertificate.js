@@ -1,9 +1,9 @@
 const User = require("../models/user");
-var ipfsClient = require("ipfs-http-client");
-var puppeteer = require("puppeteer");
-var fs = require("fs");
+const ipfsClient = require("ipfs-http-client");
+const puppeteer = require("puppeteer");
+const fs = require("fs");
 
-var clientIPFS = "";
+let clientIPFS = "";
 
 const xinfinClient = new ipfsClient({
   host: "ipfs.xinfin.network",
@@ -30,10 +30,10 @@ exports.getAllCertificates = async (req, res) => {
     });
   });
   if (!user) {
-    res.redirect("/login");
+    return res.redirect("/login");
   }
   if (user.examData.certificateHash.length < 1) {
-    res.json({
+    return res.status(412).json({
       certificateHash: null,
       status: 412,
       msg: "no certificates associated with this account"
@@ -60,7 +60,7 @@ exports.getCertificatesFromCourse = async (req, res) => {
       status: 500
     });
   });
-  var certificateHash = [{}];
+  let certificateHash = [{}];
   for (obj of user.examData.certificateHash) {
     if (obj.examType == course) {
       certificateHash.push(obj);
@@ -75,32 +75,35 @@ exports.getCertificatesFromCourse = async (req, res) => {
 // get_user -> validate_hash -> get_user -> fetch_hash_frpm_IPFS -> get_screenshot -> save_screenshot -> send_screenshot -> delete_screenshot
 exports.downloadCertificate = async (req, res) => {
   if (req.body.hash == "" || req.body.hash == undefined) {
-    res
-      .status(400)
-      .json({ error: "please provide certificate hash", status: 400 });
+    res.status(400).json({
+      error: "please provide certificate hash",
+      status: 400,
+      uploaded: false
+    });
   }
   const hash = req.body.hash;
-  var imgHTML = "";
+  let imgHTML = "";
   const user = await User.findOne({ email: req.user.email }).catch(err => {
     console.log("Error while fetching the user from mongodb: ", err);
-    res.json({
+    return res.status(500).json({
       certificateHash: null,
       status: 500,
-      msg:
+      uploaded: false,
+      error:
         "looks like our database is under maintenance, please try again after some time"
     });
   });
   if (!user) {
-    res.redirect("/login");
+    return res.redirect("/login");
   }
   for (obj of user.examData.certificateHash) {
     if (obj.clientHash != undefined && obj.clientHash == hash) {
       clientIPFS.get(hash, (err, files) => {
         if (err) {
-          res.json({ uploaded: false, error: err });
+          return res.status(500).json({ uploaded: false, error: err });
         }
         files.forEach(async file => {
-          var localPath = "tmp/" + file.path + ".png";
+          let localPath = "tmp/" + file.path + ".png";
           imgHTML = file.content.toString("utf-8");
           const browser = await puppeteer.launch({
             args: ["--no-sandbox", "--disable-setuid-sandbox"]

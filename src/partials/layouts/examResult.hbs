@@ -320,6 +320,9 @@
           }
         }
       }
+      else {
+        $.notify("Looks like some error has occured, please try again", { type: "danger" })
+      }
     };
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send($.param({ hash: "{{ certificateHash }}" }));
@@ -455,6 +458,9 @@
           var URL = window.URL || window.webkitURL;
           document.querySelector(`#modalImage${social}`).src = URL.createObjectURL(blob);
         }
+      }
+      else {
+        $.notify("Looks like some error has occured, please try again", { type: "danger" })
       }
     };
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
