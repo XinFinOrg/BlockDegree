@@ -30,20 +30,20 @@ if (typeof jQuery != "undefined") {
           name.innerHTML = userProfile.name;
           googleLink.innerHTML =
             userProfile.auth.google.id != ""
-              ? "linked"
-              : '<button onclick="handleAuthGoogle()">Link Google</button>';
+              ? "<span>linked</span>"
+              : '<button class="btn btn-primary social-g+" onclick="handleAuthGoogle()"><i class="fa fa fa-link"></i> Link Google</button>';
           facebookLink.innerHTML =
             userProfile.auth.facebook.id != ""
-              ? "linked"
-              : '<button onclick="handleAuthFacebook()">Link Facebook</button>';
+              ? "<span>linked</span>"
+              : '<button class="btn btn-primary social-fb" onclick="handleAuthFacebook()"><i class="fa fa fa-link"></i> Link Facebook</button>';
           twitterLink.innerHTML =
             userProfile.auth.twitter.id != ""
-              ? "linked"
-              : '<button onclick="handleAuthTwitter()">Link Twitter</button>';
+              ? "<span>linked</span>"
+              : '<button class="btn btn-primary social-tw" onclick="handleAuthTwitter()"><i class="fa fa fa-link"></i> Link Twitter</button>';
           linkedinLink.innerHTML =
             userProfile.auth.linkedin.id != ""
-              ? "linked"
-              : '<button onclick="handleAuthLinkedin()">Link Linkedin</button>';
+              ? "<span>linked</span>"
+              : '<button class="btn btn-primary social-li" onclick="handleAuthLinkedin()"><i class="fa fa fa-link"></i> Link Linkedin</button>';
           basicStatus.innerHTML = userProfile.examData.payment.course_1
             ? "Enrolled"
             : "Not Paid";
@@ -71,19 +71,19 @@ if (typeof jQuery != "undefined") {
           edit_name.value = userProfile.name;
           edit_googleLink.innerHTML =
             userProfile.auth.google.id != ""
-              ? "linked"
+              ? "<span>linked</span>"
               : '<button onclick="handleAuthGoogle()">Link Google</button>';
           edit_facebookLink.innerHTML =
             userProfile.auth.facebook.id != ""
-              ? "linked"
+              ? "<span>linked</span>"
               : '<button onclick="handleAuthFacebook()">Link Facebook</button>';
           edit_twitterLink.innerHTML =
             userProfile.auth.twitter.id != ""
-              ? "linked"
+              ? "<span>linked</span>"
               : '<button onclick="handleAuthTwitter()">Link Twitter</button>';
           edit_linkedinLink.innerHTML =
             userProfile.auth.linkedin.id != ""
-              ? "linked"
+              ? "<span>linked</span>"
               : '<button onclick="handleAuthLinkedin()">Link Linkdedin</button>';
         }
       }
@@ -104,7 +104,7 @@ if (typeof jQuery != "undefined") {
           // is logged in
           let currentUser = result.user;
           if (currentUser.name == newNameTrim) {
-            alert("Same Name");
+            $.notify("Same Name", { type: "danger" });
           } else {
             $.ajax({
               method: "post",
@@ -115,7 +115,7 @@ if (typeof jQuery != "undefined") {
                 window.location.reload();
               },
               error: err => {
-                alert("Error while updating the name");
+                $.notify("Error while updating the name", { type: "danger" });
               }
             });
           }
@@ -239,7 +239,9 @@ if (typeof jQuery != "undefined") {
           // user is logged in
           let user = result.user;
           if (user.auth[social].id == undefined || user.auth[social].id == "") {
-            alert(`Error: ${social} is not linked to this account`);
+            $.notify(`Error: ${social} is not linked to this account`, {
+              type: "danger"
+            });
           } else {
             if (
               confirm(
@@ -252,7 +254,9 @@ if (typeof jQuery != "undefined") {
                 data: { social },
                 success: result => {
                   if (result.status) {
-                    alert("Successfully removed the social link");
+                    $.notify("Successfully removed the social link", {
+                      type: "success"
+                    });
                     checkAuth();
                   } else {
                     alert(`Cannot not remove: ${result.error}`);
@@ -282,9 +286,12 @@ if (typeof jQuery != "undefined") {
   window.addEventListener(
     "message",
     function(event) {
-      // if (event.origin == "https://www.blockdegree.org") {
-      checkAuth();
-      // }
+      console.log("Originating event: ", event.origin);
+      console.log(event.origin);
+      if (event.origin == "https://www.blockdegree.org" && event.data == "ok") {
+        $.notify("Login linked!", { type: "success" });
+        checkAuth();
+      }
     },
     false
   );
@@ -307,29 +314,29 @@ if (typeof jQuery != "undefined") {
           edit_linkedinLink = document.getElementById("edit_linkedinLink");
         // get & update edit-profile links
         if (auths.googleAuth) {
-          googleLink.innerHTML = "yes";
-          edit_googleLink.innerHTML = "yes";
+          googleLink.innerHTML = "<span>linked</span>";
+          edit_googleLink.innerHTML = "<span>linked</span>";
         } else {
           googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
           edit_googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
         }
         if (auths.facebookAuth) {
-          facebookLink.innerHTML = "yes";
-          edit_facebookLink.innerHTML = "yes";
+          facebookLink.innerHTML = "<span>linked</span>";
+          edit_facebookLink.innerHTML = "<span>linked</span>";
         } else {
           facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
           edit_facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
         }
         if (auths.twitterAuth) {
-          twitterLink.innerHTML = "yes";
-          edit_twitterLink.innerHTML = "yes";
+          twitterLink.innerHTML = "<span>linked</span>";
+          edit_twitterLink.innerHTML = "<span>linked</span>";
         } else {
           twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
           edit_twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
         }
         if (auths.linkedinAuth) {
-          linkedinLink.innerHTML = "yes";
-          edit_linkedinLink.innerHTML = "yes";
+          linkedinLink.innerHTML = "<span>linked</span>";
+          edit_linkedinLink.innerHTML = "<span>linked</span>";
         } else {
           linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
           edit_linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;

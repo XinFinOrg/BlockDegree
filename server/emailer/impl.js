@@ -94,7 +94,7 @@ module.exports = {
         from: "info@blockdegree.org",
         to: mail,
         subject: "Forgot Password",
-        html: `<a href="${link}">Link</a>`
+        html: `<div>Click on the link to reset password : <a href="${link}">Link</a></div>`
       };
 
       transporter.sendMail(mailOptions, function(error, info) {

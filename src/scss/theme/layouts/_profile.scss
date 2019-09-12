@@ -1,52 +1,162 @@
 /* Style the tab */
-.tab {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-}
+#profile {
+	.tabbed-section {
+		-webkit-box-shadow: 0 10px 23px -14px rgba(0,0,0,0.2);
+    	box-shadow: 0 10px 23px -14px rgba(0,0,0,0.2);
+	}
+	.tab {
+		overflow: hidden;
+		/*border: 1px solid #ccc;
+		background-color: #f1f1f1;*/
+	}
+	
+	.tab button {
+		background-color: inherit;
+		float: left;
+		border: none;
+		outline: none;
+		cursor: pointer;
+		/*padding: 14px 16px;*/
+		line-height: 65px;
+		margin-right: 40px;
+		font-size: 18px;
+		transition: all 500ms ease-in-out;
+	}
+	
+	.tab button:after {
+		content: "";
+		display: block;
+		width: 0%;
+		border-bottom: 3px solid #2073D4;
+		transition: all 500ms ease-in-out;
+	}
+	
+	.tab button:hover:after {
+		width: 0%;
+	}
+	
+	/* Change background color of buttons on hover */
+	.tab button:hover {
+		background-color: transparent;
+	}
+	
+	/* Create an active/current tablink class */
+	.tab button.active {
+		color: #2073D4;
+		background-color: transparent;
+	}
 
-.tab button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    font-size: 17px;
-}
+	.tab button.active:after {
+		width: 100%;
+	}
+	
+	/* Style the tab content */
+	.tabcontent {
+		display: none;
+		/*padding: 6px 12px;
+		border: 1px solid #ccc;
+		border-top: none;*/
+	
+	.profile-Heading {
+		font-size: 24px;
+		font-weight: 400;
+		margin-bottom: 0px;
+	}
+	
+	.profile-subHeading {
+		color: #0a4886;
+		font-size: 22px;
+		font-weight: 400;
+		background-color: #e1eaff;
+		padding: 15px;
+		border-top-left-radius: .25rem;
+		border-top-right-radius: .25rem;
+	}
+	
+	.table-responsive {
+		background-color: #fafbfb;
+		border: 1px solid #e1eaff;
+	}
+	
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		margin-bottom: 0px;
+		width: 100%;
+	}
+	
+	td,
+	th {
+		/*border: 1px solid #dddddd;*/
+		text-align: left;
+		padding: 15px;
+		vertical-align: middle;
+	}
+	
+	th {
+		text-transform: uppercase;
+		background-color: #FFFFFF;
+		line-height: 22px;
+	}
+	
+	.table-hover tbody tr:hover {
+    	background-color: rgba(255,255,255,1);
+	}
+	
+	/*tr:nth-child(even) {
+		background-color: #dddddd;
+	}*/
+	}
+	
+	.form-control {
+		max-width: 300px;
+		width: 100%;
+		background-color: #f6f6f6;
+		border: 1px solid #ccc;
+			
+		&:focus, &:hover {
+			box-shadow: none!important;
+			background-color: #fff;
+			border-color: #2073D4;
+		}
+    }
 
-/* Change background color of buttons on hover */
-.tab button:hover {
-    background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-    background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
-}
-
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-}
-
-td,
-th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
-
-tr:nth-child(even) {
-    background-color: #dddddd;
+	input {
+    	border-radius: 50px;
+		padding: 12px;
+	}
+	
+	.btn {
+		border: none !important;
+		padding: 0.275rem 1rem !important;
+		border-radius: 50px;
+		min-width: 160px;
+		max-width: 160px;
+		-webkit-transition-duration: 0.5s;
+		-moz-transition-duration: 0.5s;
+		-o-transition-duration: 0.5s;
+	}
+	
+	.btn-update {
+		border: none !important;
+		border-radius: 50px !important;
+    	font-size: 14px;
+    	text-transform: uppercase;
+    	line-height: 40px;
+    	padding: 0 30px !important;
+    	text-align: center;
+    	font-weight: 600;
+		-webkit-transition: all 0.3s ease 0s;
+    	-moz-transition: all 0.3s ease 0s;
+    	-o-transition: all 0.3s ease 0s;
+    	transition: all 0.3s ease 0s;
+		
+		&:hover {			
+			background-color: #2196F3 !important;
+		}
+	}
+	
+	#googleLink, #facebookLink, #twitterLink, #linkedinLink {font-size: 22px; color: #28a745;}
+	#googleLink:after, #facebookLink:after, #twitterLink:after, #linkedinLink:after {content: "\2713"; padding-left: 10px;}
+		
 }

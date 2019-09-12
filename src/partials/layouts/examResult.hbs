@@ -24,7 +24,7 @@
                 class="redText fw-6">FAIL</span>
               {{/if}}
           </ul>
-            {{#if examStatus}}
+          {{#if examStatus}}
           <div>
             <button type="button" class="btn btn-download mb-3" onclick="downloadImage()">Download <i
                 class="fa fa-download"></i></button><br>
@@ -248,9 +248,18 @@
 <script>
 
 
-  const msg = "Hey, I just got certified in blockchain from Blockdegree.org, check it out !!"
+  const msg = "Hey, I just got certified in blockchain from Blockdegree.org, check it out !! Also use 'code10' to get free certificate !!"
   window.onload = function () {
     checkAuth();
+  }
+
+  history.pushState(null, null, location.href);
+  window.onpopstate = function () {
+    history.go(1);
+  };
+
+  window.onbeforeunload = function (event) {
+    event.returnValue = "Something clever"
   }
 
   window.addEventListener(
@@ -333,8 +342,9 @@
             '              </form>'
           console.log(result)
           if (result.twitterAuth) {
+            // ---------------TWITTER MODAL----------------------------------
             // signed in with twitter, show share button
-            retHTML += '<button type="button" class="btn btn-primary social-tw" onclick="showImageModal()" data-toggle="modal" data-target="#postTwitter"><i class="fa fa-twitter social"></i> Post on Twitter</button>' +
+            retHTML += '<button type="button" class="btn btn-primary social-tw" onclick="showImageModal(`Twitter`)" data-toggle="modal" data-target="#postTwitter"><i class="fa fa-twitter social"></i> Post on Twitter</button>' +
               '' +
               '  <!-- Modal -->' +
               '  <div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
@@ -350,7 +360,7 @@
               '          <div class="mb-3"><input type ="checkbox" id="certiLinkTwitter"> Include link to Certificate<br></div> ' +
               '          <p>' + '<textarea cols="30" rows="3" id="postMSGTwitter" >' + msg + '</textarea>' +
               '          <div>' +
-              '          <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;" id="modalImage" ></div>' +
+              '          <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;" id="modalImageTwitter" ></div>' +
               '            <button type="button" id="twitter-share-cert-btn" class="btn btn-primary social-tw mt-3" onclick="postTweet()"><i class="fa fa-twitter"></i> Post On Twitter ' +
               '            </button>' +
               '          </div>' +
@@ -369,7 +379,8 @@
               '</div>';
           }
           if (result.linkedinAuth) {
-            retHTML += '<button type="button" class="btn btn-primary social-li" data-toggle="modal" data-target="#postLinkedin">Post on Linkedin</button>' +
+            //------------------LINKEDIN MODAL--------------------------------------
+            retHTML += '<button type="button" class="btn btn-primary social-li" onclick="showImageModal(`Linkedin`)" data-toggle="modal" data-target="#postLinkedin">Post on Linkedin</button>' +
               '' +
               '  <!-- Modal -->' +
               '  <div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
@@ -385,6 +396,7 @@
               '        <div class="mb-3"><input type ="checkbox" id="certiLinkLinkedin"> Include link to Certificate<br></div> ' +
               '          <p>' + '<textarea cols="30" rows="3" id="postMSGLinkedin" >' + msg + '</textarea>' +
               '          <div>' +
+              '          <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" ></div>' +
               '            <button type="button" id="linkedin-share-cert-btn" class="btn btn-primary social-li mt-3" onclick="postLinkedin()"><i class="fa fa-linkedin"></i> Post On Linkedin ' +
               '            </button>' +
               '          </div>' +
@@ -410,7 +422,7 @@
 
   }
 
-  function showImageModal() {
+  function showImageModal(social) {
     console.log("inside download");
     var xhr = new XMLHttpRequest();
     xhr.open('POST', "/api/downloadCertificate", true);
@@ -434,7 +446,7 @@
           window.navigator.msSaveBlob(blob, filename);
         } else {
           var URL = window.URL || window.webkitURL;
-          document.querySelector("#modalImage").src = URL.createObjectURL(blob);
+          document.querySelector(`#modalImage${social}`).src = URL.createObjectURL(blob);
         }
       }
     };
@@ -446,9 +458,10 @@
     let userMSG = document.getElementById("postMSGTwitter").value;
     let certiLink = document.getElementById("certiLinkTwitter").checked;
     if (userMSG.length > 260) {
-      alert("Max length is 260 ");
+      $.notify("Max length is 260 ", { type: "danger" });
     }
     else {
+      $.notify("Your post is now being submitted, please wait a few seconds.");
       $.ajax({
         method: 'post',
         url: '/api/shareOnTwitter',
@@ -456,10 +469,9 @@
         success: (result) => {
           console.log(result);
           if (result.uploaded) {
-            alert("Posted on Twitter!");
-          }
-          else {
-            alert("Oops, error occured while posting!")
+            $.notify("Successfully posted on twitter!", { type: "success" });
+          } else {
+            $.notify("Oops, error occured while posting!", { type: "danger" });
           }
         }
       });
@@ -470,6 +482,7 @@
   function postLinkedin() {
     let userMSG = document.getElementById("postMSGLinkedin").value;
     let certiLink = document.getElementById("certiLinkLinkedin").checked;
+    $.notify("Your post is now being submitted, please wait a few seconds.");
     $.ajax({
       method: 'post',
       url: '/api/shareOnLinkedin',
@@ -477,10 +490,9 @@
       success: (result) => {
         console.log(result);
         if (result.uploaded) {
-          alert("Posted on Linkedin!");
-        }
-        else {
-          alert("Oops, error occured while posting!")
+          $.notify("Successfully posted on linkedin!", { type: "success" });
+        } else {
+          $.notify("Oops, error occured while posting!", { type: "danger" });
         }
       }
     });
