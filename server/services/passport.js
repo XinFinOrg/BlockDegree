@@ -223,9 +223,9 @@ module.exports = function(passport) {
             if (otherUser != null) {
               // this set of credentials are associated with another account, show error
               return done(
-                "credentials are already taken by other account, please try logging in with other account.",
+                "This social account is already linked to other account, please try logging in with other account.",
                 null,
-                "credentials are already taken by other account, please try logging in with other account."
+                "This social account is already linked to other account, please try logging in with other account."
               );
             }
             let user = await User.findOne({ email: req.user.email });
@@ -311,9 +311,9 @@ module.exports = function(passport) {
             if (otherUser != null) {
               // this set of credentials are associated with another account, show error
               return done(
-                "credentials are already taken by other account, please try logging in with other account.",
+                "This social account is already linked to other account, please try logging in with other account.",
                 null,
-                "credentials are already taken bt ither account, please try logging in with other account."
+                "This social account is already linked to other account, please try logging in with other account."
               );
             }
             let user = await User.findOne({ email: req.user.email });
@@ -410,9 +410,9 @@ module.exports = function(passport) {
             if (otherUser != null) {
               // this set of credentials are associated with another account, show error
               return done(
-                "credentials are already taken by other account, please try logging in with other account.",
+                "This social account is already linked to other account, please try logging in with other account.",
                 null,
-                "credentials are already taken bt ither account, please try logging in with other account."
+                "This social account is already linked to other account, please try logging in with other account."
               );
             }
 
@@ -511,9 +511,9 @@ module.exports = function(passport) {
               if (otherUser != null) {
                 // this set of credentials are associated with another account, show error
                 return done(
-                  "credentials are already taken by other account, please try logging in with other account.",
+                  "This social account is already linked to other account, please try logging in with other account.",
                   null,
-                  "credentials are already taken bt ither account, please try logging in with other account."
+                  "This social account is already linked to other account, please try logging in with other account."
                 );
               }
 
