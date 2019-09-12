@@ -13,10 +13,10 @@ const xinfinClient = new ipfsClient({
 
 const localClient = new ipfsClient("/ip4/127.0.0.1/tcp/5001");
 
-if (process.env.IPFS_NETWORK=="local"){
-  clientIPFS=localClient
-}else{
-  clientIPFS=xinfinClient
+if (process.env.IPFS_NETWORK == "local") {
+  clientIPFS = localClient;
+} else {
+  clientIPFS = xinfinClient;
 }
 
 exports.getAllCertificates = async (req, res) => {
@@ -94,7 +94,7 @@ exports.downloadCertificate = async (req, res) => {
     res.redirect("/login");
   }
   for (obj of user.examData.certificateHash) {
-    if (obj.clientHash!=undefined && obj.clientHash == hash) {
+    if (obj.clientHash != undefined && obj.clientHash == hash) {
       clientIPFS.get(hash, (err, files) => {
         if (err) {
           res.json({ uploaded: false, error: err });
@@ -102,7 +102,9 @@ exports.downloadCertificate = async (req, res) => {
         files.forEach(async file => {
           var localPath = "tmp/" + file.path + ".png";
           imgHTML = file.content.toString("utf-8");
-          const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+          const browser = await puppeteer.launch({
+            args: ["--no-sandbox", "--disable-setuid-sandbox"]
+          });
           const page = await browser.newPage();
           await page.setViewport({
             width: 800,
@@ -112,15 +114,16 @@ exports.downloadCertificate = async (req, res) => {
           await page.setContent(imgHTML);
           await page.screenshot({ path: localPath });
           browser.close().then(() => {
-            res.download(localPath, err => {
-              if (err != null) {
-                console.error(`error in sending the download: ${err}`);
+            res.download(localPath, function(errDownload) {
+              if (errDownload != null || errDownload != undefined) {
+                console.log(
+                  `Error sending download : ${localPath} : ${errDownload}`
+                );
               }
-              fs.unlink(localPath, err => {
-                if (err != null) {
+              fs.unlink(localPath, errUnlink => {
+                if (errUnlink != null || errUnlink != undefined) {
                   console.log(
-                    "Error while deleting te temp-file at: ",
-                    localPath
+                    `Error while deleting : ${localPath} : ${errUnlink}`
                   );
                 }
               });

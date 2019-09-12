@@ -87,7 +87,22 @@
           <input type="checkbox" id="certiLinkTwitter" /> Include link to
           Certificate<br />
         </div>
-        <p><textarea cols="30" rows="3" id="postMSGTwitter"></textarea></p>
+        <p>
+          <textarea
+            onkeyup="checkCharacter()"
+            cols="30"
+            rows="3"
+            id="postMSGTwitter"
+          ></textarea>
+        </p>
+        <span style="float: right">
+          <span>Character Count ( Max 260 ):</span
+          ><span
+            style="padding-left:10px;padding-right: 10px"
+            id="charCount"
+          ></span>
+        </span>
+
         <div>
           <div>
             <img
@@ -97,6 +112,7 @@
             />
           </div>
           <button
+            id="btn-postTweet"
             type="button"
             class="btn btn-primary social-tw mt-3"
             onclick="postTweet()"
@@ -258,13 +274,15 @@
       event.origin == "https://www.blockdegree.org" ||
       event.origin == "https://blockdegree.org"
     ) {
-      console.log("message from popup.");
-      if (postLinkedinHash != "") {
-        // toggle linkedin modal
-        $("#togglePostLinkedin").click();
-      } else if (postTwitterHash != "") {
-        // toggle twitter modal
-        $("#togglePostTwitter").click();
+      if (event.data == "ok") {
+        console.log("message from popup.");
+        if (postLinkedinHash != "") {
+          // toggle linkedin modal
+          $("#togglePostLinkedin").click();
+        } else if (postTwitterHash != "") {
+          // toggle twitter modal
+          $("#togglePostTwitter").click();
+        }
       }
     }
   });
@@ -580,6 +598,9 @@
     console.log("called handle twitter share");
     console.log(`hash: ${hash}`);
     document.getElementById("postMSGTwitter").innerHTML = msg;
+    document.getElementById("charCount").innerHTML = msg.normalize(
+      "NFC"
+    ).length;
     postTwitterHash = hash;
     $.ajax({
       method: "post",
@@ -633,9 +654,14 @@
           console.log(result);
           if (result.uploaded) {
             $.notify("Successfully posted on twitter!", { type: "success" });
+            postTwitterHash = "";
           } else {
             $.notify("Oops, error occured while posting!", { type: "danger" });
+            postTwitterHash = "";
           }
+        },
+        error: err => {
+          postTwitterHash = "";
         }
       });
     }
@@ -699,6 +725,36 @@
         postLinkedinHash = "";
       }
     });
+    document.getElementById("postMSGLinkedin").value = msg;
     $("#postLinkedin").modal("hide");
+  }
+
+  $("#postLinkedin").on("hidden.bs.modal", function() {
+    postLinkedinHash = "";
+    document.getElementById("postMSGLinkedin").value = msg;
+    document.querySelector(`#modalImageLinkedin`).src =
+      "/img/gif/loading_block.gif";
+  });
+
+  $("#postTwitter").on("hidden.bs.modal", function() {
+    postTwitterHash = "";
+    document.getElementById("postMSGTwitter").value = msg;
+    document.querySelector(`#modalImageTwitter`).src =
+      "/img/gif/loading_block.gif";
+  });
+
+  function checkCharacter() {
+    let textMsg = document.getElementById("postMSGTwitter").value;
+    let count = textMsg.normalize("NFC").length;
+    document.getElementById("charCount").innerHTML = count;
+    if (textMsg.trim().length == 0 || count >= 260) {
+      document.getElementById("btn-postTweet").disabled = true;
+      document.getElementById("charCount").style =
+        "padding-left:10px;padding-right:10px;color:red";
+    } else {
+      document.getElementById("btn-postTweet").disabled = false;
+      document.getElementById("charCount").style =
+        "padding-left:10px;padding-right:10px;color:black";
+    }
   }
 </script>

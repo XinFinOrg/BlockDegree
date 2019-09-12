@@ -287,8 +287,9 @@ if (typeof jQuery != "undefined") {
     "message",
     function(event) {
       console.log("Originating event: ", event.origin);
-      if (event.origin == "https://www.blockdegree.org") {
-        $.notify("Loggin linked!", { type: "success" });
+      console.log(event.origin);
+      if (event.origin == "https://www.blockdegree.org" && event.data == "ok") {
+        $.notify("Login linked!", { type: "success" });
         checkAuth();
       }
     },

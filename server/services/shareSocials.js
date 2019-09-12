@@ -123,23 +123,36 @@ exports.postTwitter = async (req, res) => {
                 if (err) {
                   console.log("ERROR: ", err);
                   res.json({ uploaded: false, error: err });
+                  fs.unlink(localPath, err => {
+                    if (err != null) {
+                      console.log(
+                        "Error while deleting te temp-file at: ",
+                        localPath
+                      );
+                      // res.json({ uploaded: true, error: null });
+                    }
+                  });
                 } else {
                   console.log("Posted the status!");
+                  fs.unlink(localPath, err => {
+                    if (err != null) {
+                      console.log(
+                        "Error while deleting te temp-file at: ",
+                        localPath
+                      );
+                    } else {
+                      res.json({ uploaded: true, error: null });
+                    }
+                  });
                 }
               }
             );
           }
         });
-        fs.unlink(localPath, err => {
-          if (err != null) {
-            console.log("Error while deleting te temp-file at: ", localPath);
-            res.json({ uploaded: true, error: null });
-          }
-        });
       });
     });
   });
-  return res.json({ uploaded: true, error: null });
+  // return res.json({ uploaded: true, error: null });
 };
 
 exports.postLinkedin = async (req, res) => {
@@ -380,7 +393,10 @@ exports.uploadImageLinkedin = async (req, res) => {
                 });
               }
               console.log(resp.status);
-              return res.json({ uploaded: true, error: null });
+              return res.json({
+                uploaded: resp.status == 201,
+                error: resp.status == 201 ? null : "Some error occured"
+              });
             });
           }
         );
