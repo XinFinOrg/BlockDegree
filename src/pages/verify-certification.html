@@ -422,17 +422,22 @@
               console.log(result);
               if (result.msg == "ok") {
                 let allCerti = result.certificateHash;
-                for (let i = 1; i < allCerti.length; i++) {
-                  let currCerti = allCerti[i];
-                  // console.log(currCerti);
-                  retHTML += generateCard(
-                    currCerti.examType,
-                    currCerti.marks,
-                    currCerti.total,
-                    currCerti.timestamp,
-                    currCerti.clientHash,
-                    currCerti.headlessHash
-                  );
+                if (allCerti.length == 1) {
+                  $.notify("You have no certificates right now, give an exam to get a certificate", { type: "danger" })
+                }
+                else {
+                  for (let i = 1; i < allCerti.length; i++) {
+                    let currCerti = allCerti[i];
+                    // console.log(currCerti);
+                    retHTML += generateCard(
+                      currCerti.examType,
+                      currCerti.marks,
+                      currCerti.total,
+                      currCerti.timestamp,
+                      currCerti.clientHash,
+                      currCerti.headlessHash
+                    );
+                  }
                 }
                 card_wrap.innerHTML = retHTML;
               } else {
