@@ -71,19 +71,19 @@ if (typeof jQuery != "undefined") {
           edit_name.value = userProfile.name;
           edit_googleLink.innerHTML =
             userProfile.auth.google.id != ""
-              ? "linked"
+              ? "<span>linked</span>"
               : '<button onclick="handleAuthGoogle()">Link Google</button>';
           edit_facebookLink.innerHTML =
             userProfile.auth.facebook.id != ""
-              ? "linked"
+              ? "<span>linked</span>"
               : '<button onclick="handleAuthFacebook()">Link Facebook</button>';
           edit_twitterLink.innerHTML =
             userProfile.auth.twitter.id != ""
-              ? "linked"
+              ? "<span>linked</span>"
               : '<button onclick="handleAuthTwitter()">Link Twitter</button>';
           edit_linkedinLink.innerHTML =
             userProfile.auth.linkedin.id != ""
-              ? "linked"
+              ? "<span>linked</span>"
               : '<button onclick="handleAuthLinkedin()">Link Linkdedin</button>';
         }
       }
@@ -307,29 +307,29 @@ if (typeof jQuery != "undefined") {
           edit_linkedinLink = document.getElementById("edit_linkedinLink");
         // get & update edit-profile links
         if (auths.googleAuth) {
-          googleLink.innerHTML = "linked";
-          edit_googleLink.innerHTML = "linked";
+          googleLink.innerHTML = "<span>linked</span>";
+          edit_googleLink.innerHTML = "<span>linked</span>";
         } else {
           googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
           edit_googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
         }
         if (auths.facebookAuth) {
-          facebookLink.innerHTML = "linked";
-          edit_facebookLink.innerHTML = "linked";
+          facebookLink.innerHTML = "<span>linked</span>";
+          edit_facebookLink.innerHTML = "<span>linked</span>";
         } else {
           facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
           edit_facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
         }
         if (auths.twitterAuth) {
-          twitterLink.innerHTML = "linked";
-          edit_twitterLink.innerHTML = "linked";
+          twitterLink.innerHTML = "<span>linked</span>";
+          edit_twitterLink.innerHTML = "<span>linked</span>";
         } else {
           twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
           edit_twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
         }
         if (auths.linkedinAuth) {
-          linkedinLink.innerHTML = "linked";
-          edit_linkedinLink.innerHTML = "linked";
+          linkedinLink.innerHTML = "<span>linked</span>";
+          edit_linkedinLink.innerHTML = "<span>linked</span>";
         } else {
           linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
           edit_linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
