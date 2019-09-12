@@ -1,10 +1,11 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "mail001.dakghar.in",
+  port: 25,
   auth: {
-    user: process.env.SUPP_EMAILER_ID,
-    pass: process.env.SUPP_EMAILER_PSD
+    user: process.env.NODEMAILER_USER_ID,
+    pass: process.env.NODEMAILER_USER_PASS
   }
 });
 

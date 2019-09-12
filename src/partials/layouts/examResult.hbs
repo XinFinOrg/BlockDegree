@@ -266,7 +266,7 @@
     "message",
     function (event) {
       console.log(event.origin);
-      if (event.origin == "https://www.blockdegree.org") {
+      if (event.origin == "https://www.blockdegree.org" && event.data == "ok") {
         console.log("Praise thee Lord!");
         checkAuth();
       }
@@ -358,7 +358,14 @@
               '        </div>' +
               '        <div class="modal-body">' +
               '          <div class="mb-3"><input type ="checkbox" id="certiLinkTwitter"> Include link to Certificate<br></div> ' +
-              '          <p>' + '<textarea cols="30" rows="3" id="postMSGTwitter" >' + msg + '</textarea>' +
+              '          <p>' + '<textarea cols="30" rows="3" id="postMSGTwitter" >' + msg + '</textarea> </p>' +
+              '<div style="float: right">' +
+              '          <span>Character Count ( Max 260 ):</span' +
+              '          ><span' +
+              '            style="padding-left:10px;padding-right: 10px"' +
+              '            id="charCount"' +
+              '          ></span>' +
+              '        </div>' +
               '          <div>' +
               '          <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;" id="modalImageTwitter" ></div>' +
               '            <button type="button" id="twitter-share-cert-btn" class="btn btn-primary social-tw mt-3" onclick="postTweet()"><i class="fa fa-twitter"></i> Post On Twitter ' +
@@ -506,4 +513,20 @@
   function handleAuthLinkedin() {
     var win = window.open("https://www.blockdegree.org/auth/linkedin?close=true", 'newwin', 'height=600px,width=600px');
   }
+
+  function checkCharacter() {
+    let textMsg = document.getElementById("postMSGTwitter").value;
+    let count = textMsg.normalize("NFC").length;
+    document.getElementById("charCount").innerHTML = count;
+    if (textMsg.trim().length == 0 || count >= 260) {
+      document.getElementById("twitter-share-cert-btn").disabled = true;
+      document.getElementById("charCount").style =
+        "padding-left:10px;padding-right:10px;color:red";
+    } else {
+      document.getElementById("twitter-share-cert-btn").disabled = false;
+      document.getElementById("charCount").style =
+        "padding-left:10px;padding-right:10px;color:black";
+    }
+  }
+
 </script>
