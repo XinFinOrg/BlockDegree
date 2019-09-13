@@ -158,10 +158,6 @@
         @include media-breakpoint-down(md) {
             font-size: 36px;
         }
-		p {
-			font-size: 18px;
-    		font-weight: 400;
-		}
         br {
             @include media-breakpoint-down (md) {
                 display: none;
@@ -174,6 +170,11 @@
             font-size: 32px;
         }
     }
+	p {
+		font-size: 18px;
+    	font-weight: 300;
+    	line-height: 26px;
+	}
 
     .primary-btn {
         background-color: $primary-color;

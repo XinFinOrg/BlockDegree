@@ -10,26 +10,25 @@
     <nav id="nav-menu-container">
       <ul class="nav-menu">
         <li class="menu-has-children">
-          <div class="py-1">Online Blockchain Training</div>
-          <ul id="nav-sub-1">
-            <script id="nav-submenu-template" type="text/template">
-              \{{#each courses}}
-                <li><a href="/\{{slug}}" onclick="window.location.href='/\{{slug}}'" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstra">
-                  \{{title}}
-                </a></li>
-              \{{/each}}
-            </script>
+          <a class="py-1">Online Blockchain Training</a>
+          <ul>
+		     <li><a href="/blockchain-basic">101 - Blockchain Basic Course for Engineer</a></li>
+			 <li><a href="/blockchain-advanced">102 - Blockchain Advanced Course for Engineer</a></li>
+			 <li><a href="/blockchain-professional">103 - Blockchain Professional Course for Engineer</a></li>
           </ul>
         </li>
         <li><a href="/exams" class="py-1">Take Exam</a></li>
-        <li><a href="/profile" id="profile-btn" style="display: none;" class="py-1">Profile</a></li>
+        <li><a href="/profile" id="profile-btn" class="py-1">Profile</a></li>
         <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
         <li><a href="/contact" class="py-1">Contact Us</a></li>
         <li id="login-btn">
-
-          <a id="nav-login" style="display: none" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">
-          </a>
+          <a id="nav-login" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"></a>
         </li>
+		
+		<li id="logout-btn">
+          <a href="/logout" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Logout</a>
+        </li>
+		
         </li>
       </ul>
     </nav>
@@ -41,6 +40,8 @@
     console.log("called");
     let loginButton = document.getElementById("nav-login"),
       profileBtn = document.getElementById("profile-btn");
+	  logoutBtn = document.getElementById("logout-btn");
+	  loginBtn = document.getElementById("login-btn");
 
     let resp = await fetch("/api/current_user");
     let respJSON = await resp.json();
@@ -48,12 +49,14 @@
       //is logged in
       loginButton.innerHTML = "Logout";
       loginButton.setAttribute("href", "/logout");
-      loginButton.style = "display:inline";
+      loginButton.style = "display:none";
       profileBtn.style = "display:block";
     } else {
       loginButton.innerHTML = "Login";
       loginButton.setAttribute("href", "/login");
-      loginButton.style = "display:inline";
+      loginButton.style = "display:block";
+	  logoutBtn.style = "display:none";
+	  loginBtn.style = "display:block";
     }
   });
 </script>
