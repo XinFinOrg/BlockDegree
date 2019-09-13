@@ -124,7 +124,7 @@ module.exports = function(passport) {
               console.log("in method creating user");
               var newUser = newDefaultUser();
               newUser.email = email;
-              newUser.name = req.body.firstName + " " + req.body.lastName;
+              newUser.name = formatName(req.body.firstName + " " + req.body.lastName);
               newUser.timestamp = Date.now();
               newUser.timestamp = Date.now();
               newUser.auth.local.password = newUser.generateHash(password);
@@ -277,7 +277,7 @@ module.exports = function(passport) {
         newUser = newDefaultUser();
         newUser.auth.google.id = profile.id;
         newUser.email = profile.emails[0].value;
-        newUser.name = profile._json.name;
+        newUser.name = formatName(profile._json.name);
         newUser.auth.google.accessToken = accessToken;
         newUser.auth.google.refreshToken = refreshToken;
         newUser.created = Date.now();
@@ -377,7 +377,7 @@ module.exports = function(passport) {
         newUser.auth.facebook.id = profile.id;
         newUser.auth.facebook.accessToken = accessToken;
         newUser.auth.facebook.refreshToken = refreshToken || "";
-        newUser.name = profile.displayName;
+        newUser.name = formatName(profile.displayName);
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
@@ -475,7 +475,7 @@ module.exports = function(passport) {
         }
         newUser = newDefaultUser();
         newUser.auth.twitter.id = profile.id;
-        newUser.name = profile.displayName;
+        newUser.name = formatName(profile.displayName);
         newUser.email = profile.emails[0].value;
         newUser.auth.twitter.token = token;
         newUser.auth.twitter.tokenSecret = tokenSecret;
@@ -573,7 +573,7 @@ module.exports = function(passport) {
           }
           newUser = newDefaultUser();
           newUser.auth.linkedin.id = profile.id;
-          newUser.name = profile.displayName;
+          newUser.name = formatName(profile.displayName);
           newUser.email = profile.emails[0].value;
           newUser.auth.linkedin.accessToken = accessToken;
           newUser.created = Date.now();
@@ -636,4 +636,15 @@ function validateName(name) {
     validFN = false;
   }
   return { msg: msg, valid: validFN };
+}
+
+function formatName(fullName) {
+  const lowerFN = fullName.toLowerCase();
+  const splitFN = lowerFN.split(" ");
+  let formattedName = "";
+  for (name of splitFN) {
+    formattedName += name.charAt(0).toUpperCase() + name.slice(1) + " ";
+  }
+  const finalFN = formattedName.trim();
+  return finalFN.trim();
 }

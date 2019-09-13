@@ -50,40 +50,36 @@ exports.renderForIPFSHash = (name, percent, examType, date, callback) => {
           });
         }
         console.log("Uploaded");
-        renderWithQR(name,percent,examType,date,ipfsHash[0].hash,obj => {
+        renderWithQR(name, percent, examType, date, ipfsHash[0].hash, obj => {
           callback({
             uploaded: obj.uploaded,
             info: obj.info,
             hash: obj.hash,
             error: obj.error
           });
-        })
+        });
       });
     }
   );
 };
 
-  var renderWithQR = async (
-  name,
-  percent,
-  examType,
-  date,
-  hash,
-  callback
-) => {
+var renderWithQR = async (name, percent, examType, date, hash, callback) => {
   if (name == "" || percent == null || examType == "") {
     return callback({ uploaded: false, error: "bad parameters", hash: "" });
   }
   if (hash == "") {
     return callback({ uploaded: false, error: "bad parameters", hash: "" });
   }
-  const dataURL = await qrcode.toDataURL(`https://ipfs-gateway.xinfin.network/${hash}`);// or the domain of where its hosted
+  const dataURL = await qrcode.toDataURL(
+    `https://ipfs-gateway.xinfin.network/${hash}`
+  ); // or the domain of where its hosted
   ejs.renderFile(
     __dirname + "/certificateWithQR.ejs",
     {
       rndDgt: crypto.randomBytes(32).toString("hex"),
       name: name,
-      course: `Certified Blockchain ${examType} Expert`,
+      course: `Certified Blockchain ${examType.charAt(0).toUpperCase() +
+        examType.slice(1)} Expert`,
       score: percent,
       date: date,
       dataURL: dataURL
@@ -110,7 +106,7 @@ exports.renderForIPFSHash = (name, percent, examType, date, callback) => {
         return callback({
           uploaded: true,
           info: "",
-          hash: [hash,ipfsHash[0].hash],
+          hash: [hash, ipfsHash[0].hash],
           error: null
         });
       });
