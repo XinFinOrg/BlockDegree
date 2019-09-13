@@ -92,7 +92,7 @@ if (typeof jQuery != "undefined") {
 
   function handleUpdateName() {
     let newName = document.getElementById("edit_name").value;
-    let newNameTrim = newName.trim();
+    let newNameTrim = formatName(newName);
     if (newNameTrim.length < 2) {
       return alert("Invalid Name");
     }
@@ -344,4 +344,15 @@ if (typeof jQuery != "undefined") {
       }
     });
   }
+}
+
+function formatName(fullName) {
+  const lowerFN = fullName.toLowerCase();
+  const splitFN = lowerFN.split(" ");
+  let formattedName = "";
+  for (name of splitFN) {
+    formattedName += name.charAt(0).toUpperCase() + name.slice(1) + " ";
+  }
+  const finalFN = formattedName.trim();
+  return finalFN;
 }

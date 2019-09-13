@@ -9,9 +9,18 @@
     <div class="row">
       <div class="col-lg-6 offset-lg-3 text-center">
         <div class="input-group mb-3">
-          <input type="text" id="certiHash" class="form-control" placeholder="Enter the hash" />
+          <input
+            type="text"
+            id="certiHash"
+            class="form-control"
+            placeholder="Enter the hash"
+          />
           <div class="input-group-append">
-            <button type="button" class="btn btn-dark" onclick="openCertiByHash()">
+            <button
+              type="button"
+              class="btn btn-dark"
+              onclick="openCertiByHash()"
+            >
               Open Certificate
             </button>
           </div>
@@ -27,7 +36,11 @@
               </div>-->
 
         <div>
-          <button type="button" class="btn btn-primary text-white" onclick="getAllCertificates()">
+          <button
+            type="button"
+            class="btn btn-primary text-white"
+            onclick="getAllCertificates()"
+          >
             Get My Certificates
           </button>
         </div>
@@ -41,14 +54,27 @@
     <div class="row" id="card_wrap"></div>
   </div>
 </div>
-<button type="button" class="btn btn-primary social-tw" onclick="showImageModal('Twitter')" data-toggle="modal"
-  data-target="#postTwitter" style="display: none" id="togglePostTwitter">
+<button
+  type="button"
+  class="btn btn-primary social-tw"
+  onclick="showImageModal('Twitter')"
+  data-toggle="modal"
+  data-target="#postTwitter"
+  style="display: none"
+  id="togglePostTwitter"
+>
   <i class="fa fa-twitter social"></i> Post on Twitter
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-  aria-hidden="true">
+<div
+  class="modal fade"
+  id="postTwitter"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered" role="document">
     <!-- Modal content-->
     <div class="modal-content">
@@ -62,19 +88,35 @@
           Certificate<br />
         </div>
         <p>
-          <textarea onkeyup="checkCharacter()" cols="30" rows="3" id="postMSGTwitter"></textarea>
+          <textarea
+            onkeyup="checkCharacter()"
+            cols="30"
+            rows="3"
+            id="postMSGTwitter"
+          ></textarea>
         </p>
         <span style="float: right">
-          <span>Character Count ( Max 260 ):</span><span style="padding-left:10px;padding-right: 10px"
-            id="charCount"></span>
+          <span>Character Count ( Max 260 ):</span
+          ><span
+            style="padding-left:10px;padding-right: 10px"
+            id="charCount"
+          ></span>
         </span>
 
         <div>
           <div>
-            <img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;"
-              id="modalImageTwitter" />
+            <img
+              src="/img/gif/loading_block.gif"
+              style="width:300px;height:300px;display:block;margin:0 auto;"
+              id="modalImageTwitter"
+            />
           </div>
-          <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3" onclick="postTweet()">
+          <button
+            id="btn-postTweet"
+            type="button"
+            class="btn btn-primary social-tw mt-3"
+            onclick="postTweet()"
+          >
             <i class="fa fa-twitter"></i> Post On Twitter
           </button>
         </div>
@@ -88,12 +130,25 @@
     </div>
   </div>
 </div>
-<button onclick="showImageModal('Linkedin')" id="togglePostLinkedin" type="button" class="btn btn-primary social-li"
-  data-toggle="modal" data-target="#postLinkedin" style="display: none">
+<button
+  onclick="showImageModal('Linkedin')"
+  id="togglePostLinkedin"
+  type="button"
+  class="btn btn-primary social-li"
+  data-toggle="modal"
+  data-target="#postLinkedin"
+  style="display: none"
+>
   Post Linkedin
 </button>
-<div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-  aria-hidden="true">
+<div
+  class="modal fade"
+  id="postLinkedin"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered" role="document">
     <!-- Modal content-->
     <div class="modal-content">
@@ -109,10 +164,17 @@
         <p><textarea cols="30" rows="3" id="postMSGLinkedin"></textarea></p>
         <div>
           <div>
-            <img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;"
-              id="modalImageLinkedin" />
+            <img
+              src="/img/gif/loading_block.gif"
+              style="width:300px;height:300px;display:block;margin:0 auto;"
+              id="modalImageLinkedin"
+            />
           </div>
-          <button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()">
+          <button
+            type="button"
+            class="btn btn-primary social-li mt-3"
+            onclick="postLinkedin()"
+          >
             <i class="fa fa-linkedin"></i> Post On Linkedin
           </button>
         </div>
@@ -207,7 +269,7 @@
     });
   });
 
-  window.addEventListener("message", function (event) {
+  window.addEventListener("message", function(event) {
     if (
       event.origin == "https://www.blockdegree.org" ||
       event.origin == "https://blockdegree.org"
@@ -228,7 +290,9 @@
     $.ajax({
       method: "post",
       url: "/api/setName",
-      data: { fullName: document.getElementById("fullName").value },
+      data: {
+        fullName: formatName(document.getElementById("fullName").value)
+      },
       success: result => {
         alert(`Msg : ${result.msg}`);
         document.location.reload();
@@ -423,9 +487,11 @@
               if (result.msg == "ok") {
                 let allCerti = result.certificateHash;
                 if (allCerti.length == 1) {
-                  $.notify("You have no certificates right now, give an exam to get a certificate", { type: "danger" })
-                }
-                else {
+                  $.notify(
+                    "You have no certificates right now, give an exam to get a certificate",
+                    { type: "danger" }
+                  );
+                } else {
                   for (let i = 1; i < allCerti.length; i++) {
                     let currCerti = allCerti[i];
                     // console.log(currCerti);
@@ -464,7 +530,7 @@
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/downloadCertificate", true);
     xhr.responseType = "arraybuffer";
-    xhr.onload = function () {
+    xhr.onload = function() {
       if (this.status === 200) {
         var filename = "";
         var disposition = xhr.getResponseHeader("Content-Disposition");
@@ -504,9 +570,10 @@
             window.location = downloadUrl;
           }
         }
-      }
-      else {
-        $.notify("Looks like some error has occured, please try again", { type: "danger" })
+      } else {
+        $.notify("Looks like some error has occured, please try again", {
+          type: "danger"
+        });
       }
     };
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -619,7 +686,7 @@
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/downloadCertificate", true);
     xhr.responseType = "arraybuffer";
-    xhr.onload = function () {
+    xhr.onload = function() {
       if (this.status === 200) {
         var filename = "";
         var disposition = xhr.getResponseHeader("Content-Disposition");
@@ -644,9 +711,10 @@
             `#modalImage${social}`
           ).src = URL.createObjectURL(blob);
         }
-      }
-      else {
-        $.notify("Looks like some error has occured, please try again", { type: "danger" })
+      } else {
+        $.notify("Looks like some error has occured, please try again", {
+          type: "danger"
+        });
       }
     };
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -678,19 +746,30 @@
     $("#postLinkedin").modal("hide");
   }
 
-  $("#postLinkedin").on("hidden.bs.modal", function () {
+  $("#postLinkedin").on("hidden.bs.modal", function() {
     postLinkedinHash = "";
     document.getElementById("postMSGLinkedin").value = msg;
     document.querySelector(`#modalImageLinkedin`).src =
       "/img/gif/loading_block.gif";
   });
 
-  $("#postTwitter").on("hidden.bs.modal", function () {
+  $("#postTwitter").on("hidden.bs.modal", function() {
     postTwitterHash = "";
     document.getElementById("postMSGTwitter").value = msg;
     document.querySelector(`#modalImageTwitter`).src =
       "/img/gif/loading_block.gif";
   });
+
+  function formatName(fullName) {
+    const lowerFN = fullName.toLowerCase();
+    const splitFN = lowerFN.split(" ");
+    let formattedName = "";
+    for (name of splitFN) {
+      formattedName += name.charAt(0).toUpperCase() + name.slice(1) + " ";
+    }
+    const finalFN = formattedName.trim();
+    return finalFN;
+  }
 
   function checkCharacter() {
     let textMsg = document.getElementById("postMSGTwitter").value;

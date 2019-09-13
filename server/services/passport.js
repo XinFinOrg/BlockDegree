@@ -124,7 +124,9 @@ module.exports = function(passport) {
               console.log("in method creating user");
               var newUser = newDefaultUser();
               newUser.email = email;
-              newUser.name = formatName(req.body.firstName + " " + req.body.lastName);
+              newUser.name = formatName(
+                req.body.firstName + " " + req.body.lastName
+              );
               newUser.timestamp = Date.now();
               newUser.timestamp = Date.now();
               newUser.auth.local.password = newUser.generateHash(password);
@@ -646,5 +648,5 @@ function formatName(fullName) {
     formattedName += name.charAt(0).toUpperCase() + name.slice(1) + " ";
   }
   const finalFN = formattedName.trim();
-  return finalFN.trim();
+  return finalFN;
 }
