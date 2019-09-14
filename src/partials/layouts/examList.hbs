@@ -1,6 +1,41 @@
 {{> includes/hero hero-title="Exams"}}
+
+<style>
+  [data-notify="container"][class*="alert-pastel-"] {
+    background-color: rgb(255, 255, 238);
+    border-width: 0px;
+    border-left: 15px solid rgb(255, 240, 106);
+    border-radius: 0px;
+    box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+  }
+
+  [data-notify="container"].alert-pastel-info {
+    border-left-color: greenyellow;
+  }
+
+  [data-notify="container"][class*="alert-pastel-"]>[data-notify="title"] {
+    color: rgb(80, 80, 57);
+    display: block;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+</style>
 <div class="container__cstm">
   {{!-- This is exam list --}}
+  <div>
+    <h3>Points to Note</h3><br>
+    <ol>
+      <li>Below are the current courses available on our platform. Please <strong>ENROLL</strong> in the course of your
+        choice.</li>
+      <li> If you have already enrolled in one of our courses then you <strong>Take Exam</strong> for certification
+        after completing
+        the <u>whole curriculum</u> for that given course.</li>
+    </ol>
+    <div><strong>Warning:</strong> Check / update your name before taking exam as the certificate will be generated
+      on that name only & cannot be changed.
+    </div>
+    <br>
+  </div>
 
   <div class="row" id="exams__list">
     {{#each json.courses as |course index|}}
@@ -62,6 +97,25 @@
 </div>
 
 <script type="text/javascript">
+
+  $("document").ready(function () {
+    $.notify({
+      title: 'AWAIL FREE CERTIFICATES',
+      message: 'Use promocode <strong>code10</strong> to get ENROLL for free on <strong>ANY</strong> course. HURRY! offer only for a limited time'
+    }, {
+      type: 'pastel-info',
+      delay: Date.now(),
+      template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+        '<span data-notify="title">{1}</span>' +
+        '<span data-notify="message">{2}</span>' +
+        '</div>',
+      placement: {
+        from: "bottom"
+      }
+    });
+  })
+
   function takeExam(slug) {
     if (slug.id === "course_1") {
       window.location = '/blockchain-basic-exam'
