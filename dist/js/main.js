@@ -1,6 +1,27 @@
-$(document).ready(function() {
+$(document).ready(async function() {
   "use strict";
 
+  console.log("called: ", window.localStorage.getItem("user-status"));
+  let navLogin = document.getElementById("nav-login"),
+    loginButton = document.getElementById("login-btn"),
+    profileBtn = document.getElementById("profile-btn");
+
+  let resp = await fetch("/api/current_user");
+  let respJSON = await resp.json();
+  if (respJSON.status) {
+    //is logged in
+    navLogin.innerHTML = "Logout";
+    navLogin.style = "display:block";
+    navLogin.setAttribute("href", "/logout");
+    loginButton.style = "display:block";
+    profileBtn.style = "display:block";
+  } else {
+    navLogin.innerHTML = "Login";
+    navLogin.setAttribute("href", "/login");
+    loginButton.style = "display:block";
+    navLogin.style = "display:block";
+    profileBtn.style = "display:none";
+  }
   var window_width = $(window).width(),
     window_height = window.innerHeight,
     header_height = $(".default-header").height(),
@@ -30,41 +51,52 @@ $(document).ready(function() {
     },
     speed: 400
   });
-  
-  
-  //------- Mobile Nav js starts --------//
-  if ($('#nav-menu-container').length) {
-    var $mobile_nav = $('#nav-menu-container').clone().prop({
-      id: 'mobile-nav'
-    });
-    $mobile_nav.find('> ul').attr({
-      'class': '',
-      'id': ''
-    });
-    $('body').append($mobile_nav);
-    $('body').prepend('<button type="button" id="mobile-nav-toggle"><i class="lnr lnr-menu"></i></button>');
-    $('body').append('<div id="mobile-body-overly"></div>');
-    $('#mobile-nav').find('.menu-has-children').prepend('<i class="lnr lnr-chevron-down"></i>');
 
-    $(document).on('click', '.menu-has-children i', function(e) {
-      $(this).next().toggleClass('menu-item-active');
-      $(this).nextAll('ul').eq(0).slideToggle();
+  //------- Mobile Nav js starts --------//
+  if ($("#nav-menu-container").length) {
+    var $mobile_nav = $("#nav-menu-container")
+      .clone()
+      .prop({
+        id: "mobile-nav"
+      });
+    $mobile_nav.find("> ul").attr({
+      class: "",
+      id: ""
+    });
+    $("body").append($mobile_nav);
+    $("body").prepend(
+      '<button type="button" id="mobile-nav-toggle"><i class="lnr lnr-menu"></i></button>'
+    );
+    $("body").append('<div id="mobile-body-overly"></div>');
+    $("#mobile-nav")
+      .find(".menu-has-children")
+      .prepend('<i class="lnr lnr-chevron-down"></i>');
+
+    console.log($("body"));
+    $(document).on("click", ".menu-has-children i", function(e) {
+      $(this)
+        .next()
+        .toggleClass("menu-item-active");
+      $(this)
+        .nextAll("ul")
+        .eq(0)
+        .slideToggle();
       $(this).toggleClass("lnr-chevron-up lnr-chevron-down");
     });
 
-    $(document).on('click', '#mobile-nav-toggle', function(e) {
-      $('body').toggleClass('mobile-nav-active');
-      $('#mobile-nav-toggle i').toggleClass('lnr-cross lnr-menu');
-      $('#mobile-body-overly').toggle();
+    $(document).on("click", "#mobile-nav-toggle", function(e) {
+      $("body").toggleClass("mobile-nav-active");
+      $("#mobile-nav-toggle i").toggleClass("lnr-cross lnr-menu");
+      $("#mobile-body-overly").toggle();
     });
 
     $(document).click(function(e) {
       var container = $("#mobile-nav, #mobile-nav-toggle");
       if (!container.is(e.target) && container.has(e.target).length === 0) {
-        if ($('body').hasClass('mobile-nav-active')) {
-          $('body').removeClass('mobile-nav-active');
-          $('#mobile-nav-toggle i').toggleClass('lnr-cross lnr-menu');
-          $('#mobile-body-overly').fadeOut();
+        if ($("body").hasClass("mobile-nav-active")) {
+          $("body").removeClass("mobile-nav-active");
+          $("#mobile-nav-toggle i").toggleClass("lnr-cross lnr-menu");
+          $("#mobile-body-overly").fadeOut();
         }
       }
     });
@@ -72,7 +104,6 @@ $(document).ready(function() {
     $("#mobile-nav, #mobile-nav-toggle").hide();
   }
   //------- Mobile Nav js ends --------//
-  
 
   //------- Tabs Js --------//
   if (document.getElementById("horizontalTab")) {
@@ -81,8 +112,6 @@ $(document).ready(function() {
       duration: 200
     });
   }
-  
-  
 
   //------- Smooth Scroll  js --------//
 
@@ -129,8 +158,7 @@ $(document).ready(function() {
     }
   });
 
-
-    //------- Header Scroll Class js --------//
+  //------- Header Scroll Class js --------//
 
   $(document).ready(function() {
     $("html, body").hide();
@@ -153,29 +181,24 @@ $(document).ready(function() {
     }
   });
 
+  $(window).scroll(function() {
+    if ($(this).scrollTop() > 50) {
+      $("#header").addClass("header-scrolled");
+    } else {
+      $("#header").removeClass("header-scrolled");
+    }
+  });
 
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 50) {
-            $('#header').addClass('header-scrolled');
-        } else {
-            $('#header').removeClass('header-scrolled');
-        }
-    });
-
-	
-
-    //------- Header Scroll Mobile nav toggle i Class js --------//
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 50) {
-            $('#mobile-nav-toggle i').addClass('scrolled-mobile-nav-toggle');
-        } else {
-            $('#mobile-nav-toggle i').removeClass('scrolled-mobile-nav-toggle');
-        }
-    });
-	
+  //------- Header Scroll Mobile nav toggle i Class js --------//
+  $(window).scroll(function() {
+    if ($(this).scrollTop() > 50) {
+      $("#mobile-nav-toggle i").addClass("scrolled-mobile-nav-toggle");
+    } else {
+      $("#mobile-nav-toggle i").removeClass("scrolled-mobile-nav-toggle");
+    }
+  });
 
   //------- Header Scroll Class  js --------//
-
 
   //------- Mailchimp js --------//
   $("#mc_embed_signup")
@@ -260,12 +283,12 @@ $(document).ready(function() {
       .slideToggle();
   });
 
-//   //Course price code toggle
-//   $(".promoCode-btn").on("click", function() {
-//     $(".promoCode-block")
-//       .stop()
-//       .slideToggle();
-//   });
+  //   //Course price code toggle
+  //   $(".promoCode-btn").on("click", function() {
+  //     $(".promoCode-block")
+  //       .stop()
+  //       .slideToggle();
+  //   });
 
   $("#course_1PromoCodeBtn").on("click", function() {
     $("#course_1PromoCodeBlock")
