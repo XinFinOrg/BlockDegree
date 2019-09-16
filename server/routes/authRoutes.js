@@ -104,6 +104,10 @@ module.exports = app => {
       res.sendFile("./resetpassword.html", {
         root: path.join(__dirname, "../../dist")
       });
+    } else {
+      res.render("displayError", {
+        error: "the reset-password link is no longer valid"
+      });
     }
   });
 
