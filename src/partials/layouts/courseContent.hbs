@@ -1,31 +1,46 @@
 \{{#> base}}
 
-  \{{> layouts/base pageClass="course-module"}}
-    \{{#*inline "body-block"}}
-      \{{> includes/hero hero-title="{{parent}}"}}
-        <div class="row mx-0">
-          <div class="col-12 col-sm-4 px-0">
-            \{{#> sidebar}}
-            \{{> layouts/modSidebar sidebarId={{courseIdx}} }}
-            \{{/sidebar}}
-          </div>
+\{{> layouts/base pageClass="course-module"}}
+\{{#*inline "body-block"}}
+\{{> includes/hero hero-title="{{parent}}"}}
+<div class="row mx-0">
+  <div class="col-12 col-sm-4 px-0">
+    \{{#> sidebar}}
+    \{{> layouts/modSidebar sidebarId={{courseIdx}} }}
+    \{{/sidebar}}
+  </div>
 
-          <div class="col-12 col-sm-8 p-4 module-content">
-            <div class="container py-2">
-              <h2 id="{{title}}">{{{ title }}}</h2>
-              <div>{{{ contents }}}</div>
-              <div id="next-page" class="text-center text-sm-right"></div>
-              \{{#> certBlock}}
-              \{{> layouts/certBlock }}
-              \{{/certBlock}}
-            </div>
-          </div>
-      </div>
-    </section>
-    \{{/inline}}
+  <div class="col-12 col-sm-8 p-4 module-content">
+    <div class="container py-2">
+      <h2 id="{{title}}">{{{ title }}}</h2>
+      <div>{{{ contents }}}</div>
+      <div id="next-page" class="text-center text-sm-right"></div>
+      \{{#> certBlock}}
+      \{{> layouts/certBlock }}
+      \{{/certBlock}}
+    </div>
+  </div>
+</div>
+</section>
+\{{/inline}}
 
-    \{{#*inline "scripts-block"}}
-      <script src="/js/modMenu.js"></script>
-      <script src="/js/cachedMenu.js"></script>
-    \{{/inline}}
+\{{#*inline "scripts-block"}}
+<script src="/js/modMenu.js"></script>
+<script src="/js/cachedMenu.js"></script>
+<script>
+        < !--Start of Tawk.to Script-- >
+    <script type="text/javascript">
+      var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/5d7f1911c22bdd393bb5fcce/default';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+      })();
+</script>
+<!--End of Tawk.to Script-->
+</script>
+\{{/inline}}
 \{{/base}}
