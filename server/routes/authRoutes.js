@@ -93,7 +93,6 @@ module.exports = app => {
   });
 
   app.get("/resetpassword", async (req, res) => {
-    console.log(req.url);
     console.log("inside reset password");
     const token = req.query.email;
     const user = await User.findOne({ "auth.local.password": token });
@@ -127,6 +126,9 @@ module.exports = app => {
       hash = userobj.generateHash(dataupdate.password);
       console.log(token);
       let user = await User.findOne({ "auth.local.password": token });
+      if (user==null){
+        return res.render("displayError",{error:"Broken reset password link"})
+      }
       console.log("Found User:  ", user);
       user.auth.local.password = hash;
       await user.save();
