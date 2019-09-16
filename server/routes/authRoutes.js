@@ -92,21 +92,15 @@ module.exports = app => {
     }
   });
 
-  app.get("/resetpassword", async (req, res) => {
+  app.post("/api/checkResetLink", async (req, res) => {
     console.log("inside reset password");
-    const token = req.query.email;
+    const token = req.body.emailToken;
     const user = await User.findOne({ "auth.local.password": token });
-    console.log(user);
-    if (user != null) {
-      // user is found
-      console.log(user);
-      res.sendFile("./resetpassword.html", {
-        root: path.join(__dirname, "../../dist")
-      });
+    if (user == null) {
+      console.log("invalid link");
+      return res.json({ exists: false });
     } else {
-      res.render("displayError", {
-        error: "the reset-password link is no longer valid"
-      });
+      res.json({ exists: true });
     }
   });
 
@@ -126,8 +120,10 @@ module.exports = app => {
       hash = userobj.generateHash(dataupdate.password);
       console.log(token);
       let user = await User.findOne({ "auth.local.password": token });
-      if (user==null){
-        return res.render("displayError",{error:"Broken reset password link"})
+      if (user == null) {
+        return res.render("displayError", {
+          error: "Broken reset password link"
+        });
       }
       console.log("Found User:  ", user);
       user.auth.local.password = hash;
