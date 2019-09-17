@@ -6,7 +6,7 @@ if (typeof jQuery != "undefined") {
       success: result => {
         if (!result.status) {
           alert("You are not logged in, please visit after logging in");
-          window.location.replace("https://www.blockdegree.org/login");
+          window.location.replace("https://uat.blockdegree.org/login");
         } else {
           // is logged in, set the parameter
           let userProfile = result.user;
@@ -121,12 +121,12 @@ if (typeof jQuery != "undefined") {
           }
         } else {
           alert("You're not logged in");
-          window.location.replace("https://www.blockdegree.org/login");
+          window.location.replace("https://uat.blockdegree.org/login");
         }
       },
       error: err => {
         alert("Error while getting the current user");
-        window.location.replace("https://www.blockdegree.org/login");
+        window.location.replace("https://uat.blockdegree.org/login");
       }
     });
     let trimName = newName.trim();
@@ -212,18 +212,18 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("https://www.blockdegree.org");
+                  window.location.reload("https://uat.blockdegree.org");
                 }
               });
             }
           } else {
             alert("Please log in to continue");
-            window.location.reload("https://www.blockdegree.org/login");
+            window.location.reload("https://uat.blockdegree.org/login");
           }
         },
         error: err => {
           alert("Error while getting current user");
-          window.location.reload("https://www.blockdegree.org/login");
+          window.location.reload("https://uat.blockdegree.org/login");
         }
       });
     }
@@ -266,19 +266,19 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("https://www.blockdegree.org");
+                  window.location.reload("https://uat.blockdegree.org");
                 }
               });
             }
           }
         } else {
           alert("Please log in to continue");
-          window.location.reload("https://www.blockdegree.org/login");
+          window.location.reload("https://uat.blockdegree.org/login");
         }
       },
       error: err => {
         alert("Error while getting current user");
-        window.location.reload("https://www.blockdegree.org/login");
+        window.location.reload("https://uat.blockdegree.org/login");
       }
     });
   }
@@ -288,7 +288,7 @@ if (typeof jQuery != "undefined") {
     function(event) {
       console.log("Originating event: ", event.origin);
       console.log(event.origin);
-      if (event.origin == "https://www.blockdegree.org" && event.data == "ok") {
+      if (event.origin == "https://uat.blockdegree.org" && event.data == "ok") {
         $.notify("Login linked!", { type: "success" });
         checkAuth();
       }

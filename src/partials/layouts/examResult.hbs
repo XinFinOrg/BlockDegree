@@ -74,7 +74,7 @@
         </div>
       </div>
       <button class="ITR btn btn-primary" type="button"
-        onclick="window.location.replace('https://www.blockdegree.org/blockchain-basic-exam')" /><i
+        onclick="window.location.replace('https://uat.blockdegree.org/blockchain-basic-exam')" /><i
         class="fa fa-arrow-left"></i> Retake Exam</button>
 
       {{else if exam.examAdvanced}}
@@ -147,9 +147,9 @@
         </ul>-->
         </div>
       </div>
-      <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.replace('https://www.blockdegree.org/blockchain-advanced-exam')" />-->
+      <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.replace('https://uat.blockdegree.org/blockchain-advanced-exam')" />-->
       <button class="ITR btn btn-primary" type="button"
-        onclick="window.location.replace('https://www.blockdegree.org/blockchain-advanced-exam')" /><i
+        onclick="window.location.replace('https://uat.blockdegree.org/blockchain-advanced-exam')" /><i
         class="fa fa-arrow-left"></i> Retake Exam</button>
 
       {{else if exam.examProfessional}}
@@ -224,9 +224,9 @@
 
         </div>
       </div>
-      <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.replace('https://www.blockdegree.org/blockchain-professional-exam')" />-->
+      <!--<input class="ITR" type="button" value="Retake Exam" onclick="window.location.replace('https://uat.blockdegree.org/blockchain-professional-exam')" />-->
       <button class="ITR btn btn-primary" type="button"
-        onclick="window.location.replace('https://www.blockdegree.org/blockchain-professional-exam')" /><i
+        onclick="window.location.replace('https://uat.blockdegree.org/blockchain-professional-exam')" /><i
         class="fa fa-arrow-left"></i> Retake Exam</button>
 
 
@@ -266,7 +266,7 @@
     "message",
     function (event) {
       console.log(event.origin);
-      if (event.origin == "https://www.blockdegree.org" && event.data == "ok") {
+      if (event.origin == "https://uat.blockdegree.org" && event.data == "ok") {
         console.log("Praise thee Lord!");
         checkAuth();
       }
@@ -529,11 +529,11 @@
   }
 
   function handleAuthTwitter() {
-    let win = window.open("https://www.blockdegree.org/auth/twitter?close=true", 'newwin', 'height=600px,width=600px');
+    let win = window.open("https://uat.blockdegree.org/auth/twitter?close=true", 'newwin', 'height=600px,width=600px');
   }
 
   function handleAuthLinkedin() {
-    var win = window.open("https://www.blockdegree.org/auth/linkedin?close=true", 'newwin', 'height=600px,width=600px');
+    var win = window.open("https://uat.blockdegree.org/auth/linkedin?close=true", 'newwin', 'height=600px,width=600px');
   }
 
 </script>

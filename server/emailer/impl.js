@@ -36,7 +36,7 @@ module.exports = {
     console.log("sendTokenMail:", type, mail);
 
     var mailOptions;
-    let link = "https://www.blockdegree.org/confirmation/?token=" + token.token;
+    let link = "https://uat.blockdegree.org/confirmation/?token=" + token.token;
     if (type === "signup" || type === "resend") {
       mailOptions = {
         from: "blockdegree@xinfin.org",
@@ -66,7 +66,7 @@ module.exports = {
           "Hello,\n\n" +
           "Your payment is completed for " +
           courseName +
-          ` : \nhttps://www.blockdegree.org/` +
+          ` : \nhttps://uat.blockdegree.org/` +
           courseName +
           ".\n"
       };
@@ -89,7 +89,7 @@ module.exports = {
   forgotPasswordMailer: function(mail, token, res) {
     console.log("mail", mail);
     return new Promise(function(resolve, reject) {
-      var link = `https://www.blockdegree.org/resetpassword?&email=` + token;
+      var link = `https://uat.blockdegree.org/resetpassword?&email=` + token;
       var mailOptions = {
         from: "info@blockdegree.org",
         to: mail,
