@@ -88,20 +88,8 @@
           Certificate<br />
         </div>
         <p>
-          <textarea
-            onkeyup="checkCharacter()"
-            cols="30"
-            rows="3"
-            id="postMSGTwitter"
-          ></textarea>
+          <textarea cols="30" rows="3" id="postMSGTwitter"></textarea>
         </p>
-        <span style="float: right">
-          <span>Character Count ( Max 260 ):</span
-          ><span
-            style="padding-left:10px;padding-right: 10px"
-            id="charCount"
-          ></span>
-        </span>
 
         <div>
           <div>
@@ -611,9 +599,6 @@
     console.log("called handle twitter share");
     console.log(`hash: ${hash}`);
     document.getElementById("postMSGTwitter").innerHTML = msg;
-    document.getElementById("charCount").innerHTML = msg.normalize(
-      "NFC"
-    ).length;
     postTwitterHash = hash;
     $.ajax({
       method: "post",
@@ -630,7 +615,7 @@
       },
       error: err => {
         $.notify(
-          `Oops, some error has occured, please try againn after sometime`,
+          `Oops, some error has occured, please try again after sometime`,
           { type: "danger" }
         );
       }
@@ -655,29 +640,66 @@
   function postTweet() {
     let userMSG = document.getElementById("postMSGTwitter").value;
     let certiLink = document.getElementById("certiLinkTwitter").checked;
-    $.notify("Your post is now being submitted, please wait a few seconds.");
-    if (userMSG.length > 260) {
-      $.notify("Max length is 260 ", { type: "danger" });
-    } else {
-      $.ajax({
-        method: "post",
-        url: "/api/shareOnTwitter",
-        data: { hash: postTwitterHash, certiLink: certiLink, msg: userMSG },
-        success: result => {
-          console.log(result);
-          if (result.uploaded) {
-            $.notify("Successfully posted on twitter!", { type: "success" });
-            postTwitterHash = "";
-          } else {
-            $.notify("Oops, error occured while posting!", { type: "danger" });
-            postTwitterHash = "";
-          }
-        },
-        error: err => {
-          postTwitterHash = "";
+    let validMsg = false;
+    $.post({
+      method: "post",
+      url: "/api/checkTweetCharacters",
+      data: { tweet: userMSG, includeLink: certiLink },
+      success: result => {
+        validMsg = result.valid;
+        if (!validMsg) {
+          $.notify("Max tweet character exceeded, please shorten your msg", {
+            type: "danger"
+          });
+        } else {
+          $.notify(
+            "Your post is now being submitted, please wait a few seconds."
+          );
+          $.ajax({
+            method: "post",
+            url: "/api/shareOnTwitter",
+            data: { hash: postTwitterHash, certiLink: certiLink, msg: userMSG },
+            success: (result, textStatus, xhr) => {
+              console.log(`XHR status: ${xhr.status}`);
+              console.log(`TextStatus: ${textStatus}`);
+              if (result.uploaded) {
+                $.notify("Successfully posted on twitter!", {
+                  type: "success"
+                });
+                postTwitterHash = "";
+              } else {
+                $.notify("Oops, error occured while posting!", {
+                  type: "danger"
+                });
+                postTwitterHash = "";
+              }
+            },
+            error: xhr => {
+              if (xhr.status == 429) {
+                $.notify(
+                  "Looks like a lot of people are using this API, please try again after sometime",
+                  { type: "danger" }
+                );
+              } else {
+                $.notify(
+                  "Some error has occured, please tray again after sometime",
+                  { type: "danger" }
+                );
+              }
+            }
+          });
         }
-      });
-    }
+      },
+      error: err => {
+        validMsg = false;
+        console.log("inside error in checkTweetCharacters: ", err);
+        $.notify("Some error occured please try again after sometime", {
+          type: "danger"
+        });
+        return;
+      }
+    });
+
     $("#postTwitter").modal("hide");
   }
 

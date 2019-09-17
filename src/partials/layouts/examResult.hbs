@@ -362,13 +362,7 @@
               '        <div class="modal-body">' +
               '          <div class="mb-3"><input type ="checkbox" id="certiLinkTwitter"> Include link to Certificate<br></div> ' +
               '          <p>' + '<textarea cols="30" rows="3" id="postMSGTwitter" >' + msg + '</textarea> </p>' +
-              '<div style="float: right">' +
-              '          <span>Character Count ( Max 260 ):</span' +
-              '          ><span' +
-              '            style="padding-left:10px;padding-right: 10px"' +
-              '            id="charCount"' +
-              '          ></span>' +
-              '        </div>' +
+
               '          <div>' +
               '          <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;" id="modalImageTwitter" ></div>' +
               '            <button type="button" id="twitter-share-cert-btn" class="btn btn-primary social-tw mt-3" onclick="postTweet()"><i class="fa fa-twitter"></i> Post On Twitter ' +
@@ -470,25 +464,47 @@
   function postTweet() {
     let userMSG = document.getElementById("postMSGTwitter").value;
     let certiLink = document.getElementById("certiLinkTwitter").checked;
-    if (userMSG.length > 260) {
-      $.notify("Max length is 260 ", { type: "danger" });
-    }
-    else {
-      $.notify("Your post is now being submitted, please wait a few seconds.");
-      $.ajax({
-        method: 'post',
-        url: '/api/shareOnTwitter',
-        data: { hash: "{{certificateHash}}", certiLink: certiLink, msg: userMSG },
-        success: (result) => {
-          console.log(result);
-          if (result.uploaded) {
-            $.notify("Successfully posted on twitter!", { type: "success" });
-          } else {
-            $.notify("Oops, error occured while posting!", { type: "danger" });
-          }
+    $.post({
+      method: "post",
+      url: "/api/checkTweetCharacters",
+      data: { tweet: userMSG, includeLink: certiLink },
+      success: result => {
+        if (!result.valid) {
+          $.notify("Max tweet character exceeded, please shorten your msg", {
+            type: "danger"
+          });
         }
-      });
-    }
+        else {
+          $.notify("Your post is now being submitted, please wait a few seconds.");
+          $.ajax({
+            method: 'post',
+            url: '/api/shareOnTwitter',
+            data: { hash: "{{certificateHash}}", certiLink: certiLink, msg: userMSG },
+            success: (result) => {
+              console.log(result);
+              if (result.uploaded) {
+                $.notify("Successfully posted on twitter!", { type: "success" });
+              } else {
+                $.notify("Oops, error occured while posting!", { type: "danger" });
+              }
+            }
+          });
+        }
+      },
+      error: xhr => {
+        if (xhr.status == 429) {
+          $.notify(
+            "Looks like a lot of people are using this API, please try again after sometime",
+            { type: "danger" }
+          );
+        } else {
+          $.notify(
+            "Some error has occured, please tray again after sometime",
+            { type: "danger" }
+          );
+        }
+      }
+    })
     $('#postTwitter').modal('hide');
   }
 
@@ -518,21 +534,6 @@
 
   function handleAuthLinkedin() {
     var win = window.open("https://www.blockdegree.org/auth/linkedin?close=true", 'newwin', 'height=600px,width=600px');
-  }
-
-  function checkCharacter() {
-    let textMsg = document.getElementById("postMSGTwitter").value;
-    let count = textMsg.normalize("NFC").length;
-    document.getElementById("charCount").innerHTML = count;
-    if (textMsg.trim().length == 0 || count >= 260) {
-      document.getElementById("twitter-share-cert-btn").disabled = true;
-      document.getElementById("charCount").style =
-        "padding-left:10px;padding-right:10px;color:red";
-    } else {
-      document.getElementById("twitter-share-cert-btn").disabled = false;
-      document.getElementById("charCount").style =
-        "padding-left:10px;padding-right:10px;color:black";
-    }
   }
 
 </script>
