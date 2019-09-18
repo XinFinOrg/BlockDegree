@@ -42,17 +42,20 @@ $(document).ready(async function() {
   if (document.getElementById("service-select")) {
     $("select").niceSelect();
   }
-  
-  
+
   //------- Open offer modal on pageload --------//
-  $(document).ready(function () {
-	$("#offerModal").modal({
+  $(document).ready(function() {
+    if (sessionStorage.getItem("shown_offerModal") == 1) {
+    } else {
+      $("#offerModal").modal({
         show: false,
-        backdrop: 'static',
-		minWidth: 300
-    });
-	$('body').addClass("offerModal-open");
-	$('#offerModal').modal('show');
+        backdrop: "static",
+        minWidth: 300
+      });
+      $("body").addClass("offerModal-open");
+      $("#offerModal").modal("show");
+      sessionStorage.setItem("shown_offerModal", 1);
+    }
   });
 
   //------- Superfist nav menu  js --------//
@@ -319,5 +322,4 @@ $(document).ready(async function() {
       .stop()
       .slideToggle();
   });
-   
 });
