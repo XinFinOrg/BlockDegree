@@ -69,6 +69,7 @@ $(document).ready(async function() {
 
   //------- Open offer modal on pageload --------//
   $(document).ready(function() {
+    console.log(sessionStorage.getItem("shown_offerModal"));
     if (sessionStorage.getItem("shown_offerModal") == 1) {
     } else {
       $("#offerModal").modal({
