@@ -42,6 +42,18 @@ $(document).ready(async function() {
   if (document.getElementById("service-select")) {
     $("select").niceSelect();
   }
+  
+  
+  //------- Open offer modal on pageload --------//
+  $(document).ready(function () {
+	$("#offerModal").modal({
+        show: false,
+        backdrop: 'static',
+		minWidth: 300
+    });
+	$('body').addClass("offerModal-open");
+	$('#offerModal').modal('show');
+  });
 
   //------- Superfist nav menu  js --------//
 
@@ -307,4 +319,5 @@ $(document).ready(async function() {
       .stop()
       .slideToggle();
   });
+   
 });
