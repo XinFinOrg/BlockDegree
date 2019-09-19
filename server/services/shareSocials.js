@@ -31,14 +31,17 @@ exports.postTwitter = async (req, res) => {
   if (!req.user) {
     return res.redirect("/login");
   } else {
-    const user = await User.findOne({ email: req.user.email }).catch(e => {
+    let user;
+    try {
+      user = await User.findOne({ email: req.user.email });
+    } catch (e) {
       console.error(`Exception in shareSocial.postTwitter/User.findOne: `, e);
       return res.json({
         uploaded: false,
         error:
           "Some error has occured please try again after sometime or contact us"
       });
-    });
+    }
     if (!user) {
       return res.redirect("/login");
     } else if (
@@ -86,15 +89,16 @@ exports.postTwitter = async (req, res) => {
           uploaded: false
         });
       } else {
-        const currUser = await User.findOne({ email: req.user.email }).catch(
-          e => {
-            console.error(
-              `Exception in shareSocial.postTwitter/User.findOne: `,
-              e
-            );
-            return res.json({ uploaded: false, error: e });
-          }
-        );
+        let currUser;
+        try {
+          currUser = await User.findOne({ email: req.user.email });
+        } catch (e) {
+          console.error(
+            `Exception in shareSocial.postTwitter/User.findOne: `,
+            e
+          );
+          return res.json({ uploaded: false, error: e });
+        }
         var config = getTwitterConfig(
           process.env.TWITTER_CLIENT_ID,
           process.env.TWITTER_CLIENT_SECRET,
@@ -230,7 +234,15 @@ exports.postTwitter = async (req, res) => {
 
 exports.postLinkedin = async (req, res) => {
   console.log(req.body);
-  const user = await User.findOne({ email: req.user.email });
+  let user;
+  try {
+    user = await User.findOne({ email: req.user.email });
+  } catch (e) {
+    console.log(
+      `error while fetching the user ${req.user.email} in postLinked: `,
+      e
+    );
+  }
   if (!user) {
     return res.redirect("/login");
   }

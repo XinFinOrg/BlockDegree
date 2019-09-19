@@ -20,7 +20,10 @@ if (process.env.IPFS_NETWORK == "local") {
 }
 
 exports.getAllCertificates = async (req, res) => {
-  const user = await User.findOne({ email: req.user.email }).catch(err => {
+  let user;
+  try {
+    user = await User.findOne({ email: req.user.email });
+  } catch (err) {
     console.log("Error while fetching the user from mongodb: ", err);
     res.json({
       certificateHash: null,
@@ -28,7 +31,7 @@ exports.getAllCertificates = async (req, res) => {
       msg:
         "looks like our database is under maintenance, please try again after some time"
     });
-  });
+  }
   if (!user) {
     return res.redirect("/login");
   }
