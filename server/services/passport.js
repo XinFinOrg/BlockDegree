@@ -285,7 +285,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
-        done(null, newUser);
+        done(null, newUser,"new-name");
       }
     )
   );
@@ -383,7 +383,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
-        done(null, newUser);
+        done(null, newUser,"new-name");
       }
     )
   );
@@ -484,7 +484,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
-        done(null, newUser);
+        done(null, newUser,"new-name");
       }
     )
   );
@@ -581,7 +581,7 @@ module.exports = function(passport) {
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
           newUser.save();
-          return done(null, newUser);
+          done(null, newUser,"new-name");
         });
       }
     )

@@ -62,29 +62,26 @@ if (typeof jQuery != "undefined") {
 
           // getting elements in the edit-page
           let edit_name = document.getElementById("edit_name"),
-            edit_email = document.getElementById("edit_email"),
-            edit_googleLink = document.getElementById("edit_googleLink"),
-            edit_facebookLink = document.getElementById("edit_facebookLink"),
-            edit_twitterLink = document.getElementById("edit_twitterLink"),
-            edit_linkedinLink = document.getElementById("edit_linkedinLink");
+            edit_email = document.getElementById("edit_email");
           edit_email.value = userProfile.email;
           edit_name.value = userProfile.name;
-          edit_googleLink.innerHTML =
-            userProfile.auth.google.id != ""
-              ? "<span>linked</span>"
-              : '<button onclick="handleAuthGoogle()">Link Google</button>';
-          edit_facebookLink.innerHTML =
-            userProfile.auth.facebook.id != ""
-              ? "<span>linked</span>"
-              : '<button onclick="handleAuthFacebook()">Link Facebook</button>';
-          edit_twitterLink.innerHTML =
-            userProfile.auth.twitter.id != ""
-              ? "<span>linked</span>"
-              : '<button onclick="handleAuthTwitter()">Link Twitter</button>';
-          edit_linkedinLink.innerHTML =
-            userProfile.auth.linkedin.id != ""
-              ? "<span>linked</span>"
-              : '<button onclick="handleAuthLinkedin()">Link Linkdedin</button>';
+
+          let currentUrl = window.location.href;
+          let paramsString = currentUrl.split("?")[1];
+          if (paramsString) {
+            console.log(`ParamsString: ${paramsString}`);
+            let params = paramsString.split("&");
+            console.log(params);
+            for (let i = 0; i < params.length; i++) {
+              let key = params[i].split("=")[0],
+                value = params[i].split("=")[1];
+              console.log(`Key: ${key} & Value: ${value}`);
+              if (key == "confirmName" && value.startsWith("true")) {
+                // new registration, need to confirm the name.
+                document.getElementById("btn-confirmName").click();
+              }
+            }
+          }
         }
       }
     });

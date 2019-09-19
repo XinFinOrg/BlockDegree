@@ -169,11 +169,14 @@ module.exports = app => {
         req.logIn(user, err => {
           if (err != null) {
             console.log(`Error while logging in ${err}`);
-            res.redirect("/login");
+            return res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
             return res.redirect("/closeCallback");
+          }
+          if (info == "new-name") {
+            return res.redirect("/profile?confirmName=true");
           }
           var url = req.session.redirectTo || "/";
           if (
