@@ -217,6 +217,9 @@ module.exports = app => {
           if (req.session.closeOnCallback) {
             return res.redirect("/closeCallback");
           }
+          if (info == "new-name") {
+            return res.redirect("/profile?confirmName=true");
+          }
           var url = req.session.redirectTo || "/";
           if (
             url == "/login" ||
@@ -256,6 +259,9 @@ module.exports = app => {
           if (req.session.closeOnCallback) {
             return res.redirect("/closeCallback");
           }
+          if (info == "new-name") {
+            return res.redirect("/profile?confirmName=true");
+          }
           var url = req.session.redirectTo || "/";
           if (
             url == "/login" ||
@@ -293,6 +299,9 @@ module.exports = app => {
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
             return res.redirect("/closeCallback");
+          }
+          if (info == "new-name") {
+            return res.redirect("/profile?confirmName=true");
           }
           var url = req.session.redirectTo || "/";
           if (
