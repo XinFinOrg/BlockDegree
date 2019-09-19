@@ -172,7 +172,9 @@
             Get Certificates By User
           </button>
           <br />
-          <span>Certificate Count: </span><span id="certCount"></span>
+          <span>Unique User Certificate Count: </span><span id="certCount"></span>
+          <span>Total Certificate Issued Count: </span><span id="totCertisCount"></span>
+
           <br />
           <section id="certificatesTable"></section>
         </div>
@@ -454,6 +456,7 @@
     function getAllUserCertificates() {
       let certificatesTable = document.getElementById("certificatesTable");
       let certificateCount = document.getElementById("certCount");
+      let totCertisCount = document.getElementById("totCertisCount");
       certificateCount.innerHTML = "";
       let retHTML = "<table class='certificateTab'";
       retHTML +=
@@ -467,12 +470,13 @@
           } else {
             // console.log(result);
             let data = result.users;
+            let totCertis = 0;
             certificateCount.innerHTML = data.length;
             for (let i = 0; i < data.length; i++) {
               let currentUser = data[i];
               let currentCertificates = currentUser.examData.certificateHash;
               let rowSpan = currentCertificates.length-1;
-              retHTML += `<tr><td rowspan="${rowSpan}">${
+              retHTML += `<tr><td >${
                 currentUser.email
               }</td><td>${currentCertificates[1].examType}</td><td>${
                 currentCertificates[1].clientHash
@@ -481,8 +485,10 @@
               }</td><td>${new Date(
                 parseFloat(currentCertificates[1].timestamp)
               )}</td></tr>`;
+              totCertis++;
               for (let j = 2; j < rowSpan; j++) {
-                retHTML += `<tr><td>${
+                totCertis++;
+                retHTML += `<tr><td > -- || -- </td><td>${
                   currentCertificates[j].examType
                 }</td><td>${currentCertificates[j].clientHash}</td><td>${
                   currentCertificates[1].headlessHash
@@ -493,6 +499,7 @@
             }
             retHTML += "</table>";
             certificatesTable.innerHTML = retHTML;
+            totCertisCount.innerHTML = totCertis;
           }
         },
         error: err => {
