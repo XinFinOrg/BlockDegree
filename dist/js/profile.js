@@ -91,7 +91,16 @@ if (typeof jQuery != "undefined") {
     let newName = document.getElementById("edit_name").value;
     let newNameTrim = formatName(newName);
     if (newNameTrim.length < 2) {
-      return alert("Invalid Name");
+      $.notify("The length of name has to be atleast 2", {
+        type: "danger"
+      });
+      return;
+    }
+    if (containsNumber(newName)) {
+      $.notify("Name cannot have number", {
+        type: "danger"
+      });
+      return;
     }
     $.ajax({
       method: "get",
@@ -102,14 +111,22 @@ if (typeof jQuery != "undefined") {
           let currentUser = result.user;
           if (currentUser.name == newNameTrim) {
             $.notify("Same Name", { type: "danger" });
+            return;
           } else {
             $.ajax({
               method: "post",
               url: "/api/setName",
               data: { fullName: newNameTrim },
               success: result => {
-                alert("New name set");
-                window.location.reload();
+                console.log(result);
+                if (result.updated) {
+                  alert("New Name successfully set");
+                  location.reload();
+                  return;
+                } else {
+                  $.notify(result.error, { type: "danger" });
+                  return;
+                }
               },
               error: err => {
                 $.notify("Error while updating the name", { type: "danger" });
@@ -126,32 +143,6 @@ if (typeof jQuery != "undefined") {
         window.location.replace("https://uat.blockdegree.org/login");
       }
     });
-    let trimName = newName.trim();
-    console.log("Current Name ", currentName);
-    console.log("Trim name ", trimName);
-    if (trimName.length < 2) {
-      alert("Invalid name");
-      return;
-    }
-    if (currentName == trimName) {
-      // they are same duh!
-      alert("New name same as old name");
-    } else {
-      $.ajax({
-        method: "post",
-        url: "/api/setName",
-        data: { fullName: trimName },
-        success: result => {
-          console.log(result);
-          alert("New name set!");
-          window.location.reload();
-        },
-        error: err => {
-          alert("Some Error Occured!");
-          console.log(err);
-        }
-      });
-    }
   }
 
   function handleUpdateLink(social) {
@@ -352,4 +343,8 @@ function formatName(fullName) {
   }
   const finalFN = formattedName.trim();
   return finalFN;
+}
+
+function containsNumber(fullName) {
+  return /\d/.test(fullName);
 }

@@ -1,10 +1,20 @@
 const User = require("../models/user");
 
+/*
+
+All the below APIs (except setProfileName) are NOT in use; no need to OPTIMIZE
+
+*/
+
 exports.setupProfile = async (req, res) => {
   console.log("called setup profile");
-  const user = await User.findOne({ email: req.user.email }).catch(e =>
-    console.error(`Exception in setupProfile ${e}`)
-  );
+  let user;
+  try {
+    user = await User.findOne({ email: req.user.email });
+  } catch (e) {
+    console.error(`Exception in setupProfile ${e}`);
+    res.render("displayError", { error: "Exception in setup profile" });
+  }
   if (!user) {
     return console.error(`User not found, seems like the DB is down`);
   }
@@ -20,7 +30,11 @@ exports.setupProfile = async (req, res) => {
   newProfile.photo.name = res.locals.file_name;
   newProfile.photo.buffer = req.file.buffer.toString("base64");
   user.profile = newProfile;
-  await user.save();
+  try {
+    await user.save();
+  } catch (e) {
+    res.render("displayError", { error: "error while saving the newProfile" });
+  }
   res.json({ msg: "ok" });
 };
 
@@ -123,15 +137,47 @@ exports.removeSocial = async (req, res) => {
   }
 };
 
+/*
+
+The API below is the only API which is in USE
+
+*/
 exports.setProfileName = async (req, res) => {
-  const user = await User.findOne({ email: req.user.email }).catch(e => {
-    console.error(`Error : ${e}`);
-    return res.render("displayError", { error: `error : ${e}` });
-  });
+  let user;
+  try {
+    user = await User.findOne({ email: req.user.email });
+  } catch (e) {
+    console.error(
+      `Error occured at setProfileName for user : ${req.user.email} : ${e}`
+    );
+    return res.json({
+      updated: false,
+      error:
+        "Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org"
+    });
+  }
   if (user == null) {
-    return res.render("displayError", { error: `no such user` });
+    return res.json({
+      updated: false,
+      error: `No user ${req.user.email} found!!`
+    });
   }
   user.name = req.body.fullName;
-  await user.save();
-  res.json({ msg: `Name set: ${req.body.fullName}` });
+  try {
+    await user.save();
+  } catch (e) {
+    console.error(
+      `Error occured at setProfileName for user ${req.user.email} `,
+      e
+    );
+    return res.json({
+      updated: false,
+      error:
+        "Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org"
+    });
+  }
+  res.json({
+    updated: true,
+    error: null
+  });
 };

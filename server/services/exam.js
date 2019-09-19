@@ -405,7 +405,7 @@ exports.getExamResult = async (req, res) => {
   }
 };
 
-exports.getExamStatus = (req, res) => {
+exports.getExamStatus = async (req, res) => {
   console.log("local exam: ");
   var query = {};
   query = { email: req.user.email };
