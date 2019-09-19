@@ -39,7 +39,7 @@ module.exports = {
     let link = "https://uat.blockdegree.org/confirmation/?token=" + token.token;
     if (type === "signup" || type === "resend") {
       mailOptions = {
-        from: "blockdegree@xinfin.org",
+        from: "info@blockdegree.org",
         to: mail,
         subject: "Login",
         html: `<div>Click on the link to confirm email address : <a href="${link}">Link</a></div>`
