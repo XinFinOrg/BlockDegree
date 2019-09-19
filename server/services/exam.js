@@ -302,6 +302,17 @@ exports.getExamResult = async (req, res) => {
     `called the exam-result endpoint by ${req.user.email} at ${Date.now()}`
   );
   const backUrl = req.header("Referer");
+  console.log("BackURL: ", backUrl);
+  if (backUrl == undefined) {
+    // not a redirect
+    res.render("error");
+  }
+  let trailPath = backUrl.split("/")[3];
+  if (trailPath == undefined || trailPath == null || !trailPath.split("-")[1]) {
+    // redirect from some other page
+    res.render("error");
+  }
+  const examName = trailPath.split("-")[1];
   let name = "";
   if (req.user.name == "" || req.user.name == undefined) {
     // old email id.
@@ -311,22 +322,20 @@ exports.getExamResult = async (req, res) => {
   }
   var query = {};
   query = { email: req.user.email };
-  const examName = backUrl.split("/")[3].split("-")[1];
-  let user,ques
-  try{
-     user = await User.findOne(query)
+  let user, ques;
+  try {
+    user = await User.findOne(query);
 
-     ques = await questions.findOne({ exam: "firstExam" })
-  }
-  catch(err){
-      if (err) {
-        console.log("error: ", err);
-        res.render("displayError", {
-          error: "Its not you, its us. Please try again after sometime."
-        });
-      }
+    ques = await questions.findOne({ exam: "firstExam" });
+  } catch (err) {
+    if (err) {
+      console.log("error: ", err);
+      res.render("displayError", {
+        error: "Its not you, its us. Please try again after sometime."
+      });
     }
-  
+  }
+
   const totalQuestions = ques[examTypes[examName].questionName].length;
   const marksObtained = user.examData[examTypes[examName].courseName].marks;
   const percentObtained = (marksObtained * 100) / totalQuestions;
