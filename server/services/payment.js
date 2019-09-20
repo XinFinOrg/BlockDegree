@@ -189,11 +189,13 @@ exports.payPaypal = async (req, res) => {
       discObj.error
     );
 
-    res.send({
-      status: "500",
-      message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
-    });
-    return;
+    if (discObj.error != "bad request") {
+      res.send({
+        status: "500",
+        message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
+      });
+      return;
+    }
   }
   console.log(`Price After : ${price}`);
   price = Math.round(parseFloat(price) * 100) / 100;

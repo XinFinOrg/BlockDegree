@@ -129,6 +129,9 @@
           if (!alert(data.message)) { window.location.reload(); }
           else
             alert(data.message);
+        else {
+          $.notify(data.message, { type: "danger" })
+        }
       }
     });
   }
@@ -152,7 +155,7 @@
           }
         }
         else {
-          $.notify(`Some error occurred, please try agina later`, { type: "danger" })
+          $.notify(`Some error occurred, please try again later`, { type: "danger" })
         }
       }
     })
