@@ -203,12 +203,12 @@ exports.payPaypal = async (req, res) => {
   const user = await User.findOne({ email: email }, function(err) {
     if (err != null) {
       console.error(`Can't find user | access db; Err : ${err}`);
+      res.send({
+        status: "500",
+        message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
+      });
+      return;
     }
-    res.send({
-      status: "500",
-      message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
-    });
-    return;
   });
   if (course_id == "course_1") {
     payment_status = user.examData.payment.course_1;
