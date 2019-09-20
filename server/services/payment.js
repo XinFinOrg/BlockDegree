@@ -175,7 +175,7 @@ exports.payPaypal = async (req, res) => {
   let email = req.user.email;
   let course_id = req.body.course_id;
   let payment_status;
-  const discObj = promoCodeService.usePromoCode(req);
+  const discObj = await promoCodeService.usePromoCode(req);
   console.log(discObj);
   console.log(typeof price);
   console.log(`Price Before : ${price}`);

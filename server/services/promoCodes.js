@@ -107,7 +107,11 @@ exports.deactivatePromoCode = async (req, res) => {
 
 // user functionality
 exports.usePromoCode = async req => {
-  if (req.body.codeName == undefined || req.body.codeName == "") {
+  if (
+    req.body.codeName == undefined ||
+    req.body.codeName == null ||
+    req.body.codeName == ""
+  ) {
     return { error: "bad request" };
   }
   let userEmail = req.user.email;
