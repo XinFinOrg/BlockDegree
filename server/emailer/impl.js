@@ -11,13 +11,14 @@ var transporter = nodemailer.createTransport({
 });
 
 module.exports = {
-  sendMail: mail => {
+  // only for internal use
+  sendMail: (mail, subject, msg) => {
     return new Promise(function(resolve, reject) {
       var mailOptions = {
         from: "Blockchain@XinFin.Org",
         to: mail,
-        subject: "Login",
-        html: "<h3>Ankit Patel</h3>" + Date.now()
+        subject: subject,
+        html: `<div>${msg}</div>`
       };
       transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
