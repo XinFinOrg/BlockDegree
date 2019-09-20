@@ -192,17 +192,21 @@
       value = params[i].split("=")[1];
     console.log(key, value);
     if (key == "emailConfirmed" && value == "true") {
-      $.notify("Your email was successfully confirmed! Please Login-in now", {
-        type: "success"
-      });
+      setTimeout(() => {
+        $.notify("Your email was successfully confirmed! Please Login-in now", {
+          type: "success"
+        });
+      }, 1000);
     }
     if (key == "alreadyVerified" && value == "true") {
-      $.notify(
-        "Your email addess is already verified.Please continue to login.",
-        {
-          type: "info"
-        }
-      );
+      setTimeout(() => {
+        $.notify(
+          "Your email addess is already verified.Please continue to login.",
+          {
+            type: "info"
+          }
+        );
+      }, 1000);
     }
   }
 </script>
