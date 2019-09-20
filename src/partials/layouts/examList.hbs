@@ -29,7 +29,7 @@
         choice.</li>
       <li> If you have already enrolled in one of our courses then you <strong>Take Exam</strong> for certification
         after completing
-        the <u style="color:black">whole curriculum</u> for that given course.</li>
+        the <strong>whole curriculum</strong> for that given course.</li>
     </ol>
     <div><strong>Warning:</strong> Check / update your name before taking exam as the certificate will be generated
       on that name only & cannot be changed.
@@ -97,24 +97,6 @@
 </div>
 
 <script type="text/javascript">
-
-  $("document").ready(function () {
-    $.notify({
-      title: 'AWAIL FREE CERTIFICATES',
-      message: 'Use promocode <strong>code10</strong> to get ENROLL for free on <strong>ANY</strong> course. HURRY! offer only for a limited time'
-    }, {
-      type: 'pastel-info',
-      delay: Date.now(),
-      template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
-        '<span data-notify="title">{1}</span>' +
-        '<span data-notify="message">{2}</span>' +
-        '</div>',
-      placement: {
-        from: "bottom"
-      }
-    });
-  })
 
   function takeExam(slug) {
     if (slug.id === "course_1") {

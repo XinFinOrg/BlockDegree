@@ -426,3 +426,19 @@
   }
 }
 /*-------- End Contributors Area Style ------------*/
+
+
+
+
+
+.offerModal-open .modal-backdrop {background-color:black;opacity:0.9;}
+
+#offerModal {
+	.modal-content {background: #3CD3AD;background: -webkit-linear-gradient(45deg, #3CD3AD,#4CB8C4)!important;background: linear-gradient(45deg, #3CD3AD,#4CB8C4)!important;}
+	.modal-body {padding: 1.5rem;padding-bottom: 60px;}
+	.modal-header {border-bottom:none;padding-bottom: 0px;}
+	.modal-body h2 {font-size: 26px;color:#FFFFFF;}
+	.modal-body h3 {font-size: 24px;color:#112842;}
+	.modal-body h4 {font-size: 22px;color:#FFFFFF;line-height: 38px!important;}
+	.modal-body h4 span {background-color: rgba(0,0,0,0.4);padding: 5px 15px;border-radius: 5px;color:#ffc107;}
+}
