@@ -194,9 +194,8 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(request[index]) + 1 ==
                 result.questionsProfessional[index].answer
               ) {
-                // marks++;
+                marks++;
               }
-              marks++;
             }
             attemptsProfessional += 1;
             User.findOneAndUpdate(
