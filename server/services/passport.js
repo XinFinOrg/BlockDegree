@@ -285,7 +285,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
-        done(null, newUser,"new-name");
+        done(null, newUser, "new-name");
       }
     )
   );
@@ -298,7 +298,7 @@ module.exports = function(passport) {
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         callbackURL: "https://uat.blockdegree.org/auth/facebook/callback",
         passReqToCallback: true,
-        profileFields: ["id", "emails", "name"]
+        profileFields: ["id", "emails", "name", "displayName"]
       },
       async (req, accessToken, refreshToken, profile, done) => {
         if (req.user) {
@@ -383,7 +383,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
-        done(null, newUser,"new-name");
+        done(null, newUser, "new-name");
       }
     )
   );
@@ -484,7 +484,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
-        done(null, newUser,"new-name");
+        done(null, newUser, "new-name");
       }
     )
   );
@@ -581,7 +581,7 @@ module.exports = function(passport) {
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
           newUser.save();
-          done(null, newUser,"new-name");
+          done(null, newUser, "new-name");
         });
       }
     )

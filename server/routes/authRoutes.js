@@ -317,18 +317,18 @@ module.exports = app => {
     )(req, res);
   });
 
-  app.post("/api/getAuthStatus", requireLogin, async (req, res) => {
-    if (!req.user) {
-      res.redirect("/login");
-    }
-    const user = await User.findOne({ email: req.user.email }).catch(err => {
+  app.post("/api/getAuthStatus", async (req, res) => {
+    let user;
+    try {
+      user = await User.findOne({ email: req.user.email });
+    } catch (err) {
       console.error(err);
       res.status(500).json({
         error: err,
         status: 500,
         info: "error while looking up the database for the user"
       });
-    });
+    }
     res.status(200).json({
       localAuth: user.auth.local.password != "",
       twitterAuth: user.auth.twitter.id != "",
