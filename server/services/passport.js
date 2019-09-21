@@ -298,7 +298,7 @@ module.exports = function(passport) {
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         callbackURL: "https://www.blockdegree.org/auth/facebook/callback",
         passReqToCallback: true,
-        profileFields: ["id", "emails", "name"]
+        profileFields: ["id", "emails", "name", "displayName"]
       },
       async (req, accessToken, refreshToken, profile, done) => {
         if (req.user) {
