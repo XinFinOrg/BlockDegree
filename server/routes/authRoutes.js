@@ -318,6 +318,15 @@ module.exports = app => {
   });
 
   app.post("/api/getAuthStatus", async (req, res) => {
+    if (!req.user) {
+      res.status(200).json({
+        localAuth: false,
+        twitterAuth: false,
+        facebookAuth: false,
+        googleAuth: false,
+        linkedinAuth: false
+      });
+    }
     let user;
     try {
       user = await User.findOne({ email: req.user.email });
