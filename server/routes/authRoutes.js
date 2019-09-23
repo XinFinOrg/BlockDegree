@@ -318,7 +318,7 @@ module.exports = app => {
   });
 
   app.post("/api/getAuthStatus", async (req, res) => {
-    if (!req.user) {
+    if (req.user == undefined || req.user.email == undefined) {
       res.status(200).json({
         localAuth: false,
         twitterAuth: false,
