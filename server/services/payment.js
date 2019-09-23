@@ -192,7 +192,7 @@ exports.payPaypal = async (req, res) => {
     if (discObj.error != "bad request") {
       res.send({
         status: "500",
-        message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
+        message: discObj.error
       });
       return;
     }
