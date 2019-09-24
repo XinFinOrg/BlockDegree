@@ -1,0 +1,21 @@
+
+.sideshare {
+    position: fixed;
+    z-index: 1;
+    top: 30%;
+    right: 0;
+    background-color: #111;
+    overflow-x: hidden;
+  }
+  
+  .sideshare i {
+    padding: 10px 10px 10px 10px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+  }
+  
+  .sideshare i:hover {
+    color: #f1f1f1;
+  }
