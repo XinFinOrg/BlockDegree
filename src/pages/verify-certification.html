@@ -781,16 +781,14 @@
   }
 
   $("#postLinkedin").on("hidden.bs.modal", function() {
-    postLinkedinHash = "";
-    document.getElementById("postLinkedinHash").innerHTML = "";
+
     document.getElementById("postMSGLinkedin").value = msg;
     document.querySelector(`#modalImageLinkedin`).src =
       "/img/gif/loading_block.gif";
   });
 
   $("#postTwitter").on("hidden.bs.modal", function() {
-    postTwitterHash = "";
-    document.getElementById("postTwitterHash").innerHTML = "";
+
     document.getElementById("postMSGTwitter").value = msg;
     document.querySelector(`#modalImageTwitter`).src =
       "/img/gif/loading_block.gif";
