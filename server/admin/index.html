@@ -1,93 +1,207 @@
 <html>
-    <h1>
-        Don't fear, Admin is here.
-    </h1>
+        <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                <style>
+                  body {
+                    font-family: "Lato", sans-serif;
+                  }
+            
+                  table {
+                    font-size: 15px;
+                    width: 100%;
+                    text-align: center;
+                  }
+            
+                  .sidenav {
+                    height: 100%;
+                    width: 200px;
+                    position: fixed;
+                    z-index: 1;
+                    top: 0;
+                    left: 0;
+                    background-color: #111;
+                    overflow-x: hidden;
+                    padding-top: 20px;
+                  }
+            
+                  .sidenav div {
+                    padding: 6px 8px 6px 16px;
+                    text-decoration: none;
+                    font-size: 18px;
+                    color: white;
+                    display: block;
+                  }
+            
+                  .sidenav div:hover {
+                    color: #f1f1f1;
+                    background-color: #818181;
+                    cursor: pointer;
+                  }
+            
+                  th {
+                    white-space: nowrap;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    background-color: #4caf50;
+                    color: white;
+                  }
+                  tr:hover {
+                    background-color: #ddd;
+                  }
+            
+                  .main {
+                    margin-left: 230px;
+                    font-size: 28px;
+                    padding: 0px 10px;
+                  }
+            
+                  @media screen and (max-height: 450px) {
+                    .sidenav {
+                      padding-top: 15px;
+                    }
+                    .sidenav div {
+                      font-size: 15px;
+                    }
+                  }
+                </style>
+              </head>
+              <body>
+                    <div class="sidenav">
+                            <div onclick="openPage('promoCode')">PromoCode</div>
+                            <div onclick="openPage('blogs')">Blogs</div>
+                          </div>
+                          <div class="main">
+                                <section class="main-section">
+                                        <div id="promoCode" class="tabcontent" style="display:none">
+                                                <p>
+                                                        <h1>Promo Codes</h1>
+                                                        <!-- Form for adding new promo-code -->
+                                                        <form action="/admin/newPromoCode" method="POST">
+                                                            <h3>Add Promo Code</h3>
+                                                            <div>
+                                                                CodeName : 
+                                                                <input type="text" name="codeName" placeholder="enter the codename" >
+                                                            </div>
+                                                            <div>
+                                                                Discount Amount : 
+                                                                <input type="number" name="discAmt" placeholder="enter the discount amount" >
+                                                            </div>
+                                                            <div>
+                                                                Purpose for new code : 
+                                                                <input type="text" name="purpose" placeholder="enter the purpose" >
+                                                            </div> 
+                                                            <div>
+                                                                Promo-code access ?<br>
+                                                                <input type="radio" name="restricted" id="restricted" value="true">restricted<br>
+                                                                <input type="radio" name="restricted" id="unrestricted" value="false">unrestricted
+                                                            </div>
+                                                            <input type="submit" value="OK">
+                                                        </form>
+                                                      
+                                                    </p>
+                                                    <p>
+                                                        <!-- Form for making promo-code active -->
+                                                        <form action="/admin/activatePromoCode" method="POST">
+                                                            <h3>Activate Promo Code</h3>
+                                                            <div>
+                                                                CodeName : 
+                                                                <input type="text" name="codeName" placeholder="enter the codename" >
+                                                            </div>
+                                                            <input type="submit" value="OK">
+                                                        </form>
+                                                    </p>
+                                                    <p>
+                                                            <!-- Form for making promo-code inactive -->
+                                                            <form action="/admin/deactivatePromoCode" method="POST">
+                                                                <h3>Deactivate Promo Code</h3>
+                                                                <div>
+                                                                    CodeName : 
+                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                </div>
+                                                                <input type="submit" value="OK">
+                                                            </form>
+                                                        </p>     
+                                                        
+                                                        <p>
+                                                            <!-- Form for making promo-code inactive -->
+                                                            <form action="/admin/restrictPromoCode" method="POST">
+                                                                <h3>Restrict Promo Code</h3>
+                                                                <div>
+                                                                    CodeName : 
+                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                </div>
+                                                                <input type="submit" value="OK">
+                                                            </form>
+                                                        </p>  
+                                                        
+                                                        <p>
+                                                            <!-- Form for making promo-code inactive -->
+                                                            <form action="/admin/unrestrictPromoCode" method="POST">
+                                                                <h3>Un-Restrict Promo Code</h3>
+                                                                <div>
+                                                                    CodeName : 
+                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                </div>
+                                                                <input type="submit" value="OK">
+                                                            </form>
+                                                        </p> 
+                                                        <p>
+                                                            <!-- Form for making promo-code inactive -->
+                                                            <form action="/admin/addAllowedUser" method="POST">
+                                                                <h3>Allow User for restricted Promo Code</h3>
+                                                                <div>
+                                                                    User email : 
+                                                                    <input type="text" name="email" placeholder="enter the user email" >
+                                                                </div>
+                                                                <div>
+                                                                    CodeName : 
+                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                </div>
+                                                                <input type="submit" value="OK">
+                                                            </form>
+                                                        </p>   
+                                        </div>
+                                        <div id="blogs" class="tabcontent" style="display:none">
+                                                <h1>Blogs</h1>
+                                                <div>
+                                                    <button onclick="newPost()">New Post</button>
+                                                </div>
+                                                <div>
+                                                    <input id="blog_id" type="text" placeholder="enter the post hash"><button onclick="editPost()">Edit Post</button>
+                                                </div>
+                                        </div>
+                                    </section>
+                          </div>                    
+              </body>
 
-    <p>
+        <script>
+            function openPage(pageName) {
+                let allTabContent = document.getElementsByClassName("tabcontent");
+                for (let i = 0; i < allTabContent.length; i++) {
+                    allTabContent[i].style.display = "none";
+                }
+                document.getElementById(pageName).style.display = "block";
+            }
 
-        <!-- Form for adding new promo-code -->
-        <form action="/admin/newPromoCode" method="POST">
-            <h3>Add Promo Code</h3>
-            <div>
-                CodeName : 
-                <input type="text" name="codeName" placeholder="enter the codename" >
-            </div>
-            <div>
-                Discount Amount : 
-                <input type="number" name="discAmt" placeholder="enter the discount amount" >
-            </div>
-            <div>
-                Purpose for new code : 
-                <input type="text" name="purpose" placeholder="enter the purpose" >
-            </div> 
-            <div>
-                Promo-code access ?<br>
-                <input type="radio" name="restricted" id="restricted" value="true">restricted<br>
-                <input type="radio" name="restricted" id="unrestricted" value="false">unrestricted
-            </div>
-            <input type="submit" value="OK">
-        </form>
-      
-    </p>
-    <p>
-        <!-- Form for making promo-code active -->
-        <form action="/admin/activatePromoCode" method="POST">
-            <h3>Activate Promo Code</h3>
-            <div>
-                CodeName : 
-                <input type="text" name="codeName" placeholder="enter the codename" >
-            </div>
-            <input type="submit" value="OK">
-        </form>
-    </p>
-    <p>
-            <!-- Form for making promo-code inactive -->
-            <form action="/admin/deactivatePromoCode" method="POST">
-                <h3>Deactivate Promo Code</h3>
-                <div>
-                    CodeName : 
-                    <input type="text" name="codeName" placeholder="enter the codename" >
-                </div>
-                <input type="submit" value="OK">
-            </form>
-        </p>     
-        
-        <p>
-            <!-- Form for making promo-code inactive -->
-            <form action="/admin/restrictPromoCode" method="POST">
-                <h3>Restrict Promo Code</h3>
-                <div>
-                    CodeName : 
-                    <input type="text" name="codeName" placeholder="enter the codename" >
-                </div>
-                <input type="submit" value="OK">
-            </form>
-        </p>  
-        
-        <p>
-            <!-- Form for making promo-code inactive -->
-            <form action="/admin/unrestrictPromoCode" method="POST">
-                <h3>Un-Restrict Promo Code</h3>
-                <div>
-                    CodeName : 
-                    <input type="text" name="codeName" placeholder="enter the codename" >
-                </div>
-                <input type="submit" value="OK">
-            </form>
-        </p> 
-        <p>
-            <!-- Form for making promo-code inactive -->
-            <form action="/admin/addAllowedUser" method="POST">
-                <h3>Allow User for restricted Promo Code</h3>
-                <div>
-                    User email : 
-                    <input type="text" name="email" placeholder="enter the user email" >
-                </div>
-                <div>
-                    CodeName : 
-                    <input type="text" name="codeName" placeholder="enter the codename" >
-                </div>
-                <input type="submit" value="OK">
-            </form>
-        </p>   
+            function newPost(){
+                // make a get to create a new post
+                $.ajax({
+                    method:"get",
+                    url:"/api/blogs/createNewPost",
+                    success: response => {
+                        if (response.error==null){
+                            // no error
+                            let hash = response.hash
+                            window.location.replace(`https://www.blockdegree.org/blogs/newPost?blog_id=${hash}`);
+                        }
+                    }
+                })
+            }
+
+            function editPost(){
+                let blog_id = document.getElementById("blog_id");
+                window.location.replace(`https://www.blockdegree.org/blogs/editBlog?blog_id=${blog_id.value}`);
+            }
+        </script>
 </html>

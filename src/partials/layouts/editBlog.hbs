@@ -1,0 +1,101 @@
+{{> includes/hero hero-title="Edit Blog Post"}}
+<section>
+    <br>
+    <h3 style="text-align: center">BLOG EDITOR</h3>
+    <br>
+    <textarea style="margin: 10px" id="blog-content"></textarea>
+    <br>
+    <script>
+        CKEDITOR.replace('blog-content');
+    </script>
+    <button onclick="saveDraft()">Save Draft</button>
+    <button onclick="submitArticle()">Submit</button>
+    <button onclick="deleteArticle()">Delete</button>
+</section>
+<script>
+    document.onload = () => {
+        fetchBlog();
+    }
+    function saveDraft() { // save a blog as draft
+        let content = document.getElementById("blog-content");
+        let blog_id = window.location.href.split("?")[1].split("=")[1];
+        $.ajax({
+            method: "post",
+            url: "https://www.blockdegree.org/api/blogs/saveDraft",
+            data: {
+                content: CKEDITOR.instances['blog-content'].getData(),
+                blog_id: blog_id
+            },
+            success: result => {
+                if (result.saved) {
+                    $.notify("Blog Saved Successfully", { type: "success" })
+                } else {
+                    $.notify(response.error, { type: "danger" })
+                }
+            },
+            error: xhr => {
+                $.notify("Some error occurred while making a request", { type: "danger" })
+            }
+        })
+    }
+    function submitArticle() { //  post the blog on the site
+        let content = document.getElementById("blog-content");
+        let blog_id = window.location.href.split("?")[1].split("=")[1];
+        $.ajax({
+            method: "post",
+            url: "https://www.blockdegree.org/api/blogs/postBlog",
+            data: {
+                content: CKEDITOR.instances['blog-content'].getData(),
+                blog_id: blog_id
+            },
+            success: response => {
+                if (response.posted) {
+                    $.notify("Successfully Posted the Blog", { type: "success" })
+                }
+                else {
+                    $.notify(response.error, { type: "danger" })
+                }
+            },
+            error: xhr => {
+                $.notify("Some error occurred while making a request", { type: "danger" })
+            }
+        })
+    }
+
+    function deleteArticle() {
+        let blog_id = window.location.href.split("?")[1].split("=")[1];
+        $.ajax({
+            method: "post",
+            url: "https://www.blockdegree.org/api/blogs/deleteBlog",
+            data: {
+                blog_id: blog_id
+            },
+            success: response => {
+                if (response.deleted) {
+                    $.notify("Successfully Deleted the Blog", { type: "success" })
+                } else {
+                    $.notify(response.error, { type: "danger" })
+                }
+            },
+            error: xhr => {
+                $.notify("Some error occurred while making a request", { type: "danger" })
+            }
+        })
+    }
+    function fetchBlog() {
+        let curr_blog_id = window.location.href.split("?")[1].split("=")[1];
+        $.ajax({
+            method: "post",
+            url: "https://www.blockdegree.org/api/blogs/fetchBlog",
+            data: { blog_id: curr_blog_id },
+            success: response => {
+                if (response.error == null) {
+                    CKEDITOR.instances["blog-content"].setData(response.blog.content)
+                } else {
+                    alert(response.error)
+                }
+            }
+        })
+    }
+    fetchBlog();
+</script>

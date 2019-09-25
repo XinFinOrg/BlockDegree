@@ -70,6 +70,7 @@ require("./routes/contactUsRoutes")(app);
 require("./routes/promoCodeRoutes")(app);
 require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
+require("./routes/blogsRoutes")(app);
 
 // catch 404 and render 404 page
 app.use("*", function(req, res) {

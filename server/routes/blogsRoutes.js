@@ -4,22 +4,52 @@ const requireAdmin = require("../middleware/requireAdmin");
 const requireBlogOwner = require("../middleware/requireBlogOwner");
 
 module.exports = app => {
-  app.get("/blogs/loadBlogs", blogServices.loadBlogs);
-  app.get("/blogs/read", blogServices.readBlog);
-  app.post("/blogs/keywordSearch", blogServices.keywordSearch);
-  app.get("/blogs/getFavs", requireLogin, blogServices.getMyFavs);
+  app.get("/blogs/loadBlogs", blogServices.loadBlogs); // initial loading of the blogs on the site
+  app.get("/blogs/read", blogServices.readBlog); //  read a particular blog referred by its unique ID
+  app.post("/blogs/keywordSearch", blogServices.keywordSearch); // get a collection of blogs from their keywords
+  app.get("/blogs/getFavs", requireLogin, blogServices.getMyFavs); // get a collection of blogs favorited by the request sender
   app.post("/blogs/makeFav", requireLogin, blogServices.makeFav);
-  app.get("/blogs/postBlog", requireLogin, requireBlogOwner, blogServices.postBlog);
-  app.post(
-    "/blogs/deleteBlog",
+
+  app.get("/blogs/newPost", requireLogin, requireAdmin, blogServices.newPost);
+  app.get("/blogs/editBlog", requireLogin, requireAdmin, blogServices.editBlog);
+  app.get(
+    "/blogs/getDrafts",
     requireLogin,
-    requireBlogOwner,
-    blogServices.deleteBlog
+    requireAdmin,
+    blogServices.getDrafts
+  );
+
+  app.get(
+    "/api/blogs/createNewPost",
+    requireLogin,
+    requireAdmin,
+    blogServices.createNewPost
   );
   app.post(
-    "/blogs/editBlog",
+    "/api/blogs/saveDraft",
     requireLogin,
-    requireBlogOwner,
+    requireAdmin,
+    blogServices.saveDraft
+  );
+  app.post("/api/blogs/fetchBlog", blogServices.fetchBlog);
+  app.post(
+    "/api/blogs/postBlog", // post a new blog or draft
+    requireLogin,
+    requireAdmin,
+    blogServices.postBlog
+  );
+  app.post(
+    // edit a blog which is already posted
+    "/api/blogs/editBlog",
+    requireLogin,
+    requireAdmin,
     blogServices.editBlog
+  );
+  app.post(
+    // delete a blog which is already posted
+    "/api/blogs/deleteBlog",
+    requireLogin,
+    requireAdmin,
+    blogServices.deleteBlog
   );
 };

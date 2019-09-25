@@ -12,11 +12,29 @@
   <i class="fa fa-instagram"></i>
 </div>
 
-<div></div>
-
 {{/inline}}
 
 {{#*inline "scripts-block"}}
+
+<script>
+  $.ajax({
+    method: "post",
+    url: "/api/getAuthStatus",
+    data: {},
+    success: auths => {
+      if (
+        auths.localAuth ||
+        auths.twitterAuth ||
+        auths.facebookAuth ||
+        auths.googleAuth ||
+        auths.linkedinAuth
+      ) {
+        // is logged in
+
+      }
+    }
+  });
+</script>
 
 {{/inline}}
 {{/base}}

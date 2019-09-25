@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 let blogSchema = mongoose.Schema({
   blog_id: { type: String, unique: true, require: true },
-  author: { type: String, email: String, unique: true },
+  author: { type: String, require: true},
   content: { type: String },
   likes: Number,
   topics: [],
