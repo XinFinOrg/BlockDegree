@@ -90,7 +90,7 @@
         <p>
           <textarea cols="30" rows="3" id="postMSGTwitter"></textarea>
         </p>
-
+        <div id="postTwitterHash" style="display: none"></div>
         <div>
           <div>
             <img
@@ -150,6 +150,7 @@
           Certificate<br />
         </div>
         <p><textarea cols="30" rows="3" id="postMSGLinkedin"></textarea></p>
+        <div id="postLinkedinHash" style="display: none"></div>
         <div>
           <div>
             <img
@@ -573,6 +574,7 @@
     console.log(`hash: ${hash}`);
     document.getElementById("postMSGLinkedin").innerHTML = msg;
     postLinkedinHash = hash;
+    document.getElementById("postLinkedinHash").innerHTML = hash;
     $.ajax({
       method: "post",
       url: "/api/getAuthStatus",
@@ -600,6 +602,7 @@
     console.log(`hash: ${hash}`);
     document.getElementById("postMSGTwitter").innerHTML = msg;
     postTwitterHash = hash;
+    document.getElementById("postTwitterHash").innerHTML = hash;
     $.ajax({
       method: "post",
       url: "/api/getAuthStatus",
@@ -640,7 +643,9 @@
   function postTweet() {
     let userMSG = document.getElementById("postMSGTwitter").value;
     let certiLink = document.getElementById("certiLinkTwitter").checked;
+    let hash = document.getElementById("postTwitterHash");
     let validMsg = false;
+    console.log(`PostTwitterHash: ${postTwitterHash}`);
     $.post({
       method: "post",
       url: "/api/checkTweetCharacters",
@@ -658,7 +663,7 @@
           $.ajax({
             method: "post",
             url: "/api/shareOnTwitter",
-            data: { hash: postTwitterHash, certiLink: certiLink, msg: userMSG },
+            data: { hash: hash.innerHTML, certiLink: certiLink, msg: userMSG },
             success: (result, textStatus, xhr) => {
               console.log(`XHR status: ${xhr.status}`);
               console.log(`TextStatus: ${textStatus}`);
@@ -667,11 +672,13 @@
                   type: "success"
                 });
                 postTwitterHash = "";
+                hash.innerHTML = "";
               } else {
                 $.notify("Oops, error occured while posting!", {
                   type: "danger"
                 });
                 postTwitterHash = "";
+                hash.innerHTML = "";
               }
             },
             error: xhr => {
@@ -696,6 +703,8 @@
         $.notify("Some error occured please try again after sometime", {
           type: "danger"
         });
+        postTwitterHash = "";
+        hash.innerHTML = "";
         return;
       }
     });
@@ -746,11 +755,12 @@
   function postLinkedin() {
     let userMSG = document.getElementById("postMSGLinkedin").value;
     let certiLink = document.getElementById("certiLinkLinkedin").checked;
+    let hash = document.getElementById("postLinkedinHash");
     $.notify("Your post is now being submitted, please wait a few seconds.");
     $.ajax({
       method: "post",
       url: "/api/shareOnLinkedin",
-      data: { hash: postLinkedinHash, msg: userMSG, certiLink: certiLink },
+      data: { hash: hash.innerHTML, msg: userMSG, certiLink: certiLink },
       success: result => {
         console.log(result);
         if (result.uploaded) {
@@ -759,9 +769,11 @@
           $.notify("Oops, error occured while posting!", { type: "danger" });
         }
         postLinkedinHash = "";
+        hash.innerHTML = "";
       },
       error: err => {
         postLinkedinHash = "";
+        hash.innerHTML = "";
       }
     });
     document.getElementById("postMSGLinkedin").value = msg;
@@ -770,6 +782,7 @@
 
   $("#postLinkedin").on("hidden.bs.modal", function() {
     postLinkedinHash = "";
+    document.getElementById("postLinkedinHash").innerHTML = "";
     document.getElementById("postMSGLinkedin").value = msg;
     document.querySelector(`#modalImageLinkedin`).src =
       "/img/gif/loading_block.gif";
@@ -777,6 +790,7 @@
 
   $("#postTwitter").on("hidden.bs.modal", function() {
     postTwitterHash = "";
+    document.getElementById("postTwitterHash").innerHTML = "";
     document.getElementById("postMSGTwitter").value = msg;
     document.querySelector(`#modalImageTwitter`).src =
       "/img/gif/loading_block.gif";
