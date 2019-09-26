@@ -1,9 +1,13 @@
 {{> includes/hero hero-title="New Blog Post"}}
 <section>
+    <input type="text" name="keywords" id="keywords" placeholder="Enter keywords seperated by ';'"><br>
+    <input type="text" name="topics" id="topics" placeholder="Enter Topics seperated by ';'"><br>
+    <input type="text" name="title" id="title" placeholder="Enter Title">
+    <textarea id="desc" name="desc" placeholder="Enter a short Descrition..."></textarea>
     <br>
     <h3 style="text-align: center">BLOG EDITOR</h3>
     <br>
-    <textarea id="blog-content" style="width: 100%;height:100%"></textarea>
+    <textarea id="blog-content"></textarea>
     <br>
     <script>
         CKEDITOR.replace('blog-content');
@@ -13,13 +17,21 @@
 </section>
 <script>
     function saveDraft() { // save a blog as draft
-        let blog_id = window.location.href.split("?")[1].split("=")[1];
+        const blog_id = window.location.href.split("?")[1].split("=")[1];
+        const keywords = document.getElementById("keywords").value.split(";");
+        const topics = document.getElementById("topics").value.split(";");
+        const title = document.getElementById("title").value;
+        const desc = document.getElementById("desc").value;
         $.ajax({
             method: "post",
             url: "/api/blogs/saveDraft",
             data: {
                 content: CKEDITOR.instances['blog-content'].getData(),
-                blog_id: blog_id
+                blog_id: blog_id,
+                keywords: keywords,
+                topics: topics,
+                title: title,
+                desc:desc
             },
             success: result => {
                 if (result.saved) {
@@ -40,7 +52,10 @@
             url: "/blogs/postBlog",
             data: {
                 content: CKEDITOR.instances['blog-content'].getData(),
-                blog_id: blog_id
+                blog_id: blog_id,
+                keywords: keywords,
+                topics: topics,
+                title: title
             },
             success: response => {
                 if (response.posted) {

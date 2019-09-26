@@ -4,12 +4,18 @@ const requireAdmin = require("../middleware/requireAdmin");
 const requireBlogOwner = require("../middleware/requireBlogOwner");
 
 module.exports = app => {
-  app.get("/blogs/loadBlogs", blogServices.loadBlogs); // initial loading of the blogs on the site
-  app.get("/blogs/read", blogServices.readBlog); //  read a particular blog referred by its unique ID
-  app.post("/blogs/keywordSearch", blogServices.keywordSearch); // get a collection of blogs from their keywords
-  app.get("/blogs/getFavs", requireLogin, blogServices.getMyFavs); // get a collection of blogs favorited by the request sender
-  app.post("/blogs/makeFav", requireLogin, blogServices.makeFav);
+  // OPEN VIEWs & APIs
+  app.get("/api/blogs/loadBlogs", blogServices.loadBlogs); // initial loading of the blogs on the site
+  app.post("/api/blogs/keywordSearch", blogServices.keywordSearch); // get a collection of blogs from their keywords
 
+  // USER VIEWs & APIs
+  app.get("/blogs/readBlog", requireLogin, blogServices.readBlog); //  read a particular blog referred by its unique ID
+  app.get("/api/blogs/getFavs", requireLogin, blogServices.getMyFavs); // get a collection of blogs favorited by the request sender
+  app.post("/api/blogs/makeFav", requireLogin, blogServices.makeFav);
+  app.post("/api/blogs/fetchBlog",requireLogin, blogServices.fetchBlog);
+
+
+  // ADMIN VIEWs & APIs
   app.get("/blogs/newPost", requireLogin, requireAdmin, blogServices.newPost);
   app.get("/blogs/editBlog", requireLogin, requireAdmin, blogServices.editBlog);
   app.get(
@@ -31,7 +37,6 @@ module.exports = app => {
     requireAdmin,
     blogServices.saveDraft
   );
-  app.post("/api/blogs/fetchBlog", blogServices.fetchBlog);
   app.post(
     "/api/blogs/postBlog", // post a new blog or draft
     requireLogin,

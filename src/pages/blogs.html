@@ -1,0 +1,94 @@
+{{#> base}}
+{{> layouts/base title="Blogs - Blockdegree"}}
+
+{{#*inline "body-block"}}
+{{> includes/hero hero-title="Blogs"}}
+
+<section class="wrap-blogs">
+  <input
+    type="text"
+    id="searchKeywords"
+    placeholder="Search By Keyword"
+  /><button type="button" onclick="searchByKeyword()">
+    Search
+  </button>
+  <div id="main-wrapper-blogs"></div>
+</section>
+
+{{/inline}}
+
+{{#*inline "scripts-block"}}
+
+<script>
+  $("document").ready(function() {
+    $.ajax({
+      method: "get",
+      url: "/api/blogs/loadBlogs",
+      success: response => {
+        let blogWrapper = document.getElementById("main-wrapper-blogs");
+        let retHTML = "";
+        if (!response.status) {
+          $.notify(response.error, { type: "danger" });
+        } else {
+          if (response.blogs.length < 1) {
+            $.notify("No blogs to show", { type: "danger" });
+            return;
+          }
+          response.blogs.forEach(blog => {
+            retHTML +=
+              `<div class="card blog-card" onclick="readBlog('${blog.blog_id}')">` +
+              `<h3 class="card-title">${blog.title}</h3>` +
+              `<p class="card-text" >${blog.desc}</p>` +
+              `<h6 class="card-subtitle mb-2 text-muted">Author - ${blog.author}</h6>` +
+              `</div><br>`;
+          });
+          console.log("InnerHTML: ", retHTML);
+          blogWrapper.innerHTML = retHTML;
+        }
+      }
+    });
+  });
+
+  function readBlog(blog_id) {
+    console.log(`Blog ID: ${blog_id}`);
+    window.location.href = `https://www.blockdegree.org/blogs/readBlog?blog_id=${blog_id}`;
+  }
+
+  function searchByKeyword() {
+    let searchKeywords = document.getElementById("searchKeywords");
+    let blogWrapper = document.getElementById("main-wrapper-blogs");
+    $.ajax({
+      method: "post",
+      url: "/api/blogs/keywordSearch",
+      data: { keyword: searchKeywords.value },
+      success: response => {
+        if (!response.status) {
+          $.notify(response.error, { type: "danger" });
+        } else {
+          let blogs = response.blogs;
+          console.log(blogs);
+          if (blogs.length < 1) {
+            $.notify(`No blogs found with keyword: ${searchKeywords.value} `, {
+              type: "danger"
+            });
+            blogWrapper.innerHTML = "";
+          } else {
+            let retHTML = "";
+            response.blogs.forEach(blog => {
+              retHTML +=
+                `<div class="card blog-card" onclick="readBlog('${blog.blog_id}')">` +
+                `<h3 class="card-title">${blog.title}</h3>` +
+                `<p class="card-text" >${blog.desc}</p>` +
+                `<h6 class="card-subtitle mb-2 text-muted">Author - ${blog.author}</h6>` +
+                `</div><br>`;
+            });
+            blogWrapper.innerHTML = retHTML;
+          }
+        }
+      }
+    });
+  }
+</script>
+
+{{/inline}}
+{{/base}}
