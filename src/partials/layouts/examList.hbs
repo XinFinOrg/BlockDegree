@@ -99,15 +99,26 @@
 <script type="text/javascript">
 
   function takeExam(slug) {
-    if (slug.id === "course_1") {
-      window.location = '/blockchain-basic-exam'
-    } else if (slug.id === "course_2") {
-      window.location = '/blockchain-advanced-exam'
-    } else if (slug.id === "course_3") {
-      window.location = '/blockchain-professional-exam'
-    } else {
-      window.location = '/'
-    }
+    $.ajax({
+      method: "get",
+      url: "/api/current_user",
+      success: response => {
+        if (response.status) {
+          if (confirm(`Certificate will be issued on name "${response.user.name}" Press OK to confirm or else cancel & edit name via your profile tab.`)) {
+            if (slug.id === "course_1") {
+              window.location = '/blockchain-basic-exam'
+            } else if (slug.id === "course_2") {
+              window.location = '/blockchain-advanced-exam'
+            } else if (slug.id === "course_3") {
+              window.location = '/blockchain-professional-exam'
+            } else {
+              window.location = '/'
+            }
+          }
+        }
+      }
+    })
+
 
   }
 
