@@ -104,7 +104,7 @@
       url: "/api/current_user",
       success: response => {
         if (response.status) {
-          if (confirm(`Certificate will be issued on name "${response.user.name}" Press OK to confirm or else cancel & edit name via your profile tab.`)) {
+          if (confirm(`Certificate will be issued on name "${response.user.name}" Press OK to confirm or else CANCEL & edit your name via the PROFILE tab.`)) {
             if (slug.id === "course_1") {
               window.location = '/blockchain-basic-exam'
             } else if (slug.id === "course_2") {
