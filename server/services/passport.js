@@ -301,92 +301,95 @@ module.exports = function(passport) {
         profileFields: ["id", "emails", "name", "displayName"]
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        if (req.user) {
-          if (
-            req.user.auth.facebook.id == "" ||
-            req.user.auth.facebook.id == undefined
-          ) {
-            // check if the credentials are associated with any other user.
-            let otherUser = await User.findOne({
-              "auth.facebook.id": profile.id
-            });
-            if (otherUser != null) {
-              // this set of credentials are associated with another account, show error
-              return done(
-                "This social account is already linked to other account, please try logging in with other account.",
-                null,
-                "This social account is already linked to other account, please try logging in with other account."
-              );
+        process.nextTick(function(){
+          if (req.user) {
+            if (
+              req.user.auth.facebook.id == "" ||
+              req.user.auth.facebook.id == undefined
+            ) {
+              // check if the credentials are associated with any other user.
+              let otherUser = await User.findOne({
+                "auth.facebook.id": profile.id
+              });
+              if (otherUser != null) {
+                // this set of credentials are associated with another account, show error
+                return done(
+                  "This social account is already linked to other account, please try logging in with other account.",
+                  null,
+                  "This social account is already linked to other account, please try logging in with other account."
+                );
+              }
+              let user = await User.findOne({ email: req.user.email });
+              user.auth.facebook.id = profile.id;
+              user.auth.facebook.accessToken = accessToken;
+              user.auth.facebook.refreshToken = refreshToken;
+              user.lastActive = Date.now();
+              user.save();
+              return done(null, user);
             }
             let user = await User.findOne({ email: req.user.email });
+            user.lastActive = Date.now();
+            user.save();
+            return done(null, req.user);
+          }
+          if (!profile) {
+            return done("Profile not set", null);
+          }
+          var existingUser = await User.findOne({
+            "auth.facebook.id": profile.id
+          });
+          if (existingUser) {
+            existingUser.lastActive = Date.now();
+            existingUser.save();
+            return done(null, existingUser);
+          }
+  
+          // email registered
+          if (profile.emails.length > 0) {
+            const linkEmail = await User.findOne({
+              email: profile.emails[0].value
+            });
+            if (linkEmail) {
+              linkEmail.auth.facebook.id = profile.id;
+              linkEmail.auth.facebook.accessToken = accessToken;
+              linkEmail.auth.facebook.refreshToken = refreshToken || "";
+              linkEmail.lastActive = Date.now();
+              linkEmail.save();
+              done(null, linkEmail);
+            }
+          }
+  
+          if (profile.emails.length < 1) {
+            return done(
+              "no email-id not associated with this social account",
+              null,
+              "no email-id not associated with this social account"
+            );
+          }
+          existingUser = await User.findOne({
+            email: profile.emails[0].value
+          });
+          if (existingUser) {
+            let user = await User.findOne({ email: profile.emails[0].value });
             user.auth.facebook.id = profile.id;
             user.auth.facebook.accessToken = accessToken;
-            user.auth.facebook.refreshToken = refreshToken;
+            user.auth.facebook.refreshToken = refreshToken || "";
             user.lastActive = Date.now();
             user.save();
             return done(null, user);
           }
-          let user = await User.findOne({ email: req.user.email });
-          user.lastActive = Date.now();
-          user.save();
-          return done(null, req.user);
-        }
-        if (!profile) {
-          return done("Profile not set", null);
-        }
-        var existingUser = await User.findOne({
-          "auth.facebook.id": profile.id
-        });
-        if (existingUser) {
-          existingUser.lastActive = Date.now();
-          existingUser.save();
-          return done(null, existingUser);
-        }
-
-        // email registered
-        if (profile.emails.length > 0) {
-          const linkEmail = await User.findOne({
-            email: profile.emails[0].value
-          });
-          if (linkEmail) {
-            linkEmail.auth.facebook.id = profile.id;
-            linkEmail.auth.facebook.accessToken = accessToken;
-            linkEmail.auth.facebook.refreshToken = refreshToken || "";
-            linkEmail.lastActive = Date.now();
-            linkEmail.save();
-            done(null, linkEmail);
-          }
-        }
-
-        if (profile.emails.length < 1) {
-          return done(
-            "no email-id not associated with this social account",
-            null,
-            "no email-id not associated with this social account"
-          );
-        }
-        existingUser = await User.findOne({
-          email: profile.emails[0].value
-        });
-        if (existingUser) {
-          let user = await User.findOne({ email: profile.emails[0].value });
-          user.auth.facebook.id = profile.id;
-          user.auth.facebook.accessToken = accessToken;
-          user.auth.facebook.refreshToken = refreshToken || "";
-          user.lastActive = Date.now();
-          user.save();
-          return done(null, user);
-        }
-        newUser = newDefaultUser();
-        newUser.email = profile.emails[0].value;
-        newUser.auth.facebook.id = profile.id;
-        newUser.auth.facebook.accessToken = accessToken;
-        newUser.auth.facebook.refreshToken = refreshToken || "";
-        newUser.name = formatName(profile.displayName);
-        newUser.created = Date.now();
-        newUser.lastActive = Date.now();
-        newUser.save();
-        done(null, newUser, "new-name");
+          newUser = newDefaultUser();
+          newUser.email = profile.emails[0].value;
+          newUser.auth.facebook.id = profile.id;
+          newUser.auth.facebook.accessToken = accessToken;
+          newUser.auth.facebook.refreshToken = refreshToken || "";
+          newUser.name = formatName(profile.displayName);
+          newUser.created = Date.now();
+          newUser.lastActive = Date.now();
+          newUser.save();
+          done(null, newUser, "new-name");
+        })
+        
       }
     )
   );
