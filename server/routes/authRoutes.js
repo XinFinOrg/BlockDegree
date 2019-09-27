@@ -155,7 +155,7 @@ module.exports = app => {
   app.get("/auth/google/callback", (req, res, next) => {
     passport.authenticate(
       "google",
-      { failureRedirect: "/login" },
+      { failureRedirect: "/" },
       (err, user, info) => {
         if (err != null) {
           console.log(`Error: ${err}`);
@@ -197,7 +197,7 @@ module.exports = app => {
   app.get("/auth/facebook/callback", (req, res) => {
     passport.authenticate(
       "facebook",
-      { failureRedirect: "/login" },
+      { failureRedirect: "/" },
       (err, user, info) => {
         if (err != null) {
           console.log(`Error: ${err}`);
@@ -237,7 +237,7 @@ module.exports = app => {
   app.get("/auth/twitter/callback", (req, res) => {
     passport.authenticate(
       "twitter",
-      { failureRedirect: "/login" },
+      { failureRedirect: "/" },
       (err, user, info) => {
         console.log("Inside error is not null: ", err, user, info);
         if (err != null) {
@@ -279,7 +279,7 @@ module.exports = app => {
   app.get("/auth/linkedin/callback", (req, res) => {
     passport.authenticate(
       "linkedin",
-      { failureRedirect: "/login" },
+      { failureRedirect: "/" },
       (err, user, info) => {
         if (err != null) {
           console.log("Inside error is not null: ", err, user, info);
