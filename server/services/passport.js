@@ -331,6 +331,9 @@ module.exports = function(passport) {
           user.save();
           return done(null, req.user);
         }
+        if (!profile) {
+          return done("Profile not set", null);
+        }
         var existingUser = await User.findOne({
           "auth.facebook.id": profile.id
         });
