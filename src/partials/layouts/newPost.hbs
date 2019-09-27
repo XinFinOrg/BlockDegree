@@ -1,6 +1,5 @@
 {{> includes/hero hero-title="New Blog Post"}}
 <section>
-    <input type="text" name="keywords" id="keywords" placeholder="Enter keywords seperated by ';'"><br>
     <input type="text" name="topics" id="topics" placeholder="Enter Topics seperated by ';'"><br>
     <input type="text" name="title" id="title" placeholder="Enter Title">
     <textarea id="desc" name="desc" placeholder="Enter a short Descrition..."></textarea>
@@ -18,7 +17,6 @@
 <script>
     function saveDraft() { // save a blog as draft
         const blog_id = window.location.href.split("?")[1].split("=")[1];
-        const keywords = document.getElementById("keywords").value.split(";");
         const topics = document.getElementById("topics").value.split(";");
         const title = document.getElementById("title").value;
         const desc = document.getElementById("desc").value;
@@ -28,7 +26,6 @@
             data: {
                 content: CKEDITOR.instances['blog-content'].getData(),
                 blog_id: blog_id,
-                keywords: keywords,
                 topics: topics,
                 title: title,
                 desc:desc
@@ -53,7 +50,6 @@
             data: {
                 content: CKEDITOR.instances['blog-content'].getData(),
                 blog_id: blog_id,
-                keywords: keywords,
                 topics: topics,
                 title: title
             },

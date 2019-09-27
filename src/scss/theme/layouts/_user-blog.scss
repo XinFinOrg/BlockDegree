@@ -1,33 +1,16 @@
-.sideshare {
-  position: fixed;
-  z-index: 1;
-  top: 30%;
-  right: 0;
-  background-color: #111;
-  overflow-x: hidden;
-}
-
-.sideshare i {
-  padding: 10px 10px 10px 10px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-}
-
-.sideshare i:hover {
-  color: #f1f1f1;
-}
-
 .wrap-blogs {
-  background-color: lightblue;
+  background-color: lightgrey;
   padding: 10px;
+  height: 100%;
+  overflow: auto;
 }
 
 .blog-card {
+  float: left;
   background-color: white;
   margin: 0.5%;
   padding: 0.5%;
+  width: 18rem;
 }
 
 .blog-card:hover {

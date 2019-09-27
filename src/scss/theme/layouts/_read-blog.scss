@@ -2,3 +2,47 @@
     padding: 10px;
     margin: 10px;
 }
+
+.btn-circle {
+    border-radius: 50%;
+    position: fixed;
+    z-index: 1;
+    right: 1%;
+    bottom: 5%;
+    overflow-x: hidden;
+    min-width: 60px;
+    min-height: 60px;
+}
+
+.like-btn {
+    background-color: black;
+    color: white
+}
+
+.unlike-btn {
+    background-color: lightgray;
+    color: red
+}
+
+.sideshare {
+    position: fixed;
+    z-index: 1;
+    top: 30%;
+    right: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    border-radius: 5%;
+    color: darkslategrey
+}
+
+.sideshare i {
+    padding: 10px 10px 10px 10px;
+    text-decoration: none;
+    font-size: 25px;
+    display: block;
+    border-radius: 2%;
+}
+
+.sideshare i:hover {
+    color: whitesmoke;
+}

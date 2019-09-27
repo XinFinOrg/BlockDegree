@@ -1,7 +1,11 @@
 const Blog = require("../models/blog");
 const Blog_Content = require("../models/blog_content");
 const uuidv4 = require("uuid/v4");
-
+const html2Txt = require("html-to-text");
+const retext = require("retext");
+const pos = require("retext-pos");
+const keywords = require("retext-keywords");
+const toString = require("nlcst-to-string");
 const internalErrorMsg =
   "Its not you, its us. Please try again after sometime or contact us at info@blockdegree.org";
 // ---------------------------------- APIs -----------------------------------------
@@ -43,10 +47,20 @@ exports.postBlog = async (req, res) => {
   const content = req.body.content;
   const blog_title = req.body.title;
   const blog_topics = req.body["topics[]"];
-  const blog_keywords = req.body["keywords[]"];
   const blog_desc = req.body.desc;
   console.log(`Blog ID: ${blog_id}`);
   let blog, blogContent;
+
+  const contentText = html2Txt.fromString(content, { wordwrap: 130 });
+  let blog_keywords = [];
+  retext()
+    .use(pos) // Make sure to use `retext-pos` before `retext-keywords`.
+    .use(keywords)
+    .process(contentText, (err, file) => {
+      file.data.keywords.forEach(function(keyword) {
+        blog_keywords.push(toString(keyword.matches[0].node));
+      });
+    });
   try {
     blog = await Blog.findOne({ blog_id: blog_id });
     blogContent = await Blog_Content.findOne({ blog_id: blog_id });
@@ -96,9 +110,19 @@ exports.saveDraft = async (req, res) => {
   let blog_id = req.body.blog_id;
   const blog_title = req.body.title;
   const blog_topics = req.body["topics[]"];
-  const blog_keywords = req.body["keywords[]"];
   const blog_desc = req.body.desc;
   let blog, blogContent;
+  const contentText = html2Txt.fromString(content, { wordwrap: 130 });
+  let blog_keywords = [];
+  retext()
+    .use(pos)
+    .use(keywords)
+    .process(contentText, (err, file) => {
+      console.log("Keywords:");
+      file.data.keywords.forEach(function(keyword) {
+        blog_keywords.push(toString(keyword.matches[0].node));
+      });
+    });
   try {
     blog = await Blog.findOne({ blog_id: blog_id });
     blogContent = await Blog_Content.findOne({ blog_id: blog_id });
@@ -202,13 +226,14 @@ exports.fetchBlog = async (req, res) => {
   // update the view for blog_id
   let viewArr = blog.views;
   let found = false;
-  viewArr.forEach(obj => {
-    if (viewArr.email === user_email) {
+  for (let i = 0; i < viewArr.length; i++) {
+    if (viewArr[i].email === user_email) {
       // found the user, increase the count
-      viewArr.count++;
+      viewArr[i].count++;
       found = true;
+      break;
     }
-  });
+  }
   if (!found) {
     // first visit, insert the object
     viewArr.push({ email: user_email, count: 1 });
@@ -223,6 +248,7 @@ exports.fetchBlog = async (req, res) => {
     );
     return res.json({ error: internalErrorMsg, blog: null });
   }
+  blog._id = "";
   res.json({ error: null, blog: blog, content: blogContent.content });
 };
 
@@ -277,13 +303,14 @@ exports.deleteBlog = async (req, res) => {
   res.json({ error: null, deleted: true });
 };
 
-// API - OPEN
+// API - USER
 exports.makeFav = async (req, res) => {
+  console.log("called make FAV");
   const email = req.user.email;
   const blog_id = req.body.blog_id;
   let blog;
   try {
-    blog = await Blog.findOne({ email: email });
+    blog = await Blog.findOne({ blog_id: blog_id });
   } catch (e) {
     console.error(
       `Exception at blogs/makeFav while fetching blog ${blog_id} by user ${email}: `,
@@ -303,29 +330,97 @@ exports.makeFav = async (req, res) => {
   // Got the blog properly
   let favArr = blog.favs;
   let found = false;
-  favArr.forEach(usrObj => {
-    if (usrObj.email === email) {
+  for (let i = 0; i < favArr.length; i++) {
+    if (favArr[i].email == email) {
       // found user.
-      found = false;
-      if (usrObj.fav) {
+      found = true;
+      if (favArr[i].fav) {
         // already favorite, return as it is
         return res.json({
           error: "Already Favorited",
           status: false
         });
       }
-      usrObj.fav = true;
+      favArr[i].fav = true;
+      break;
     }
-  });
+  }
+
   if (!found) {
     // not found, push new
     favArr.push({ email: email, fav: true });
   }
+  // reassign fav arr.
+  blog.favs = [];
+  blog.favs = favArr;
   try {
     await blog.save();
   } catch (e) {
     console.error(
       `Exception at blogs.makeFav for blog ${blog_id} by user ${email}: `,
+      e
+    );
+    return res.json({
+      status: false,
+      error: internalErrorMsg
+    });
+  }
+  res.json({ status: true, error: null });
+};
+
+// API - USER
+exports.removeFav = async (req, res) => {
+  console.log("called remove FAV");
+  const email = req.user.email;
+  const blog_id = req.body.blog_id;
+  let blog;
+  try {
+    blog = await Blog.findOne({ blog_id: blog_id });
+  } catch (e) {
+    console.error(
+      `Exception at blogs/removeFav while fetching blog ${blog_id} by user ${email}: `,
+      e
+    );
+    return res.json({
+      status: false,
+      error: internalErrorMsg
+    });
+  }
+  if (blog == null) {
+    return res.json({
+      status: false,
+      error: "The blog that you're trying to un-favorite does not exist."
+    });
+  }
+  // Got the blog properly
+  let favArr = blog.favs;
+  let found = false;
+  for (let i = 0; i < favArr.length; i++) {
+    if (favArr[i].email == email) {
+      // found user.
+      found = true;
+      if (!favArr[i].fav) {
+        // already un-favorite, return as it is
+        return res.json({
+          error: "Already Un-Favorited",
+          status: false
+        });
+      }
+      favArr[i].fav = false;
+    }
+  }
+
+  if (!found) {
+    // not found, push new
+    favArr.push({ email: email, fav: false });
+  }
+  blog.favs = [];
+  blog.favs = favArr;
+  try {
+    await blog.save();
+  } catch (e) {
+    console.error(
+      `Exception at blogs.removeFav for blog ${blog_id} by user ${email}: `,
       e
     );
     return res.json({
@@ -358,6 +453,61 @@ exports.keywordSearch = async (req, res) => {
     });
   }
   res.json({ status: true, error: null, blogs: retBlogs });
+};
+
+// API - OPEN
+
+/*
+
+Enable complex search by doing an intersection on results from all individual results.
+
+Queries : keywords, topics
+
+*/
+exports.complexSearch = async (req, res) => {
+  const keywords = req.body.keywords;
+  const topics = req.body.topics;
+
+  let fmtKeywords = [],
+    fmtTopics = [],
+    retBlogs = [];
+
+  keywords.split(/[\s,]+/).forEach(keyword => {
+    let trimKeyword = keyword.trim();
+    if (trimKeyword != "") {
+      fmtKeywords.push(trimKeyword);
+    }
+  });
+  topics.split(",").forEach(topic => {
+    let trimTopic = topic.trim();
+    if (trimTopic != "") {
+      fmtTopics.push(trimTopic);
+    }
+  });
+
+  const allBlogs = await Blog.find({});
+
+  for (let j = 0; j < allBlogs.length; j++) {
+    loop2: {
+      for (let i = 0; i < fmtKeywords.length; i++) {
+        if (allBlogs[j].keywords.includes(fmtKeywords[i])) {
+          // has a keyword, push and break.
+          retBlogs.push(allBlogs[j]);
+          break loop2;
+        }
+      }
+      for (let i = 0; i < fmtTopics.length; i++) {
+        if (allBlogs[j].topics.includes(fmtTopics[i])) {
+          // has a topic, push and break.
+          if (!retBlogs.includes(allBlogs[j])) {
+            retBlogs.push(allBlogs[j]);
+          }
+          break loop2;
+        }
+      }
+    }
+  }
+  res.json({ blogs: retBlogs });
 };
 
 //  API - OPEN
@@ -405,7 +555,15 @@ exports.readBlog = async (req, res) => {
     );
     return res.render("displayError", { error: internalErrorMsg });
   }
-  res.render("readBlog", { blog: blog, content: blogContent.content });
+  blog = blog.toObject();
+  delete blog._id;
+  delete blog.id;
+  res.render("readBlog", {
+    blog: JSON.stringify(blog),
+    content: blogContent.content,
+    userEmail: req.user.email,
+    title: blog.title
+  });
 };
 
 // View - ADMIN

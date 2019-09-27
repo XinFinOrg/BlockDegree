@@ -1,6 +1,5 @@
 {{> includes/hero hero-title="Edit Blog Post"}}
 <section>
-    <input type="text" id="keywords" name="keywords" placeholder="Enter keywords seperated by ';'"><br>
     <input type="text" id="topics" name="topics" placeholder="Enter Topics seperated by ';'"><br>
     <input type="text" id="title" name="title" placeholder="Enter Title">
     <textarea id="desc" name="desc" placeholder="Enter a short Descrition..."></textarea>
@@ -23,17 +22,15 @@
     function saveDraft() { // save a blog as draft
         let content = document.getElementById("blog-content");
         let blog_id = window.location.href.split("?")[1].split("=")[1];
-        let keywords = document.getElementById("keywords").value.split(";");
         let topics = document.getElementById("topics").value.split(";");
         let title = document.getElementById("title").value;
-        console.log(keywords, topics, title)
+        let desc = document.getElementById("desc").value;
         $.ajax({
             method: "post",
             url: "https://www.blockdegree.org/api/blogs/saveDraft",
             data: {
                 content: CKEDITOR.instances['blog-content'].getData(),
                 blog_id: blog_id,
-                keywords: keywords,
                 topics: topics,
                 title: title,
                 desc: desc
@@ -53,16 +50,15 @@
     function submitArticle() { //  post the blog on the site
         let content = document.getElementById("blog-content");
         let blog_id = window.location.href.split("?")[1].split("=")[1];
-        let keywords = document.getElementById("keywords").value.split(";");
         let topics = document.getElementById("topics").value.split(";");
         let title = document.getElementById("title").value;
+        let desc = document.getElementById("desc").value;
         $.ajax({
             method: "post",
             url: "https://www.blockdegree.org/api/blogs/postBlog",
             data: {
                 content: CKEDITOR.instances['blog-content'].getData(),
                 blog_id: blog_id,
-                keywords: keywords,
                 topics: topics,
                 title: title,
                 desc: desc
@@ -109,15 +105,9 @@
             data: { blog_id: curr_blog_id },
             success: response => {
                 if (response.error == null) {
-                    let keywords = "", topics = "";
+                    let  topics = "";
                     document.getElementById("title").value = response.blog.title;
-                    if (typeof response.blog.keywords == "string") {
-                        keywords = keyword + ";";
-                    } else {
-                        response.blog.keywords.forEach(keyword => {
-                            keywords += keyword + ";";
-                        })
-                    }
+
                     if (typeof response.blog.topics == "string") {
                         topics = topics + ";";
                     } else {
@@ -126,7 +116,6 @@
                         })
                     }
                     CKEDITOR.instances["blog-content"].setData(response.content)
-                    document.getElementById("keywords").value = keywords.substring(0, keywords.length - 1);
                     document.getElementById("topics").value = topics.substring(0, topics.length - 1);
                     document.getElementById("desc").value = response.blog.desc;
                 } else {

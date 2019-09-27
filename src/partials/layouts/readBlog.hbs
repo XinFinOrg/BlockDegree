@@ -1,13 +1,105 @@
-{{> includes/hero hero-title=blog.title}}
+{{> includes/hero hero-title=title}}
 
-<div class="sideshare">
-    <i class="fa fa-twitter"></i>
-    <i class="fa fa-facebook"></i>
-    <i class="fa fa-linkedin"></i>
-    <i class="fa fa-whatsapp"></i>
-    <i class="fa fa-instagram"></i>
-</div>
+<div>
 
-<section class="read-blog" id="read-blog-container">
-    {{{content}}}
-</section>
+    <div class="sideshare">
+        <i class="fa fa-twitter"></i>
+        <i class="fa fa-facebook"></i>
+        <i class="fa fa-linkedin"></i>
+        <i class="fa fa-whatsapp"></i>
+        <i class="fa fa-instagram"></i>
+    </div>
+
+    <section class="read-blog" id="read-blog-container">
+        {{{content}}}
+    </section>
+    <button class="btn btn-circle like-btn" type="button" id="handle_fav" onclick="makeFav()">
+        <i class="like-btn icon-heart-empty"></i>
+    </button>
+
+    <script>
+        let blog;
+        $("document").ready(function () {
+            blog = {{{ blog }}};
+        setFavBtn(blog);
+        })
+        function makeFav() {
+            console.log("called makeFav");
+            $.ajax({
+                method: "post",
+                url: "/api/blogs/makeFav",
+                data: { blog_id: blog.blog_id },
+                success: response => {
+                    if (!response.status) {
+                        $.notify(response.error, { type: "danger" });
+                        return
+                    } else {
+                        fetchBlog();
+                        $.notify("Added the Blog to favorites", { type: "success" })
+                    }
+                },
+                error: xhr => { $.notify("Error", { type: "danger" }); }
+            })
+        }
+
+        function removeFav() {
+            console.log("called removeFav");
+            $.ajax({
+                method: "post",
+                url: "/api/blogs/removeFav",
+                data: { blog_id: blog.blog_id },
+                success: response => {
+                    if (!response.status) {
+                        $.notify(response.error, { type: "danger" });
+                        return
+                    } else {
+                        fetchBlog();
+                        $.notify("Removed the Blog from favorites", { type: "success" })
+                    }
+                },
+                error: xhr => { $.notify("Error", { type: "danger" }); }
+            })
+        }
+
+        function fetchBlog() {
+            console.log("Called fetchBlog")
+            $.ajax({
+                method: "post",
+                url: "https://www.blockdegree.org/api/blogs/fetchBlog",
+                data: { blog_id: blog.blog_id },
+                success: response => {
+                    if (response.error == null) {
+                        blog = response.blog
+                        setFavBtn(blog);
+                    } else {
+                        $.notify(response.error, { type: "danger" })
+                    }
+                }
+            })
+        }
+        function setFavBtn(newBlog) {
+            let fav = false;
+            let favBtn = document.getElementById("handle_fav");
+            let userEmail = "{{userEmail}}"
+            console.log(userEmail)
+            newBlog.favs.forEach(obj => {
+                if (obj.email == userEmail) {
+                    if (obj.fav) {
+                        fav = true;
+                    }
+                }
+            })
+            console.log("Fav: ", fav)
+            if (fav) {
+                favBtn.innerHTML = '<i class="fa fa-heart"></i>';
+                $(`#${favBtn.id}`).removeClass("like-btn");
+                $(`#${favBtn.id}`).addClass("unlike-btn");
+                favBtn.onclick = removeFav;
+            } else {
+                favBtn.innerHTML = '<i class="like-btn fa fa-heart"></i>';
+                $(`#${favBtn.id}`).addClass("like-btn");
+                $(`#${favBtn.id}`).removeClass("unlike-btn");
+                favBtn.onclick = makeFav;
+            }
+        }
+    </script>
