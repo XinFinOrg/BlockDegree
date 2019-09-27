@@ -196,6 +196,10 @@ module.exports = app => {
       "facebook",
       { failureRedirect: "/login" },
       (err, user, info) => {
+        console.log("CAllback URL: ", req.originalUrl);
+        if (req.originalUrl.split("?")[1].split("=")[0] == "error") {
+          return res.redirect("/login");
+        }
         if (err != null) {
           console.log(`Error: ${err}`);
           return res.render("displayError", {
