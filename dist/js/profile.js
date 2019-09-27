@@ -296,38 +296,27 @@ if (typeof jQuery != "undefined") {
           facebookLink = document.getElementById("facebookLink"),
           twitterLink = document.getElementById("twitterLink"),
           linkedinLink = document.getElementById("linkedinLink");
-        let edit_googleLink = document.getElementById("edit_googleLink"),
-          edit_facebookLink = document.getElementById("edit_facebookLink"),
-          edit_twitterLink = document.getElementById("edit_twitterLink"),
-          edit_linkedinLink = document.getElementById("edit_linkedinLink");
+
         // get & update edit-profile links
         if (auths.googleAuth) {
           googleLink.innerHTML = "<span>linked</span>";
-          edit_googleLink.innerHTML = "<span>linked</span>";
         } else {
           googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
-          edit_googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
         }
         if (auths.facebookAuth) {
           facebookLink.innerHTML = "<span>linked</span>";
-          edit_facebookLink.innerHTML = "<span>linked</span>";
         } else {
           facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
-          edit_facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
         }
         if (auths.twitterAuth) {
           twitterLink.innerHTML = "<span>linked</span>";
-          edit_twitterLink.innerHTML = "<span>linked</span>";
         } else {
           twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
-          edit_twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
         }
         if (auths.linkedinAuth) {
           linkedinLink.innerHTML = "<span>linked</span>";
-          edit_linkedinLink.innerHTML = "<span>linked</span>";
         } else {
           linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
-          edit_linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
         }
       }
     });
