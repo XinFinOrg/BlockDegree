@@ -301,7 +301,7 @@ module.exports = function(passport) {
         profileFields: ["id", "emails", "name", "displayName"]
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        process.nextTick(function(){
+        process.nextTick(async function(){
           if (req.user) {
             if (
               req.user.auth.facebook.id == "" ||
