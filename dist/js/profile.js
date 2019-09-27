@@ -301,22 +301,22 @@ if (typeof jQuery != "undefined") {
         if (auths.googleAuth) {
           googleLink.innerHTML = "<span>linked</span>";
         } else {
-          googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
+          googleLink.innerHTML = `<button class="btn btn-primary social-g+" onclick="handleAuthGoogle()">Link Google</button>`;
         }
         if (auths.facebookAuth) {
           facebookLink.innerHTML = "<span>linked</span>";
         } else {
-          facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
+          facebookLink.innerHTML = `<button class="btn btn-primary social-fb" onclick="handleAuthFacebook()">Link Facebook</button>`;
         }
         if (auths.twitterAuth) {
           twitterLink.innerHTML = "<span>linked</span>";
         } else {
-          twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
+          twitterLink.innerHTML = `<button class="class="btn btn-primary social-tw" onclick="handleAuthTwitter()">Link Twitter</button>`;
         }
         if (auths.linkedinAuth) {
           linkedinLink.innerHTML = "<span>linked</span>";
         } else {
-          linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
+          linkedinLink.innerHTML = `<button class="class="btn btn-primary social-li" onclick="handleAuthLinkedin()">Link Linkedin</button>`;
         }
       }
     });
