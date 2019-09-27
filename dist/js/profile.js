@@ -289,7 +289,7 @@ if (typeof jQuery != "undefined") {
       console.log("Originating event: ", event.origin);
       console.log(event.origin);
       if (event.origin == "https://www.blockdegree.org" && event.data == "ok") {
-        $.notify("Login linked!", { type: "success" });
+        $.notify("Social linked!", { type: "success" });
         checkAuth();
       }
     },
