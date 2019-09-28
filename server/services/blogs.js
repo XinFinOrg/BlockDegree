@@ -465,11 +465,9 @@ Queries : keywords, topics
 
 */
 exports.complexSearch = async (req, res) => {
-  const keywords = req.body.keywords;
-  const topics = req.body.topics;
+  const keywords = req.body.keyword;
 
   let fmtKeywords = [],
-    fmtTopics = [],
     retBlogs = [];
 
   keywords.split(/[\s,]+/).forEach(keyword => {
@@ -478,36 +476,25 @@ exports.complexSearch = async (req, res) => {
       fmtKeywords.push(trimKeyword);
     }
   });
-  topics.split(",").forEach(topic => {
-    let trimTopic = topic.trim();
-    if (trimTopic != "") {
-      fmtTopics.push(trimTopic);
-    }
-  });
-
-  const allBlogs = await Blog.find({});
-
+  let allBlogs;
+  try {
+    allBlogs = await Blog.find({});
+  } catch (e) {
+    console.error(`Exception at blogs.complexSearch: `, e);
+    return res.json({ status: false, errro: internalErrorMsg, blogs: null });
+  }
   for (let j = 0; j < allBlogs.length; j++) {
     loop2: {
       for (let i = 0; i < fmtKeywords.length; i++) {
-        if (allBlogs[j].keywords.includes(fmtKeywords[i])) {
+        if (allBlogs[j].keywords.includes(fmtKeywords[i]) || allBlogs[j].topics.includes(fmtKeywords[i]) ) {
           // has a keyword, push and break.
           retBlogs.push(allBlogs[j]);
           break loop2;
         }
       }
-      for (let i = 0; i < fmtTopics.length; i++) {
-        if (allBlogs[j].topics.includes(fmtTopics[i])) {
-          // has a topic, push and break.
-          if (!retBlogs.includes(allBlogs[j])) {
-            retBlogs.push(allBlogs[j]);
-          }
-          break loop2;
-        }
-      }
     }
   }
-  res.json({ blogs: retBlogs });
+  res.json({ status: true, error: null, blogs: retBlogs });
 };
 
 //  API - OPEN

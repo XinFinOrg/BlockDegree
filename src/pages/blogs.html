@@ -5,13 +5,22 @@
 {{> includes/hero hero-title="Blogs"}}
 
 <section class="wrap-blogs">
-  <input
-    type="text"
-    id="searchKeywords"
-    placeholder="Search By Keyword"
-  /><button type="button" onclick="searchByKeyword()">
+  <button
+    class="btn"
+    style="float: right"
+    type="button"
+    onclick="searchByKeyword()"
+  >
     Search
   </button>
+  <div style="overflow: hidden; padding-right: .5em;">
+    <input
+      type="text"
+      class="form-control"
+      id="searchKeywords"
+      placeholder="Search By Keyword"
+    />
+  </div>
   <div id="main-wrapper-blogs"></div>
 </section>
 
@@ -57,6 +66,7 @@
   function searchByKeyword() {
     let searchKeywords = document.getElementById("searchKeywords");
     let blogWrapper = document.getElementById("main-wrapper-blogs");
+    blogWrapper.innerHTML = "";
     $.ajax({
       method: "post",
       url: "/api/blogs/keywordSearch",
@@ -85,6 +95,9 @@
             blogWrapper.innerHTML = retHTML;
           }
         }
+      },
+      error: xhr => {
+        $.notify("Oops, some error has occured", { type: "danger" });
       }
     });
   }
