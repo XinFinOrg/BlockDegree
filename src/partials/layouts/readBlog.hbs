@@ -35,7 +35,7 @@
                         return
                     } else {
                         fetchBlog();
-                        $.notify("Added the Blog to favorites", { type: "success" })
+                        $.notify("Added the Blog to your favorites", { type: "success" })
                     }
                 },
                 error: xhr => { $.notify("Error", { type: "danger" }); }
@@ -54,7 +54,7 @@
                         return
                     } else {
                         fetchBlog();
-                        $.notify("Removed the Blog from favorites", { type: "success" })
+                        $.notify("Removed the Blog from your favorites", { type: "success" })
                     }
                 },
                 error: xhr => { $.notify("Error", { type: "danger" }); }

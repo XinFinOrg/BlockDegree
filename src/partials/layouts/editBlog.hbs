@@ -1,19 +1,22 @@
 {{> includes/hero hero-title="Edit Blog Post"}}
 <section>
-    <input type="text" id="topics" name="topics" placeholder="Enter Topics seperated by ';'"><br>
-    <input type="text" id="title" name="title" placeholder="Enter Title">
-    <textarea id="desc" name="desc" placeholder="Enter a short Descrition..."></textarea>
     <br>
-    <h3 style="text-align: center">BLOG EDITOR</h3>
+    <h3 style="text-align: center"><strong>BLOG DETAILS</strong></h3>
+    <br>
+    <input class="form-control" type="text" name="topics" id="topics"
+        placeholder="Enter Topics seperated by ',' or ';'"><br>
+    <input class="form-control" type="text" name="title" id="title" placeholder="Enter Title"><br>
+    <textarea class="form-control" id="desc" name="desc" placeholder="Enter a short Descrition..."></textarea>
+    <br>
+    <h3 style="text-align: center"><strong>BLOG EDITOR</strong></h3>
     <br>
     <textarea id="blog-content"></textarea>
     <br>
     <script>
         CKEDITOR.replace('blog-content');
     </script>
-    <button onclick="saveDraft()">Save Draft</button>
-    <button onclick="submitArticle()">Submit</button>
-    <button onclick="deleteArticle()">Delete</button>
+    <button class="btn" onclick="saveDraft()">Save Draft</button>
+    <button class="btn" onclick="submitArticle()">Submit</button>
 </section>
 <script>
     document.onload = () => {

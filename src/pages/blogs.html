@@ -13,6 +13,7 @@
   >
     Search
   </button>
+
   <div style="overflow: hidden; padding-right: .5em;">
     <input
       type="text"
@@ -20,6 +21,24 @@
       id="searchKeywords"
       placeholder="Search By Keyword"
     />
+  </div>
+  <button class="btn" style="margin: 3px" type="button" onclick="loadBlogs()">
+    Reset Search
+  </button>
+  <div style="float: right;padding: 3px">
+    <label for="only-fav" style="word-wrap:break-word">
+      Show Only My Favorites :
+      <input
+        id="only-fav"
+        type="checkbox"
+        onclick="handleOnlyFav()"
+        name="only-fav"
+      />
+    </label>
+    &nbsp;OR&nbsp;
+    <button onclick="getAllFavorites()" type="button" class="btn">
+      Get All Favorites
+    </button>
   </div>
   <div id="main-wrapper-blogs"></div>
 </section>
@@ -30,6 +49,10 @@
 
 <script>
   $("document").ready(function() {
+    loadBlogs();
+  });
+
+  function loadBlogs() {
     $.ajax({
       method: "get",
       url: "/api/blogs/loadBlogs",
@@ -40,7 +63,7 @@
           $.notify(response.error, { type: "danger" });
         } else {
           if (response.blogs.length < 1) {
-            $.notify("No blogs to show", { type: "danger" });
+            $.notify("No blogs to show", { type: "warning" });
             return;
           }
           response.blogs.forEach(blog => {
@@ -56,7 +79,7 @@
         }
       }
     });
-  });
+  }
 
   function readBlog(blog_id) {
     console.log(`Blog ID: ${blog_id}`);
@@ -66,38 +89,103 @@
   function searchByKeyword() {
     let searchKeywords = document.getElementById("searchKeywords");
     let blogWrapper = document.getElementById("main-wrapper-blogs");
+    let onlyFav = document.getElementById("only-fav").checked;
     blogWrapper.innerHTML = "";
-    $.ajax({
-      method: "post",
-      url: "/api/blogs/keywordSearch",
-      data: { keyword: searchKeywords.value },
-      success: response => {
-        if (!response.status) {
-          $.notify(response.error, { type: "danger" });
-        } else {
-          let blogs = response.blogs;
-          console.log(blogs);
-          if (blogs.length < 1) {
-            $.notify(`No blogs found with keyword: ${searchKeywords.value} `, {
-              type: "danger"
-            });
-            blogWrapper.innerHTML = "";
+    if (searchKeywords.value.trim() == "") {
+      $.notify(`Empty search`, {
+        type: "danger"
+      });
+    } else
+      $.ajax({
+        method: "post",
+        url: "/api/blogs/keywordSearch",
+        data: { keyword: searchKeywords.value, onlyFav: onlyFav },
+        success: response => {
+          if (!response.status) {
+            $.notify(response.error, { type: "danger" });
           } else {
-            let retHTML = "";
-            response.blogs.forEach(blog => {
-              retHTML +=
-                `<div class="card blog-card" onclick="readBlog('${blog.blog_id}')">` +
-                `<h3 class="card-title">${blog.title}</h3>` +
-                `<p class="card-text" >${blog.desc}</p>` +
-                `<h6 class="card-subtitle mb-2 text-muted">Author - ${blog.author}</h6>` +
-                `</div>`;
-            });
-            blogWrapper.innerHTML = retHTML;
+            let blogs = response.blogs;
+            if (blogs.length < 1) {
+              $.notify(
+                `No blogs found with keyword: ${searchKeywords.value} `,
+                {
+                  type: "warning"
+                }
+              );
+              blogWrapper.innerHTML = "";
+            } else {
+              let retHTML = "";
+              response.blogs.forEach(blog => {
+                retHTML +=
+                  `<div class="card blog-card" onclick="readBlog('${blog.blog_id}')">` +
+                  `<h3 class="card-title">${blog.title}</h3>` +
+                  `<p class="card-text" >${blog.desc}</p>` +
+                  `<h6 class="card-subtitle mb-2 text-muted">Author - ${blog.author}</h6>` +
+                  `</div>`;
+              });
+              blogWrapper.innerHTML = retHTML;
+            }
           }
+        },
+        error: xhr => {
+          $.notify("Oops, some error has occured", { type: "danger" });
+        }
+      });
+  }
+
+  function handleOnlyFav() {
+    $.ajax({
+      method: "get",
+      url: "/api/current_user",
+      data: {},
+      success: result => {
+        if (!result.status) {
+          $.notify(`You need to login to use this feature`, { type: "danger" });
+          document.getElementById("only-fav").checked = false;
         }
       },
       error: xhr => {
-        $.notify("Oops, some error has occured", { type: "danger" });
+        $.notify(
+          "Some error occured, please try again later or contact-us at info@blockdegree.org",
+          { type: "danger" }
+        );
+        document.getElementById("only-fav").checked = false;
+      }
+    });
+  }
+
+  function getAllFavorites() {
+    $.ajax({
+      method: "get",
+      url: "/api/blogs/getAllFavs",
+      success: response => {
+        let bloggerWrapper = document.getElementById("main-wrapper-blogs");
+        if (!response.status) {
+          $.notify(response.error, { type: "danger" });
+          bloggerWrapper.innerHTML = "";
+        }
+        if (response.blogs.length < 1) {
+          $.notify("No blogs to show", { type: "warning" });
+          bloggerWrapper.innerHTML = "";
+          return;
+        }
+        let retHTML = "";
+        response.blogs.forEach(blog => {
+          retHTML +=
+            `<div class="card blog-card" onclick="readBlog('${blog.blog_id}')">` +
+            `<h3 class="card-title">${blog.title}</h3>` +
+            `<p class="card-text" >${blog.desc}</p>` +
+            `<h6 class="card-subtitle mb-2 text-muted">Author - ${blog.author}</h6>` +
+            `</div>`;
+        });
+        bloggerWrapper.innerHTML = retHTML;
+      },
+      error: xhr => {
+        $.notify(
+          `Oops, something went wrong, please try again later or contact us at info@blockdegree.org`,
+          { type: "danger" }
+        );
+        bloggerWrapper.innerHTML = "";
       }
     });
   }

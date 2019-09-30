@@ -11,7 +11,7 @@ module.exports = app => {
 
   // USER VIEWs & APIs
   app.get("/blogs/readBlog", requireLogin, blogServices.readBlog); //  read a particular blog referred by its unique ID
-  app.get("/api/blogs/getFavs", requireLogin, blogServices.getMyFavs); // get a collection of blogs favorited by the request sender
+  app.get("/api/blogs/getAllFavs", requireLogin, blogServices.getMyFavs); // get a collection of blogs favorited by the request sender
   app.post("/api/blogs/makeFav", requireLogin, blogServices.makeFav);
   app.post("/api/blogs/removeFav", requireLogin, blogServices.removeFav);
   app.post("/api/blogs/fetchBlog", requireLogin, blogServices.fetchBlog);

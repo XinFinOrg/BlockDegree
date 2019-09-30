@@ -46,7 +46,7 @@ exports.postBlog = async (req, res) => {
   let blog_id = req.body.blog_id;
   const content = req.body.content;
   const blog_title = req.body.title;
-  const blog_topics = req.body["topics[]"];
+  const blog_topics = filterKeyword(req.body["topics[]"]);
   const blog_desc = req.body.desc;
   console.log(`Blog ID: ${blog_id}`);
   let blog, blogContent;
@@ -58,7 +58,11 @@ exports.postBlog = async (req, res) => {
     .use(keywords)
     .process(contentText, (err, file) => {
       file.data.keywords.forEach(function(keyword) {
-        blog_keywords.push(toString(keyword.matches[0].node));
+        blog_keywords.push(
+          toString(keyword.matches[0].node)
+            .trim()
+            .toLowerCase()
+        );
       });
     });
   try {
@@ -109,7 +113,7 @@ exports.saveDraft = async (req, res) => {
   let content = req.body.content;
   let blog_id = req.body.blog_id;
   const blog_title = req.body.title;
-  const blog_topics = req.body["topics[]"];
+  const blog_topics = filterKeyword(req.body["topics[]"]);
   const blog_desc = req.body.desc;
   let blog, blogContent;
   const contentText = html2Txt.fromString(content, { wordwrap: 130 });
@@ -118,9 +122,12 @@ exports.saveDraft = async (req, res) => {
     .use(pos)
     .use(keywords)
     .process(contentText, (err, file) => {
-      console.log("Keywords:");
       file.data.keywords.forEach(function(keyword) {
-        blog_keywords.push(toString(keyword.matches[0].node));
+        blog_keywords.push(
+          toString(keyword.matches[0].node)
+            .trim()
+            .toLowerCase()
+        );
       });
     });
   try {
@@ -255,6 +262,7 @@ exports.fetchBlog = async (req, res) => {
 // API - OPEN
 exports.loadBlogs = async (req, res) => {
   let allBlogs;
+  let retBlogs = [];
   try {
     allBlogs = await Blog.find({});
   } catch (e) {
@@ -266,7 +274,12 @@ exports.loadBlogs = async (req, res) => {
       blogs: null
     });
   }
-  res.json({ blogs: allBlogs, error: null, status: true });
+  allBlogs.forEach(blog => {
+    if (blog.status == "posted") {
+      retBlogs.push(blog);
+    }
+  });
+  res.json({ blogs: retBlogs, error: null, status: true });
 };
 
 //  API - ADMIN
@@ -431,7 +444,7 @@ exports.removeFav = async (req, res) => {
   res.json({ status: true, error: null });
 };
 
-// API - OPEN
+// API - OPEN - depreciated
 exports.keywordSearch = async (req, res) => {
   const keyword = req.body["keyword"];
   let retBlogs = [];
@@ -465,17 +478,21 @@ Queries : keywords, topics
 
 */
 exports.complexSearch = async (req, res) => {
-  const keywords = req.body.keyword;
-
+  let keywords = req.body.keyword;
+  const onlyFav = req.body.onlyFav;
+  if (typeof keywords != "string") {
+    console.log("Error at blogs.complexSearch:  Bad Request");
+    return res.json({ status: false, error: "Bad Request", blogs: null });
+  }
   let fmtKeywords = [],
     retBlogs = [];
 
-  keywords.split(/[\s,]+/).forEach(keyword => {
-    let trimKeyword = keyword.trim();
-    if (trimKeyword != "") {
-      fmtKeywords.push(trimKeyword);
-    }
+  keywords = keywords.split(/[\s,]+/);
+  keywords = filterKeyword(keywords);
+  keywords.forEach(keyword => {
+    fmtKeywords.push(keyword);
   });
+  console.log(fmtKeywords);
   let allBlogs;
   try {
     allBlogs = await Blog.find({});
@@ -485,8 +502,27 @@ exports.complexSearch = async (req, res) => {
   }
   for (let j = 0; j < allBlogs.length; j++) {
     loop2: {
+      if (onlyFav == "true") {
+        let found = false;
+        for (let k = 0; k < allBlogs[j].favs.length; k++) {
+          if (
+            allBlogs[j].favs[k].email == req.user.email &&
+            allBlogs[j].favs[k].fav
+          ) {
+            found = true;
+            break;
+          }
+          if (!found) {
+            // blog is not to be added
+            break loop2;
+          }
+        }
+      }
       for (let i = 0; i < fmtKeywords.length; i++) {
-        if (allBlogs[j].keywords.includes(fmtKeywords[i]) || allBlogs[j].topics.includes(fmtKeywords[i]) ) {
+        if (
+          allBlogs[j].keywords.includes(fmtKeywords[i]) ||
+          allBlogs[j].topics.includes(fmtKeywords[i])
+        ) {
           // has a keyword, push and break.
           retBlogs.push(allBlogs[j]);
           break loop2;
@@ -497,12 +533,14 @@ exports.complexSearch = async (req, res) => {
   res.json({ status: true, error: null, blogs: retBlogs });
 };
 
-//  API - OPEN
+//  API - USER
 exports.getMyFavs = async (req, res) => {
   const email = req.user.email;
   let blogs;
   try {
-    blogs = await Blog.find({ "favs.email": email });
+    blogs = await Blog.find({
+      $and: [{ "favs.email": email }, { "favs.fav": true }]
+    });
   } catch (e) {
     console.error(`Exception at blogs.getMyFavs for user ${email}: `, e);
     return res.json({ status: false, error: internalErrorMsg, blogs: null });
@@ -590,3 +628,16 @@ exports.newPost = async (req, res) => {
 exports.editBlog = (req, res) => {
   res.render("editBlog");
 };
+
+function filterKeyword(keywords) {
+  let retKeywords = [];
+  keywords.forEach(keyword => {
+    let trimKeyword = keyword.trim();
+    if (trimKeyword == "") {
+      return;
+    }
+    trimKeyword = trimKeyword.toLowerCase();
+    retKeywords.push(trimKeyword);
+  });
+  return retKeywords;
+}
