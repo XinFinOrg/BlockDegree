@@ -100,7 +100,7 @@ module.exports = function(passport) {
                 return done(
                   null,
                   false,
-                  "This email is registered to another one of the socials below."
+                  "This email is registered to another one of the socials."
                 );
               }
             } else {
