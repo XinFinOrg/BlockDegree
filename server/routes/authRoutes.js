@@ -26,6 +26,7 @@ module.exports = app => {
     console.log("HIT current user");
 
     if (req.user) {
+      console.log(`User Logged In: ${req.user.email}`);
       res.json({ status: true, user: req.user });
     } else {
       res.json({ status: false, user: null });
