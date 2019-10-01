@@ -59,6 +59,7 @@
   })
 
   window.onbeforeunload = function (event) {
+    if (!submitted)
     event.returnValue = "Something clever"
   }
 

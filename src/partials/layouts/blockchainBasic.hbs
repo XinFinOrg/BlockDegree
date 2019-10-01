@@ -32,8 +32,9 @@
       </div>
       {{/each}}
       <div>
-        <input id="exam-submit" type="submit" onclick="handleSubmitClicked()" class="btn btn-primary py-2 mt-4 text-white"
-          onclick="this.disabled=true; this.value='Sending…';" value="Submit Your Answers">
+        <input id="exam-submit" type="submit" onclick="handleSubmitClicked()"
+          class="btn btn-primary py-2 mt-4 text-white" onclick="this.disabled=true; this.value='Sending…';"
+          value="Submit Your Answers">
       </div>
     </form>
   </div>
@@ -62,7 +63,8 @@
   })
 
   window.onbeforeunload = function (event) {
-    event.returnValue = "Something clever"
+    if (!submitted)
+      event.returnValue = "Something clever"
   }
 
   function focusQuestion(id) {
