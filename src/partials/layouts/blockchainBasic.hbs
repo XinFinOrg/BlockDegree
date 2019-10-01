@@ -33,8 +33,7 @@
       {{/each}}
       <div>
         <input id="exam-submit" type="submit" onclick="handleSubmitClicked()"
-          class="btn btn-primary py-2 mt-4 text-white" onclick="this.disabled=true; this.value='Sending…';"
-          value="Submit Your Answers">
+          class="btn btn-primary py-2 mt-4 text-white" value="Submit Your Answers">
       </div>
     </form>
   </div>
@@ -43,7 +42,6 @@
 <script src="/js/exam.js?v=1.0"></script>
 <script>
   let submitted = false;
-
   $("document").ready(function () {
     let allQNos = document.getElementsByClassName("q_no");
     let allQ = document.getElementsByClassName("exam-qns");
@@ -74,4 +72,5 @@
   function handleSubmitClicked() {
     submitted = true;
   }
+
 </script>
