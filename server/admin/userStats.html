@@ -475,7 +475,7 @@
             for (let i = 0; i < data.length; i++) {
               let currentUser = data[i];
               let currentCertificates = currentUser.examData.certificateHash;
-              let rowSpan = currentCertificates.length-1;
+              let rowSpan = currentCertificates.length;
               retHTML += `<tr><td >${
                 currentUser.email
               }</td><td>${currentCertificates[1].examType}</td><td>${
