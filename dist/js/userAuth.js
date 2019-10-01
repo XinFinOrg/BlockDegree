@@ -76,7 +76,7 @@ if (typeof jQuery != "undefined") {
       registerForm.errMsg =
         "This Email Id Already Register. Please check your input.";
       registerForm.accessMsg =
-        'Please check your mail and Verify your mail address   <a href="/login">Login</a>to get access to the free content';
+        'Please check your mail and Verify your mail address <a href="/login">Login</a> to get access to the free content';
 
       function validatePw() {
         if (pw.value.length > 0 && pw.value == cfmPw.value) {
