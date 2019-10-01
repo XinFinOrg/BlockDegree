@@ -59,6 +59,7 @@
     "events": "^3.0.0",
     "express": "~4.16.0",
     "express-handlebars": "^3.0.0",
+    "express-rate-limit": "^5.0.0",
     "express-session": "^1.15.6",
     "html-to-image": "^0.1.1",
     "http-errors": "~1.6.2",
@@ -78,6 +79,7 @@
     "puppeteer": "^1.19.0",
     "qrcode": "^1.4.1",
     "twit": "^2.2.11",
+    "twitter-text": "^3.0.0",
     "web3": "^1.2.0"
   }
 }

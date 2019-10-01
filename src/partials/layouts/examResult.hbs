@@ -15,8 +15,8 @@
             <li class="list-group-item border-top-0"><span>Total Questions :</span> {{{total}}}</li>
             <li class="list-group-item"><span>Marks :</span> {{{obtainedMarks}}}</li>
             <li class="list-group-item"><span>Percentage :</span> {{{percent}}} %</li>
-            <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
             {{#if examStatus}}
+            <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
             <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span
                 class="greenText fw-6">PASS</span></li>
             {{else}}
@@ -87,8 +87,8 @@
             <li class="list-group-item border-top-0"><span>Total Questions :</span> {{{total}}}</li>
             <li class="list-group-item"><span>Marks :</span> {{{obtainedMarks}}}</li>
             <li class="list-group-item"><span>Percentage :</span> {{{percent}}} %</li>
-            <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
             {{#if examStatus}}
+            <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
             <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span
                 class="greenText fw-6">PASS</span></li>
             {{else}}
@@ -162,8 +162,8 @@
             <li class="list-group-item border-top-0"><span>Total Questions :</span> {{{total}}}</li>
             <li class="list-group-item"><span>Marks :</span> {{{obtainedMarks}}}</li>
             <li class="list-group-item"><span>Percentage :</span> {{{percent}}} %</li>
-            <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
             {{#if examStatus}}
+            <li class="list-group-item"><span>Certificate Hash :</span> {{{certificateHash}}}</li>
             <li class="list-group-item border-bottom-0"><span>Exam Status :</span> <span
                 class="greenText fw-6">PASS</span></li>
             {{else}}
@@ -242,6 +242,73 @@
     </form>
   </div>
 
+
+
+  <div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Twitter Post</h3>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3"><input type="checkbox" id="certiLinkTwitter"> Include link to Certificate<br></div>
+          <p><textarea cols="30" rows="3"
+              id="postMSGTwitter">Hey, I just got certified in blockchain from Blockdegree.org, check it out !! Also use 'code10' to get free certificate !!</textarea>
+          </p>
+
+          <div>
+            <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;"
+                id="modalImageTwitter"></div>
+            <button type="button" id="twitter-share-cert-btn" class="btn btn-primary social-tw mt-3"
+              onclick="postTweet()"><i class="fa fa-twitter"></i> Post On Twitter
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Linkedin Post</h3>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3"><input type="checkbox" id="certiLinkLinkedin"> Include link to Certificate<br></div>
+          <p><textarea cols="30" rows="3"
+              id="postMSGLinkedin">Hey, I just got certified in blockchain from Blockdegree.org, check it out !! Also use 'code10' to get free certificate !!</textarea>
+            <div>
+              <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;"
+                  id="modalImageLinkedin"></div>
+              <button type="button" id="linkedin-share-cert-btn" class="btn btn-primary social-li mt-3"
+                onclick="postLinkedin()"><i class="fa fa-linkedin"></i> Post On Linkedin
+              </button>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 <script src="/js/exam.js?v=1.0"></script>
 
@@ -249,6 +316,8 @@
 
 
   const msg = "Hey, I just got certified in blockchain from Blockdegree.org, check it out !! Also use 'code10' to get free certificate !!"
+  let postTwitterBool = false,
+    postLinkedinBool = false;
   window.onload = function () {
     checkAuth();
   }
@@ -267,8 +336,17 @@
     function (event) {
       console.log(event.origin);
       if (event.origin == "https://www.blockdegree.org" && event.data == "ok") {
-        console.log("Praise thee Lord!");
-        checkAuth();
+        if (postLinkedinBool) {
+          showImageModal(`Linkedin`);
+          $("#postLinkedin").modal("show");
+          postLinkedinBool = false;
+        }
+        if (postTwitterBool) {
+          showImageModal(`Twitter`)
+          $("#postTwitter").modal("show");
+          postTwitterBool = false
+        }
+        checkAuth()
       }
     },
     false
@@ -347,82 +425,21 @@
           if (result.twitterAuth) {
             // ---------------TWITTER MODAL----------------------------------
             // signed in with twitter, show share button
-            retHTML += '<button type="button" class="btn btn-primary social-tw" onclick="showImageModal(`Twitter`)" data-toggle="modal" data-target="#postTwitter"><i class="fa fa-twitter social"></i> Post on Twitter</button>' +
-              '' +
-              '  <!-- Modal -->' +
-              '  <div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
-              '    <div class="modal-dialog modal-dialog-centered" role="document">' +
-              '    ' +
-              '      <!-- Modal content-->' +
-              '      <div class="modal-content">' +
-              '        <div class="modal-header">' +
-              '          <h3 class="modal-title">Twitter Post</h3>' +
-              '          <button type="button" class="close" data-dismiss="modal">×</button>' +
-              '        </div>' +
-              '        <div class="modal-body">' +
-              '          <div class="mb-3"><input type ="checkbox" id="certiLinkTwitter"> Include link to Certificate<br></div> ' +
-              '          <p>' + '<textarea cols="30" rows="3" id="postMSGTwitter" >' + msg + '</textarea> </p>' +
-              '<div style="float: right">' +
-              '          <span>Character Count ( Max 260 ):</span' +
-              '          ><span' +
-              '            style="padding-left:10px;padding-right: 10px"' +
-              '            id="charCount"' +
-              '          ></span>' +
-              '        </div>' +
-              '          <div>' +
-              '          <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;" id="modalImageTwitter" ></div>' +
-              '            <button type="button" id="twitter-share-cert-btn" class="btn btn-primary social-tw mt-3" onclick="postTweet()"><i class="fa fa-twitter"></i> Post On Twitter ' +
-              '            </button>' +
-              '          </div>' +
-              '        </div>' +
-              '' +
-              '        <div class="modal-footer">' +
-              '          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>' +
-              '        </div>' +
-              '      </div>' +
-              '      ' +
-              '    </div>' +
-              '  </div>';
+            retHTML += '<button type="button" class="btn btn-primary social-tw" onclick="showImageModal(`Twitter`)" data-toggle="modal" data-target="#postTwitter"><i class="fa fa-twitter social"></i> Post on Twitter</button>'
+
           } else {
             retHTML += '<div>' +
-              '<button type="button" id="twitter-auth-cert-btn" class="btn btn-primary social-tw mt-2" onclick="handleAuthTwitter()">Auth-Twitter</button>' +
+              '<button type="button" id="twitter-auth-cert-btn" class="btn btn-primary social-tw mt-2" onclick="handleAuthTwitter()">Link & Post Twitter</button>' +
               '</div>';
           }
           if (result.linkedinAuth) {
             //------------------LINKEDIN MODAL--------------------------------------
-            retHTML += '<button type="button" class="btn btn-primary social-li" onclick="showImageModal(`Linkedin`)" data-toggle="modal" data-target="#postLinkedin">Post on Linkedin</button>' +
-              '' +
-              '  <!-- Modal -->' +
-              '  <div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
-              '    <div class="modal-dialog modal-dialog-centered" role="document">' +
-              '    ' +
-              '      <!-- Modal content-->' +
-              '      <div class="modal-content">' +
-              '        <div class="modal-header">' +
-              '          <h3 class="modal-title">Linkedin Post</h3>' +
-              '          <button type="button" class="close" data-dismiss="modal">×</button>' +
-              '        </div>' +
-              '        <div class="modal-body">' +
-              '        <div class="mb-3"><input type ="checkbox" id="certiLinkLinkedin"> Include link to Certificate<br></div> ' +
-              '          <p>' + '<textarea cols="30" rows="3" id="postMSGLinkedin" >' + msg + '</textarea>' +
-              '          <div>' +
-              '          <div><img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" ></div>' +
-              '            <button type="button" id="linkedin-share-cert-btn" class="btn btn-primary social-li mt-3" onclick="postLinkedin()"><i class="fa fa-linkedin"></i> Post On Linkedin ' +
-              '            </button>' +
-              '          </div>' +
-              '        </div>' +
-              '' +
-              '        <div class="modal-footer">' +
-              '          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>' +
-              '        </div>' +
-              '      </div>' +
-              '      ' +
-              '    </div>' +
-              '  </div>';
+            retHTML += '<button type="button" class="btn btn-primary social-li" onclick="showImageModal(`Linkedin`)" data-toggle="modal" data-target="#postLinkedin">Post on Linkedin</button>'
+
           }
           else {
             retHTML += '<div>' +
-              '<button type="button" id="linkedin-auth-cert-btn" class="btn btn-primary social-li mt-2" onclick="handleAuthLinkedin()">Auth-Linkedin</button>' +
+              '<button type="button" id="linkedin-auth-cert-btn" class="btn btn-primary social-li mt-2" onclick="handleAuthLinkedin()">Link & Post on Linkedin</button>' +
               '</div>';
           }
           document.getElementById("social_wrap").innerHTML = retHTML;
@@ -470,25 +487,47 @@
   function postTweet() {
     let userMSG = document.getElementById("postMSGTwitter").value;
     let certiLink = document.getElementById("certiLinkTwitter").checked;
-    if (userMSG.length > 260) {
-      $.notify("Max length is 260 ", { type: "danger" });
-    }
-    else {
-      $.notify("Your post is now being submitted, please wait a few seconds.");
-      $.ajax({
-        method: 'post',
-        url: '/api/shareOnTwitter',
-        data: { hash: "{{certificateHash}}", certiLink: certiLink, msg: userMSG },
-        success: (result) => {
-          console.log(result);
-          if (result.uploaded) {
-            $.notify("Successfully posted on twitter!", { type: "success" });
-          } else {
-            $.notify("Oops, error occured while posting!", { type: "danger" });
-          }
+    $.post({
+      method: "post",
+      url: "/api/checkTweetCharacters",
+      data: { tweet: userMSG, includeLink: certiLink },
+      success: result => {
+        if (!result.valid) {
+          $.notify("Max tweet character exceeded, please shorten your msg", {
+            type: "danger"
+          });
         }
-      });
-    }
+        else {
+          $.notify("Your post is now being submitted, please wait a few seconds.");
+          $.ajax({
+            method: 'post',
+            url: '/api/shareOnTwitter',
+            data: { hash: "{{certificateHash}}", certiLink: certiLink, msg: userMSG },
+            success: (result) => {
+              console.log(result);
+              if (result.uploaded) {
+                $.notify("Successfully posted on twitter!", { type: "success" });
+              } else {
+                $.notify("Oops, error occured while posting!", { type: "danger" });
+              }
+            }
+          });
+        }
+      },
+      error: xhr => {
+        if (xhr.status == 429) {
+          $.notify(
+            "Looks like a lot of people are using this API, please try again after sometime",
+            { type: "danger" }
+          );
+        } else {
+          $.notify(
+            "Some error has occured, please tray again after sometime",
+            { type: "danger" }
+          );
+        }
+      }
+    })
     $('#postTwitter').modal('hide');
   }
 
@@ -513,26 +552,13 @@
   }
 
   function handleAuthTwitter() {
+    postTwitterBool = true;
     let win = window.open("https://www.blockdegree.org/auth/twitter?close=true", 'newwin', 'height=600px,width=600px');
   }
 
   function handleAuthLinkedin() {
+    postLinkedinBool = true;
     var win = window.open("https://www.blockdegree.org/auth/linkedin?close=true", 'newwin', 'height=600px,width=600px');
-  }
-
-  function checkCharacter() {
-    let textMsg = document.getElementById("postMSGTwitter").value;
-    let count = textMsg.normalize("NFC").length;
-    document.getElementById("charCount").innerHTML = count;
-    if (textMsg.trim().length == 0 || count >= 260) {
-      document.getElementById("twitter-share-cert-btn").disabled = true;
-      document.getElementById("charCount").style =
-        "padding-left:10px;padding-right:10px;color:red";
-    } else {
-      document.getElementById("twitter-share-cert-btn").disabled = false;
-      document.getElementById("charCount").style =
-        "padding-left:10px;padding-right:10px;color:black";
-    }
   }
 
 </script>

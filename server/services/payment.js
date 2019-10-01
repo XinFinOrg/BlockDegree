@@ -1,28 +1,25 @@
-const path = require("path");
-var paypal = require("paypal-rest-sdk");
-var cors = require("cors");
-var User = require("../models/user");
-var Token = require("../models/tokenVerification");
-var PaymentLogs = require("../models/payment_logs");
+const paypal = require("paypal-rest-sdk");
+const User = require("../models/user");
+const PaymentLogs = require("../models/payment_logs");
 const emailer = require("../emailer/impl");
-var crypto = require("crypto");
-const IPFS = require("ipfs-http-client");
-var ejs = require("ejs");
-const utils = require("../utils.js");
 const promoCodeService = require("../services/promoCodes");
 
 // Need to understand the complete flow and handle erros, unexpected shutdowns, inaccessible 3rd party.
 
-exports.payPaypalSuccess = (req, res, next) => {
-  var paymentId = req.query.paymentId;
-  var payerId = { payer_id: req.query.PayerID };
-  var order;
+exports.payPaypalSuccess = (req, res) => {
+  let paymentId = req.query.paymentId;
+  let payerId = { payer_id: req.query.PayerID };
+  let order;
 
   paypal.payment.execute(paymentId, payerId, function(error, payment) {
     if (error) {
       // Error in executing a payment.
-      console.error(JSON.stringify(error));
-      res.status(400).json(JSON.stringify(error));
+      console.error("Error in payment execution: ", JSON.stringify(error));
+      res.status(500).render("displayError", {
+        error:
+          "Some error occured while processing your payment, please try again later or contact-us at info@blockdegree.org"
+      });
+      return;
     } else {
       if (
         payment.state === "approved" &&
@@ -33,10 +30,10 @@ exports.payPaypalSuccess = (req, res, next) => {
         console.log("order authorization completed successfully");
         order = payment.transactions[0].related_resources[0].order.id;
         console.log(payment.transactions[0].description);
-        var email = payment.transactions[0].description;
-        var course_id = payment.transactions[0].item_list.items[0].name;
-        var invoice_number = payment.transactions[0].invoice_number;
-        var capture_details = {
+        let email = payment.transactions[0].description;
+        let course_id = payment.transactions[0].item_list.items[0].name;
+        let invoice_number = payment.transactions[0].invoice_number;
+        let capture_details = {
           amount: {
             currency: payment.transactions[0].amount.currency,
             total: payment.transactions[0].amount.total
@@ -48,7 +45,11 @@ exports.payPaypalSuccess = (req, res, next) => {
         ) {
           if (error) {
             console.error(JSON.stringify(error));
-            // res.status(500).json(JSON.stringify(error))
+            res.status(500).render("displayError", {
+              error:
+                "Some error occured while processing your payment, please try again later or contact-us at info@blockdegree.org"
+            });
+            return;
           } else {
             paypal.order.capture(order, capture_details, function(
               error,
@@ -56,7 +57,18 @@ exports.payPaypalSuccess = (req, res, next) => {
             ) {
               if (error) {
                 console.error(error);
-                res.status(500).json(JSON.stringify(error));
+                res.status(500).render("displayError", {
+                  error:
+                    "Some error occured while processing your payment, please try again later or contact-us at info@blockdegree.org"
+                });
+                emailer.sendMail(
+                  process.env.SUPP_EMAIL_ID,
+                  "Payment-error: error while capturing the order",
+                  `While processing order for the user ${
+                    req.user.email
+                  } some error occured while capturing the order: ${error.toString()}`
+                );
+                return;
               } else {
                 console.log("ORDER CAPTURE SUCCESS");
                 User.findOne({ email: req.user.email }, async function(
@@ -64,8 +76,18 @@ exports.payPaypalSuccess = (req, res, next) => {
                   user
                 ) {
                   if (err != null) {
-                    // res.status(500).json({error:JSON.stringify(err),msg:"database under maintenance"})
+                    // CRITICAL: payment lost
                     console.error(`Error: user not found || ${err}`);
+                    res.status(500).render("displayError", {
+                      error:
+                        "Some error occurred while processing your payment, your service ticket has been generated, please contact info@blockdegree.org"
+                    });
+                    emailer.sendMail(
+                      process.env.SUPP_EMAIL_ID,
+                      "Re-embursement: payment lost",
+                      `The payment for the user ${req.user.email} was processed but some error occured and user's state was not updated. Please consider for re-embursement`
+                    );
+                    return;
                   }
                   if (course_id == "course_1")
                     user.examData.payment.course_1 = true;
@@ -73,18 +95,90 @@ exports.payPaypalSuccess = (req, res, next) => {
                     user.examData.payment.course_2 = true;
                   else if (course_id == "course_3")
                     user.examData.payment.course_3 = true;
-                  user.save();
-                  await PaymentLogs.findOne(
-                    { payment_id: invoice_number, email: email },
-                    function(err, payment_log) {
-                      payment_log.payment_status = true;
-                      payment_log.save();
-                    }
+                  try {
+                    await user.save();
+                  } catch (err) {
+                    // CRITICAL: payment lost
+                    console.error(
+                      `Exception while saving the user ${req.user.email} details: `,
+                      err
+                    );
+                    res.status(500).render("displayError", {
+                      error:
+                        "Some error occured while fetching / updating your profile, please contact info@blockdegree.org"
+                    });
+                    emailer.sendMail(
+                      process.env.SUPP_EMAIL_ID,
+                      "Re-embursement: payment lost",
+                      `The payment for the user ${req.user.email} was processed & saved but some error occured & payment log was not generated.`
+                    );
+                    return;
+                  }
+
+                  let payment_log;
+                  try {
+                    payment_log = await PaymentLogs.findOne({
+                      payment_id: invoice_number,
+                      email: email
+                    });
+                  } catch (e) {
+                    // Not Critical: just the log is lost
+                    console.error(
+                      `Exception while saving the user payment ${req.user.email} details: `,
+                      e
+                    );
+                    res.status(500).render("displayError", {
+                      error:
+                        "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org"
+                    });
+                    emailer.sendMail(
+                      process.env.SUPP_EMAIL_ID,
+                      "Data-loss: payment-log lost",
+                      `The payment for the user ${req.user.email} was processed & saved but some error occured and user's payment log is not generated. Please consider for re-embursement`
+                    );
+                    return;
+                  }
+
+                  payment_log.payment_status = true;
+                  try {
+                    await payment_log.save();
+                  } catch (e) {
+                    // Not critical: just the log is lost.
+                    console.error(
+                      `Exception while saving the user payment ${req.user.email} details: `,
+                      e
+                    );
+                    res.status(500).render("displayError", {
+                      error:
+                        "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org"
+                    });
+                    emailer.sendMail(
+                      process.env.SUPP_EMAIL_ID,
+                      "Data-loss: payment-log lost",
+                      `The payment for the user ${req.user.email} was processed & saved but some error occured and user's payment log is not generated. Please consider for re-embursement`
+                    );
+                    return;
+                  }
+                  console.log("course_id", course_id, email);
+                  emailer.sendTokenMail(email, "", req, course_id);
+                  res.redirect("/payment-success");
+                }).catch(e => {
+                  // CRITICAL: payment lost
+                  console.error(
+                    `Exception while updating the user profile ${req.user.email}: `,
+                    e
                   );
+                  res.status(500).render("displayError", {
+                    error:
+                      "Some error occured while fetching / updating your profile, please contact info@blockdegree.org"
+                  });
+                  emailer.sendMail(
+                    process.env.SUPP_EMAIL_ID,
+                    "Re-embursement: payment lost",
+                    `The payment for the user ${req.user.email} was processed but some error occured and user's state was not updated. Please consider for re-embursement`
+                  );
+                  return;
                 });
-                console.log("course_id", course_id, email);
-                emailer.sendTokenMail(email, "", req, course_id);
-                res.redirect("/payment-success");
               }
             });
           }
@@ -98,10 +192,10 @@ exports.payPaypalSuccess = (req, res, next) => {
 };
 
 exports.payPaypal = async (req, res) => {
-  var price = req.body.price;
-  var email = req.user.email;
-  var course_id = req.body.course_id;
-  var payment_status;
+  let price = req.body.price;
+  let email = req.user.email;
+  let course_id = req.body.course_id;
+  let payment_status;
   const discObj = await promoCodeService.usePromoCode(req);
   console.log(discObj);
   console.log(typeof price);
@@ -110,6 +204,19 @@ exports.payPaypal = async (req, res) => {
   if (discObj.error == null) {
     // all good, can avail promo-code discount
     price = price - discObj.discAmt;
+  } else {
+    console.error(
+      `Error while using promocode ${req.body.codeName}: `,
+      discObj.error
+    );
+
+    if (discObj.error != "bad request") {
+      res.send({
+        status: "500",
+        message: discObj.error
+      });
+      return;
+    }
   }
   console.log(`Price After : ${price}`);
   price = Math.round(parseFloat(price) * 100) / 100;
@@ -117,6 +224,11 @@ exports.payPaypal = async (req, res) => {
   const user = await User.findOne({ email: email }, function(err) {
     if (err != null) {
       console.error(`Can't find user | access db; Err : ${err}`);
+      res.send({
+        status: "500",
+        message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
+      });
+      return;
     }
   });
   if (course_id == "course_1") {
@@ -131,7 +243,18 @@ exports.payPaypal = async (req, res) => {
     if (!payment_status) {
       // if already not paid
       user.examData.payment[course_id] = true;
-      user.save();
+      try {
+        user.save();
+      } catch (err) {
+        console.error(
+          `Some error occured while updating the profile for user ${res.user.email}: `,
+          err
+        );
+        res.send({
+          status: "500",
+          message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
+        });
+      }
       return res.send({
         status: 201,
         message: "Course has been availed for free!"
@@ -186,6 +309,10 @@ exports.payPaypal = async (req, res) => {
       var links = {};
       if (error) {
         console.error(JSON.stringify(error));
+        return res.send({
+          status: "500",
+          message: "Some error occured while creating the Txn."
+        });
       } else {
         payment.links.forEach(function(linkObj) {
           links[linkObj.rel] = {
@@ -208,6 +335,10 @@ exports.payPaypal = async (req, res) => {
           });
         } else {
           console.error("no redirect URI present");
+          return res.send({
+            status: "400",
+            message: "no redirect URI present"
+          });
         }
       }
     });

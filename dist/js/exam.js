@@ -56,10 +56,13 @@ $(function() {
     alert('post exam after');
   }
 
+
   $('#exam-submit').on('click', (e) => {
     e.preventDefault();
     var form = $('#basicExamForm');
     var ansArray = [];
+    document.getElementById("exam-submit").disabled = true;
+    document.getElementById("exam-submit").value = "Sending...";
     for(var i = 0; i < form[0].length; i++) {
       var ans = $('input[name='+i+']:checked').val();
       if(ans) {

@@ -6,6 +6,7 @@ $(document).ready(async function() {
     loginButton = document.getElementById("login-btn"),
     profileBtn = document.getElementById("profile-btn");
   console.log(`current location: ${window.location.pathname}`);
+
   // if (window.location.pathname == "/exams") {
   //   setTimeout(() => {
   //     $.notify(
@@ -68,6 +69,7 @@ $(document).ready(async function() {
   }
 
   //------- Open offer modal on pageload --------//
+
   // $(document).ready(function() {
   //   console.log(sessionStorage.getItem("shown_offerModal"));
   //   if (sessionStorage.getItem("shown_offerModal") == 1) {

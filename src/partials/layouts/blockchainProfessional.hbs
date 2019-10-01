@@ -1,9 +1,14 @@
 {{> includes/hero hero-title="Blockchain Professional Exam"}}
 <div class="container__cstm">
   <div class="exam-heading">Blockchain Professional Exam</div>
-  
-  <div id="exam">
 
+  <div id="exam">
+    <div id="overview-container">
+      <div id="overview-title">Questions Overview</div>
+      {{#each exam}}
+      <div class="q_no" onclick="focusQuestion('q.n.{{@index}}')" id="q.n.{{@index}}">{{@index}}</div>
+      {{/each}}
+    </div>
     <form id="basicExamForm">
       {{#each exam}}
       <div class="card bg-light py-3 px-4 mb-4">
@@ -15,7 +20,8 @@
           {{#each choices as |choice| }}
           <div class="col-12 col-md-6">
             <div class="exam-choice">
-              <input type="radio" id="q{{@../index}}-c{{@index}}" name="{{@../index}}" value="{{@index}}" />
+              <input class="q_option" type="radio" id="q{{@../index}}-c{{@index}}" name="{{@../index}}"
+                value="{{@index}}" />
               <label for="q{{@../index}}-c{{@index}}">{{choice}}</label>
             </div>
           </div>
@@ -24,11 +30,46 @@
       </div>
       {{/each}}
       <div>
-        <input id="exam-submit" type="submit" class="btn btn-primary py-2 mt-4 text-white"
-          onclick="this.disabled=true; this.value='Sending…';" value="Submit Your Answers">
+        <input id="exam-submit" type="submit" onclick="handleSubmitClicked()"
+          class="btn btn-primary py-2 mt-4 text-white"
+          value="Submit Your Answers">
       </div>
     </form>
   </div>
 
 </div>
 <script src="/js/exam.js?v=1.0"></script>
+<script>
+  let submitted=false;
+  $("document").ready(function () {
+    let allQNos = document.getElementsByClassName("q_no");
+    let allQ = document.getElementsByClassName("exam-qns");
+    for (let i = 0; i < allQNos.length; i++) {
+      let qNo = parseInt(allQNos[i].innerHTML) + 1;
+      let funcFocus = ``;
+      allQNos[i].innerHTML = qNo
+    }
+    for (let i = 0; i < allQ.length; i++) {
+      allQ[i].innerHTML = (parseInt(allQ[i].id.slice(1)) + 1) + ". " + allQ[i].innerHTML
+    }
+  })
+
+  $(".q_option").click(function (event) {
+    let qNoId = event.target.id.split("-")[0].slice(1);
+    document.getElementById(`q.n.${qNoId}`).style = "background-color:#A3C5FC;color:white";
+  })
+
+  window.onbeforeunload = function (event) {
+    if (!submitted)
+      event.returnValue = "Something clever"
+  }
+
+  function focusQuestion(id) {
+    $(window).scrollTop($(`#q${id.split(".")[2]}`).offset().top - $(this).height() / 2)
+  }
+
+  function handleSubmitClicked() {
+    submitted = true;
+  }
+</script>
+

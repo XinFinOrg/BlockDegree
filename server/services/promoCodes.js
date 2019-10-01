@@ -19,93 +19,117 @@ exports.addPromoCode = async (req, res) => {
   console.log(req.body);
   if (!checkReqBody_NewPromo(req.body, "codeName|discAmt|purpose|restricted")) {
     // bad request
-    res.status(400), json({ error: "Bad request" });
+    return res.status(400).json({ error: "Bad request" });
+  } else {
+    try {
+      let newPromoCode = new PromoCode({
+        codeName: req.body.codeName,
+        discAmt: req.body.discAmt,
+        purpose: req.body.purpose,
+        status: false,
+        count: 0,
+        created: "" + Date.now(),
+        lastUsed: "",
+        users: [{}],
+        restricted: req.body.restricted == "true",
+        allowedUsers: [{}]
+      });
+      await newPromoCode.save();
+    } catch (e) {
+      console.log(`Exception while creating new promocode: `, e);
+      return res.status(500).json({ error: "Internal error" });
+    }
+    res.status(200).json({ error: null });
   }
-  let newPromoCode = new PromoCode({
-    codeName: req.body.codeName,
-    discAmt: req.body.discAmt,
-    purpose: req.body.purpose,
-    status: false,
-    count: 0,
-    created: "" + Date.now(),
-    lastUsed: "",
-    users: [{}],
-    restricted: req.body.restricted == "true",
-    allowedUsers: [{}]
-  });
-  await newPromoCode.save();
-  res.status(200).json({ error: null });
 };
 
 // admin functionality
 exports.activatePromoCode = async (req, res) => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
-    res.status(400), json({ error: "Bad request" });
+    return res.status(400).json({ error: "Bad request" });
   }
   let codeName = req.body.codeName;
-  let currPromoCode = await PromoCode.findOne({ codeName: codeName }).catch(
-    e => {
-      res
-        .status(500)
-        .json({ error: "Internal error while accessing promo-code" });
-    }
-  );
+  let currPromoCode;
+  try {
+    currPromoCode = await PromoCode.findOne({ codeName: codeName });
+  } catch (e) {
+    res
+      .status(500)
+      .json({ error: "Internal error while accessing promo-code" });
+  }
   if (currPromoCode == null) {
-    res.status(200).json({ error: `no promo-code ${codeName} exists` });
+    return res.status(200).json({ error: `no promo-code ${codeName} exists` });
   }
   if (currPromoCode.status) {
-    res.status(200).json({ error: null, msg: "Already activated" });
+    return res.status(200).json({ error: null, msg: "Already activated" });
   }
   currPromoCode.status = true;
-  currPromoCode.save();
+  try {
+    currPromoCode.save();
+  } catch (e) {
+    res
+      .status(500)
+      .json({ error: "Internal error while accessing promo-code" });
+  }
   res.status(200).json({ error: null, msg: "ok" });
 };
 
 // admin functionality
 exports.deactivatePromoCode = async (req, res) => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
-    res.status(400).json({ error: "Bad request" });
+    return res.status(400).json({ error: "Bad request" });
   }
   let codeName = req.body.codeName;
-  let currPromoCode = await PromoCode.findOne({ codeName: codeName }).catch(
-    e => {
-      res
-        .status(500)
-        .json({ error: "Internal error while accessing promo-code" });
-    }
-  );
+  let currPromoCode;
+  try {
+    currPromoCode = await PromoCode.findOne({ codeName: codeName });
+  } catch (e) {
+    return res
+      .status(500)
+      .json({ error: "Internal error while accessing promo-code" });
+  }
   if (currPromoCode == null) {
-    res.status(200).json({ error: `no promo-code ${codeName} exists` });
+    return res.status(200).json({ error: `no promo-code ${codeName} exists` });
   }
   if (!currPromoCode.status) {
-    res.status(200).json({ error: null, msg: "Already deactivated" });
+    return res.status(200).json({ error: null, msg: "Already deactivated" });
   }
   currPromoCode.status = false;
-  currPromoCode.save();
+  try {
+    currPromoCode.save();
+  } catch (e) {
+    res
+      .status(500)
+      .json({ error: "Internal error while accessing promo-code" });
+  }
   res.status(200).json({ error: null, msg: "ok" });
 };
 
 // user functionality
 exports.usePromoCode = async req => {
-  if (req.body.codeName == undefined || req.body.codeName == "") {
+  if (
+    req.body.codeName == undefined ||
+    req.body.codeName == null ||
+    req.body.codeName == ""
+  ) {
     return { error: "bad request" };
   }
   let userEmail = req.user.email;
   let codeName = req.body.codeName;
-  let currPromoCode = await PromoCode.findOne({ codeName: codeName }).catch(
-    e => {
-      return {
-        error: `Error while fetching the promo-code ${codeName} from the DB ${e}`
-      };
-    }
-  );
+  let currPromoCode;
+  try {
+    currPromoCode = await PromoCode.findOne({ codeName: codeName });
+  } catch (e) {
+    return {
+      error: `Error while fetching the promo-code ${codeName} from the DB ${e}`
+    };
+  }
   if (currPromoCode == null) {
     return { error: `No such promo-code ${codeName}` };
   }
   if (!currPromoCode.status) {
     return { error: `Promo-code ${codeName} no longer valid` };
   }
-  console.log(currPromoCode.allowedUsers);
   if (currPromoCode.restricted) {
     for (var i = 0; i < currPromoCode.allowedUsers.length; i++) {
       let user = currPromoCode.allowedUsers[i];
@@ -118,15 +142,21 @@ exports.usePromoCode = async req => {
         currPromoCode.count += 1;
         let discAmt = parseFloat(currPromoCode.discAmt);
         user.count += 1;
-        await PromoCode.updateOne(
-          { codeName: codeName, "allowedUsers.email": user.email },
-          {
-            $set: {
-              "allowedUsers.$.count": user.count,
-              "allowedUsers.$.lastUsed": Date.now()
+        try {
+          await PromoCode.updateOne(
+            { codeName: codeName, "allowedUsers.email": user.email },
+            {
+              $set: {
+                "allowedUsers.$.count": user.count,
+                "allowedUsers.$.lastUsed": Date.now()
+              }
             }
-          }
-        );
+          );
+        } catch (e) {
+          return {
+            error: `Error while updating the promo-code ${codeName} from the DB ${e}`
+          };
+        }
         console.log("saved");
         return { error: null, msg: "all ok", discAmt: discAmt };
       }
@@ -158,19 +188,29 @@ exports.usePromoCode = async req => {
   } else {
     // update used count & last used date
     let newCount = userArr[userIndex].count + 1;
-    await PromoCode.updateOne(
-      { codeName: codeName, "users.email": userEmail },
-      {
-        $set: {
-          "users.$.count": newCount,
-          "users.$.lastUsed": Date.now()
+    try {
+      await PromoCode.updateOne(
+        { codeName: codeName, "users.email": userEmail },
+        {
+          $set: {
+            "users.$.count": newCount,
+            "users.$.lastUsed": Date.now()
+          }
         }
-      }
-    );
+      );
+    } catch (e) {
+      return {
+        error: `Error while updating the promo-code ${codeName} from the DB ${e}`
+      };
+    }
   }
 
   // currPromoCode.users = userArr;
-  await currPromoCode.save();
+  try {
+    await currPromoCode.save();
+  } catch (e) {
+    return { error: "Error while saving the promocode query" };
+  }
   return { error: null, msg: "ok", discAmt: discAmt };
 };
 
@@ -179,13 +219,14 @@ exports.restrictPromoCode = async (req, res) => {
     return { error: "bad request" };
   }
   let codeName = req.body.codeName;
-  let currPromoCode = await PromoCode.findOne({ codeName: codeName }).catch(
-    e => {
-      return {
-        error: `Error while fetching the promo-code ${codeName} from the DB ${e}`
-      };
-    }
-  );
+  let currPromoCode;
+  try {
+    currPromoCode = await PromoCode.findOne({ codeName: codeName });
+  } catch (e) {
+    return {
+      error: `Error while fetching the promo-code ${codeName} from the DB ${e}`
+    };
+  }
   if (currPromoCode == null) {
     return { error: `No such promo-code ${codeName}` };
   }
@@ -197,7 +238,11 @@ exports.restrictPromoCode = async (req, res) => {
     };
   }
   currPromoCode.restricted = true;
-  await currPromoCode.save();
+  try {
+    await currPromoCode.save();
+  } catch (e) {
+    return { error: "Some error occured while saving the promo-code" };
+  }
   return { error: null, msg: `Promo-code ${codeName} is now restricted !` };
 };
 
@@ -206,13 +251,14 @@ exports.unrestrictPromoCode = async (req, res) => {
     return { error: "bad request" };
   }
   let codeName = req.body.codeName;
-  let currPromoCode = await PromoCode.findOne({ codeName: codeName }).catch(
-    e => {
-      return {
-        error: `Error while fetching the promo-code ${codeName} from the DB ${e}`
-      };
-    }
-  );
+  let currPromoCode;
+  try {
+    currPromoCode = await PromoCode.findOne({ codeName: codeName });
+  } catch (e) {
+    return {
+      error: `Error while fetching the promo-code ${codeName} from the DB ${e}`
+    };
+  }
   if (currPromoCode == null) {
     return { error: `No such promo-code ${codeName}` };
   }
@@ -224,25 +270,30 @@ exports.unrestrictPromoCode = async (req, res) => {
     };
   }
   currPromoCode.restricted = false;
-  await currPromoCode.save();
+  try {
+    await currPromoCode.save();
+  } catch (e) {
+    return { error: "Some error occured while saving the promocode" };
+  }
   return { error: null, msg: `Promo-code ${codeName} is now un-restricted !` };
 };
 
 exports.addAllowedUser = async (req, res) => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
-    res.status(400), json({ error: "Bad request" });
+    return res.status(400), json({ error: "Bad request" });
   }
   let codeName = req.body.codeName;
   let email = req.body.email;
-  let currPromoCode = await PromoCode.findOne({ codeName: codeName }).catch(
-    e => {
-      res
-        .status(500)
-        .json({ error: "Internal error while accessing promo-code" });
-    }
-  );
+  let currPromoCode;
+  try {
+    currPromoCode = await PromoCode.findOne({ codeName: codeName });
+  } catch (e) {
+    res
+      .status(500)
+      .json({ error: "Internal error while accessing promo-code" });
+  }
   if (currPromoCode == null) {
-    res.status(200).json({ error: `no promo-code ${codeName} exists` });
+    return res.status(200).json({ error: `no promo-code ${codeName} exists` });
   }
   let user = {
     email: email,
@@ -250,10 +301,21 @@ exports.addAllowedUser = async (req, res) => {
     created: Date.now(),
     lastUsed: ""
   };
-  await PromoCode.updateOne(
-    { codeName: codeName },
-    { $push: { allowedUsers: user } }
-  );
+  try {
+    await PromoCode.updateOne(
+      { codeName: codeName },
+      { $push: { allowedUsers: user } }
+    );
+  } catch (e) {
+    console.error(
+      `Exception at addAllowedUser for user ${req.user.email} : `,
+      e
+    );
+    res
+      .status(500)
+      .json({ error: "Internal error while accessing promo-code" });
+  }
+
   res.status(200).json({ error: null, msg: "all ok" });
 };
 
@@ -263,13 +325,15 @@ exports.checkCode = async (req, res) => {
     return res.status(400).json({ error: "Bad request" });
   }
   let codeName = req.body.codeName;
-  let currPromoCode = await PromoCode.findOne({ codeName: codeName }).catch(
-    e => {
-      return res
-        .status(500)
-        .json({ error: "Internal error while accessing promo-code" });
-    }
-  );
+  let currPromoCode;
+  try {
+    currPromoCode = await PromoCode.findOne({ codeName: codeName });
+  } catch (e) {
+    console.error(`Exception at checkCode for user ${req.user.email} : `, e);
+    return res
+      .status(500)
+      .json({ error: "Internal error while accessing promo-code" });
+  }
   if (currPromoCode == null) {
     return res.status(200).json({ error: `no promo-code ${codeName} exists` });
   }

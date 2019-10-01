@@ -99,6 +99,7 @@
 <script type="text/javascript">
 
   function takeExam(slug) {
+
     $.ajax({
       method: "get",
       url: "/api/current_user",
@@ -118,8 +119,6 @@
         }
       }
     })
-
-
   }
 
   function pay(course_id, price) {
@@ -140,6 +139,9 @@
           if (!alert(data.message)) { window.location.reload(); }
           else
             alert(data.message);
+        else {
+          $.notify(data.message, { type: "danger" })
+        }
       }
     });
   }
@@ -163,7 +165,7 @@
           }
         }
         else {
-          $.notify(`Some error occurred, please try agina later`, { type: "danger" })
+          $.notify(result.error, { type: "danger" })
         }
       }
     })
