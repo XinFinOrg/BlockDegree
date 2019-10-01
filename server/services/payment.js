@@ -61,6 +61,13 @@ exports.payPaypalSuccess = (req, res) => {
                   error:
                     "Some error occured while processing your payment, please try again later or contact-us at info@blockdegree.org"
                 });
+                emailer.sendMail(
+                  process.env.SUPP_EMAIL_ID,
+                  "Payment-error: error while capturing the order",
+                  `While processing order for the user ${
+                    req.user.email
+                  } some error occured while capturing the order: ${error.toString()}`
+                );
                 return;
               } else {
                 console.log("ORDER CAPTURE SUCCESS");
@@ -73,10 +80,10 @@ exports.payPaypalSuccess = (req, res) => {
                     console.error(`Error: user not found || ${err}`);
                     res.status(500).render("displayError", {
                       error:
-                        "Some error occured while fetching / updating your profile, please contact info@blockdegree.org"
+                        "Some error occurred while processing your payment, your service ticket has been generated, please contact info@blockdegree.org"
                     });
                     emailer.sendMail(
-                      "rudresh",
+                      process.env.SUPP_EMAIL_ID,
                       "Re-embursement: payment lost",
                       `The payment for the user ${req.user.email} was processed but some error occured and user's state was not updated. Please consider for re-embursement`
                     );
@@ -90,37 +97,6 @@ exports.payPaypalSuccess = (req, res) => {
                     user.examData.payment.course_3 = true;
                   try {
                     await user.save();
-                    PaymentLogs.findOne(
-                      { payment_id: invoice_number, email: email },
-                      async function(err, payment_log) {
-                        if (err) {
-                          console.error(
-                            `Exception while saving the user ${req.user.email} details: `,
-                            err
-                          );
-                          res.status(500).render("displayError", {
-                            error:
-                              "Some error occured while fetching / updating your profile, please contact info@blockdegree.org"
-                          });
-                          emailer.sendMail(
-                            "rudresh",
-                            "Re-embursement: payment lost",
-                            `The payment for the user ${req.user.email} was processed but some error occured and user's state was not updated. Please consider for re-embursement`
-                          );
-                          return;
-                        }
-                        payment_log.payment_status = true;
-
-                        try {
-                          await payment_log.save();
-                        } catch (errSave) {
-                          console.error(
-                            `Exception while saving the payment log for user ${req.user.email} details: `,
-                            errSave
-                          );
-                        }
-                      }
-                    );
                   } catch (err) {
                     // CRITICAL: payment lost
                     console.error(
@@ -134,10 +110,58 @@ exports.payPaypalSuccess = (req, res) => {
                     emailer.sendMail(
                       process.env.SUPP_EMAIL_ID,
                       "Re-embursement: payment lost",
-                      `The payment for the user ${req.user.email} was processed but some error occured and user's state was not updated. Please consider for re-embursement`
+                      `The payment for the user ${req.user.email} was processed & saved but some error occured & payment log was not generated.`
                     );
                     return;
                   }
+
+                  let payment_log;
+                  try {
+                    payment_log = await PaymentLogs.findOne({
+                      payment_id: invoice_number,
+                      email: email
+                    });
+                  } catch (e) {
+                    // Not Critical: just the log is lost
+                    console.error(
+                      `Exception while saving the user payment ${req.user.email} details: `,
+                      e
+                    );
+                    res.status(500).render("displayError", {
+                      error:
+                        "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org"
+                    });
+                    emailer.sendMail(
+                      process.env.SUPP_EMAIL_ID,
+                      "Data-loss: payment-log lost",
+                      `The payment for the user ${req.user.email} was processed & saved but some error occured and user's payment log is not generated. Please consider for re-embursement`
+                    );
+                    return;
+                  }
+
+                  payment_log.payment_status = true;
+                  try {
+                    await payment_log.save();
+                  } catch (e) {
+                    // Not critical: just the log is lost.
+                    console.error(
+                      `Exception while saving the user payment ${req.user.email} details: `,
+                      e
+                    );
+                    res.status(500).render("displayError", {
+                      error:
+                        "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org"
+                    });
+                    emailer.sendMail(
+                      process.env.SUPP_EMAIL_ID,
+                      "Data-loss: payment-log lost",
+                      `The payment for the user ${req.user.email} was processed & saved but some error occured and user's payment log is not generated. Please consider for re-embursement`
+                    );
+                    return;
+                  }
+                  console.log("course_id", course_id, email);
+                  emailer.sendTokenMail(email, "", req, course_id);
+                  res.redirect("/payment-success");
                 }).catch(e => {
                   // CRITICAL: payment lost
                   console.error(
@@ -155,9 +179,6 @@ exports.payPaypalSuccess = (req, res) => {
                   );
                   return;
                 });
-                console.log("course_id", course_id, email);
-                emailer.sendTokenMail(email, "", req, course_id);
-                res.redirect("/payment-success");
               }
             });
           }
