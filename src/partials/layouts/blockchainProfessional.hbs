@@ -30,8 +30,9 @@
       </div>
       {{/each}}
       <div>
-        <input id="exam-submit" type="submit" class="btn btn-primary py-2 mt-4 text-white"
-          onclick="this.disabled=true; this.value='Sending…';" value="Submit Your Answers">
+        <input id="exam-submit" type="submit" onclick="handleSubmitClicked()"
+          class="btn btn-primary py-2 mt-4 text-white" onclick="this.disabled=true; this.value='Sending…';"
+          value="Submit Your Answers">
       </div>
     </form>
   </div>
@@ -57,9 +58,15 @@
     document.getElementById(`q.n.${qNoId}`).style = "background-color:#A3C5FC;color:white";
   })
 
-
+  window.onbeforeunload = function (event) {
+    event.returnValue = "Something clever"
+  }
 
   function focusQuestion(id) {
     $(window).scrollTop($(`#q${id.split(".")[2]}`).offset().top - $(this).height() / 2)
+  }
+  
+  function handleSubmitClicked() {
+    submitted = true;
   }
 </script>
