@@ -1,3 +1,5 @@
-const User = require("../models/user");
+const Contributor = require("../models/contributor");
 
-module.exports = (req, res, next) => {};
+module.exports = (req, res, next) => {
+    
+};

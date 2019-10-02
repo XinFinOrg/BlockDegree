@@ -4,7 +4,7 @@ const uuidv4 = require("uuid/v4");
 const html2Txt = require("html-to-text");
 const retext = require("retext");
 const pos = require("retext-pos");
-const keywords = require("retext-keywords");
+const keywords = require("retext-keywords"); // explodes on maximum > 7 : +10
 const toString = require("nlcst-to-string");
 const internalErrorMsg =
   "Its not you, its us. Please try again after sometime or contact us at info@blockdegree.org";
@@ -21,7 +21,7 @@ exports.createNewPost = async (req, res) => {
     topics: [],
     keywords: [],
     other_data: [],
-    status: null
+    status: "draft"
   });
   const newPostContent = new Blog_Content({
     blog_id: hashId,
@@ -54,8 +54,8 @@ exports.postBlog = async (req, res) => {
   const contentText = html2Txt.fromString(content, { wordwrap: 130 });
   let blog_keywords = [];
   retext()
-    .use(pos) // Make sure to use `retext-pos` before `retext-keywords`.
-    .use(keywords)
+    .use(pos)
+    .use(keywords,{maximum:8})
     .process(contentText, (err, file) => {
       file.data.keywords.forEach(function(keyword) {
         blog_keywords.push(
@@ -120,7 +120,7 @@ exports.saveDraft = async (req, res) => {
   let blog_keywords = [];
   retext()
     .use(pos)
-    .use(keywords)
+    .use(keywords,{maximum:8})
     .process(contentText, (err, file) => {
       file.data.keywords.forEach(function(keyword) {
         blog_keywords.push(
@@ -631,6 +631,10 @@ exports.editBlog = (req, res) => {
 
 function filterKeyword(keywords) {
   let retKeywords = [];
+  console.log(keywords);
+  if (typeof keywords == "string") {
+    return [keywords];
+  }
   keywords.forEach(keyword => {
     let trimKeyword = keyword.trim();
     if (trimKeyword == "") {

@@ -17,7 +17,6 @@ module.exports = app => {
   app.post("/api/blogs/fetchBlog", requireLogin, blogServices.fetchBlog);
 
   // ADMIN VIEWs & APIs
-  app.get("/blogs/newPost", requireLogin, requireAdmin, blogServices.newPost);
   app.get("/blogs/editBlog", requireLogin, requireAdmin, blogServices.editBlog);
   app.get(
     "/blogs/getDrafts",
