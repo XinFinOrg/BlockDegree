@@ -495,6 +495,12 @@
                   }
                 }
                 card_wrap.innerHTML = retHTML;
+                $("html,body").animate(
+                  {
+                    scrollTop: $(".card").offset().top - 100
+                  },
+                  "slow"
+                );
               } else {
                 $.notify(`Error while fetching certificates: ${result.msg}`, {
                   type: "danger"
@@ -781,14 +787,12 @@
   }
 
   $("#postLinkedin").on("hidden.bs.modal", function() {
-
     document.getElementById("postMSGLinkedin").value = msg;
     document.querySelector(`#modalImageLinkedin`).src =
       "/img/gif/loading_block.gif";
   });
 
   $("#postTwitter").on("hidden.bs.modal", function() {
-
     document.getElementById("postMSGTwitter").value = msg;
     document.querySelector(`#modalImageTwitter`).src =
       "/img/gif/loading_block.gif";
