@@ -32,4 +32,5 @@ module.exports = function(app) {
   app.get("/payment-success", requireLogin, function(req, res) {
     res.render("paymentSuccess");
   });
+  app.post("/api/payViaXdc", paymentService.payViaXdc);
 };

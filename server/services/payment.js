@@ -3,7 +3,13 @@ const User = require("../models/user");
 const PaymentLogs = require("../models/payment_logs");
 const emailer = require("../emailer/impl");
 const promoCodeService = require("../services/promoCodes");
+const PaymentXDC = require("../models/payment_xdc");
+const XDC3 = require("xdc3");
+const Web3 = require("web3");
 
+const xdc3 = new XDC3("https://rpc.xinfin.network/"); // setting up the instance for xinfin's mainnet provider
+const web3 = new Web3("https://rpc.xinfin.network/"); // this wont work with XinFin's network
+const txReceiptUrl = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
 // Need to understand the complete flow and handle erros, unexpected shutdowns, inaccessible 3rd party.
 
 exports.payPaypalSuccess = (req, res) => {
@@ -201,6 +207,12 @@ exports.payPaypal = async (req, res) => {
   console.log(typeof price);
   console.log(`Price Before : ${price}`);
   console.log(`Discount Price : ${discObj.discAmt}`);
+  if (price !== "9.99") {
+    return res.send({
+      status: "400",
+      message: "Bad request"
+    });
+  }
   if (discObj.error == null) {
     // all good, can avail promo-code discount
     price = price - discObj.discAmt;
@@ -345,4 +357,62 @@ exports.payPaypal = async (req, res) => {
   } else {
     return res.send({ status: "400", message: "Payment already completed." });
   }
+};
+
+exports.payViaXdc = async (req, res) => {
+  /*
+
+  1. Register the receipt in-app
+
+  2. Make a call to the burning service
+
+  3. Return the hash from the burning service to the user
+
+  4. Handle errors at in-built registration, error in making call to burning service, error in the burning service.
+
+  */
+  // if (
+  //   req.body.txn_hash == undefined ||
+  //   req.body.course == undefined ||
+  //   req.body.price == undefined
+  // ) {
+  //   console.log(`Bad request from the user ${req.user.email}: `, req.body);
+  //   res.json({ status: false, error: "Bad request" });
+  // }
+  // const txn_hash = req.body.txn_hash;
+  // let price = req.body.price;
+  // const course = req.body.course;
+  // 0xb17fb11d4b6ca97dcd9811254c1d2598568a902389669c9290deb333426fba07
+  // console.log(req.body);
+  // res.json({ status: true, error: null });
+  const retObj = await xdc3.eth.getTransaction(req.body.hash);
+  const toAddr = retObj.to;
+  const fromAddr = retObj.from;
+  const value = retObj.value;
+  console.log(retObj);
+  $.ajax({
+    method: "post",
+    url: txReceiptUrl,
+    data: { isTransfer: false, tx: req.body.hash },
+    success: response => {
+      isComplete = response.blockNumber != null;
+    },
+    error: xhr => {}
+  });
+
+  // const user = await User.findOne({ email: req.user.email }, function(err) {
+  //   if (err != null) {
+  //     console.error(`Can't find user | access db; Err : ${err}`);
+  //     res.json({
+  //       status: false,
+  //       error: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
+  //     });
+  //     return;
+  //   }
+  // });
+  // let newPaymentXDC = new PaymentXDC({
+  //   email: req.user.email,
+  //   course: course,
+  //   price: price
+  // });
 };

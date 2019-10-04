@@ -2,22 +2,27 @@
 #course__info {
   .cta {
     height: 25vh;
+
     @include media-breakpoint-up(sm) {
       height: 40vh;
     }
   }
+
   .hero-banner {
-  	padding-top: 100px;
+    padding-top: 100px;
   }
+
   .courses-banner-bg {
-  	background: url(' /img/hero-course.jpg ') center/cover;
+    background: url(' /img/hero-course.jpg ') center/cover;
   }
+
   .hero-banner h1 {
-  	font-size: 38px;
-	line-height: 36px!important;
+    font-size: 38px;
+    line-height: 36px !important;
   }
+
   .hero-banner p {
-  	line-height: 1.4rem!important;
+    line-height: 1.4rem !important;
   }
 }
 
@@ -32,7 +37,12 @@
   }*/
 
   .module-content {
-    h1, h2, h3, h4, h5 {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
       margin-top: 60px;
       margin-bottom: 15px;
     }
@@ -41,6 +51,7 @@
       list-style-type: circle;
       margin-left: 20px;
       padding-bottom: 15px;
+
       @include media-breakpoint-up(sm) {
         margin-left: 30px;
       }
@@ -57,6 +68,7 @@
       list-style-type: circle;
       margin-left: 20px;
       padding-bottom: 15px;
+
       @include media-breakpoint-up(sm) {
         margin-left: 30px;
       }
@@ -80,7 +92,7 @@
   }
 }
 
-#mod__details.mod--fixed{
+#mod__details.mod--fixed {
   position: fixed;
   z-index: 99;
   top: 110px;
@@ -97,22 +109,26 @@
 /*-------- Start courses page Area ------------*/
 
 .courses-page {
-    .single-popular-carusel {
-        margin-bottom: 40px;
+  .single-popular-carusel {
+    margin-bottom: 40px;
+  }
+
+  .primary-btn {
+    border: 1px solid transparent;
+
+    &:hover {
+      background: transparent;
+      border-color: $primary-color;
+      color: $primary-color;
     }
-    .primary-btn {
-        border: 1px solid transparent;
-        &:hover {
-            background: transparent;
-            border-color: $primary-color;
-            color: $primary-color;
-        }
-    }
+  }
 }
 
 .mod__sidebar {
+
   .mod__heading,
   .mod__sub-heading {
+
     &:hover,
     &.active {
       color: $nav--hover;
@@ -131,4 +147,8 @@
     left: 5%;
     border-top: 4px solid $border;
   }
+}
+
+a.nobr {
+  white-space: nowrap;
 }
