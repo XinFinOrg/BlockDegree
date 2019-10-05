@@ -179,17 +179,6 @@
 
 <script type="text/javascript">
 
-  let isChrome = false;
-  let isFirefox = false;
-
-  $("document").ready(() => {
-    isChrome =
-      !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-    isFirefox = typeof InstallTrigger !== "undefined";
-    console.log(`Is Chrome: ${isChrome}`);
-    console.log(`Is Firefox: ${isFirefox}`);
-  });
-
   function takeExam(slug) {
 
     $.ajax({
@@ -273,15 +262,15 @@
     // check if the 
     // need to check if the user is logged in.
 
-    if (isFirefox) {
+    if (typeof InstallTrigger !== "undefined") {
       $.notify("This feature is only available for Chrome users for now, we'll support FireFox shortly", { type: "danger" })
       return;
     }
-    else if (!isChrome) {
+    else if (!!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
       $.notify("This feature is not available in this browser, please try again using Chrome browser", { type: "danger" })
       return;
     }
-    else if (isChrome) {
+    else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
 
       // proper browser
       $(`#btn-XinPayNotifier${course_id.id}`).click();
@@ -297,65 +286,83 @@
       return;
     }
 
-    if (window.web3.eth.coinbase == undefined) {
-      $.notify("Please login & setup your <strong>XinPay</strong> web-extension to continue.")
-      return;
-    }
+    window.web3.version.getNetwork((err, providerNetworkId) => {
+      if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
 
-    $.ajax({
-      method: "get",
-      url: "https://api.coinmarketcap.com/v1/ticker/xinfin-network/",
-      success: async response => {
-        if (!response[0].price_usd) {
-          // New format? 
-          $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
+      if (providerNetworkId == 50) {
+        if (window.web3.eth.coinbase == undefined) {
+          $.notify("Please login & setup your <strong>XinPay</strong> web-extension to continue.")
           return;
         }
-        const priceUsd = parseFloat(response[0].price_usd);
-        const coursePriceXdc = parseFloat(price) / (10000 * priceUsd)
-        console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
-        await ethereum.enable();
-        window.web3.eth.sendTransaction({ to: window.web3.eth.coinbase, gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
-          if (err) {
-            console.error(err)
-            $.notify("<b>XinPay</b> : Some error while creating or processing this transaction.", { type: "danger" });
-            return;
-          }
-          else {
-            // transaction processed; lets register this tx on blockdegree.
-            console.log("Transaction Hash: ", result);
-            $.ajax({
-              method: "post",
-              url: "/api/payViaXdc",
-              data: { course: course_id.id, price: (coursePriceXdc / 10000).toString(), txn_hash: result },
-              success: response => {
-                if (!response.status) {
-                  // Error, its ok.
-                  $.notify(`<b>Error</b> : ${response.error} `, { type: "danger" });
-                  return
-                } else {
-                  alert(`Success : Your transaction is now approved & you're enolled in our course, your txn-hash is ${response.txnHash}.`);
-                  window.location.reload();
-                  return;
-                }
-              },
-              error: xhr => {
-                // YIKES, ask to copy txn & mail at info@blockdegree.org
-                $.notify(`<b>Error</b> : Your txn was processed, but something went from our side. Don't worry, just send a mail to info@blockdegree.org with your tx hash.`, { type: "success" });
+        // is on XinFin mainnet
+        $.ajax({
+          method: "get",
+          url: "https://api.coinmarketcap.com/v1/ticker/xinfin-network/",
+          success: async response => {
+            if (!response[0].price_usd) {
+              // New format? 
+              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
+              return;
+            }
+            const priceUsd = parseFloat(response[0].price_usd);
+            const coursePriceXdc = parseFloat(price) / (10000 * priceUsd)
+            console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
+            await ethereum.enable();
+            window.web3.eth.sendTransaction({ to: window.web3.eth.coinbase, gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
+              if (err) {
+                console.error(err)
+                $.notify("<b>XinPay</b> : Some error while creating or processing this transaction.", { type: "danger" });
                 return;
               }
-            })
-          }
+              else {
+                // transaction processed; lets register this tx on blockdegree.
+                console.log("Transaction Hash: ", result);
+                $.ajax({
+                  method: "post",
+                  url: "/api/payViaXdc",
+                  data: { course: course_id.id, price: (coursePriceXdc / 10000).toString(), txn_hash: result },
+                  success: response => {
+                    if (!response.status) {
+                      // Error, its ok.
+                      $.notify(`<b>Error</b> : ${response.error} `, { type: "danger" });
+                      return
+                    } else {
+                      alert(`Success : Your transaction is now approved & you're enolled in our course, your txn-hash is ${response.txnHash}.`);
+                      window.location.reload();
+                      return;
+                    }
+                  },
+                  error: xhr => {
+                    // YIKES, ask to copy txn & mail at info@blockdegree.org
+                    $.notify(`<b>Error</b> : Your txn was processed, but something went from our side. Don't worry, just send a mail to info@blockdegree.org with your tx hash.`, { type: "success" });
+                    return;
+                  }
+                })
+              }
 
+            })
+          },
+          error: xhr => {
+            $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
+            return;
+          }
         })
-      },
-      error: xhr => {
-        $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
+      }
+      else if (providerNetworkId == 51) {
+        // User is on Apothem
+        $.notify("Looks like your wallet is on XinFin Apothem Network, please switch to XinFin Mainnet to make payment", { type: "danger" });
+        return;
+      }
+      else {
+        // Looks like you're using some other web-extension as web3 provider. Please disable other web3 extensions like metamask, mist and enable only XinPay & then try again.
+        $.notify("Looks like you're using some other web-extension as web3 provider. Please <b>disable</b> other web3 extensions like <b>Metamask</b>, <b>Mist</b> and enable only <b>XinPay</b>, refresh & then try again.", { type: "danger" });
         return;
       }
     })
 
-      ;
+
+
+
   }
 
   function checkCode(course_id, price) {
