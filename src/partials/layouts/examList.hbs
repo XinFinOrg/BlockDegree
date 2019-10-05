@@ -271,7 +271,6 @@
       return;
     }
     else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
-
       // proper browser
       $(`#btn-XinPayNotifier${course_id.id}`).click();
 
@@ -282,7 +281,7 @@
   async function launchXinPay(course_id, price) {
     if (window.web3 == undefined) {
       // no web3 provider is available, ask to install XinPay
-      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue.")
+      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
       return;
     }
 
@@ -291,7 +290,7 @@
 
       if (providerNetworkId == 50) {
         if (window.web3.eth.coinbase == undefined) {
-          $.notify("Please login & setup your <strong>XinPay</strong> web-extension to continue.")
+          $.notify("Please login & setup your <strong>XinPay</strong> web-extension to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
           return;
         }
         // is on XinFin mainnet
@@ -352,12 +351,12 @@
       }
       else if (providerNetworkId == 51) {
         // User is on Apothem
-        $.notify("Looks like your wallet is on XinFin Apothem Network, please switch to XinFin Mainnet to make payment", { type: "danger", delay: 5000 });
+        $.notify("Looks like your wallet is on XinFin Apothem Network, please switch to XinFin Mainnet to make payment, if already did please <a onclick='window.location.reload()'>refresh</a>", { type: "danger", delay: 5000 });
         return;
       }
       else {
         // Looks like you're using some other web-extension as web3 provider. Please disable other web3 extensions like metamask, mist and enable only XinPay & then try again.
-        $.notify("Looks like you're using some other web-extension as web3 provider. Please <b>disable</b> other web3 extensions like <b>Metamask</b>, <b>Mist</b> and enable only <b>XinPay</b>, refresh & then try again.", { type: "danger", delay: 5000 });
+        $.notify("Looks like you're using some other web-extension as web3 provider. Please <b>disable</b> other web3 extensions like <b>Metamask</b>, <b>Mist</b> and enable only <b>XinPay</b> & then try again, if already did please <a onclick='window.location.reload()'>refresh</a>", { type: "danger", delay: 5000 });
         return;
       }
     })
