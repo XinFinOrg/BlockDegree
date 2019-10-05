@@ -331,10 +331,11 @@
               success: response => {
                 if (!response.status) {
                   // Error, its ok.
-                  $.notify(`<b>Error</b> : Some error occured while processing your transaction ,please send a mail to info@blockdegree.org with your transaction-hash ${result.toString()} `, { type: "danger" });
+                  $.notify(`<b>Error</b> : ${response.error} `, { type: "danger" });
                   return
                 } else {
-                  $.notify(`<b>Success</b> : Your transaction is now approved & you're enolled in our course, your txn-hash is ${result.txnHash}.`, { type: "success" });
+                  alert(`Success : Your transaction is now approved & you're enolled in our course, your txn-hash is ${response.txnHash}.`);
+                  window.location.reload();
                   return;
                 }
               },

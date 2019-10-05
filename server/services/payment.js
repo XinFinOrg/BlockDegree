@@ -6,6 +6,8 @@ const promoCodeService = require("../services/promoCodes");
 const PaymentXDC = require("../models/payment_xdc");
 const XDC3 = require("xdc3");
 const Web3 = require("web3");
+const axios = require("axios");
+const uuidv4 = require("uuid/v4");
 
 const xdc3 = new XDC3("https://rpc.xinfin.network/"); // setting up the instance for xinfin's mainnet provider
 const web3 = new Web3("https://rpc.xinfin.network/"); // this wont work with XinFin's network
@@ -371,48 +373,88 @@ exports.payViaXdc = async (req, res) => {
   4. Handle errors at in-built registration, error in making call to burning service, error in the burning service.
 
   */
-  // if (
-  //   req.body.txn_hash == undefined ||
-  //   req.body.course == undefined ||
-  //   req.body.price == undefined
-  // ) {
-  //   console.log(`Bad request from the user ${req.user.email}: `, req.body);
-  //   res.json({ status: false, error: "Bad request" });
-  // }
-  // const txn_hash = req.body.txn_hash;
-  // let price = req.body.price;
-  // const course = req.body.course;
-  // 0xb17fb11d4b6ca97dcd9811254c1d2598568a902389669c9290deb333426fba07
-  // console.log(req.body);
-  // res.json({ status: true, error: null });
-  const retObj = await xdc3.eth.getTransaction(req.body.hash);
-  const toAddr = retObj.to;
-  const fromAddr = retObj.from;
-  const value = retObj.value;
-  console.log(retObj);
-  $.ajax({
-    method: "post",
-    url: txReceiptUrl,
-    data: { isTransfer: false, tx: req.body.hash },
-    success: response => {
-      isComplete = response.blockNumber != null;
-    },
-    error: xhr => {}
-  });
+  if (req.body.txn_hash == undefined || req.body.course == undefined) {
+    console.log(`Bad request from the user ${req.user.email}: `, req.body);
+    res.json({ status: false, error: "Bad request" });
+    return;
+  }
+  const txn_hash = req.body.txn_hash;
+  const course = req.body.course;
+  let txnObj;
 
-  // const user = await User.findOne({ email: req.user.email }, function(err) {
-  //   if (err != null) {
-  //     console.error(`Can't find user | access db; Err : ${err}`);
-  //     res.json({
-  //       status: false,
-  //       error: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
-  //     });
-  //     return;
-  //   }
+  txnObj = await axios.post(txReceiptUrl, {
+    isTransfer: false,
+    tx: txn_hash
+  });
+  // Verify the amt, to & time
+  console.log(txnObj.data);
+  let priceInUsd,
+    priceObj,
+    tolerance = 5;
+  const constPrice = 9.99;
+  priceObj = await axios.get(
+    "https://api.coinmarketcap.com/v1/ticker/xinfin-network/"
+  );
+  priceInUsd = priceObj.data[0].price_usd;
+  console.log(priceObj.data[0], priceInUsd);
+  // $.ajax({
+  //   method: "get",
+  //   url: "https://api.coinmarketcap.com/v1/ticker/xinfin-network/",
+  //   success: response => {
+  //     priceInUsd = response.price_usd;
+  //   },
+  //   error: xhr => {}
   // });
-  // let newPaymentXDC = new PaymentXDC({
-  //   email: req.user.email,
-  //   course: course,
-  //   price: price
-  // });
+
+  let expectedXdc = constPrice / (10000 * priceInUsd); // 10000 multiplier for testing purpose
+  console.log(expectedXdc);
+
+  console.log(
+    `Difference: ${Math.abs(parseFloat(txnObj.data.value) - expectedXdc)}`
+  );
+  console.log(`Tolerance: ${(tolerance / 100) * 100}`);
+
+  if (
+    Math.abs(parseFloat(txnObj.data.value) - expectedXdc) / expectedXdc <=
+    (tolerance / 100) * expectedXdc
+  ) {
+    // tolerance of 10 %
+    // valid amount
+    let user;
+    try {
+      user = await User.findOne({ email: req.user.email });
+    } catch (e) {
+      console.log(
+        `Exception occured while fetching user for payment.PayViaXdc :`,
+        e
+      );
+      res.json({ status: false, error: "Internal error" });
+      return;
+    }
+    let newPaymentXDC = new PaymentXDC({
+      payment_id: uuidv4(),
+      email: user.email,
+      course: course,
+      price: expectedXdc,
+      creationDate: Date.now(),
+      txn_hash: txn_hash
+    });
+    user.examData.payment[course] = true;
+
+    try {
+      newPaymentXDC.save();
+      user.save();
+    } catch (e) {
+      console.log(
+        `Some error has occurred while saving the data at payment.payViaXdc`,
+        e
+      );
+      res.json({ status: false, error: "Internal Error" });
+      return;
+    }
+    res.json({ status: true, error: null, txnHash: txn_hash });
+  } else {
+    res.json({ status: false, error: "Invalid amount" });
+    return;
+  }
 };
