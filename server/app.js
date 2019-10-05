@@ -47,6 +47,7 @@ app.use(
   session({
     secret: "",
     resave: true,
+    rolling: true,
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
