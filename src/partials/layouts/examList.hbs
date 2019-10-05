@@ -308,6 +308,7 @@
             const coursePriceXdc = parseFloat(price) / (10000 * priceUsd)
             console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
             await ethereum.enable();
+
             window.web3.eth.sendTransaction({ to: window.web3.eth.coinbase, gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
               if (err) {
                 console.error(err)
@@ -317,6 +318,7 @@
               else {
                 // transaction processed; lets register this tx on blockdegree.
                 console.log("Transaction Hash: ", result);
+                $.notify("The payment process has been initiated");
                 $.ajax({
                   method: "post",
                   url: "/api/payViaXdc",
@@ -350,12 +352,12 @@
       }
       else if (providerNetworkId == 51) {
         // User is on Apothem
-        $.notify("Looks like your wallet is on XinFin Apothem Network, please switch to XinFin Mainnet to make payment", { type: "danger" });
+        $.notify("Looks like your wallet is on XinFin Apothem Network, please switch to XinFin Mainnet to make payment", { type: "danger", delay: 5000 });
         return;
       }
       else {
         // Looks like you're using some other web-extension as web3 provider. Please disable other web3 extensions like metamask, mist and enable only XinPay & then try again.
-        $.notify("Looks like you're using some other web-extension as web3 provider. Please <b>disable</b> other web3 extensions like <b>Metamask</b>, <b>Mist</b> and enable only <b>XinPay</b>, refresh & then try again.", { type: "danger" });
+        $.notify("Looks like you're using some other web-extension as web3 provider. Please <b>disable</b> other web3 extensions like <b>Metamask</b>, <b>Mist</b> and enable only <b>XinPay</b>, refresh & then try again.", { type: "danger", delay: 5000 });
         return;
       }
     })
