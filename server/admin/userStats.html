@@ -171,9 +171,14 @@
           <button type="button" onclick="getAllUserCertificates()">
             Get Certificates By User
           </button>
+          <button type="button" onclick="getCertificatesFromPromoCode()">
+            Get Certificates With Payment Mode
+          </button>
           <br />
-          <span>Unique User Certificate Count: </span><span id="certCount"></span>
-          <span>Total Certificate Issued Count: </span><span id="totCertisCount"></span>
+          <span>Unique User Certificate Count: </span
+          ><span id="certCount"></span>
+          <span>Total Certificate Issued Count: </span
+          ><span id="totCertisCount"></span>
 
           <br />
           <section id="certificatesTable"></section>
@@ -419,9 +424,9 @@
             // console.log("Current Data: ", data[i]);
             // console.log(`Tot Code: ${totCode}`);
             // console.log(`Tot Payment: ${totPayment}`);
-            retHTML += `<tr><td rowspan="${rowSpan}">${
-              data[i].email
-            }</td><td>${totCode > 0 ? codeKeys[0] : "NA"}</td><td>${
+            retHTML += `<tr><td rowspan="${rowSpan}">${data[i].email}</td><td>${
+              totCode > 0 ? codeKeys[0] : "NA"
+            }</td><td>${
               totCode > 0 ? data[i].codes[codeKeys[0]] : "NA"
             }</td><td>${totPayment > 0 ? paymentKeys[0] : "NA"}</td><td>${
               totPayment > 0 ? data[i].payment[paymentKeys[0]] : "NA"
@@ -476,11 +481,9 @@
               let currentUser = data[i];
               let currentCertificates = currentUser.examData.certificateHash;
               let rowSpan = currentCertificates.length;
-              retHTML += `<tr><td >${
-                currentUser.email
-              }</td><td>${currentCertificates[1].examType}</td><td>${
-                currentCertificates[1].clientHash
-              }</td><td>${
+              retHTML += `<tr><td >${currentUser.email}</td><td>${
+                currentCertificates[1].examType
+              }</td><td>${currentCertificates[1].clientHash}</td><td>${
                 currentCertificates[1].headlessHash
               }</td><td>${new Date(
                 parseFloat(currentCertificates[1].timestamp)
@@ -506,6 +509,249 @@
           alert(`Error: ${err}`);
         }
       });
+    }
+
+    function getCertificatesFromPromoCode() {
+      let certificatesTable = document.getElementById("certificatesTable");
+      let certificateCount = document.getElementById("certCount");
+      let totCertisCount = document.getElementById("totCertisCount");
+      certificateCount.innerHTML = "";
+      let allUserCertis = [],
+        allUserPayment = [];
+      let retHTML = "<table class='certificateTab'";
+      retHTML +=
+        "<tr><th rowspan='2'>Email</th><th colspan='4'>Payment</th><th colspan='4' >Certificates</th></tr><tr><th>Code Name</th><th>Count</th><th>Course ID</th><th>Count</th><th>Course Name</th><th>Client Hash</th><th>Document Hash</th><th>Timestamp</th></tr>";
+      $.ajax({
+        method: "get",
+        url: "/api/getAllUserCertificates",
+        success: res => {
+          if (!res.status) {
+            alert(`Error: ${res.error}`);
+          } else {
+            allUserCertis = res.users;
+            $.ajax({
+              method: "get",
+              url: "/api/getAllUserPaymentList",
+              success: result => {
+                // console.log("result: ", result);
+                allUserPayment = result.data;
+                let codeKeys = [],
+                  paymentKeys = [],
+                  totCode = 0,
+                  totPayment = 0;
+                // const totRows = allUserCertis.length > allUserPayment.length ? allUserCertis.length : allUserPayment.length;
+                for (let i = 0; i < allUserCertis.length; i++) {
+                  const currentUser = allUserCertis[i];
+                  const userPaymentTuple = findUser(
+                    allUserPayment,
+                    currentUser.email
+                  );
+                  if (userPaymentTuple.codes != undefined) {
+                    codeKeys = Object.keys(userPaymentTuple.codes);
+                    totCode = codeKeys.length;
+                  } else {
+                    (codeKeys = []), (totCode = 0);
+                  }
+                  if (userPaymentTuple.payment != undefined) {
+                    paymentKeys = Object.keys(userPaymentTuple.payment);
+                    totPayment = paymentKeys.length;
+                  } else {
+                    (paymentKeys = []), (totPayment = 0);
+                  }
+                  const paymentRowSpan =
+                    totCode > totPayment ? totCode : totPayment;
+                  let currentCertificates =
+                    currentUser.examData.certificateHash;
+                  const certisRowSpan = currentCertificates.length;
+                  const currRowSpan =
+                    paymentRowSpan > certisRowSpan
+                      ? paymentRowSpan
+                      : certisRowSpan;
+                  retHTML += `<tr><td>${currentUser.email}</td><td>${
+                    totCode > 0 ? codeKeys[0] : "NA"
+                  }</td><td>${
+                    totCode > 0 ? userPaymentTuple.codes[codeKeys[0]] : "NA"
+                  }</td><td>${totPayment > 0 ? paymentKeys[0] : "NA"}</td><td>${
+                    totPayment > 0
+                      ? userPaymentTuple.payment[paymentKeys[0]]
+                      : "NA"
+                  }</td><td>${currentCertificates[1].examType}</td><td>${
+                    currentCertificates[1].clientHash
+                  }</td><td>${
+                    currentCertificates[1].headlessHash
+                  }</td><td>${new Date(
+                    parseFloat(currentCertificates[1].timestamp)
+                  )}</td><tr>`;
+                  let remainingCertis = certisRowSpan - 2;
+                  let remainingCodes = totCode - 1;
+                  let remainingPayment = totPayment - 1;
+                  // max out of three
+                  let maxRemainingSpan =
+                    remainingCertis > remainingCodes
+                      ? remainingCertis > remainingPayment
+                        ? remainingCertis
+                        : remainingPayment
+                      : remainingCodes > remainingPayment
+                      ? remainingCodes
+                      : remainingPayment;
+                  // 2 onwards for certificates & 1 onwards for code & payment
+                  let offSetCode = 1,
+                    offSetPayment = 1,
+                    offSetCertis = 2;
+                  for (let j = 0; j < maxRemainingSpan; j++) {
+                    retHTML += `<tr><td>-- || --</td><td>${
+                      remainingCodes > 0 ? codeKeys[j + offSetCode] : "NA"
+                    }</td><td>${
+                      remainingCodes > 0
+                        ? userPaymentTuple.codes[codeKeys[j + offSetCode]]
+                        : "NA"
+                    }</td>
+          <td>${
+            remainingPayment > 0 ? paymentKeys[j + offSetPayment] : "NA"
+          }</td><td>${
+                      remainingPayment > 0
+                        ? userPaymentTuple.payment[
+                            paymentKeys[j + offSetPayment]
+                          ]
+                        : "NA"
+                    }</td>
+          <td>${
+            currentCertificates[j + offSetCertis] !== undefined
+              ? currentCertificates[j + offSetCertis].examType
+              : "NA"
+          }</td><td>${
+                      currentCertificates[j + offSetCertis] !== undefined
+                        ? currentCertificates[j + offSetCertis].clientHash
+                        : "NA"
+                    }</td><td>${
+                      currentCertificates[j + offSetCertis] !== undefined
+                        ? currentCertificates[j + offSetCertis].headlessHash
+                        : "NA"
+                    }</td><td>${
+                      currentCertificates[j + offSetCertis] !== undefined
+                        ? new Date(
+                            parseFloat(
+                              currentCertificates[j + offSetCertis].timestamp
+                            )
+                          )
+                        : "NA"
+                    }</td></tr>`;
+                    if (remainingCodes > 0) remainingCodes--;
+                    if (remainingPayment > 0) remainingPayment--;
+                    if (remainingCertis > 0) remainingCertis--;
+                  }
+                }
+                certificatesTable.innerHTML = retHTML;
+              }
+            });
+          }
+        },
+        error: err => {
+          alert(`Error: ${err}`);
+        }
+      });
+
+      // let codeKeys = [],
+      //   paymentKeys = [],
+      //   totCode = 0,
+      //   totPayment = 0;
+      // // const totRows = allUserCertis.length > allUserPayment.length ? allUserCertis.length : allUserPayment.length;
+      // for (let i = 0; i < allUserCertis.length; i++) {
+      //   const currentUser = allUserCertis[i];
+      //   const userPaymentTuple = findUser(allUserPayment, currentUser.email);
+      //   if (userPaymentTuple.codes != undefined) {
+      //     codeKeys = Object.keys(userPaymentTuple.codes);
+      //     totCode = codeKeys.length;
+      //   } else {
+      //     (codeKeys = []), (totCode = 0);
+      //   }
+      //   if (userPaymentTuple.payment != undefined) {
+      //     paymentKeys = Object.keys(userPaymentTuple.payment);
+      //     totPayment = paymentKeys.length;
+      //   } else {
+      //     (paymentKeys = []), (totPayment = 0);
+      //   }
+      //   const paymentRowSpan = totCode > totPayment ? totCode : totPayment;
+      //   let currentCertificates = currentUser.examData.certificateHash;
+      //   const certisRowSpan = currentCertificates.length;
+      //   const currRowSpan =
+      //     paymentRowSpan > certisRowSpan ? paymentRowSpan : certisRowSpan;
+      //   retHTML += `<tr><td>${currentUser.email}</td><td>${
+      //     totCode > 0 ? codeKeys[0] : "NA"
+      //   }</td><td>${
+      //     totCode > 0 ? userPaymentTuple.codes[codeKeys[0]] : "NA"
+      //   }</td><td>${totPayment > 0 ? paymentKeys[0] : "NA"}</td><td>${
+      //     totPayment > 0 ? userPaymentTuple.payment[paymentKeys[0]] : "NA"
+      //   }</td><td>${currentCertificates[1].examType}</td><td>${
+      //     currentCertificates[1].clientHash
+      //   }</td><td>${currentCertificates[1].headlessHash}</td><td>${new Date(
+      //     parseFloat(currentCertificates[1].timestamp)
+      //   )}</td><tr>`;
+      //   let remainingCertis = certisRowSpan - 1;
+      //   let remainingCodes = totCode - 1;
+      //   let remainingPayment = totPayment - 1;
+      //   // max out of three
+      //   let maxRemainingSpan =
+      //     remainingCertis > remainingCodes
+      //       ? remainingCertis > remainingPayment
+      //         ? remainingCertis
+      //         : remainingPayment
+      //       : remainingCodes > remainingPayment
+      //       ? remainingCodes
+      //       : remainingPayment;
+      //   // 2 onwards for certificates & 1 onwards for code & payment
+      //   let offSetCode = 1,
+      //     offSetPayment = 1,
+      //     offSetCertis = 2;
+      //   for (let j = 0; j < maxRemainingSpan; j++) {
+      //     retHTML += `<tr><td>-- || --</td><td>${
+      //       remainingCodes > 0 ? codeKeys[j + offSetCode] : "NA"
+      //     }</td><td>${
+      //       remainingCodes > 0
+      //         ? userPaymentTuple.codes[codeKeys[j + offSetCode]]
+      //         : "NA"
+      //     }</td>
+      //     <td>${
+      //       remainingPayment > 0 ? paymentKeys[j + offSetPayment] : "NA"
+      //     }</td><td>${
+      //       remaininPayment > 0
+      //         ? userPaymentTuple.payment[paymentKeys[j + offSetPayment]]
+      //         : "NA"
+      //     }</td>
+      //     <td>${
+      //       remainingCertis > 0
+      //         ? currentCertificates[j + offSetCertis].examType
+      //         : "NA"
+      //     }</td><td>${
+      //       remainingCertis > 0
+      //         ? currentCertificates[j + offSetCertis].clienthash
+      //         : "NA"
+      //     }</td><td>${
+      //       remainingCertis > 0
+      //         ? currentCertificates[j + offSetCertis].headlessHash
+      //         : "NA"
+      //     }</td><td>${
+      //       remainingCertis > 0
+      //         ? new Date(
+      //             parseFloat(currentCertificates[j + offSetCertis].timestamp)
+      //           )
+      //         : "NA"
+      //     }</td></tr>`;
+      //     if (remainingCodes > 0) remainingCodes--;
+      //     if (remainingPayment > 0) remainingPayment--;
+      //     if (remainingCertis > 0) remainingCertis--;
+      //   }
+      // }
+      // certificatesTable.innerHTML = retHTML;
+    }
+
+    function findUser(arr, email) {
+      for (let i = 0; i < arr.length; i++) {
+        if (email === arr[i].email) {
+          return arr[i];
+        }
+      }
+      return false;
     }
   </script>
 </html>
