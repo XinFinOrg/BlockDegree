@@ -537,7 +537,7 @@
       $.ajax({
         method: "get",
         url: "/api/getAllCodes",
-        success: async result => {
+        success: result => {
           let allCodes = result.codes;
           promoCodeCount.innerHTML = allCodes.length;
           let retHTML = '<table style="width: 100%;">';
@@ -546,19 +546,9 @@
           for (let i = 0; i < allCodes.length; i++) {
             let createdDate = new Date(parseFloat(allCodes[i].created));
             let lastUsedDate = new Date(parseFloat(allCodes[i].lastUsed));
-            let currentCodeUsers = await $.ajax({
-              method: "post",
-              url: "/api/getUserListUsingCode",
-              data: { codeName: allCodes[i].codeName }
-            });
-            let usedCountToday = 0;
-            for (let k=0;k<currentCodeUsers.users.length;k++){
-              if (todayStart - parseFloat(currentCodeUsers.users[k].lastUsed) < nMilliSecs){
-                usedCountToday++;
-              }
-            }
+          
             retHTML += `<tr><td>${allCodes[i].codeName}</td><td>${
-              usedCountToday
+              allCodes[i].count
             }</td><td>${allCodes[i].users.length - 1}</td><td>${
               allCodes[i].status
             }</td><td>${
