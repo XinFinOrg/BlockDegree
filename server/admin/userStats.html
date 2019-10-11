@@ -467,7 +467,7 @@
       let codeName = document.getElementById("codename_users").value;
       let promoCodeCount = document.getElementById("promoCodeCount");
       let n = document.getElementById("userByCode-n-days").value;
-      let nMilliSecs = parseFloat(n.trim()) * 24 * 60 * 60 * 1000;
+      let nMilliSecs = parseFloat(n) * 24 * 60 * 60 * 1000;
       // console.log(codeName);
       let promoCodeTable = document.getElementById("promoCodeTable");
       if (codeName != undefined && codeName != null && codeName != "") {
@@ -537,17 +537,28 @@
       $.ajax({
         method: "get",
         url: "/api/getAllCodes",
-        success: result => {
+        success: async result => {
           let allCodes = result.codes;
           promoCodeCount.innerHTML = allCodes.length;
           let retHTML = '<table style="width: 100%;">';
           retHTML +=
-            "<tr><th>CodeName</th><th>Used Count</th><th>User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
+            "<tr><th>CodeName</th><th>Total Used Count</th><th>User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
           for (let i = 0; i < allCodes.length; i++) {
             let createdDate = new Date(parseFloat(allCodes[i].created));
             let lastUsedDate = new Date(parseFloat(allCodes[i].lastUsed));
+            let currentCodeUsers = await $.ajax({
+              method: "post",
+              url: "/api/getUserListUsingCode",
+              data: { codeName: allCodes[i].codeName }
+            });
+            let usedCountToday = 0;
+            for (let k=0;k<currentCodeUsers.users.length;k++){
+              if (todayStart - parseFloat(currentCodeUsers.users[k].lastUsed) < nMilliSecs){
+                usedCountToday++;
+              }
+            }
             retHTML += `<tr><td>${allCodes[i].codeName}</td><td>${
-              allCodes[i].count
+              usedCountToday
             }</td><td>${allCodes[i].users.length - 1}</td><td>${
               allCodes[i].status
             }</td><td>${
@@ -575,14 +586,14 @@
           let allCodes = result.codes;
           let codeCount = 0;
           let n = document.getElementById("allCodes-n-days").value;
-          let nMilliSecs = parseFloat(n.trim()) * 24 * 60 * 60 * 1000;
+          let nMilliSecs = parseFloat(n) * 24 * 60 * 60 * 1000;
           let retHTML = '<table style="width: 100%;">';
           let todayStart = new Date();
           todayStart.setHours(0);
           todayStart.setMinutes(0);
           todayStart.setSeconds(0);
           retHTML +=
-            "<tr><th>CodeName</th><th>Used Count</th><th>User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
+            "<tr><th>CodeName</th><th>Total Used Count</th><th>User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
           for (let i = 0; i < allCodes.length; i++) {
             if (todayStart - parseFloat(allCodes[i].lastUsed) < nMilliSecs) {
               codeCount++;
@@ -660,7 +671,7 @@
       todayStart.setHours(0);
       todayStart.setMinutes(0);
       todayStart.setSeconds(0);
-      if (n.trim() !== "") {
+      if (n !== "") {
         nToMilliSec = parseFloat(n) * 24 * 60 * 60 * 1000;
       }
       visitCount.innerHTML = "";
@@ -836,7 +847,7 @@
       let certificateCount = document.getElementById("certCount");
       let totCertisCount = document.getElementById("totCertisCount");
       let n = document.getElementById("userCert-n-days").value;
-      let nMilliSecs = parseFloat(n.trim()) * 24 * 60 * 60 * 1000;
+      let nMilliSecs = parseFloat(n) * 24 * 60 * 60 * 1000;
       let todayStart = new Date();
       todayStart.setHours(0);
       todayStart.setMinutes(0);
@@ -855,7 +866,7 @@
             // console.log(result);
             let data = result.users;
             let totCertis = 0;
-            certificateCount.innerHTML = data.length;
+            let totUser = 0;
             for (let i = 0; i < data.length; i++) {
               let currentUser = data[i];
               let currentCertificates = currentUser.examData.certificateHash;
@@ -872,6 +883,7 @@
                   parseFloat(currentCertificates[1].timestamp)
                 )}</td></tr>`;
                 totCertis++;
+                totUser++;
               }
               for (let j = 2; j < rowSpan; j++) {
                 if (
@@ -892,6 +904,7 @@
             retHTML += "</table>";
             certificatesTable.innerHTML = retHTML;
             totCertisCount.innerHTML = totCertis;
+            certificateCount.innerHTML = totUser;
           }
         },
         error: err => {
