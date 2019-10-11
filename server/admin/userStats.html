@@ -582,7 +582,7 @@
       $.ajax({
         method: "get",
         url: "/api/getAllCodes",
-        success: result => {
+        success: async result => {
           let allCodes = result.codes;
           let codeCount = 0;
           let n = document.getElementById("allCodes-n-days").value;
@@ -599,8 +599,19 @@
               codeCount++;
               let createdDate = new Date(parseFloat(allCodes[i].created));
               let lastUsedDate = new Date(parseFloat(allCodes[i].lastUsed));
+              let currentCodeUsers = await $.ajax({
+              method: "post",
+              url: "/api/getUserListUsingCode",
+              data: { codeName: allCodes[i].codeName }
+            });
+            let usedCountToday = 0;
+            for (let k=0;k<currentCodeUsers.users.length;k++){
+              if (todayStart - parseFloat(currentCodeUsers.users[k].lastUsed) < nMilliSecs){
+                usedCountToday++;
+              }
+            }
               retHTML += `<tr><td>${allCodes[i].codeName}</td><td>${
-                allCodes[i].count
+                usedCountToday
               }</td><td>${allCodes[i].users.length - 1}</td><td>${
                 allCodes[i].status
               }</td><td>${
