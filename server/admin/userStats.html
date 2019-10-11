@@ -3,6 +3,16 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.js"
+      integrity="sha256-OztcN49BsVSoupBpIZaUwczM6+GLsXuA8IJF+W9SsBU="
+      crossorigin="anonymous"
+    ></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+    <script src="//d3js.org/topojson.v1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
       body {
         font-family: "Lato", sans-serif;
@@ -51,6 +61,51 @@
         background-color: #ddd;
       }
 
+      #wrap-body {
+        align-self: center;
+        border: 1px solid black;
+      }
+
+      path {
+        stroke: grey;
+        stroke-width: 0.5px;
+        fill: lightgrey;
+      }
+
+      #tooltip {
+        text-align: left;
+        padding: 16px;
+        background-color: lightsalmon;
+        border: 1px solid black;
+        width: fit-content;
+        opacity: 0;
+        color: black;
+        position: absolute;
+      }
+
+      /*
+ * Footer
+ */
+      a:link {
+        text-decoration: none;
+      }
+
+      a:visited {
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .tableFooter {
+        margin-top: 15px;
+      }
+
+      .footerSvg {
+        width: 32px;
+      }
+
       .main {
         margin-left: 230px;
         font-size: 28px;
@@ -74,6 +129,7 @@
       <div onclick="openPage('bySiteTraffic')">Traffic</div>
       <div onclick="openPage('byPayment')">Payment</div>
       <div onclick="openPage('byCertificates')">Certificates</div>
+      <div onclick="openPage('byTrafficMap')">Traffic Map</div>
     </div>
 
     <div class="main">
@@ -130,16 +186,42 @@
           <br />
           <section id="promoCodeTable"></section>
         </div>
+        <div id="byTrafficMap" class="tabcontent" style="display: none">
+          <h1>Course Traffic Map</h1>
+          <button onclick="loadMap('curri-blockchain-basic')">
+            Map - Basic Curriculum
+          </button>
+          <button onclick="loadMap('curri-blockchain-advanced')">
+            Map - Advanced Curriculum
+          </button>
+          <button onclick="loadMap('curri-blockchain-professional')">
+            Map - Professional Curriculum
+          </button>
+          <button onclick="loadMap('basic')">Map - Basic Course</button>
+          <button onclick="loadMap('advanced')">Map - Advanced Course</button>
+          <button onclick="loadMap('professional')">
+            Map - Professional Course
+          </button>
+          <div id="wrap-body"></div>
+          <div id="tooltip">
+            Email: <span id="email" class="info"></span><br />
+            Count: <span id="count" class="info"></span><br />
+            City: <span id="city" class="info"></span><br />
+            Region: <span id="region" class="info"></span><br />
+            First Visit: <span id="firstVisit" class="info"></span><br />
+            Last Visit: <span id="lastVisit" class="info"></span><br />
+          </div>
+        </div>
         <div id="bySiteTraffic" class="tabcontent" style="display:none">
           <h2>Traffic</h2>
           <button onclick="getAllVisits('curri-blockchain-basic')">
-            Visited Curriculaum Basic
+            Visited Curriculum Basic
           </button>
           <button onclick="getAllVisits('curri-blockchain-advanced')">
-            Visited Curriculaum Advanced
+            Visited Curriculum Advanced
           </button>
           <button onclick="getAllVisits('curri-blockchain-professional')">
-            Visited Curriculaum Professional
+            Visited Curriculum Professional
           </button>
           <br />
           <button onclick="getAllVisits('basic')">
@@ -650,99 +732,164 @@
           alert(`Error: ${err}`);
         }
       });
+    }
 
-      // let codeKeys = [],
-      //   paymentKeys = [],
-      //   totCode = 0,
-      //   totPayment = 0;
-      // // const totRows = allUserCertis.length > allUserPayment.length ? allUserCertis.length : allUserPayment.length;
-      // for (let i = 0; i < allUserCertis.length; i++) {
-      //   const currentUser = allUserCertis[i];
-      //   const userPaymentTuple = findUser(allUserPayment, currentUser.email);
-      //   if (userPaymentTuple.codes != undefined) {
-      //     codeKeys = Object.keys(userPaymentTuple.codes);
-      //     totCode = codeKeys.length;
-      //   } else {
-      //     (codeKeys = []), (totCode = 0);
-      //   }
-      //   if (userPaymentTuple.payment != undefined) {
-      //     paymentKeys = Object.keys(userPaymentTuple.payment);
-      //     totPayment = paymentKeys.length;
-      //   } else {
-      //     (paymentKeys = []), (totPayment = 0);
-      //   }
-      //   const paymentRowSpan = totCode > totPayment ? totCode : totPayment;
-      //   let currentCertificates = currentUser.examData.certificateHash;
-      //   const certisRowSpan = currentCertificates.length;
-      //   const currRowSpan =
-      //     paymentRowSpan > certisRowSpan ? paymentRowSpan : certisRowSpan;
-      //   retHTML += `<tr><td>${currentUser.email}</td><td>${
-      //     totCode > 0 ? codeKeys[0] : "NA"
-      //   }</td><td>${
-      //     totCode > 0 ? userPaymentTuple.codes[codeKeys[0]] : "NA"
-      //   }</td><td>${totPayment > 0 ? paymentKeys[0] : "NA"}</td><td>${
-      //     totPayment > 0 ? userPaymentTuple.payment[paymentKeys[0]] : "NA"
-      //   }</td><td>${currentCertificates[1].examType}</td><td>${
-      //     currentCertificates[1].clientHash
-      //   }</td><td>${currentCertificates[1].headlessHash}</td><td>${new Date(
-      //     parseFloat(currentCertificates[1].timestamp)
-      //   )}</td><tr>`;
-      //   let remainingCertis = certisRowSpan - 1;
-      //   let remainingCodes = totCode - 1;
-      //   let remainingPayment = totPayment - 1;
-      //   // max out of three
-      //   let maxRemainingSpan =
-      //     remainingCertis > remainingCodes
-      //       ? remainingCertis > remainingPayment
-      //         ? remainingCertis
-      //         : remainingPayment
-      //       : remainingCodes > remainingPayment
-      //       ? remainingCodes
-      //       : remainingPayment;
-      //   // 2 onwards for certificates & 1 onwards for code & payment
-      //   let offSetCode = 1,
-      //     offSetPayment = 1,
-      //     offSetCertis = 2;
-      //   for (let j = 0; j < maxRemainingSpan; j++) {
-      //     retHTML += `<tr><td>-- || --</td><td>${
-      //       remainingCodes > 0 ? codeKeys[j + offSetCode] : "NA"
-      //     }</td><td>${
-      //       remainingCodes > 0
-      //         ? userPaymentTuple.codes[codeKeys[j + offSetCode]]
-      //         : "NA"
-      //     }</td>
-      //     <td>${
-      //       remainingPayment > 0 ? paymentKeys[j + offSetPayment] : "NA"
-      //     }</td><td>${
-      //       remaininPayment > 0
-      //         ? userPaymentTuple.payment[paymentKeys[j + offSetPayment]]
-      //         : "NA"
-      //     }</td>
-      //     <td>${
-      //       remainingCertis > 0
-      //         ? currentCertificates[j + offSetCertis].examType
-      //         : "NA"
-      //     }</td><td>${
-      //       remainingCertis > 0
-      //         ? currentCertificates[j + offSetCertis].clienthash
-      //         : "NA"
-      //     }</td><td>${
-      //       remainingCertis > 0
-      //         ? currentCertificates[j + offSetCertis].headlessHash
-      //         : "NA"
-      //     }</td><td>${
-      //       remainingCertis > 0
-      //         ? new Date(
-      //             parseFloat(currentCertificates[j + offSetCertis].timestamp)
-      //           )
-      //         : "NA"
-      //     }</td></tr>`;
-      //     if (remainingCodes > 0) remainingCodes--;
-      //     if (remainingPayment > 0) remainingPayment--;
-      //     if (remainingCertis > 0) remainingCertis--;
-      //   }
-      // }
-      // certificatesTable.innerHTML = retHTML;
+    function loadMap(visitPage) {
+      // let regions = [];
+      // Width and Height of the whole visualization
+      $("#wrap-body").html("");
+      var w = 1000;
+      var h = 480;
+      //D3 has some internal functionality that can turn GeoJSON data into screen coordinates based on the projection you set. This is not unlike other libraries such as Leaflet, but the result is much more open-ended, not constrained to shapes on a tiled Mercator map.1 So, yes, D3 supports projections.
+      var projection = d3.geo.equirectangular();
+      // Create GeoPath function that uses built-in D3 functionality to turn
+      // lat/lon coordinates into screen coordinates
+      var path = d3.geo.path().projection(projection);
+      //add the following to create our SVG canvas.
+      var svg = d3
+        .select("#wrap-body")
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h);
+      svg
+        .append("rect")
+        .attr("width", w)
+        .attr("height", h)
+        .attr("fill", "white");
+      // Append empty placeholder g element to the SVG
+      // g will contain geometry elements
+      var g = svg.append("g");
+
+      //add a call to d3.json to load the TopoJSON file
+      //so it loads into our visualization
+      d3.json("https://d3js.org/world-50m.v1.json", async function(
+        error,
+        data
+      ) {
+        if (error) console.error(error);
+        g.append("path")
+          .datum(topojson.feature(data, data.objects.countries))
+          .attr("d", path);
+
+        //create the zoom effect
+        var zoom = d3.behavior.zoom().on("zoom", function() {
+          g.attr(
+            "transform",
+            "translate(" +
+              d3.event.translate.join(",") +
+              ")scale(" +
+              d3.event.scale +
+              ")"
+          );
+          g.selectAll("path").attr("d", path.projection(projection));
+        });
+        svg.call(zoom);
+
+        // Load the data from the json file
+        // d3.json(locatio, function(error, data) {
+        data = await loadDataFromIP(visitPage);
+        console.log(data);
+        if (error) console.error(error);
+        // for (let itr = 0; itr < data.features.length; itr++) {
+        //   let existingIndex = isNewRegion(
+        //     regions,
+        //     data.features[itr].properties.region
+        //   );
+        //   if (existingIndex !== -1) {
+        //     // is not new region, assign existing color
+        //     data.features[itr].color = regions[existingIndex].color;
+        //     continue;
+        //   }
+        //   // generate new color, add to region arr, set color
+        //   let newColor = getRandomColor();
+        //   regions.push({ name: data.features[itr].region, color: newColor });
+        //   data.features[itr].color = newColor;
+        // }
+
+        var locations = data.features;
+        console.log("Location: ", locations);
+        // we will pass our data (the TopoJSON) as an argument, then create SVG elements using a classic D3 append. Selecting all paths, the TopoJSON is bound in the data method. From here, we can perform work on each element.
+
+        // locations.map(function(d) {
+        //   // Create an object for holding dataset
+        //   hue += 0.36; // Create property for each circle, give it value from color
+        //   d.color = "hsl(" + hue + ", 100%, 50%)";
+        // });
+
+        // Classic D3... Select non-existent elements, bind the data, append the elements, and apply attributes
+        g.selectAll("circle")
+          .data(locations)
+          .enter()
+          .append("circle") //show the circles
+          .attr("cx", function(d) {
+            if (d.geometry) {
+              return projection([
+                d.geometry.coordinates[0],
+                d.geometry.coordinates[1]
+              ])[0];
+            }
+          })
+          .attr("cy", function(d) {
+            if (d.geometry) {
+              return projection([
+                d.geometry.coordinates[0],
+                d.geometry.coordinates[1]
+              ])[1];
+            }
+          })
+          .attr("r", function(d) {
+            return Math.pow(200, 1 / 9); // static point size
+          })
+          .style("fill", function(d) {
+            //Use the Color Function to set the Fill Value for each circle
+            return d.properties.color;
+          })
+
+          //Next, we need to write two pieces of code, one that listens for when the value of the tooltip changes, and one that updates the SVG elements.
+          //We are going to use some D3 code to listen for an input change on the tooltip elements
+
+          //Add Event Listeners | mouseover
+          .on("mouseover", function(d) {
+            d3.select(this).style("fill", "black");
+            d3.select("#email").text(d.properties.email);
+            d3.select("#count").text(d.properties.count);
+            d3.select("#region").text(d.properties.region);
+            d3.select("#city").text(d.properties.city);
+            d3.select("#firstVisit").text(d.properties.firstVisit);
+            d3.select("#lastVisit").text(d.properties.lastVisit);
+
+            d3.select("#tooltip")
+              .style("left", d3.event.pageX + 20 + "px")
+              .style("top", d3.event.pageY - 80 + "px")
+              .style("display", "block")
+              .style("opacity", 0.8);
+          })
+          //Add Event Listeners | mouseout
+          .on("mouseout", function(d) {
+            d3.select(this).style("fill", d.properties.color);
+            d3.select("#tooltip").style("display", "none");
+          });
+      });
+      // });
+    }
+
+    function getRandomColor() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function isNewRegion(arr, regName) {
+      console.log(arr, regName);
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].name === regName) {
+          return i;
+        }
+      }
+      return -1;
     }
 
     function findUser(arr, email) {
@@ -752,6 +899,88 @@
         }
       }
       return false;
+    }
+
+    async function loadDataFromIP() {
+      let result = await $.ajax({
+        method: "post",
+        url: "/api/getVisits",
+        data: { content: "curri-blockchain-basic" }
+      });
+      let retData = {
+        type: "FeatureCollection",
+        features: [],
+        crs: {
+          type: "name",
+          properties: {
+            name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+          }
+        }
+      };
+      if (result.status) {
+        let featuredData = [];
+        let regions = [];
+        for (let i = 0; i < result.visits.length; i++) {
+          console.log(i);
+          if (!result.visits[i].ip) continue;
+          let ip = result.visits[i].ip.trim();
+          if (ip !== undefined) {
+            let result_ip = await $.ajax({
+              method: "get",
+              url: `http://ip-api.com/json/${ip}`
+            });
+            console.log(result_ip);
+            if (result_ip.status == "success") {
+              // generate new or fetch color based on the region
+              let color = "";
+              let existingIndex = isNewRegion(regions, result_ip.regionName);
+              if (existingIndex !== -1) {
+                // is not new region, assign existing color
+                color = regions[existingIndex].color;
+              } else {
+                // generate new color, add to region arr, set color
+                let newColor = getRandomColor();
+                while (newColor == "#D3D3D3") {
+                  newColor = getRandomColor();
+                }
+                regions.push({
+                  name: result_ip.regionName,
+                  color: newColor
+                });
+                color = newColor;
+              }
+              let currCreatedDate = new Date(
+                parseFloat(result.visits[i].firstVisit)
+              );
+              let currLastDate = new Date(
+                parseFloat(result.visits[i].lastVisit)
+              );
+              featuredData.push({
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [result_ip.lon, result_ip.lat]
+                },
+                properties: {
+                  email: result.visits[i].email,
+                  region: result_ip.regionName,
+                  city: result_ip.city,
+                  count: result.visits[i].count,
+                  firstVisit: `${currCreatedDate.getDate()}/${currCreatedDate.getUTCMonth() +
+                    1}/${currCreatedDate.getFullYear()}`,
+                  lastVisit: `${currLastDate.getDate()}/${currLastDate.getUTCMonth() +
+                    1}/${currLastDate.getFullYear()}`,
+                  color: color
+                }
+              });
+            }
+            // $.ajax({ async: true });
+          }
+          retData.features = featuredData;
+          console.log("Return data: ", retData);
+          return retData;
+        }
+      }
     }
   </script>
 </html>
