@@ -179,7 +179,23 @@
             placeholder="code-name ( case sensitive )"
           />
           <button onclick="getUserListUsingCode()">Get List</button>
+          &nbsp;&nbsp;or&nbsp;&nbsp;
+          <input
+            id="userByCode-n-days"
+            type="number"
+            placeholder="Last N Days"
+          />
+          <input id="" type="text" placeholder="code-name ( case sensitive )" />
+          <button onclick="getUserListUsingCodeLastNDays()">Last N Days</button
+          ><br />
           <button onclick="getAllCodes()">Get All Codes</button>
+          &nbsp;&nbsp;or&nbsp;&nbsp;<input
+            type="number"
+            placeholder="Enter Last N Days"
+            id="allCodes-n-days"
+          /><button onclick="getAllCodeLastNDays()">
+            Get All Codes - LastNDays
+          </button>
           <br />
           <span>Promo Code Count:</span>
           <span id="promoCodeCount"></span>
@@ -195,8 +211,8 @@
             Map - Advanced Curriculum
           </button>
           <button onclick="loadMap('curri-blockchain-professional')">
-            Map - Professional Curriculum
-          </button>
+            Map - Professional Curriculum</button
+          ><br />
           <button onclick="loadMap('basic')">Map - Basic Course</button>
           <button onclick="loadMap('advanced')">Map - Advanced Course</button>
           <button onclick="loadMap('professional')">
@@ -208,6 +224,7 @@
             Count: <span id="count" class="info"></span><br />
             City: <span id="city" class="info"></span><br />
             Region: <span id="region" class="info"></span><br />
+            Country: <span id="country" class="info"></span><br />
             First Visit: <span id="firstVisit" class="info"></span><br />
             Last Visit: <span id="lastVisit" class="info"></span><br />
           </div>
@@ -217,21 +234,66 @@
           <button onclick="getAllVisits('curri-blockchain-basic')">
             Visited Curriculum Basic
           </button>
+          &nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;
+          <input
+            type="number"
+            id="curri-blockchain-basic-n-days"
+            placeholder="Last N Days"
+          />
+          <button onclick="getVisitsLastNDays('curri-blockchain-basic')">
+            Curriculum Basic N Days</button
+          ><br />
           <button onclick="getAllVisits('curri-blockchain-advanced')">
-            Visited Curriculum Advanced
-          </button>
+            Visited Curriculum Advanced</button
+          >&nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;
+          <input
+            type="number"
+            id="curri-blockchain-advanced-n-days"
+            placeholder="Last N Days"
+          />
+          <button onclick="getVisitsLastNDays('curri-blockchain-advanced')">
+            Curriculum Advanced N Days</button
+          ><br />
           <button onclick="getAllVisits('curri-blockchain-professional')">
             Visited Curriculum Professional
+          </button>
+          &nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;
+          <input
+            type="number"
+            id="curri-blockchain-professional-n-days"
+            placeholder="Last N Days"
+          />
+          <button onclick="getVisitsLastNDays('curri-blockchain-professional')">
+            Curriculum Professional N Days
           </button>
           <br />
           <button onclick="getAllVisits('basic')">
             Visited Course Basic
           </button>
+          &nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;
+          <input type="number" id="basic-n-days" placeholder="Last N Days" />
+          <button onclick="getVisitsLastNDays('basic')">
+            Basic N Days</button
+          ><br />
           <button onclick="getAllVisits('advanced')">
             Visited Course Advanced
           </button>
+          &nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;
+          <input type="number" id="advanced-n-days" placeholder="Last N Days" />
+          <button onclick="getVisitsLastNDays('advanced')">
+            Advanced N Days</button
+          ><br />
           <button onclick="getAllVisits('professional')">
             Visited Course Professional
+          </button>
+          &nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;
+          <input
+            type="number"
+            id="professional-n-days"
+            placeholder="Last N Days"
+          />
+          <button onclick="getVisitsLastNDays('professional')">
+            Professional N Days
           </button>
           <br />
           <span>Visit Count: </span><span id="visitCount"></span>
@@ -251,8 +313,14 @@
         <div id="byCertificates" class="tabcontent" style="display:none">
           <h2>Certificates</h2>
           <button type="button" onclick="getAllUserCertificates()">
-            Get Certificates By User
-          </button>
+            Get Certificates By User</button
+          >&nbsp;&nbsp;or&nbsp;&nbsp;<input
+            type="number"
+            id="userCert-n-days"
+            placeholder="enter last N days"
+          /><button type="button" onclick="getUserCertficatesLastNDays()">
+            Get Certificates For Last n Days</button
+          ><br />
           <button type="button" onclick="getCertificatesFromPromoCode()">
             Get Certificates With Payment Mode
           </button>
@@ -395,6 +463,74 @@
       }
     }
 
+    function getUserListUsingCodeLastNDays() {
+      let codeName = document.getElementById("codename_users").value;
+      let promoCodeCount = document.getElementById("promoCodeCount");
+      let n = document.getElementById("userByCode-n-days").value;
+      let nMilliSecs = parseFloat(n.trim()) * 24 * 60 * 60 * 1000;
+      // console.log(codeName);
+      let promoCodeTable = document.getElementById("promoCodeTable");
+      if (codeName != undefined && codeName != null && codeName != "") {
+        let todayStart = new Date();
+        todayStart.setHours(0);
+        todayStart.setMinutes(0);
+        todayStart.setSeconds(0);
+        $.ajax({
+          method: "post",
+          url: "/api/getUserListUsingCode",
+          data: { codeName: codeName },
+          success: result => {
+            // console.log(result);
+            if (!result.status) {
+              alert(`Error:${result.error}`);
+            } else {
+              let retHtml = "<table>";
+              let userArr = result.users;
+              let codeCount = 0;
+              if (result.restricted) {
+                retHtml +=
+                  "<tr><th>Email</th><th>Count</th><th>Created</th><th>Last Used</th></tr>";
+                for (let i = 1; i < userArr.length; i++) {
+                  if (
+                    todayStart - parseFloat(userArr[i].lastUsed) <
+                    nMilliSecs
+                  ) {
+                    codeCount++;
+                    retHtml += `<tr><td>${userArr[i].email}</td><td>${
+                      userArr[i].count
+                    }</td><td>${new Date(
+                      userArr[i].created
+                    )}</td><td>${new Date(userArr[i].lastUsed)}</td></tr>`;
+                  }
+                }
+              } else {
+                retHtml +=
+                  "<tr><th>Email</th><th>Count</th><th>First Used</th><th>Last Used</th></tr>";
+                for (let i = 1; i < userArr.length; i++) {
+                  if (
+                    todayStart - parseFloat(userArr[i].lastUsed) <
+                    nMilliSecs
+                  ) {
+                    codeCount++;
+                    retHtml += `<tr><td>${userArr[i].email}</td><td>${
+                      userArr[i].count
+                    }</td><td>${new Date(
+                      userArr[i].firstUsed
+                    )}</td><td>${new Date(userArr[i].lastUsed)}</td></tr>`;
+                  }
+                }
+              }
+              promoCodeTable.innerHTML = retHtml + "</table>";
+              promoCodeCount.innerHTML = codeCount;
+            }
+          },
+          error: err => {
+            alert(`Error: ${err}`);
+          }
+        });
+      }
+    }
+
     function getAllCodes() {
       let promoCodeTable = document.getElementById("promoCodeTable");
       promoCodeTable.innerHTML = "";
@@ -421,6 +557,50 @@
               1}/${lastUsedDate.getFullYear()}</td></tr>`;
           }
           retHTML += "</table>";
+          promoCodeTable.innerHTML = retHTML;
+        },
+        error: err => {
+          alert(`Error: ${err}`);
+        }
+      });
+    }
+
+    function getAllCodeLastNDays() {
+      let promoCodeTable = document.getElementById("promoCodeTable");
+      promoCodeTable.innerHTML = "";
+      $.ajax({
+        method: "get",
+        url: "/api/getAllCodes",
+        success: result => {
+          let allCodes = result.codes;
+          let codeCount = 0;
+          let n = document.getElementById("allCodes-n-days").value;
+          let nMilliSecs = parseFloat(n.trim()) * 24 * 60 * 60 * 1000;
+          let retHTML = '<table style="width: 100%;">';
+          let todayStart = new Date();
+          todayStart.setHours(0);
+          todayStart.setMinutes(0);
+          todayStart.setSeconds(0);
+          retHTML +=
+            "<tr><th>CodeName</th><th>Used Count</th><th>User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
+          for (let i = 0; i < allCodes.length; i++) {
+            if (todayStart - parseFloat(allCodes[i].lastUsed) < nMilliSecs) {
+              codeCount++;
+              let createdDate = new Date(parseFloat(allCodes[i].created));
+              let lastUsedDate = new Date(parseFloat(allCodes[i].lastUsed));
+              retHTML += `<tr><td>${allCodes[i].codeName}</td><td>${
+                allCodes[i].count
+              }</td><td>${allCodes[i].users.length - 1}</td><td>${
+                allCodes[i].status
+              }</td><td>${
+                allCodes[i].restricted
+              }</td><td>${createdDate.getDate()}/${createdDate.getMonth() +
+                1}/${lastUsedDate.getFullYear()}</td><td>${lastUsedDate.getDate()}/${lastUsedDate.getMonth() +
+                1}/${lastUsedDate.getFullYear()}</td></tr>`;
+            }
+          }
+          retHTML += "</table>";
+          promoCodeCount.innerHTML = codeCount;
           promoCodeTable.innerHTML = retHTML;
         },
         error: err => {
@@ -460,6 +640,64 @@
                 parseFloat(result.visits[i].lastVisit)
               )}</<td></tr>`;
             }
+            retHTML += "</table>";
+            // console.log(retHTML);
+            trafficTable.innerHTML = retHTML;
+          }
+        },
+        error: err => {
+          alert(`Error: ${err}`);
+        }
+      });
+    }
+
+    function getVisitsLastNDays(content) {
+      let trafficTable = document.getElementById("trafficTable");
+      let visitCount = document.getElementById("visitCount");
+      let n = document.getElementById(`${content}-n-days`).value;
+      let nToMilliSec;
+      let todayStart = new Date();
+      todayStart.setHours(0);
+      todayStart.setMinutes(0);
+      todayStart.setSeconds(0);
+      if (n.trim() !== "") {
+        nToMilliSec = parseFloat(n) * 24 * 60 * 60 * 1000;
+      }
+      visitCount.innerHTML = "";
+      trafficTable.innerHTML = "";
+      let retHTML = "<table>";
+      retHTML +=
+        "<tr><th>Email</th><th>IP Address</th><th>Count</th><th>First Visit</th><th>Last Visit</th></tr>";
+      $.ajax({
+        method: "post",
+        url: "/api/getVisits",
+        data: { content: content },
+        success: result => {
+          if (result.status) {
+            let count = 0;
+            for (let i = 0; i < result.visits.length; i++) {
+              if (
+                todayStart - parseFloat(result.visits[i].lastVisit) <
+                nToMilliSec
+              ) {
+                count++;
+                retHTML += `<tr><td>${
+                  result.visits[i].email == undefined ||
+                  result.visits[i].email == ""
+                    ? "NA"
+                    : result.visits[i].email
+                }</<td><td>${
+                  result.visits[i].ip == undefined || result.visits[i].ip == ""
+                    ? "NA"
+                    : result.visits[i].ip
+                }</<td><td>${result.visits[i].count}</<td><td>${new Date(
+                  parseFloat(result.visits[i].firstVisit)
+                )}</<td><td>${new Date(
+                  parseFloat(result.visits[i].lastVisit)
+                )}</<td></tr>`;
+              }
+            }
+            visitCount.innerHTML = count + "";
             retHTML += "</table>";
             // console.log(retHTML);
             trafficTable.innerHTML = retHTML;
@@ -580,6 +818,75 @@
                 }</td><td>${new Date(
                   parseFloat(currentCertificates[j].timestamp)
                 )}</td></tr>`;
+              }
+            }
+            retHTML += "</table>";
+            certificatesTable.innerHTML = retHTML;
+            totCertisCount.innerHTML = totCertis;
+          }
+        },
+        error: err => {
+          alert(`Error: ${err}`);
+        }
+      });
+    }
+
+    function getUserCertficatesLastNDays() {
+      let certificatesTable = document.getElementById("certificatesTable");
+      let certificateCount = document.getElementById("certCount");
+      let totCertisCount = document.getElementById("totCertisCount");
+      let n = document.getElementById("userCert-n-days").value;
+      let nMilliSecs = parseFloat(n.trim()) * 24 * 60 * 60 * 1000;
+      let todayStart = new Date();
+      todayStart.setHours(0);
+      todayStart.setMinutes(0);
+      todayStart.setSeconds(0);
+      certificateCount.innerHTML = "";
+      let retHTML = "<table class='certificateTab'";
+      retHTML +=
+        "<tr><th rowspan='2'>Email</th><th colspan='4' >Certificates</th></tr><tr><th>Course Name</th><th>Client Hash</th><th>Document Hash</th><th>Timestamp</th></tr>";
+      $.ajax({
+        method: "get",
+        url: "/api/getAllUserCertificates",
+        success: result => {
+          if (!result.status) {
+            alert(`Error: ${result.error}`);
+          } else {
+            // console.log(result);
+            let data = result.users;
+            let totCertis = 0;
+            certificateCount.innerHTML = data.length;
+            for (let i = 0; i < data.length; i++) {
+              let currentUser = data[i];
+              let currentCertificates = currentUser.examData.certificateHash;
+              let rowSpan = currentCertificates.length;
+              if (
+                todayStart - parseFloat(currentCertificates[1].timestamp) <
+                nMilliSecs
+              ) {
+                retHTML += `<tr><td >${currentUser.email}</td><td>${
+                  currentCertificates[1].examType
+                }</td><td>${currentCertificates[1].clientHash}</td><td>${
+                  currentCertificates[1].headlessHash
+                }</td><td>${new Date(
+                  parseFloat(currentCertificates[1].timestamp)
+                )}</td></tr>`;
+                totCertis++;
+              }
+              for (let j = 2; j < rowSpan; j++) {
+                if (
+                  todayStart - parseFloat(currentCertificates[j].timestamp) <
+                  nMilliSecs
+                ) {
+                  totCertis++;
+                  retHTML += `<tr><td > -- || -- </td><td>${
+                    currentCertificates[j].examType
+                  }</td><td>${currentCertificates[j].clientHash}</td><td>${
+                    currentCertificates[1].headlessHash
+                  }</td><td>${new Date(
+                    parseFloat(currentCertificates[j].timestamp)
+                  )}</td></tr>`;
+                }
               }
             }
             retHTML += "</table>";
@@ -853,6 +1160,7 @@
             d3.select(this).style("fill", "black");
             d3.select("#email").text(d.properties.email);
             d3.select("#count").text(d.properties.count);
+            d3.select("#country").text(d.properties.country);
             d3.select("#region").text(d.properties.region);
             d3.select("#city").text(d.properties.city);
             d3.select("#firstVisit").text(d.properties.firstVisit);
@@ -924,53 +1232,55 @@
           console.log(i);
           if (!result.visits[i].ip) continue;
           let ip = result.visits[i].ip.trim();
-          if (ip !== undefined) {            
-              // generate new or fetch color based on the region
-              let color = "";
-              let existingIndex = isNewRegion(regions, result.visits[i].region);
-              if (existingIndex !== -1) {
-                // is not new region, assign existing color
-                color = regions[existingIndex].color;
-              } else {
-                // generate new color, add to region arr, set color
-                let newColor = getRandomColor();
-                while (newColor == "#D3D3D3") {
-                  newColor = getRandomColor();
-                }
-                regions.push({
-                  name: result.visits[i].region,
-                  color: newColor
-                });
-                color = newColor;
+          if (ip !== undefined) {
+            // generate new or fetch color based on the region
+            let color = "";
+            let existingIndex = isNewRegion(regions, result.visits[i].region);
+            if (existingIndex !== -1) {
+              // is not new region, assign existing color
+              color = regions[existingIndex].color;
+            } else {
+              // generate new color, add to region arr, set color
+              let newColor = getRandomColor();
+              while (newColor == "#D3D3D3") {
+                newColor = getRandomColor();
               }
-              let currCreatedDate = new Date(
-                parseFloat(result.visits[i].firstVisit)
-              );
-              let currLastDate = new Date(
-                parseFloat(result.visits[i].lastVisit)
-              );
-              featuredData.push({
-                type: "Feature",
-                geometry: {
-                  type: "Point",
-                  coordinates: [parseFloat(result.visits[i].coordinates[1]), parseFloat(result.visits[i].coordinates[0])]
-                },
-                properties: {
-                  email:
-                    result.visits[i].email !== undefined
-                      ? result.visits[i].email
-                      : "",
-                  region: result.visits[i].region,
-                  city: result.visits[i].city,
-                  count: result.visits[i].count,
-                  firstVisit: `${currCreatedDate.getDate()}/${currCreatedDate.getUTCMonth() +
-                    1}/${currCreatedDate.getFullYear()}`,
-                  lastVisit: `${currLastDate.getDate()}/${currLastDate.getUTCMonth() +
-                    1}/${currLastDate.getFullYear()}`,
-                  color: color
-                }
+              regions.push({
+                name: result.visits[i].region,
+                color: newColor
               });
-            
+              color = newColor;
+            }
+            let currCreatedDate = new Date(
+              parseFloat(result.visits[i].firstVisit)
+            );
+            let currLastDate = new Date(parseFloat(result.visits[i].lastVisit));
+            featuredData.push({
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [
+                  parseFloat(result.visits[i].coordinates[1]),
+                  parseFloat(result.visits[i].coordinates[0])
+                ]
+              },
+              properties: {
+                email:
+                  result.visits[i].email !== undefined
+                    ? result.visits[i].email
+                    : "",
+                region: result.visits[i].region,
+                country: result.visits[i].country,
+                city: result.visits[i].city,
+                count: result.visits[i].count,
+                firstVisit: `${currCreatedDate.getDate()}/${currCreatedDate.getUTCMonth() +
+                  1}/${currCreatedDate.getFullYear()}`,
+                lastVisit: `${currLastDate.getDate()}/${currLastDate.getUTCMonth() +
+                  1}/${currLastDate.getFullYear()}`,
+                color: color
+              }
+            });
+
             // $.ajax({ async: true });
           }
         }
