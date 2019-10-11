@@ -34,6 +34,14 @@ module.exports = app => {
   //   }
   // );
 
+  // set coordinates, region, city for visiteds
+  app.get(
+    "/api/setCoords",
+    requireLogin,
+    requrieAdmin,
+    userStatsService.setCoordsFromIP
+  );
+
   app.get(
     "/api/getAllTimestamp",
     requireLogin,

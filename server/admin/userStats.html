@@ -838,7 +838,7 @@
             }
           })
           .attr("r", function(d) {
-            return Math.pow(200, 1 / 9); // static point size
+            return Math.pow(10, 1 / 9); // static point size
           })
           .style("fill", function(d) {
             //Use the Color Function to set the Fill Value for each circle
@@ -901,11 +901,11 @@
       return false;
     }
 
-    async function loadDataFromIP() {
+    async function loadDataFromIP(visitPage) {
       let result = await $.ajax({
         method: "post",
         url: "/api/getVisits",
-        data: { content: "curri-blockchain-basic" }
+        data: { content: visitPage }
       });
       let retData = {
         type: "FeatureCollection",
@@ -924,16 +924,10 @@
           console.log(i);
           if (!result.visits[i].ip) continue;
           let ip = result.visits[i].ip.trim();
-          if (ip !== undefined) {
-            let result_ip = await $.ajax({
-              method: "get",
-              url: `http://ip-api.com/json/${ip}`
-            });
-            console.log(result_ip);
-            if (result_ip.status == "success") {
+          if (ip !== undefined) {            
               // generate new or fetch color based on the region
               let color = "";
-              let existingIndex = isNewRegion(regions, result_ip.regionName);
+              let existingIndex = isNewRegion(regions, result.visits[i].region);
               if (existingIndex !== -1) {
                 // is not new region, assign existing color
                 color = regions[existingIndex].color;
@@ -944,7 +938,7 @@
                   newColor = getRandomColor();
                 }
                 regions.push({
-                  name: result_ip.regionName,
+                  name: result.visits[i].region,
                   color: newColor
                 });
                 color = newColor;
@@ -959,12 +953,15 @@
                 type: "Feature",
                 geometry: {
                   type: "Point",
-                  coordinates: [result_ip.lon, result_ip.lat]
+                  coordinates: [parseFloat(result.visits[i].coordinates[1]), parseFloat(result.visits[i].coordinates[0])]
                 },
                 properties: {
-                  email: result.visits[i].email,
-                  region: result_ip.regionName,
-                  city: result_ip.city,
+                  email:
+                    result.visits[i].email !== undefined
+                      ? result.visits[i].email
+                      : "",
+                  region: result.visits[i].region,
+                  city: result.visits[i].city,
                   count: result.visits[i].count,
                   firstVisit: `${currCreatedDate.getDate()}/${currCreatedDate.getUTCMonth() +
                     1}/${currCreatedDate.getFullYear()}`,
@@ -973,13 +970,13 @@
                   color: color
                 }
               });
-            }
+            
             // $.ajax({ async: true });
           }
-          retData.features = featuredData;
-          console.log("Return data: ", retData);
-          return retData;
         }
+        retData.features = featuredData;
+        console.log("Return data: ", retData);
+        return retData;
       }
     }
   </script>

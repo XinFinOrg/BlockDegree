@@ -1,5 +1,6 @@
 let EventEmitter = require("events").EventEmitter;
 const Visited = require("../models/visited");
+const GeoIP = require("geoip-lite");
 
 let eventEmitter = new EventEmitter();
 
@@ -10,7 +11,11 @@ const newVisited = (email, ip, course) => {
     course: course,
     count: 1,
     firstVisit: "",
-    lastVisit: ""
+    lastVisit: "",
+    region: "",
+    city: "",
+    country: "",
+    coordinates: []
   });
 };
 
@@ -27,13 +32,28 @@ let visitedCourseHandler = (req, course) => {
       // not first time user, simple update the count
       existingStat.count += 1;
       existingStat.lastVisit = Date.now();
-      await existingStat.save();
+      try {
+        await existingStat.save();
+      } catch (e) {
+        console.error(`Error while saving to DB at listeners.visited ${e}`);
+        return;
+      }
     } else {
       // New user, create new stat & set count to 1
+      let geo = GeoIP.lookup(fromIP);
       let newStat = newVisited(user_email, fromIP, course);
       newStat.firstVisit = Date.now();
       newStat.lastVisit = Date.now();
-      await newStat.save();
+      newStat.region = geo.region;
+      newStat.city = geo.city;
+      newStat.coordinates = [geo.ll[0].toString(), geo.ll[1].toString()];
+      newStat.country = geo.country;
+      try {
+        await newStat.save();
+      } catch (e) {
+        console.error(`Error while saving to DB at listeners.visited ${e}`);
+        return;
+      }
     }
   });
 };
@@ -52,13 +72,22 @@ let visitedCourseCurriculum = (req, courseCurriculum) => {
         // not first time user, simple update the count
         existingStat.count += 1;
         existingStat.lastVisit = Date.now();
-        await existingStat.save();
+        try {
+          await existingStat.save();
+        } catch (e) {
+          console.log(`Error while saving to DB at listeners.visited ${e}`);
+        }
       } else {
         // New user, create new stat & set count to 1
         let newStat = newVisited(req.user.email, fromIP, courseCurriculum);
         newStat.firstVisit = Date.now();
         newStat.lastVisit = Date.now();
-        await newStat.save();
+        try {
+          await newStat.save();
+        } catch (e) {
+          console.error(`Error while saving to DB at listeners.visited ${e}`);
+          return;
+        }
       }
     } else {
       // not logged in, track by their IP address
@@ -71,13 +100,22 @@ let visitedCourseCurriculum = (req, courseCurriculum) => {
         // stat exists, update the count
         existingStat.count += 1;
         existingStat.lastVisit = Date.now();
-        await existingStat.save();
+        try {
+          await existingStat.save();
+        } catch (e) {
+          console.log(`Error while saving to DB at listeners.visited ${e}`);
+        }
       } else {
         // new stat, create one & set count to 1
         let newStat = newVisited("", fromIP, courseCurriculum);
         newStat.firstVisit = Date.now();
         newStat.lastVisit = Date.now();
-        await newStat.save();
+        try {
+          await newStat.save();
+        } catch (e) {
+          console.error(`Error while saving to DB at listeners.visited ${e}`);
+          return;
+        }
       }
     }
   });
