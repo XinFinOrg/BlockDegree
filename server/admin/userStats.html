@@ -583,7 +583,7 @@
           todayStart.setMinutes(0);
           todayStart.setSeconds(0);
           retHTML +=
-            "<tr><th>CodeName</th><th>Today User Count</th><th>Total User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
+            "<tr><th>CodeName</th><th>User Count</th><th>Total User Count</th><th>Active</th><th>Restricted</th><th>Created</th><th>Last Used</th></tr>";
           for (let i = 0; i < allCodes.length; i++) {
             if (todayStart - parseFloat(allCodes[i].lastUsed) < nMilliSecs) {
               codeCount++;
