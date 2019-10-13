@@ -110,7 +110,7 @@ exports.postTwitter = async (req, res) => {
         let b64content;
         if (checkCached(hash)) {
           // found in cache
-          console.log("serving from cache")
+          console.log("serving from cache");
           b64content = fs
             .readFileSync(`server/cached/${hash}.png`)
             .toString("base64");
@@ -407,7 +407,7 @@ exports.uploadImageLinkedin = async (req, res) => {
   let pathToFile = "";
   if (checkCached(hash)) {
     // found the cache
-    console.log("serving from cache")
+    console.log("serving from cache");
     pathToFile = `server/cached/${hash}.png`;
   } else {
     // not cached, query & save the cache
@@ -416,7 +416,7 @@ exports.uploadImageLinkedin = async (req, res) => {
         return res.json({ uploaded: false, error: err });
       }
       files.forEach(async file => {
-        pathToFile = "tmp/" + file.path + ".png";
+        pathToFile = "server/cached/" + file.path + ".png";
         imgHTML = file.content.toString("utf-8");
         let browser;
         try {
@@ -497,23 +497,14 @@ exports.uploadImageLinkedin = async (req, res) => {
             "something's wrong, we'll look into it. Please try again after some time or contact us"
         });
       }
-      fs.unlink(pathToFile, e => {
-        if (e) {
-          console.error(`Some exception has occurred `, e);
-          return res.json({
-            uploaded: false,
-            error:
-              "something's wrong, we'll look into it. Please try again after some time or contact us"
-          });
-        }
-        console.log(resp.status);
-        return res.json({
-          uploaded: resp.status == 201,
-          error:
-            resp.status == 201
-              ? null
-              : "something's wrong, we'll look into it. Please try again after some time or contact us"
-        });
+
+      console.log(resp.status);
+      return res.json({
+        uploaded: resp.status == 201,
+        error:
+          resp.status == 201
+            ? null
+            : "something's wrong, we'll look into it. Please try again after some time or contact us"
       });
     },
     err => {
