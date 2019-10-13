@@ -301,7 +301,7 @@ module.exports = function(passport) {
         profileFields: ["id", "emails", "name", "displayName"]
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        process.nextTick(async function(){
+        process.nextTick(async function() {
           if (req.user) {
             if (
               req.user.auth.facebook.id == "" ||
@@ -343,7 +343,15 @@ module.exports = function(passport) {
             existingUser.save();
             return done(null, existingUser);
           }
-  
+
+          if (profile.emails == undefined || profile.emails == null) {
+            return done(
+              "no email-id not associated with this social account",
+              null,
+              "no email-id not associated with this social account"
+            );
+          }
+
           // email registered
           if (profile.emails.length > 0) {
             const linkEmail = await User.findOne({
@@ -358,14 +366,7 @@ module.exports = function(passport) {
               done(null, linkEmail);
             }
           }
-  
-          if (profile.emails.length < 1) {
-            return done(
-              "no email-id not associated with this social account",
-              null,
-              "no email-id not associated with this social account"
-            );
-          }
+
           existingUser = await User.findOne({
             email: profile.emails[0].value
           });
@@ -388,8 +389,7 @@ module.exports = function(passport) {
           newUser.lastActive = Date.now();
           newUser.save();
           done(null, newUser, "new-name");
-        })
-        
+        });
       }
     )
   );
@@ -447,7 +447,7 @@ module.exports = function(passport) {
           return done(null, existingUser);
         }
 
-        if (profile.emails == undefined || profile.emails == null ) {
+        if (profile.emails == undefined || profile.emails == null) {
           return done(
             "no email-id not associated with this social account",
             null,
@@ -549,7 +549,7 @@ module.exports = function(passport) {
             return done(null, existingUser);
           }
 
-          if (profile.emails ==undefined || profile.emails == null ) {
+          if (profile.emails == undefined || profile.emails == null) {
             return done(
               "no email-id not associated with this social account",
               null,
