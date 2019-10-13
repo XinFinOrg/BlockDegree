@@ -96,4 +96,8 @@ if (!fs.existsSync("./tmp")) {
   fs.mkdirSync("./tmp");
 }
 
+if (!fs.existsSync("./server/cached")) {
+  fs.mkdirSync("./server/cached");
+}
+
 module.exports = app;

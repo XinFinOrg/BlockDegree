@@ -2,6 +2,8 @@ const ejs = require("ejs");
 const crypto = require("crypto");
 const ipfsClient = require("ipfs-http-client");
 const qrcode = require("qrcode");
+const puppeteer = require("puppeteer");
+const fs = require("fs");
 require("dotenv").config();
 
 var clientIPFS = "";
@@ -103,6 +105,57 @@ var renderWithQR = async (name, percent, examType, date, hash, callback) => {
             error: err
           });
         }
+        // save the buffer to cache
+
+        clientIPFS.get(ipfsHash[0].hash, (err, files) => {
+          if (err) {
+            return callback({
+              uploaded: false,
+              info: "error in adding certi to IPFS",
+              hash: "",
+              error: err
+            });
+          } else {
+            files.forEach(async file => {
+              var localPath = "server/cached/" + file.path + ".png";
+              imgHTML = file.content.toString("utf-8");
+              // Asynchronous Starts
+              let browser;
+              try {
+                browser = await puppeteer.launch({
+                  args: ["--no-sandbox", "--disable-setuid-sandbox"]
+                });
+                const page = await browser.newPage();
+                await page.setViewport({
+                  width: 800,
+                  height: 600,
+                  deviceScaleFactor: 1
+                });
+                await page.setContent(imgHTML);
+                await page.screenshot({ path: localPath });
+              } catch (browserException) {
+                console.error(
+                  `Exeception occurred in between opening the headless-browser & taking screenshot: `,
+                  browserException
+                );
+                return callback({
+                  uploaded: false,
+                  info: "error while screenshot in puppeteer",
+                  hash: "",
+                  error: browserException
+                });
+              }
+
+              browser.close().then(() => {
+                // asynchronous
+                b64content = fs.readFileSync(localPath, {
+                  encoding: "base64"
+                });
+              });
+            });
+          }
+        });
+
         return callback({
           uploaded: true,
           info: "",
