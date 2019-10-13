@@ -1082,7 +1082,7 @@
             alert(`Error: ${res.error}`);
           } else {
             allUserCertis = res.users;
-            certificateCount.innerHTML = allUserCertis.length;
+            // certificateCount.innerHTML = allUserCertis.length;
             $.ajax({
               method: "get",
               url: "/api/getAllUserPaymentList",
@@ -1091,7 +1091,7 @@
                 allUserPayment = result.data;
 
                 let codeKeys = [],
-                  totCode = 0, totCertis=0;
+                  totCode = 0, totCertis=0, totUser=0;
                 // const totRows = allUserCertis.length > allUserPayment.length ? allUserCertis.length : allUserPayment.length;
                 for (let i = 0; i < allUserCertis.length; i++) {
                   const currentUser = allUserCertis[i];
@@ -1134,6 +1134,7 @@
                     parseFloat(currentCertificates[1].timestamp)
                   )}</td><tr>`;
                     totCertis++;
+                    totUser++;
                       }
                   let remainingCertis = certisRowSpan - 2;
                   let remainingCodes = totCode - 1;
@@ -1184,6 +1185,7 @@
                   }
                 }
                 certificatesTable.innerHTML = retHTML;
+                certificateCount.innerHTML = totUser;
                 totCertisCount.innerHTML = totCertis;
               }
             });
