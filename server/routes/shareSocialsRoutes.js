@@ -1,4 +1,5 @@
 const shareServices = require("../services/shareSocials");
+const shareServicesCached = require("../services/shareSocial-cached");
 const requireLogin = require("../middleware/requireLogin");
 const rateLimit = require("express-rate-limit");
 
@@ -13,19 +14,19 @@ module.exports = app => {
     "/api/shareOnTwitter",
     requireLogin,
     bitlyRateLimit,
-    shareServices.postTwitter
+    shareServicesCached.postTwitter
   );
   app.post(
     "/api/shareOnLinkedin",
     requireLogin,
     bitlyRateLimit,
-    shareServices.uploadImageLinkedin
+    shareServicesCached.uploadImageLinkedin
   );
   app.post("/api/shareOnFacebook", requireLogin, shareServices.postFacebook);
   app.post(
     "/api/checkTweetCharacters",
     requireLogin,
-    shareServices.checkTweetCharacters
+    shareServicesCached.checkTweetCharacters
   );
   // Not working : issue in uploading image to uploadURL; tried cURL, HTTPie, axios
   // app.get("/api/uploadImageLinkedin",shareServices.uploadImageLinkedin);
