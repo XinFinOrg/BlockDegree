@@ -447,6 +447,14 @@ module.exports = function(passport) {
           return done(null, existingUser);
         }
 
+        if (profile.emails == undefined || profile.emails == null ) {
+          return done(
+            "no email-id not associated with this social account",
+            null,
+            "no email-id not associated with this social account"
+          );
+        }
+
         // Link auths via email
         if (profile.emails.length > 0) {
           const linkEmail = await User.findOne({
@@ -462,13 +470,6 @@ module.exports = function(passport) {
           }
         }
 
-        if (profile.emails.length < 1) {
-          return done(
-            "no email-id not associated with this social account",
-            null,
-            "no email-id not associated with this social account"
-          );
-        }
         existingUser = await User.findOne({
           email: profile.emails[0].value
         });
@@ -548,6 +549,14 @@ module.exports = function(passport) {
             return done(null, existingUser);
           }
 
+          if (profile.emails ==undefined || profile.emails == null ) {
+            return done(
+              "no email-id not associated with this social account",
+              null,
+              "no email-id not associated with this social account"
+            );
+          }
+
           if (profile.emails.length > 0) {
             const linkEmail = await User.findOne({
               email: profile.emails[0].value
@@ -561,13 +570,6 @@ module.exports = function(passport) {
             }
           }
 
-          if (profile.emails.length < 1) {
-            return done(
-              "no email-id not associated with this social account",
-              null,
-              "no email-id not associated with this social account"
-            );
-          }
           existingUser = await User.findOne({
             email: profile.emails[0].value
           });
