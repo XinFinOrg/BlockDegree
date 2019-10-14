@@ -59,10 +59,10 @@ The XDC-E smart contract is available on the following link. Copy the smart cont
 https://docs.google.com/document/d/1v9Oow11P7WfDBUHwesD-bercqH4jOE_8bWtobssx8ro/edit?usp=sharing
 
 ### Write Your Smart Contract on Remix Compiler
-<img src="/img/courses/bc-pro/op2.png" alt="remix compiler"/>
+<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/op2.png" alt="remix compiler"/>
 
 After that copy on ABI (Web3deploy)
-<img src="/img/courses/bc-pro/op3.png" alt="geth-download"/>
+<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/op3.png" alt="geth-download"/>
 
 ABI is the binary interface of the application. ABI is an interface between two software modules, one of which is often at the machine code level. In Ethereum, basically, you can encode Solidity contracts for EVM and, conversely, read data from transactions.
 
@@ -79,6 +79,6 @@ Now that our smart contract is deployed on our private Ethereum Blockchain, we c
 2. The contract address
 
 Contract is deployed
-<img src="/img/courses/bc-pro/op7.png" alt="deployed contract"/>
+<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/op7.png" alt="deployed contract"/>
 
 With that you have deployed your smart contract to your own private Ethereum network!

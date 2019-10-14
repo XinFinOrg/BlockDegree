@@ -28,10 +28,10 @@ As the network is growing, it is facing more and more difficulties. The algorith
 
 ### Implementation of proof of work
 Miners solve the puzzle, form the new block and confirm the transactions. How complex a puzzle is depends on the number of users, the current power and the network load. The hash of each block contains the hash of the previous block, which increases security and prevents any block violation.
-  <img src="/img/courses/bc-adv/npm1.jpg"  style="width:100%; height: 400px; align-content: center; "/>
+  <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-adv/npm1.jpg"  style="width:100%; height: 400px; align-content: center; "/>
 ####How can this algorithm implemented in Blockchain?
  
 
 If a miner manages to solve the puzzle, the new block is formed. The transactions are placed in this block and considered confirmed
-  <img src="/img/courses/bc-adv/npm2.jpg"  style="width:100%; height: 400px; align-content: center; "/>
+  <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-adv/npm2.jpg"  style="width:100%; height: 400px; align-content: center; "/>
 

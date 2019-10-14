@@ -4,8 +4,8 @@ title: History of the Blockchain
 template: courseContent.hbs
 courseIdx: 0
 ---
-<img src="/img/courses/bc-basic/hst1.png"  style="width:255px; height: 400px; align-content: center; margin: 25px;"/>
-<img src="/img/courses/bc-basic/hst2.png"   style="width:300px; height: 400px; align-content: center; margin: 25px;"/>
+<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/hst1.png"  style="width:255px; height: 400px; align-content: center; margin: 25px;"/>
+<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/hst2.png"   style="width:300px; height: 400px; align-content: center; margin: 25px;"/>
 
 
 In 1991, Dr W. Scott Stornetta published a whitepaper with his co-author Dr Stuart Haber to introduce ‘blockchain’. The term blockchain can be defined as a decentralised, cryptic database on which digital transactions take place.
