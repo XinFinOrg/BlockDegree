@@ -5,8 +5,8 @@ template: courseContent.hbs
 courseIdx: 0
 ---
 
-<img src="/img/courses/bc-basic/blockchain-database.png"  style="width:100%; height: 400px; align-content: center; "/>
-                <img src="/img/courses/bc-basic/bc-db.png"  style="width:100%; height: 400px; align-content: center; "/>
+<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/blockchain-database.png"  style="width:100%; height: 400px; align-content: center; "/>
+                <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/bc-db.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 __The distinctions between a traditional (Relational or document-oriented) database and a blockchain__
 

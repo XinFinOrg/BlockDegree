@@ -105,7 +105,7 @@
   window.addEventListener(
     "message",
     function(event) {
-      if (event.origin == "https://www.blockdegree.org") {
+      if (event.origin == "https://uat.blockdegree.org") {
         console.log("From PopUp", event.data);
         document.cookie = event.data;
         checkAuth();
@@ -114,20 +114,20 @@
     false
   );
   function handleAuthGoogle() {
-    window.location.replace("https://www.blockdegree.org/auth/google");
-    // popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
+    window.location.replace("https://uat.blockdegree.org/auth/google");
+    // popupLogin({ path: "https://uat.blockdegree.org/auth/google?close=true" });
   }
   function handleAuthFacebook() {
-    window.location.replace("https://www.blockdegree.org/auth/facebook");
-    // popupLogin({ path: "https://www.blockdegree.org/auth/facebook?close=true" });
+    window.location.replace("https://uat.blockdegree.org/auth/facebook");
+    // popupLogin({ path: "https://uat.blockdegree.org/auth/facebook?close=true" });
   }
   function handleAuthTwitter() {
-    window.location.replace("https://www.blockdegree.org/auth/twitter");
-    // popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
+    window.location.replace("https://uat.blockdegree.org/auth/twitter");
+    // popupLogin({ path: "https://uat.blockdegree.org/auth/twitter?close=true" });
   }
   function handleAuthLinkedin() {
-    window.location.replace("https://www.blockdegree.org/auth/linkedin");
-    // popupLogin({ path: "https://www.blockdegree.org/auth/linkedin?close=true" });
+    window.location.replace("https://uat.blockdegree.org/auth/linkedin");
+    // popupLogin({ path: "https://uat.blockdegree.org/auth/linkedin?close=true" });
   }
 
   function checkAuth() {
@@ -150,7 +150,7 @@
           result.linkedinAuth
         ) {
           // user is logged in, redirect.
-          location.replace("https://www.blockdegree.org");
+          location.replace("https://uat.blockdegree.org");
         }
         // signed in with twitter, show share button
       }

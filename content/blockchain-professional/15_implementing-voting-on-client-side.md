@@ -111,10 +111,10 @@ castVote: function() {
 First, we query for the `candidateId` in the form. When we call the vote function from our smart contract, we pass in this id, and we provide the current account with the function's "from" metadata. This will be an asynchronous call. When it is finished, we'll show the loader and hide the page content. Whenever the vote is recorded, we'll do the opposite, showing the content to the user again.
 
 Now your front-end application should look like this:
-<img src="/img/courses/bc-pro/election-mockup.jpg" alt="election frontend"/>
+<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/election-mockup.jpg" alt="election frontend"/>
 
 Go ahead and try the voting function. Once you do, you should see a Metamask confirmation pop up.
-<img src="/img/courses/bc-pro/metamask.jpg" alt="metamask"/>
+<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/metamask.jpg" alt="metamask"/>
 
 Once you click submit, you've successfully casted a vote! You'll still see a loading screen. For now, you'll have to refresh the page to see the votes recorded. We'll implement the functionality update the loader automatically
 

@@ -2,103 +2,103 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
-    <loc>https://www.blockdegree.org/</loc>
+    <loc>https://uat.blockdegree.org/</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/guides</loc>
+    <loc>https://uat.blockdegree.org/guides</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/privacy-policy</loc>
+    <loc>https://uat.blockdegree.org/privacy-policy</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/terms-and-conditions</loc>
+    <loc>https://uat.blockdegree.org/terms-and-conditions</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/verify-certification</loc>
+    <loc>https://uat.blockdegree.org/verify-certification</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/login</loc>
+    <loc>https://uat.blockdegree.org/login</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/contact</loc>
+    <loc>https://uat.blockdegree.org/contact</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/blockchain-professional</loc>
+    <loc>https://uat.blockdegree.org/blockchain-professional</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/</loc>
+    <loc>https://uat.blockdegree.org/</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/profile</loc>
+    <loc>https://uat.blockdegree.org/profile</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/blockchain-advanced</loc>
+    <loc>https://uat.blockdegree.org/blockchain-advanced</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/login?from=blockchain-professional</loc>
+    <loc>https://uat.blockdegree.org/login?from=blockchain-professional</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/register</loc>
+    <loc>https://uat.blockdegree.org/register</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/blockchain-basic</loc>
+    <loc>https://uat.blockdegree.org/blockchain-basic</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/login?from=blockchain-advanced</loc>
+    <loc>https://uat.blockdegree.org/login?from=blockchain-advanced</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/login?from=blockchain-basic</loc>
+    <loc>https://uat.blockdegree.org/login?from=blockchain-basic</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/forgotpassword.html</loc>
+    <loc>https://uat.blockdegree.org/forgotpassword.html</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
