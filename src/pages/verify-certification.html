@@ -94,7 +94,7 @@
         <div>
           <div>
             <img
-              src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/gif/loading_block.gif"
+              src="/img/gif/loading_block.gif"
               style="width:300px;height:300px;display:block;margin:0 auto;"
               id="modalImageTwitter"
             />
@@ -154,7 +154,7 @@
         <div>
           <div>
             <img
-              src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/gif/loading_block.gif"
+              src="/img/gif/loading_block.gif"
               style="width:300px;height:300px;display:block;margin:0 auto;"
               id="modalImageLinkedin"
             />
@@ -260,7 +260,7 @@
 
   window.addEventListener("message", function(event) {
     if (
-      event.origin == "https://uat.blockdegree.org" ||
+      event.origin == "https://www.blockdegree.org" ||
       event.origin == "https://blockdegree.org"
     ) {
       if (event.data == "ok") {
@@ -333,7 +333,7 @@
       `                                <span class="social-tw" onclick="handleShareTwitter('${clientHash}')" ><i class="fa fa-twitter social"></i></span>` +
       " or " +
       `                            <span class="social-li" onclick="downloadCertificate('${clientHash}')"><i class="fa fa-download"></i></span>` +
-      `<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="${clientHash}loading_download">` +
+      `<img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="${clientHash}loading_download">` +
       "							</p>" +
       "						</div>" +
       "					</div>" +
@@ -633,14 +633,14 @@
 
   function handleAuthTwitter() {
     return window.open(
-      "https://uat.blockdegree.org/auth/twitter?close=true",
+      "https://www.blockdegree.org/auth/twitter?close=true",
       "newwin",
       "height=600px,width=600px"
     );
   }
   function handleAuthLinkedin() {
     return window.open(
-      "https://uat.blockdegree.org/auth/linkedin?close=true",
+      "https://www.blockdegree.org/auth/linkedin?close=true",
       "newwin",
       "height=600px,width=600px"
     );
@@ -789,13 +789,13 @@
   $("#postLinkedin").on("hidden.bs.modal", function() {
     document.getElementById("postMSGLinkedin").value = msg;
     document.querySelector(`#modalImageLinkedin`).src =
-      "https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/gif/loading_block.gif";
+      "/img/gif/loading_block.gif";
   });
 
   $("#postTwitter").on("hidden.bs.modal", function() {
     document.getElementById("postMSGTwitter").value = msg;
     document.querySelector(`#modalImageTwitter`).src =
-      "https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/gif/loading_block.gif";
+      "/img/gif/loading_block.gif";
   });
 
   function formatName(fullName) {

@@ -5,7 +5,7 @@ template: courseContent.hbs
 courseIdx: 1
 ---
 
- <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-adv/Bitcoin-&-blockchain.png"  style="width:100%; height: 400px; align-content: center; "/>
+ <img src="/img/courses/bc-adv/Bitcoin-&-blockchain.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 Many people think that bitcoin equates to blockchain. The confusion probably stems from the fact that bitcoin is the most well known cryptocurrency in the market today and blockchain is relatively still a mystery to most people.
 

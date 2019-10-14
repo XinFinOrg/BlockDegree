@@ -7,7 +7,7 @@ courseIdx: 2
 #### Download Geth
 Follow the instructions from the <a href="https://geth.ethereum.org/downloads/" target="_blonk">official Geth website</a> to download geth as per your requirement and your operating system.
 
-<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/qa1.png" alt="geth-download"/>
+<img src="/img/courses/bc-pro/qa1.png" alt="geth-download"/>
 
 Geth is a multipurpose order line apparatus that runs a full Ethereum hub executed in Go. It offers three interfaces: the direction line subcommands and choices, a Json-rpc server and an intelligent comfort.
 
@@ -19,7 +19,7 @@ user:~/$: geth
 ```
 
 You will see the log of a running geth instance.
-<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/qa2.png" alt="geth-console" />
+<img src="/img/courses/bc-pro/qa2.png" alt="geth-console" />
 
 #### Configure your blockchain setting
 <div class="precode">shell</div>
@@ -63,7 +63,7 @@ This is an example of how a genesis file.
 user:~/blockchain$ geth -datadir=./new init genesis.json
 ```
 This command will initialize your genesis block. You will see that a new folder is created in the blockchain folder. This new folder contains geth and your keystore.
-<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/qa5.png" alt="geth-console init" />
+<img src="/img/courses/bc-pro/qa5.png" alt="geth-console init" />
 
 #### Start your blockchain(node)
 <div class="precode">shell</div>
@@ -94,7 +94,7 @@ Now you are ready to interact with your private Ethereum blockchain. Let's start
 > web3.fromWei(eth.getBalance(eth.coinbase),”ether”)
 > eth.sendTransaction({from: <AddrA> to: <AddrB> value, :web3.toWei(85,"ether")})  // it is Transfer some ether one account to another account
 ```
-<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/qa8.png" alt="create eth transactions" />
+<img src="/img/courses/bc-pro/qa8.png" alt="create eth transactions" />
 
 
 #### Check your transaction
@@ -105,4 +105,4 @@ When you make a transaction, the console will print an alphanumberic string, whi
 ```console
 > eth.getTransaction('<TX receipt>')
 ```
-<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-pro/qa9.png" alt="check transaction information" />
+<img src="/img/courses/bc-pro/qa9.png" alt="check transaction information" />

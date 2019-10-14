@@ -95,7 +95,7 @@ The src file runs on Gulp, handlebars, livereload and other relevant packages. U
 Some of the benefits of this template:
 1. Easily change hero images, title and copy with a single line e.g. as seen in the university courses page
 ```
-{{> includes/hero hero-title="University Courses" hero-image="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/pm4.jpg" hero-copy="this is if you want to add a line below the title"}}
+{{> includes/hero hero-title="University Courses" hero-image="/img/pm4.jpg" hero-copy="this is if you want to add a line below the title"}}
 ```
 
 

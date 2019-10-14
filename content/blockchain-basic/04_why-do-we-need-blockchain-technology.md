@@ -22,7 +22,7 @@ Electoral fraud and votes hacking had been a major over the years. Advocates of 
 
 ### Business Scenario Implemented Using the Database
 Considering the case of supply chain where multiple parties such as manufacturers, wholesalers, distributors, retailers and logistics are involved, the movement of a product through the supply chain is only individually tracked by the parties concerned.
-  <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/Blockchain-database.jpg"  style="width:100%; height: 400px; align-content: center; "/>
+  <img src="/img/courses/bc-basic/Blockchain-database.jpg"  style="width:100%; height: 400px; align-content: center; "/>
 
 
 
@@ -38,7 +38,7 @@ Lack of customer focus: The customer finds it very difficult to know if the prod
 
 ### Business Scenario Implemented Using Blockchain
 With the same Blockchain technology, all parties track the movement of products through the supply chain.
-  <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/Blockchain-ledger.jpg"  style="width:100%; height: 400px; align-content: center; "/>
+  <img src="/img/courses/bc-basic/Blockchain-ledger.jpg"  style="width:100%; height: 400px; align-content: center; "/>
 
 A single shared data storage, which is tamper-evident (designed to reveal any unusual interference) and protected using cryptographic methods.
 

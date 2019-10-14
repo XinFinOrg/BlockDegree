@@ -10,7 +10,7 @@ History of Cryptography:-
 
 Cryptography is a method of hiding information to keep its content safe and secret. To uncover the information, the reader needs to know how the information has been modified, or encrypted. The encrypted message can, if properly done, be read only by the sender and the recipient.
 
-<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/cryptography.png"  style="width:100%; height: 400px; align-content: center; "/>
+<img src="/img/courses/bc-basic/cryptography.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 
 Nearly everyone has heard of Blockchain and that it is cool. But not everybody understands how it works.
@@ -23,11 +23,11 @@ A Blockchain is a diary that is almost impossible to forget.
 ### Hash function
 Let us imagine that 10 people in one room decide to make a unique currency. They have to follow the flow of funds, and one person – let's call him Alice – decides to keep a list of all the actions in a diary: Another person – let’s call him Sam – decides to steal money. To hide this, he changed the entries in Alice’s diary:
 
-  <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/hash-function.png"  style="width:100%; height: 400px; align-content: center; "/>
+  <img src="/img/courses/bc-basic/hash-function.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 
 Alice noticed that someone had tampered with his diary and wants to find a solution to this. He finds a progAlice called a Hash function which turns text into a set of numbers and letters, as shown in the table below.
-  <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/hash-function1.png"  style="width:100%; height: 400px; align-content: center; "/>
+  <img src="/img/courses/bc-basic/hash-function1.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 
 A hash is a set of numbers and letters, produced by hash functions. A hash function is a mathematical function that takes a variable number of characters and converts it into a set with a fixed number of characters. Even a small change in a set creates a totally new hash.
@@ -53,7 +53,7 @@ But Alice did not want to lose hope, so he decided to add a number after each re
 Now, to forget the records, Sam would have to spend hours and hours choosing Nonce for each line.
 
 More importantly, the computers itself cannot figure out the Nonce quickly
-  <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/nonce.png"  style="width:100%; height: 400px; align-content: center; "/>
+  <img src="/img/courses/bc-basic/nonce.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 
 ### Nodes
@@ -112,7 +112,7 @@ When someone decides to send coins to anybody, they must sign the message contai
 
 Once the message is sent it is broadcast to the Blockchain network. The network of nodes then works on the message to make sure that the transaction it contains is valid. If it confirms the validity, the transaction is placed in a block and after that no information about it can be altered.
 
-  <img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/digital-signature.png"  style="width:100%; height: 400px; align-content: center; "/>
+  <img src="/img/courses/bc-basic/digital-signature.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 
 ### What are cryptographic keys?

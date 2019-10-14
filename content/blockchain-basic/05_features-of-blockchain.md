@@ -6,7 +6,7 @@ template: courseContent.hbs
 courseIdx: 0
 
 ---
-<img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/courses/bc-basic/features-of-blockchain.png"  style="width:100%; height: 400px; align-content: center; "/>
+<img src="/img/courses/bc-basic/features-of-blockchain.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 
 ### Decentralized System
