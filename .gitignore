@@ -16,6 +16,7 @@ server/config/auth.js
 server/config/authSecrets.js
 server/config/authSecrets.js.bak
 server/config/paypalKeys.js
+server/config/*
 server/keystore
 server/routes/testRoutes.js
 

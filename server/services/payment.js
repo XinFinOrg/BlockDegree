@@ -8,11 +8,20 @@ const XDC3 = require("xdc3");
 const Web3 = require("web3");
 const axios = require("axios");
 const uuidv4 = require("uuid/v4");
+const contractConfig = require("../config/smartContractConfig");
+const keyConfig = require("../config/keyConfig");
 
 const xdc3 = new XDC3("https://rpc.xinfin.network/"); // setting up the instance for xinfin's mainnet provider
-const web3 = new Web3("https://rpc.xinfin.network/"); // this wont work with XinFin's network
+const web3 = new Web3(
+  new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
+);
 const txReceiptUrl = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
 // Need to understand the complete flow and handle erros, unexpected shutdowns, inaccessible 3rd party.
+
+const contractAddrRinkeby = contractConfig.address.rinkeby;
+const contractABI = contractConfig.ABI;
+
+const contractInst = new web3.eth.Contract(contractABI, contractAddrRinkeby);
 
 exports.payPaypalSuccess = (req, res) => {
   let paymentId = req.query.paymentId;
@@ -380,81 +389,101 @@ exports.payViaXdc = async (req, res) => {
   }
   const txn_hash = req.body.txn_hash;
   const course = req.body.course;
-  let txnObj;
+  // let txnObj;
 
-  txnObj = await axios.post(txReceiptUrl, {
-    isTransfer: false,
-    tx: txn_hash
-  });
-  // Verify the amt, to & time
-  console.log(txnObj.data);
-  let priceInUsd,
-    priceObj,
-    tolerance = 5;
-  const constPrice = 9.99;
-  priceObj = await axios.get(
-    "https://api.coinmarketcap.com/v1/ticker/xinfin-network/"
-  );
-  priceInUsd = priceObj.data[0].price_usd;
-  console.log(priceObj.data[0], priceInUsd);
-  // $.ajax({
-  //   method: "get",
-  //   url: "https://api.coinmarketcap.com/v1/ticker/xinfin-network/",
-  //   success: response => {
-  //     priceInUsd = response.price_usd;
-  //   },
-  //   error: xhr => {}
+  // txnObj = await axios.post(txReceiptUrl, {
+  //   isTransfer: false,
+  //   tx: txn_hash
   // });
+  // Verify the amt, to & time
+  // console.log(txnObj.data);
+  // let priceInUsd,
+  //   priceObj,
+  //   tolerance = 5;
+  // const constPrice = 9.99;
+  // priceObj = await axios.get(
+  //   "https://api.coinmarketcap.com/v1/ticker/xinfin-network/"
+  // );
+  // priceInUsd = priceObj.data[0].price_usd;
+  // console.log(priceObj.data[0], priceInUsd);
+  // // $.ajax({
+  // //   method: "get",
+  // //   url: "https://api.coinmarketcap.com/v1/ticker/xinfin-network/",
+  // //   success: response => {
+  // //     priceInUsd = response.price_usd;
+  // //   },
+  // //   error: xhr => {}
+  // // });
 
-  let expectedXdc = constPrice / (10000 * priceInUsd); // 10000 multiplier for testing purpose
-  console.log(expectedXdc);
+  // let expectedXdc = constPrice / (10000 * priceInUsd); // 10000 multiplier for testing purpose
+  // console.log(expectedXdc);
 
-  console.log(
-    `Difference: ${Math.abs(parseFloat(txnObj.data.value) - expectedXdc)}`
-  );
-  console.log(`Tolerance: ${(tolerance / 100) * 100}`);
+  // console.log(
+  //   `Difference: ${Math.abs(parseFloat(txnObj.data.value) - expectedXdc)}`
+  // );
+  // console.log(`Tolerance: ${(tolerance / 100) * 100}`);
 
-  if (
-    Math.abs(parseFloat(txnObj.data.value) - expectedXdc) / expectedXdc <=
-    (tolerance / 100) * expectedXdc
-  ) {
-    // tolerance of 10 %
-    // valid amount
-    let user;
-    try {
-      user = await User.findOne({ email: req.user.email });
-    } catch (e) {
-      console.log(
-        `Exception occured while fetching user for payment.PayViaXdc :`,
-        e
-      );
-      res.json({ status: false, error: "Internal error" });
-      return;
-    }
-    let newPaymentXDC = new PaymentXDC({
-      payment_id: uuidv4(),
-      email: user.email,
-      course: course,
-      price: expectedXdc,
-      creationDate: Date.now(),
-      txn_hash: txn_hash
-    });
-    user.examData.payment[course] = true;
-
-    try {
-      newPaymentXDC.save();
-      user.save();
-    } catch (e) {
-      console.log(
-        `Some error has occurred while saving the data at payment.payViaXdc`,
-        e
-      );
-      res.json({ status: false, error: "Internal Error" });
-      return;
-    }
-    res.json({ status: true, error: null, txnHash: txn_hash });
-  } else {
-    res.json({ status: false, error: "Invalid amount" });
+  // if (
+  //   Math.abs(parseFloat(txnObj.data.value) - expectedXdc) / expectedXdc <=
+  //   (tolerance / 100) * expectedXdc
+  // ) {
+  // tolerance of 10 %
+  // valid amount
+  let user;
+  try {
+    user = await User.findOne({ email: req.user.email });
+  } catch (e) {
+    console.log(
+      `Exception occured while fetching user for payment.PayViaXdc :`,
+      e
+    );
+    res.json({ status: false, error: "Internal error" });
     return;
   }
+  let newPaymentXDC = new PaymentXDC({
+    payment_id: uuidv4(),
+    email: user.email,
+    course: course,
+    price: req.body.price, // only for testing.
+    creationDate: Date.now(),
+    txn_hash: txn_hash
+  });
+  user.examData.payment[course] = true;
+
+  let encodedTx = contractInst.methods
+    .burnToken("app_id", "name", txn_hash)
+    .encodeABI();
+  let gp = await web3.eth.getGasPrice();
+  let tx = {
+    to: contractAddrRinkeby,
+    data: encodedTx,
+    value: web3.utils.toHex(100),
+    gas: web3.utils.toHex(3000000),
+    gasPrice: web3.utils.toHex(100 * gp)
+  };
+
+  let privateKey = keyConfig.privateKey;
+
+  web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+    web3.eth
+      .sendSignedTransaction(signed.rawTransaction)
+      .on("receipt", console.log);
+  });
+
+  try {
+    newPaymentXDC.save();
+    user.save();
+  } catch (e) {
+    console.log(
+      `Some error has occurred while saving the data at payment.payViaXdc`,
+      e
+    );
+    res.json({ status: false, error: "Internal Error" });
+    return;
+  }
+  res.json({ status: true, error: null, txnHash: txn_hash });
+  // } else {
+  //   res.json({ status: false, error: "Invalid amount" });
+  //   return;
+  // }
 };

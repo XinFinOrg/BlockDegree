@@ -288,11 +288,11 @@
     window.web3.version.getNetwork((err, providerNetworkId) => {
       if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
 
-      if (providerNetworkId == 50) {
-        if (window.web3.eth.coinbase == undefined) {
+      if (providerNetworkId == 4) {
+        {{!-- if (window.web3.eth.coinbase == undefined) {
           $.notify("Please login & setup your <strong>XinPay</strong> web-extension to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
           return;
-        }
+        } --}}
         // is on XinFin mainnet
         $.ajax({
           method: "get",
@@ -308,7 +308,7 @@
             console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
             await ethereum.enable();
 
-            window.web3.eth.sendTransaction({ to: window.web3.eth.coinbase, gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
+            window.web3.eth.sendTransaction({ to: "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
               if (err) {
                 console.error(err)
                 $.notify("<b>XinPay</b> : Some error while creating or processing this transaction.", { type: "danger" });
