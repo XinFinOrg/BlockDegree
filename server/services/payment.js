@@ -455,8 +455,8 @@ exports.payViaXdc = async (req, res) => {
     .encodeABI();
   let gp = await web3.eth.getGasPrice();
   let tx = {
-    to: contractAddrRinkeby,
-    data: encodedTx,
+    to: "0x0000000000000000000000000000000000000000",
+    // data: encodedTx,
     value: web3.utils.toHex(100),
     gas: web3.utils.toHex(3000000),
     gasPrice: web3.utils.toHex(100 * gp)
