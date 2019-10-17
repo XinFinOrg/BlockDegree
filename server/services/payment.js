@@ -3,26 +3,32 @@ const User = require("../models/user");
 const PaymentLogs = require("../models/payment_logs");
 const emailer = require("../emailer/impl");
 const promoCodeService = require("../services/promoCodes");
-const PaymentXDC = require("../models/payment_xdc");
+const PaymentToken = require("../models/payment_token");
 const XDC3 = require("xdc3");
 const Web3 = require("web3");
 const axios = require("axios");
 const uuidv4 = require("uuid/v4");
 const contractConfig = require("../config/smartContractConfig");
 const keyConfig = require("../config/keyConfig");
+const eventEmitter = require("../listeners/txnConfirmation").em;
 
-const xdc3 = new XDC3("https://rpc.xinfin.network/"); // setting up the instance for xinfin's mainnet provider
-const web3 = new Web3(
-  new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
-);
+const xdcePrice = 10;
+const xdcPrice = 10;
+
+// const xdc3 = new XDC3("https://rpc.xinfin.network/"); // setting up the instance for xinfin's mainnet provider
+
 const txReceiptUrl = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
+
 // Need to understand the complete flow and handle erros, unexpected shutdowns, inaccessible 3rd party.
 
 const contractAddrRinkeby = contractConfig.address.rinkeby;
 const contractABI = contractConfig.ABI;
-
-const contractInst = new web3.eth.Contract(contractABI, contractAddrRinkeby);
-
+const xdceAddrMainnet = contractConfig.address.xdceMainnet;
+const xdceABI = contractConfig.XdceABI;
+const transferFunctionStr = "transfer(address,uint)";
+const XDCE = "xdce";
+const XDC = "xdc";
+const xdceOwnerPubAddr = "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E";
 exports.payPaypalSuccess = (req, res) => {
   let paymentId = req.query.paymentId;
   let payerId = { payer_id: req.query.PayerID };
@@ -382,6 +388,12 @@ exports.payViaXdc = async (req, res) => {
   4. Handle errors at in-built registration, error in making call to burning service, error in the burning service.
 
   */
+
+  const web3 = new Web3(
+    new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
+  );
+  const contractInst = new web3.eth.Contract(contractABI, contractAddrRinkeby);
+
   if (req.body.txn_hash == undefined || req.body.course == undefined) {
     console.log(`Bad request from the user ${req.user.email}: `, req.body);
     res.json({ status: false, error: "Bad request" });
@@ -450,9 +462,9 @@ exports.payViaXdc = async (req, res) => {
   });
   user.examData.payment[course] = true;
 
-  let encodedTx = contractInst.methods
-    .burnToken("app_id", "name", txn_hash)
-    .encodeABI();
+  // let encodedTx = contractInst.methods.transfer("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E",);
+  //   .burnToken("app_id", "name", txn_hash)
+  //   .encodeABI();
   let gp = await web3.eth.getGasPrice();
   let tx = {
     to: "0x0000000000000000000000000000000000000000",
@@ -462,13 +474,29 @@ exports.payViaXdc = async (req, res) => {
     gasPrice: web3.utils.toHex(100 * gp)
   };
 
-  let privateKey = keyConfig.privateKey;
-
-  web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
-    web3.eth
-      .sendSignedTransaction(signed.rawTransaction)
-      .on("receipt", console.log);
+  web3.eth.sendTransaction(tx, (err, result) => {
+    if (err) {
+      $.notify(
+        "Some error occured while processing your transaction, please try again after sometime",
+        { type: "danger" }
+      );
+      return;
+    } else {
+      $.notify(
+        `Transaction successfully placed, your tx is :${result.transactionHash}, please wait it might take sometime to confirm your payment `,
+        { type: "info" }
+      );
+      return;
+    }
   });
+
+  // let privateKey = keyConfig.privateKey;
+
+  // web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+  //   web3.eth
+  //     .sendSignedTransaction(signed.rawTransaction)
+  //     .on("receipt", console.log);
+  // });
 
   try {
     newPaymentXDC.save();
@@ -487,3 +515,175 @@ exports.payViaXdc = async (req, res) => {
   //   return;
   // }
 };
+
+exports.payViaXdce = (req, res) => {
+  /*
+
+  1. Register the receipt in-app
+
+  2. Make a call to the burning service
+
+  3. Return the hash from the burning service to the user
+
+  4. Handle errors at in-built registration, error in making call to burning service, error in the burning service.
+
+  */
+  const txn_hash = req.body.txn_hash;
+  const course = req.body.course;
+  const price = req.body.price;
+  console.log("Called the function PayViaXdce");
+  console.log("Hash: ", txn_hash, "typeof: ", typeof txn_hash);
+  const web3 = new Web3(
+    new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49")
+  );
+  // for demo: 0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed
+  if (txn_hash == "") {
+    console.error("Bad request: txn_hash is missing from the request");
+    return res.json({ error: "bad request", status: false });
+  }
+  const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
+  let txReceipt = "";
+  let txMinedLimit = 30 * 60 * 1000; // will listen for mining of the trn_hash for 30 minutes.
+  let startTime = Date.now();
+  let TxMinedListener = setInterval(async () => {
+    console.log(`Interval for Tx mining`);
+    if (Date.now() - startTime > txMinedLimit) {
+      TxMinedListener = clearInterval(TxMinedListener);
+      res.json({ status: false, error: "Cannot get the transaction receipt" });
+      return;
+    }
+    txReceipt = await web3.eth.getTransactionReceipt(txn_hash);
+    if (txReceipt != null) {
+      // txnMined.
+      console.log(`Got the tx receipt for the tx: ${txn_hash}`);
+
+      const duplicateTx = await PaymentToken.findOne({
+        txn_hash: txReceipt.transactionHash
+      });
+      if (duplicateTx != null) {
+        // this transaction is already recorded
+        console.log(
+          `User ${req.user.email} tried to double spend hash: ${txReceipt.transactionHash}`
+        );
+        TxMinedListener = clearInterval(TxMinedListener);
+        res.json({ error: "duplicate transation", status: false });
+        return;
+      }
+      let getTx = await web3.eth.getTransaction(txn_hash);
+      let txInputData = getTx.input;
+      let expectedData = contractInst.methods
+        .transfer(xdceOwnerPubAddr, xdcePrice)
+        .encodeABI();
+      console.log(`Input data from the transaction: ${txInputData}`);
+      console.log(`Calculated data: ${expectedData}`);
+      console.log(expectedData === txInputData);
+      let validFuncSig = expectedData === txInputData;
+      console.log(validFuncSig);
+      if (!validFuncSig) {
+        // invalid transaction;
+        TxMinedListener = clearInterval(TxMinedListener);
+        res.json({ error: "Invalud transaction", status: false });
+        return;
+      }
+      const blockData = await web3.eth.getBlock(txReceipt.blockNumber);
+      const txTimestamp = blockData.timestamp;
+      if (!(Date.now() - txTimestamp > 24 * 60 * 60 * 1000)) {
+        // tx timedout
+        TxMinedListener = clearInterval(TxMinedListener);
+        res.json({ error: "tx timed out", status: false });
+        return;
+      }
+      /* 
+        1. check if the to is our address - done
+        2. check if the value is within the tolerance of our system - done
+        3. check if the blockdate is not older than 12 hrs - done
+        4. check if thr transaction is already recorded
+      */
+      let newPaymentXdce = newPaymentToken();
+      newPaymentXdce.payment_id = uuidv4();
+      newPaymentXdce.email = req.user.email;
+      newPaymentXdce.creationDate = Date.now();
+      newPaymentXdce.txn_hash = txn_hash;
+      newPaymentXdce.course = course;
+      newPaymentXdce.tokenName = XDCE;
+      newPaymentXdce.price = req.body.price;
+      newPaymentXdce.status = "pending";
+      try {
+        await newPaymentXdce.save();
+      } catch (e) {
+        console.error(`Some error occured while saving the payment log: `, e);
+        TxMinedListener = clearInterval(TxMinedListener);
+        res.json({
+          status: false,
+          error: "errorwhile saving the new payment log"
+        });
+        return;
+      }
+      TxMinedListener = clearInterval(TxMinedListener);
+      res.json({ status: true, error: null });
+      eventEmitter.emit("listenTx", txn_hash, 1, req.user.email);
+      return;
+    }
+  }, 1000);
+  // let TxConfirmed = setInterval(async () => {
+  //   if (txReceipt != "") {
+  //     // got a receipt
+  //     const currentBlock = await web3.eth.getBlockNumber();
+  //     const confirmations = currentBlock - txReceipt.blockNumber;
+  //     if (confirmations > 3) {
+  //       // required confirmations met.
+  //       let user;
+  //       try {
+  //         user = await User.findOne({ email: req.user.email });
+  //       } catch (e) {
+  //         console.log(
+  //           `Exception occured while fetching user for payment.PayViaXdc :`,
+  //           e
+  //         );
+  //         res.json({ status: false, error: "Internal error" });
+  //         clearInterval(TxConfirmed);
+  //         return;
+  //       }
+  //       let newPaymentXdce = newPaymentToken();
+  //       newPaymentXdce.payment_id = uuidv4();
+  //       newPaymentXdce.email = req.user.email;
+  //       newPaymentXdce.creationDate = Date.now();
+  //       newPaymentXdce.txn_hash = txn_hash;
+  //       newPaymentXdce.course = course;
+  //       newPaymentXdce.tokenName = XDCE;
+  //       newPaymentXdce.price = req.body.price;
+  //       newPaymentXdce.status = "complete";
+  //       user.examData.payment[course] = true;
+  //       try {
+  //         await newPaymentXDC.save();
+  //         await user.save();
+  //       } catch (e) {
+  //         console.log(
+  //           `Some error has occurred while saving the data at payment.payViaXdc`,
+  //           e
+  //         );
+  //         res.json({ status: false, error: "Internal Error" });
+  //         clearInterval(TxConfirmed);
+  //         return;
+  //       }
+  //       res.json({ status: true, error: null, txnHash: txn_hash });
+  //       clearInterval(TxConfirmed);
+  //       return;
+  //     }
+  //   }
+  // }, 1000);
+};
+
+function newPaymentToken() {
+  return new PaymentToken({
+    payment_id: "",
+    email: "",
+    creationDate: "",
+    txn_hash: "",
+    course: "",
+    tokenName: "",
+    tokenAmt: "",
+    price: "",
+    status: "" // pending, complete or rejected
+  });
+}

@@ -102,6 +102,8 @@
                     </button>
                   </div>
                   <div class="modal-body">
+                    <button type="button" style="btn btn-primary" onclick="payViaXdce({{this.type}},{{this.price}})"
+                      data-dismiss="modal"> Pay Via XDCe </button>
                     <button type="button" style="btn btn-primary" onclick="payViaXdc({{this.type}},{{this.price}})"
                       data-dismiss="modal"> Pay Via XDC* </button>
                     <button type="button" style="btn btn-primary" onclick="pay({{this.type}},{{this.price}})"
@@ -277,6 +279,624 @@
     }
   }
 
+  function payViaXdce(course_id, price) {
+    if (window.web3 == undefined) {
+      // no web3 provider is available, ask to install XinPay
+      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
+      return;
+    }
+
+    window.web3.version.getNetwork((err, providerNetworkId) => {
+      if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
+
+      if (providerNetworkId == 1) {
+        // is on ethereum mainnet; all ok
+        $.ajax({
+          method: "get",
+          url: "https://api.coinmarketcap.com/v1/ticker/xinfin-network/",
+          success: async response => {
+            if (!response[0].price_usd) {
+              // New format? 
+              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
+              return;
+            }
+            const priceUsd = parseFloat(response[0].price_usd);
+            const coursePriceXdce = parseFloat(price) / (10000 * priceUsd) // dividend of 10000 for testing
+            console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdce}`)
+            await ethereum.enable();
+
+            const xdceAddrMainnet = "0x41ab1b6fcbb2fa9dced81acbdec13ea6315f2bf2";
+            const xdceABI = [
+              {
+                constant: false,
+                inputs: [
+                  { name: "_name", type: "string" },
+                  { name: "_symbol", type: "string" }
+                ],
+                name: "updateTokenInformation",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "addr", type: "address" },
+                  { name: "state", type: "bool" }
+                ],
+                name: "setTransferAgent",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "name",
+                outputs: [{ name: "", type: "string" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_spender", type: "address" },
+                  { name: "_value", type: "uint256" }
+                ],
+                name: "approve",
+                outputs: [{ name: "success", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_tokensForPublicSale", type: "uint256" },
+                  { name: "_min", type: "uint256" },
+                  { name: "_max", type: "uint256" },
+                  { name: "_crowdsaleStatus", type: "bool" }
+                ],
+                name: "setPublicSaleParams",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_value", type: "uint256" }],
+                name: "setTotalTokensForPublicSale",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "totalSupply",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_from", type: "address" },
+                  { name: "_to", type: "address" },
+                  { name: "_value", type: "uint256" }
+                ],
+                name: "transferFrom",
+                outputs: [{ name: "success", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "addr", type: "address" }],
+                name: "setReleaseAgent",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "destroyToken",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "decimals",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_min", type: "uint256" },
+                  { name: "_max", type: "uint256" }
+                ],
+                name: "setMinAndMaxEthersForPublicSale",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "value", type: "uint256" }],
+                name: "upgrade",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "isCrowdsaleOpen",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "upgradeAgent",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "releaseTokenTransfer",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "upgradeMaster",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_value", type: "uint256" }],
+                name: "updateTokenPrice",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [{ name: "_owner", type: "address" }],
+                name: "balanceOf",
+                outputs: [{ name: "balance", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "acceptOwnership",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "getUpgradeState",
+                outputs: [{ name: "", type: "uint8" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [{ name: "", type: "address" }],
+                name: "transferAgents",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_investor", type: "address" },
+                  { name: "_tokens", type: "uint256" }
+                ],
+                name: "sendTokensToInvestors",
+                outputs: [{ name: "ok", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "owner",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "symbol",
+                outputs: [{ name: "", type: "string" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "released",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "canUpgrade",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "value", type: "uint256" }],
+                name: "decreaseSupply",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "a", type: "uint256" }, { name: "b", type: "uint256" }],
+                name: "safeSub",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_to", type: "address" },
+                  { name: "_value", type: "uint256" }
+                ],
+                name: "transfer",
+                outputs: [{ name: "success", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "value", type: "uint256" }],
+                name: "increaseSupply",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "stopCrowdSale",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "totalUpgraded",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_addresses", type: "address[]" },
+                  { name: "_value", type: "uint256[]" }
+                ],
+                name: "dispenseTokensToInvestorAddressesByValue",
+                outputs: [{ name: "ok", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "a", type: "uint256" }, { name: "b", type: "uint256" }],
+                name: "safeMul",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "buyTokens",
+                outputs: [{ name: "tokenAmount", type: "uint256" }],
+                payable: true,
+                stateMutability: "payable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "releaseAgent",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "newOwner",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "agent", type: "address" }],
+                name: "setUpgradeAgent",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_newSupply", type: "uint256" }],
+                name: "updateOnSaleSupply",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [
+                  { name: "_owner", type: "address" },
+                  { name: "_spender", type: "address" }
+                ],
+                name: "allowance",
+                outputs: [{ name: "remaining", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "onSaleTokens",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "a", type: "uint256" }, { name: "b", type: "uint256" }],
+                name: "safeAdd",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_tokens", type: "uint256" }],
+                name: "sendTokensToOwner",
+                outputs: [{ name: "ok", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "startCrowdSale",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_newOwner", type: "address" }],
+                name: "transferOwnership",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "master", type: "address" }],
+                name: "setUpgradeMaster",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                inputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "constructor"
+              },
+              { payable: true, stateMutability: "payable", type: "fallback" },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: false, name: "newName", type: "string" },
+                  { indexed: false, name: "newSymbol", type: "string" }
+                ],
+                name: "UpdatedTokenInformation",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: true, name: "_from", type: "address" },
+                  { indexed: true, name: "_to", type: "address" }
+                ],
+                name: "OwnershipTransferred",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: true, name: "_from", type: "address" },
+                  { indexed: true, name: "_to", type: "address" },
+                  { indexed: false, name: "_value", type: "uint256" }
+                ],
+                name: "Upgrade",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [{ indexed: false, name: "agent", type: "address" }],
+                name: "UpgradeAgentSet",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: true, name: "from", type: "address" },
+                  { indexed: true, name: "to", type: "address" },
+                  { indexed: false, name: "value", type: "uint256" }
+                ],
+                name: "Transfer",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: true, name: "owner", type: "address" },
+                  { indexed: true, name: "spender", type: "address" },
+                  { indexed: false, name: "value", type: "uint256" }
+                ],
+                name: "Approval",
+                type: "event"
+              }
+            ]
+            let XDCeContract = window.web3.eth.contract(xdceABI);
+            let xdceInst = XDCeContract.at(xdceAddrMainnet);
+            console.log(web3.eth.defaultAccount)
+            console.log(web3.version.api);
+            let tx = {
+              to: xdceAddrMainnet
+            };
+            {{!-- $.ajax({
+                    method: "post",
+                    url: "/api/payViaXdce",
+                    data: { txn_hash: "0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed",course:course_id.id,price:price },
+                    success: resp => {
+                      if (resp.status) {
+                        // all ok, ask to check profile after sometime.
+                        $.notify(`Your transaction has been successfully received by our servers, your order will be completed after it being comfirmed.`, { type: "success" });
+                        return;
+                      } else {
+                        // something went wrong, ask to store tx & mail to info@blockdegree.org
+                        $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>${result}</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                      }
+                    },
+                    error: xhr => {
+                      $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                      return;
+                    }
+                  }) --}}
+            xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", 10, tx, (err, result) => {
+                  if (err != null) {
+                    $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
+                    return;
+                  }
+                  // result is transaction hash
+                  $.notify(`Your was successfully placed (<strong>Hash</strong> : ${result}), once the transaction is confimed your order will be complete.`, { type: "info" });
+                  $.ajax({
+                    method: "post",
+                    url: "/api/payViaXdce",
+                    data: { txn_hash: result,course:course_id.id,price:price },
+                    success: resp => {
+                      if (resp.status) {
+                        // all ok, ask to check profile after sometime.
+                        $.notify(`Your transaction has been successfully received by our servers, your order will be completed after it being comfirmed.`, { type: "success" });
+                        return;
+                      } else {
+                        // something went wrong, ask to store tx & mail to info@blockdegree.org
+                        $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>${result}</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                      }
+                    },
+                    error: xhr => {
+                      $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                      return;
+                    }
+                  })
+                  return;
+                })
+
+          },
+          error: xhr => {
+            $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
+            return;
+          }
+        })
+      }
+      else {
+        // Looks like you're using some other web-extension as web3 provider. Please disable other web3 extensions like metamask, mist and enable only XinPay & then try again.
+        $.notify("looks like you're on some other Network, please switch to network-id 1 aka <strong>ethereum mainnet</strong>", { type: "danger", delay: 5000 });
+        return;
+      }
+    })
+
+  }
+
+
   // using 10000 as the divisor for testing purpose
   async function launchXinPay(course_id, price) {
     if (window.web3 == undefined) {
@@ -289,10 +909,10 @@
       if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
 
       if (providerNetworkId == 4) {
-        {{!-- if (window.web3.eth.coinbase == undefined) {
+        if (window.web3.eth.coinbase == undefined) {
           $.notify("Please login & setup your <strong>XinPay</strong> web-extension to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
           return;
-        } --}}
+        }
         // is on XinFin mainnet
         $.ajax({
           method: "get",
@@ -335,7 +955,7 @@
                   },
                   error: xhr => {
                     // YIKES, ask to copy txn & mail at info@blockdegree.org
-                    $.notify(`<b>Error</b> : Your txn was processed, but something went from our side. Don't worry, just send a mail to info@blockdegree.org with your tx hash.`, { type: "success" });
+                    $.notify(`<b>Error</b> : Your txn was processed, but something went from our side. Don't worry, just send a mail to <strong>info@blockdegree.org</strong> with your tx hash.`, { type: "success" });
                     return;
                   }
                 })
