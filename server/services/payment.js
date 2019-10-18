@@ -534,7 +534,7 @@ exports.payViaXdce = (req, res) => {
   console.log("Called the function PayViaXdce");
   console.log("Hash: ", txn_hash, "typeof: ", typeof txn_hash);
   const web3 = new Web3(
-    new Web3.providers.Https("https://mainnet.infura.io/v3/9670d19506ee4d738e7f128634a37a49")
+    new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49")
   );
   // for demo: 0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed
   if (txn_hash == "") {
@@ -543,7 +543,7 @@ exports.payViaXdce = (req, res) => {
   }
   const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
   let txReceipt = "";
-  let txMinedLimit = 30 * 60 * 1000; // will listen for mining of the trn_hash for 30 minutes.
+  let txMinedLimit = 1 * 60 * 1000; // will listen for mining of the trn_hash for 30 minutes.
   let startTime = Date.now();
   let TxMinedListener = setInterval(async () => {
     console.log(`Interval for Tx mining`);
