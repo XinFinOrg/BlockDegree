@@ -9,8 +9,8 @@ const abiDecoder = require("abi-decoder");
 const axios = require("axios");
 
 let eventEmitter = new EventEmitter();
-const ethConfirmation = 3;
-const xinConfirmation = 3;
+// const ethConfirmation = 3;
+// const xinConfirmation = 3;
 const contractAddrRinkeby = contractConfig.address.rinkeby;
 const contractABI = contractConfig.ABI;
 const xdceAddrMainnet = contractConfig.address.xdceMainnet;
@@ -29,7 +29,7 @@ const divisor = 1000000; // for testing purposes 1 million'th of actual value wi
 
 abiDecoder.addABI(xdceABI);
 
-function listenForConfirmation(txHash, network, userEmail) {
+function listenForConfirmation(txHash, network, userEmail, course) {
   setImmediate(async () => {
     console.log(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
@@ -41,6 +41,8 @@ function listenForConfirmation(txHash, network, userEmail) {
         );
         try {
           const txReceipt = await web3.eth.getTransactionReceipt(txHash);
+          const coursePrice = await CoursePrice.findOne({ courseId: course });
+          const ethConfirmation = coursePrice.xdceConfirmation;
           if (txReceipt == null) {
             // how ?
             console.log(
@@ -98,8 +100,10 @@ function listenForConfirmation(txHash, network, userEmail) {
                   console.log(
                     `Received block with blocknumber: ${blockHeader.number}`
                   );
-                  if (blockHeader.number - txBlockNumber >= ethConfirmation) {
+                  let currConfirmations = blockHeader.number - txBlockNumber;
+                  if (currConfirmations >= ethConfirmation) {
                     // the limit is now met, complete the order
+                    paymentLog.confirmations = currConfirmations;
                     paymentLog.status = "completed";
                     user.examData.payment[paymentLog.course] = true;
                     await paymentLog.save();
@@ -111,6 +115,18 @@ function listenForConfirmation(txHash, network, userEmail) {
                         );
                       }
                     });
+                  } else {
+                    // check if more confirmations are received & update accordingly
+                    if (
+                      currConfirmations != parseInt(paymentLog.confirmations)
+                    ) {
+                      // have changed
+                      paymentLog.confirmations = currConfirmations;
+                      console.log(
+                        `Updated the confirmations: ${paymentLog.confirmations}`
+                      );
+                      await paymentLog.save();
+                    }
                   }
                 }
               });
@@ -265,7 +281,7 @@ function listenForMined(txHash, network, userEmail, price, course) {
               console.log(
                 `Finished listening for the tx ${txHash} for user ${userEmail}`
               );
-              listenForConfirmation(txHash, 1, userEmail);
+              listenForConfirmation(txHash, 1, userEmail, course);
               return;
             }
           }, 10000);
@@ -297,16 +313,21 @@ function newPaymentToken() {
     tokenName: "",
     tokenAmt: "",
     price: "",
-    status: "" // pending, complete or rejected
+    status: "", // pending, complete or rejected
+    confirmations: "0"
   });
 }
 
 async function getXinEquivalent(amnt) {
   try {
     const currXinPrice = await axios.get(coinMarketCapAPI);
-    if (currXinPrice.data[0] != undefined || currXinPrice.data[0] != undefined) {
+    if (
+      currXinPrice.data[0] != undefined ||
+      currXinPrice.data[0] != undefined
+    ) {
       return (
-        (parseFloat(amnt) / (parseFloat(currXinPrice.data[0].price_usd) * divisor)) *
+        (parseFloat(amnt) /
+          (parseFloat(currXinPrice.data[0].price_usd) * divisor)) *
         Math.pow(10, 18)
       );
     }

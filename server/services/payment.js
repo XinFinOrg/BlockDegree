@@ -679,7 +679,13 @@ exports.payViaXdce = async (req, res) => {
         }
         TxMinedListener = clearInterval(TxMinedListener);
         res.json({ status: true, error: null });
-        eventEmitter.emit("listenTxConfirm", txn_hash, 1, req.user.email);
+        eventEmitter.emit(
+          "listenTxConfirm",
+          txn_hash,
+          1,
+          req.user.email,
+          course
+        );
         return;
       }
     }, 3000);

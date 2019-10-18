@@ -7,7 +7,9 @@ exports.addCourse = async (req, res) => {
     (req.body.courseName == undefined || req.body.courseName == "") ||
     (req.body.coursePriceUsd == undefined || req.body.coursePriceUsd == "") ||
     (req.body.xdceTolerance == undefined || req.body.xdceTolerance == "") ||
-    (req.body.xdcTolerance == undefined || req.body.xdcTolerance == "")
+    (req.body.xdceConfirmation == undefined || req.body.xdceConfirmation == "") ||
+    (req.body.xdceTolerance == undefined || req.body.xdceTolerance == "") ||
+    (req.body.xdcConfirmation == undefined || req.body.xdcConfirmation == "")
   ) {
     res.json({ error: "bad request", status: false });
   }
@@ -17,6 +19,9 @@ exports.addCourse = async (req, res) => {
   newCourse.priceUsd = req.body.coursePriceUsd;
   newCourse.xdcTolerance = req.body.xdcTolerance;
   newCourse.xdceTolerance = req.body.xdceTolerance;
+  newCourse.xdceConfirmation = req.body.xdceConfirmation;
+  newCourse.xdcConfirmation = req.body.xdcConfirmation;
+
   try {
     await newCourse.save();
   } catch (saveError) {
@@ -46,7 +51,7 @@ exports.setXdceTolerance = async (req, res) => {
   }
 
   try {
-    let course = await CoursePrice.findOne({ course: req.body.courseId });
+    let course = await CoursePrice.findOne({ courseId: req.body.courseId });
     let filteredTolerance = req.body.xdceTolerance.trim();
     if (course == null) {
       console.error(
@@ -91,7 +96,7 @@ exports.setXdcTolerance = async (req, res) => {
   }
 
   try {
-    let course = await CoursePrice.findOne({ course: req.body.courseId });
+    let course = await CoursePrice.findOne({ courseId: req.body.courseId });
     let filteredTolerance = req.body.xdcTolerance.trim();
     if (course == null) {
       console.error(
@@ -136,7 +141,7 @@ exports.setPriceUsd = async (req, res) => {
   }
 
   try {
-    let course = await CoursePrice.findOne({ course: req.body.courseId });
+    let course = await CoursePrice.findOne({ courseId: req.body.courseId });
     let filteredPrice = req.body.priceUsd.trim();
     if (course == null) {
       console.error(
@@ -165,12 +170,98 @@ exports.setPriceUsd = async (req, res) => {
   res.json({ status: true, error: null });
 };
 
+exports.setXdceConfirmation = async (req, res) => {
+  if (
+    req.body.courseId == undefined ||
+    req.body.courseId == "" ||
+    req.body.xdceConfirmation == undefined ||
+    req.body.xdceConfirmation == ""
+  ) {
+    console.error("Bad request at adminServices.setXdceConfirmation");
+    res.json({ status: false, error: "bad request" });
+    return;
+  }
+
+  try {
+    let course = await CoursePrice.findOne({ courseId: req.body.courseId });
+    let filteredConfirmation = req.body.xdceConfirmation.trim();
+    if (course == null) {
+      console.error(
+        "Bad request at adminServices.setXdceConfirmation, course not found"
+      );
+      res.json({ status: false, error: "bad request, course not found" });
+      return;
+    }
+    // course found
+    if (course.xdceConfirmation === filteredConfirmation) {
+      // same value, no need to set it again
+      console.error("bad request, same confirmation number as the existing value");
+      res.json({
+        status: false,
+        error: "bad request, same value of the confirmations"
+      });
+      return;
+    }
+    course.xdceConfirmation = filteredConfirmation;
+    await course.save();
+  } catch (e) {
+    console.error("Some exception occured ay adminServices.setXdceConfirmation: ", e);
+    res.json({ status: false, error: "internal error" });
+    return;
+  }
+  res.json({ status: true, error: null });
+};
+
+exports.setXdcConfirmation = async (req, res) => {
+  if (
+    req.body.courseId == undefined ||
+    req.body.courseId == "" ||
+    req.body.xdcConfirmation == undefined ||
+    req.body.xdcConfirmation == ""
+  ) {
+    console.error("Bad request at adminServices.setXdcConfirmation");
+    res.json({ status: false, error: "bad request" });
+    return;
+  }
+
+  try {
+    let course = await CoursePrice.findOne({ courseId: req.body.courseId });
+    let filteredConfirmation = req.body.xdcConfirmation.trim();
+    if (course == null) {
+      console.error(
+        "Bad request at adminServices.setXdcConfirmation, course not found"
+      );
+      res.json({ status: false, error: "bad request, course not found" });
+      return;
+    }
+    // course found
+    if (course.xdcConfirmation === filteredConfirmation) {
+      // same value, no need to set it again
+      console.error("bad request, same confirmation number as the existing value");
+      res.json({
+        status: false,
+        error: "bad request, same value of the confirmations"
+      });
+      return;
+    }
+    course.xdcConfirmation = filteredConfirmation;
+    await course.save();
+  } catch (e) {
+    console.error("Some exception occured ay adminServices.setXdcConfirmation: ", e);
+    res.json({ status: false, error: "internal error" });
+    return;
+  }
+  res.json({ status: true, error: null });
+};
+
 function newDefCourse(courseId) {
   return new CoursePrice({
     courseId: courseId,
     courseName: "",
     xdceTolerance: "",
+    xdceConfirmation:"",
     xdcTolerance: "",
+    xdcConfirmation:"",
     priceUsd: ""
   });
 }

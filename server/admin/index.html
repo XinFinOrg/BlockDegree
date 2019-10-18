@@ -198,7 +198,19 @@
                                                                         <input class="form-control" id="setTolXdc_course_id" placeholder="Enter the course ID"/>
                                                                         <input class="form-control" id="setTolXdc_course_tol" placeholder="Enter the XDC tolerance in percentage"/>
                                                                         <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setToleranceXdc()">Set XDC Tolerance</button>
-                                                                </div>
+                                                                </div><br/>
+                                                                <div>
+                                                                        <h4>Set Xdce Confirmations For Course</h4>
+                                                                                <input class="form-control" id="setConXdce_course_id" placeholder="Enter the course ID"/>
+                                                                                <input class="form-control" id="setConXdce_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
+                                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setConfirmationsXdce()">Set XDCe Confirmations</button>
+                                                                        </div><br/>
+                                                                        <div>
+                                                                                <h4>Set Xdc Confirmations For Course</h4>
+                                                                                        <input class="form-control" id="setConXdc_course_id" placeholder="Enter the course ID"/>
+                                                                                        <input class="form-control" id="setConXdc_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
+                                                                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setConfirmationsXdc()">Set XDC Confirmations</button>
+                                                                                </div><br/>
                                         </div>
                                     </section>
                           </div>                    
@@ -293,6 +305,48 @@
                     method:"post",
                     url:"/api/setXdcTolerance",
                     data : {courseId : courseId,xdcTolerance:xdcTolerance},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setConfirmationsXdce() {
+                const courseId = document.getElementById("setConXdce_course_id").value.trim();
+                const xdceCons = document.getElementById("setConXdce_course_con").value.trim();
+                if (courseId == "" || xdceCons == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdceConfirmation",
+                    data : {courseId : courseId,xdceConfirmation:xdceCons},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setConfirmationsXdc() {
+                const courseId = document.getElementById("setConXdc_course_id").value.trim();
+                const xdcCons = document.getElementById("setConXdc_course_con").value.trim();
+                if (courseId == "" || xdcCons == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdcConfirmation",
+                    data : {courseId : courseId,xdcConfirmation:xdcCons},
                     success: result => {
                         if (!result.status){
                             alert(result.error);
