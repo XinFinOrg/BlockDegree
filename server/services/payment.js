@@ -564,7 +564,7 @@ exports.payViaXdce = async (req, res) => {
     }
     const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
     let txReceipt = "";
-    let txMinedLimit = 10 * 60 * 1000; // will listen for mining of the trn_hash for 5 minutes.
+    let txMinedLimit = 120 * 1000; // will listen for mining of the trn_hash for 2 minutes.
     let startTime = Date.now();
     let TxMinedListener = setInterval(async () => {
       console.log(`Interval for Tx mining`);
