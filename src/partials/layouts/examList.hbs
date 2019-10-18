@@ -176,11 +176,43 @@
     </div>
     {{/each}}
 
+    <button id="btn-displayHashModal" type="button" style="display: none;" class="btn btn-primary" data-toggle="modal"
+      data-target="#displayHashModal">
+      Open modal
+    </button>
+
+    <!-- The Modal -->
+    <div class="modal fade" id="displayHashModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 id="displayHashModal-title" class="modal-title">Title</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div id="displayHashModal-body" class="modal-body">
+            body
+          </div>
+
+          <!-- Modal footer -->
+          <div id="displayHashModal-footer" class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script type="text/javascript">
 
+  const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
+  const coinMarketCapUrl = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
   function takeExam(slug) {
 
     $.ajax({
@@ -293,7 +325,7 @@
         // is on ethereum mainnet; all ok
         $.ajax({
           method: "get",
-          url: "https://api.coinmarketcap.com/v1/ticker/xinfin-network/",
+          url: coinMarketCapUrl,
           success: async response => {
             if (!response[0].price_usd) {
               // New format? 
@@ -832,53 +864,69 @@
             let tx = {
               to: xdceAddrMainnet
             };
+            let xdcePrice = await getXinEquivalent(price)
+            console.log("XDCe Price: ",xdcePrice)
             {{!-- $.ajax({
-                    method: "post",
-                    url: "/api/payViaXdce",
-                    data: { txn_hash: "0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed",course:course_id.id,price:price },
-                    success: resp => {
-                      if (resp.status) {
-                        // all ok, ask to check profile after sometime.
-                        $.notify(`Your transaction has been successfully received by our servers, your order will be completed after it being comfirmed.`, { type: "success" });
-                        return;
-                      } else {
-                        // something went wrong, ask to store tx & mail to info@blockdegree.org
-                        $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>${result}</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
-                      }
-                    },
-                    error: xhr => {
-                      $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                  method: "post",
+                  url: "/api/payViaXdce",
+                  data: { txn_hash: "0x55ede32eae710eed3d21456db6fb01c5e16fcfb04292e72bc0e451fc6693ff8a", course: course_id.id, price: price },
+                  success: resp => {
+                    if (resp.status) {
+                      // all ok, ask to check profile after sometime.
+                      $.notify(`Your transaction has been successfully received by our servers, your order will be completed after it being comfirmed.`, { type: "success" });
+                      
                       return;
+                    } else {
+                      // something went wrong, ask to store tx & mail to info@blockdegree.org
+                      $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>${result}</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
                     }
-                  }) --}}
-            xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", 10, tx, (err, result) => {
-                  if (err != null) {
-                    $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
+                  },
+                  error: xhr => {
+                    $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
                     return;
                   }
-                  // result is transaction hash
-                  $.notify(`Your was successfully placed (<strong>Hash</strong> : ${result}), once the transaction is confimed your order will be complete.`, { type: "info" });
-                  $.ajax({
-                    method: "post",
-                    url: "/api/payViaXdce",
-                    data: { txn_hash: result,course:course_id.id,price:price },
-                    success: resp => {
-                      if (resp.status) {
-                        // all ok, ask to check profile after sometime.
-                        $.notify(`Your transaction has been successfully received by our servers, your order will be completed after it being comfirmed.`, { type: "success" });
-                        return;
-                      } else {
-                        // something went wrong, ask to store tx & mail to info@blockdegree.org
-                        $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>${result}</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
-                      }
-                    },
-                    error: xhr => {
-                      $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
-                      return;
-                    }
-                  })
+                }) --}}
+            xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E",xdcePrice, tx, (err, result) => {
+              if (err != null) {
+                $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
+                return;
+              }
+              // result is transaction hash
+                      const hashModalTitle = document.getElementById("displayHashModal-title");
+                      const hashModalBody = document.getElementById("displayHashModal-body");
+                      const hashModalFooter = document.getElementById("displayHashModal-footer");
+                      hashModalTitle.innerHTML = "Transaction Submitted Successfully";
+                      hashModalBody.innerHTML = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is "+result;
+                    document.getElementById("btn-displayHashModal").click();
+
+
+              $.ajax({
+                method: "post",
+                url: "/api/payViaXdce",
+                data: { txn_hash: result, course: course_id.id, price: price },
+                success: resp => {
+                  if (resp.status) {
+                    // all ok, ask to check profile after sometime.
+
+                    const hashModalTitle = document.getElementById("displayHashModal-title");
+                      const hashModalBody = document.getElementById("displayHashModal-body");
+                      const hashModalFooter = document.getElementById("displayHashModal-footer");
+                      hashModalTitle.innerHTML = "Transaction Received Successfully";
+                      hashModalBody.innerHTML = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. Your trasnaction hash is "+result;
+                    document.getElementById("btn-displayHashModal").click();
+                    return;
+                  } else {
+                    // something went wrong, ask to store tx & mail to info@blockdegree.org
+                    $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>${result}</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                  }
+                },
+                error: xhr => {
+                  $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
                   return;
-                })
+                }
+              })
+              return;
+            })
 
           },
           error: xhr => {
@@ -916,7 +964,7 @@
         // is on XinFin mainnet
         $.ajax({
           method: "get",
-          url: "https://api.coinmarketcap.com/v1/ticker/xinfin-network/",
+          url: coinMarketCapUrl,
           success: async response => {
             if (!response[0].price_usd) {
               // New format? 
@@ -1010,5 +1058,25 @@
       }
     })
   }
+
+  async function getXinEquivalent(amnt) {
+  try {
+    const currXinPrice = await $.ajax({method:"get",url:coinMarketCapUrl});
+    console.log(currXinPrice);
+    console.log("Response from CMC: ",currXinPrice)
+    if (currXinPrice[0] != undefined || currXinPrice[0] != undefined) {
+      const retPrice = (parseFloat(amnt) / (parseFloat(currXinPrice[0].price_usd) * divisor)) * Math.pow(10,18);
+      console.log("ret price: ",retPrice)
+      return (
+        retPrice
+      );
+    }
+  } catch (e) {
+    console.error(
+      "Some error occurred while making or processing call from CoinMarketCap",e
+    );
+    return -1;
+  }
+}
 
 </script>

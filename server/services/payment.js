@@ -4,6 +4,7 @@ const PaymentLogs = require("../models/payment_logs");
 const emailer = require("../emailer/impl");
 const promoCodeService = require("../services/promoCodes");
 const PaymentToken = require("../models/payment_token");
+const CoursePrice = require("../models/coursePrice");
 const XDC3 = require("xdc3");
 const Web3 = require("web3");
 const axios = require("axios");
@@ -11,8 +12,12 @@ const uuidv4 = require("uuid/v4");
 const contractConfig = require("../config/smartContractConfig");
 const keyConfig = require("../config/keyConfig");
 const eventEmitter = require("../listeners/txnConfirmation").em;
+const abiDecoder = require("abi-decoder");
 
-const xdcePrice = 10;
+const coinMarketCapAPI =
+  "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
+
+// const xdcePrice = 10;
 const xdcPrice = 10;
 
 // const xdc3 = new XDC3("https://rpc.xinfin.network/"); // setting up the instance for xinfin's mainnet provider
@@ -29,6 +34,13 @@ const transferFunctionStr = "transfer(address,uint)";
 const XDCE = "xdce";
 const XDC = "xdc";
 const xdceOwnerPubAddr = "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E";
+
+const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
+
+// const xdceTolerance = 5; // tolerance set to 5 percent of principal value.
+
+abiDecoder.addABI(xdceABI);
+
 exports.payPaypalSuccess = (req, res) => {
   let paymentId = req.query.paymentId;
   let payerId = { payer_id: req.query.PayerID };
@@ -516,7 +528,7 @@ exports.payViaXdc = async (req, res) => {
   // }
 };
 
-exports.payViaXdce = (req, res) => {
+exports.payViaXdce = async (req, res) => {
   /*
 
   1. Register the receipt in-app
@@ -528,103 +540,153 @@ exports.payViaXdce = (req, res) => {
   4. Handle errors at in-built registration, error in making call to burning service, error in the burning service.
 
   */
-  const txn_hash = req.body.txn_hash;
-  const course = req.body.course;
-  const price = req.body.price;
-  console.log("Called the function PayViaXdce");
-  console.log("Hash: ", txn_hash, "typeof: ", typeof txn_hash);
-  const web3 = new Web3(
-    new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49")
-  );
-  // for demo: 0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed
-  if (txn_hash == "") {
-    console.error("Bad request: txn_hash is missing from the request");
-    return res.json({ error: "bad request", status: false });
-  }
-  const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
-  let txReceipt = "";
-  let txMinedLimit = 5 * 60 * 1000; // will listen for mining of the trn_hash for 5 minutes.
-  let startTime = Date.now();
-  let TxMinedListener = setInterval(async () => {
-    console.log(`Interval for Tx mining`);
-    if (Date.now() - startTime > txMinedLimit) {
-      TxMinedListener = clearInterval(TxMinedListener);
-      res.json({ status: false, error: "Cannot get the transaction receipt" });
-      return;
-    }
-    txReceipt = await web3.eth.getTransactionReceipt(txn_hash);
-    if (txReceipt != null) {
-      // txnMined.
-      console.log(`Got the tx receipt for the tx: ${txn_hash}`);
+  try {
+    const txn_hash = req.body.txn_hash;
+    const course = req.body.course;
+    const price = req.body.price;
+    console.log("Called the function PayViaXdce");
+    console.log("Hash: ", txn_hash, "typeof: ", typeof txn_hash);
 
-      const duplicateTx = await PaymentToken.findOne({
-        txn_hash: txReceipt.transactionHash
-      });
-      if (duplicateTx != null) {
-        // this transaction is already recorded
-        console.log(
-          `User ${req.user.email} tried to double spend hash: ${txReceipt.transactionHash}`
-        );
-        TxMinedListener = clearInterval(TxMinedListener);
-        res.json({ error: "duplicate transation", status: false });
-        return;
-      }
-      let getTx = await web3.eth.getTransaction(txn_hash);
-      let txInputData = getTx.input;
-      let expectedData = contractInst.methods
-        .transfer(xdceOwnerPubAddr, xdcePrice)
-        .encodeABI();
-      console.log(`Input data from the transaction: ${txInputData}`);
-      console.log(`Calculated data: ${expectedData}`);
-      console.log(expectedData === txInputData);
-      let validFuncSig = expectedData === txInputData;
-      console.log(validFuncSig);
-      if (!validFuncSig) {
-        // invalid transaction;
-        TxMinedListener = clearInterval(TxMinedListener);
-        res.json({ error: "Invalud transaction", status: false });
-        return;
-      }
-      const blockData = await web3.eth.getBlock(txReceipt.blockNumber);
-      const txTimestamp = blockData.timestamp;
-      if (!(Date.now() - txTimestamp > 24 * 60 * 60 * 1000)) {
-        // tx timedout
-        TxMinedListener = clearInterval(TxMinedListener);
-        res.json({ error: "tx timed out", status: false });
-        return;
-      }
-      /* 
-        1. check if the to is our address - done
-        2. check if the value is within the tolerance of our system - done
-        3. check if the blockdate is not older than 12 hrs - done
-        4. check if thr transaction is already recorded
-      */
-      let newPaymentXdce = newPaymentToken();
-      newPaymentXdce.payment_id = uuidv4();
-      newPaymentXdce.email = req.user.email;
-      newPaymentXdce.creationDate = Date.now();
-      newPaymentXdce.txn_hash = txn_hash;
-      newPaymentXdce.course = course;
-      newPaymentXdce.tokenName = XDCE;
-      newPaymentXdce.price = req.body.price;
-      newPaymentXdce.status = "pending";
-      try {
-        await newPaymentXdce.save();
-      } catch (e) {
-        console.error(`Some error occured while saving the payment log: `, e);
+    console.log(course);
+    const coursePrice = await CoursePrice.findOne({ courseId: course });
+    console.log(coursePrice);
+    const xdcePrice = await getXinEquivalent(coursePrice.priceUsd);
+    const xdceTolerance = coursePrice.xdceTolerance;
+    const web3 = new Web3(
+      new Web3.providers.WebsocketProvider(
+        "wss://mainnet.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49"
+      )
+    );
+    // for demo: 0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed, 0x55ede32eae710eed3d21456db6fb01c5e16fcfb04292e72bc0e451fc6693ff8a
+    if (txn_hash == "") {
+      console.error("Bad request: txn_hash is missing from the request");
+      return res.json({ error: "bad request", status: false });
+    }
+    const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
+    let txReceipt = "";
+    let txMinedLimit = 10 * 60 * 1000; // will listen for mining of the trn_hash for 5 minutes.
+    let startTime = Date.now();
+    let TxMinedListener = setInterval(async () => {
+      console.log(`Interval for Tx mining`);
+      if (Date.now() - startTime > txMinedLimit) {
         TxMinedListener = clearInterval(TxMinedListener);
         res.json({
           status: false,
-          error: "errorwhile saving the new payment log"
+          error:
+            "Looks like its taking more time than usual to for the transaction to be mined. We'll update you when its done."
         });
+        eventEmitter.emit(
+          "listenTxMined",
+          txn_hash,
+          1,
+          req.user.email,
+          price,
+          course
+        );
         return;
       }
-      TxMinedListener = clearInterval(TxMinedListener);
-      res.json({ status: true, error: null });
-      eventEmitter.emit("listenTx", txn_hash, 1, req.user.email);
-      return;
-    }
-  }, 3000);
+      txReceipt = await web3.eth.getTransactionReceipt(txn_hash);
+      if (txReceipt != null) {
+        // txnMined.
+        console.log(`Got the tx receipt for the tx: ${txn_hash}`);
+
+        const duplicateTx = await PaymentToken.findOne({
+          txn_hash: txReceipt.transactionHash
+        });
+        if (duplicateTx != null) {
+          // this transaction is already recorded
+          console.log(
+            `User ${req.user.email} tried to double spend hash: ${txReceipt.transactionHash}`
+          );
+          TxMinedListener = clearInterval(TxMinedListener);
+          res.json({ error: "duplicate transation", status: false });
+          return;
+        }
+        let getTx = await web3.eth.getTransaction(txn_hash);
+        let txInputData = getTx.input;
+
+        let decodedMethod = abiDecoder.decodeMethod(txInputData);
+        console.log(decodedMethod);
+        console.log("Expected Price: ", xdcePrice);
+        console.log("Actual Price: ", decodedMethod.params[1].value);
+        let valAcceptable =
+          parseFloat(xdcePrice) - parseFloat(xdcePrice * xdceTolerance) / 100 <=
+            parseFloat(decodedMethod.params[1].value) &&
+          parseFloat(decodedMethod.params[1].value) <=
+            parseFloat(xdcePrice) + parseFloat(xdcePrice * xdceTolerance) / 100;
+        if (!valAcceptable) {
+          TxMinedListener = clearInterval(TxMinedListener);
+          console.log(
+            `Invalid value in tx ${txn_hash} by the user ${
+              req.user.email
+            } at network ${1}`
+          );
+          res.json({ error: "Invalid transaction", status: false });
+          return;
+        }
+        let expectedData = contractInst.methods
+          .transfer(xdceOwnerPubAddr, parseInt(decodedMethod.params[1].value))
+          .encodeABI();
+        let validFuncSig = expectedData === txInputData && valAcceptable;
+        // console.log(validFuncSig);
+        console.log(abiDecoder.decodeMethod(txInputData));
+
+        // console.log(expectedData === txInputData);
+        // let validFuncSig = expectedData === txInputData;
+        // console.log(validFuncSig);
+        if (!validFuncSig) {
+          // invalid transaction;
+          TxMinedListener = clearInterval(TxMinedListener);
+          res.json({ error: "Invalud transaction", status: false });
+          return;
+        }
+        const blockData = await web3.eth.getBlock(txReceipt.blockNumber);
+        if (blockData != null) {
+          const txTimestamp = blockData.timestamp;
+          if (!(Date.now() - txTimestamp > 24 * 60 * 60 * 1000)) {
+            // tx timedout
+            TxMinedListener = clearInterval(TxMinedListener);
+            res.json({ error: "tx timed out", status: false });
+            return;
+          }
+        }
+        /* 
+        1. check if the to is our address - done
+        2. check if the value is within the tolerance of our system - done
+        3. check if the blockdate is not older than 12 hrs - done
+        4. check if the transaction is already recorded - done
+      */
+        let newPaymentXdce = newPaymentToken();
+        newPaymentXdce.payment_id = uuidv4();
+        newPaymentXdce.email = req.user.email;
+        newPaymentXdce.creationDate = Date.now();
+        newPaymentXdce.txn_hash = txn_hash;
+        newPaymentXdce.course = course;
+        newPaymentXdce.tokenName = XDCE;
+        newPaymentXdce.price = coursePrice.priceUsd;
+        newPaymentXdce.tokenAmt = xdcePrice + "";
+        newPaymentXdce.status = "pending";
+        try {
+          await newPaymentXdce.save();
+        } catch (e) {
+          console.error(`Some error occured while saving the payment log: `, e);
+          TxMinedListener = clearInterval(TxMinedListener);
+          res.json({
+            status: false,
+            error: "errorwhile saving the new payment log"
+          });
+          return;
+        }
+        TxMinedListener = clearInterval(TxMinedListener);
+        res.json({ status: true, error: null });
+        eventEmitter.emit("listenTxConfirm", txn_hash, 1, req.user.email);
+        return;
+      }
+    }, 3000);
+  } catch (e) {
+    console.error("Some error occured at payment.payViaXdce: ", e);
+    res.json({ status: false, error: "Internal error" });
+  }
   // let TxConfirmed = setInterval(async () => {
   //   if (txReceipt != "") {
   //     // got a receipt
@@ -686,4 +748,25 @@ function newPaymentToken() {
     price: "",
     status: "" // pending, complete or rejected
   });
+}
+
+async function getXinEquivalent(amnt) {
+  try {
+    const currXinPrice = await axios.get(coinMarketCapAPI);
+    if (
+      currXinPrice.data[0] != undefined ||
+      currXinPrice.data[0] != undefined
+    ) {
+      const retPrice =
+        (parseFloat(amnt) /
+          (parseFloat(currXinPrice.data[0].price_usd) * divisor)) *
+        Math.pow(10, 18);
+      return retPrice;
+    }
+  } catch (e) {
+    console.error(
+      "Some error occurred while making or processing call from CoinMarketCap"
+    );
+    return -1;
+  }
 }

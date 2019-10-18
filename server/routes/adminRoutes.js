@@ -4,6 +4,7 @@ const path = require("path");
 const adminPath = path.join(__dirname, "../admin/");
 const migrationService = require("../services/migrate");
 const userStatsService = require("../services/userStats");
+const adminServices = require("../services/adminServices");
 const User = require("../models/user");
 
 module.exports = app => {
@@ -99,4 +100,9 @@ module.exports = app => {
   //   requrieAdmin,
   //   userStatsService.getMostActive
   // );
+
+  app.post("/api/addCourse",requireLogin,requrieAdmin,adminServices.addCourse);
+  app.post("/api/setXdceTolerance",requireLogin,requrieAdmin,adminServices.setXdceTolerance);
+  app.post("/api/setXdcTolerance",requireLogin,requrieAdmin,adminServices.setXdcTolerance);
+  app.post("/api/setPriceUsd",requireLogin,requrieAdmin,adminServices.setPriceUsd);
 };
