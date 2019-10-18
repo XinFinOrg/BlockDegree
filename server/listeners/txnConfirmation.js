@@ -72,10 +72,13 @@ function listenForConfirmation(txHash, network, userEmail) {
             e
           );
         }
+        break;
       }
       case 4: {
+        break;
       }
       case 50: {
+        break;
       }
       default: {
         console.error(
