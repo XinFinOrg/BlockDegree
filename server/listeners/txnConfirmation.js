@@ -79,7 +79,7 @@ function listenForConfirmation(txHash, network, userEmail) {
       }
       default: {
         console.error(
-          `No listener registered for gthe chain with networkid ${network}: `
+          `No listener registered for gthe chain with networkid ${network}`
         );
       }
     }

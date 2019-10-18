@@ -543,7 +543,7 @@ exports.payViaXdce = (req, res) => {
   }
   const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
   let txReceipt = "";
-  let txMinedLimit = 1 * 60 * 1000; // will listen for mining of the trn_hash for 30 minutes.
+  let txMinedLimit = 5 * 60 * 1000; // will listen for mining of the trn_hash for 5 minutes.
   let startTime = Date.now();
   let TxMinedListener = setInterval(async () => {
     console.log(`Interval for Tx mining`);
@@ -624,7 +624,7 @@ exports.payViaXdce = (req, res) => {
       eventEmitter.emit("listenTx", txn_hash, 1, req.user.email);
       return;
     }
-  }, 1000);
+  }, 3000);
   // let TxConfirmed = setInterval(async () => {
   //   if (txReceipt != "") {
   //     // got a receipt
