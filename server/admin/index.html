@@ -179,6 +179,8 @@
                                                     <input class="form-control" id="new_course_priceUsd" placeholder="Enter the price in USD"/>
                                                     <input class="form-control" id="new_course_xdceTolerance" placeholder="Enter the XDCe tolerance ( in percentage ) "/>
                                                     <input class="form-control" id="new_course_xdcTolerance" placeholder="Enter the XDC tolerance ( in percentage ) " />
+                                                    <input class="form-control" id="new_course_xdceConfirmation" placeholder="Enter the XDCe Confirmations ( in blocks ) " />
+                                                    <input class="form-control" id="new_course_xdcConfirmation" placeholder="Enter the XDC Confirmations ( in blocks ) " />
                                                     <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="newCourse()">New Course</button>
                                                 </div><br/>                                                
                                                 <div>
@@ -211,6 +213,25 @@
                                                                                         <input class="form-control" id="setConXdc_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
                                                                                         <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setConfirmationsXdc()">Set XDC Confirmations</button>
                                                                                 </div><br/>
+                                                                                <div>
+                                                                                    <h4>Set Token Burn Percent For Course</h4>
+                                                                                            <input class="form-control" id="setBurnPer_course_id" placeholder="Enter the course ID"/>
+                                                                                            <input class="form-control" id="setBurnPer_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                            <input class="form-control" id="setBurnPer_course_burnPercent" placeholder="Enter the Token Burn Percent"/>
+                                                                                            <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setTokenBurnPercent()">Set Burn Percent</button>
+                                                                                    </div><br/>
+                                                                                    <div>
+                                                                                        <h4>Enable Burning For Course</h4>
+                                                                                                <input class="form-control" id="enableBurn_course_id" placeholder="Enter the course ID"/>
+                                                                                                <input class="form-control" id="enableBurn_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="enableBurning()">Enable Burning</button>
+                                                                                        </div><br/>
+                                                                                        <h4>Disable Burning For Course</h4>
+                                                                                                <input class="form-control" id="disableBurn_course_id" placeholder="Enter the course ID"/>
+                                                                                                <input class="form-control" id="disableBurn_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="disableBurning()">Disable Burning</button>
+                                                                                        </div><br/>
+                                                                                        
                                         </div>
                                     </section>
                           </div>                    
@@ -232,8 +253,10 @@
                 const coursePriceUsd = document.getElementById("new_course_priceUsd").value.trim();
                 const courseXdcTolerance = document.getElementById("new_course_xdcTolerance").value.trim();
                 const courseXdceTolerance = document.getElementById("new_course_xdceTolerance").value.trim();
+                const courseXdceConfirmation = document.getElementById("new_course_xdceConfirmation").value.trim();
+                const courseXdcConfirmation = document.getElementById("new_course_xdcConfirmation").value.trim();
 
-                if (courseId == "" || courseName == "" || coursePriceUsd == "" || courseXdcTolerance == "" || courseXdceTolerance == "" ){
+                if (courseId == "" || courseName == "" || coursePriceUsd == "" || courseXdcTolerance == "" || courseXdceTolerance == "" || courseXdceConfirmation == "" || courseXdcConfirmation == ""){
                     alert("Invalid parameters");
                     return;
                 }
@@ -241,7 +264,7 @@
                 $.ajax({
                     method:"post",
                     url:"/api/addCourse",
-                    data : {courseId : courseId,courseName:courseName,coursePriceUsd:coursePriceUsd,xdcTolerance:courseXdcTolerance,xdceTolerance:courseXdceTolerance},
+                    data : {courseId : courseId,courseName:courseName,coursePriceUsd:coursePriceUsd,xdcTolerance:courseXdcTolerance,xdceTolerance:courseXdceTolerance,xdceConfirmation:courseXdceConfirmation, xdcConfirmation:courseXdcConfirmation},
                     success: result => {
                         if (!result.status){
                             alert(result.error);
@@ -357,6 +380,69 @@
                 })
             }
 
+            function setTokenBurnPercent(){
+                const courseId = document.getElementById("setBurnPer_course_id").value.trim();
+                const tokenName = document.getElementById("setBurnPer_course_tokenName").value.trim(); 
+                const burnPercent = document.getElementById("setBurnPer_course_burnPercent").value.trim(); 
+                if (courseId == "" || tokenName == "" || burnPercent == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setCourseBurnPercent",
+                    data : {courseId : courseId,tokenName:tokenName, burnPercent:burnPercent},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function enableBurning(){
+                const courseId = document.getElementById("enableBurn_course_id").value.trim();
+                const tokenName = document.getElementById("enableBurn_course_tokenName").value.trim(); 
+                if (courseId == "" || tokenName == ""){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/enableBurning",
+                    data : {courseId : courseId,tokenName:tokenName},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function disableBurning(){
+                const courseId = document.getElementById("disableBurn_course_id").value.trim();
+                const tokenName = document.getElementById("disableBurn_course_tokenName").value.trim(); 
+                if (courseId == "" || tokenName == ""){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/disableBurning",
+                    data : {courseId : courseId,tokenName:tokenName},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
             
         </script>
 </html>

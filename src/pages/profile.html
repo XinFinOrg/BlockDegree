@@ -111,6 +111,26 @@
             </tbody>
           </table>
         </div>
+
+        <h3 class="profile-subHeading mt-5">Payment Via Tokens</h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Payment Token</th>
+                <th>Transaction Hash</th>
+                <th>Status</th>
+                <th>Burn Transaction Hash</th>
+              </tr>
+            </thead>
+            <tbody id="tokenPayment-tbody"></tbody>
+          </table>
+          <div
+            style="background-color:lightsteelblue;"
+            id="tokenPayment-tfooter"
+          ></div>
+        </div>
       </div>
 
       <div id="edit_profile" class="tabcontent">
@@ -243,9 +263,12 @@
 {{/inline}}
 {{#*inline "scripts-block"}}
 
-
 <script src="js/profile.js?v=1.2"></script>
 <script>
+  $("document").ready(() => {
+    fetchCryptoTransactions();
+  });
+
   $("#modalConfirmName").on("hidden.bs.modal", function() {
     document.getElementById("edit-profile-btn").click();
     document.getElementById("edit_name").focus();
@@ -314,6 +337,107 @@
           "https://uat.blockdegree.org/closeCallback";
       }
     }, 1000);
+  }
+
+  function fetchCryptoTransactions() {
+    console.log("called crypto transactions");
+    const etherScanIo = "https://etherscan.io/tx/";
+    const tableBody = document.getElementById("tokenPayment-tbody");
+    const tableFooter = document.getElementById("tokenPayment-tfooter");
+    $.ajax({
+      method: "get",
+      url: "/api/getUserCryptoPayment",
+      success: result => {
+        if (!result.status) {
+          console.error("Error in /api/getUserCryptoPayment: ", result);
+          $.notify(
+            "Error occured while fetching your payments via cryptocurrencies",
+            { type: "danger" }
+          );
+        }
+
+        // <th>Course Name</th>
+        // <th>Payment Token</th>
+        // <th>Transaction Hash</th>
+        // <th>Status</th>
+        // <th>Burn Transaction Hash</th>
+
+        const payments = result.allPayments;
+        console.log(payments);
+        let retHtml = "";
+        if (payments.length == 0) {
+          retHtml = "<div>No transactions made yet</div>";
+          return;
+        } else {
+          for (let z = 0; z < payments.length; z++) {
+            let status = payments[z].status;
+            let payment_txHash, burn_txHash, pay_hash_link, burn_hash_link;
+            if (status === "completed") {
+              if (payments[z].tokenName === "xdce") {
+                payment_txHash =
+                  payments[z].txn_hash.toString().slice(0, 11) + "...";
+                if (
+                  payments[z].willBurn ||
+                  (payments[z].burn_txn_hash != undefined &&
+                    payments[z].burn_txn_hash != null &&
+                    payments[z].burn_txn_hash != "")
+                ) {
+                  burn_txHash =
+                    payments[z].burn_txn_hash == undefined ||
+                    payments[z].burn_txn_hash == null ||
+                    payments[z].burn_txn_hash == ""
+                      ? "-"
+                      : payments[z].burn_txn_hash.toString().slice(0, 11) +
+                        "...";
+                } else {
+                  burn_txHash = "-";
+                }
+
+                pay_hash_link = `<a href="${etherScanIo +
+                  payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+                if (
+                  burn_txHash !== "-" &&
+                  burn_txHash !== "Burning is in process"
+                ) {
+                  burn_hash_link = `<a href="${etherScanIo +
+                    payments[z]
+                      .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                } else {
+                  burn_hash_link = burn_txHash;
+                }
+              }
+            } else if (status === "pending") {
+              payment_txHash =
+                payments[z].txn_hash.toString().slice(0, 11) + "...";
+              pay_hash_link = `<a href="${etherScanIo +
+                payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+              status += `( ${payments[z].confirmations}/${
+                payments[z].tokenName === "xdce"
+                  ? payments[z].xdceConfirmation
+                  : payments[z].xdcConfirmation
+              } )`;
+            }
+
+            retHtml += `<tr><td>${payments[z].courseName}</td><td>${payments[
+              z
+            ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${status}">${status}</td><td>${burn_hash_link}</td></tr>`;
+          }
+          tableBody.innerHTML = retHtml;
+          tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;
+          return;
+        }
+      },
+      error: xhr => {
+        console.error(
+          "Error occured while making a get request to /api/getUserCryptoPayment"
+        );
+        $.notify(
+          "Error occured while fetching your payments via cryptocurrencies",
+          { type: "danger" }
+        );
+        return;
+      }
+    });
   }
 </script>
 {{/inline}}

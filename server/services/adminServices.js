@@ -7,11 +7,13 @@ exports.addCourse = async (req, res) => {
     (req.body.courseName == undefined || req.body.courseName == "") ||
     (req.body.coursePriceUsd == undefined || req.body.coursePriceUsd == "") ||
     (req.body.xdceTolerance == undefined || req.body.xdceTolerance == "") ||
-    (req.body.xdceConfirmation == undefined || req.body.xdceConfirmation == "") ||
+    (req.body.xdceConfirmation == undefined ||
+      req.body.xdceConfirmation == "") ||
     (req.body.xdceTolerance == undefined || req.body.xdceTolerance == "") ||
     (req.body.xdcConfirmation == undefined || req.body.xdcConfirmation == "")
   ) {
     res.json({ error: "bad request", status: false });
+    return;
   }
   let newCourse = newDefCourse(req.body.courseId);
   newCourse.courseId = req.body.courseId;
@@ -195,7 +197,9 @@ exports.setXdceConfirmation = async (req, res) => {
     // course found
     if (course.xdceConfirmation === filteredConfirmation) {
       // same value, no need to set it again
-      console.error("bad request, same confirmation number as the existing value");
+      console.error(
+        "bad request, same confirmation number as the existing value"
+      );
       res.json({
         status: false,
         error: "bad request, same value of the confirmations"
@@ -205,7 +209,10 @@ exports.setXdceConfirmation = async (req, res) => {
     course.xdceConfirmation = filteredConfirmation;
     await course.save();
   } catch (e) {
-    console.error("Some exception occured ay adminServices.setXdceConfirmation: ", e);
+    console.error(
+      "Some exception occured ay adminServices.setXdceConfirmation: ",
+      e
+    );
     res.json({ status: false, error: "internal error" });
     return;
   }
@@ -237,7 +244,9 @@ exports.setXdcConfirmation = async (req, res) => {
     // course found
     if (course.xdcConfirmation === filteredConfirmation) {
       // same value, no need to set it again
-      console.error("bad request, same confirmation number as the existing value");
+      console.error(
+        "bad request, same confirmation number as the existing value"
+      );
       res.json({
         status: false,
         error: "bad request, same value of the confirmations"
@@ -247,7 +256,145 @@ exports.setXdcConfirmation = async (req, res) => {
     course.xdcConfirmation = filteredConfirmation;
     await course.save();
   } catch (e) {
-    console.error("Some exception occured ay adminServices.setXdcConfirmation: ", e);
+    console.error(
+      "Some exception occured ay adminServices.setXdcConfirmation: ",
+      e
+    );
+    res.json({ status: false, error: "internal error" });
+    return;
+  }
+  res.json({ status: true, error: null });
+};
+
+exports.setCourseBurnPercent = async (req, res) => {
+  if (
+    req.body.courseId == undefined ||
+    req.body.courseId == "" ||
+    req.body.tokenName == undefined ||
+    req.body.tokenName == "" ||
+    req.body.burnPercent == undefined ||
+    req.body.burnPercent == ""
+  ) {
+    console.error("Bad request at adminServices.setCourseBurnPercent");
+    res.json({ status: false, error: "bad request" });
+    return;
+  }
+
+  try {
+    let course = await CoursePrice.findOne({ courseId: req.body.courseId });
+    let filteredTokenName = req.body.tokenName.trim();
+    let burnPercent = req.body.burnPercent.trim();
+    if (course == null) {
+      console.error(
+        "Bad request at adminServices.setCourseBurnPercent, course not found"
+      );
+      res.json({ status: false, error: "bad request, course not found" });
+      return;
+    }
+    // course found
+    let allBurnTokens = course.burnToken;
+    let found = false;
+    for (let i = 0; i < allBurnTokens.length; i++) {
+      if (allBurnTokens[i].tokenName === filteredTokenName) {
+        // found token, it exists
+        found = true;
+        if (allBurnTokens[i].burnPercent === burnPercent) {
+          // same value, bad request
+          console.error(
+            "Bad request at adminServices.setCourseBurnPercent, same value"
+          );
+          res.json({
+            status: false,
+            error:
+              "Bad request at adminServices.setCourseBurnPercent, same value"
+          });
+          return;
+        } else {
+          allBurnTokens[i].burnPercent = burnPercent;
+        }
+      }
+    }
+
+    if (!found) {
+      // new token burn addition
+      allBurnTokens.push({
+        tokenName: filteredTokenName,
+        burnPercent: burnPercent,
+        autoBurn: false
+      });
+    }
+
+    await course.save();
+  } catch (e) {
+    console.error(
+      "Some exception occured ay adminServices.setXdcConfirmation: ",
+      e
+    );
+    res.json({ status: false, error: "internal error" });
+    return;
+  }
+  res.json({ status: true, error: null });
+};
+
+exports.enableBurning = async (req, res) => {
+  if (
+    req.body.courseId == undefined ||
+    req.body.courseId == "" ||
+    req.body.tokenName == undefined ||
+    req.body.tokenName == ""
+  ) {
+    console.error("Bad request at adminServices.enableBurning");
+    res.json({ status: false, error: "bad request" });
+    return;
+  }
+
+  try {
+    // course found
+    let filteredTokenName = req.body.tokenName.trim();
+    await CoursePrice.update(
+      { courseId: req.body.courseId, "burnToken.tokenName": filteredTokenName },
+      { $set: { "burnToken.$.autoBurn": true } },
+      (err, course) => {
+        console.log(err, course);
+      }
+    );
+  } catch (e) {
+    console.error(
+      "Some exception occured ay adminServices.setXdcConfirmation: ",
+      e
+    );
+    res.json({ status: false, error: "internal error" });
+    return;
+  }
+  res.json({ status: true, error: null });
+};
+
+exports.disableBurning = async (req, res) => {
+  if (
+    req.body.courseId == undefined ||
+    req.body.courseId == "" ||
+    req.body.tokenName == undefined ||
+    req.body.tokenName == ""
+  ) {
+    console.error("Bad request at adminServices.disableBurning");
+    res.json({ status: false, error: "bad request" });
+    return;
+  }
+
+  try {
+    let filteredTokenName = req.body.tokenName.trim();
+    await CoursePrice.update(
+      { courseId: req.body.courseId, "burnToken.tokenName": filteredTokenName },
+      { $set: { "burnToken.$.autoBurn": false } },
+      (err, course) => {
+        console.log(err, course);
+      }
+    );
+  } catch (e) {
+    console.error(
+      "Some exception occured ay adminServices.setXdcConfirmation: ",
+      e
+    );
     res.json({ status: false, error: "internal error" });
     return;
   }
@@ -259,9 +406,10 @@ function newDefCourse(courseId) {
     courseId: courseId,
     courseName: "",
     xdceTolerance: "",
-    xdceConfirmation:"",
+    xdceConfirmation: "",
     xdcTolerance: "",
-    xdcConfirmation:"",
-    priceUsd: ""
+    xdcConfirmation: "",
+    priceUsd: "",
+    burnToken: []
   });
 }

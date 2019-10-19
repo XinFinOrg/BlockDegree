@@ -1,4 +1,6 @@
 const User = require("../models/user");
+const PaymentToken = require("../models/payment_token");
+const CoursePrice = require("../models/coursePrice");
 
 /*
 
@@ -180,4 +182,91 @@ exports.setProfileName = async (req, res) => {
     updated: true,
     error: null
   });
+};
+
+/*
+
+  Mini explorer for user payments based in crypto payments
+
+*/
+exports.getUserCryptoPayment = async (req, res) => {
+  console.log("Called getUserCryptoPayment");
+  try {
+    const allUserPayments = await PaymentToken.find({
+      email: req.user.email
+    }).lean();
+    for (let i = 0; i < allUserPayments.length; i++) {
+      const course = await CoursePrice.findOne({
+        courseId: allUserPayments[i].course
+      });
+      allUserPayments[i].courseName = course.courseName;
+      allUserPayments[i].coursePriceUsd = course.priceUsd;
+      allUserPayments[i].xdceConfirmation = course.xdceConfirmation;
+      allUserPayments[i].xdcConfirmation = course.xdcConfirmation;
+      let willBurn = false;
+      for (let x = 0; x < course.burnToken.length; x++) {
+        if (course.burnToken[x].tokenName == allUserPayments[i].tokenName) {
+          // found the token
+          willBurn = course.burnToken[x].autoBurn;
+        }
+      }
+      allUserPayments[i].willBurn = willBurn;
+    }
+    return res.json({
+      status: true,
+      error: null,
+      allPayments: allUserPayments
+    });
+  } catch (e) {
+    console.error(
+      "Some error occured at userProfile.getUserCryptoPayment while fetching the payments: ",
+      e
+    );
+    return res.json({
+      status: false,
+      error: "internal error",
+      allPayments: null
+    });
+  }
+};
+
+exports.getCourseMeta = async (req, res) => {
+  try {
+    if (
+      req.body.courseId.trim() == undefined ||
+      req.body.courseId.trim() == null ||
+      req.body.courseId.trim() == ""
+    ) {
+      return res.json({ status: false, error: "bad request", data: null });
+    }
+    const courseMeta = await CoursePrice.findOne({
+      courseId: req.body.courseId.trim()
+    });
+    if (courseMeta == null) {
+      // no course found with
+      return res.json({
+        status: false,
+        error: "no course exixts with given courseId",
+        data: null
+      });
+    }
+    let retObj = {
+      courseId: courseMeta.courseId,
+      courseName: courseMeta.courseName,
+      xdceConfirmation: courseMeta.xdceConfirmation,
+      xdcConfirmation: courseMeta.xdcConfirmation,
+      priceUsd: courseMeta.priceUsd
+    };
+    return res.json({ status: true, error: null, data: retObj });
+  } catch (e) {
+    console.error(
+      "Some error occured at userProfile.getCourseMeta while fetching the payments: ",
+      e
+    );
+    return res.json({
+      status: false,
+      error: "internal error",
+      data: null
+    });
+  }
 };

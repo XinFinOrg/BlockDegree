@@ -1,9 +1,11 @@
 let EventEmitter = require("events").EventEmitter;
 const PaymentToken = require("../models/payment_token");
 const CoursePrice = require("../models/coursePrice");
+const BurnLog = require("../models/burn_logs");
 const User = require("../models/user");
 const Web3 = require("web3");
 const contractConfig = require("../config/smartContractConfig");
+const keyConfig = require("../config/keyConfig").mainnetPrivateKey;
 const uuidv4 = require("uuid/v4");
 const abiDecoder = require("abi-decoder");
 const axios = require("axios");
@@ -17,6 +19,8 @@ const xdceAddrMainnet = contractConfig.address.xdceMainnet;
 const xdceABI = contractConfig.XdceABI;
 
 const xdceOwnerPubAddr = "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E";
+const blockdegreePubAddr = "0x3C7a500D32C3A8317c943293c2a123A0456aa2D0";
+const burnAddress = "0x0000000000000000000000000000000000000000";
 const coinMarketCapAPI =
   "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 // const xdcePrice = 10;
@@ -68,23 +72,6 @@ function listenForConfirmation(txHash, network, userEmail, course) {
           }
           const txBlockNumber = txReceipt.blockNumber;
           if (paymentLog.status === "pending") {
-            // in proper state, start listening for the confimations
-            // let ConfirmationInterval = setInterval(async () => {
-            //   console.log("Interval for confimation");
-            //   const currBlockNumber = await web3.eth.getBlockNumber();
-            //   if (currBlockNumber - txBlockNumber >= ethConfirmation) {
-            //     // alright, payment can now be completed
-            //     paymentLog.status = "completed";
-            //     user.examData.payment[paymentLog.course] = true;
-            //     await paymentLog.save();
-            //     await user.save();
-            //     console.log(
-            //       `Finished listening for the tx ${txHash}; reason: successfully completed the order`
-            //     );
-            //     clearInterval(ConfirmationInterval);
-            //   }
-            // }, 5000);
-
             let blockSubscription = web3.eth
               .subscribe("newBlockHeaders", (err, result) => {
                 if (err) {
@@ -112,6 +99,13 @@ function listenForConfirmation(txHash, network, userEmail, course) {
                       if (success) {
                         console.log(
                           `Finished listening for the tx ${txHash}; reason: successfully completed the order`
+                        );
+                        handleBurnToken(
+                          course,
+                          txHash,
+                          paymentLog.payment_id,
+                          userEmail,
+                          XDCE
                         );
                       }
                     });
@@ -318,6 +312,21 @@ function newPaymentToken() {
   });
 }
 
+function newDefBurnLog(id, txHash) {
+  return new BurnLog({
+    principal_payment_id: id,
+    principal_userEmail: "",
+    principal_txn_hash: txHash,
+    course: "",
+    tokenName: "",
+    tokenAmt: "",
+    principal_from: "",
+    from: "",
+    to: "",
+    creationDate: ""
+  });
+}
+
 async function getXinEquivalent(amnt) {
   try {
     const currXinPrice = await axios.get(coinMarketCapAPI);
@@ -336,6 +345,110 @@ async function getXinEquivalent(amnt) {
       "Some error occurred while making or processing call from CoinMarketCap"
     );
     return -1;
+  }
+}
+
+async function handleBurnToken(
+  courseId,
+  txHash,
+  paymentId,
+  userEmail,
+  tokenName
+) {
+  switch (tokenName) {
+    case "xdce": {
+      try {
+        const web3 = new Web3(
+          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+        );
+
+        let course = await CoursePrice.findOne({ courseId: courseId });
+        let getTx = await web3.eth.getTransaction(txHash);
+        let paymentLog = await PaymentToken.findOne({ payment_id: paymentId });
+        let txInputData = getTx.input;
+        let decodedMethod = abiDecoder.decodeMethod(txInputData);
+        let receivedXdce = decodedMethod.params[1].value;
+
+        const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
+        let burnAmnt = 0;
+
+        for (let z = 0; z < course.burnToken.length; z++) {
+          if (
+            course.burnToken[z].tokenName === XDCE &&
+            course.burnToken[z].autoBurn
+          ) {
+            // token has applied for burning & autoBurn is on
+            const burnPercent = parseFloat(course.burnToken[z].burnPercent);
+            burnAmnt = Math.floor(
+              (parseFloat(receivedXdce) * burnPercent) / 100
+            );
+            break;
+          }
+        }
+        if (burnAmnt == 0) {
+          // dont burn
+          console.log("Auto-Burn has been turned off, closed the listener.");
+          return;
+        }
+
+        const encodedData = contractInst.methods
+          .transfer(burnAddress, burnAmnt)
+          .encodeABI();
+
+        console.log(
+          "Pending: ",
+          await web3.eth.getTransactionCount(blockdegreePubAddr, "pending")
+        );
+        console.log(
+          "Confirmed: ",
+          await web3.eth.getTransactionCount(blockdegreePubAddr)
+        );
+        const tx = {
+          from: blockdegreePubAddr,
+          to: xdceAddrMainnet,
+          gas: 2000000,
+          data: encodedData,
+          nonce: await web3.eth.getTransactionCount(
+            blockdegreePubAddr,
+            "pending"
+          )
+        };
+
+        web3.eth.accounts.signTransaction(tx, keyConfig).then(signedTx => {
+          web3.eth
+            .sendSignedTransaction(signedTx.rawTransaction)
+            .on("receipt", async burnReceipt => {
+              if (burnReceipt.status) {
+                // the transaction is accepted
+                paymentLog.burn_txn_hash = burnReceipt.transactionHash;
+                paymentLog.burn_token_amnt = burnAmnt;
+
+                let newBurnLog = newDefBurnLog(uuidv4(), txHash);
+                newBurnLog.principal_userEmail = userEmail;
+                newBurnLog.course = courseId;
+                newBurnLog.principal_from = getTx.from;
+                newBurnLog.tokenName = tokenName;
+                newBurnLog.tokenAmt = burnAmnt;
+                newBurnLog.creationDate = Date.now().toString();
+                newBurnLog.to = burnAddress;
+                newBurnLog.from = blockdegreePubAddr;
+                await newBurnLog.save();
+                await paymentLog.save();
+                console.log(
+                  "Successfully burned token for payment by user: ",
+                  userEmail
+                );
+              } else {
+                console.error("Error while comfirming the tx");
+                return;
+              }
+            });
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      break;
+    }
   }
 }
 

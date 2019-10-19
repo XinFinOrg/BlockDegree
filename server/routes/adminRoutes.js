@@ -107,5 +107,8 @@ module.exports = app => {
   app.post("/api/setPriceUsd",requireLogin,requrieAdmin,adminServices.setPriceUsd);
   app.post("/api/setXdceConfirmation",requireLogin,requrieAdmin,adminServices.setXdceConfirmation);
   app.post("/api/setXdcConfirmation",requireLogin,requrieAdmin,adminServices.setXdcConfirmation);
+  app.post("/api/setCourseBurnPercent",requireLogin,requrieAdmin,adminServices.setCourseBurnPercent);
+  app.post("/api/enableBurning",requireLogin,requrieAdmin,adminServices.enableBurning);
+  app.post("/api/disableBurning",requireLogin,requrieAdmin,adminServices.disableBurning);
 
 };

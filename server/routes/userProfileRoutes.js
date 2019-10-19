@@ -19,4 +19,10 @@ module.exports = app => {
   app.post("/api/setName", requireLogin, profileService.setProfileName);
   app.post("/api/updateSocial", requireLogin, profileService.updateSocial);
   app.post("/api/removeSocial", requireLogin, profileService.removeSocial);
+  app.get(
+    "/api/getUserCryptoPayment",
+    requireLogin,
+    profileService.getUserCryptoPayment
+  );
+  app.post("/api/getCourseMeta", requireLogin, profileService.getCourseMeta);
 };
