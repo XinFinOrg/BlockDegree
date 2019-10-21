@@ -622,7 +622,7 @@ exports.payViaXdce = async (req, res) => {
     let startTime = Date.now();
     let TxMinedListener = setInterval(async () => {
       console.log(`Interval for Tx mining`);
-      if (Date.now() - startTime < txMinedLimit) {
+      if (Date.now() - startTime > txMinedLimit) {
         TxMinedListener = clearInterval(TxMinedListener);
         res.json({
           status: false,
