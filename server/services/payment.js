@@ -543,14 +543,68 @@ exports.payViaXdce = async (req, res) => {
   try {
     const txn_hash = req.body.txn_hash;
     const course = req.body.course;
-    const price = req.body.price;
+    let price = req.body.price;
     console.log("Called the function PayViaXdce");
     console.log("Hash: ", txn_hash, "typeof: ", typeof txn_hash);
-
-    console.log(course);
     const coursePrice = await CoursePrice.findOne({ courseId: course });
-    console.log(coursePrice);
-    const xdcePrice = await getXinEquivalent(coursePrice.priceUsd);
+    let fullPrice = coursePrice.priceUsd;
+    const discObj = await promoCodeService.usePromoCode(req);
+
+    // check if the price is 9.99 if not then check if a propoer codeName has been supplied else makr invalid transfer.
+
+    if (price != fullPrice) {
+      // not equal check for promoCode
+      if (discObj.error == null) {
+        // all good, can avail promo-code discount
+        console.log(fullPrice, discObj.discAmt);
+        fullPrice =
+          Math.round((parseFloat(fullPrice) - discObj.discAmt) * 100) / 100;
+      } else {
+        console.error(
+          `Error while using promocode ${req.body.codeName}: `,
+          discObj.error
+        );
+
+        if (discObj.error != "bad request") {
+          res.json({
+            status: false,
+            error: discObj.error
+          });
+          return;
+        }
+      }
+      if (price != fullPrice) {
+        //invalid price
+        console.log(`Invalid amount, expected ${fullPrice} actual ${price}`);
+        return res.json({ status: false, error: "Invalid amount" });
+      }
+    }
+
+    if (price <= 0) {
+      // free course; directly make the  status true.
+      let user = await User.findOne({ email: req.user.email });
+      if (user != null) {
+        if (!user.examData.payment[course]) {
+          user.examData.payment[course] = true;
+          await user.save();
+          return res.json({ status: true, error: null });
+        } else {
+          // already paid
+          return res.json({
+            status: false,
+            error: "Course is already paid for."
+          });
+        }
+      } else {
+        return res.json({ status: false, error: "user not found" });
+      }
+    }
+
+    if (txn_hash == undefined || txn_hash == null || txn_hash == "") {
+      return res.json({ status: false, error: "bad request, tx hash missing" });
+    }
+
+    const xdcePrice = await getXinEquivalent(price);
     const xdceTolerance = coursePrice.xdceTolerance;
     const web3 = new Web3(
       new Web3.providers.WebsocketProvider(
@@ -564,7 +618,7 @@ exports.payViaXdce = async (req, res) => {
     }
     const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
     let txReceipt = "";
-    let txMinedLimit = 120 * 1000; // will listen for mining of the trn_hash for 2 minutes.
+    let txMinedLimit = 55 * 1000; // will listen for mining of the trn_hash for about 1 minute.
     let startTime = Date.now();
     let TxMinedListener = setInterval(async () => {
       console.log(`Interval for Tx mining`);
@@ -573,7 +627,7 @@ exports.payViaXdce = async (req, res) => {
         res.json({
           status: false,
           error:
-            "Looks like its taking more time than usual to for the transaction to be mined. We'll update you when its done."
+            "Looks like its taking more time than usual to for the transaction to be mined on the ethereum network. We'll update you when its done in your <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong>"
         });
         eventEmitter.emit(
           "listenTxMined",
@@ -581,7 +635,8 @@ exports.payViaXdce = async (req, res) => {
           1,
           req.user.email,
           price,
-          course
+          course,
+          req
         );
         return;
       }
@@ -609,6 +664,20 @@ exports.payViaXdce = async (req, res) => {
         console.log(decodedMethod);
         console.log("Expected Price: ", xdcePrice);
         console.log("Actual Price: ", decodedMethod.params[1].value);
+
+        console.log(
+          "Minimum Value: ",
+          parseFloat(xdcePrice) - parseFloat(xdcePrice * xdceTolerance) / 100
+        );
+        console.log(
+          "Maximum Value: ",
+          parseFloat(xdcePrice) + parseFloat(xdcePrice * xdceTolerance) / 100
+        );
+        console.log(
+          "Actual Value: ",
+          parseFloat(decodedMethod.params[1].value)
+        );
+
         let valAcceptable =
           parseFloat(xdcePrice) - parseFloat(xdcePrice * xdceTolerance) / 100 <=
             parseFloat(decodedMethod.params[1].value) &&
@@ -624,7 +693,10 @@ exports.payViaXdce = async (req, res) => {
           res.json({ error: "Invalid transaction", status: false });
           return;
         }
-        console.log(decodedMethod.params[1].value,typeof decodedMethod.params[1].value)
+        console.log(
+          decodedMethod.params[1].value,
+          typeof decodedMethod.params[1].value
+        );
         let expectedData = contractInst.methods
           .transfer(xdceOwnerPubAddr, decodedMethod.params[1].value)
           .encodeABI();
@@ -657,6 +729,14 @@ exports.payViaXdce = async (req, res) => {
         3. check if the blockdate is not older than 12 hrs - done
         4. check if the transaction is already recorded - done
       */
+
+        let toAutoBurn = false;
+        for (let g = 0; g < coursePrice.burnToken.length; g++) {
+          if (coursePrice.burnToken[g].tokenName === XDCE) {
+            toAutoBurn = coursePrice.burnToken[g].autoBurn;
+          }
+        }
+
         let newPaymentXdce = newPaymentToken();
         newPaymentXdce.payment_id = uuidv4();
         newPaymentXdce.email = req.user.email;
@@ -667,6 +747,8 @@ exports.payViaXdce = async (req, res) => {
         newPaymentXdce.price = coursePrice.priceUsd;
         newPaymentXdce.tokenAmt = xdcePrice + "";
         newPaymentXdce.status = "pending";
+        newPaymentXdce.autoBurn = toAutoBurn; // capture trhe status of autoburn at the moment, this will be forwarded.
+        console.log(newPaymentXdce)
         try {
           await newPaymentXdce.save();
         } catch (e) {
@@ -753,7 +835,11 @@ function newPaymentToken() {
     tokenName: "",
     tokenAmt: "",
     price: "",
-    status: "" // pending, complete or rejected
+    status: "", // pending, complete or rejected
+    confirmations: "0",
+    autoBurn: false,
+    burn_txn_hash: "",
+    burn_token_amnt: ""
   });
 }
 

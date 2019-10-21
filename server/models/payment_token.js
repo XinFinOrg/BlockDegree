@@ -13,6 +13,7 @@ const tokenLogSchema = mongoose.Schema({
   price: String,
   status: String,
   confirmations: String,
+  autoBurn:Boolean,
   burn_txn_hash: String,
   burn_token_amnt: String
 });

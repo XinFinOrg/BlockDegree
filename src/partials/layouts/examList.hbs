@@ -187,7 +187,7 @@
         <div class="modal-content">
 
           <!-- Modal Header -->
-          <div class="modal-header">
+          <div id="modal-header-wrp" class="modal-header">
             <h4 id="displayHashModal-title" class="modal-title">Title</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
@@ -213,6 +213,9 @@
 
   const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
   const coinMarketCapUrl = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
+  const etherScanIo = "https://etherscan.io/tx/";
+
+
   function takeExam(slug) {
 
     $.ajax({
@@ -240,10 +243,11 @@
     console.log(`Course ID: ${course_id} & Price: ${price}`);
     console.log(`Course ID: ${course_id.id} & Price: ${price}`);
     const codeName = document.getElementById(course_id.id + "codeName").value;
+    console.log(codeName)
     if (codeName.trim().length == 0) {
       // no promo code used
       $(`#btn-paymentModal${course_id.id}`).click();
-    } else
+    } else {
       $.ajax({
         url: "/api/checkCode",
         method: "post",
@@ -251,11 +255,15 @@
         success: (result) => {
           console.log(result);
           if (result.error == null) {
+            console.log("alright")
             const finalAmt = Math.round((parseFloat(price) - parseFloat(result.discAmt)) * 100) / 100;
-
+            if (finalAmt <= 0){
+              pay(course_id,price);
+              return;
+            }else{
             // Not a free course load the Payment Modal
             $(`#btn-paymentModal${course_id.id}`).click();
-
+            }            
           }
           else {
             $.notify(result.error, { type: "danger" })
@@ -265,6 +273,7 @@
           $.notify(xhr.statusText, { type: "danger" })
         }
       })
+    }
   }
 
   function pay(course_id, price) {
@@ -333,6 +342,42 @@
               return;
             }
             const priceUsd = parseFloat(response[0].price_usd);
+            const codeName = document.getElementById(course_id.id + "codeName").value;
+            try {
+              const codeResp = await $.ajax({
+                method: "post",
+                url: "/api/checkCode",
+                data: { codeName: codeName }
+              })
+              if (codeResp.error == null) {
+                price = Math.round((parseFloat(price) - parseFloat(codeResp.discAmt)) * 100) / 100;
+              }
+              if (price <= 0) price = 0;
+            } catch (e) {
+              console.error(e)
+            }
+            console.log(`Price after discount: ${price}`);
+            if (price == 0) {
+              // free course
+              try{
+              const respFree = await $.ajax({
+                method: "post",
+                url: "/api/payViaXdce",
+                data: { course: course_id.id, price: price }
+              });
+              if (!respFree.status){
+                $.notify(respFree.error,{type:"danger"});
+                return;
+              }
+              alert("Your Course has been availed for free !!");
+              window.location.reload();
+              return;              
+              }
+              catch(e){
+                  $.notify("Some error occured while making the request, please try again after sometime or contact <strong>info@blockdegree.org</strong>", { type: "danger" });
+
+              }
+            }
             const coursePriceXdce = parseFloat(price) / (10000 * priceUsd) // dividend of 10000 for testing
             console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdce}`)
             await ethereum.enable();
@@ -865,8 +910,8 @@
               to: xdceAddrMainnet
             };
             let xdcePrice = await getXinEquivalent(price)
-            console.log("XDCe Price: ",xdcePrice)
-            {{!-- $.ajax({
+            console.log("XDCe Price: ", xdcePrice)
+            {{!--$.ajax({
                   method: "post",
                   url: "/api/payViaXdce",
                   data: { txn_hash: "0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f", course: course_id.id, price: price },
@@ -874,7 +919,7 @@
                     if (resp.status) {
                       // all ok, ask to check profile after sometime.
                       $.notify(`Your transaction has been successfully received by our servers, your order will be completed after it being comfirmed.`, { type: "success" });
-                      
+
                       return;
                     } else {
                       // something went wrong, ask to store tx & mail to info@blockdegree.org
@@ -886,39 +931,62 @@
                     return;
                   }
                 }) --}}
-            xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E",xdcePrice, tx, (err, result) => {
+            xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", xdcePrice, tx, (err, result) => {
               if (err != null) {
                 $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
                 return;
               }
               // result is transaction hash
-                      const hashModalTitle = document.getElementById("displayHashModal-title");
-                      const hashModalBody = document.getElementById("displayHashModal-body");
-                      const hashModalFooter = document.getElementById("displayHashModal-footer");
-                      hashModalTitle.innerHTML = "Transaction Submitted Successfully";
-                      hashModalBody.innerHTML = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is "+result;
-                    document.getElementById("btn-displayHashModal").click();
+              $("#modal-header-wrp").removeClass("modal-success");
+                    $("#modal-header-wrp").removeClass("modal-warning");
+                    $("#displayHashModal-footer").removeClass('modal-success');
+                    $("#displayHashModal-footer").removeClass('modal-warning');
+$("#modal-header-wrp").addClass('modal-info');
+              $("#displayHashModal-footer").addClass('modal-info');
+              const hashModalTitle = document.getElementById("displayHashModal-title");
+              const hashModalBody = document.getElementById("displayHashModal-body");
+              const hashModalFooter = document.getElementById("displayHashModal-footer");
+              hashModalTitle.innerHTML = "<strong>Transaction Submitted Successfully</strong>";
+              hashModalBody.innerHTML = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyDivContent('pending_txHash')" >Click</button> to copy hash`;
+
+              document.getElementById("btn-displayHashModal").click();
 
 
               $.ajax({
                 method: "post",
                 url: "/api/payViaXdce",
-                data: { txn_hash: result, course: course_id.id, price: price },
+                data: { txn_hash: result, course: course_id.id, price: price, codeName:codeName },
                 success: resp => {
                   if (resp.status) {
                     // all ok, ask to check profile after sometime.
-
+                    $("#modal-header-wrp").removeClass("modal-info");
+                    $("#modal-header-wrp").removeClass("modal-warning");
+                    $("#displayHashModal-footer").removeClass('modal-info');
+                    $("#displayHashModal-footer").removeClass('modal-warning');
+                    $("#modal-header-wrp").addClass('modal-success');
+                    $("#displayHashModal-footer").addClass('modal-success');
                     const hashModalTitle = document.getElementById("displayHashModal-title");
-                      const hashModalBody = document.getElementById("displayHashModal-body");
-                      const hashModalFooter = document.getElementById("displayHashModal-footer");
-                      hashModalTitle.innerHTML = "Transaction Received Successfully";
-                      hashModalBody.innerHTML = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. Your trasnaction hash is "+result;
+                    const hashModalBody = document.getElementById("displayHashModal-body");
+                    const hashModalFooter = document.getElementById("displayHashModal-footer");
+                    hashModalTitle.innerHTML = "<strong>Transaction Received Successfully</strong>";
+                    hashModalBody.innerHTML = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. Your trasnaction hash is <div style='display:none' id='confirmed_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a>. Click on link to view on etherscan.`;
                     document.getElementById("btn-displayHashModal").click();
                     return;
                   } else {
                     // something went wrong, ask to store tx & mail to info@blockdegree.org
-                    $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>${result}</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
-                  }
+                    $("#modal-header-wrp").removeClass("modal-info");
+                    $("#modal-header-wrp").removeClass("modal-success");
+                    $("#displayHashModal-footer").removeClass('modal-info');
+                    $("#displayHashModal-footer").removeClass('modal-success');
+                    $("#modal-header-wrp").addClass('modal-warning');
+              $("#displayHashModal-footer").addClass('modal-warning');
+                    const hashModalTitle = document.getElementById("displayHashModal-title");
+                    const hashModalBody = document.getElementById("displayHashModal-body");
+                    const hashModalFooter = document.getElementById("displayHashModal-footer");
+                    hashModalTitle.innerHTML = "<strong>Some Error Occured</strong>";
+                    hashModalBody.innerHTML = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyDivContent('confirmed_err_txHash')" >Click</button> to copy hash`;
+
+                    document.getElementById("btn-displayHashModal").click();                  }
                 },
                 error: xhr => {
                   $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
@@ -1028,10 +1096,6 @@
         return;
       }
     })
-
-
-
-
   }
 
   function checkCode(course_id, price) {
@@ -1060,23 +1124,40 @@
   }
 
   async function getXinEquivalent(amnt) {
-  try {
-    const currXinPrice = await $.ajax({method:"get",url:coinMarketCapUrl});
-    console.log(currXinPrice);
-    console.log("Response from CMC: ",currXinPrice)
-    if (currXinPrice[0] != undefined || currXinPrice[0] != undefined) {
-      const retPrice = (parseFloat(amnt) / (parseFloat(currXinPrice[0].price_usd) * divisor)) * Math.pow(10,18);
-      console.log("ret price: ",retPrice)
-      return (
-        retPrice
+    try {
+      const currXinPrice = await $.ajax({ method: "get", url: coinMarketCapUrl });
+      console.log(currXinPrice);
+      console.log("Response from CMC: ", currXinPrice)
+      if (currXinPrice[0] != undefined || currXinPrice[0] != undefined) {
+        const retPrice = (parseFloat(amnt) / (parseFloat(currXinPrice[0].price_usd) * divisor)) * Math.pow(10, 18);
+        console.log("ret price: ", retPrice)
+        return (
+          retPrice
+        );
+      }
+    } catch (e) {
+      console.error(
+        "Some error occurred while making or processing call from CoinMarketCap", e
       );
+      return -1;
     }
-  } catch (e) {
-    console.error(
-      "Some error occurred while making or processing call from CoinMarketCap",e
-    );
-    return -1;
   }
+
+  function copyDivContent(containerid) {
+    console.log(containerid);
+    if (document.selection) { 
+    var range = document.body.createTextRange();
+    range.moveToElementText(document.getElementById(containerid));
+    range.select().createTextRange();
+    document.execCommand("copy"); 
+
+} else if (window.getSelection) {
+    var range = document.createRange();
+     range.selectNode(document.getElementById(containerid));
+     window.getSelection().addRange(range);
+     document.execCommand("copy");
 }
+                    $.notify("Copied")
+  }
 
 </script>

@@ -82,7 +82,7 @@
           </table>
         </div>
 
-        <h3 class="profile-subHeading mt-5">Payment Details</h3>
+        <h3 class="profile-subHeading mt-5">Course Enrollment Details</h3>
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
@@ -112,7 +112,9 @@
           </table>
         </div>
 
-        <h3 class="profile-subHeading mt-5">Payment Via Tokens</h3>
+        <h3 id="payment-via-tokens" class="profile-subHeading mt-5">
+          Payment Via Tokens
+        </h3>
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
@@ -376,39 +378,37 @@
               if (payments[z].tokenName === "xdce") {
                 payment_txHash =
                   payments[z].txn_hash.toString().slice(0, 11) + "...";
-                if (
-                  payments[z].willBurn ||
-                  (payments[z].burn_txn_hash != undefined &&
-                    payments[z].burn_txn_hash != null &&
-                    payments[z].burn_txn_hash != "")
-                ) {
-                  burn_txHash =
-                    payments[z].burn_txn_hash == undefined ||
-                    payments[z].burn_txn_hash == null ||
-                    payments[z].burn_txn_hash == ""
-                      ? "-"
-                      : payments[z].burn_txn_hash.toString().slice(0, 11) +
-                        "...";
-                } else {
-                  burn_txHash = "-";
-                }
 
                 pay_hash_link = `<a href="${etherScanIo +
                   payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
-                if (
-                  burn_txHash !== "-" &&
-                  burn_txHash !== "Burning is in process"
-                ) {
-                  burn_hash_link = `<a href="${etherScanIo +
-                    payments[z]
-                      .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
-                } else {
-                  burn_hash_link = burn_txHash;
+
+                if (payments[z].autoBurn) {
+                  // will burn
+                  if (payments[z].burn_txn_hash == "") {
+                    // not yet burned
+                    burn_txHash = "Burning is in process...";
+                    burn_hash_link = burn_txHash;
+                  } else {
+                    burn_txHash =
+                      payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
+                    burn_hash_link = `<a href="${etherScanIo +
+                      payments[z]
+                        .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                  }
+                }else{
+                  burn_hash_link = "-"
                 }
               }
             } else if (status === "pending") {
               payment_txHash =
                 payments[z].txn_hash.toString().slice(0, 11) + "...";
+              if (payments[z].autoBurn) {
+                // will burn
+                burn_txHash = "Will burn after confirmation";
+              } else {
+                // wont burn
+                burn_txHash = "NA";
+              }
               pay_hash_link = `<a href="${etherScanIo +
                 payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
               status += `( ${payments[z].confirmations}/${
@@ -416,11 +416,14 @@
                   ? payments[z].xdceConfirmation
                   : payments[z].xdcConfirmation
               } )`;
+              burn_hash_link = burn_txHash;
             }
 
             retHtml += `<tr><td>${payments[z].courseName}</td><td>${payments[
               z
-            ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${status}">${status}</td><td>${burn_hash_link}</td></tr>`;
+            ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${
+              payments[z].status
+            }">${status}</td><td>${burn_hash_link}</td></tr>`;
           }
           tableBody.innerHTML = retHtml;
           tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;

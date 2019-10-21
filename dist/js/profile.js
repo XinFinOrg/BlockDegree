@@ -79,6 +79,18 @@ if (typeof jQuery != "undefined") {
               if (key == "confirmName" && value.startsWith("true")) {
                 // new registration, need to confirm the name.
                 document.getElementById("btn-confirmName").click();
+                return;
+              } else if (key === "inFocus" && value === "cryptoPayment") {
+                $("html, body").animate(
+                  {
+                    scrollTop:
+                      $("#payment-via-tokens").offset().top -
+                      document.getElementById("header").scrollHeight - 20
+                  },
+                  2000
+                );
+                console.log("called in focus");
+                return;
               }
             }
           }

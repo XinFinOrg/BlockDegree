@@ -9,6 +9,7 @@ const keyConfig = require("../config/keyConfig").mainnetPrivateKey;
 const uuidv4 = require("uuid/v4");
 const abiDecoder = require("abi-decoder");
 const axios = require("axios");
+const promoCodeService = require("../services/promoCodes");
 
 let eventEmitter = new EventEmitter();
 // const ethConfirmation = 3;
@@ -153,7 +154,7 @@ function listenForConfirmation(txHash, network, userEmail, course) {
   });
 }
 
-function listenForMined(txHash, network, userEmail, price, course) {
+function listenForMined(txHash, network, userEmail, price, course, req) {
   setImmediate(async () => {
     switch (network) {
       case 1: {
@@ -168,7 +169,24 @@ function listenForMined(txHash, network, userEmail, price, course) {
             console.error("Course not found: ", course);
             return;
           }
-          const xdcePrice = await getXinEquivalent(coursePrice.priceUsd);
+
+          const discObj = await promoCodeService.usePromoCode(req);
+          if (discObj.error == null) {
+            // all good, can avail promo-code discount
+            price = parseFloat(price) - discObj.discAmt;
+          } else {
+            console.error(
+              `Error while using promocode ${req.body.codeName}: `,
+              discObj.error
+            );
+
+            if (discObj.error != "bad request") {
+              console.log("fatal error, closing listener");
+              return;
+            }
+          }
+
+          const xdcePrice = await getXinEquivalent(price);
           const xdceTolerance = coursePrice.xdceTolerance;
           if (xdcePrice == -1) {
             // error while calculating current price.
@@ -205,13 +223,24 @@ function listenForMined(txHash, network, userEmail, price, course) {
               //   .transfer(xdceOwnerPubAddr, xdcePrice)
               //   .encodeABI();
               let decodedMethod = abiDecoder.decodeMethod(txInputData);
-              let valAcceptable =
+              console.log(
+                "Minimum Value: ",
                 parseFloat(xdcePrice) -
+                  parseFloat(xdcePrice * xdceTolerance) / 100
+              );
+              console.log(
+                "Maximum Value: ",
+                parseFloat(xdcePrice) +
+                  parseFloat(xdcePrice * xdceTolerance) / 100
+              );
+              console.log("Actual Value: ",parseFloat(decodedMethod.params[1].value))
+              let valAcceptable =
+               ( parseFloat(xdcePrice) -
                   parseFloat(xdcePrice * xdceTolerance) / 100 <=
-                  parseFloat(decodedMethod.params[1].value) &&
-                parseFloat(decodedMethod.params[1].value) <=
+                  parseFloat(decodedMethod.params[1].value)) &&
+                (parseFloat(decodedMethod.params[1].value) <=
                   parseFloat(xdcePrice) +
-                    parseFloat(xdcePrice * xdceTolerance) / 100;
+                    parseFloat(xdcePrice * xdceTolerance) / 100)
               if (!valAcceptable) {
                 TxMinedListener = clearInterval(TxMinedListener);
                 console.log(
@@ -220,10 +249,7 @@ function listenForMined(txHash, network, userEmail, price, course) {
                 return;
               }
               let expectedData = contractInst.methods
-                .transfer(
-                  xdceOwnerPubAddr,
-                  parseInt(decodedMethod.params[1].value)
-                )
+                .transfer(xdceOwnerPubAddr, decodedMethod.params[1].value)
                 .encodeABI();
               let validFuncSig = expectedData === txInputData && valAcceptable;
               console.log(validFuncSig);
@@ -261,6 +287,7 @@ function listenForMined(txHash, network, userEmail, price, course) {
               newPaymentXdce.tokenName = XDCE;
               newPaymentXdce.price = price;
               newPaymentXdce.status = "pending";
+              newPaymentXdce.autoBurn = coursePrice.autoBurn;
               try {
                 await newPaymentXdce.save();
               } catch (e) {
@@ -308,7 +335,10 @@ function newPaymentToken() {
     tokenAmt: "",
     price: "",
     status: "", // pending, complete or rejected
-    confirmations: "0"
+    confirmations: "0",
+    autoBurn:false,
+    burn_txn_hash: "",
+    burn_token_amnt: ""
   });
 }
 
@@ -372,6 +402,11 @@ async function handleBurnToken(
         const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
         let burnAmnt = 0;
 
+        if (!paymentLog.autoBurn){
+          console.log("Auto-Burn has been turned off, closed the listener.");
+          return;
+        }
+
         for (let z = 0; z < course.burnToken.length; z++) {
           if (
             course.burnToken[z].tokenName === XDCE &&
@@ -385,6 +420,7 @@ async function handleBurnToken(
             break;
           }
         }
+
         if (burnAmnt == 0) {
           // dont burn
           console.log("Auto-Burn has been turned off, closed the listener.");
@@ -406,7 +442,7 @@ async function handleBurnToken(
         const tx = {
           from: blockdegreePubAddr,
           to: xdceAddrMainnet,
-          gas: 2000000,
+          gas: 60000,
           data: encodedData,
           nonce: await web3.eth.getTransactionCount(
             blockdegreePubAddr,
