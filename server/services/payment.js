@@ -624,8 +624,9 @@ exports.payViaXdce = async (req, res) => {
           res.json({ error: "Invalid transaction", status: false });
           return;
         }
+        console.log(decodedMethod.params[1].value,typeof decodedMethod.params[1].value)
         let expectedData = contractInst.methods
-          .transfer(xdceOwnerPubAddr, parseInt(decodedMethod.params[1].value))
+          .transfer(xdceOwnerPubAddr, decodedMethod.params[1].value)
           .encodeABI();
         let validFuncSig = expectedData === txInputData && valAcceptable;
         // console.log(validFuncSig);
