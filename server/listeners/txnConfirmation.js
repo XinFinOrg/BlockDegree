@@ -223,24 +223,27 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               //   .transfer(xdceOwnerPubAddr, xdcePrice)
               //   .encodeABI();
               let decodedMethod = abiDecoder.decodeMethod(txInputData);
+              
               console.log(
                 "Minimum Value: ",
-                parseFloat(xdcePrice) -
-                  parseFloat(xdcePrice * xdceTolerance) / 100
+                parseFloat(xdcePrice) - parseFloat(xdcePrice * xdceTolerance) / 100
               );
               console.log(
                 "Maximum Value: ",
-                parseFloat(xdcePrice) +
-                  parseFloat(xdcePrice * xdceTolerance) / 100
+                parseFloat(xdcePrice) + parseFloat(xdcePrice * xdceTolerance) / 100
               );
-              console.log("Actual Value: ",parseFloat(decodedMethod.params[1].value))
+              console.log(
+                "Actual Value: ",
+                parseFloat(decodedMethod.params[1].value)
+              );
+
               let valAcceptable =
-               ( parseFloat(xdcePrice) -
+                parseFloat(xdcePrice) -
                   parseFloat(xdcePrice * xdceTolerance) / 100 <=
-                  parseFloat(decodedMethod.params[1].value)) &&
-                (parseFloat(decodedMethod.params[1].value) <=
+                  parseFloat(decodedMethod.params[1].value) &&
+                parseFloat(decodedMethod.params[1].value) <=
                   parseFloat(xdcePrice) +
-                    parseFloat(xdcePrice * xdceTolerance) / 100)
+                    parseFloat(xdcePrice * xdceTolerance) / 100;
               if (!valAcceptable) {
                 TxMinedListener = clearInterval(TxMinedListener);
                 console.log(
@@ -336,7 +339,7 @@ function newPaymentToken() {
     price: "",
     status: "", // pending, complete or rejected
     confirmations: "0",
-    autoBurn:false,
+    autoBurn: false,
     burn_txn_hash: "",
     burn_token_amnt: ""
   });
@@ -402,7 +405,7 @@ async function handleBurnToken(
         const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
         let burnAmnt = 0;
 
-        if (!paymentLog.autoBurn){
+        if (!paymentLog.autoBurn) {
           console.log("Auto-Burn has been turned off, closed the listener.");
           return;
         }
