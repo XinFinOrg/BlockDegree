@@ -20,6 +20,13 @@
     margin-bottom: 5px;
   }
 </style>
+
+<div style="display: none;" id="wrapfabtest">
+    <div class="adBanner">This is a test&nbsp;
+    </div>
+</div>
+
+
 <div class="container__cstm">
   {{!-- This is exam list --}}
   <div>
@@ -95,25 +102,25 @@
               aria-labelledby="paymentModalTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLongTitle">Please Select Payment Method</h4>
+                  <div class="modal-header" >
+                    <h3 class="modal-title" style="margin-left:17% ;" id="exampleModalLongTitle">Please Select Payment Method</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                    <button type="button" style="btn btn-primary" onclick="payViaXdce({{this.type}},{{this.price}})"
+                    <button type="button" class="btn-payment" onclick="payViaXdce({{this.type}},{{this.price}})"
                       data-dismiss="modal"> Pay Via XDCe </button>
                     {{!-- <button type="button" style="btn btn-primary" onclick="payViaXdc({{this.type}},{{this.price}})"
                       data-dismiss="modal"> Pay Via XDC* </button> --}}
-                    <button type="button" style="btn btn-primary" onclick="pay({{this.type}},{{this.price}})"
+                    <button type="button" class="btn-payment" onclick="pay({{this.type}},{{this.price}})"
                       data-dismiss="modal">
                       Pay Via PayPal </button>
                   </div>
-                  <div class="modal-footer">
+                  {{!-- <div class="modal-footer">
                     *<a href="https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo"
                       target="_blank">XinPay</a> &nbsp; web-extension is required
-                  </div>
+                  </div> --}}
                 </div>
               </div>
             </div>
@@ -215,6 +222,27 @@
   const coinMarketCapUrl = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
   const etherScanIo = "https://etherscan.io/tx/";
 
+  $('document').ready(() => {
+    $(document).ready(function(){
+    if(!($("#wrapfabtest").height() > 0)) {        
+      // adblock detected, ask to disable
+      $("#modal-header-wrp").removeClass("modal-success");
+                    $("#modal-header-wrp").removeClass("modal-warning");
+                    $("#displayHashModal-footer").removeClass('modal-success');
+                    $("#displayHashModal-footer").removeClass('modal-warning');
+$("#modal-header-wrp").addClass('modal-info');
+              $("#displayHashModal-footer").addClass('modal-info');
+              const hashModalTitle = document.getElementById("displayHashModal-title");
+              const hashModalBody = document.getElementById("displayHashModal-body");
+              const hashModalFooter = document.getElementById("displayHashModal-footer");
+              hashModalTitle.innerHTML = "<strong>AdBlock Detected</strong>";
+              hashModalBody.innerHTML = "Some functionality of this page won't work properly if an AdBlock is enabled. Please consider turning it off or pausing on our site. \nDon't worry we don't have any ads on our site.";
+              document.getElementById("btn-displayHashModal").click();
+        
+    }
+});
+
+  })
 
   function takeExam(slug) {
 

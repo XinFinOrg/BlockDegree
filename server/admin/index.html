@@ -60,7 +60,6 @@
             
                   .main {
                     margin-left: 230px;
-                    font-size: 28px;
                     padding: 0px 10px;
                   }
             
@@ -89,22 +88,22 @@
                                                             <h3>Add Promo Code</h3>
                                                             <div>
                                                                 CodeName : 
-                                                                <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                             </div>
                                                             <div>
                                                                 Discount Amount : 
-                                                                <input type="number" name="discAmt" placeholder="enter the discount amount" >
+                                                                <input class="form-control" type="number" name="discAmt" placeholder="enter the discount amount" >
                                                             </div>
                                                             <div>
                                                                 Purpose for new code : 
-                                                                <input type="text" name="purpose" placeholder="enter the purpose" >
+                                                                <input class="form-control" type="text" name="purpose" placeholder="enter the purpose" >
                                                             </div> 
                                                             <div>
                                                                 Promo-code access ?<br>
-                                                                <input type="radio" name="restricted" id="restricted" value="true">restricted<br>
-                                                                <input type="radio" name="restricted" id="unrestricted" value="false">unrestricted
+                                                                <input type="radio" name="restricted" id="restricted" value="true"><label for="restricted">&nbsp;Restricted</label>&nbsp;&nbsp;&nbsp;
+                                                                <input type="radio" name="restricted" id="unrestricted" value="false"><label for="unrestricted">&nbsp;Unrestricted</label>
                                                             </div>
-                                                            <input type="submit" value="OK">
+                                                            <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                         </form>
                                                       
                                                     </p>
@@ -114,9 +113,9 @@
                                                             <h3>Activate Promo Code</h3>
                                                             <div>
                                                                 CodeName : 
-                                                                <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                             </div>
-                                                            <input type="submit" value="OK">
+                                                            <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                         </form>
                                                     </p>
                                                     <p>
@@ -125,9 +124,9 @@
                                                                 <h3>Deactivate Promo Code</h3>
                                                                 <div>
                                                                     CodeName : 
-                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                    <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                                 </div>
-                                                                <input type="submit" value="OK">
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
                                                         </p>     
                                                         
@@ -137,9 +136,9 @@
                                                                 <h3>Restrict Promo Code</h3>
                                                                 <div>
                                                                     CodeName : 
-                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                    <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                                 </div>
-                                                                <input type="submit" value="OK">
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
                                                         </p>  
                                                         
@@ -151,7 +150,7 @@
                                                                     CodeName : 
                                                                     <input type="text" name="codeName" placeholder="enter the codename" >
                                                                 </div>
-                                                                <input type="submit" value="OK">
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
                                                         </p> 
                                                         <p>
@@ -160,13 +159,13 @@
                                                                 <h3>Allow User for restricted Promo Code</h3>
                                                                 <div>
                                                                     User email : 
-                                                                    <input type="text" name="email" placeholder="enter the user email" >
+                                                                    <input class="form-control" type="text" name="email" placeholder="enter the user email" >
                                                                 </div>
                                                                 <div>
                                                                     CodeName : 
-                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                    <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                                 </div>
-                                                                <input type="submit" value="OK">
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
                                                         </p>   
                                         </div>
@@ -174,61 +173,61 @@
                                                 <h1>Course Payments - tread carefully </h1>
                                                 <div>
                                                     <h4>Register New Course</h4>
-                                                    <input class="form-control" id="new_course_id" placeholder="Enter the course ID"/>
-                                                    <input class="form-control" id="new_course_name" placeholder="Enter the course name" />
-                                                    <input class="form-control" id="new_course_priceUsd" placeholder="Enter the price in USD"/>
-                                                    <input class="form-control" id="new_course_xdceTolerance" placeholder="Enter the XDCe tolerance ( in percentage ) "/>
-                                                    <input class="form-control" id="new_course_xdcTolerance" placeholder="Enter the XDC tolerance ( in percentage ) " />
-                                                    <input class="form-control" id="new_course_xdceConfirmation" placeholder="Enter the XDCe Confirmations ( in blocks ) " />
-                                                    <input class="form-control" id="new_course_xdcConfirmation" placeholder="Enter the XDC Confirmations ( in blocks ) " />
+                                                    <input class="form-control" class="form-control" id="new_course_id" placeholder="Enter the course ID"/>
+                                                    <input class="form-control" class="form-control" id="new_course_name" placeholder="Enter the course name" />
+                                                    <input class="form-control" class="form-control" id="new_course_priceUsd" placeholder="Enter the price in USD"/>
+                                                    <input class="form-control" class="form-control" id="new_course_xdceTolerance" placeholder="Enter the XDCe tolerance ( in percentage ) "/>
+                                                    <input class="form-control" class="form-control" id="new_course_xdcTolerance" placeholder="Enter the XDC tolerance ( in percentage ) " />
+                                                    <input class="form-control" class="form-control" id="new_course_xdceConfirmation" placeholder="Enter the XDCe Confirmations ( in blocks ) " />
+                                                    <input class="form-control" class="form-control" id="new_course_xdcConfirmation" placeholder="Enter the XDC Confirmations ( in blocks ) " />
                                                     <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="newCourse()">New Course</button>
                                                 </div><br/>                                                
                                                 <div>
                                                 <h4>Set Price Usd For Course</h4>
-                                                        <input class="form-control" id="setPrice_course_id" placeholder="Enter the course ID"/>
-                                                        <input class="form-control" id="setPrice_course_priceUsd" placeholder="Enter the price in USD"/>
+                                                        <input class="form-control" class="form-control" id="setPrice_course_id" placeholder="Enter the course ID"/>
+                                                        <input class="form-control" class="form-control" id="setPrice_course_priceUsd" placeholder="Enter the price in USD"/>
                                                         <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setPriceUsd()">Set Price in USD</button>
                                                 </div><br/>
                                                 <div>
                                                         <h4>Set XdceTolerance For Course</h4>
-                                                                <input class="form-control" id="setTolXdce_course_id" placeholder="Enter the course ID"/>
-                                                                <input class="form-control" id="setTolXdce_course_tol" placeholder="Enter the XDCE tolerance in percentage"/>
+                                                                <input class="form-control" class="form-control" id="setTolXdce_course_id" placeholder="Enter the course ID"/>
+                                                                <input class="form-control" class="form-control" id="setTolXdce_course_tol" placeholder="Enter the XDCE tolerance in percentage"/>
                                                                 <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setToleranceXdce()">Set XDCe Tolerance</button>
                                                         </div><br/>
                                                         <div>
                                                                 <h4>Set XdcTolerance For Course</h4>
-                                                                        <input class="form-control" id="setTolXdc_course_id" placeholder="Enter the course ID"/>
-                                                                        <input class="form-control" id="setTolXdc_course_tol" placeholder="Enter the XDC tolerance in percentage"/>
+                                                                        <input class="form-control" class="form-control" id="setTolXdc_course_id" placeholder="Enter the course ID"/>
+                                                                        <input class="form-control" class="form-control" id="setTolXdc_course_tol" placeholder="Enter the XDC tolerance in percentage"/>
                                                                         <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setToleranceXdc()">Set XDC Tolerance</button>
                                                                 </div><br/>
                                                                 <div>
                                                                         <h4>Set Xdce Confirmations For Course</h4>
-                                                                                <input class="form-control" id="setConXdce_course_id" placeholder="Enter the course ID"/>
-                                                                                <input class="form-control" id="setConXdce_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
+                                                                                <input class="form-control" class="form-control" id="setConXdce_course_id" placeholder="Enter the course ID"/>
+                                                                                <input class="form-control" class="form-control" id="setConXdce_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
                                                                                 <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setConfirmationsXdce()">Set XDCe Confirmations</button>
                                                                         </div><br/>
                                                                         <div>
                                                                                 <h4>Set Xdc Confirmations For Course</h4>
-                                                                                        <input class="form-control" id="setConXdc_course_id" placeholder="Enter the course ID"/>
-                                                                                        <input class="form-control" id="setConXdc_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
+                                                                                        <input class="form-control" class="form-control" id="setConXdc_course_id" placeholder="Enter the course ID"/>
+                                                                                        <input class="form-control" class="form-control" id="setConXdc_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
                                                                                         <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setConfirmationsXdc()">Set XDC Confirmations</button>
                                                                                 </div><br/>
                                                                                 <div>
                                                                                     <h4>Set Token Burn Percent For Course</h4>
-                                                                                            <input class="form-control" id="setBurnPer_course_id" placeholder="Enter the course ID"/>
-                                                                                            <input class="form-control" id="setBurnPer_course_tokenName" placeholder="Enter the Token Name"/>
-                                                                                            <input class="form-control" id="setBurnPer_course_burnPercent" placeholder="Enter the Token Burn Percent"/>
+                                                                                            <input class="form-control" class="form-control" id="setBurnPer_course_id" placeholder="Enter the course ID"/>
+                                                                                            <input class="form-control" class="form-control" id="setBurnPer_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                            <input class="form-control" class="form-control" id="setBurnPer_course_burnPercent" placeholder="Enter the Token Burn Percent"/>
                                                                                             <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setTokenBurnPercent()">Set Burn Percent</button>
                                                                                     </div><br/>
                                                                                     <div>
                                                                                         <h4>Enable Burning For Course</h4>
-                                                                                                <input class="form-control" id="enableBurn_course_id" placeholder="Enter the course ID"/>
-                                                                                                <input class="form-control" id="enableBurn_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                                <input class="form-control" class="form-control" id="enableBurn_course_id" placeholder="Enter the course ID"/>
+                                                                                                <input class="form-control" class="form-control" id="enableBurn_course_tokenName" placeholder="Enter the Token Name"/>
                                                                                                 <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="enableBurning()">Enable Burning</button>
                                                                                         </div><br/>
                                                                                         <h4>Disable Burning For Course</h4>
-                                                                                                <input class="form-control" id="disableBurn_course_id" placeholder="Enter the course ID"/>
-                                                                                                <input class="form-control" id="disableBurn_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                                <input class="form-control" class="form-control" id="disableBurn_course_id" placeholder="Enter the course ID"/>
+                                                                                                <input class="form-control" class="form-control" id="disableBurn_course_tokenName" placeholder="Enter the Token Name"/>
                                                                                                 <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="disableBurning()">Disable Burning</button>
                                                                                         </div><br/>
                                                                                         

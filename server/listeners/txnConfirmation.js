@@ -10,6 +10,7 @@ const uuidv4 = require("uuid/v4");
 const abiDecoder = require("abi-decoder");
 const axios = require("axios");
 const promoCodeService = require("../services/promoCodes");
+const emailer = require("../emailer/impl");
 
 let eventEmitter = new EventEmitter();
 // const ethConfirmation = 3;
@@ -53,6 +54,11 @@ function listenForConfirmation(txHash, network, userEmail, course) {
             console.log(
               `Finished listening for the tx ${txHash}; reason: no receipt found`
             );
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${req.user.email}`,
+              `TxReceipt was null. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+            );
             return;
           }
           const paymentLog = await PaymentToken.findOne({ txn_hash: txHash });
@@ -60,6 +66,11 @@ function listenForConfirmation(txHash, network, userEmail, course) {
             // how ?
             console.log(
               `Finished listening for the tx ${txHash}; reason: no payment log found`
+            );
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${req.user.email}`,
+              `Payment log was null. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
             );
             return;
           }
@@ -69,15 +80,25 @@ function listenForConfirmation(txHash, network, userEmail, course) {
             console.log(
               `Finished listening for the tx ${txHash}; reason no user found`
             );
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${req.user.email}`,
+              `User was null. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+            );
             return;
           }
           const txBlockNumber = txReceipt.blockNumber;
           if (paymentLog.status === "pending") {
             let blockSubscription = web3.eth
-              .subscribe("newBlockHeaders", (err, result) => {
+              .subscribe("newBlockHeaders", async (err, result) => {
                 if (err) {
                   console.error(
                     `Some error has occured while starting the subscription for ${err}`
+                  );
+                  await emailer.sendMail(
+                    process.env.SUPP_EMAIL_ID,
+                    `Re-embursement for user ${req.user.email}`,
+                    `Error while initiating a subscription for blockheader. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
                   );
                   return;
                 }
@@ -136,6 +157,11 @@ function listenForConfirmation(txHash, network, userEmail, course) {
             `Some error has occured while listening for tx: ${txHash}: `,
             e
           );
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Re-embursement for user ${req.user.email}`,
+            `Some error has occured while listening for block headers. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+          );
         }
         break;
       }
@@ -167,6 +193,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
           if (coursePrice == null) {
             // how ?
             console.error("Course not found: ", course);
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${req.user.email}`,
+              `No course found. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+            );
             return;
           }
 
@@ -182,6 +213,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
 
             if (discObj.error != "bad request") {
               console.log("fatal error, closing listener");
+              await emailer.sendMail(
+                process.env.SUPP_EMAIL_ID,
+                `Re-embursement for user ${req.user.email}`,
+                `Error while applying promo-code. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+              );
               return;
             }
           }
@@ -191,6 +227,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
           if (xdcePrice == -1) {
             // error while calculating current price.
             console.error("Error while fetching the current price");
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${req.user.email}`,
+              `Error while fetching the current price. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+            );
             return;
           }
           console.log(
@@ -223,14 +264,16 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               //   .transfer(xdceOwnerPubAddr, xdcePrice)
               //   .encodeABI();
               let decodedMethod = abiDecoder.decodeMethod(txInputData);
-              
+
               console.log(
                 "Minimum Value: ",
-                parseFloat(xdcePrice) - parseFloat(xdcePrice * xdceTolerance) / 100
+                parseFloat(xdcePrice) -
+                  parseFloat(xdcePrice * xdceTolerance) / 100
               );
               console.log(
                 "Maximum Value: ",
-                parseFloat(xdcePrice) + parseFloat(xdcePrice * xdceTolerance) / 100
+                parseFloat(xdcePrice) +
+                  parseFloat(xdcePrice * xdceTolerance) / 100
               );
               console.log(
                 "Actual Value: ",
@@ -249,6 +292,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                 console.log(
                   `Invalid value in tx ${txHash} by the user ${userEmail} at network ${network}`
                 );
+                await emailer.sendMail(
+                  process.env.SUPP_EMAIL_ID,
+                  `Re-embursement for user ${req.user.email}`,
+                  `Invalid amount sent by the user. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+                );
                 return;
               }
               let expectedData = contractInst.methods
@@ -263,6 +311,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                 console.log(
                   `Invalid tx signature for tx ${txHash} by the user ${userEmail} at network ${network}`
                 );
+                await emailer.sendMail(
+                  process.env.SUPP_EMAIL_ID,
+                  `Re-embursement for user ${req.user.email}`,
+                  `Invalid tx signature. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+                );
                 return;
               }
               const blockData = await web3.eth.getBlock(txReceipt.blockNumber);
@@ -272,6 +325,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                   // tx timedout
                   TxMinedListener = clearInterval(TxMinedListener);
                   res.json({ error: "tx timed out", status: false });
+                  await emailer.sendMail(
+                    process.env.SUPP_EMAIL_ID,
+                    `Re-embursement for user ${req.user.email}`,
+                    `Transaction timed-out. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+                  );
                   return;
                 }
               }
@@ -298,6 +356,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                   `Some error occured while saving the payment log: `,
                   e
                 );
+                await emailer.sendMail(
+                  process.env.SUPP_EMAIL_ID,
+                  `Re-embursement for user ${req.user.email}`,
+                  `Error while saving the payment log. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+                );
                 TxMinedListener = clearInterval(TxMinedListener);
                 return;
               }
@@ -312,6 +375,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
         } catch (e) {
           console.error(
             `Some error occured while listening for the mining of tx ${txHash} on network id ${network} for user ${userEmail}`
+          );
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Re-embursement for user ${req.user.email}`,
+            `Some error occured while listening for the mining of tx. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
           );
           return;
         }
