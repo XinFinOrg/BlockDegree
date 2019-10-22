@@ -224,11 +224,11 @@
   const etherScanIo = "https://etherscan.io/tx/";
 
   $('document').ready(() => {    
-    $(document).ready(function(){
+    $(document).ready(function(){    
     if(!($("#wrapfabtest").height() > 0)) {        
       // adblock detected, ask to disable              
       const modTitle = "<strong>AdBlock Detected</strong>";
-      const modBody = "Some functionality of this page won't work properly if an AdBlock is enabled. Please consider turning it off or pausing on our site. \nDon't worry we don't have any ads on our site.";
+      const modBody = "Some functionality of this page won't work properly if an AdBlock is enabled. Please consider turning it off or pausing on our site. <br/>Don't worry we don't have any ads on our site.";
       openModal("modal-info",modTitle,modBody);        
     }
 });
@@ -329,12 +329,12 @@
       return;
     }
     else if (!!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
+      $(`#btn-XinPayNotifier${course_id.id}`).click();
+    }
+    else {
+      // proper browser
       $.notify("This feature is not available in this browser, please try again using Chrome browser", { type: "danger" })
       return;
-    }
-    else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
-      // proper browser
-      $(`#btn-XinPayNotifier${course_id.id}`).click();
 
     }
   }
@@ -344,19 +344,31 @@
       // no web3 provider is available, ask to install XinPay
 
     if (typeof InstallTrigger !== "undefined") {
-      $.notify("Please install <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
+      $.notify("Please install <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
       return;
     }
     else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
-      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
+      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
       return;
     }
     else{
-      $.notify("This feature is not available in this browser, please try again using Chrome browser", { type: "danger" })
+      $.notify("This feature is not available in this browser, please try again using Chrome browser or Firefox", { type: "danger" })
       return;
     }
 
 
+    }
+
+    if (window.web3.eth.accounts.length<=0){
+      // not logged in
+      if (typeof InstallTrigger !== "undefined") {
+      $.notify(`Please login and connect your <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> extension, if you've already done that please <a onclick="window.location.reload()">refresh</a>`,{delay:5000})
+      return;
+    }
+    else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
+      $.notify(`Please login and connect your <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> extension, if you've already done that please <a onclick="window.location.reload()">refresh</a>`,{delay:5000})
+      return;
+    }
     }
 
     window.web3.version.getNetwork((err, providerNetworkId) => {
@@ -975,17 +987,21 @@
               
               openModal("modal-info",modTitle,modBody);
 
+              $.notify("Transaction is <strong>pending</strong> . . .",{type:"warning",allow_dismiss:false,delay:Date.now(),placement: {
+                  from: 'bottom',
+                  align: 'right'
+                }});
 
               $.ajax({
                 method: "post",
                 url: "/api/payViaXdce",
                 data: { txn_hash: result, course: course_id.id, price: price, codeName:codeName },
                 success: resp => {
-                  if (resp.status) {
-                    
+                  if (resp.status) {                    
                     const modTitle = "<strong>Transaction Received Successfully</strong>";
                     const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='display:none' id='confirmed_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a>. Click on link to view on etherscan.`;
                     openModal("modal-success",modTitle,modBody);
+                    $.notifyClose('bottom-right')
                     return;
                   } else {
                     // something went wrong, ask to store tx & mail to info@blockdegree.org
@@ -993,10 +1009,12 @@
                     const modTitle = "<strong>Some Error Occured</strong>";
                     const modBody = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyDivContent('confirmed_err_txHash')" >Click</button> to copy hash`;
                     openModal("modal-warning",modTitle,modBody);
-                                    }
+                    $.notifyClose('bottom-right')
+                  }
                 },
                 error: xhr => {
                   $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                  $.notifyClose('bottom-right')
                   return;
                 }
               })
@@ -1005,14 +1023,30 @@
 
           },
           error: xhr => {
-            $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
-            return;
+            if (!($("#wrapfabtest").height() > 0)){
+              $.notify("An Ad-Blocker blocked our request for fetching the current XDC price, please try again after disabling ad-blocker.", { type: "danger", delay:10000 });
+              return;
+            }else{
+              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay:10000 });
+              return;
+            }            
           }
         })
       }
       else {
         // Looks like you're using some other web-extension as web3 provider. Please disable other web3 extensions like metamask, mist and enable only XinPay & then try again.
-        $.notify("looks like you're on some other Network, please switch to network-id 1 aka <strong>ethereum mainnet</strong>", { type: "danger", delay: 5000 });
+        {{!-- $.notify("looks like you're on some other Network, please switch to network-id 1 aka <strong>ethereum mainnet</strong>", { type: "danger", delay: 5000 }); --}}
+        const modTitle = "<strong>You're connected to wrong network</strong>";
+        let modBody;
+        if (typeof InstallTrigger !== "undefined") {
+          // firefox
+          modBody = "Inorder to make a payment via XDCe, your extension needs to be connected to the Ethereum Mainnet.<br/>Please open your web extension and connect to Ethereum Mainnet. If your extension does'nt support connection to ethereum mainnet, then please install a compatible extension like <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> & disable other incompatible wallets <br/>If you've switched to ethereum mainnet, please <a onclick='window.location.reload()'>refresh</a>."
+        }
+        else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)){
+          // chrome
+          modBody = "Inorder to make a payment via XDCe, your extension needs to be connected to the Ethereum Mainnet.<br/>Please open your web extension and connect to Ethereum Mainnet. If your extension does'nt support connection to ethereum mainnet, then please install a compatible extension like <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> & disable other incompatible wallets <br/>If you've switched to ethereum mainnet, please <a onclick='window.location.reload()'>refresh</a>."
+        }
+        openModal("modal-info",modTitle,modBody)
         return;
       }
     })
@@ -1024,7 +1058,7 @@
   async function launchXinPay(course_id, price) {
     if (window.web3 == undefined) {
       // no web3 provider is available, ask to install XinPay
-      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
+      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
       return;
     }
 
@@ -1087,8 +1121,13 @@
             })
           },
           error: xhr => {
-            $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
-            return;
+            if (!($("#wrapfabtest").height() > 0)){
+              $.notify("An Ad-Blocker blocked our request for fetching the current XDC price, please try again after disabling ad-blocker.", { type: "danger", delay:10000 });
+              return;
+            }else{
+              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay:10000 });
+              return;
+            } 
           }
         })
       }
@@ -1143,10 +1182,15 @@
         );
       }
     } catch (e) {
-      console.error(
+      if (!($("#wrapfabtest").height() > 0)){
+              $.notify("An Ad-Blocker blocked our request for fetching the current XDC price, please try again after disabling ad-blocker.", { type: "danger", delay:10000 });
+              return;
+            }else{
+              console.error(
         "Some error occurred while making or processing call from CoinMarketCap", e
       );
       return -1;
+            }       
     }
   }
 
@@ -1187,6 +1231,7 @@
   }
 
   $('#displayHashModal').on('hidden.bs.modal', function (e) {
+    console.log(e);
     allModals.shift();
     if (allModals.length > 0){
       let firstModal = allModals[0];
