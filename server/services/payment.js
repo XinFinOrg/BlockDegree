@@ -561,7 +561,6 @@ exports.payViaXdce = async (req, res) => {
     const discObj = await promoCodeService.usePromoCode(req);
 
     // check if the price is 9.99 if not then check if a propoer codeName has been supplied else makr invalid transfer.
-
     if (price != fullPrice) {
       // not equal check for promoCode
       if (discObj.error == null) {
@@ -587,7 +586,7 @@ exports.payViaXdce = async (req, res) => {
           );
           return;
         }
-      }
+      }      
       if (price != fullPrice) {
         //invalid price
         console.log(`Invalid amount, expected ${fullPrice} actual ${price}`);
@@ -610,6 +609,11 @@ exports.payViaXdce = async (req, res) => {
           return res.json({ status: true, error: null });
         } else {
           // already paid
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Re-embursement for user ${req.user.email}`,
+            `User tried to pay for an already paid course. Payment mode was via XDCe. Payment transaction hash: ${txn_hash}`
+          );
           return res.json({
             status: false,
             error: "Course is already paid for."

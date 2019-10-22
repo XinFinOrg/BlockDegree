@@ -218,27 +218,18 @@
 
 <script type="text/javascript">
 
+  let allModals=[];
   const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
   const coinMarketCapUrl = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
   const etherScanIo = "https://etherscan.io/tx/";
 
-  $('document').ready(() => {
+  $('document').ready(() => {    
     $(document).ready(function(){
     if(!($("#wrapfabtest").height() > 0)) {        
-      // adblock detected, ask to disable
-      $("#modal-header-wrp").removeClass("modal-success");
-                    $("#modal-header-wrp").removeClass("modal-warning");
-                    $("#displayHashModal-footer").removeClass('modal-success');
-                    $("#displayHashModal-footer").removeClass('modal-warning');
-$("#modal-header-wrp").addClass('modal-info');
-              $("#displayHashModal-footer").addClass('modal-info');
-              const hashModalTitle = document.getElementById("displayHashModal-title");
-              const hashModalBody = document.getElementById("displayHashModal-body");
-              const hashModalFooter = document.getElementById("displayHashModal-footer");
-              hashModalTitle.innerHTML = "<strong>AdBlock Detected</strong>";
-              hashModalBody.innerHTML = "Some functionality of this page won't work properly if an AdBlock is enabled. Please consider turning it off or pausing on our site. \nDon't worry we don't have any ads on our site.";
-              document.getElementById("btn-displayHashModal").click();
-        
+      // adblock detected, ask to disable              
+      const modTitle = "<strong>AdBlock Detected</strong>";
+      const modBody = "Some functionality of this page won't work properly if an AdBlock is enabled. Please consider turning it off or pausing on our site. \nDon't worry we don't have any ads on our site.";
+      openModal("modal-info",modTitle,modBody);        
     }
 });
 
@@ -351,8 +342,21 @@ $("#modal-header-wrp").addClass('modal-info');
   function payViaXdce(course_id, price) {
     if (window.web3 == undefined) {
       // no web3 provider is available, ask to install XinPay
+
+    if (typeof InstallTrigger !== "undefined") {
+      $.notify("Please install <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
+      return;
+    }
+    else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
       $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
       return;
+    }
+    else{
+      $.notify("This feature is not available in this browser, please try again using Chrome browser", { type: "danger" })
+      return;
+    }
+
+
     }
 
     window.web3.version.getNetwork((err, providerNetworkId) => {
@@ -939,10 +943,10 @@ $("#modal-header-wrp").addClass('modal-info');
             };
             let xdcePrice = await getXinEquivalent(price)
             console.log("XDCe Price: ", xdcePrice)
-            {{!--$.ajax({
+            {{!-- $.ajax({
                   method: "post",
                   url: "/api/payViaXdce",
-                  data: { txn_hash: "0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f", course: course_id.id, price: price },
+                  data: { txn_hash: "0xaa0ff04be57142f37d26d96d44e6c92b3187fc865315802934fbc129808af6e2", course: course_id.id, price: price },
                   success: resp => {
                     if (resp.status) {
                       // all ok, ask to check profile after sometime.
@@ -951,11 +955,11 @@ $("#modal-header-wrp").addClass('modal-info');
                       return;
                     } else {
                       // something went wrong, ask to store tx & mail to info@blockdegree.org
-                      $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>${result}</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                      $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
                     }
                   },
                   error: xhr => {
-                    $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                    $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>$0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
                     return;
                   }
                 }) --}}
@@ -965,19 +969,11 @@ $("#modal-header-wrp").addClass('modal-info');
                 return;
               }
               // result is transaction hash
-              $("#modal-header-wrp").removeClass("modal-success");
-                    $("#modal-header-wrp").removeClass("modal-warning");
-                    $("#displayHashModal-footer").removeClass('modal-success');
-                    $("#displayHashModal-footer").removeClass('modal-warning');
-$("#modal-header-wrp").addClass('modal-info');
-              $("#displayHashModal-footer").addClass('modal-info');
-              const hashModalTitle = document.getElementById("displayHashModal-title");
-              const hashModalBody = document.getElementById("displayHashModal-body");
-              const hashModalFooter = document.getElementById("displayHashModal-footer");
-              hashModalTitle.innerHTML = "<strong>Transaction Submitted Successfully</strong>";
-              hashModalBody.innerHTML = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyDivContent('pending_txHash')" >Click</button> to copy hash`;
-
-              document.getElementById("btn-displayHashModal").click();
+              
+              const modTitle = "<strong>Transaction Submitted Successfully</strong>";
+              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyDivContent('pending_txHash')" >Click</button> to copy hash`;
+              
+              openModal("modal-info",modTitle,modBody);
 
 
               $.ajax({
@@ -986,35 +982,18 @@ $("#modal-header-wrp").addClass('modal-info');
                 data: { txn_hash: result, course: course_id.id, price: price, codeName:codeName },
                 success: resp => {
                   if (resp.status) {
-                    // all ok, ask to check profile after sometime.
-                    $("#modal-header-wrp").removeClass("modal-info");
-                    $("#modal-header-wrp").removeClass("modal-warning");
-                    $("#displayHashModal-footer").removeClass('modal-info');
-                    $("#displayHashModal-footer").removeClass('modal-warning');
-                    $("#modal-header-wrp").addClass('modal-success');
-                    $("#displayHashModal-footer").addClass('modal-success');
-                    const hashModalTitle = document.getElementById("displayHashModal-title");
-                    const hashModalBody = document.getElementById("displayHashModal-body");
-                    const hashModalFooter = document.getElementById("displayHashModal-footer");
-                    hashModalTitle.innerHTML = "<strong>Transaction Received Successfully</strong>";
-                    hashModalBody.innerHTML = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. Your trasnaction hash is <div style='display:none' id='confirmed_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a>. Click on link to view on etherscan.`;
-                    document.getElementById("btn-displayHashModal").click();
+                    
+                    const modTitle = "<strong>Transaction Received Successfully</strong>";
+                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='display:none' id='confirmed_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a>. Click on link to view on etherscan.`;
+                    openModal("modal-success",modTitle,modBody);
                     return;
                   } else {
                     // something went wrong, ask to store tx & mail to info@blockdegree.org
-                    $("#modal-header-wrp").removeClass("modal-info");
-                    $("#modal-header-wrp").removeClass("modal-success");
-                    $("#displayHashModal-footer").removeClass('modal-info');
-                    $("#displayHashModal-footer").removeClass('modal-success');
-                    $("#modal-header-wrp").addClass('modal-warning');
-              $("#displayHashModal-footer").addClass('modal-warning');
-                    const hashModalTitle = document.getElementById("displayHashModal-title");
-                    const hashModalBody = document.getElementById("displayHashModal-body");
-                    const hashModalFooter = document.getElementById("displayHashModal-footer");
-                    hashModalTitle.innerHTML = "<strong>Some Error Occured</strong>";
-                    hashModalBody.innerHTML = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyDivContent('confirmed_err_txHash')" >Click</button> to copy hash`;
-
-                    document.getElementById("btn-displayHashModal").click();                  }
+                   
+                    const modTitle = "<strong>Some Error Occured</strong>";
+                    const modBody = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyDivContent('confirmed_err_txHash')" >Click</button> to copy hash`;
+                    openModal("modal-warning",modTitle,modBody);
+                                    }
                 },
                 error: xhr => {
                   $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
@@ -1186,6 +1165,53 @@ $("#modal-header-wrp").addClass('modal-info');
      document.execCommand("copy");
 }
                     $.notify("Copied")
+  }
+  
+  function openModal(modalType,modalTitle,modalBody){
+      // check if a modal is already open, then wait forthe modal to close.
+      allModals.push({modalType:modalType,modalTitle:modalTitle,modalBody:modalBody});      
+      if (allModals.length > 1) {
+        console.log("modal is open");
+      }
+      else{
+        // directly show
+        const hashModalTitle = document.getElementById("displayHashModal-title");
+        const hashModalBody = document.getElementById("displayHashModal-body");
+        setModalType(modalType);
+        hashModalTitle.innerHTML = modalTitle;
+        hashModalBody.innerHTML = modalBody;
+        document.getElementById("btn-displayHashModal").click();
+        console.log($('#displayHashModal').hasClass('in'));
+        console.log($('#displayHashModal').is(':visible'));
+      }           
+  }
+
+  $('#displayHashModal').on('hidden.bs.modal', function (e) {
+    allModals.shift();
+    if (allModals.length > 0){
+      let firstModal = allModals[0];
+      const hashModalTitle = document.getElementById("displayHashModal-title");
+      const hashModalBody = document.getElementById("displayHashModal-body");
+      setModalType(firstModal.modalType);
+      hashModalTitle.innerHTML = firstModal.modalTitle;
+      hashModalBody.innerHTML = firstModal.modalBody;
+      document.getElementById("btn-displayHashModal").click();
+    }            
+  })
+
+  function setModalType(modalType) {
+    // remove all
+    $("#modal-header-wrp").removeClass("modal-success");
+    $("#modal-header-wrp").removeClass("modal-warning");
+    $("#modal-header-wrp").removeClass("modal-info");
+
+    $("#displayHashModal-footer").removeClass('modal-success');
+    $("#displayHashModal-footer").removeClass('modal-warning');
+    $("#displayHashModal-footer").removeClass('modal-info');
+
+    // add modalType
+    $("#modal-header-wrp").addClass(modalType);
+    $("#displayHashModal-footer").addClass(modalType);
   }
 
 </script>
