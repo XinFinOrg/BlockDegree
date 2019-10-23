@@ -334,7 +334,7 @@
   }
 
   function payViaXdce(course_id, price) {
-    if (window.web3 == undefined) {
+    if (web3 == undefined) {
       // no web3 provider is available, ask to install XinPay
 
     if (typeof InstallTrigger !== "undefined") {
@@ -353,7 +353,7 @@
 
     }
 
-    if (window.web3.eth.accounts.length<=0){
+    if (web3.eth.accounts.length<=0){
       // not logged in
       if (typeof InstallTrigger !== "undefined") {
       $.notify(`Please login and connect your <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> extension, if you've already done that please <a onclick="window.location.reload()">refresh</a>`,{delay:5000})
@@ -365,7 +365,7 @@
     }
     }
 
-    window.web3.version.getNetwork((err, providerNetworkId) => {
+    web3.version.getNetwork((err, providerNetworkId) => {
       if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
 
       if (providerNetworkId == 1) {
@@ -941,7 +941,7 @@
                 type: "event"
               }
             ]
-            let XDCeContract = window.web3.eth.contract(xdceABI);
+            let XDCeContract = web3.eth.contract(xdceABI);
             let xdceInst = XDCeContract.at(xdceAddrMainnet);
             console.log(web3.eth.defaultAccount)
             console.log(web3.version.api);
@@ -1047,17 +1047,17 @@
 
   // using 10000 as the divisor for testing purpose
   async function launchXinPay(course_id, price) {
-    if (window.web3 == undefined) {
+    if (web3 == undefined) {
       // no web3 provider is available, ask to install XinPay
       $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
       return;
     }
 
-    window.web3.version.getNetwork((err, providerNetworkId) => {
+    web3.version.getNetwork((err, providerNetworkId) => {
       if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
 
       if (providerNetworkId == 4) {
-        if (window.web3.eth.coinbase == undefined) {
+        if (web3.eth.coinbase == undefined) {
           $.notify("Please login & setup your <strong>XinPay</strong> web-extension to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
           return;
         }
@@ -1077,7 +1077,7 @@
             console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
             await ethereum.enable();
 
-            window.web3.eth.sendTransaction({ to: "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
+            web3.eth.sendTransaction({ to: "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
               if (err) {
                 console.error(err)
                 $.notify("<b>XinPay</b> : Some error while creating or processing this transaction.", { type: "danger" });
