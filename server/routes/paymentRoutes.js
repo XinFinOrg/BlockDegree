@@ -34,4 +34,6 @@ module.exports = function(app) {
   });
   app.post("/api/payViaXdc", requireLogin, paymentService.payViaXdc);
   app.post("/api/payViaXdce", requireLogin, paymentService.payViaXdce);
+  app.get("/api/wrapCoinMarketCap",requireLogin,paymentService.wrapCoinMarketCap);
+  app.get("/api/getUserNotis",requireLogin,paymentService.getPaymentsToNotify);
 };

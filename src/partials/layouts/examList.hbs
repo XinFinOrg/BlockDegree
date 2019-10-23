@@ -220,17 +220,12 @@
 
   let allModals=[];
   const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
-  const coinMarketCapUrl = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
+  {{!-- const coinMarketCapUrl = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/"; --}}
+    const coinMarketCapUrl = "/api/wrapCoinMarketCap";
   const etherScanIo = "https://etherscan.io/tx/";
 
   $('document').ready(() => {    
     $(document).ready(function(){    
-    if(!($("#wrapfabtest").height() > 0)) {        
-      // adblock detected, ask to disable              
-      const modTitle = "<strong>AdBlock Detected</strong>";
-      const modBody = "Some functionality of this page won't work properly if an AdBlock is enabled. Please consider turning it off or pausing on our site. <br/>Don't worry we don't have any ads on our site.";
-      openModal("modal-info",modTitle,modBody);        
-    }
 });
 
   })
@@ -379,7 +374,8 @@
         $.ajax({
           method: "get",
           url: coinMarketCapUrl,
-          success: async response => {
+          success: async respWhole => {
+            let response = respWhole.data;
             if (!response[0].price_usd) {
               // New format? 
               $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
@@ -955,10 +951,10 @@
             };
             let xdcePrice = await getXinEquivalent(price)
             console.log("XDCe Price: ", xdcePrice)
-            {{!-- $.ajax({
+            $.ajax({
                   method: "post",
                   url: "/api/payViaXdce",
-                  data: { txn_hash: "0xaa0ff04be57142f37d26d96d44e6c92b3187fc865315802934fbc129808af6e2", course: course_id.id, price: price },
+                  data: { txn_hash: "0x765c94643ff51bff83c97feca6b80044840b6b0298c02fbd17d9d600eac32148", course: course_id.id, price: price },
                   success: resp => {
                     if (resp.status) {
                       // all ok, ask to check profile after sometime.
@@ -974,8 +970,8 @@
                     $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>$0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
                     return;
                   }
-                }) --}}
-            xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", xdcePrice, tx, (err, result) => {
+                })
+            {{!-- xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", xdcePrice, tx, (err, result) => {
               if (err != null) {
                 $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
                 return;
@@ -983,7 +979,7 @@
               // result is transaction hash
               
               const modTitle = "<strong>Transaction Submitted Successfully</strong>";
-              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyTextToClipboard('pending_txHash')" >Click</button> to copy hash`;
+              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a> <button onclick="copyTextToClipboard('pending_txHash')" >Click</button> to copy hash`;
               
               openModal("modal-info",modTitle,modBody);
 
@@ -1007,7 +1003,7 @@
                     // something went wrong, ask to store tx & mail to info@blockdegree.org
                    
                     const modTitle = "<strong>Some Error Occured</strong>";
-                    const modBody = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
+                    const modBody = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
                     openModal("modal-warning",modTitle,modBody);
                     $.notifyClose('bottom-right')
                   }
@@ -1019,17 +1015,14 @@
                 }
               })
               return;
-            })
+            }) --}}
 
           },
           error: xhr => {
-            if (!($("#wrapfabtest").height() > 0)){
-              $.notify("An Ad-Blocker blocked our request for fetching the current XDC price, please try again after disabling ad-blocker.", { type: "danger", delay:10000 });
-              return;
-            }else{
+            
               $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay:10000 });
               return;
-            }            
+                       
           }
         })
       }
@@ -1074,7 +1067,8 @@
         $.ajax({
           method: "get",
           url: coinMarketCapUrl,
-          success: async response => {
+          success: async respWhole => {
+            let response = respWhole.data
             if (!response[0].price_usd) {
               // New format? 
               $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
@@ -1121,13 +1115,10 @@
             })
           },
           error: xhr => {
-            if (!($("#wrapfabtest").height() > 0)){
-              $.notify("An Ad-Blocker blocked our request for fetching the current XDC price, please try again after disabling ad-blocker.", { type: "danger", delay:10000 });
-              return;
-            }else{
+            
               $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay:10000 });
               return;
-            } 
+             
           }
         })
       }
@@ -1171,7 +1162,8 @@
 
   async function getXinEquivalent(amnt) {
     try {
-      const currXinPrice = await $.ajax({ method: "get", url: coinMarketCapUrl });
+      const respWhole = await $.ajax({ method: "get", url: coinMarketCapUrl });      
+      const currXinPrice = respWhole.data;
       console.log(currXinPrice);
       console.log("Response from CMC: ", currXinPrice)
       if (currXinPrice[0] != undefined || currXinPrice[0] != undefined) {
@@ -1182,15 +1174,12 @@
         );
       }
     } catch (e) {
-      if (!($("#wrapfabtest").height() > 0)){
-              $.notify("An Ad-Blocker blocked our request for fetching the current XDC price, please try again after disabling ad-blocker.", { type: "danger", delay:10000 });
-              return;
-            }else{
+      
               console.error(
         "Some error occurred while making or processing call from CoinMarketCap", e
       );
       return -1;
-            }       
+                 
     }
   }
 

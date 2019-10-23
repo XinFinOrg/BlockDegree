@@ -1,6 +1,7 @@
 let EventEmitter = require("events").EventEmitter;
 const PaymentToken = require("../models/payment_token");
 const CoursePrice = require("../models/coursePrice");
+const Notification = require("../models/notifications");
 const BurnLog = require("../models/burn_logs");
 const User = require("../models/user");
 const Web3 = require("web3");
@@ -35,7 +36,7 @@ const divisor = 1000000; // for testing purposes 1 million'th of actual value wi
 
 abiDecoder.addABI(xdceABI);
 
-function listenForConfirmation(txHash, network, userEmail, course) {
+function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
   setImmediate(async () => {
     console.log(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
@@ -114,9 +115,27 @@ function listenForConfirmation(txHash, network, userEmail, course) {
                     // the limit is now met, complete the order
                     paymentLog.confirmations = currConfirmations;
                     paymentLog.status = "completed";
+                    let respPendingNoti = await Notification.findOne({
+                      eventId: newNotiId
+                    });
+                    if (respPendingNoti != null && !respPendingNoti.displayed) {
+                      respPendingNoti.displayed = true;
+                      await respPendingNoti.save();
+                    }
+
+                    let newNoti = newDefNoti();
+                    newNoti.type = "success";
+                    newNoti.email = userEmail;
+                    newNoti.eventName = "payment is completed";
+                    newNoti.eventId = uuidv4();
+                    newNoti.title = "Payment Completed";
+                    newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+                    newNoti.displayed = false;
+
                     user.examData.payment[paymentLog.course] = true;
                     await paymentLog.save();
                     await user.save();
+                    await newNoti.save();
                     blockSubscription.unsubscribe((err, success) => {
                       if (success) {
                         console.log(
@@ -247,13 +266,14 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               // txnMined.
               console.log(`Got the tx receipt for the tx: ${txHash}`);
 
-              const duplicateTx = await PaymentToken.findOne({
+              const comPaymentToken = await PaymentToken.findOne({
                 txn_hash: txReceipt.transactionHash
               });
-              if (duplicateTx != null) {
+              if (comPaymentToken == null) {
                 // this transaction is already recorded
                 console.log(
-                  `User ${userEmail} tried to double spend hash: ${txReceipt.transactionHash}`
+                  "Cannot find the token in paymentlogs for hash: ",
+                  txReceipt.transactionHash
                 );
                 TxMinedListener = clearInterval(TxMinedListener);
                 return;
@@ -339,18 +359,38 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
         3. check if the blockdate is not older than 12 hrs - done
         4. check if thr transaction is already recorded
       */
-              let newPaymentXdce = newPaymentToken();
-              newPaymentXdce.payment_id = uuidv4();
-              newPaymentXdce.email = userEmail;
-              newPaymentXdce.creationDate = Date.now();
-              newPaymentXdce.txn_hash = txHash;
-              newPaymentXdce.course = course;
-              newPaymentXdce.tokenName = XDCE;
-              newPaymentXdce.price = price;
-              newPaymentXdce.status = "pending";
-              newPaymentXdce.autoBurn = coursePrice.autoBurn;
+              // let newPaymentXdce = newPaymentToken();
+              // newPaymentXdce.payment_id = uuidv4();
+              // newPaymentXdce.email = userEmail;
+              // newPaymentXdce.creationDate = Date.now();
+              // newPaymentXdce.txn_hash = txHash;
+              // newPaymentXdce.course = course;
+              // newPaymentXdce.tokenName = XDCE;
+              // newPaymentXdce.price = price;
+              // newPaymentXdce.status = "pending";
+              // newPaymentXdce.autoBurn = coursePrice.autoBurn;
+              comPaymentToken.status = "pending";
+              comPaymentToken.tokenAmt = decodedMethod.params[1].value.toString();
+              let newNoti = newDefNoti();
+              // email: "",
+              // eventName: "",
+              // eventId: "",
+              // type: "",
+              // title: "",
+              // message: "",
+              // displayed: ""
+              let newNotiId = uuidv4();
+              newNoti.type = "info";
+              newNoti.email = userEmail;
+              newNoti.eventName = "payment in pending";
+              newNoti.eventId = newNotiId;
+              newNoti.title = "Payment Mined";
+              newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+              newNoti.displayed = false;
+
               try {
-                await newPaymentXdce.save();
+                await newNoti.save();
+                await comPaymentToken.save();
               } catch (e) {
                 console.error(
                   `Some error occured while saving the payment log: `,
@@ -368,7 +408,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               console.log(
                 `Finished listening for the tx ${txHash} for user ${userEmail}`
               );
-              listenForConfirmation(txHash, 1, userEmail, course);
+              listenForConfirmation(txHash, 1, userEmail, course, newNotiId);
               return;
             }
           }, 10000);
@@ -557,6 +597,18 @@ async function handleBurnToken(
       break;
     }
   }
+}
+
+function newDefNoti() {
+  return new Notification({
+    email: "",
+    eventName: "",
+    eventId: "",
+    type: "",
+    title: "",
+    message: "",
+    displayed: false
+  });
 }
 
 eventEmitter.on("listenTxConfirm", listenForConfirmation);

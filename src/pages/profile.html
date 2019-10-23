@@ -435,7 +435,7 @@
                   burn_hash_link = "-";
                 }
               }
-            } else if (status === "pending") {
+            } else {
               if (allPendingTransaction.indexOf(payments[z].txn_hash) < 0)
                 allPendingTransaction.push(payments[z].txn_hash);
               payment_txHash =
@@ -460,8 +460,8 @@
             retHtml += `<tr><td>${payments[z].courseName[0].toUpperCase()+payments[z].courseName.slice(1)}</td><td>${payments[
               z
             ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${
-              payments[z].status
-            }">${status}</td><td>${burn_hash_link}</td></tr>`;
+              payments[z].status != "not yet mined" ? payments[z].status : "notYetMined"
+            }">${payments[z].status != "not yet mined" ? status : "not yet mined"}</td><td>${burn_hash_link}</td></tr>`;
           }
           tableBody.innerHTML = retHtml;
           tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;

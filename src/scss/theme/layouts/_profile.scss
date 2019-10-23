@@ -163,6 +163,10 @@
 	.pending {
 		color: orange;
 	}
+
+	.notYetMined {
+		color: purple;
+	}
 	
 	#googleLink span, #facebookLink span, #twitterLink span, #linkedinLink span {font-size: 22px; color: #28a745;}
 	#googleLink span:after, #facebookLink span:after, #twitterLink span:after, #linkedinLink span:after {content: "\2713"; padding-left: 10px;}

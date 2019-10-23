@@ -5,6 +5,7 @@ const emailer = require("../emailer/impl");
 const promoCodeService = require("../services/promoCodes");
 const PaymentToken = require("../models/payment_token");
 const CoursePrice = require("../models/coursePrice");
+const Notification = require("../models/notifications");
 const XDC3 = require("xdc3");
 const Web3 = require("web3");
 const axios = require("axios");
@@ -586,7 +587,7 @@ exports.payViaXdce = async (req, res) => {
           );
           return;
         }
-      }      
+      }
       if (price != fullPrice) {
         //invalid price
         console.log(`Invalid amount, expected ${fullPrice} actual ${price}`);
@@ -628,13 +629,46 @@ exports.payViaXdce = async (req, res) => {
       return res.json({ status: false, error: "bad request, tx hash missing" });
     }
 
+    let toAutoBurn = false;
+    for (let g = 0; g < coursePrice.burnToken.length; g++) {
+      if (coursePrice.burnToken[g].tokenName === XDCE) {
+        toAutoBurn = coursePrice.burnToken[g].autoBurn;
+      }
+    }
+
+    const duplicateTx = await PaymentToken.findOne({
+      txn_hash: txn_hash
+    });
+    if (duplicateTx != null) {
+      // this transaction is already recorded
+      console.log(
+        `User ${req.user.email} tried to double spend hash: ${txn_hash}`
+      );
+      TxMinedListener = clearInterval(TxMinedListener);
+      res.json({ error: "duplicate transation", status: false });
+      return;
+    }
+
+    let newPaymentXdce = newPaymentToken();
+    newPaymentXdce.payment_id = uuidv4();
+    newPaymentXdce.email = req.user.email;
+    newPaymentXdce.creationDate = Date.now();
+    newPaymentXdce.txn_hash = txn_hash;
+    newPaymentXdce.course = course;
+    newPaymentXdce.tokenName = XDCE;
+    newPaymentXdce.price = coursePrice.priceUsd;
+    newPaymentXdce.status = "not yet mined";
+    newPaymentXdce.autoBurn = toAutoBurn; // capture trhe status of autoburn at the moment, this will be forwarded.
+    await newPaymentXdce.save();
+    console.log("saved");
+
     const xdcePrice = await getXinEquivalent(price);
-    if (xdcePrice == -1){
+    if (xdcePrice == -1) {
       await emailer.sendMail(
         process.env.SUPP_EMAIL_ID,
         `Re-embursement for user ${req.user.email}`,
         `Some error occured while fetching prices from coinmarketcap. Payment mode was via XDCe. Payment transaction hash: ${txn_hash}`
-      );      
+      );
     }
     const xdceTolerance = coursePrice.xdceTolerance;
     const web3 = new Web3(
@@ -642,7 +676,7 @@ exports.payViaXdce = async (req, res) => {
         "wss://mainnet.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49"
       )
     );
-    
+
     // for demo: 0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed, 0x55ede32eae710eed3d21456db6fb01c5e16fcfb04292e72bc0e451fc6693ff8a
 
     const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
@@ -674,18 +708,18 @@ exports.payViaXdce = async (req, res) => {
         // txnMined.
         console.log(`Got the tx receipt for the tx: ${txn_hash}`);
 
-        const duplicateTx = await PaymentToken.findOne({
-          txn_hash: txReceipt.transactionHash
-        });
-        if (duplicateTx != null) {
-          // this transaction is already recorded
-          console.log(
-            `User ${req.user.email} tried to double spend hash: ${txReceipt.transactionHash}`
-          );
-          TxMinedListener = clearInterval(TxMinedListener);
-          res.json({ error: "duplicate transation", status: false });
-          return;
-        }
+        // const duplicateTx = await PaymentToken.findOne({
+        //   txn_hash: txReceipt.transactionHash
+        // });
+        // if (duplicateTx != null) {
+        //   // this transaction is already recorded
+        //   console.log(
+        //     `User ${req.user.email} tried to double spend hash: ${txReceipt.transactionHash}`
+        //   );
+        //   TxMinedListener = clearInterval(TxMinedListener);
+        //   res.json({ error: "duplicate transation", status: false });
+        //   return;
+        // }
         let getTx = await web3.eth.getTransaction(txn_hash);
         let txInputData = getTx.input;
 
@@ -769,35 +803,44 @@ exports.payViaXdce = async (req, res) => {
         4. check if the transaction is already recorded - done
       */
 
-        let toAutoBurn = false;
-        for (let g = 0; g < coursePrice.burnToken.length; g++) {
-          if (coursePrice.burnToken[g].tokenName === XDCE) {
-            toAutoBurn = coursePrice.burnToken[g].autoBurn;
-          }
-        }
-
-        let newPaymentXdce = newPaymentToken();
-        newPaymentXdce.payment_id = uuidv4();
-        newPaymentXdce.email = req.user.email;
-        newPaymentXdce.creationDate = Date.now();
-        newPaymentXdce.txn_hash = txn_hash;
-        newPaymentXdce.course = course;
-        newPaymentXdce.tokenName = XDCE;
-        newPaymentXdce.price = coursePrice.priceUsd;
-        newPaymentXdce.tokenAmt = xdcePrice + "";
-        newPaymentXdce.status = "pending";
-        newPaymentXdce.autoBurn = toAutoBurn; // capture trhe status of autoburn at the moment, this will be forwarded.
-        try {
-          await newPaymentXdce.save();
-        } catch (e) {
-          console.error(`Some error occured while saving the payment log: `, e);
-          TxMinedListener = clearInterval(TxMinedListener);
-          res.json({
-            status: false,
-            error: "error while saving the new payment log"
-          });
+        let comPaymentToken = await PaymentToken.findOne({
+          txn_hash: txReceipt.transactionHash
+        });
+        if (comPaymentToken == null) {
+          res.json({ error: "Internal error", status: false });
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Fatal error for user ${req.user.email}`,
+            `Fatal error occured while finding the tokne for transaction hash: ${txReceipt.transactionHash} for user ${req.user.email}`
+          );
           return;
         }
+
+        comPaymentToken.status = "pending";
+        comPaymentToken.tokenAmt = decodedMethod.params[1].value.toString();
+        await comPaymentToken.save();
+        // let newPaymentXdce = newPaymentToken();
+        // newPaymentXdce.payment_id = uuidv4();
+        // newPaymentXdce.email = req.user.email;
+        // newPaymentXdce.creationDate = Date.now();
+        // newPaymentXdce.txn_hash = txn_hash;
+        // newPaymentXdce.course = course;
+        // newPaymentXdce.tokenName = XDCE;
+        // newPaymentXdce.price = coursePrice.priceUsd;
+        // newPaymentXdce.tokenAmt = xdcePrice + "";
+        // newPaymentXdce.status = "pending";
+        // newPaymentXdce.autoBurn = toAutoBurn; // capture trhe status of autoburn at the moment, this will be forwarded.
+        // try {
+        //   await newPaymentXdce.save();
+        // } catch (e) {
+        //   console.error(`Some error occured while saving the payment log: `, e);
+        //   TxMinedListener = clearInterval(TxMinedListener);
+        //   res.json({
+        //     status: false,
+        //     error: "error while saving the new payment log"
+        //   });
+        //   return;
+        // }
         TxMinedListener = clearInterval(TxMinedListener);
         res.json({ status: true, error: null });
         eventEmitter.emit(
@@ -815,7 +858,7 @@ exports.payViaXdce = async (req, res) => {
     await emailer.sendMail(
       process.env.SUPP_EMAIL_ID,
       `Re-embursement for user ${req.user.email}`,
-      `Some error occured at payment.payViaXdce. Payment mode was via XDCe. Payment transaction hash: ${txn_hash}`
+      `Some error occured at payment.payViaXdce. Payment mode was via XDCe. Payment transaction hash: ${req.body.txn_hash}`
     );
     res.json({ status: false, error: "Internal error" });
   }
@@ -868,6 +911,52 @@ exports.payViaXdce = async (req, res) => {
   // }, 1000);
 };
 
+exports.wrapCoinMarketCap = async (req, res) => {
+  try {
+    const currXinPrice = await axios.get(coinMarketCapAPI);
+    return res.json({ data: currXinPrice.data, status: true, error: null });
+  } catch (e) {
+    console.error("Some error occured while getting currentXinPrice: ", e);
+    return res.json({ data: null, status: false, error: "Internal errro" });
+  }
+};
+
+exports.getUserPendingTx = async (req, res) => {
+  try {
+    const getAllPending = await PaymentToken.find({
+      email: req.user.email,
+      status: { $ne: "completed" }
+    });
+    return res.json({ error: null, status: true, data: getAllPending });
+  } catch (e) {
+    console.error(
+      "Some error occured while fetching the pending payments of user."
+    );
+    return res.json({ error: "internal error", status: false, data: null });
+  }
+};
+
+exports.getPaymentsToNotify = async (req, res) => {
+  console.log("called getPaymentsToNotify");
+  try {
+    let pendingNotification = await Notification.find({
+      email: req.user.email,
+      displayed: false
+    });
+    for (let i = 0; i < pendingNotification.length; i++) {
+      pendingNotification[i].displayed = true;
+      pendingNotification[i].save();
+    }
+    return res.json({ notis: pendingNotification, status: true, error: false });
+  } catch (e) {
+    console.error(
+      "Some exception has occured while fethcing pending notifications at payment.getpaymentsToNotify: ",
+      e
+    );
+    return res.json({ status: false, error: "internal error", notis: false });
+  }
+};
+
 function newPaymentToken() {
   return new PaymentToken({
     payment_id: "",
@@ -905,4 +994,16 @@ async function getXinEquivalent(amnt) {
     );
     return -1;
   }
+}
+
+function newDefNoti() {
+  return new Notification({
+    email: "",
+    eventName: "",
+    eventId: "",
+    type: "",
+    title: "",
+    message: "",
+    displayed: false
+  });
 }
