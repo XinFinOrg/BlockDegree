@@ -983,7 +983,7 @@
               // result is transaction hash
               
               const modTitle = "<strong>Transaction Submitted Successfully</strong>";
-              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyDivContent('pending_txHash')" >Click</button> to copy hash`;
+              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyTextToClipboard('pending_txHash')" >Click</button> to copy hash`;
               
               openModal("modal-info",modTitle,modBody);
 
@@ -999,7 +999,7 @@
                 success: resp => {
                   if (resp.status) {                    
                     const modTitle = "<strong>Transaction Received Successfully</strong>";
-                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='display:none' id='confirmed_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a>. Click on link to view on etherscan.`;
+                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a>. Click on link to view on etherscan.`;
                     openModal("modal-success",modTitle,modBody);
                     $.notifyClose('bottom-right')
                     return;
@@ -1007,7 +1007,7 @@
                     // something went wrong, ask to store tx & mail to info@blockdegree.org
                    
                     const modTitle = "<strong>Some Error Occured</strong>";
-                    const modBody = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyDivContent('confirmed_err_txHash')" >Click</button> to copy hash`;
+                    const modBody = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<strong>${result.toString().slice(0,11)}...</strong> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
                     openModal("modal-warning",modTitle,modBody);
                     $.notifyClose('bottom-right')
                   }
@@ -1194,22 +1194,35 @@
     }
   }
 
-  function copyDivContent(containerid) {
-    console.log(containerid);
-    if (document.selection) { 
-    var range = document.body.createTextRange();
-    range.moveToElementText(document.getElementById(containerid));
-    range.select().createTextRange();
-    document.execCommand("copy"); 
+function fallbackCopyTextToClipboard(text) {
+  var textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
 
-} else if (window.getSelection) {
-    var range = document.createRange();
-     range.selectNode(document.getElementById(containerid));
-     window.getSelection().addRange(range);
-     document.execCommand("copy");
-}
-                    $.notify("Copied")
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Fallback: Copying text command was ' + msg);
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
   }
+
+  document.body.removeChild(textArea);
+}
+function copyTextToClipboard(containerId) {
+  let text = document.getElementById(containerId).innerHTML;
+  if (!navigator.clipboard) {
+    fallbackCopyTextToClipboard(text);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Async: Copying to clipboard was successful!');
+  }, function(err) {
+    console.error('Async: Could not copy text: ', err);
+  });
+}
   
   function openModal(modalType,modalTitle,modalBody){
       // check if a modal is already open, then wait forthe modal to close.

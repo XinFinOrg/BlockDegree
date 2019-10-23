@@ -555,7 +555,7 @@ exports.payViaXdce = async (req, res) => {
     const course = req.body.course;
     let price = req.body.price;
     console.log("Called the function PayViaXdce");
-    console.log("Hash: ", txn_hash, "typeof: ", typeof txn_hash);
+    console.log("Hash: ", txn_hash);
     const coursePrice = await CoursePrice.findOne({ courseId: course });
     let fullPrice = coursePrice.priceUsd;
     const discObj = await promoCodeService.usePromoCode(req);
