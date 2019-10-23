@@ -220,7 +220,6 @@
 
   let allModals=[];
   const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
-  {{!-- const coinMarketCapUrl = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/"; --}}
     const coinMarketCapUrl = "/api/wrapCoinMarketCap";
   const etherScanIo = "https://etherscan.io/tx/";
 
@@ -951,7 +950,7 @@
             };
             let xdcePrice = await getXinEquivalent(price)
             console.log("XDCe Price: ", xdcePrice)
-            $.ajax({
+            {{!-- $.ajax({
                   method: "post",
                   url: "/api/payViaXdce",
                   data: { txn_hash: "0x765c94643ff51bff83c97feca6b80044840b6b0298c02fbd17d9d600eac32148", course: course_id.id, price: price },
@@ -970,8 +969,8 @@
                     $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>$0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
                     return;
                   }
-                })
-            {{!-- xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", xdcePrice, tx, (err, result) => {
+                }) --}}
+            xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", xdcePrice, tx, (err, result) => {
               if (err != null) {
                 $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
                 return;
@@ -1015,7 +1014,7 @@
                 }
               })
               return;
-            }) --}}
+            }) 
 
           },
           error: xhr => {
@@ -1028,7 +1027,6 @@
       }
       else {
         // Looks like you're using some other web-extension as web3 provider. Please disable other web3 extensions like metamask, mist and enable only XinPay & then try again.
-        {{!-- $.notify("looks like you're on some other Network, please switch to network-id 1 aka <strong>ethereum mainnet</strong>", { type: "danger", delay: 5000 }); --}}
         const modTitle = "<strong>You're connected to wrong network</strong>";
         let modBody;
         if (typeof InstallTrigger !== "undefined") {
