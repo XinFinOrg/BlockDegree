@@ -40,6 +40,19 @@ $(document).ready(async function() {
     navLogin.setAttribute("href", "/logout");
     loginButton.style = "display:block";
     profileBtn.style = "display:block";
+
+    let pendingNotis = await fetch("/api/getUserNotis");
+    let pendingNotisJosn = await pendingNotis.json();
+    if (pendingNotisJosn.status){
+      console.log(pendingNotisJosn);
+      pendingNotisJosn.notis.forEach(noti => {
+        $.notify(
+          { title: "<strong>"+noti.title+"</strong>", message: noti.message },
+          { type: noti.type }
+        );
+      });
+    }
+
   } else {
     navLogin.innerHTML = "Login";
     navLogin.setAttribute("href", "/login");

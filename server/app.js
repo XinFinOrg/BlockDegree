@@ -1,18 +1,18 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var mongoose = require("mongoose");
-var passport = require("passport");
-var flash = require("connect-flash");
-var bodyParser = require("body-parser");
-var session = require("express-session");
-var hbs = require("express-handlebars");
-var cors = require("cors");
-var fs = require("fs");
-
-var app = express();
+let createError = require("http-errors");
+let express = require("express");
+let path = require("path");
+let cookieParser = require("cookie-parser");
+let logger = require("morgan");
+let mongoose = require("mongoose");
+let passport = require("passport");
+let flash = require("connect-flash");
+let bodyParser = require("body-parser");
+let session = require("express-session");
+let hbs = require("express-handlebars");
+let cors = require("cors");
+let fs = require("fs");
+let pendingTx = require("./listeners/pendingTx").em;
+let app = express();
 require("dotenv").config();
 mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true });
 require("./services/passport")(passport);
@@ -89,6 +89,7 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen("3000", () => {
+  pendingTx.emit("initiatePendingTx");
   console.log("server started");
 });
 

@@ -1,93 +1,447 @@
 <html>
-    <h1>
-        Don't fear, Admin is here.
-    </h1>
+        <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-    <p>
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-        <!-- Form for adding new promo-code -->
-        <form action="/admin/newPromoCode" method="POST">
-            <h3>Add Promo Code</h3>
-            <div>
-                CodeName : 
-                <input type="text" name="codeName" placeholder="enter the codename" >
-            </div>
-            <div>
-                Discount Amount : 
-                <input type="number" name="discAmt" placeholder="enter the discount amount" >
-            </div>
-            <div>
-                Purpose for new code : 
-                <input type="text" name="purpose" placeholder="enter the purpose" >
-            </div> 
-            <div>
-                Promo-code access ?<br>
-                <input type="radio" name="restricted" id="restricted" value="true">restricted<br>
-                <input type="radio" name="restricted" id="unrestricted" value="false">unrestricted
-            </div>
-            <input type="submit" value="OK">
-        </form>
-      
-    </p>
-    <p>
-        <!-- Form for making promo-code active -->
-        <form action="/admin/activatePromoCode" method="POST">
-            <h3>Activate Promo Code</h3>
-            <div>
-                CodeName : 
-                <input type="text" name="codeName" placeholder="enter the codename" >
-            </div>
-            <input type="submit" value="OK">
-        </form>
-    </p>
-    <p>
-            <!-- Form for making promo-code inactive -->
-            <form action="/admin/deactivatePromoCode" method="POST">
-                <h3>Deactivate Promo Code</h3>
-                <div>
-                    CodeName : 
-                    <input type="text" name="codeName" placeholder="enter the codename" >
-                </div>
-                <input type="submit" value="OK">
-            </form>
-        </p>     
-        
-        <p>
-            <!-- Form for making promo-code inactive -->
-            <form action="/admin/restrictPromoCode" method="POST">
-                <h3>Restrict Promo Code</h3>
-                <div>
-                    CodeName : 
-                    <input type="text" name="codeName" placeholder="enter the codename" >
-                </div>
-                <input type="submit" value="OK">
-            </form>
-        </p>  
-        
-        <p>
-            <!-- Form for making promo-code inactive -->
-            <form action="/admin/unrestrictPromoCode" method="POST">
-                <h3>Un-Restrict Promo Code</h3>
-                <div>
-                    CodeName : 
-                    <input type="text" name="codeName" placeholder="enter the codename" >
-                </div>
-                <input type="submit" value="OK">
-            </form>
-        </p> 
-        <p>
-            <!-- Form for making promo-code inactive -->
-            <form action="/admin/addAllowedUser" method="POST">
-                <h3>Allow User for restricted Promo Code</h3>
-                <div>
-                    User email : 
-                    <input type="text" name="email" placeholder="enter the user email" >
-                </div>
-                <div>
-                    CodeName : 
-                    <input type="text" name="codeName" placeholder="enter the codename" >
-                </div>
-                <input type="submit" value="OK">
-            </form>
-        </p>   
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+                <style>
+                  body {
+                    font-family: "Lato", sans-serif;
+                  }
+            
+                  table {
+                    font-size: 15px;
+                    width: 100%;
+                    text-align: center;
+                  }
+            
+                  .sidenav {
+                    height: 100%;
+                    width: 200px;
+                    position: fixed;
+                    z-index: 1;
+                    top: 0;
+                    left: 0;
+                    background-color: #111;
+                    overflow-x: hidden;
+                    padding-top: 20px;
+                  }
+            
+                  .sidenav div {
+                    padding: 6px 8px 6px 16px;
+                    text-decoration: none;
+                    font-size: 18px;
+                    color: white;
+                    display: block;
+                  }
+            
+                  .sidenav div:hover {
+                    color: #f1f1f1;
+                    background-color: #818181;
+                    cursor: pointer;
+                  }
+            
+                  th {
+                    white-space: nowrap;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    background-color: #4caf50;
+                    color: white;
+                  }
+                  tr:hover {
+                    background-color: #ddd;
+                  }
+            
+                  .main {
+                    margin-left: 230px;
+                    padding: 0px 10px;
+                  }
+            
+                  @media screen and (max-height: 450px) {
+                    .sidenav {
+                      padding-top: 15px;
+                    }
+                    .sidenav div {
+                      font-size: 15px;
+                    }
+                  }
+                </style>
+              </head>
+              <body>
+                    <div class="sidenav">
+                            <div onclick="openPage('promoCode')">PromoCode</div>
+                            <div onclick="openPage('course_payment')">Course Payments</div>
+                          </div>
+                          <div class="main">
+                                <section class="main-section">
+                                        <div id="promoCode" class="tabcontent" style="display:none">
+                                                <p>
+                                                        <h1>Promo Codes</h1>
+                                                        <!-- Form for adding new promo-code -->
+                                                        <form action="/admin/newPromoCode" method="POST">
+                                                            <h3>Add Promo Code</h3>
+                                                            <div>
+                                                                CodeName : 
+                                                                <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
+                                                            </div>
+                                                            <div>
+                                                                Discount Amount : 
+                                                                <input class="form-control" type="number" name="discAmt" placeholder="enter the discount amount" >
+                                                            </div>
+                                                            <div>
+                                                                Purpose for new code : 
+                                                                <input class="form-control" type="text" name="purpose" placeholder="enter the purpose" >
+                                                            </div> 
+                                                            <div>
+                                                                Promo-code access ?<br>
+                                                                <input type="radio" name="restricted" id="restricted" value="true"><label for="restricted">&nbsp;Restricted</label>&nbsp;&nbsp;&nbsp;
+                                                                <input type="radio" name="restricted" id="unrestricted" value="false"><label for="unrestricted">&nbsp;Unrestricted</label>
+                                                            </div>
+                                                            <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
+                                                        </form>
+                                                      
+                                                    </p>
+                                                    <p>
+                                                        <!-- Form for making promo-code active -->
+                                                        <form action="/admin/activatePromoCode" method="POST">
+                                                            <h3>Activate Promo Code</h3>
+                                                            <div>
+                                                                CodeName : 
+                                                                <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
+                                                            </div>
+                                                            <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
+                                                        </form>
+                                                    </p>
+                                                    <p>
+                                                            <!-- Form for making promo-code inactive -->
+                                                            <form action="/admin/deactivatePromoCode" method="POST">
+                                                                <h3>Deactivate Promo Code</h3>
+                                                                <div>
+                                                                    CodeName : 
+                                                                    <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
+                                                                </div>
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
+                                                            </form>
+                                                        </p>     
+                                                        
+                                                        <p>
+                                                            <!-- Form for making promo-code inactive -->
+                                                            <form action="/admin/restrictPromoCode" method="POST">
+                                                                <h3>Restrict Promo Code</h3>
+                                                                <div>
+                                                                    CodeName : 
+                                                                    <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
+                                                                </div>
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
+                                                            </form>
+                                                        </p>  
+                                                        
+                                                        <p>
+                                                            <!-- Form for making promo-code inactive -->
+                                                            <form action="/admin/unrestrictPromoCode" method="POST">
+                                                                <h3>Un-Restrict Promo Code</h3>
+                                                                <div>
+                                                                    CodeName : 
+                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                </div>
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
+                                                            </form>
+                                                        </p> 
+                                                        <p>
+                                                            <!-- Form for making promo-code inactive -->
+                                                            <form action="/admin/addAllowedUser" method="POST">
+                                                                <h3>Allow User for restricted Promo Code</h3>
+                                                                <div>
+                                                                    User email : 
+                                                                    <input class="form-control" type="text" name="email" placeholder="enter the user email" >
+                                                                </div>
+                                                                <div>
+                                                                    CodeName : 
+                                                                    <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
+                                                                </div>
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
+                                                            </form>
+                                                        </p>   
+                                        </div>
+                                        <div id="course_payment" class="tabcontent" style="display:none">
+                                                <h1>Course Payments - tread carefully </h1>
+                                                <div>
+                                                    <h4>Register New Course</h4>
+                                                    <input class="form-control" class="form-control" id="new_course_id" placeholder="Enter the course ID"/>
+                                                    <input class="form-control" class="form-control" id="new_course_name" placeholder="Enter the course name" />
+                                                    <input class="form-control" class="form-control" id="new_course_priceUsd" placeholder="Enter the price in USD"/>
+                                                    <input class="form-control" class="form-control" id="new_course_xdceTolerance" placeholder="Enter the XDCe tolerance ( in percentage ) "/>
+                                                    <input class="form-control" class="form-control" id="new_course_xdcTolerance" placeholder="Enter the XDC tolerance ( in percentage ) " />
+                                                    <input class="form-control" class="form-control" id="new_course_xdceConfirmation" placeholder="Enter the XDCe Confirmations ( in blocks ) " />
+                                                    <input class="form-control" class="form-control" id="new_course_xdcConfirmation" placeholder="Enter the XDC Confirmations ( in blocks ) " />
+                                                    <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="newCourse()">New Course</button>
+                                                </div><br/>                                                
+                                                <div>
+                                                <h4>Set Price Usd For Course</h4>
+                                                        <input class="form-control" class="form-control" id="setPrice_course_id" placeholder="Enter the course ID"/>
+                                                        <input class="form-control" class="form-control" id="setPrice_course_priceUsd" placeholder="Enter the price in USD"/>
+                                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setPriceUsd()">Set Price in USD</button>
+                                                </div><br/>
+                                                <div>
+                                                        <h4>Set XdceTolerance For Course</h4>
+                                                                <input class="form-control" class="form-control" id="setTolXdce_course_id" placeholder="Enter the course ID"/>
+                                                                <input class="form-control" class="form-control" id="setTolXdce_course_tol" placeholder="Enter the XDCE tolerance in percentage"/>
+                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setToleranceXdce()">Set XDCe Tolerance</button>
+                                                        </div><br/>
+                                                        <div>
+                                                                <h4>Set XdcTolerance For Course</h4>
+                                                                        <input class="form-control" class="form-control" id="setTolXdc_course_id" placeholder="Enter the course ID"/>
+                                                                        <input class="form-control" class="form-control" id="setTolXdc_course_tol" placeholder="Enter the XDC tolerance in percentage"/>
+                                                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setToleranceXdc()">Set XDC Tolerance</button>
+                                                                </div><br/>
+                                                                <div>
+                                                                        <h4>Set Xdce Confirmations For Course</h4>
+                                                                                <input class="form-control" class="form-control" id="setConXdce_course_id" placeholder="Enter the course ID"/>
+                                                                                <input class="form-control" class="form-control" id="setConXdce_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
+                                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setConfirmationsXdce()">Set XDCe Confirmations</button>
+                                                                        </div><br/>
+                                                                        <div>
+                                                                                <h4>Set Xdc Confirmations For Course</h4>
+                                                                                        <input class="form-control" class="form-control" id="setConXdc_course_id" placeholder="Enter the course ID"/>
+                                                                                        <input class="form-control" class="form-control" id="setConXdc_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
+                                                                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setConfirmationsXdc()">Set XDC Confirmations</button>
+                                                                                </div><br/>
+                                                                                <div>
+                                                                                    <h4>Set Token Burn Percent For Course</h4>
+                                                                                            <input class="form-control" class="form-control" id="setBurnPer_course_id" placeholder="Enter the course ID"/>
+                                                                                            <input class="form-control" class="form-control" id="setBurnPer_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                            <input class="form-control" class="form-control" id="setBurnPer_course_burnPercent" placeholder="Enter the Token Burn Percent"/>
+                                                                                            <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setTokenBurnPercent()">Set Burn Percent</button>
+                                                                                    </div><br/>
+                                                                                    <div>
+                                                                                        <h4>Enable Burning For Course</h4>
+                                                                                                <input class="form-control" class="form-control" id="enableBurn_course_id" placeholder="Enter the course ID"/>
+                                                                                                <input class="form-control" class="form-control" id="enableBurn_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="enableBurning()">Enable Burning</button>
+                                                                                        </div><br/>
+                                                                                        <h4>Disable Burning For Course</h4>
+                                                                                                <input class="form-control" class="form-control" id="disableBurn_course_id" placeholder="Enter the course ID"/>
+                                                                                                <input class="form-control" class="form-control" id="disableBurn_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="disableBurning()">Disable Burning</button>
+                                                                                        </div><br/>
+                                                                                        
+                                        </div>
+                                    </section>
+                          </div>                    
+              </body>
+
+        <script>
+            function openPage(pageName) {
+                let allTabContent = document.getElementsByClassName("tabcontent");
+                for (let i = 0; i < allTabContent.length; i++) {
+                    allTabContent[i].style.display = "none";
+                }
+                document.getElementById(pageName).style.display = "block";
+            }
+
+            function newCourse() {
+
+                const courseId = document.getElementById("new_course_id").value.trim();
+                const courseName = document.getElementById("new_course_name").value.trim();
+                const coursePriceUsd = document.getElementById("new_course_priceUsd").value.trim();
+                const courseXdcTolerance = document.getElementById("new_course_xdcTolerance").value.trim();
+                const courseXdceTolerance = document.getElementById("new_course_xdceTolerance").value.trim();
+                const courseXdceConfirmation = document.getElementById("new_course_xdceConfirmation").value.trim();
+                const courseXdcConfirmation = document.getElementById("new_course_xdcConfirmation").value.trim();
+
+                if (courseId == "" || courseName == "" || coursePriceUsd == "" || courseXdcTolerance == "" || courseXdceTolerance == "" || courseXdceConfirmation == "" || courseXdcConfirmation == ""){
+                    alert("Invalid parameters");
+                    return;
+                }
+
+                $.ajax({
+                    method:"post",
+                    url:"/api/addCourse",
+                    data : {courseId : courseId,courseName:courseName,coursePriceUsd:coursePriceUsd,xdcTolerance:courseXdcTolerance,xdceTolerance:courseXdceTolerance,xdceConfirmation:courseXdceConfirmation, xdcConfirmation:courseXdcConfirmation},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setPriceUsd() {
+                const courseId = document.getElementById("setPrice_course_id").value.trim();
+                const coursePriceUsd = document.getElementById("setPrice_course_priceUsd").value.trim();
+                if (courseId == "" || coursePriceUsd == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setPriceUsd",
+                    data : {courseId : courseId,coursePriceUsd:coursePriceUsd},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setToleranceXdce() {
+                const courseId = document.getElementById("setTolXdce_course_id").value.trim();
+                const courseXdceTolerance = document.getElementById("setTolXdce_course_tol").value.trim();
+                if (courseId == "" || courseXdceTolerance == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdceTolerance",
+                    data : {courseId : courseId,xdceTolerance:courseXdceTolerance},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setToleranceXdc() {
+                const courseId = document.getElementById("setTolXdc_course_id").value.trim();
+                const courseXdcTolerance = document.getElementById("setTolXdc_course_tol").value.trim();
+                if (courseId == "" || courseXdcTolerance == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdcTolerance",
+                    data : {courseId : courseId,xdcTolerance:xdcTolerance},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setConfirmationsXdce() {
+                const courseId = document.getElementById("setConXdce_course_id").value.trim();
+                const xdceCons = document.getElementById("setConXdce_course_con").value.trim();
+                if (courseId == "" || xdceCons == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdceConfirmation",
+                    data : {courseId : courseId,xdceConfirmation:xdceCons},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setConfirmationsXdc() {
+                const courseId = document.getElementById("setConXdc_course_id").value.trim();
+                const xdcCons = document.getElementById("setConXdc_course_con").value.trim();
+                if (courseId == "" || xdcCons == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdcConfirmation",
+                    data : {courseId : courseId,xdcConfirmation:xdcCons},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setTokenBurnPercent(){
+                const courseId = document.getElementById("setBurnPer_course_id").value.trim();
+                const tokenName = document.getElementById("setBurnPer_course_tokenName").value.trim(); 
+                const burnPercent = document.getElementById("setBurnPer_course_burnPercent").value.trim(); 
+                if (courseId == "" || tokenName == "" || burnPercent == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setCourseBurnPercent",
+                    data : {courseId : courseId,tokenName:tokenName, burnPercent:burnPercent},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function enableBurning(){
+                const courseId = document.getElementById("enableBurn_course_id").value.trim();
+                const tokenName = document.getElementById("enableBurn_course_tokenName").value.trim(); 
+                if (courseId == "" || tokenName == ""){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/enableBurning",
+                    data : {courseId : courseId,tokenName:tokenName},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function disableBurning(){
+                const courseId = document.getElementById("disableBurn_course_id").value.trim();
+                const tokenName = document.getElementById("disableBurn_course_tokenName").value.trim(); 
+                if (courseId == "" || tokenName == ""){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/disableBurning",
+                    data : {courseId : courseId,tokenName:tokenName},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+            
+        </script>
 </html>

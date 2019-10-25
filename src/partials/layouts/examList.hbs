@@ -20,6 +20,13 @@
     margin-bottom: 5px;
   }
 </style>
+
+<div style="display: none;" id="wrapfabtest">
+    <div class="adBanner">This is a test&nbsp;
+    </div>
+</div>
+
+
 <div class="container__cstm">
   {{!-- This is exam list --}}
   <div>
@@ -81,11 +88,94 @@
               </div>
             </div>
 
-            <button onclick="pay({{this.type}},{{this.price}})" class="btn text-body btn-light mb-3"
+            <button onclick="handlePayment({{this.type}},{{this.price}})" class="btn text-body btn-light mb-3"
               data-price="{{this.price}}" id="{{this.type}}">
               ENROLL
             </button>
             <div class="promoCode-btn" id="{{this.type}}PromoCodeBtn">*Apply promo code</div>
+
+            <div id="btn-paymentModal{{this.type}}" style="display:none" data-toggle="modal"
+              data-target="#paymentModal{{this.type}}">
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="paymentModal{{this.type}}" tabindex="-1" role="dialog"
+              aria-labelledby="paymentModalTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header" >
+                    <h3 class="modal-title" style="margin-left:17% ;" id="exampleModalLongTitle">Please Select Payment Method</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <button type="button" class="btn-payment" onclick="payViaXdce({{this.type}},{{this.price}})"
+                      data-dismiss="modal"> Pay Via XDCe </button>
+                    {{!-- <button type="button" style="btn btn-primary" onclick="payViaXdc({{this.type}},{{this.price}})"
+                      data-dismiss="modal"> Pay Via XDC* </button> --}}
+                    <button type="button" class="btn-payment" onclick="pay({{this.type}},{{this.price}})"
+                      data-dismiss="modal">
+                      Pay Via PayPal </button>
+                  </div>
+                  {{!-- <div class="modal-footer">
+                    *<a href="https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo"
+                      target="_blank">XinPay</a> &nbsp; web-extension is required
+                  </div> --}}
+                </div>
+              </div>
+            </div>
+
+
+
+
+            <div id="btn-XinPayNotifier{{this.type}}" style="display:none" data-toggle="modal"
+              data-target="#XinPayNotifier{{this.type}}">
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="XinPayNotifier{{this.type}}" tabindex="-1" role="dialog"
+              aria-labelledby="XinPayNotifierTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="modal-title">XinPay</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div style="text-align: left;margin:10px">
+                    <p>
+                      Please note that in order to make a payment via XDC you need to have <a target="_blank"
+                        href="https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo"
+                        class="tooltip-test nobr" title="XinPay : XinFin's official web-extension">
+                        XinPay</a> -
+                      XinFin's official web-extension for payments installed.<br>
+                      If you have not installed it, please install it via this <a target="_blank"
+                        href="https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo"
+                        class="tooltip-test nobr" title="XinPay : XinFin's official web-extension">
+                        link</a>.
+                    </p>
+
+                    <p>
+                      <strong>Note:</strong> For smooth transaction please diable
+                      any other web3 providers like Metamask, etc., you can enable them later.
+                    </p>
+                  </div>
+
+                  <div class="modal-footer">
+
+                    <button type="button" data-dismiss="modal">Close</button>
+                    <buton type="button" onclick="launchXinPay({{this.type}},{{this.price}})" data-dismiss="modal">Done
+                    </buton>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
             {{/if}}
 
           </div>
@@ -94,10 +184,51 @@
     </div>
     {{/each}}
 
+    <button id="btn-displayHashModal" type="button" style="display: none;" class="btn btn-primary" data-toggle="modal"
+      data-target="#displayHashModal">
+      Open modal
+    </button>
+
+    <!-- The Modal -->
+    <div class="modal fade" id="displayHashModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div id="modal-header-wrp" class="modal-header">
+            <h4 id="displayHashModal-title" class="modal-title">Title</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div id="displayHashModal-body" class="modal-body">
+            body
+          </div>
+
+          <!-- Modal footer -->
+          <div id="displayHashModal-footer" class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script type="text/javascript">
+
+  let allModals=[];
+  const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
+    const coinMarketCapUrl = "/api/wrapCoinMarketCap";
+  const etherScanIo = "https://etherscan.io/tx/";
+
+  $('document').ready(() => {    
+    $(document).ready(function(){    
+});
+
+  })
 
   function takeExam(slug) {
 
@@ -120,6 +251,43 @@
         }
       }
     })
+  }
+
+  function handlePayment(course_id, price) {
+    console.log(`Course ID: ${course_id} & Price: ${price}`);
+    console.log(`Course ID: ${course_id.id} & Price: ${price}`);
+    const codeName = document.getElementById(course_id.id + "codeName").value;
+    console.log(codeName)
+    if (codeName.trim().length == 0) {
+      // no promo code used
+      $(`#btn-paymentModal${course_id.id}`).click();
+    } else {
+      $.ajax({
+        url: "/api/checkCode",
+        method: "post",
+        data: { codeName: codeName },
+        success: (result) => {
+          console.log(result);
+          if (result.error == null) {
+            console.log("alright")
+            const finalAmt = Math.round((parseFloat(price) - parseFloat(result.discAmt)) * 100) / 100;
+            if (finalAmt <= 0){
+              pay(course_id,price);
+              return;
+            }else{
+            // Not a free course load the Payment Modal
+            $(`#btn-paymentModal${course_id.id}`).click();
+            }            
+          }
+          else {
+            $.notify(result.error, { type: "danger" })
+          }
+        },
+        error: xhr => {
+          $.notify(xhr.statusText, { type: "danger" })
+        }
+      })
+    }
   }
 
   function pay(course_id, price) {
@@ -147,6 +315,825 @@
     });
   }
 
+  async function payViaXdc(course_id, price) {
+    // check if the 
+    // need to check if the user is logged in.
+
+    if (typeof InstallTrigger !== "undefined") {
+      $.notify("This feature is only available for Chrome users for now, we'll support FireFox shortly", { type: "danger" })
+      return;
+    }
+    else if (!!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
+      $(`#btn-XinPayNotifier${course_id.id}`).click();
+    }
+    else {
+      // proper browser
+      $.notify("This feature is not available in this browser, please try again using Chrome browser", { type: "danger" })
+      return;
+
+    }
+  }
+
+  function payViaXdce(course_id, price) {
+    if (web3 == undefined) {
+      // no web3 provider is available, ask to install XinPay
+
+    if (typeof InstallTrigger !== "undefined") {
+      $.notify("Please install <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
+      return;
+    }
+    else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
+      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
+      return;
+    }
+    else{
+      $.notify("This feature is not available in this browser, please try again using Chrome browser or Firefox", { type: "danger" })
+      return;
+    }
+
+
+    }
+
+    if (web3.eth.accounts.length<=0){
+      // not logged in
+      if (typeof InstallTrigger !== "undefined") {
+      $.notify(`Please login and connect your <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> extension, if you've already done that please <a onclick="window.location.reload()">refresh</a>`,{delay:5000})
+      return;
+    }
+    else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
+      $.notify(`Please login and connect your <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> extension, if you've already done that please <a onclick="window.location.reload()">refresh</a>`,{delay:5000})
+      return;
+    }
+    }
+
+    web3.version.getNetwork((err, providerNetworkId) => {
+      if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
+
+      if (providerNetworkId == 1) {
+        // is on ethereum mainnet; all ok
+        $.ajax({
+          method: "get",
+          url: coinMarketCapUrl,
+          success: async respWhole => {
+            let response = respWhole.data;
+            if (!response[0].price_usd) {
+              // New format? 
+              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
+              return;
+            }
+            const priceUsd = parseFloat(response[0].price_usd);
+            const codeName = document.getElementById(course_id.id + "codeName").value;
+            try {
+              const codeResp = await $.ajax({
+                method: "post",
+                url: "/api/checkCode",
+                data: { codeName: codeName }
+              })
+              if (codeResp.error == null) {
+                price = Math.round((parseFloat(price) - parseFloat(codeResp.discAmt)) * 100) / 100;
+              }
+              if (price <= 0) price = 0;
+            } catch (e) {
+              console.error(e)
+            }
+            console.log(`Price after discount: ${price}`);
+            if (price == 0) {
+              // free course
+              try{
+              const respFree = await $.ajax({
+                method: "post",
+                url: "/api/payViaXdce",
+                data: { course: course_id.id, price: price }
+              });
+              if (!respFree.status){
+                $.notify(respFree.error,{type:"danger"});
+                return;
+              }
+              alert("Your Course has been availed for free !!");
+              window.location.reload();
+              return;              
+              }
+              catch(e){
+                  $.notify("Some error occured while making the request, please try again after sometime or contact <strong>info@blockdegree.org</strong>", { type: "danger" });
+
+              }
+            }
+            const coursePriceXdce = parseFloat(price) / (10000 * priceUsd) // dividend of 10000 for testing
+            console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdce}`)
+            await ethereum.enable();
+
+            const xdceAddrMainnet = "0x41ab1b6fcbb2fa9dced81acbdec13ea6315f2bf2";
+            const xdceABI = [
+              {
+                constant: false,
+                inputs: [
+                  { name: "_name", type: "string" },
+                  { name: "_symbol", type: "string" }
+                ],
+                name: "updateTokenInformation",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "addr", type: "address" },
+                  { name: "state", type: "bool" }
+                ],
+                name: "setTransferAgent",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "name",
+                outputs: [{ name: "", type: "string" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_spender", type: "address" },
+                  { name: "_value", type: "uint256" }
+                ],
+                name: "approve",
+                outputs: [{ name: "success", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_tokensForPublicSale", type: "uint256" },
+                  { name: "_min", type: "uint256" },
+                  { name: "_max", type: "uint256" },
+                  { name: "_crowdsaleStatus", type: "bool" }
+                ],
+                name: "setPublicSaleParams",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_value", type: "uint256" }],
+                name: "setTotalTokensForPublicSale",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "totalSupply",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_from", type: "address" },
+                  { name: "_to", type: "address" },
+                  { name: "_value", type: "uint256" }
+                ],
+                name: "transferFrom",
+                outputs: [{ name: "success", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "addr", type: "address" }],
+                name: "setReleaseAgent",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "destroyToken",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "decimals",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_min", type: "uint256" },
+                  { name: "_max", type: "uint256" }
+                ],
+                name: "setMinAndMaxEthersForPublicSale",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "value", type: "uint256" }],
+                name: "upgrade",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "isCrowdsaleOpen",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "upgradeAgent",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "releaseTokenTransfer",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "upgradeMaster",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_value", type: "uint256" }],
+                name: "updateTokenPrice",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [{ name: "_owner", type: "address" }],
+                name: "balanceOf",
+                outputs: [{ name: "balance", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "acceptOwnership",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "getUpgradeState",
+                outputs: [{ name: "", type: "uint8" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [{ name: "", type: "address" }],
+                name: "transferAgents",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_investor", type: "address" },
+                  { name: "_tokens", type: "uint256" }
+                ],
+                name: "sendTokensToInvestors",
+                outputs: [{ name: "ok", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "owner",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "symbol",
+                outputs: [{ name: "", type: "string" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "released",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "canUpgrade",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "value", type: "uint256" }],
+                name: "decreaseSupply",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "a", type: "uint256" }, { name: "b", type: "uint256" }],
+                name: "safeSub",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_to", type: "address" },
+                  { name: "_value", type: "uint256" }
+                ],
+                name: "transfer",
+                outputs: [{ name: "success", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "value", type: "uint256" }],
+                name: "increaseSupply",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "stopCrowdSale",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "totalUpgraded",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [
+                  { name: "_addresses", type: "address[]" },
+                  { name: "_value", type: "uint256[]" }
+                ],
+                name: "dispenseTokensToInvestorAddressesByValue",
+                outputs: [{ name: "ok", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "a", type: "uint256" }, { name: "b", type: "uint256" }],
+                name: "safeMul",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "buyTokens",
+                outputs: [{ name: "tokenAmount", type: "uint256" }],
+                payable: true,
+                stateMutability: "payable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "releaseAgent",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "newOwner",
+                outputs: [{ name: "", type: "address" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "agent", type: "address" }],
+                name: "setUpgradeAgent",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_newSupply", type: "uint256" }],
+                name: "updateOnSaleSupply",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [
+                  { name: "_owner", type: "address" },
+                  { name: "_spender", type: "address" }
+                ],
+                name: "allowance",
+                outputs: [{ name: "remaining", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: true,
+                inputs: [],
+                name: "onSaleTokens",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "view",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "a", type: "uint256" }, { name: "b", type: "uint256" }],
+                name: "safeAdd",
+                outputs: [{ name: "", type: "uint256" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_tokens", type: "uint256" }],
+                name: "sendTokensToOwner",
+                outputs: [{ name: "ok", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [],
+                name: "startCrowdSale",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "_newOwner", type: "address" }],
+                name: "transferOwnership",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                constant: false,
+                inputs: [{ name: "master", type: "address" }],
+                name: "setUpgradeMaster",
+                outputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function"
+              },
+              {
+                inputs: [],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "constructor"
+              },
+              { payable: true, stateMutability: "payable", type: "fallback" },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: false, name: "newName", type: "string" },
+                  { indexed: false, name: "newSymbol", type: "string" }
+                ],
+                name: "UpdatedTokenInformation",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: true, name: "_from", type: "address" },
+                  { indexed: true, name: "_to", type: "address" }
+                ],
+                name: "OwnershipTransferred",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: true, name: "_from", type: "address" },
+                  { indexed: true, name: "_to", type: "address" },
+                  { indexed: false, name: "_value", type: "uint256" }
+                ],
+                name: "Upgrade",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [{ indexed: false, name: "agent", type: "address" }],
+                name: "UpgradeAgentSet",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: true, name: "from", type: "address" },
+                  { indexed: true, name: "to", type: "address" },
+                  { indexed: false, name: "value", type: "uint256" }
+                ],
+                name: "Transfer",
+                type: "event"
+              },
+              {
+                anonymous: false,
+                inputs: [
+                  { indexed: true, name: "owner", type: "address" },
+                  { indexed: true, name: "spender", type: "address" },
+                  { indexed: false, name: "value", type: "uint256" }
+                ],
+                name: "Approval",
+                type: "event"
+              }
+            ]
+            let XDCeContract = web3.eth.contract(xdceABI);
+            let xdceInst = XDCeContract.at(xdceAddrMainnet);
+            console.log(web3.eth.defaultAccount)
+            console.log(web3.version.api);
+            let tx = {
+              to: xdceAddrMainnet
+            };
+            let xdcePrice = await getXinEquivalent(price)
+            console.log("XDCe Price: ", xdcePrice)
+            {{!-- $.ajax({
+                  method: "post",
+                  url: "/api/payViaXdce",
+                  data: { txn_hash: "0x765c94643ff51bff83c97feca6b80044840b6b0298c02fbd17d9d600eac32148", course: course_id.id, price: price },
+                  success: resp => {
+                    if (resp.status) {
+                      // all ok, ask to check profile after sometime.
+                      $.notify(`Your transaction has been successfully received by our servers, your order will be completed after it being comfirmed.`, { type: "success" });
+
+                      return;
+                    } else {
+                      // something went wrong, ask to store tx & mail to info@blockdegree.org
+                      $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                    }
+                  },
+                  error: xhr => {
+                    $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>$0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                    return;
+                  }
+                }) --}}
+            xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", xdcePrice, tx, (err, result) => {
+              if (err != null) {
+                $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
+                return;
+              }
+              // result is transaction hash
+              
+              const modTitle = "<strong>Transaction Submitted Successfully</strong>";
+              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a> <button onclick="copyTextToClipboard('pending_txHash')" >Click</button> to copy hash`;
+              
+              openModal("modal-info",modTitle,modBody);
+
+              $.notify("Transaction is <strong>pending</strong> . . .",{type:"warning",allow_dismiss:false,delay:Date.now(),placement: {
+                  from: 'bottom',
+                  align: 'right'
+                }});
+
+              $.ajax({
+                method: "post",
+                url: "/api/payViaXdce",
+                data: { txn_hash: result, course: course_id.id, price: price, codeName:codeName },
+                success: resp => {
+                  if (resp.status) {                    
+                    const modTitle = "<strong>Transaction Received Successfully</strong>";
+                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a>. Click on link to view on etherscan.`;
+                    openModal("modal-success",modTitle,modBody);
+                    $.notifyClose('bottom-right')
+                    return;
+                  } else {
+                    // something went wrong, ask to store tx & mail to info@blockdegree.org
+                   
+                    const modTitle = "<strong>Some Error Occured</strong>";
+                    const modBody = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
+                    openModal("modal-warning",modTitle,modBody);
+                    $.notifyClose('bottom-right')
+                  }
+                },
+                error: xhr => {
+                  $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>${result}</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
+                  $.notifyClose('bottom-right')
+                  return;
+                }
+              })
+              return;
+            }) 
+
+          },
+          error: xhr => {
+            
+              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay:10000 });
+              return;
+                       
+          }
+        })
+      }
+      else {
+        // Looks like you're using some other web-extension as web3 provider. Please disable other web3 extensions like metamask, mist and enable only XinPay & then try again.
+        const modTitle = "<strong>You're connected to wrong network</strong>";
+        let modBody;
+        if (typeof InstallTrigger !== "undefined") {
+          // firefox
+          modBody = "Inorder to make a payment via XDCe, your extension needs to be connected to the Ethereum Mainnet.<br/>Please open your web extension and connect to Ethereum Mainnet. If your extension does'nt support connection to ethereum mainnet, then please install a compatible extension like <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> & disable other incompatible wallets <br/>If you've switched to ethereum mainnet, please <a onclick='window.location.reload()'>refresh</a>."
+        }
+        else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)){
+          // chrome
+          modBody = "Inorder to make a payment via XDCe, your extension needs to be connected to the Ethereum Mainnet.<br/>Please open your web extension and connect to Ethereum Mainnet. If your extension does'nt support connection to ethereum mainnet, then please install a compatible extension like <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> & disable other incompatible wallets <br/>If you've switched to ethereum mainnet, please <a onclick='window.location.reload()'>refresh</a>."
+        }
+        openModal("modal-info",modTitle,modBody)
+        return;
+      }
+    })
+
+  }
+
+
+  // using 10000 as the divisor for testing purpose
+  async function launchXinPay(course_id, price) {
+    if (web3 == undefined) {
+      // no web3 provider is available, ask to install XinPay
+      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
+      return;
+    }
+
+    web3.version.getNetwork((err, providerNetworkId) => {
+      if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
+
+      if (providerNetworkId == 4) {
+        if (web3.eth.coinbase == undefined) {
+          $.notify("Please login & setup your <strong>XinPay</strong> web-extension to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
+          return;
+        }
+        // is on XinFin mainnet
+        $.ajax({
+          method: "get",
+          url: coinMarketCapUrl,
+          success: async respWhole => {
+            let response = respWhole.data
+            if (!response[0].price_usd) {
+              // New format? 
+              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
+              return;
+            }
+            const priceUsd = parseFloat(response[0].price_usd);
+            const coursePriceXdc = parseFloat(price) / (10000 * priceUsd)
+            console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
+            await ethereum.enable();
+
+            web3.eth.sendTransaction({ to: "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
+              if (err) {
+                console.error(err)
+                $.notify("<b>XinPay</b> : Some error while creating or processing this transaction.", { type: "danger" });
+                return;
+              }
+              else {
+                // transaction processed; lets register this tx on blockdegree.
+                console.log("Transaction Hash: ", result);
+                $.notify("The payment process has been initiated");
+                $.ajax({
+                  method: "post",
+                  url: "/api/payViaXdc",
+                  data: { course: course_id.id, price: (coursePriceXdc / 10000).toString(), txn_hash: result },
+                  success: response => {
+                    if (!response.status) {
+                      // Error, its ok.
+                      $.notify(`<b>Error</b> : ${response.error} `, { type: "danger" });
+                      return
+                    } else {
+                      alert(`Success : Your transaction is now approved & you're enolled in our course, your txn-hash is ${response.txnHash}.`);
+                      window.location.reload();
+                      return;
+                    }
+                  },
+                  error: xhr => {
+                    // YIKES, ask to copy txn & mail at info@blockdegree.org
+                    $.notify(`<b>Error</b> : Your txn was processed, but something went from our side. Don't worry, just send a mail to <strong>info@blockdegree.org</strong> with your tx hash.`, { type: "success" });
+                    return;
+                  }
+                })
+              }
+
+            })
+          },
+          error: xhr => {
+            
+              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay:10000 });
+              return;
+             
+          }
+        })
+      }
+      else if (providerNetworkId == 51) {
+        // User is on Apothem
+        $.notify("Looks like your wallet is on XinFin Apothem Network, please switch to XinFin Mainnet to make payment, if already did please <a onclick='window.location.reload()'>refresh</a>", { type: "danger", delay: 5000 });
+        return;
+      }
+      else {
+        // Looks like you're using some other web-extension as web3 provider. Please disable other web3 extensions like metamask, mist and enable only XinPay & then try again.
+        $.notify("Looks like you're using some other web-extension as web3 provider. Please <b>disable</b> other web3 extensions like <b>Metamask</b>, <b>Mist</b> and enable only <b>XinPay</b> & then try again, if already did please <a onclick='window.location.reload()'>refresh</a>", { type: "danger", delay: 5000 });
+        return;
+      }
+    })
+  }
+
   function checkCode(course_id, price) {
     const codeName = document.getElementById(course_id.id + "codeName").value;
     $.ajax({
@@ -170,6 +1157,107 @@
         }
       }
     })
+  }
+
+  async function getXinEquivalent(amnt) {
+    try {
+      const respWhole = await $.ajax({ method: "get", url: coinMarketCapUrl });      
+      const currXinPrice = respWhole.data;
+      console.log(currXinPrice);
+      console.log("Response from CMC: ", currXinPrice)
+      if (currXinPrice[0] != undefined || currXinPrice[0] != undefined) {
+        const retPrice = (parseFloat(amnt) / (parseFloat(currXinPrice[0].price_usd) * divisor)) * Math.pow(10, 18);
+        console.log("ret price: ", retPrice)
+        return (
+          retPrice
+        );
+      }
+    } catch (e) {
+      
+              console.error(
+        "Some error occurred while making or processing call from CoinMarketCap", e
+      );
+      return -1;
+                 
+    }
+  }
+
+function fallbackCopyTextToClipboard(text) {
+  var textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Fallback: Copying text command was ' + msg);
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
+  }
+
+  document.body.removeChild(textArea);
+}
+function copyTextToClipboard(containerId) {
+  let text = document.getElementById(containerId).innerHTML;
+  if (!navigator.clipboard) {
+    fallbackCopyTextToClipboard(text);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Async: Copying to clipboard was successful!');
+  }, function(err) {
+    console.error('Async: Could not copy text: ', err);
+  });
+}
+  
+  function openModal(modalType,modalTitle,modalBody){
+      // check if a modal is already open, then wait forthe modal to close.
+      allModals.push({modalType:modalType,modalTitle:modalTitle,modalBody:modalBody});      
+      if (allModals.length > 1) {
+        console.log("modal is open");
+      }
+      else{
+        // directly show
+        const hashModalTitle = document.getElementById("displayHashModal-title");
+        const hashModalBody = document.getElementById("displayHashModal-body");
+        setModalType(modalType);
+        hashModalTitle.innerHTML = modalTitle;
+        hashModalBody.innerHTML = modalBody;
+        document.getElementById("btn-displayHashModal").click();
+        console.log($('#displayHashModal').hasClass('in'));
+        console.log($('#displayHashModal').is(':visible'));
+      }           
+  }
+
+  $('#displayHashModal').on('hidden.bs.modal', function (e) {
+    console.log(e);
+    allModals.shift();
+    if (allModals.length > 0){
+      let firstModal = allModals[0];
+      const hashModalTitle = document.getElementById("displayHashModal-title");
+      const hashModalBody = document.getElementById("displayHashModal-body");
+      setModalType(firstModal.modalType);
+      hashModalTitle.innerHTML = firstModal.modalTitle;
+      hashModalBody.innerHTML = firstModal.modalBody;
+      document.getElementById("btn-displayHashModal").click();
+    }            
+  })
+
+  function setModalType(modalType) {
+    // remove all
+    $("#modal-header-wrp").removeClass("modal-success");
+    $("#modal-header-wrp").removeClass("modal-warning");
+    $("#modal-header-wrp").removeClass("modal-info");
+
+    $("#displayHashModal-footer").removeClass('modal-success');
+    $("#displayHashModal-footer").removeClass('modal-warning');
+    $("#displayHashModal-footer").removeClass('modal-info');
+
+    // add modalType
+    $("#modal-header-wrp").addClass(modalType);
+    $("#displayHashModal-footer").addClass(modalType);
   }
 
 </script>

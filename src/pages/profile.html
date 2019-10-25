@@ -82,7 +82,7 @@
           </table>
         </div>
 
-        <h3 class="profile-subHeading mt-5">Payment Details</h3>
+        <h3 class="profile-subHeading mt-5">Course Enrollment Details</h3>
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
@@ -110,6 +110,28 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <h3 id="payment-via-tokens" class="profile-subHeading mt-5">
+          Payment Via Tokens
+        </h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Payment Token</th>
+                <th>Transaction Hash</th>
+                <th>Status</th>
+                <th>Burn Transaction Hash</th>
+              </tr>
+            </thead>
+            <tbody id="tokenPayment-tbody"></tbody>
+          </table>
+          <div
+            style="background-color:lightsteelblue;"
+            id="tokenPayment-tfooter"
+          ></div>
         </div>
       </div>
 
@@ -243,9 +265,18 @@
 {{/inline}}
 {{#*inline "scripts-block"}}
 
-
 <script src="js/profile.js?v=1.2"></script>
 <script>
+  let allPendingTransaction = [];
+  let pendingEventListener;
+  let listeningForPending = false;
+  $("document").ready(() => {
+    fetchCryptoTransactions();
+    setTimeout(() => {
+      fetchCryptoTransactions();
+    }, 3000);
+  });
+
   $("#modalConfirmName").on("hidden.bs.modal", function() {
     document.getElementById("edit-profile-btn").click();
     document.getElementById("edit_name").focus();
@@ -314,6 +345,171 @@
           "https://www.blockdegree.org/closeCallback";
       }
     }, 1000);
+  }
+
+  function fetchCryptoTransactions() {
+    console.log("called crypto transactions");
+    const etherScanIo = "https://etherscan.io/tx/";
+    const tableBody = document.getElementById("tokenPayment-tbody");
+    const tableFooter = document.getElementById("tokenPayment-tfooter");
+    $.ajax({
+      method: "get",
+      url: "/api/getUserCryptoPayment",
+      success: result => {
+        if (!result.status) {
+          console.error("Error in /api/getUserCryptoPayment: ", result);
+          $.notify(
+            "Error occured while fetching your payments via cryptocurrencies",
+            { type: "danger" }
+          );
+        }
+
+        // <th>Course Name</th>
+        // <th>Payment Token</th>
+        // <th>Transaction Hash</th>
+        // <th>Status</th>
+        // <th>Burn Transaction Hash</th>
+
+        const payments = result.allPayments;
+        console.log(payments.length);
+        let retHtml = "";
+        if (payments.length == 0) {
+          retHtml = "<div>No transactions made yet</div>";
+          return;
+        } else {
+          for (let z = 0; z < payments.length; z++) {
+            let status = payments[z].status;
+            let payment_txHash, burn_txHash, pay_hash_link, burn_hash_link;
+            if (status === "completed") {
+              if (payments[z].tokenName === "xdce") {
+                payment_txHash =
+                  payments[z].txn_hash.toString().slice(0, 11) + "...";
+
+                if (allPendingTransaction.indexOf(payments[z].txn_hash) > -1) {
+                  // was one of the pending tx.
+                  allPendingTransaction = removeFromArray(
+                    allPendingTransaction,
+                    payments[z].txn_hash
+                  );
+                  listeningForPending = true;
+                }
+
+                pay_hash_link = `<a href="${etherScanIo +
+                  payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+
+                if (payments[z].autoBurn) {
+                  // will burn
+                  if (payments[z].burn_txn_hash == "") {
+                    // not yet burned
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) < 0
+                    )
+                      allPendingTransaction.push(
+                        payments[z].txn_hash + "_burn"
+                      );
+                    listeningForPending = true;
+                    burn_txHash = "Burning is in process...";
+                    burn_hash_link = burn_txHash;
+                  } else {
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) > -1
+                    ) {
+                      // was one of the pending tx.
+                      allPendingTransaction = removeFromArray(
+                        allPendingTransaction,
+                        payments[z].txn_hash + "_burn"
+                      );
+                    }
+
+                    burn_txHash =
+                      payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
+                    burn_hash_link = `<a href="${etherScanIo +
+                      payments[z]
+                        .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                  }
+                } else {
+                  burn_hash_link = "-";
+                }
+              }
+            } else {
+              if (allPendingTransaction.indexOf(payments[z].txn_hash) < 0)
+                allPendingTransaction.push(payments[z].txn_hash);
+              payment_txHash =
+                payments[z].txn_hash.toString().slice(0, 11) + "...";
+              if (payments[z].autoBurn) {
+                // will burn
+                burn_txHash = "Will burn after confirmation";
+              } else {
+                // wont burn
+                burn_txHash = "NA";
+              }
+              pay_hash_link = `<a href="${etherScanIo +
+                payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+              status += `( ${payments[z].confirmations}/${
+                payments[z].tokenName === "xdce"
+                  ? payments[z].xdceConfirmation
+                  : payments[z].xdcConfirmation
+              } )`;
+              burn_hash_link = burn_txHash;
+            }
+
+            retHtml += `<tr><td>${payments[z].courseName[0].toUpperCase()+payments[z].courseName.slice(1)}</td><td>${payments[
+              z
+            ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${
+              payments[z].status != "not yet mined" ? payments[z].status : "notYetMined"
+            }">${payments[z].status != "not yet mined" ? status : "not yet mined"}</td><td>${burn_hash_link}</td></tr>`;
+          }
+          tableBody.innerHTML = retHtml;
+          tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;
+          if (allPendingTransaction.length == 0) {
+            // clear listener
+            clearInterval(pendingEventListener);
+            listeningForPending = false;
+          }
+        }
+      },
+      error: xhr => {
+        console.error(
+          "Error occured while making a get request to /api/getUserCryptoPayment"
+        );
+        $.notify(
+          "Error occured while fetching your payments via cryptocurrencies",
+          { type: "danger" }
+        );
+        return;
+      }
+    });
+
+    // setInterval for pending transactions
+    callPendingListener();
+  }
+
+  function callPendingListener() {
+    console.log("called callPendingListener");
+    console.log(allPendingTransaction);
+    console.log(allPendingTransaction[0]);
+    console.log(allPendingTransaction.length);
+    if (allPendingTransaction.length > 0 && !listeningForPending) {
+      // some tx are still in pending phase
+      listeningForPending = true;
+      pendingEventListener = setInterval(() => {
+        console.log("fired listener");
+        console.log(allPendingTransaction);
+        fetchCryptoTransactions();
+      }, 5000);
+    }
+  }
+
+  function removeFromArray(arr, element) {
+    let removeIndex = arr.indexOf(element);
+    if (removeIndex > -1) {
+      arr.splice(removeIndex, 1);
+    }
+    return arr;
   }
 </script>
 {{/inline}}
