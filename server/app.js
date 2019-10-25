@@ -47,6 +47,7 @@ app.use(
   session({
     secret: "",
     resave: true,
+    rolling: true,
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
@@ -94,6 +95,10 @@ app.listen("3000", () => {
 
 if (!fs.existsSync("./tmp")) {
   fs.mkdirSync("./tmp");
+}
+
+if (!fs.existsSync("./server/cached")) {
+  fs.mkdirSync("./server/cached");
 }
 
 module.exports = app;

@@ -91,80 +91,96 @@ exports.downloadCertificate = async (req, res) => {
   const hash = req.body.hash;
   let imgHTML = "";
   let user;
-  try {
-    user = await User.findOne({ email: req.user.email });
-  } catch (e) {
-    console.log("Error while fetching the user from mongodb: ", e);
-    return res.status(500).json({
-      certificateHash: null,
-      status: 500,
-      uploaded: false,
-      error:
-        "looks like our database is under maintenance, please try again after some time"
+  let pathToFile = "";
+  if (checkCached(hash)) {
+    console.log("serving from cache")
+    pathToFile = `server/cached/${hash}.png`;
+    return res.download(pathToFile, function(errDownload) {
+      if (errDownload) {
+        console.log(`Error sending download : ${pathToFile} : ${errDownload}`);
+      }
     });
-  }
-  if (!user) {
-    return res.status(400).json({ error: "not able to fetch user" });
-  }
-  for (obj of user.examData.certificateHash) {
-    if (obj.clientHash != undefined && obj.clientHash == hash) {
-      clientIPFS.get(hash, (err, files) => {
-        if (err) {
-          return res.status(500).json({ uploaded: false, error: err });
-        }
-        files.forEach(async file => {
-          let localPath = "tmp/" + file.path + ".png";
-          imgHTML = file.content.toString("utf-8");
-          let browser;
-          try {
-            browser = await puppeteer.launch({
-              args: ["--no-sandbox", "--disable-setuid-sandbox"]
-            });
-            const page = await browser.newPage();
-            await page.setViewport({
-              width: 800,
-              height: 600,
-              deviceScaleFactor: 1
-            });
-            await page.setContent(imgHTML);
-            await page.screenshot({ path: localPath });
-          } catch (e) {
-            console.log("Error while taking screenshot from browser: ", e);
-            return res.status(500).json({
-              certificateHash: null,
-              status: 500,
-              uploaded: false,
-              error:
-                "Looks like something went wrong, please try again after sometime or contact us via contact-us page"
-            });
+  } else {
+    try {
+      user = await User.findOne({ email: req.user.email });
+    } catch (e) {
+      console.log("Error while fetching the user from mongodb: ", e);
+      return res.status(500).json({
+        certificateHash: null,
+        status: 500,
+        uploaded: false,
+        error:
+          "looks like our database is under maintenance, please try again after some time"
+      });
+    }
+    if (!user) {
+      return res.status(400).json({ error: "not able to fetch user" });
+    }
+    for (obj of user.examData.certificateHash) {
+      if (obj.clientHash != undefined && obj.clientHash == hash) {
+        clientIPFS.get(hash, (err, files) => {
+          if (err) {
+            return res.status(500).json({ uploaded: false, error: err });
           }
-          browser
-            .close()
-            .then(() => {
-              return res.download(localPath, function(errDownload) {
-                if (errDownload != null || errDownload != undefined) {
-                  console.log(
-                    `Error sending download : ${localPath} : ${errDownload}`
-                  );
-                }
-                fs.unlink(localPath, errUnlink => {
-                  if (errUnlink != null || errUnlink != undefined) {
+          files.forEach(async file => {
+            let localPath = "server/cached/" + file.path + ".png";
+            imgHTML = file.content.toString("utf-8");
+            let browser;
+            try {
+              browser = await puppeteer.launch({
+                args: ["--no-sandbox", "--disable-setuid-sandbox"]
+              });
+              const page = await browser.newPage();
+              await page.setViewport({
+                width: 800,
+                height: 600,
+                deviceScaleFactor: 1
+              });
+              await page.setContent(imgHTML);
+              await page.screenshot({ path: localPath });
+            } catch (e) {
+              console.log("Error while taking screenshot from browser: ", e);
+              return res.status(500).json({
+                certificateHash: null,
+                status: 500,
+                uploaded: false,
+                error:
+                  "Looks like something went wrong, please try again after sometime or contact us via contact-us page"
+              });
+            }
+            browser
+              .close()
+              .then(() => {
+                pathToFile = localPath;
+                return res.download(pathToFile, function(errDownload) {
+                  if (errDownload) {
                     console.log(
-                      `Error while deleting : ${localPath} : ${errUnlink}`
+                      `Error sending download : ${pathToFile} : ${errDownload}`
                     );
                   }
                 });
+                // return res.download(localPath, function(errDownload) {
+                //   if (errDownload) {
+                //     console.log(
+                //       `Error sending download : ${localPath} : ${errDownload}`
+                //     );
+                //   }
+                // });
+              })
+              .catch(e => {
+                console.log(`exception at browser.close(): `, e);
+                return res.status(500).json({
+                  error:
+                    "some error has occured please try again later or contact us via contact-us page"
+                });
               });
-            })
-            .catch(e => {
-              console.log(`exception at browser.close(): `, e);
-              return res.status(500).json({
-                error:
-                  "some error has occured please try again later or contact us via contact-us page"
-              });
-            });
+          });
         });
-      });
+      }
     }
   }
 };
+
+function checkCached(hash) {
+  return fs.existsSync(`server/cached/${hash}.png`);
+}

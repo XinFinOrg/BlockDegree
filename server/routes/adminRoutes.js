@@ -5,6 +5,7 @@ const adminPath = path.join(__dirname, "../admin/");
 const migrationService = require("../services/migrate");
 const userStatsService = require("../services/userStats");
 const adminServices = require("../services/adminServices");
+const cacheSync = require("../services/cacheSync");
 const User = require("../models/user");
 
 module.exports = app => {
@@ -34,6 +35,23 @@ module.exports = app => {
   //     res.json({ msg: "ok" });
   //   }
   // );
+
+  // set coordinates, region, city for visiteds
+  app.get(
+    "/api/setCoords",
+    requireLogin,
+    requrieAdmin,
+    userStatsService.setCoordsFromIP
+  );
+
+
+  // API to cache all the user certificates which are not cached yet
+  app.get(
+    "/api/certificatesCacheSync",
+    requireLogin,
+    requrieAdmin,
+    cacheSync.syncCertificateCache
+  );
 
   app.get(
     "/api/getAllTimestamp",

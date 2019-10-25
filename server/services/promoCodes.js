@@ -1,4 +1,5 @@
 const PromoCode = require("../models/promo_code");
+const PromoCodeLog = require("../models/promocode_log");
 
 function checkReqBody_NewPromo(obj, list) {
   if (typeof list === "string") {
@@ -204,13 +205,23 @@ exports.usePromoCode = async req => {
       };
     }
   }
+  let newPromoLog = new PromoCodeLog({
+    codeName: codeName,
+    discAmt: discAmt,
+    user_email: userEmail,
+    course_id: req.body.course_id,
+    course_price: req.body.price,
+    used_date: Date.now()
+  });
 
   // currPromoCode.users = userArr;
   try {
     await currPromoCode.save();
+    await newPromoLog.save();
   } catch (e) {
     return { error: "Error while saving the promocode query" };
   }
+
   return { error: null, msg: "ok", discAmt: discAmt };
 };
 

@@ -219,7 +219,7 @@
   let postTwitterHash = "";
 
   const msg =
-    "Hey, I just got certified in blockchain from Blockdegree.org, check it out !! Also use 'code10' to get free certificate !!! ";
+    "Hey, I just got certified in blockchain from Blockdegree.org, check it out !! ";
 
   $(document).ready(() => {
     $.ajax({
@@ -495,6 +495,12 @@
                   }
                 }
                 card_wrap.innerHTML = retHTML;
+                $("html,body").animate(
+                  {
+                    scrollTop: $(".card").offset().top - 100
+                  },
+                  "slow"
+                );
               } else {
                 $.notify(`Error while fetching certificates: ${result.msg}`, {
                   type: "danger"

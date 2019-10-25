@@ -2,6 +2,7 @@ const User = require("../models/user");
 const PromoCode = require("../models/promo_code");
 const Visited = require("../models/visited");
 const PaymentLogs = require("../models/payment_logs");
+const GeoIP = require("geoip-lite");
 
 exports.getAllUserTimestamp = async (req, res) => {
   const users = await User.find({});
@@ -246,4 +247,40 @@ exports.getAllUserCertificates = async (req, res) => {
     res.json({ status: false, users: null, error: "No users found" });
   }
   res.json({ status: true, users: allUsers });
+};
+
+exports.setCoordsFromIP = async (req, res) => {
+  let visits;
+  try {
+    visits = await Visited.find({});
+  } catch (e) {
+    console.log("Some error occured: ", e);
+    return res.json({
+      error: "something went wrong while fetching all the visits",
+      status: false
+    });
+  }
+  for (let i = 0; i < visits.length; i++) {
+    if (visits[i].ip !== undefined) {
+      // IP exists
+      let geo = GeoIP.lookup(visits[i].ip);
+      if (geo) {
+        // ok
+        visits[i].region = geo.region;
+        visits[i].city = geo.city;
+        visits[i].country = geo.country;
+        visits[i].coordinates = [geo.ll[0].toString(), geo.ll[1].toString()];
+        try {
+          await visits[i].save();
+        } catch (e) {
+          console.log("Some error occured while saving the updated visits: ", e);
+          return res.json({
+            status: false,
+            error: "error occired while saving the updated schema"
+          });
+        }
+      }
+    }
+  }
+  return res.json({ status: true, error: null });
 };

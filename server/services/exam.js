@@ -45,6 +45,7 @@ exports.submitExam = async (req, res, next) => {
       error:
         "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
     });
+    return;
   }
   if (currUser != null) {
     if (
@@ -153,6 +154,7 @@ exports.submitExam = async (req, res, next) => {
                   });
                 }
                 res.redirect("/exam-result");
+                return;
               }
             );
           });
@@ -177,6 +179,7 @@ exports.submitExam = async (req, res, next) => {
                 });
               }
               res.redirect("/exam-result");
+              return;
             }
           );
         }
@@ -217,6 +220,7 @@ exports.submitExam = async (req, res, next) => {
                   });
                 }
                 res.redirect("/exam-result");
+                return;
               }
             );
           });
@@ -241,6 +245,7 @@ exports.submitExam = async (req, res, next) => {
                 });
               }
               res.redirect("/exam-result");
+              return;
             }
           );
         }
@@ -303,11 +308,13 @@ exports.getExamResult = async (req, res) => {
   if (backUrl == undefined) {
     // not a redirect
     res.render("error");
+    return;
   }
   let trailPath = backUrl.split("/")[3];
   if (trailPath == undefined || trailPath == null || !trailPath.split("-")[1]) {
     // redirect from some other page
     res.render("error");
+    return;
   }
   const examName = trailPath.split("-")[1];
   let name = "";
@@ -331,6 +338,7 @@ exports.getExamResult = async (req, res) => {
         error: "Its not you, its us. Please try again after sometime."
       });
     }
+    return;
   }
 
   const totalQuestions = ques[examTypes[examName].questionName].length;
@@ -408,6 +416,7 @@ exports.getExamResult = async (req, res) => {
     // No!
     jsonData.examStatus = false;
     res.render("examResult", jsonData);
+    return;
   }
 };
 
