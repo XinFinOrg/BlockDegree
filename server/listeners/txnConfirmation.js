@@ -287,22 +287,26 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
 
               console.log(
                 "Minimum Value: ",
-                parseFloat(xdcePrice) - parseFloat(xdcePrice * xdceTolerance) / 100
+                parseFloat(xdcePrice) -
+                  parseFloat(xdcePrice * xdceTolerance / 100) 
               );
               console.log(
                 "Maximum Value: ",
-                parseFloat(xdcePrice) + parseFloat(xdcePrice * xdceTolerance) / 100
+                parseFloat(xdcePrice) +
+                  parseFloat(xdcePrice * xdceTolerance / 100) 
               );
               console.log(
                 "Actual Value: ",
                 parseFloat(decodedMethod.params[1].value)
               );
-      
+
               let valAcceptable =
-                parseFloat(xdcePrice) - parseFloat(xdcePrice * xdceTolerance) / 100 <=
+                parseFloat(xdcePrice) -
+                  parseFloat(xdcePrice * xdceTolerance / 100)  <=
                   parseFloat(decodedMethod.params[1].value) &&
                 parseFloat(decodedMethod.params[1].value) <=
-                  parseFloat(xdcePrice) + parseFloat(xdcePrice * xdceTolerance) / 100;
+                  parseFloat(xdcePrice) +
+                    parseFloat(xdcePrice * xdceTolerance / 100) ;
 
               if (!valAcceptable) {
                 TxMinedListener = clearInterval(TxMinedListener);
@@ -468,10 +472,17 @@ function newDefBurnLog(id, txHash) {
 async function getXinEquivalent(amnt) {
   try {
     const currXinPrice = await axios.get(coinMarketCapAPI);
+    console.log("Parameter amnt: ",amnt);
+    console.log("Price usd: ",currXinPrice.data[0].price_usd)
     if (
       currXinPrice.data[0] != undefined ||
       currXinPrice.data[0] != undefined
     ) {
+      console.log(
+        (parseFloat(amnt) /
+          (parseFloat(currXinPrice.data[0].price_usd))) *
+          Math.pow(10, 18)
+      );
       return (
         (parseFloat(amnt) /
           (parseFloat(currXinPrice.data[0].price_usd) * divisor)) *
@@ -529,7 +540,7 @@ async function handleBurnToken(
           }
         }
 
-        if (burnAmnt == 0 || burnAmnt == "0" || burnAmnt == "" ) {
+        if (burnAmnt == 0 || burnAmnt == "0" || burnAmnt == "") {
           // dont burn
           console.log("Auto-Burn has been turned off, closed the listener.");
           return;

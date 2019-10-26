@@ -642,7 +642,6 @@ exports.payViaXdce = async (req, res) => {
       console.log(
         `User ${req.user.email} tried to double spend hash: ${txn_hash}`
       );
-      TxMinedListener = clearInterval(TxMinedListener);
       res.json({ error: "duplicate transation", status: false });
       return;
     }
