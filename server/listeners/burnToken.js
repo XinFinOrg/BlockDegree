@@ -16,8 +16,8 @@ const keyConfig = require("../config/keyConfig").mainnetPrivateKey;
 
 const xdceAddrMainnet = contractConfig.address.xdceMainnet;
 const xdceABI = contractConfig.XdceABI;
-const xdceOwnerPubAddr = "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E";
-const blockdegreePubAddr = "0x3C7a500D32C3A8317c943293c2a123A0456aa2D0";
+const xdceOwnerPubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
+const blockdegreePubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
 const burnAddress = "0x0000000000000000000000000000000000000000";
 
 const XDCE = "xdce";

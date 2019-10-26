@@ -6,12 +6,10 @@ const promoCodeService = require("../services/promoCodes");
 const PaymentToken = require("../models/payment_token");
 const CoursePrice = require("../models/coursePrice");
 const Notification = require("../models/notifications");
-const XDC3 = require("xdc3");
 const Web3 = require("web3");
 const axios = require("axios");
 const uuidv4 = require("uuid/v4");
 const contractConfig = require("../config/smartContractConfig");
-const keyConfig = require("../config/keyConfig");
 const eventEmitter = require("../listeners/txnConfirmation").em;
 const abiDecoder = require("abi-decoder");
 
@@ -34,9 +32,9 @@ const xdceABI = contractConfig.XdceABI;
 const transferFunctionStr = "transfer(address,uint)";
 const XDCE = "xdce";
 const XDC = "xdc";
-const xdceOwnerPubAddr = "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E";
+const xdceOwnerPubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
 
-const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
+const divisor = 1; // for testing purposes 1 million'th of actual value will be used
 
 // const xdceTolerance = 5; // tolerance set to 5 percent of principal value.
 
@@ -485,7 +483,7 @@ exports.payViaXdc = async (req, res) => {
   });
   user.examData.payment[course] = true;
 
-  // let encodedTx = contractInst.methods.transfer("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E",);
+  // let encodedTx = contractInst.methods.transfer("0x4F85F740aCDCf01DF73Be4EB9558247E573097ff",);
   //   .burnToken("app_id", "name", txn_hash)
   //   .encodeABI();
   let gp = await web3.eth.getGasPrice();
@@ -779,6 +777,11 @@ exports.payViaXdce = async (req, res) => {
           // invalid transaction;
           TxMinedListener = clearInterval(TxMinedListener);
           res.json({ error: "Invalid transaction", status: false });
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Re-embursement for user ${req.user.email}`,
+            `User sent a transaction with invalid. Payment mode was via XDCe. Payment transaction hash: ${txn_hash}`
+          );
           return;
         }
         const blockData = await web3.eth.getBlock(txReceipt.blockNumber);

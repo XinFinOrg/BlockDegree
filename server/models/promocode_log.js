@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const promoLogSchema = mongoose.Schema({
-  codeName: { type: String, required: true },
-  discAmt: { type: String, required: true },
-  user_email: { type: String, required: true },
-  course_id: { type: String, required: true },
-  course_price: { type: String, required: true },
+  codeName: String,
+  discAmt: String,
+  user_email: String,
+  course_id: String,
+  course_price: String,
   used_date: String
 });
 

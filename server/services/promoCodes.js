@@ -209,7 +209,7 @@ exports.usePromoCode = async req => {
     codeName: codeName,
     discAmt: discAmt,
     user_email: userEmail,
-    course_id: req.body.course_id,
+    course_id: req.body.course_id || req.body.course ,
     course_price: req.body.price,
     used_date: Date.now()
   });
@@ -218,7 +218,8 @@ exports.usePromoCode = async req => {
   try {
     await currPromoCode.save();
     await newPromoLog.save();
-  } catch (e) {
+  } catch (e) {    
+    console.log("Error: ",e)
     return { error: "Error while saving the promocode query" };
   }
 

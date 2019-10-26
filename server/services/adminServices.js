@@ -292,13 +292,13 @@ exports.setCourseBurnPercent = async (req, res) => {
       return;
     }
     // course found
-    let allBurnTokens = course.burnToken;
+    // let allBurnTokens = course.burnToken;
     let found = false;
-    for (let i = 0; i < allBurnTokens.length; i++) {
-      if (allBurnTokens[i].tokenName === filteredTokenName) {
+    for (let i = 0; i < course.burnToken.length; i++) {
+      if (course.burnToken[i].tokenName === filteredTokenName) {
         // found token, it exists
         found = true;
-        if (allBurnTokens[i].burnPercent === burnPercent) {
+        if (course.burnToken[i].burnPercent === burnPercent) {
           // same value, bad request
           console.error(
             "Bad request at adminServices.setCourseBurnPercent, same value"
@@ -310,14 +310,21 @@ exports.setCourseBurnPercent = async (req, res) => {
           });
           return;
         } else {
-          allBurnTokens[i].burnPercent = burnPercent;
+          // course.burnToken[i].burnPercent = burnPercent;
+          await CoursePrice.update(
+            { courseId: req.body.courseId, "burnToken.tokenName": filteredTokenName },
+            { $set: { "burnToken.$.burnPercent": burnPercent } },
+            (err, course) => {
+              console.log(err, course);
+            }
+          );
         }
       }
     }
 
     if (!found) {
       // new token burn addition
-      allBurnTokens.push({
+      course.burnToken.push({
         tokenName: filteredTokenName,
         burnPercent: burnPercent,
         autoBurn: false

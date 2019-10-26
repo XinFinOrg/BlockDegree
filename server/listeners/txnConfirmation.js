@@ -21,8 +21,8 @@ const contractABI = contractConfig.ABI;
 const xdceAddrMainnet = contractConfig.address.xdceMainnet;
 const xdceABI = contractConfig.XdceABI;
 
-const xdceOwnerPubAddr = "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E";
-const blockdegreePubAddr = "0x3C7a500D32C3A8317c943293c2a123A0456aa2D0";
+const xdceOwnerPubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
+const blockdegreePubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
 const burnAddress = "0x0000000000000000000000000000000000000000";
 const coinMarketCapAPI =
   "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
@@ -32,7 +32,7 @@ const XDCE = "xdce";
 
 // const xdceTolerance = 10; // tolerance set to 5 percent of principal value.
 
-const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
+const divisor = 1; // for testing purposes 1 million'th of actual value will be used
 
 abiDecoder.addABI(xdceABI);
 
@@ -287,26 +287,23 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
 
               console.log(
                 "Minimum Value: ",
-                parseFloat(xdcePrice) -
-                  parseFloat(xdcePrice * xdceTolerance) / 100
+                parseFloat(xdcePrice) - parseFloat(xdcePrice * xdceTolerance) / 100
               );
               console.log(
                 "Maximum Value: ",
-                parseFloat(xdcePrice) +
-                  parseFloat(xdcePrice * xdceTolerance) / 100
+                parseFloat(xdcePrice) + parseFloat(xdcePrice * xdceTolerance) / 100
               );
               console.log(
                 "Actual Value: ",
                 parseFloat(decodedMethod.params[1].value)
               );
-
+      
               let valAcceptable =
-                parseFloat(xdcePrice) -
-                  parseFloat(xdcePrice * xdceTolerance) / 100 <=
+                parseFloat(xdcePrice) - parseFloat(xdcePrice * xdceTolerance) / 100 <=
                   parseFloat(decodedMethod.params[1].value) &&
                 parseFloat(decodedMethod.params[1].value) <=
-                  parseFloat(xdcePrice) +
-                    parseFloat(xdcePrice * xdceTolerance) / 100;
+                  parseFloat(xdcePrice) + parseFloat(xdcePrice * xdceTolerance) / 100;
+
               if (!valAcceptable) {
                 TxMinedListener = clearInterval(TxMinedListener);
                 console.log(
@@ -511,7 +508,7 @@ async function handleBurnToken(
         let receivedXdce = decodedMethod.params[1].value;
 
         const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
-        let burnAmnt = 0;
+        let burnAmnt = "";
 
         if (!paymentLog.autoBurn) {
           console.log("Auto-Burn has been turned off, closed the listener.");
@@ -527,12 +524,12 @@ async function handleBurnToken(
             const burnPercent = parseFloat(course.burnToken[z].burnPercent);
             burnAmnt = Math.floor(
               (parseFloat(receivedXdce) * burnPercent) / 100
-            );
+            ).toString();
             break;
           }
         }
 
-        if (burnAmnt == 0) {
+        if (burnAmnt == 0 || burnAmnt == "0" || burnAmnt == "" ) {
           // dont burn
           console.log("Auto-Burn has been turned off, closed the listener.");
           return;

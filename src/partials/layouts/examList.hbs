@@ -220,7 +220,7 @@
 <script type="text/javascript">
 
   let allModals=[];
-  const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
+  const divisor = 1; // for testing purposes 1 million'th of actual value will be used
     const coinMarketCapUrl = "/api/wrapCoinMarketCap";
   const etherScanIo = "https://etherscan.io/tx/";
 
@@ -354,7 +354,7 @@
 
     }
 
-    if (web3.eth.accounts.length<=0){
+    {{!-- if (web3.eth.accounts.length<=0){
       // not logged in
       if (typeof InstallTrigger !== "undefined") {
       $.notify(`Please login and connect your <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> extension, if you've already done that please <a onclick="window.location.reload()">refresh</a>`,{delay:5000})
@@ -364,7 +364,7 @@
       $.notify(`Please login and connect your <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> extension, if you've already done that please <a onclick="window.location.reload()">refresh</a>`,{delay:5000})
       return;
     }
-    }
+    } --}}
 
     web3.version.getNetwork((err, providerNetworkId) => {
       if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
@@ -971,7 +971,7 @@
                     return;
                   }
                 }) --}}
-            xdceInst.transfer.sendTransaction("0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", xdcePrice, tx, (err, result) => {
+            xdceInst.transfer.sendTransaction("0x4F85F740aCDCf01DF73Be4EB9558247E573097ff", xdcePrice, tx, (err, result) => {
               if (err != null) {
                 $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
                 return;
@@ -1078,7 +1078,7 @@
             console.log(`Original Price: ${price} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
             await ethereum.enable();
 
-            web3.eth.sendTransaction({ to: "0x4f72d2cd0f4152f4185b2013fb45Cc3A9B89d99E", gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
+            web3.eth.sendTransaction({ to: "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff", gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
               if (err) {
                 console.error(err)
                 $.notify("<b>XinPay</b> : Some error while creating or processing this transaction.", { type: "danger" });
