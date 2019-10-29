@@ -140,8 +140,7 @@
                                                                 </div>
                                                                 <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
-                                                        </p>  
-                                                        
+                                                        </p>                                                          
                                                         <p>
                                                             <!-- Form for making promo-code inactive -->
                                                             <form action="/admin/unrestrictPromoCode" method="POST">
@@ -167,7 +166,23 @@
                                                                 </div>
                                                                 <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
-                                                        </p>   
+                                                        </p>
+                                                        <p>
+                                                            <h3>Set Cap for Promocode Use</h3>
+                                                            <input class="form-control" type="text" id="promoCodeCap_codeName" placeholder="Enter the code-name" ><br>
+                                                            <div>
+                                                                Select the state for the PromoCode cap: <br>
+                                                                <input type="radio" name="promoCodeCap" id="promoCodeCap__true" value="true"><label for="promoCodeCap__true">&nbsp;True</label>&nbsp;&nbsp;&nbsp;
+                                                                <input type="radio" name="promoCodeCap" id="promoCodeCap__false" value="false"><label for="promoCodeCap__false">&nbsp;False</label>
+                                                            </div><br>
+                                                            <button class="btn btn-primary" style="float: right;" type="button" onclick="setPromoCodeCap()">Set PromoCode Cap</button>                                                            
+                                                        </p>                                                                                                                 
+                                                        <p>
+                                                                <h3>Set Use Limit for Promocode</h3>
+                                                                <input class="form-control" type="text" id="promoCodeUL_codeName" placeholder="Enter the code-name" >
+                                                                <input class="form-control" type="number" id="promoCodeUL_useLimit" placeholder="Enter the use limit"><br>
+                                                                <button class="btn btn-primary" style="float: right;" type="button" onclick="setPromoCodeUL()">Set Promo Code Use Limit</button>                                                            
+                                                        </p>        
                                         </div>
                                         <div id="course_payment" class="tabcontent" style="display:none">
                                                 <h1>Course Payments - tread carefully </h1>
@@ -442,6 +457,53 @@
                     }
                 })
             }
-            
+
+            function setPromoCodeCap() {
+                console.log("Called set promocode cap");
+                const codeName = document.getElementById("promoCodeCap_codeName").value;
+                const setCap = $("input[name='promoCodeCap']:checked").val(); 
+                console.log(codeName,setCap)
+                $.ajax({
+                    method:"post",
+                    url:"/api/setPromoCodeCap",
+                    data:{codeName:codeName, setCap:setCap},
+                    success: data => {
+                        if (data.status){
+                            console.log("Set Promo Code Cap response ",data);
+                        alert("Success");
+                        }else{
+                            alert(data.error,{type:"danger"})
+                        }                        
+                    },
+                    error: xhr => {
+                        $.notify("Some error occured while making an Ajax Call",{type:"danger"})
+                    }
+                })
+            }
+
+            function setPromoCodeUL(){
+                console.log("called set promocode use limit");
+                const codeName = document.getElementById("promoCodeUL_codeName").value;
+                const useLimit = document.getElementById("promoCodeUL_useLimit").value;
+                $.ajax({
+                    method:"post",
+                    url:"/api/setPromoCodeUseLimit",
+                    data:{codeName:codeName,useLimit:useLimit},
+                    success: data => {
+                        if (data.status){
+                            // success
+                            alert("Success");
+                        }else{
+                            // some error occured
+                            alert(data.error);
+                        }
+
+                    },
+                    error: xhr => {
+                        alert("Some error occured while making the request")
+                    }
+                })
+            }
+                        
         </script>
 </html>

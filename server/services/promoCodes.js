@@ -131,6 +131,24 @@ exports.usePromoCode = async req => {
   if (!currPromoCode.status) {
     return { error: `Promo-code ${codeName} no longer valid` };
   }
+  if (
+    currPromoCode.hasCap !== undefined &&
+    currPromoCode.hasCap &&
+    currPromoCode.count >= currPromoCode.useLimit
+  ) {
+    // over the limit, disable the code
+    try {
+      currPromoCode.status = false;
+      await currPromoCode.save();
+      return { error: `Promocode limit reached` };
+    } catch (e) {
+      console.error(
+        "Some error occured while saving the promocode state ",
+        e
+      );
+      return { error: "internal error" };
+    }
+  }
   if (currPromoCode.restricted) {
     for (var i = 0; i < currPromoCode.allowedUsers.length; i++) {
       let user = currPromoCode.allowedUsers[i];
@@ -138,7 +156,7 @@ exports.usePromoCode = async req => {
         user.email != "" &&
         user.email != undefined &&
         user.email == userEmail
-      ) {
+      ) {      
         currPromoCode.lastUsed = Date.now();
         currPromoCode.count += 1;
         let discAmt = parseFloat(currPromoCode.discAmt);
@@ -209,7 +227,7 @@ exports.usePromoCode = async req => {
     codeName: codeName,
     discAmt: discAmt,
     user_email: userEmail,
-    course_id: req.body.course_id || req.body.course ,
+    course_id: req.body.course_id || req.body.course,
     course_price: req.body.price,
     used_date: Date.now()
   });
@@ -218,8 +236,8 @@ exports.usePromoCode = async req => {
   try {
     await currPromoCode.save();
     await newPromoLog.save();
-  } catch (e) {    
-    console.log("Error: ",e)
+  } catch (e) {
+    console.log("Error: ", e);
     return { error: "Error while saving the promocode query" };
   }
 
@@ -352,6 +370,24 @@ exports.checkCode = async (req, res) => {
   if (!currPromoCode.status) {
     return res.json({ error: "code not active" });
   }
+  if (
+    currPromoCode.hasCap !== undefined &&
+    currPromoCode.hasCap &&
+    currPromoCode.count >= currPromoCode.useLimit
+  ) {
+    // over the limit, disable the code
+    try {
+      currPromoCode.status = false;
+      await currPromoCode.save();
+      return res.json({ error: "promocode limit reached" });
+    } catch (e) {
+      console.error(
+        "Some error occured while saving the promocode state ",
+        e
+      );
+      return res.json({ error: "internal error" });
+    }
+  }
   if (currPromoCode.restricted) {
     // check if the user has access
     for (var i = 0; i < currPromoCode.allowedUsers.length; i++) {
@@ -363,4 +399,73 @@ exports.checkCode = async (req, res) => {
     return res.json({ error: "You don't have access to this code." });
   }
   res.json({ error: null, discAmt: currPromoCode.discAmt });
+};
+
+exports.setPromoCodeCap = async (req, res) => {
+  if (
+    req.body.codeName === undefined ||
+    req.body.codeName === null ||
+    req.body.codeName === "" ||
+    req.body.setCap === undefined ||
+    req.body.setCap === null ||
+    req.body.setCap === ""
+  ) {
+    // bad request
+    return res.json({ error: "bad request", status: false });
+  }
+  const codeName = req.body.codeName;
+  const setCap = req.body.setCap === 'true';
+  try {
+    const promoCode = await PromoCode.findOne({ codeName: codeName });
+    if (promoCode === null) {
+      return res.json({ error: "No such promocode exists", status: false });
+    }
+    if (promoCode.hasCap !== undefined) {
+      // this schema has 'hasCap' element
+      promoCode.hasCap = setCap;
+    } else {
+      console.log("does not have hasCap");
+      promoCode.set("hasCap", setCap);
+    }
+    await promoCode.save();
+    return res.json({ status: true, error: null });
+  } catch (e) {
+    console.error("Some error occured while fetching the promo-code ", e);
+    return res.json({ error: "internal error", status: false });
+  }
+};
+
+exports.setPromoCodeUseLimit = async (req, res) => {
+  if (
+    req.body.codeName === undefined ||
+    req.body.codeName === null ||
+    req.body.codeName === "" ||
+    req.body.useLimit === undefined ||
+    req.body.useLimit === null ||
+    req.body.useLimit === ""
+  ) {
+    // bad request
+    return res.json({ error: "bad request", status: false });
+  }
+  const codeName = req.body.codeName;
+  const useLimit = req.body.useLimit;
+
+  try {
+    const promoCode = await PromoCode.findOne({ codeName: codeName });
+    if (promoCode === null) {
+      return res.json({ error: "no such promo-code exists", status: false });
+    }
+    if (promoCode.hasCap !== undefined) {
+      if (promoCode.useLimit === undefined) {
+        promoCode.set("useLimit", parseInt(useLimit));
+      } else {
+        promoCode.useLimit = useLimit;
+      }
+    }
+    await promoCode.save();
+    return res.json({ error: null, status: true });
+  } catch (e) {
+    console.log("Some error occured at promoCodes.setUseLimit: ", e);
+    return res.json({ error: "internal error", status: false });
+  }
 };

@@ -2,6 +2,7 @@ const promoCodeServices = require("../services/promoCodes");
 const requireLogin = require("../middleware/requireLogin");
 const requireAdmin = require("../middleware/requireAdmin");
 
+// prettier-ignore
 module.exports = app => {
     app.post("/admin/newPromoCode",requireLogin,requireAdmin,promoCodeServices.addPromoCode);
     app.post("/admin/activatePromoCode",requireLogin,requireAdmin,promoCodeServices.activatePromoCode);
@@ -12,4 +13,6 @@ module.exports = app => {
     // user uses promo code
     app.post("/api/usePromoCode",requireLogin,promoCodeServices.usePromoCode);
     app.post("/api/checkCode",requireLogin,promoCodeServices.checkCode);
+    app.post("/api/setPromoCodeCap",requireLogin, requireAdmin, promoCodeServices.setPromoCodeCap);
+    app.post("/api/setPromoCodeUseLimit",requireLogin, requireAdmin,promoCodeServices.setPromoCodeUseLimit);
 }

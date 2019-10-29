@@ -5,7 +5,9 @@ const promoSchema = mongoose.Schema({
     discAmt:{type : String, required : true},
     purpose:String,
     status:Boolean,
-    count:Number,
+    count:Number, // overall count for which the code was used
+    hasCap:Boolean,
+    useLimit:Number,
     created:String,
     lastUsed:String,
     users : [{}], // all users that availed this promo code.,
