@@ -225,7 +225,7 @@ exports.payPaypalSuccess = (req, res) => {
       }
     } catch (outerErr) {
       console.error("Outer Error: ",outerErr);
-      await emailer.sendMail(
+      emailer.sendMail(
         process.env.SUPP_EMAIL_ID,
         "Re-embursement: payment lost",
         `The payment for the user ${req.user.email} was processed but some error occured and user's state was not updated. Please consider for re-embursement`
