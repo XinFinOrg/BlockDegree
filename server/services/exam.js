@@ -379,7 +379,7 @@ exports.getExamResult = async (req, res) => {
     // This is prevents dual addition of the same object based on the timestamp of the previous addition
     if (
       findLastAttempt(user, examName) == null ||
-      Date.now() - findLastAttempt(user, examName) > 10000 // 10 second freeze time between giving exams
+      Date.now() - findLastAttempt(user, examName) > 60000 // 10 second freeze time between giving exams
     ) {
       if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
         return res.redirect("/exams");

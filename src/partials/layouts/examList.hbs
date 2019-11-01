@@ -230,6 +230,7 @@
     for (let i=0;i<allParams.length;i++){
       if (allParams[i].split("=")[0]=="courseFree" && allParams[i].split("=")[1]=="true"){
         $.notify("Course awailed for free!!",{type:"success"});
+        return;
       }
     }
   })
