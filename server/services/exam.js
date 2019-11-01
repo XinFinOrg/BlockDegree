@@ -76,7 +76,11 @@ exports.submitExam = async (req, res, next) => {
                 $set: {
                   "examData.examBasic.attempts": attempts > 2 ? 0 : attempts,
                   "examData.examBasic.marks": marks,
-                  "examData.payment.course_1": attempts <= 2
+                  "examData.payment.course_1": attempts <= 2,
+                  "examData.payment.course_1_payment":
+                    attempts <= 2
+                      ? currUser.examData.payment.course_1_payment
+                      : ""
                 }
               },
               { upsert: false },
@@ -89,6 +93,7 @@ exports.submitExam = async (req, res, next) => {
                   });
                 }
                 res.redirect("/exam-result");
+                return;
               }
             );
           });
@@ -100,7 +105,8 @@ exports.submitExam = async (req, res, next) => {
               $set: {
                 "examData.examBasic.attempts": attempts,
                 "examData.examBasic.marks": marks,
-                "examData.payment.course_1": false
+                "examData.payment.course_1": false,
+                "examData.payment.course_1_payment": ""
               }
             },
             { upsert: false },
@@ -113,6 +119,7 @@ exports.submitExam = async (req, res, next) => {
                 });
               }
               res.redirect("/exam-result");
+              return;
             }
           );
         }
@@ -141,7 +148,11 @@ exports.submitExam = async (req, res, next) => {
                   "examData.examAdvanced.attempts":
                     attemptsAdvanced > 2 ? 0 : attemptsAdvanced,
                   "examData.examAdvanced.marks": marks,
-                  "examData.payment.course_2": attemptsAdvanced <= 2
+                  "examData.payment.course_2": attemptsAdvanced <= 2,
+                  "examData.payment.course_2_payment":
+                    attemptsAdvanced <= 2
+                      ? currUser.examData.payment.course_2_payment
+                      : ""
                 }
               },
               { upsert: false },
@@ -166,7 +177,8 @@ exports.submitExam = async (req, res, next) => {
               $set: {
                 "examData.examAdvanced.attempts": attemptsAdvanced,
                 "examData.examAdvanced.marks": marks,
-                "examData.payment.course_2": false
+                "examData.payment.course_2": false,
+                "examData.payment.course_2_payment": ""
               }
             },
             { upsert: false },
@@ -206,7 +218,11 @@ exports.submitExam = async (req, res, next) => {
                   "examData.examProfessional.attempts":
                     attemptsProfessional > 2 ? 0 : attemptsProfessional,
                   "examData.examProfessional.marks": marks,
-                  "examData.payment.course_3": attemptsProfessional <= 2
+                  "examData.payment.course_3": attemptsProfessional <= 2,
+                  "examData.payment.course_3_payment":
+                    attemptsProfessional <= 2
+                      ? currUser.examData.payment.course_3_payment
+                      : ""
                 }
               },
               { upsert: false },
@@ -232,7 +248,8 @@ exports.submitExam = async (req, res, next) => {
               $set: {
                 "examData.examProfessional.attempts": attemptsProfessional,
                 "examData.examProfessional.marks": marks,
-                "examData.payment.course_3": false
+                "examData.payment.course_3": false,
+                "examData.payment.course_3_payment": ""
               }
             },
             { upsert: false },
@@ -311,7 +328,7 @@ exports.getExamResult = async (req, res) => {
     return;
   }
   let trailPath = backUrl.split("/")[3];
-  if (trailPath == undefined || trailPath == null || !trailPath.split("-")[1]) {
+  if (trailPath == undefined || trailPath == null || trailPath.split("-")[1] == undefined || trailPath.split("-")[1] == null) {
     // redirect from some other page
     res.render("error");
     return;
@@ -364,7 +381,7 @@ exports.getExamResult = async (req, res) => {
     // This is prevents dual addition of the same object based on the timestamp of the previous addition
     if (
       findLastAttempt(user, examName) == null ||
-      Date.now() - findLastAttempt(user, examName) > 10000 // 10 second freeze time between giving exams
+      Date.now() - findLastAttempt(user, examName) > 60000 // 10 second freeze time between giving exams
     ) {
       if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
         return res.redirect("/exams");
@@ -398,9 +415,21 @@ exports.getExamResult = async (req, res) => {
             obj["headlessHash"] = bothRender.hash[0];
             obj["clientHash"] = bothRender.hash[1];
             obj["examType"] = examName;
+            obj["paymentMode"] =
+              user.examData.payment[
+                examTypes[examName].coursePayment_id + "_payment"
+              ] === undefined
+                ? ""
+                : user.examData.payment[
+                    examTypes[examName].coursePayment_id + "_payment"
+                  ];
             user.examData.certificateHash.push(obj);
+            user.examData.payment[
+              examTypes[examName].coursePayment_id + "_payment"
+            ] = "";
             user.save();
             res.render("examResult", jsonData);
+            return;
           }
         }
       );

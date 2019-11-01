@@ -224,11 +224,6 @@
     const coinMarketCapUrl = "/api/wrapCoinMarketCap";
   const etherScanIo = "https://etherscan.io/tx/";
 
-  $('document').ready(() => {    
-    $(document).ready(function(){    
-});
-
-  })
 
   function takeExam(slug) {
 
@@ -296,23 +291,34 @@
     console.log(course_id.id + "codeName");
     console.log(codeName);
     $(`#${course_id.id}`).attr("disabled", true);
-    $.ajax({
-      url: "/pay",
-      method: 'post',
-      data: { 'email': email, 'course_id': course_id.id, 'price': price, codeName: codeName },
-      success: function (data) {
-        console.log(data);
-        if (data.status == '200')
-          window.location.href = data.link;
-        else if (data.status == "201")
-          if (!alert(data.message)) { window.location.reload(); }
-          else
-            alert(data.message);
-        else {
-          $.notify(data.message, { type: "danger" })
-        }
-      }
-    });
+
+    let formNew = document.createElement('form');
+    formNew.action = "/pay";
+    formNew.method = "post";
+
+    let elementEmail = document.createElement("input");
+    let elementCourseId = document.createElement("input");
+    let elementPrice = document.createElement("input");
+    let elementCodeName = document.createElement("input");
+
+    elementEmail.name="email";
+    elementEmail.value = email;
+    formNew.appendChild(elementEmail);
+
+    elementCourseId.name = "course_id";
+    elementCourseId.value = course_id.id;
+    formNew.appendChild(elementCourseId);
+
+    elementPrice.name = "price";
+    elementPrice.value = price;
+    formNew.appendChild(elementPrice);
+
+    elementCodeName.name = "codeName";
+    elementCodeName.value = codeName;
+    formNew.appendChild(elementCodeName);
+
+    document.body.appendChild(formNew);
+    formNew.submit();
   }
 
   async function payViaXdc(course_id, price) {

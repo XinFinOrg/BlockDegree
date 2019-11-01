@@ -10,7 +10,10 @@ var userSchema = mongoose.Schema({
     payment: {
       course_1: Boolean,
       course_2: Boolean,
-      course_3: Boolean
+      course_3: Boolean,
+      course_1_payment: String,
+      course_2_payment: String,
+      course_3_payment: String
     },
     examBasic: {
       attempts: Number,
@@ -31,6 +34,7 @@ var userSchema = mongoose.Schema({
       examType : String,
       headlessHash: String,
       clientHash : String,
+      paymentMode : String
     }]
   },
   auth : {
