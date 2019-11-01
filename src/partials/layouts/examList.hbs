@@ -224,16 +224,6 @@
     const coinMarketCapUrl = "/api/wrapCoinMarketCap";
   const etherScanIo = "https://etherscan.io/tx/";
 
-  $('document').ready(() => {    
-    let allParams = window.location.href.split("?");
-    console.log(allParams)
-    for (let i=0;i<allParams.length;i++){
-      if (allParams[i].split("=")[0]=="courseFree" && allParams[i].split("=")[1]=="true"){
-        $.notify("Course awailed for free!!",{type:"success"});
-        return;
-      }
-    }
-  })
 
   function takeExam(slug) {
 

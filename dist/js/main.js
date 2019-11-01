@@ -7,6 +7,18 @@ $(document).ready(async function() {
     profileBtn = document.getElementById("profile-btn");
   console.log(`current location: ${window.location.pathname}`);
 
+  let allParams = window.location.href.split("?");
+  console.log(allParams);
+  for (let i = 0; i < allParams.length; i++) {
+    if (
+      allParams[i].split("=")[0] == "courseFree" &&
+      allParams[i].split("=")[1] == "true"
+    ) {
+      $.notify("Course awailed for free!!", { type: "success" });
+      return;
+    }
+  }
+
   // if (window.location.pathname == "/exams") {
   //   setTimeout(() => {
   //     $.notify(
@@ -43,16 +55,18 @@ $(document).ready(async function() {
 
     let pendingNotis = await fetch("/api/getUserNotis");
     let pendingNotisJosn = await pendingNotis.json();
-    if (pendingNotisJosn.status){
+    if (pendingNotisJosn.status) {
       console.log(pendingNotisJosn);
       pendingNotisJosn.notis.forEach(noti => {
         $.notify(
-          { title: "<strong>"+noti.title+"</strong>", message: noti.message },
+          {
+            title: "<strong>" + noti.title + "</strong>",
+            message: noti.message
+          },
           { type: noti.type }
         );
       });
     }
-
   } else {
     navLogin.innerHTML = "Login";
     navLogin.setAttribute("href", "/login");
