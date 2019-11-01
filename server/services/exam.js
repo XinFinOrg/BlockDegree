@@ -93,6 +93,7 @@ exports.submitExam = async (req, res, next) => {
                   });
                 }
                 res.redirect("/exam-result");
+                return;
               }
             );
           });
@@ -118,6 +119,7 @@ exports.submitExam = async (req, res, next) => {
                 });
               }
               res.redirect("/exam-result");
+              return;
             }
           );
         }
@@ -326,7 +328,7 @@ exports.getExamResult = async (req, res) => {
     return;
   }
   let trailPath = backUrl.split("/")[3];
-  if (trailPath == undefined || trailPath == null || !trailPath.split("-")[1]) {
+  if (trailPath == undefined || trailPath == null || trailPath.split("-")[1] == undefined || trailPath.split("-")[1] == null) {
     // redirect from some other page
     res.render("error");
     return;
@@ -427,6 +429,7 @@ exports.getExamResult = async (req, res) => {
             ] = "";
             user.save();
             res.render("examResult", jsonData);
+            return;
           }
         }
       );
