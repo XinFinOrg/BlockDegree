@@ -5,13 +5,15 @@ const Notification = require("../models/notifications");
 const BurnLog = require("../models/burn_logs");
 const User = require("../models/user");
 const Web3 = require("web3");
+const XDC3 = require("xdc3");
 const contractConfig = require("../config/smartContractConfig");
-const keyConfig = require("../config/keyConfig").mainnetPrivateKey;
+const keyConfig = require("../config/keyConfig");
 const uuidv4 = require("uuid/v4");
 const abiDecoder = require("abi-decoder");
 const axios = require("axios");
 const promoCodeService = require("../services/promoCodes");
 const emailer = require("../emailer/impl");
+const EthereumTx = require("ethereumjs-tx");
 
 let eventEmitter = new EventEmitter();
 // const ethConfirmation = 3;
@@ -23,12 +25,21 @@ const xdceABI = contractConfig.XdceABI;
 
 const xdceOwnerPubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
 const blockdegreePubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
+const blockdegreePubAddrXDCApothm =
+  "0x289da729d69ce09de5b543bc40be01e2cd9c1227";
+const xdcOwnerPubAddr = "xdc289da729d69ce09de5b543bc40be01e2cd9c1227";
+
+const xinfinApothemRPC = "http://rpc.apothem.network";
+
+const txReceiptUrlApothem = "https://explorer.apothem.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
+
 const burnAddress = "0x0000000000000000000000000000000000000000";
 const coinMarketCapAPI =
   "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 // const xdcePrice = 10;
 const xdcPrice = 10;
 const XDCE = "xdce";
+const XDC = "xdc";
 
 // const xdceTolerance = 10; // tolerance set to 5 percent of principal value.
 
@@ -57,7 +68,7 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
             );
             await emailer.sendMail(
               process.env.SUPP_EMAIL_ID,
-              `Re-embursement for user ${req.user.email}`,
+              `Re-embursement for user ${userEmail}`,
               `TxReceipt was null. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
             );
             return;
@@ -70,7 +81,7 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
             );
             await emailer.sendMail(
               process.env.SUPP_EMAIL_ID,
-              `Re-embursement for user ${req.user.email}`,
+              `Re-embursement for user ${userEmail}`,
               `Payment log was null. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
             );
             return;
@@ -83,7 +94,7 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
             );
             await emailer.sendMail(
               process.env.SUPP_EMAIL_ID,
-              `Re-embursement for user ${req.user.email}`,
+              `Re-embursement for user ${userEmail}`,
               `User was null. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
             );
             return;
@@ -98,7 +109,7 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
                   );
                   await emailer.sendMail(
                     process.env.SUPP_EMAIL_ID,
-                    `Re-embursement for user ${req.user.email}`,
+                    `Re-embursement for user ${userEmail}`,
                     `Error while initiating a subscription for blockheader. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
                   );
                   return;
@@ -178,13 +189,130 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
           );
           await emailer.sendMail(
             process.env.SUPP_EMAIL_ID,
-            `Re-embursement for user ${req.user.email}`,
+            `Re-embursement for user ${userEmail}`,
             `Some error has occured while listening for block headers. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
           );
         }
         break;
       }
       case 4: {
+        break;
+      }
+      case 51: {
+        const xdc3 = new XDC3(
+          new XDC3.providers.HttpProvider(xinfinApothemRPC)
+        );
+        try {
+          const txResponseReceipt = await axios.post(txReceiptUrlApothem, {
+            tx: txHash,
+            isTransfer: false
+          });
+          const txReceipt = txResponseReceipt.data;
+          const coursePrice = await CoursePrice.findOne({ courseId: course });
+          const xinConfirmation = coursePrice.xdcConfirmation;
+          console.log(txReceipt);
+          if (txReceipt.status != "0x1") {
+            33;
+            // how ?
+            console.log(
+              `Finished listening for the tx ${txHash}; reason: no receipt found`
+            );
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${userEmail}`,
+              `TxReceipt was null. Payment mode was via XDC. Payment transaction hash: ${txHash}`
+            );
+            clearInterval(ClearInterval);
+            return;
+          }
+          const paymentLog = await PaymentToken.findOne({ txn_hash: txHash });
+          if (paymentLog == null) {
+            // how ?
+            console.log(
+              `Finished listening for the tx ${txHash}; reason: no payment log found`
+            );
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${userEmail}`,
+              `Payment log was null. Payment mode was via XDC. Payment transaction hash: ${txHash}`
+            );
+            clearInterval(ClearInterval);
+            return;
+          }
+          const user = await User.findOne({ email: userEmail });
+          if (user == null) {
+            // how ?
+            console.log(
+              `Finished listening for the tx ${txHash}; reason no user found`
+            );
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${userEmail}`,
+              `User was null. Payment mode was via XDC. Payment transaction hash: ${txHash}`
+            );
+            clearInterval(ClearInterval);
+            return;
+          }
+          const txBlockNumber = txReceipt.blockNumber;
+          if (paymentLog.status === "pending") {
+            const ClearInterval = setInterval(async () => {
+              // Proper State.
+              let latestBlockNo = xdc3.eth.blockNumber;
+              console.log(latestBlockNo);
+              let currConfirmations = latestBlockNo - txBlockNumber;
+              console.log(currConfirmations);
+              if (currConfirmations >= xinConfirmation) {
+                // the limit is now met, complete the order
+                paymentLog.confirmations = currConfirmations;
+                paymentLog.status = "completed";
+                let respPendingNoti = await Notification.findOne({
+                  eventId: newNotiId
+                });
+                if (respPendingNoti != null && !respPendingNoti.displayed) {
+                  respPendingNoti.displayed = true;
+                  await respPendingNoti.save();
+                }
+                let newNoti = newDefNoti();
+                newNoti.type = "success";
+                newNoti.email = userEmail;
+                newNoti.eventName = "payment is completed";
+                newNoti.eventId = uuidv4();
+                newNoti.title = "Payment Completed";
+                newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+                newNoti.displayed = false;
+
+                user.examData.payment[paymentLog.course] = true;
+                await paymentLog.save();
+                await user.save();
+                await newNoti.save();
+                handleBurnToken(
+                  course,
+                  txHash,
+                  paymentLog.payment_id,
+                  userEmail,
+                  XDC
+                );
+                clearInterval(ClearInterval);
+              }
+            }, 1000);
+          } else {
+            console.log(
+              `Finished listening for the tx ${txHash}; reason: status mismatch -> ${paymentLog.status}`
+            );
+            clearInterval(ClearInterval);
+            return;
+          }
+        } catch (e) {
+          console.error(
+            `Some error has occured while listening for tx: ${txHash}: `,
+            e
+          );
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Re-embursement for user ${userEmail}`,
+            `Some error has occured while listening for block headers. Payment mode was via XDC. Payment transaction hash: ${txHash}`
+          );
+        }
         break;
       }
       case 50: {
@@ -288,12 +416,12 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               console.log(
                 "Minimum Value: ",
                 parseFloat(xdcePrice) -
-                  parseFloat(xdcePrice * xdceTolerance / 100) 
+                  parseFloat((xdcePrice * xdceTolerance) / 100)
               );
               console.log(
                 "Maximum Value: ",
                 parseFloat(xdcePrice) +
-                  parseFloat(xdcePrice * xdceTolerance / 100) 
+                  parseFloat((xdcePrice * xdceTolerance) / 100)
               );
               console.log(
                 "Actual Value: ",
@@ -302,11 +430,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
 
               let valAcceptable =
                 parseFloat(xdcePrice) -
-                  parseFloat(xdcePrice * xdceTolerance / 100)  <=
+                  parseFloat((xdcePrice * xdceTolerance) / 100) <=
                   parseFloat(decodedMethod.params[1].value) &&
                 parseFloat(decodedMethod.params[1].value) <=
                   parseFloat(xdcePrice) +
-                    parseFloat(xdcePrice * xdceTolerance / 100) ;
+                    parseFloat((xdcePrice * xdceTolerance) / 100);
 
               if (!valAcceptable) {
                 TxMinedListener = clearInterval(TxMinedListener);
@@ -345,7 +473,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                 if (!(Date.now() - txTimestamp > 24 * 60 * 60 * 1000)) {
                   // tx timedout
                   TxMinedListener = clearInterval(TxMinedListener);
-                  res.json({ error: "tx timed out", status: false });
+                  // res.json({ error: "tx timed out", status: false });
                   await emailer.sendMail(
                     process.env.SUPP_EMAIL_ID,
                     `Re-embursement for user ${req.user.email}`,
@@ -427,6 +555,168 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
 
         break;
       }
+      case 50: {
+        break;
+      }
+      case 51: {
+        try {
+          const coursePrice = await CoursePrice.findOne({ courseId: course });
+          if (coursePrice == null) {
+            // how ?
+            console.error("Course not found: ", course);
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${userEmail}`,
+              `No course found. Payment mode was via XDC. Payment transaction hash: ${txHash}`
+            );
+            return;
+          }
+          console.log("Price: ", price);
+          const discObj = await promoCodeService.usePromoCode(req);
+          if (discObj.error == null) {
+            // all good, can avail promo-code discount
+            price = parseFloat(price) - discObj.discAmt;
+          } else {
+            console.error(
+              `Error while using promocode ${req.body.codeName}: `,
+              discObj.error
+            );
+
+            if (discObj.error != "bad request") {
+              console.log("fatal error, closing listener");
+              await emailer.sendMail(
+                process.env.SUPP_EMAIL_ID,
+                `Re-embursement for user ${userEmail}`,
+                `Error while applying promo-code. Payment mode was via XDC. Payment transaction hash: ${txHash}`
+              );
+              return;
+            }
+          }
+
+          const xdcPrice = await getXinEquivalent(price);
+          const xdcTolerance = coursePrice.xdcTolerance;
+          if (xdcPrice == -1) {
+            // error while calculating current price.
+            console.error("Error while fetching the current price");
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Re-embursement for user ${userEmail}`,
+              `Error while fetching the current price. Payment mode was via XDC. Payment transaction hash: ${txHash}`
+            );
+            return;
+          }
+          console.log(
+            `Started listening for the mining for mining of TX ${txHash} for user ${userEmail} on network ${network}`
+          );
+          let TxMinedListener = setInterval(async () => {
+            console.log(
+              `Interval for TxMined for tx ${txHash} at network ${network} for user ${userEmail}`
+            );
+
+            let txResponseReceipt = await axios({
+              method: "post",
+              url: txReceiptUrlApothem,
+              data: {
+                tx: txHash,
+                isTransfer: false
+              }
+            });
+            console.log(txResponseReceipt);
+            txReceipt = txResponseReceipt.data;
+            console.log(txReceipt);
+            if (txReceipt.status == "0x1") {
+              // txnMined.
+              console.log(
+                `Got the tx receipt for the tx: ${txHash} on XinFin Network`
+              );
+              let xdcTokenAmnt = parseFloat(txReceipt.value) * Math.pow(10, 18);
+              let tknRecipient = txReceipt.to;
+              console.log(txReceipt);
+              if (tknRecipient !== xdcOwnerPubAddr) {
+                console.error("Invalid recipient for Payment By XDC");
+                return;
+              }
+
+              console.log("Expected Price: ", xdcPrice);
+              console.log("Actual Price: ", xdcTokenAmnt);
+
+              console.log(
+                "Minimum Value: ",
+                parseFloat(xdcPrice) - parseFloat(xdcPrice * xdcTolerance) / 100
+              );
+              console.log(
+                "Maximum Value: ",
+                parseFloat(xdcPrice) + parseFloat(xdcPrice * xdcTolerance) / 100
+              );
+              console.log("Actual Value: ", parseFloat(xdcTokenAmnt));
+
+              let valAcceptable =
+                parseFloat(xdcPrice) -
+                  parseFloat(xdcPrice * xdcTolerance) / 100 <=
+                  parseFloat(xdcTokenAmnt) &&
+                parseFloat(xdcTokenAmnt) <=
+                  parseFloat(xdcPrice) +
+                    parseFloat(xdcPrice * xdcTolerance) / 100;
+              if (!valAcceptable) {
+                TxMinedListener = clearInterval(TxMinedListener);
+                console.log(
+                  `Invalid value in tx ${txHash} by the user ${userEmail} at network XinFin`
+                );
+                await emailer.sendMail(
+                  process.env.SUPP_EMAIL_ID,
+                  `Re-embursement for user ${userEmail}`,
+                  `User sent an invalid amount of token. Payment mode was via XDC. Payment transaction hash: ${txHash}`
+                );
+                return;
+              }
+              console.log(txReceipt.blockNumber);
+
+              /* 
+            1. check if the to is our address - done
+            2. check if the value is within the tolerance of our system - done
+            3. check if the blockdate is not older than 12 hrs - done
+            4. check if the transaction is already recorded - done
+          */
+
+              let comPaymentToken = await PaymentToken.findOne({
+                txn_hash: txReceipt.hash
+              });
+              if (comPaymentToken == null) {
+                TxMinedListener = clearInterval(TxMinedListener);
+                await emailer.sendMail(
+                  process.env.SUPP_EMAIL_ID,
+                  `Fatal error for user ${userEmail}`,
+                  `Fatal error occured while finding the tokne for transaction hash: ${txReceipt.hash} for user ${userEmail}`
+                );
+                return;
+              }
+
+              comPaymentToken.status = "pending";
+              comPaymentToken.tokenAmt = xdcTokenAmnt;
+              await comPaymentToken.save();
+              TxMinedListener = clearInterval(TxMinedListener);
+              eventEmitter.emit(
+                "listenTxConfirm",
+                txHash,
+                51,
+                userEmail,
+                course
+              );
+              return;
+            }
+          }, 1000);
+        } catch (e) {
+          console.error(
+            `Some error occured while listening for the mining of tx ${txHash} on network id ${network} for user ${userEmail}`
+          );
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Re-embursement for user ${userEmail}`,
+            `Some error occured while listening for the mining of tx. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+          );
+          return;
+        }
+      }
       default: {
         console.error(
           `No listener registered for the chain with networkid ${network}`
@@ -472,15 +762,14 @@ function newDefBurnLog(id, txHash) {
 async function getXinEquivalent(amnt) {
   try {
     const currXinPrice = await axios.get(coinMarketCapAPI);
-    console.log("Parameter amnt: ",amnt);
-    console.log("Price usd: ",currXinPrice.data[0].price_usd)
+    console.log("Parameter amnt: ", amnt);
+    console.log("Price usd: ", currXinPrice.data[0].price_usd);
     if (
       currXinPrice.data[0] != undefined ||
       currXinPrice.data[0] != undefined
     ) {
       console.log(
-        (parseFloat(amnt) /
-          (parseFloat(currXinPrice.data[0].price_usd))) *
+        (parseFloat(amnt) / parseFloat(currXinPrice.data[0].price_usd)) *
           Math.pow(10, 18)
       );
       return (
@@ -569,36 +858,119 @@ async function handleBurnToken(
           )
         };
 
-        web3.eth.accounts.signTransaction(tx, keyConfig).then(signedTx => {
-          web3.eth
-            .sendSignedTransaction(signedTx.rawTransaction)
-            .on("receipt", async burnReceipt => {
-              if (burnReceipt.status) {
-                // the transaction is accepted
-                paymentLog.burn_txn_hash = burnReceipt.transactionHash;
-                paymentLog.burn_token_amnt = burnAmnt;
+        web3.eth.accounts
+          .signTransaction(tx, keyConfig[xdceOwnerPubAddr].privateKey)
+          .then(signedTx => {
+            web3.eth
+              .sendSignedTransaction(signedTx.rawTransaction)
+              .on("receipt", async burnReceipt => {
+                if (burnReceipt.status) {
+                  // the transaction is accepted
+                  paymentLog.burn_txn_hash = burnReceipt.transactionHash;
+                  paymentLog.burn_token_amnt = burnAmnt;
 
-                let newBurnLog = newDefBurnLog(uuidv4(), txHash);
-                newBurnLog.principal_userEmail = userEmail;
-                newBurnLog.course = courseId;
-                newBurnLog.principal_from = getTx.from;
-                newBurnLog.tokenName = tokenName;
-                newBurnLog.tokenAmt = burnAmnt;
-                newBurnLog.creationDate = Date.now().toString();
-                newBurnLog.to = burnAddress;
-                newBurnLog.from = blockdegreePubAddr;
-                await newBurnLog.save();
-                await paymentLog.save();
-                console.log(
-                  "Successfully burned token for payment by user: ",
-                  userEmail
-                );
-              } else {
-                console.error("Error while comfirming the tx");
-                return;
-              }
-            });
+                  let newBurnLog = newDefBurnLog(uuidv4(), txHash);
+                  newBurnLog.principal_userEmail = userEmail;
+                  newBurnLog.course = courseId;
+                  newBurnLog.principal_from = getTx.from;
+                  newBurnLog.tokenName = tokenName;
+                  newBurnLog.tokenAmt = burnAmnt;
+                  newBurnLog.creationDate = Date.now().toString();
+                  newBurnLog.to = burnAddress;
+                  newBurnLog.from = blockdegreePubAddr;
+                  await newBurnLog.save();
+                  await paymentLog.save();
+                  console.log(
+                    "Successfully burned token for payment by user: ",
+                    userEmail
+                  );
+                } else {
+                  console.error("Error while comfirming the tx");
+                  return;
+                }
+              });
+          });
+      } catch (e) {
+        console.log(e);
+      }
+      break;
+    }
+    case "xdc": {
+      console.log("Called burning XDC");
+      try {
+        const web3 = new Web3(
+          new Web3.providers.HttpProvider(xinfinApothemRPC)
+        );
+
+        let course = await CoursePrice.findOne({ courseId: courseId });
+        let paymentLog = await PaymentToken.findOne({ payment_id: paymentId });
+        let txReceiptResponse = await axios(txReceiptUrlApothem, {
+          tx: txHash,
+          isTransfer: false
         });
+        let receivedXdc = txReceiptResponse.data.value;
+
+        let burnAmnt = "";
+
+        if (!paymentLog.autoBurn) {
+          console.log("Auto-Burn has been turned off, closed the listener.");
+          return;
+        }
+
+        for (let z = 0; z < course.burnToken.length; z++) {
+          if (course.burnToken[z].tokenName === XDC) {
+            // token has applied for burning & autoBurn is on
+            const burnPercent = parseFloat(course.burnToken[z].burnPercent);
+            burnAmnt = Math.floor(
+              (parseFloat(receivedXdc) * burnPercent) / 100
+            ).toString();
+            break;
+          }
+        }
+
+        if (burnAmnt == 0 || burnAmnt == "0" || burnAmnt == "") {
+          // dont burn
+          console.log("Auto-Burn has been turned off, closed the listener.");
+          return;
+        }
+
+        console.log(
+          "Pending: ",
+          await web3.eth.getTransactionCount(
+            blockdegreePubAddrXDCApothm,
+            "pending"
+          )
+        );
+        console.log(
+          "Confirmed: ",
+          await web3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
+        );
+        const rawTx = {
+          from: blockdegreePubAddrXDCApothm,
+          to: "0x0000000000000000000000000000000000000000",
+          gas: 21000,
+          gasPrice: 9000,
+          value: burnAmnt,
+          nonce: await web3.eth.getTransactionCount(
+            blockdegreePubAddrXDCApothm,
+            "pending"
+          )
+        };
+
+        const privKey = Buffer.from(
+          keyConfig[blockdegreePubAddrXDCApothm].privateKey,
+          "hex"
+        );
+        const tx = new EthereumTx(rawTx);
+        tx.sign(privKey);
+        let serializedTx = tx.serialize();
+        web3.eth.sendSignedTransaction(
+          "0x" + serializedTx.toString("hex"),
+          function(err, hash) {
+            if (!err) console.log(hash);
+            else console.error(err);
+          }
+        );
       } catch (e) {
         console.log(e);
       }
