@@ -12,6 +12,7 @@ let hbs = require("express-handlebars");
 let cors = require("cors");
 let fs = require("fs");
 let pendingTx = require("./listeners/pendingTx").em;
+const adminServices = require("./services/adminServices");
 let app = express();
 require("dotenv").config();
 mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true });
@@ -88,8 +89,9 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
-app.listen("3000", () => {
+app.listen("3000", async () => {
   pendingTx.emit("initiatePendingTx");
+  await adminServices.initiateWalletConfig();
   console.log("server started");
 });
 

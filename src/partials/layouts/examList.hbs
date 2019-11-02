@@ -22,8 +22,8 @@
 </style>
 
 <div style="display: none;" id="wrapfabtest">
-    <div class="adBanner">This is a test&nbsp;
-    </div>
+  <div class="adBanner">This is a test&nbsp;
+  </div>
 </div>
 
 
@@ -37,7 +37,8 @@
       <li> If you have already enrolled in one of our courses then you <strong>Take Exam</strong> for certification
         after completing
         the <strong>whole curriculum</strong> for that given course.</li>
-      <li> Inorder to get a certificate, you'll need to get aleast <strong>60%</strong>. If you have score less than 60%, you'll have to give the exam again. <strong>Only 3 attempts</strong> possible per single payment.</li>
+      <li> Inorder to get a certificate, you'll need to get aleast <strong>60%</strong>. If you have score less than
+        60%, you'll have to give the exam again. <strong>Only 3 attempts</strong> possible per single payment.</li>
     </ol>
     <div><strong>Warning:</strong> Check / update your name before taking exam as the certificate will be generated
       on that name only & cannot be changed.
@@ -103,8 +104,9 @@
               aria-labelledby="paymentModalTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                  <div class="modal-header" >
-                    <h3 class="modal-title" style="margin-left:17% ;" id="exampleModalLongTitle">Please Select Payment Method</h3>
+                  <div class="modal-header">
+                    <h3 class="modal-title" style="margin-left:17% ;" id="exampleModalLongTitle">Please Select Payment
+                      Method</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -221,9 +223,9 @@
 
 <script type="text/javascript">
 
-  let allModals=[];
+  let allModals = [];
   const divisor = 1; // for testing purposes 1 million'th of actual value will be used
-    const coinMarketCapUrl = "/api/wrapCoinMarketCap";
+  const coinMarketCapUrl = "/api/wrapCoinMarketCap";
   const etherScanIo = "https://etherscan.io/tx/";
 
 
@@ -268,13 +270,13 @@
           if (result.error == null) {
             console.log("alright")
             const finalAmt = Math.round((parseFloat(price) - parseFloat(result.discAmt)) * 100) / 100;
-            if (finalAmt <= 0){
-              pay(course_id,price);
+            if (finalAmt <= 0) {
+              pay(course_id, price);
               return;
-            }else{
-            // Not a free course load the Payment Modal
-            $(`#btn-paymentModal${course_id.id}`).click();
-            }            
+            } else {
+              // Not a free course load the Payment Modal
+              $(`#btn-paymentModal${course_id.id}`).click();
+            }
           }
           else {
             $.notify(result.error, { type: "danger" })
@@ -336,38 +338,28 @@
     if (typeof web3 == "undefined") {
       // no web3 provider is available, ask to install XinPay
 
-    if (typeof InstallTrigger !== "undefined") {
-      $.notify("Please install <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
-      return;
-    }
-    else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
-      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
-      return;
-    }
-    else{
-      $.notify("This feature is not available in this browser, please try again using Chrome browser or Firefox", { type: "danger" })
-      return;
-    }
-
-
-    }
-
-    {{!-- if (web3.eth.accounts.length<=0){
-      // not logged in
       if (typeof InstallTrigger !== "undefined") {
-      $.notify(`Please login and connect your <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> extension, if you've already done that please <a onclick="window.location.reload()">refresh</a>`,{delay:5000})
-      return;
+        $.notify("Please install <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>", { delay: 5000 })
+        return;
+      }
+      else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
+        $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>", { delay: 5000 })
+        return;
+      }
+      else {
+        $.notify("This feature is not available in this browser, please try again using Chrome browser or Firefox", { type: "danger" })
+        return;
+      }
+
+
     }
-    else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
-      $.notify(`Please login and connect your <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> extension, if you've already done that please <a onclick="window.location.reload()">refresh</a>`,{delay:5000})
-      return;
-    }
-    } --}}
 
     web3.version.getNetwork((err, providerNetworkId) => {
       if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
 
-      if (providerNetworkId == 1) {
+      // 1 - Mainnet
+      // 4 - Rinkeby
+      if (providerNetworkId == 4) {
         // is on ethereum mainnet; all ok
         $.ajax({
           method: "get",
@@ -381,6 +373,11 @@
             }
             const priceUsd = parseFloat(response[0].price_usd);
             const codeName = document.getElementById(course_id.id + "codeName").value;
+            const xdceRecipient = await getTokenRecipient("4", "xdce");
+            if (xdceRecipient == null) {
+              $.notify("Something went wrong while fetching the XDCe recipient, please try again later", { type: "danger" });
+              return;
+            }
             try {
               const codeResp = await $.ajax({
                 method: "post",
@@ -397,22 +394,22 @@
             console.log(`Price after discount: ${price}`);
             if (price == 0) {
               // free course
-              try{
-              const respFree = await $.ajax({
-                method: "post",
-                url: "/api/payViaXdce",
-                data: { course: course_id.id, price: price }
-              });
-              if (!respFree.status){
-                $.notify(respFree.error,{type:"danger"});
+              try {
+                const respFree = await $.ajax({
+                  method: "post",
+                  url: "/api/payViaXdce",
+                  data: { course: course_id.id, price: price }
+                });
+                if (!respFree.status) {
+                  $.notify(respFree.error, { type: "danger" });
+                  return;
+                }
+                alert("Your Course has been availed for free !!");
+                window.location.reload();
                 return;
               }
-              alert("Your Course has been availed for free !!");
-              window.location.reload();
-              return;              
-              }
-              catch(e){
-                  $.notify("Some error occured while making the request, please try again after sometime or contact <strong>info@blockdegree.org</strong>", { type: "danger" });
+              catch (e) {
+                $.notify("Some error occured while making the request, please try again after sometime or contact <strong>info@blockdegree.org</strong>", { type: "danger" });
 
               }
             }
@@ -949,60 +946,44 @@
             };
             let xdcePrice = await getXinEquivalent(price)
             console.log("XDCe Price: ", xdcePrice)
-            {{!-- $.ajax({
-                  method: "post",
-                  url: "/api/payViaXdce",
-                  data: { txn_hash: "0x765c94643ff51bff83c97feca6b80044840b6b0298c02fbd17d9d600eac32148", course: course_id.id, price: price },
-                  success: resp => {
-                    if (resp.status) {
-                      // all ok, ask to check profile after sometime.
-                      $.notify(`Your transaction has been successfully received by our servers, your order will be completed after it being comfirmed.`, { type: "success" });
-
-                      return;
-                    } else {
-                      // something went wrong, ask to store tx & mail to info@blockdegree.org
-                      $.notify(`Some error occurred while processing your payment, please note your transaction hash <strong>0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f</strong> and send a mail at <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
-                    }
-                  },
-                  error: xhr => {
-                    $.notify(`<strong>Fatal Error</strong> : Fatal Error occured while connecting with our server. Please note your tx-hash <strong>$0x9f7b70fead12554dd9e1bd4cb66f1c0c062bcd6ee910b0599fb88e369b8a012f</strong> and send a mail to <strong>info@blockdegree.org</strong>`, { type: "danger", delay: 10000 })
-                    return;
-                  }
-                }) --}}
-            xdceInst.transfer.sendTransaction("0x4F85F740aCDCf01DF73Be4EB9558247E573097ff", xdcePrice, tx, (err, result) => {
+            // prettier-ignore
+          
+            xdceInst.transfer.sendTransaction(xdceRecipient, xdcePrice, tx, (err, result) => {
               if (err != null) {
                 $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
                 return;
               }
               // result is transaction hash
-              
-              const modTitle = "<strong>Transaction Submitted Successfully</strong>";
-              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a> <button onclick="copyTextToClipboard('pending_txHash')" >Click</button> to copy hash`;
-              
-              openModal("modal-info",modTitle,modBody);
 
-              $.notify("Transaction is <strong>pending</strong> . . .",{type:"warning",allow_dismiss:false,delay:Date.now(),placement: {
+              const modTitle = "<strong>Transaction Submitted Successfully</strong>";
+              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >" + result + "</div> " + `<a href="${etherScanIo + result}" target="_blank">${result.toString().slice(0, 11)}...</a> <button onclick="copyTextToClipboard('pending_txHash')" >Click</button> to copy hash`;
+
+              openModal("modal-info", modTitle, modBody);
+
+              $.notify("Transaction is <strong>pending</strong> . . .", {
+                type: "warning", allow_dismiss: false, delay: Date.now(), placement: {
                   from: 'bottom',
                   align: 'right'
-                }});
+                }
+              });
 
               $.ajax({
                 method: "post",
                 url: "/api/payViaXdce",
-                data: { txn_hash: result, course: course_id.id, price: price, codeName:codeName },
+                data: { txn_hash: result, course: course_id.id, price: price, codeName: codeName },
                 success: resp => {
-                  if (resp.status) {                    
+                  if (resp.status) {
                     const modTitle = "<strong>Transaction Received Successfully</strong>";
-                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a>. Click on link to view on etherscan.`;
-                    openModal("modal-success",modTitle,modBody);
+                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >" + result + "</div> " + `<a href="${etherScanIo + result}" target="_blank">${result.toString().slice(0, 11)}...</a>. Click on link to view on etherscan.`;
+                    openModal("modal-success", modTitle, modBody);
                     $.notifyClose('bottom-right')
                     return;
                   } else {
                     // something went wrong, ask to store tx & mail to info@blockdegree.org
-                   
+
                     const modTitle = "<strong>Some Error Occured</strong>";
-                    const modBody = resp.error+".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >"+result+"</div> "+ `<a href="${etherScanIo+result}" target="_blank">${result.toString().slice(0,11)}...</a> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
-                    openModal("modal-warning",modTitle,modBody);
+                    const modBody = resp.error + ".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >" + result + "</div> " + `<a href="${etherScanIo + result}" target="_blank">${result.toString().slice(0, 11)}...</a> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
+                    openModal("modal-warning", modTitle, modBody);
                     $.notifyClose('bottom-right')
                   }
                 },
@@ -1013,14 +994,14 @@
                 }
               })
               return;
-            }) 
+            })
 
           },
           error: xhr => {
-            
-              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay:10000 });
-              return;
-                       
+
+            $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay: 10000 });
+            return;
+
           }
         })
       }
@@ -1032,11 +1013,11 @@
           // firefox
           modBody = "Inorder to make a payment via XDCe, your extension needs to be connected to the Ethereum Mainnet.<br/>Please open your web extension and connect to Ethereum Mainnet. If your extension does'nt support connection to ethereum mainnet, then please install a compatible extension like <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> & disable other incompatible wallets <br/>If you've switched to ethereum mainnet, please <a onclick='window.location.reload()'>refresh</a>."
         }
-        else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)){
+        else if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
           // chrome
           modBody = "Inorder to make a payment via XDCe, your extension needs to be connected to the Ethereum Mainnet.<br/>Please open your web extension and connect to Ethereum Mainnet. If your extension does'nt support connection to ethereum mainnet, then please install a compatible extension like <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> & disable other incompatible wallets <br/>If you've switched to ethereum mainnet, please <a onclick='window.location.reload()'>refresh</a>."
         }
-        openModal("modal-info",modTitle,modBody)
+        openModal("modal-info", modTitle, modBody)
         return;
       }
     })
@@ -1087,7 +1068,7 @@
     console.log("TypeOf Web3: ",typeof web3);
     if (typeof web3 == "undefined") {
       // no web3 provider is available, ask to install XinPay
-      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",{delay:5000})
+      $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>", { delay: 5000 })
       return;
     }
 
@@ -1152,10 +1133,10 @@
             })
           },
           error: xhr => {
-            
-              $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay:10000 });
-              return;
-             
+
+            $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger", delay: 10000 });
+            return;
+
           }
         })
       }
@@ -1199,7 +1180,7 @@
 
   async function getXinEquivalent(amnt) {
     try {
-      const respWhole = await $.ajax({ method: "get", url: coinMarketCapUrl });      
+      const respWhole = await $.ajax({ method: "get", url: coinMarketCapUrl });
       const currXinPrice = respWhole.data;
       console.log(currXinPrice);
       console.log("Response from CMC: ", currXinPrice)
@@ -1211,68 +1192,68 @@
         );
       }
     } catch (e) {
-      
-              console.error(
+
+      console.error(
         "Some error occurred while making or processing call from CoinMarketCap", e
       );
       return -1;
-                 
+
     }
   }
 
-function fallbackCopyTextToClipboard(text) {
-  var textArea = document.createElement("textarea");
-  textArea.value = text;
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
+  function fallbackCopyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
 
-  try {
-    var successful = document.execCommand('copy');
-    var msg = successful ? 'successful' : 'unsuccessful';
-    console.log('Fallback: Copying text command was ' + msg);
-  } catch (err) {
-    console.error('Fallback: Oops, unable to copy', err);
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      console.log('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
+    }
+
+    document.body.removeChild(textArea);
+  }
+  function copyTextToClipboard(containerId) {
+    let text = document.getElementById(containerId).innerHTML;
+    if (!navigator.clipboard) {
+      fallbackCopyTextToClipboard(text);
+      return;
+    }
+    navigator.clipboard.writeText(text).then(function () {
+      console.log('Async: Copying to clipboard was successful!');
+    }, function (err) {
+      console.error('Async: Could not copy text: ', err);
+    });
   }
 
-  document.body.removeChild(textArea);
-}
-function copyTextToClipboard(containerId) {
-  let text = document.getElementById(containerId).innerHTML;
-  if (!navigator.clipboard) {
-    fallbackCopyTextToClipboard(text);
-    return;
-  }
-  navigator.clipboard.writeText(text).then(function() {
-    console.log('Async: Copying to clipboard was successful!');
-  }, function(err) {
-    console.error('Async: Could not copy text: ', err);
-  });
-}
-  
-  function openModal(modalType,modalTitle,modalBody){
-      // check if a modal is already open, then wait forthe modal to close.
-      allModals.push({modalType:modalType,modalTitle:modalTitle,modalBody:modalBody});      
-      if (allModals.length > 1) {
-        console.log("modal is open");
-      }
-      else{
-        // directly show
-        const hashModalTitle = document.getElementById("displayHashModal-title");
-        const hashModalBody = document.getElementById("displayHashModal-body");
-        setModalType(modalType);
-        hashModalTitle.innerHTML = modalTitle;
-        hashModalBody.innerHTML = modalBody;
-        document.getElementById("btn-displayHashModal").click();
-        console.log($('#displayHashModal').hasClass('in'));
-        console.log($('#displayHashModal').is(':visible'));
-      }           
+  function openModal(modalType, modalTitle, modalBody) {
+    // check if a modal is already open, then wait forthe modal to close.
+    allModals.push({ modalType: modalType, modalTitle: modalTitle, modalBody: modalBody });
+    if (allModals.length > 1) {
+      console.log("modal is open");
+    }
+    else {
+      // directly show
+      const hashModalTitle = document.getElementById("displayHashModal-title");
+      const hashModalBody = document.getElementById("displayHashModal-body");
+      setModalType(modalType);
+      hashModalTitle.innerHTML = modalTitle;
+      hashModalBody.innerHTML = modalBody;
+      document.getElementById("btn-displayHashModal").click();
+      console.log($('#displayHashModal').hasClass('in'));
+      console.log($('#displayHashModal').is(':visible'));
+    }
   }
 
   $('#displayHashModal').on('hidden.bs.modal', function (e) {
     console.log(e);
     allModals.shift();
-    if (allModals.length > 0){
+    if (allModals.length > 0) {
       let firstModal = allModals[0];
       const hashModalTitle = document.getElementById("displayHashModal-title");
       const hashModalBody = document.getElementById("displayHashModal-body");
@@ -1280,7 +1261,7 @@ function copyTextToClipboard(containerId) {
       hashModalTitle.innerHTML = firstModal.modalTitle;
       hashModalBody.innerHTML = firstModal.modalBody;
       document.getElementById("btn-displayHashModal").click();
-    }            
+    }
   })
 
   function setModalType(modalType) {
@@ -1296,6 +1277,29 @@ function copyTextToClipboard(containerId) {
     // add modalType
     $("#modal-header-wrp").addClass(modalType);
     $("#displayHashModal-footer").addClass(modalType);
+  }
+
+  async function getTokenRecipient(wallet_network, wallet_token_name) {
+    try {
+      let retData = await $.ajax({
+        method: "post",
+        "url": "/api/getTokenRecipient",
+        data: { wallet_network: wallet_network, wallet_token_name: wallet_token_name }
+      });
+      if (!retData.status) {
+        console.error("Error while making call to the API getTokenRecipient: ", retData.error);
+        return null;
+      }
+      else {
+        // status ok
+        return retData.data.wallet_address;
+      }
+    }
+    catch (e) {
+      console.error("Some error occured while executing the function getTokenRecipient: ", e);
+      return null;
+    }
+
   }
 
 </script>

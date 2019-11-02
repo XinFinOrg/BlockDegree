@@ -6,6 +6,7 @@ const promoCodeService = require("../services/promoCodes");
 const PaymentToken = require("../models/payment_token");
 const CoursePrice = require("../models/coursePrice");
 const Notification = require("../models/notifications");
+const AllWallet = require("../models/wallet");
 const Web3 = require("web3");
 const XDC3 = require("xdc3");
 const axios = require("axios");
@@ -32,7 +33,7 @@ const xinfinMainnetRPC = "http://rpc.xinfin.network";
 
 const contractAddrRinkeby = contractConfig.address.rinkeby;
 const contractABI = contractConfig.ABI;
-const xdceAddrMainnet = contractConfig.address.xdceMainnet;
+const xdceAddrMainnet = contractConfig.address.xdceRinkeby;
 const xdceABI = contractConfig.XdceABI;
 const transferFunctionStr = "transfer(address,uint)";
 const XDCE = "xdce";
@@ -644,6 +645,17 @@ exports.payViaXdce = async (req, res) => {
     let fullPrice = coursePrice.priceUsd;
     const discObj = await promoCodeService.usePromoCode(req);
 
+    const xdceOwnerPubAddr = await getXDCeRecipient("4");
+    if (xdceOwnerPubAddr === null) {
+      // some error occured while fetching the XdceOwnerPubAddr
+      res.json({ error: "internal error", status: false });
+      await emailer.sendMail(
+        process.env.SUPP_EMAIL_ID,
+        `Potential re-imbursement for the user ${req.user.email}`,
+        `Some error occured while fetching the xdceOwnerPubAddr at payments.payViaXdce. TxHash: ${txn_hash}`
+      );
+      return;
+    }
     // check if the price is 9.99 if not then check if a propoer codeName has been supplied else makr invalid transfer.
     if (price != fullPrice) {
       // not equal check for promoCode
@@ -758,7 +770,7 @@ exports.payViaXdce = async (req, res) => {
     const xdceTolerance = coursePrice.xdceTolerance;
     const web3 = new Web3(
       new Web3.providers.WebsocketProvider(
-        "wss://mainnet.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49"
+        "wss://rinkeby.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49"
       )
     );
 
@@ -1047,6 +1059,48 @@ exports.getPaymentsToNotify = async (req, res) => {
   }
 };
 
+// TO address for the frontend.
+exports.getTokenRecipient = async (req, res) => {
+  const network = req.body.wallet_network;
+  const token_name = req.body.wallet_token_name;
+
+  if (network === undefined || network === null || network === "") {
+    return res.json({ error: "invalid network", status: false });
+  }
+
+  try {
+    const retWallet = await AllWallet.findOne({
+      recipientActive: {
+        $elemMatch: {
+          wallet_network: network,
+          wallet_token_name: token_name
+        }
+      }
+    });
+    if (retWallet === null) {
+      return res.json({ error: "not found", status: false, data: null });
+    }
+    for (let c = 0; c < retWallet.recipientWallets.length; c++) {
+      if (
+        retWallet.recipientWallets[c].wallet_network === network &&
+        retWallet.recipientWallets[c].wallet_token_name === token_name
+      ) {
+        return res.json({
+          error: null,
+          status: true,
+          data: retWallet.recipientWallets[c]
+        });
+      }
+    }
+  } catch (e) {
+    console.error(
+      "Some error occured while fetching the walletConfig at payment.ggetXDCePaymentRecipient: ",
+      e
+    );
+    return res.json({ error: "internal error", status: false, data: null });
+  }
+};
+
 function newPaymentToken() {
   return new PaymentToken({
     payment_id: "",
@@ -1096,4 +1150,21 @@ function newDefNoti() {
     message: "",
     displayed: false
   });
+}
+
+async function getXDCeRecipient(network) {
+  const configWallet = await AllWallet.findOne();
+  if (configWallet == null) {
+    console.log("Wallet not configured");
+    return null;
+  }
+  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+    if (
+      configWallet.recipientActive[i].wallet_token_name === "xdce" &&
+      configWallet.recipientActive[i].wallet_network === network
+    ) {
+      return configWallet.recipientActive[i].wallet_address;
+    }
+  }
+  return null;
 }

@@ -274,6 +274,7 @@
     fetchCryptoTransactions();
     setTimeout(() => {
       fetchCryptoTransactions();
+      callPendingListener();
     }, 3000);
   });
 
@@ -391,7 +392,6 @@
                     allPendingTransaction,
                     payments[z].txn_hash
                   );
-                  listeningForPending = true;
                 }
 
                 pay_hash_link = `<a href="${etherScanIo +
@@ -409,7 +409,6 @@
                       allPendingTransaction.push(
                         payments[z].txn_hash + "_burn"
                       );
-                    listeningForPending = true;
                     burn_txHash = "Burning is in process...";
                     burn_hash_link = burn_txHash;
                   } else {
@@ -436,8 +435,9 @@
                 }
               }
             } else {
-              if (allPendingTransaction.indexOf(payments[z].txn_hash) < 0)
+              if (allPendingTransaction.indexOf(payments[z].txn_hash) < 0){
                 allPendingTransaction.push(payments[z].txn_hash);
+              }
               payment_txHash =
                 payments[z].txn_hash.toString().slice(0, 11) + "...";
               if (payments[z].autoBurn) {
@@ -465,6 +465,7 @@
           }
           tableBody.innerHTML = retHtml;
           tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;
+          console.log(allPendingTransaction)
           if (allPendingTransaction.length == 0) {
             // clear listener
             clearInterval(pendingEventListener);
@@ -485,7 +486,6 @@
     });
 
     // setInterval for pending transactions
-    callPendingListener();
   }
 
   function callPendingListener() {

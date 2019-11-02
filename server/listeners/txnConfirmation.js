@@ -8,6 +8,7 @@ const Web3 = require("web3");
 const XDC3 = require("xdc3");
 const contractConfig = require("../config/smartContractConfig");
 const keyConfig = require("../config/keyConfig");
+const AllWallet = require("../models/wallet");
 const uuidv4 = require("uuid/v4");
 const abiDecoder = require("abi-decoder");
 const axios = require("axios");
@@ -20,7 +21,7 @@ let eventEmitter = new EventEmitter();
 // const xinConfirmation = 3;
 const contractAddrRinkeby = contractConfig.address.rinkeby;
 const contractABI = contractConfig.ABI;
-const xdceAddrMainnet = contractConfig.address.xdceMainnet;
+const xdceAddrMainnet = contractConfig.address.xdceRinkeby;
 const xdceABI = contractConfig.XdceABI;
 
 const xdceOwnerPubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
@@ -33,6 +34,15 @@ const xinfinApothemRPC = "http://rpc.apothem.network";
 
 const txReceiptUrlApothem = "https://explorer.apothem.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
 
+// 0x3C7a500D32C3A8317c943293c2a123A0456aa2D0 - test on rinkeBy
+// 0x4F85F740aCDCf01DF73Be4EB9558247E573097ff - on mainnet
+// const xdceOwnerPubAddr = await getXDCeRecipient();
+// let blockdegreePubAddr = "";
+// test();
+// async function test() {
+//   blockdegreePubAddr = await getXDCeRecipient();
+//   console.log("blockdegree public address set");
+// }
 const burnAddress = "0x0000000000000000000000000000000000000000";
 const coinMarketCapAPI =
   "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
@@ -55,7 +65,7 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
     switch (network) {
       case 1: {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+          new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
         );
         try {
           const txReceipt = await web3.eth.getTransactionReceipt(txHash);
@@ -333,10 +343,22 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
       case 1: {
         try {
           const web3 = new Web3(
-            new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+            new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
           );
           const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
           const coursePrice = await CoursePrice.findOne({ courseId: course });
+          const blockdegreePubAddr = await getXDCeRecipient("4");
+          if (blockdegreePubAddr === null) {
+            console.error(
+              "Error occured while fetching blockdegreePubAddr at txnConfirmation.listenForMined"
+            );
+            await emailer.sendMail(
+              process.env.SUPP_EMAIL_ID,
+              `Potential re-imbursement for the user ${req.user.email}`,
+              `Some error occured while fetching the blockdegreePubAddr at txnConfirmation.listenForMined. TxHash: ${txHash}`
+            );
+            return;
+          }
           if (coursePrice == null) {
             // how ?
             console.error("Course not found: ", course);
@@ -449,7 +471,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                 return;
               }
               let expectedData = contractInst.methods
-                .transfer(xdceOwnerPubAddr, decodedMethod.params[1].value)
+                .transfer(blockdegreePubAddr, decodedMethod.params[1].value)
                 .encodeABI();
               let validFuncSig = expectedData === txInputData && valAcceptable;
               console.log(validFuncSig);
@@ -797,7 +819,7 @@ async function handleBurnToken(
     case "xdce": {
       try {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+          new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
         );
 
         let course = await CoursePrice.findOne({ courseId: courseId });
@@ -808,6 +830,7 @@ async function handleBurnToken(
         let receivedXdce = decodedMethod.params[1].value;
 
         const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
+        const blockdegreePubAddr = await getXDCeRecipient("4");
         let burnAmnt = "";
 
         if (!paymentLog.autoBurn) {
@@ -989,6 +1012,23 @@ function newDefNoti() {
     message: "",
     displayed: false
   });
+}
+
+async function getXDCeRecipient(network) {
+  const configWallet = await AllWallet.findOne();
+  if (configWallet == null) {
+    console.log("Wallet not configured");
+    return null;
+  }
+  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+    if (
+      configWallet.recipientActive[i].wallet_token_name === "xdce" &&
+      configWallet.recipientActive[i].wallet_network === network
+    ) {
+      return configWallet.recipientActive[i].wallet_address;
+    }
+  }
+  return null;
 }
 
 eventEmitter.on("listenTxConfirm", listenForConfirmation);
