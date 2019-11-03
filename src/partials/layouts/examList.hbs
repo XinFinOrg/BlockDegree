@@ -114,7 +114,7 @@
                   <div class="modal-body">
                     <button type="button" class="btn-payment" onclick="payViaXdce({{this.type}},{{this.price}})"
                       data-dismiss="modal"> Pay Via XDCe </button>
-    
+
                     <button type="button" class="btn-payment" onclick="payViaXdc({{this.type}},{{this.price}})"
                       data-dismiss="modal"> Pay Via XDC </button>
 
@@ -305,7 +305,7 @@
     let elementPrice = document.createElement("input");
     let elementCodeName = document.createElement("input");
 
-    elementEmail.name="email";
+    elementEmail.name = "email";
     elementEmail.value = email;
     formNew.appendChild(elementEmail);
 
@@ -328,10 +328,10 @@
   async function payViaXdc(course_id, price) {
     // check if the 
     // need to check if the user is logged in.
-    
-    
-      $(`#btn-XinPayNotifier${course_id.id}`).click();
-   
+
+
+    $(`#btn-XinPayNotifier${course_id.id}`).click();
+
   }
 
   function payViaXdce(course_id, price) {
@@ -947,7 +947,7 @@
             let xdcePrice = await getXinEquivalent(price)
             console.log("XDCe Price: ", xdcePrice)
             // prettier-ignore
-          
+
             xdceInst.transfer.sendTransaction(xdceRecipient, xdcePrice, tx, (err, result) => {
               if (err != null) {
                 $.notify(`Some error occured while creating the transaction, please try again later or inform ust at <strong>info@blockdegree.org</strong>`, { type: "danger" })
@@ -1029,43 +1029,43 @@
   async function launchXinPay(course_id, price) {
 
     const codeName = document.getElementById(course_id.id + "codeName").value;
-    let txPrice=price;
+    let txPrice = price;
     try {
-              const codeResp = await $.ajax({
-                method: "post",
-                url: "/api/checkCode",
-                data: { codeName: codeName }
-              })
-              if (codeResp.error == null) {
-                txPrice = Math.round((parseFloat(price) - parseFloat(codeResp.discAmt)) * 100) / 100;
-              }
-              if (txPrice <= 0) txPrice = 0;
-            } catch (e) {
-              console.error(e)
-            }
-            console.log(`Price after discount: ${txPrice}`);
-            if (txPrice == 0) {
-              // free course
-              try{
-              const respFree = await $.ajax({
-                method: "post",
-                url: "/api/payViaXdce",
-                data: { course: course_id.id, price: price, codeName: codeName }
-              });
-              if (!respFree.status){
-                $.notify(respFree.error,{type:"danger"});
-                return;
-              }
-              alert("Your Course has been availed for free !!");
-              window.location.reload();
-              return;              
-              }
-              catch(e){
-                  $.notify("Some error occured while making the request, please try again after sometime or contact <strong>info@blockdegree.org</strong>", { type: "danger" });
-                  return;
-              }
-            }
-    console.log("TypeOf Web3: ",typeof web3);
+      const codeResp = await $.ajax({
+        method: "post",
+        url: "/api/checkCode",
+        data: { codeName: codeName }
+      })
+      if (codeResp.error == null) {
+        txPrice = Math.round((parseFloat(price) - parseFloat(codeResp.discAmt)) * 100) / 100;
+      }
+      if (txPrice <= 0) txPrice = 0;
+    } catch (e) {
+      console.error(e)
+    }
+    console.log(`Price after discount: ${txPrice}`);
+    if (txPrice == 0) {
+      // free course
+      try {
+        const respFree = await $.ajax({
+          method: "post",
+          url: "/api/payViaXdce",
+          data: { course: course_id.id, price: price, codeName: codeName }
+        });
+        if (!respFree.status) {
+          $.notify(respFree.error, { type: "danger" });
+          return;
+        }
+        alert("Your Course has been availed for free !!");
+        window.location.reload();
+        return;
+      }
+      catch (e) {
+        $.notify("Some error occured while making the request, please try again after sometime or contact <strong>info@blockdegree.org</strong>", { type: "danger" });
+        return;
+      }
+    }
+    console.log("TypeOf Web3: ", typeof web3);
     if (typeof web3 == "undefined") {
       // no web3 provider is available, ask to install XinPay
       $.notify("Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>", { delay: 5000 })
@@ -1095,22 +1095,24 @@
             const coursePriceXdc = parseFloat(txPrice) / priceUsd
             console.log(`Original Price: ${txPrice} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
             await ethereum.enable();
-
-            web3.eth.sendTransaction({ to: "0x289da729d69ce09de5b543bc40be01e2cd9c1227", gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
+            const xdcRecipient = await getTokenRecipient("51", "xdc");
+            if (xdcRecipient == null) {
+              $.notify("Something went wrong while fetching the XDC recipient, please try again later", { type: "danger" });
+              return;
+            }
+            web3.eth.sendTransaction({ to: "0x" + xdcRecipient.slice(3,), gasPrice: web3.toWei(11, "gwei"), value: web3.toWei(coursePriceXdc, "ether") }, (err, result) => {
               if (err) {
                 console.error(err)
                 $.notify("<b>XinPay</b> : Some error while creating or processing this transaction.", { type: "danger" });
                 return;
               }
               else {
-                // transaction processed; lets register this tx on blockdegree.
-                // 0xbb0fb706bf91171d1e5bef355e1f3fca807fa7a2d5847d215885a3efcefde1b5
                 console.log("Transaction Hash: ", result);
                 $.notify("The payment process has been initiated");
                 $.ajax({
                   method: "post",
                   url: "/api/payViaXdc",
-                  data: { course: course_id.id, price: price, txn_hash: result, codeName:codeName },
+                  data: { course: course_id.id, price: price, txn_hash: result, codeName: codeName },
                   success: response => {
                     if (!response.status) {
                       // Error, its ok.

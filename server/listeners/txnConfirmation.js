@@ -654,6 +654,18 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               let xdcTokenAmnt = parseFloat(txReceipt.value) * Math.pow(10, 18);
               let tknRecipient = txReceipt.to;
               console.log(txReceipt);
+              let xdcOwnerPubAddr = await getXDCRecipient("51");
+              if (xdcOwnerPubAddr == null) {
+                console.error(
+                  "Some error occured at payment.payViaXdc while fetching the XDC recipient: "
+                );
+                await emailer.sendMail(
+                  process.env.SUPP_EMAIL_ID,
+                  `Potential re-imbursement for the user ${req.user.email}`,
+                  `Some error occured while fetching the xdceOwnerPubAddr at payments.payViaXdce. TxHash: ${txn_hash}`
+                );
+                return;
+              }
               if (tknRecipient !== xdcOwnerPubAddr) {
                 console.error("Invalid recipient for Payment By XDC");
                 return;
@@ -1029,6 +1041,22 @@ async function getXDCeRecipient(network) {
     }
   }
   return null;
+}
+
+async function getXDCRecipient(network) {
+  const configWallet = await AllWallet.findOne();
+  if (configWallet == null) {
+    console.log("Wallet not configured");
+    return null;
+  }
+  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+    if (
+      configWallet.recipientActive[i].wallet_token_name === "xdc" &&
+      configWallet.recipientActive[i].wallet_network === network
+    ) {
+      return configWallet.recipientActive[i].wallet_address;
+    }
+  }
 }
 
 eventEmitter.on("listenTxConfirm", listenForConfirmation);

@@ -486,19 +486,45 @@ exports.payViaXdc = async (req, res) => {
     const web3 = new Web3(
       new Web3.providers.HttpProvider("http://rpc.apothem.network")
     );
-    const xdc3 = new XDC3(new Web3.providers.HttpProvider("http://rpc.apothem.network"));
+    const xdc3 = new XDC3(
+      new XDC3.providers.HttpProvider("http://rpc.apothem.network")
+    );
 
     // for demo: 0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed, 0x55ede32eae710eed3d21456db6fb01c5e16fcfb04292e72bc0e451fc6693ff8a
 
     // No contract interaaction required, simple value check :)
 
     // const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
+
+    console.log("---------------------------------x-----------------------------------------")
+    xdc3.eth.getTransactionReceipt(
+      "0x52916e20111c0a113cc7da6a9d39540e6b98238bc3e192f43b6089db108e781e",
+      (err, result) =>{ console.log(err,result)}
+    );
+    console.log("---------------------------------x-----------------------------------------")
+
     let txReceipt = "";
     let txMinedLimit = 55 * 1000; // will listen for mining of the trn_hash for about 1 minute.
     let startTime = Date.now();
+    let xdcOwnerPubAddr = await getXDCRecipient("51");
+    if (xdcOwnerPubAddr == null) {
+      console.error(
+        "Some error occured at payment.payViaXdc while fetching the XDC recipient: "
+      );
+      res.json({
+        error: "internal error",
+        status: false
+      });
+      await emailer.sendMail(
+        process.env.SUPP_EMAIL_ID,
+        `Potential re-imbursement for the user ${req.user.email}`,
+        `Some error occured while fetching the xdceOwnerPubAddr at payments.payViaXdce. TxHash: ${txn_hash}`
+      );
+      return;
+    }
     let TxMinedListener = setInterval(async () => {
       console.log(`Interval for Tx mining`);
-      if (Date.now() - startTime < txMinedLimit) {
+      if (Date.now() - startTime > txMinedLimit) {
         TxMinedListener = clearInterval(TxMinedListener);
         res.json({
           status: false,
@@ -516,10 +542,7 @@ exports.payViaXdc = async (req, res) => {
         );
         return;
       }
-      console.log({
-        tx: txn_hash,
-        isTransfer: false
-      });
+
       let txResponseReceipt = await axios({
         method: "post",
         url: txReceiptUrlApothem,
@@ -528,17 +551,14 @@ exports.payViaXdc = async (req, res) => {
           isTransfer: false
         }
       });
-      console.log(txResponseReceipt);
       txReceipt = txResponseReceipt.data;
-      console.log(txReceipt);
       if (txReceipt.status == "0x1") {
         // txnMined.
         console.log(
           `Got the tx receipt for the tx: ${txn_hash} on XinFin Network`
         );
-        let xdcTokenAmnt = parseFloat(txReceipt.value)*Math.pow(10,18);
+        let xdcTokenAmnt = parseFloat(txReceipt.value) * Math.pow(10, 18);
         let tknRecipient = txReceipt.to;
-        console.log(txReceipt);
         if (tknRecipient !== xdcOwnerPubAddr) {
           return res.json({ error: "invalid receipient", status: false });
         }
@@ -574,8 +594,8 @@ exports.payViaXdc = async (req, res) => {
           );
           return;
         }
-        console.log(txReceipt.blockNumber);                
-       
+        console.log(txReceipt.blockNumber);
+
         /* 
       1. check if the to is our address - done
       2. check if the value is within the tolerance of our system - done
@@ -1167,4 +1187,20 @@ async function getXDCeRecipient(network) {
     }
   }
   return null;
+}
+
+async function getXDCRecipient(network) {
+  const configWallet = await AllWallet.findOne();
+  if (configWallet == null) {
+    console.log("Wallet not configured");
+    return null;
+  }
+  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+    if (
+      configWallet.recipientActive[i].wallet_token_name === "xdc" &&
+      configWallet.recipientActive[i].wallet_network === network
+    ) {
+      return configWallet.recipientActive[i].wallet_address;
+    }
+  }
 }
