@@ -154,6 +154,7 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
                     newNoti.displayed = false;
 
                     user.examData.payment[paymentLog.course] = true;
+                    user.examData.payment[paymentLog.course+"_payment"] = `XDCe:${paymentLog.payment_id}`;
                     await paymentLog.save();
                     await user.save();
                     await newNoti.save();
@@ -292,6 +293,8 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
                 newNoti.displayed = false;
 
                 user.examData.payment[paymentLog.course] = true;
+                user.examData.payment[paymentLog.course+"_payment"] = `XDC:${paymentLog.payment_id}`;
+
                 await paymentLog.save();
                 await user.save();
                 await newNoti.save();
