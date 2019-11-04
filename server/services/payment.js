@@ -683,7 +683,7 @@ exports.payViaXdce = async (req, res) => {
     let fullPrice = coursePrice.priceUsd;
     const discObj = await promoCodeService.usePromoCode(req);
 
-    const xdceOwnerPubAddr = await getXDCeRecipient("1");
+    const xdceOwnerPubAddr = await getXDCeRecipient("4");
     if (xdceOwnerPubAddr === null) {
       // some error occured while fetching the XdceOwnerPubAddr
       res.json({ error: "internal error", status: false });
@@ -794,7 +794,7 @@ exports.payViaXdce = async (req, res) => {
     newPaymentXdce.price = coursePrice.priceUsd;
     newPaymentXdce.status = "not yet mined";
     newPaymentXdce.autoBurn = toAutoBurn; // capture trhe status of autoburn at the moment, this will be forwarded.
-    newPaymentToken.payment_network = "1";
+    newPaymentXdce.payment_network = "4";
     await newPaymentXdce.save();
     console.log("saved");
 
@@ -831,7 +831,7 @@ exports.payViaXdce = async (req, res) => {
         eventEmitter.emit(
           "listenTxMined",
           txn_hash,
-          1,
+          4,
           req.user.email,
           price,
           course,
@@ -998,7 +998,7 @@ exports.payViaXdce = async (req, res) => {
         eventEmitter.emit(
           "listenTxConfirm",
           txn_hash,
-          1,
+          4,
           req.user.email,
           course,
           newNotiId,

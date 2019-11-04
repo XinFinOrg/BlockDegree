@@ -71,7 +71,7 @@ function listenForConfirmation(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
     );
     switch (network) {
-      case 1: {
+      case 4: {
         const web3 = new Web3(
           new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
         );
@@ -163,7 +163,7 @@ function listenForConfirmation(
 
                     user.examData.payment[paymentLog.course] = true;
 
-                    let _payment = `XDC:${paymentLog.payment_id}`;
+                    let _payment = `XDCe:${paymentLog.payment_id}`;
                     _payment =
                       codeName == undefined ||
                       codeName == null ||
@@ -376,14 +376,14 @@ function listenForConfirmation(
 function listenForMined(txHash, network, userEmail, price, course, req) {
   setImmediate(async () => {
     switch (network) {
-      case 1: {
+      case 4: {
         try {
           const web3 = new Web3(
             new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
           );
           const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
           const coursePrice = await CoursePrice.findOne({ courseId: course });
-          const blockdegreePubAddr = await getXDCeRecipient("1");
+          const blockdegreePubAddr = await getXDCeRecipient("4");
           if (blockdegreePubAddr === null) {
             console.error(
               "Error occured while fetching blockdegreePubAddr at txnConfirmation.listenForMined"
@@ -597,7 +597,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               );
               listenForConfirmation(
                 txHash,
-                1,
+                4,
                 userEmail,
                 course,
                 newNotiId,
@@ -896,7 +896,48 @@ async function handleBurnToken(
         let receivedXdce = decodedMethod.params[1].value;
 
         const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
-        const blockdegreePubAddr = await getXDCeRecipient("1");
+
+
+        
+        const allWallet = await AllWallet.findOne({
+          burnActive: {
+            $elemMatch: {
+              wallet_network: paymentLog.payment_network,
+              wallet_token_name: tokenName
+            }
+          }
+        });
+
+        let xdceOwnerPubAddr = null;
+        loop1: {
+          for (let f = 0; f < allWallet.burnActive.length; f++) {
+            if (
+              allWallet.burnActive[f].wallet_network ==
+                paymentLog.payment_network &&
+              allWallet.burnActive[f].wallet_token_name == tokenName
+            ) {
+              // Eureka!
+              xdceOwnerPubAddr = allWallet.burnActive[f].wallet_address;
+              break loop1;
+            }
+          }
+        }
+
+        const blockdegreePubAddr = xdceOwnerPubAddr;
+
+
+        if (xdceOwnerPubAddr == null) {
+          console.error(
+            "Some error occured while fethcing the XDCe recipient address txnConfirmation."
+          );
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Potential for user ${userEmail}`,
+            `XDCe recipient was null. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+          );
+          return;
+        }
+        
         let burnAmnt = "";
 
         if (!paymentLog.autoBurn) {
@@ -945,43 +986,7 @@ async function handleBurnToken(
             blockdegreePubAddr,
             "pending"
           )
-        };
-
-        const allWallet = await AllWallet.findOne({
-          recipientActive: {
-            $elemMatch: {
-              wallet_network: paymentLog.payment_network,
-              wallet_token_name: tokenName
-            }
-          }
-        });
-
-        let xdceOwnerPubAddr = null;
-        loop1: {
-          for (let f = 0; f < allWallet.burnActive.length; f++) {
-            if (
-              allWallet.burnActive[f].wallet_network ==
-                paymentLog.payment_network &&
-              allWallet.burnActive[f].wallet_token_name == tokenName
-            ) {
-              // Eureka!
-              xdceOwnerPubAddr = allWallet.burnActive[f].wallet_address;
-              break loop1;
-            }
-          }
-        }
-
-        if (xdceOwnerPubAddr == null) {
-          console.error(
-            "Some error occured while fethcing the XDCe recipient address txnConfirmation."
-          );
-          await emailer.sendMail(
-            process.env.SUPP_EMAIL_ID,
-            `Potential for user ${userEmail}`,
-            `XDCe recipient was null. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
-          );
-          return;
-        }
+        };        
 
         web3.eth.accounts
           .signTransaction(tx, keyConfig[xdceOwnerPubAddr].privateKey)
@@ -1065,7 +1070,7 @@ async function handleBurnToken(
         }
 
         const allWallet = await AllWallet.findOne({
-          recipientActive: {
+          burnActive: {
             $elemMatch: {
               wallet_network: paymentLog.payment_network,
               wallet_token_name: tokenName
