@@ -911,6 +911,27 @@ async function handleBurnToken(
           )
         };
 
+        const xdceOwnerPubAddr = await AllWallet.findOne({
+          recipientActive: {
+            $elemMatch: {
+              wallet_network: paymentLog.payment_network,
+              wallet_token_name: tokenName
+            }
+          }
+        });
+
+        if (xdceOwnerPubAddr == null) {
+          console.error(
+            "Some error occured while fethcing the XDCe recipient address txnConfirmation."
+          );
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Potential for user ${userEmail}`,
+            `XDCe recipient was null. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
+          );
+          return;
+        }
+
         web3.eth.accounts
           .signTransaction(tx, keyConfig[xdceOwnerPubAddr].privateKey)
           .then(signedTx => {
@@ -974,8 +995,8 @@ async function handleBurnToken(
           if (course.burnToken[z].tokenName === XDC) {
             // token has applied for burning & autoBurn is on
             burnPercent = parseFloat(course.burnToken[z].burnPercent);
-            console.log("Burn Percent: ",burnPercent);
-            console.log("Received Amnt: ",receivedXdc);
+            console.log("Burn Percent: ", burnPercent);
+            console.log("Received Amnt: ", receivedXdc);
             burnAmnt =
               ((parseFloat(receivedXdc) * burnPercent) / 100) *
               Math.pow(10, 18).toString();
@@ -989,6 +1010,27 @@ async function handleBurnToken(
         if (burnAmnt == 0 || burnAmnt == "0" || burnAmnt == "") {
           // dont burn
           console.log("Auto-Burn has been turned off, closed the listener.");
+          return;
+        }
+
+        const blockdegreePubAddrXDCApothm = await AllWallet.findOne({
+          recipientActive: {
+            $elemMatch: {
+              wallet_network: paymentLog.payment_network,
+              wallet_token_name: tokenName
+            }
+          }
+        });
+
+        if (blockdegreePubAddrXDCApothm == null) {
+          console.error(
+            "Some error occured while fethcing the XDC recipient address txnConfirmation."
+          );
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            `Potential for user ${userEmail}`,
+            `XDC recipient was null. Payment mode was via XDC. Payment transaction hash: ${txHash}`
+          );
           return;
         }
 

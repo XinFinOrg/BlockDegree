@@ -669,10 +669,12 @@ exports.switchWalletTo = async (req, res) => {
                   configWallet.recipientActive[f].wallet_token_name ===
                     wallet_token_name
                 ) {
-                  configWallet.recipientActive[f].wallet_address = wallet_address;
-                  configWallet.markModified('recipientActive')
+                  configWallet.recipientActive[
+                    f
+                  ].wallet_address = wallet_address;
+                  configWallet.markModified("recipientActive");
                   await configWallet.save();
-                  return res.json({ error: null, status: true }); 
+                  return res.json({ error: null, status: true });
                 }
               }
             } catch (e) {
@@ -755,9 +757,9 @@ exports.switchWalletTo = async (req, res) => {
                       wallet_token_name
                   ) {
                     configWallet.burnActive[f].wallet_address = wallet_address;
-                    configWallet.markModified('burnActive')
+                    configWallet.markModified("burnActive");
                     await configWallet.save();
-                    return res.json({ error: null, status: true }); 
+                    return res.json({ error: null, status: true });
                   }
                 }
               } catch (e) {
@@ -828,6 +830,37 @@ exports.initiateWalletConfig = async () => {
   }
 };
 
+exports.addNotification = async (req, res) => {
+  const email = req.body.email;
+  const eventName = req.body.eventName;
+  const eventId = req.body.eventId;
+  const type = req.body.type;
+  const title = req.body.title;
+  const message = req.body.message;
+  const displayed = req.body.displayed;
+  const sendAll = req.body.sendAll == "true";
+
+  const newNoti = newDefNotification();
+  newNoti.email = email;
+  newNoti.eventName = eventName;
+  newNoti.eventId = eventId;
+  newNoti.type = type;
+  newNoti.title = title;
+  newNoti.message = message;
+  newNoti.displayed = displayed;
+  newNoti.sendAll = sendAll;
+  try {
+    await newNoti.save();
+  } catch (e) {
+    console.error(
+      `Some error occured while saving the notification schema at adminServices.addNotification: ${e}`
+    );
+    return res.json({ status: false, error: "Internal Error" });
+  }
+  return res.json({ status: true, error: null });
+};
+
+
 function newDefCourse(courseId) {
   return new CoursePrice({
     courseId: courseId,
@@ -838,5 +871,19 @@ function newDefCourse(courseId) {
     xdcConfirmation: "",
     priceUsd: "",
     burnToken: []
+  });
+}
+
+function newDefNotification() {
+  return new Notification({
+    email: "",
+    eventName: "",
+    eventId: "",
+    type: "",
+    title: "",
+    message: "",
+    displayed: "",
+    emails: [],
+    sendAll: false
   });
 }

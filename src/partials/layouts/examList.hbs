@@ -1116,6 +1116,13 @@
 
               openModal("modal-info", modTitle, modBody);
 
+              $.notify("Transaction is <strong>pending</strong> . . .", {
+                type: "warning", allow_dismiss: false, delay: Date.now(), placement: {
+                  from: 'bottom',
+                  align: 'right'
+                }
+              });
+
                 $.ajax({
                   method: "post",
                   url: "/api/payViaXdc",
@@ -1123,24 +1130,23 @@
                   success: response => {
                     if (!response.status) {
                       // Error, its ok.
-
                     const modTitle = "<strong>Some Error Occured</strong>";
                     const modBody = response.error + ".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
                     openModal("modal-warning", modTitle, modBody);
-
-                      
-                      return
+                    $.notifyClose('bottom-right')
+                    return
                     } else {
 
                     const modTitle = "<strong>Transaction Received Successfully</strong>";
                     const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a>. Click on link to view on etherscan.`;
                     openModal("modal-success", modTitle, modBody);
-
-                      return;
+                    $.notifyClose('bottom-right')
+                    return;
                     }
                   },
                   error: xhr => {
                     // YIKES, ask to copy txn & mail at info@blockdegree.org
+                    $.notifyClose('bottom-right')
                     $.notify(`<b>Error</b> : Your txn was processed, but something went from our side. Don't worry, just send a mail to <strong>info@blockdegree.org</strong> with your tx hash.`, { type: "success" });
                     return;
                   }
