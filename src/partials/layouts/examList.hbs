@@ -227,7 +227,8 @@
   const divisor = 1; // for testing purposes 1 million'th of actual value will be used
   const coinMarketCapUrl = "/api/wrapCoinMarketCap";
   const etherScanIo = "https://etherscan.io/tx/";
-
+    const apothemExplorer = "https://explorer.apothem.network/tx/";
+    const mainnetExplorer = "https://explorer.mainnet.network/tx/";
 
   function takeExam(slug) {
 
@@ -1053,6 +1054,7 @@
           data: { course: course_id.id, price: price, codeName: codeName }
         });
         if (!respFree.status) {
+          
           $.notify(respFree.error, { type: "danger" });
           return;
         }
@@ -1108,19 +1110,32 @@
               }
               else {
                 console.log("Transaction Hash: ", result);
-                $.notify("The payment process has been initiated");
+
+              const modTitle = "<strong>Transaction Submitted Successfully</strong>";
+              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a> <button onclick="copyTextToClipboard('pending_txHash')" >Click</button> to copy hash`;
+
+              openModal("modal-info", modTitle, modBody);
+
                 $.ajax({
                   method: "post",
                   url: "/api/payViaXdc",
-                  data: { course: course_id.id, price: price, txn_hash: result, codeName: codeName },
+                  data: { course: course_id.id, price: txPrice, txn_hash: result, codeName: codeName },
                   success: response => {
                     if (!response.status) {
                       // Error, its ok.
-                      $.notify(`<b>Error</b> : ${response.error} `, { type: "danger" });
+
+                    const modTitle = "<strong>Some Error Occured</strong>";
+                    const modBody = response.error + ".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
+                    openModal("modal-warning", modTitle, modBody);
+
+                      
                       return
                     } else {
-                      alert(`Success : Your transaction is now approved & you're enolled in our course, your txn-hash is ${response.txnHash}.`);
-                      window.location.reload();
+
+                    const modTitle = "<strong>Transaction Received Successfully</strong>";
+                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a>. Click on link to view on etherscan.`;
+                    openModal("modal-success", modTitle, modBody);
+
                       return;
                     }
                   },

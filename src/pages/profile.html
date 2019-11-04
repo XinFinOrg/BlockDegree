@@ -351,6 +351,8 @@
   function fetchCryptoTransactions() {
     console.log("called crypto transactions");
     const etherScanIo = "https://etherscan.io/tx/";
+    const apothemExplorer = "https://explorer.apothem.network/tx/";
+    const mainnetExplorer = "https://explorer.mainnet.network/tx/";
     const tableBody = document.getElementById("tokenPayment-tbody");
     const tableFooter = document.getElementById("tokenPayment-tfooter");
     $.ajax({
@@ -433,9 +435,60 @@
                 } else {
                   burn_hash_link = "-";
                 }
+              } else if (payments[z].tokenName === "xdc") {
+                payment_txHash =
+                  payments[z].txn_hash.toString().slice(0, 11) + "...";
+
+                if (allPendingTransaction.indexOf(payments[z].txn_hash) > -1) {
+                  // was one of the pending tx.
+                  allPendingTransaction = removeFromArray(
+                    allPendingTransaction,
+                    payments[z].txn_hash
+                  );
+                }
+
+                pay_hash_link = `<a href="${apothemExplorer +
+                  payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+
+                if (payments[z].autoBurn) {
+                  // will burn
+                  if (payments[z].burn_txn_hash == "") {
+                    // not yet burned
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) < 0
+                    )
+                      allPendingTransaction.push(
+                        payments[z].txn_hash + "_burn"
+                      );
+                    burn_txHash = "Burning is in process...";
+                    burn_hash_link = burn_txHash;
+                  } else {
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) > -1
+                    ) {
+                      // was one of the pending tx.
+                      allPendingTransaction = removeFromArray(
+                        allPendingTransaction,
+                        payments[z].txn_hash + "_burn"
+                      );
+                    }
+
+                    burn_txHash =
+                      payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
+                    burn_hash_link = `<a href="${apothemExplorer +
+                      payments[z]
+                        .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                  }
+                } else {
+                  burn_hash_link = "-";
+                }
               }
             } else {
-              if (allPendingTransaction.indexOf(payments[z].txn_hash) < 0){
+              if (allPendingTransaction.indexOf(payments[z].txn_hash) < 0) {
                 allPendingTransaction.push(payments[z].txn_hash);
               }
               payment_txHash =
@@ -447,8 +500,11 @@
                 // wont burn
                 burn_txHash = "NA";
               }
-              pay_hash_link = `<a href="${etherScanIo +
-                payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+              pay_hash_link = `<a href="${
+                payments[z].tokenName === "xdce"
+                  ? etherScanIo + payments[z].txn_hash
+                  : apothemExplorer + payments[z].txn_hash
+              }" target="_blank">${payment_txHash}</a>`;
               status += `( ${payments[z].confirmations}/${
                 payments[z].tokenName === "xdce"
                   ? payments[z].xdceConfirmation
@@ -457,15 +513,20 @@
               burn_hash_link = burn_txHash;
             }
 
-            retHtml += `<tr><td>${payments[z].courseName[0].toUpperCase()+payments[z].courseName.slice(1)}</td><td>${payments[
+            retHtml += `<tr><td>${payments[z].courseName[0].toUpperCase() +
+              payments[z].courseName.slice(1)}</td><td>${payments[
               z
             ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${
-              payments[z].status != "not yet mined" ? payments[z].status : "notYetMined"
-            }">${payments[z].status != "not yet mined" ? status : "not yet mined"}</td><td>${burn_hash_link}</td></tr>`;
+              payments[z].status != "not yet mined"
+                ? payments[z].status
+                : "notYetMined"
+            }">${
+              payments[z].status != "not yet mined" ? status : "not yet mined"
+            }</td><td>${burn_hash_link}</td></tr>`;
           }
           tableBody.innerHTML = retHtml;
           tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;
-          console.log(allPendingTransaction)
+          console.log(allPendingTransaction);
           if (allPendingTransaction.length == 0) {
             // clear listener
             clearInterval(pendingEventListener);

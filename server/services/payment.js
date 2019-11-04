@@ -471,6 +471,7 @@ exports.payViaXdc = async (req, res) => {
     newPaymentXdc.price = coursePrice.priceUsd;
     newPaymentXdc.status = "not yet mined";
     newPaymentXdc.autoBurn = toAutoBurn; // capture the status of autoburn at the moment, this will be forwarded.
+    newPaymentXdc.payment_network = "51"; // 50 - mainnet; 51 apothem
     await newPaymentXdc.save();
     console.log("saved");
 
@@ -496,12 +497,11 @@ exports.payViaXdc = async (req, res) => {
 
     // const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
 
-    console.log("---------------------------------x-----------------------------------------")
-    xdc3.eth.getTransactionReceipt(
-      "0x52916e20111c0a113cc7da6a9d39540e6b98238bc3e192f43b6089db108e781e",
-      (err, result) =>{ console.log(err,result)}
-    );
-    console.log("---------------------------------x-----------------------------------------")
+    // console.log("---------------------------------x-----------------------------------------")
+    // const xdc3TxReceipt =xdc3.eth.getTransactionReceipt(
+    //   "0x52916e20111c0a113cc7da6a9d39540e6b98238bc3e192f43b6089db108e781e"
+    // );
+    // console.log("---------------------------------x-----------------------------------------")
 
     let txReceipt = "";
     let txMinedLimit = 55 * 1000; // will listen for mining of the trn_hash for about 1 minute.
@@ -552,7 +552,11 @@ exports.payViaXdc = async (req, res) => {
         }
       });
       txReceipt = txResponseReceipt.data;
-      if (txReceipt.status == "0x1") {
+      if (
+        txReceipt.blockNumber != undefined &&
+        txReceipt.blockNumber != null &&
+        typeof txReceipt.blockNumber == "number"
+      ) {
         // txnMined.
         console.log(
           `Got the tx receipt for the tx: ${txn_hash} on XinFin Network`
@@ -620,8 +624,8 @@ exports.payViaXdc = async (req, res) => {
         comPaymentToken.status = "pending";
         comPaymentToken.tokenAmt = xdcTokenAmnt;
         await comPaymentToken.save();
-        TxMinedListener = clearInterval(TxMinedListener);
         res.json({ status: true, error: null });
+        TxMinedListener = clearInterval(TxMinedListener);
         eventEmitter.emit(
           "listenTxConfirm",
           txn_hash,
@@ -776,6 +780,7 @@ exports.payViaXdce = async (req, res) => {
     newPaymentXdce.price = coursePrice.priceUsd;
     newPaymentXdce.status = "not yet mined";
     newPaymentXdce.autoBurn = toAutoBurn; // capture trhe status of autoburn at the moment, this will be forwarded.
+    newPaymentToken.payment_network = "1";
     await newPaymentXdce.save();
     console.log("saved");
 
@@ -1100,15 +1105,15 @@ exports.getTokenRecipient = async (req, res) => {
     if (retWallet === null) {
       return res.json({ error: "not found", status: false, data: null });
     }
-    for (let c = 0; c < retWallet.recipientWallets.length; c++) {
+    for (let c = 0; c < retWallet.recipientActive.length; c++) {
       if (
-        retWallet.recipientWallets[c].wallet_network === network &&
-        retWallet.recipientWallets[c].wallet_token_name === token_name
+        retWallet.recipientActive[c].wallet_network === network &&
+        retWallet.recipientActive[c].wallet_token_name === token_name
       ) {
         return res.json({
           error: null,
           status: true,
-          data: retWallet.recipientWallets[c]
+          data: retWallet.recipientActive[c]
         });
       }
     }
@@ -1135,7 +1140,8 @@ function newPaymentToken() {
     confirmations: "0",
     autoBurn: false,
     burn_txn_hash: "",
-    burn_token_amnt: ""
+    burn_token_amnt: "",
+    payment_network: ""
   });
 }
 

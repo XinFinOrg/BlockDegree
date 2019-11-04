@@ -221,8 +221,11 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
           const coursePrice = await CoursePrice.findOne({ courseId: course });
           const xinConfirmation = coursePrice.xdcConfirmation;
           console.log(txReceipt);
-          if (txReceipt.status != "0x1") {
-            33;
+          if (
+            txReceipt.blockNumber == undefined ||
+            txReceipt.blockNumber == null ||
+            typeof txReceipt.blockNumber != "number"
+          ) {
             // how ?
             console.log(
               `Finished listening for the tx ${txHash}; reason: no receipt found`
@@ -232,7 +235,6 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
               `Re-embursement for user ${userEmail}`,
               `TxReceipt was null. Payment mode was via XDC. Payment transaction hash: ${txHash}`
             );
-            clearInterval(ClearInterval);
             return;
           }
           const paymentLog = await PaymentToken.findOne({ txn_hash: txHash });
@@ -246,7 +248,6 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
               `Re-embursement for user ${userEmail}`,
               `Payment log was null. Payment mode was via XDC. Payment transaction hash: ${txHash}`
             );
-            clearInterval(ClearInterval);
             return;
           }
           const user = await User.findOne({ email: userEmail });
@@ -260,7 +261,6 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
               `Re-embursement for user ${userEmail}`,
               `User was null. Payment mode was via XDC. Payment transaction hash: ${txHash}`
             );
-            clearInterval(ClearInterval);
             return;
           }
           const txBlockNumber = txReceipt.blockNumber;
@@ -303,8 +303,14 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
                   XDC
                 );
                 clearInterval(ClearInterval);
+              } else {
+                if (paymentLog.confirmations != currConfirmations) {
+                  // update confirmations
+                  paymentLog.confirmations = currConfirmations;
+                  await paymentLog.save();
+                }
               }
-            }, 1000);
+            }, 10000);
           } else {
             console.log(
               `Finished listening for the tx ${txHash}; reason: status mismatch -> ${paymentLog.status}`
@@ -322,6 +328,7 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
             `Re-embursement for user ${userEmail}`,
             `Some error has occured while listening for block headers. Payment mode was via XDC. Payment transaction hash: ${txHash}`
           );
+          clearInterval(ClearInterval);
         }
         break;
       }
@@ -646,7 +653,11 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
             console.log(txResponseReceipt);
             txReceipt = txResponseReceipt.data;
             console.log(txReceipt);
-            if (txReceipt.status == "0x1") {
+            if (
+              txReceipt.blockNumber != undefined &&
+              txReceipt.blockNumber != null &&
+              typeof txReceipt.blockNumber == "number"
+            ) {
               // txnMined.
               console.log(
                 `Got the tx receipt for the tx: ${txHash} on XinFin Network`
@@ -664,10 +675,12 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                   `Potential re-imbursement for the user ${req.user.email}`,
                   `Some error occured while fetching the xdceOwnerPubAddr at payments.payViaXdce. TxHash: ${txn_hash}`
                 );
+                clearInterval(TxMinedListener);
                 return;
               }
               if (tknRecipient !== xdcOwnerPubAddr) {
                 console.error("Invalid recipient for Payment By XDC");
+                clearInterval(TxMinedListener);
                 return;
               }
 
@@ -701,6 +714,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                   `Re-embursement for user ${userEmail}`,
                   `User sent an invalid amount of token. Payment mode was via XDC. Payment transaction hash: ${txHash}`
                 );
+                clearInterval(TxMinedListener);
                 return;
               }
               console.log(txReceipt.blockNumber);
@@ -722,6 +736,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                   `Fatal error for user ${userEmail}`,
                   `Fatal error occured while finding the tokne for transaction hash: ${txReceipt.hash} for user ${userEmail}`
                 );
+                clearInterval(TxMinedListener);
                 return;
               }
 
@@ -738,7 +753,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               );
               return;
             }
-          }, 1000);
+          }, 10000);
         } catch (e) {
           console.error(
             `Some error occured while listening for the mining of tx ${txHash} on network id ${network} for user ${userEmail}`
@@ -748,8 +763,10 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
             `Re-embursement for user ${userEmail}`,
             `Some error occured while listening for the mining of tx. Payment mode was via XDCe. Payment transaction hash: ${txHash}`
           );
+          clearInterval(TxMinedListener);
           return;
         }
+        break;
       }
       default: {
         console.error(
@@ -789,7 +806,8 @@ function newDefBurnLog(id, txHash) {
     principal_from: "",
     from: "",
     to: "",
-    creationDate: ""
+    creationDate: "",
+    burn_network: ""
   });
 }
 
@@ -913,6 +931,7 @@ async function handleBurnToken(
                   newBurnLog.creationDate = Date.now().toString();
                   newBurnLog.to = burnAddress;
                   newBurnLog.from = blockdegreePubAddr;
+                  newBurnLog.burn_network = paymentLog.payment_network;
                   await newBurnLog.save();
                   await paymentLog.save();
                   console.log(
@@ -939,29 +958,33 @@ async function handleBurnToken(
 
         let course = await CoursePrice.findOne({ courseId: courseId });
         let paymentLog = await PaymentToken.findOne({ payment_id: paymentId });
-        let txReceiptResponse = await axios(txReceiptUrlApothem, {
+        let txReceiptResponse = await axios.post(txReceiptUrlApothem, {
           tx: txHash,
           isTransfer: false
         });
         let receivedXdc = txReceiptResponse.data.value;
-
         let burnAmnt = "";
 
         if (!paymentLog.autoBurn) {
           console.log("Auto-Burn has been turned off, closed the listener.");
           return;
         }
-
+        let burnPercent;
         for (let z = 0; z < course.burnToken.length; z++) {
           if (course.burnToken[z].tokenName === XDC) {
             // token has applied for burning & autoBurn is on
-            const burnPercent = parseFloat(course.burnToken[z].burnPercent);
-            burnAmnt = Math.floor(
-              (parseFloat(receivedXdc) * burnPercent) / 100
-            ).toString();
+            burnPercent = parseFloat(course.burnToken[z].burnPercent);
+            console.log("Burn Percent: ",burnPercent);
+            console.log("Received Amnt: ",receivedXdc);
+            burnAmnt =
+              ((parseFloat(receivedXdc) * burnPercent) / 100) *
+              Math.pow(10, 18).toString();
+            console.log("Burn Amount: ", burnAmnt);
             break;
           }
         }
+
+        console.log(burnAmnt, burnPercent);
 
         if (burnAmnt == 0 || burnAmnt == "0" || burnAmnt == "") {
           // dont burn
@@ -1001,13 +1024,36 @@ async function handleBurnToken(
         let serializedTx = tx.serialize();
         web3.eth.sendSignedTransaction(
           "0x" + serializedTx.toString("hex"),
-          function(err, hash) {
-            if (!err) console.log(hash);
-            else console.error(err);
+          async function(err, hash) {
+            if (!err) {
+              console.log("Burned XDC; txHash: ", hash);
+
+              paymentLog.burn_txn_hash = hash;
+              paymentLog.burn_token_amnt = burnAmnt;
+
+              let principalFrom = txReceiptResponse.data.from;
+
+              let newBurnLog = newDefBurnLog(uuidv4(), txHash);
+              newBurnLog.principal_userEmail = userEmail;
+              newBurnLog.course = courseId;
+              newBurnLog.principal_from = principalFrom;
+              newBurnLog.tokenName = tokenName;
+              newBurnLog.tokenAmt = burnAmnt;
+              newBurnLog.creationDate = Date.now().toString();
+              newBurnLog.to = burnAddress;
+              newBurnLog.from = blockdegreePubAddrXDCApothm;
+              newBurnLog.burn_network = paymentLog.payment_network;
+              await newBurnLog.save();
+              await paymentLog.save();
+              console.log(
+                "Successfully burned token for payment by user: ",
+                userEmail
+              );
+            } else console.error(err);
           }
         );
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
       break;
     }
