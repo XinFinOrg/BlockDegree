@@ -57,7 +57,15 @@ const divisor = 1; // for testing purposes 1 million'th of actual value will be 
 
 abiDecoder.addABI(xdceABI);
 
-function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
+function listenForConfirmation(
+  txHash,
+  network,
+  userEmail,
+  course,
+  newNotiId,
+  codeName
+) {
+  console.log("CodeName: ",codeName);
   setImmediate(async () => {
     console.log(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
@@ -154,7 +162,18 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
                     newNoti.displayed = false;
 
                     user.examData.payment[paymentLog.course] = true;
-                    user.examData.payment[paymentLog.course+"_payment"] = `XDCe:${paymentLog.payment_id}`;
+
+                    let _payment = `XDC:${paymentLog.payment_id}`;
+                    _payment =
+                      codeName == undefined ||
+                      codeName == null ||
+                      codeName == ""
+                        ? _payment
+                        : _payment + `;promocode:${codeName}`;
+                    user.examData.payment[
+                      paymentLog.course + "_payment"
+                    ] = _payment;
+
                     await paymentLog.save();
                     await user.save();
                     await newNoti.save();
@@ -293,7 +312,14 @@ function listenForConfirmation(txHash, network, userEmail, course, newNotiId) {
                 newNoti.displayed = false;
 
                 user.examData.payment[paymentLog.course] = true;
-                user.examData.payment[paymentLog.course+"_payment"] = `XDC:${paymentLog.payment_id}`;
+                let _payment = `XDC:${paymentLog.payment_id}`;
+                _payment =
+                  codeName == undefined || codeName == null || codeName == ""
+                    ? _payment
+                    : _payment + `;promocode:${codeName}`;
+                user.examData.payment[
+                  paymentLog.course + "_payment"
+                ] = _payment;
 
                 await paymentLog.save();
                 await user.save();
@@ -357,7 +383,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
           );
           const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
           const coursePrice = await CoursePrice.findOne({ courseId: course });
-          const blockdegreePubAddr = await getXDCeRecipient("4");
+          const blockdegreePubAddr = await getXDCeRecipient("1");
           if (blockdegreePubAddr === null) {
             console.error(
               "Error occured while fetching blockdegreePubAddr at txnConfirmation.listenForMined"
@@ -569,7 +595,14 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               console.log(
                 `Finished listening for the tx ${txHash} for user ${userEmail}`
               );
-              listenForConfirmation(txHash, 1, userEmail, course, newNotiId);
+              listenForConfirmation(
+                txHash,
+                1,
+                userEmail,
+                course,
+                newNotiId,
+                req.body.codeName
+              );
               return;
             }
           }, 10000);
@@ -863,7 +896,7 @@ async function handleBurnToken(
         let receivedXdce = decodedMethod.params[1].value;
 
         const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
-        const blockdegreePubAddr = await getXDCeRecipient("4");
+        const blockdegreePubAddr = await getXDCeRecipient("1");
         let burnAmnt = "";
 
         if (!paymentLog.autoBurn) {
@@ -914,7 +947,7 @@ async function handleBurnToken(
           )
         };
 
-        const xdceOwnerPubAddr = await AllWallet.findOne({
+        const allWallet = await AllWallet.findOne({
           recipientActive: {
             $elemMatch: {
               wallet_network: paymentLog.payment_network,
@@ -922,6 +955,21 @@ async function handleBurnToken(
             }
           }
         });
+
+        let xdceOwnerPubAddr = null;
+        loop1: {
+          for (let f = 0; f < allWallet.burnActive.length; f++) {
+            if (
+              allWallet.burnActive[f].wallet_network ==
+                paymentLog.payment_network &&
+              allWallet.burnActive[f].wallet_token_name == tokenName
+            ) {
+              // Eureka!
+              xdceOwnerPubAddr = allWallet.burnActive[f].wallet_address;
+              break loop1;
+            }
+          }
+        }
 
         if (xdceOwnerPubAddr == null) {
           console.error(
@@ -1016,7 +1064,7 @@ async function handleBurnToken(
           return;
         }
 
-        const blockdegreePubAddrXDCApothm = await AllWallet.findOne({
+        const allWallet = await AllWallet.findOne({
           recipientActive: {
             $elemMatch: {
               wallet_network: paymentLog.payment_network,
@@ -1024,6 +1072,21 @@ async function handleBurnToken(
             }
           }
         });
+        let blockdegreePubAddrXDCApothm = null;
+        loop1: {
+          for (let f = 0; f < allWallet.burnActive.length; f++) {
+            if (
+              allWallet.burnActive[f].wallet_network ==
+                paymentLog.payment_network &&
+              allWallet.burnActive[f].wallet_token_name == tokenName
+            ) {
+              // Eureka!
+              blockdegreePubAddrXDCApothm =
+                allWallet.burnActive[f].wallet_address;
+              break loop1;
+            }
+          }
+        }
 
         if (blockdegreePubAddrXDCApothm == null) {
           console.error(
@@ -1036,6 +1099,9 @@ async function handleBurnToken(
           );
           return;
         }
+
+        blockdegreePubAddrXDCApothm =
+          "0x" + blockdegreePubAddrXDCApothm.slice(3);
 
         console.log(
           "Pending: ",
@@ -1086,7 +1152,7 @@ async function handleBurnToken(
               newBurnLog.tokenAmt = burnAmnt;
               newBurnLog.creationDate = Date.now().toString();
               newBurnLog.to = burnAddress;
-              newBurnLog.from = blockdegreePubAddrXDCApothm;
+              newBurnLog.from = "xdc" + blockdegreePubAddrXDCApothm.slice(2);
               newBurnLog.burn_network = paymentLog.payment_network;
               await newBurnLog.save();
               await paymentLog.save();

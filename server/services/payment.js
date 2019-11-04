@@ -621,9 +621,21 @@ exports.payViaXdc = async (req, res) => {
           return;
         }
 
+        let newNoti = newDefNoti();
+        let newNotiId = uuidv4();
+        newNoti.type = "info";
+        newNoti.email = req.user.email;
+        newNoti.eventName = "payment in pending";
+        newNoti.eventId = newNotiId;
+        newNoti.title = "Payment Mined";
+        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+        newNoti.displayed = false;
+
         comPaymentToken.status = "pending";
         comPaymentToken.tokenAmt = xdcTokenAmnt;
         await comPaymentToken.save();
+        await newNoti.save();
+
         res.json({ status: true, error: null });
         TxMinedListener = clearInterval(TxMinedListener);
         eventEmitter.emit(
@@ -631,7 +643,9 @@ exports.payViaXdc = async (req, res) => {
           txn_hash,
           51,
           req.user.email,
-          course
+          course,
+          newNotiId,
+          req.body.codeName
         );
         return;
       }
@@ -669,7 +683,7 @@ exports.payViaXdce = async (req, res) => {
     let fullPrice = coursePrice.priceUsd;
     const discObj = await promoCodeService.usePromoCode(req);
 
-    const xdceOwnerPubAddr = await getXDCeRecipient("4");
+    const xdceOwnerPubAddr = await getXDCeRecipient("1");
     if (xdceOwnerPubAddr === null) {
       // some error occured while fetching the XdceOwnerPubAddr
       res.json({ error: "internal error", status: false });
@@ -943,9 +957,20 @@ exports.payViaXdce = async (req, res) => {
           return;
         }
 
+        let newNoti = newDefNoti();
+        let newNotiId = uuidv4();
+        newNoti.type = "info";
+        newNoti.email = req.user.email;
+        newNoti.eventName = "payment in pending";
+        newNoti.eventId = newNotiId;
+        newNoti.title = "Payment Mined";
+        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+        newNoti.displayed = false;
+
         comPaymentToken.status = "pending";
         comPaymentToken.tokenAmt = decodedMethod.params[1].value.toString();
         await comPaymentToken.save();
+        await newNoti.save();
         // let newPaymentXdce = newPaymentToken();
         // newPaymentXdce.payment_id = uuidv4();
         // newPaymentXdce.email = req.user.email;
@@ -975,7 +1000,9 @@ exports.payViaXdce = async (req, res) => {
           txn_hash,
           1,
           req.user.email,
-          course
+          course,
+          newNotiId,
+          req.body.codeName
         );
         return;
       }

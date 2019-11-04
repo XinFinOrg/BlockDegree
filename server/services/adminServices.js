@@ -718,10 +718,21 @@ exports.switchWalletTo = async (req, res) => {
         ) {
           // found the wallet
           console.log("found the wallet");
+          let walletPKExists = false;
+          if (wallet_address.slice(0, 3) == "xdc") {
+            // is an XDC wallet;
+            console.log("XDC wallet")
+            walletPKExists =
+              KeyConfig["0x" + wallet_address.slice(3)] !== undefined &&
+              KeyConfig["0x" + wallet_address.slice(3)].privateKey !== "";
+          } else {
+            walletPKExists =
+              KeyConfig[wallet_address] !== undefined &&
+              KeyConfig[wallet_address].privateKey !== "";
+          }
           console.log(KeyConfig[wallet_address]);
           if (
-            KeyConfig[wallet_address] !== undefined &&
-            KeyConfig[wallet_address].privateKey !== ""
+            walletPKExists
           ) {
             // stuff exists
             console.log("Stuff exists in the KeyConfig");
@@ -859,7 +870,6 @@ exports.addNotification = async (req, res) => {
   }
   return res.json({ status: true, error: null });
 };
-
 
 function newDefCourse(courseId) {
   return new CoursePrice({
