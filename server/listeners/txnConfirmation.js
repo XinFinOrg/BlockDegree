@@ -983,8 +983,7 @@ async function handleBurnToken(
           gas: 60000,
           data: encodedData,
           nonce: await web3.eth.getTransactionCount(
-            blockdegreePubAddr,
-            "pending"
+            blockdegreePubAddr            
           )
         };        
 
@@ -1126,8 +1125,7 @@ async function handleBurnToken(
           gasPrice: 9000,
           value: burnAmnt,
           nonce: await web3.eth.getTransactionCount(
-            blockdegreePubAddrXDCApothm,
-            "pending"
+            blockdegreePubAddrXDCApothm
           )
         };
 
