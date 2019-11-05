@@ -36,4 +36,5 @@ module.exports = function(app) {
   app.post("/api/payViaXdce", requireLogin, paymentService.payViaXdce);
   app.get("/api/wrapCoinMarketCap",requireLogin,paymentService.wrapCoinMarketCap);
   app.get("/api/getUserNotis",requireLogin,paymentService.getPaymentsToNotify);
+  app.post("/api/getTokenRecipient",paymentService.getTokenRecipient);
 };

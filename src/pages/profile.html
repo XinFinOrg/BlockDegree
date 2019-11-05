@@ -274,6 +274,7 @@
     fetchCryptoTransactions();
     setTimeout(() => {
       fetchCryptoTransactions();
+      callPendingListener();
     }, 3000);
   });
 
@@ -296,30 +297,30 @@
   }
 
   function handleAuthGoogle() {
-    // window.location.replace("https://www.blockdegree.org/auth/google")
+    // window.location.replace("https://uat.blockdegree.org/auth/google")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/google?close=true"
+      path: "https://uat.blockdegree.org/auth/google?close=true"
     });
   }
 
   function handleAuthFacebook() {
-    // window.location.replace("https://www.blockdegree.org/auth/facebook")
+    // window.location.replace("https://uat.blockdegree.org/auth/facebook")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/facebook?close=true"
+      path: "https://uat.blockdegree.org/auth/facebook?close=true"
     });
   }
 
   function handleAuthTwitter() {
-    // window.location.replace("https://www.blockdegree.org/auth/twitter")
+    // window.location.replace("https://uat.blockdegree.org/auth/twitter")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/twitter?close=true"
+      path: "https://uat.blockdegree.org/auth/twitter?close=true"
     });
   }
 
   function handleAuthLinkedin() {
-    // window.location.replace("https://www.blockdegree.org/auth/linkedin")
+    // window.location.replace("https://uat.blockdegree.org/auth/linkedin")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/linkedin?close=true"
+      path: "https://uat.blockdegree.org/auth/linkedin?close=true"
     });
   }
 
@@ -340,9 +341,9 @@
       options.windowOptions
     );
     that._oauthInterval = window.setInterval(function() {
-      if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
+      if (that._oauthWindow.location.href == "https://uat.blockdegree.org") {
         that._oauthWindow.location.href ==
-          "https://www.blockdegree.org/closeCallback";
+          "https://uat.blockdegree.org/closeCallback";
       }
     }, 1000);
   }
@@ -350,6 +351,8 @@
   function fetchCryptoTransactions() {
     console.log("called crypto transactions");
     const etherScanIo = "https://etherscan.io/tx/";
+    const apothemExplorer = "https://explorer.xinfin.network/tx/";
+    const mainnetExplorer = "https://explorer.xinfin.network/tx/";
     const tableBody = document.getElementById("tokenPayment-tbody");
     const tableFooter = document.getElementById("tokenPayment-tfooter");
     $.ajax({
@@ -391,7 +394,6 @@
                     allPendingTransaction,
                     payments[z].txn_hash
                   );
-                  listeningForPending = true;
                 }
 
                 pay_hash_link = `<a href="${etherScanIo +
@@ -409,7 +411,6 @@
                       allPendingTransaction.push(
                         payments[z].txn_hash + "_burn"
                       );
-                    listeningForPending = true;
                     burn_txHash = "Burning is in process...";
                     burn_hash_link = burn_txHash;
                   } else {
@@ -434,10 +435,62 @@
                 } else {
                   burn_hash_link = "-";
                 }
+              } else if (payments[z].tokenName === "xdc") {
+                payment_txHash =
+                  payments[z].txn_hash.toString().slice(0, 11) + "...";
+
+                if (allPendingTransaction.indexOf(payments[z].txn_hash) > -1) {
+                  // was one of the pending tx.
+                  allPendingTransaction = removeFromArray(
+                    allPendingTransaction,
+                    payments[z].txn_hash
+                  );
+                }
+
+                pay_hash_link = `<a href="${apothemExplorer +
+                  payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+
+                if (payments[z].autoBurn) {
+                  // will burn
+                  if (payments[z].burn_txn_hash == "") {
+                    // not yet burned
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) < 0
+                    )
+                      allPendingTransaction.push(
+                        payments[z].txn_hash + "_burn"
+                      );
+                    burn_txHash = "Burning is in process...";
+                    burn_hash_link = burn_txHash;
+                  } else {
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) > -1
+                    ) {
+                      // was one of the pending tx.
+                      allPendingTransaction = removeFromArray(
+                        allPendingTransaction,
+                        payments[z].txn_hash + "_burn"
+                      );
+                    }
+
+                    burn_txHash =
+                      payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
+                    burn_hash_link = `<a href="${apothemExplorer +
+                      payments[z]
+                        .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                  }
+                } else {
+                  burn_hash_link = "-";
+                }
               }
             } else {
-              if (allPendingTransaction.indexOf(payments[z].txn_hash) < 0)
+              if (allPendingTransaction.indexOf(payments[z].txn_hash) < 0) {
                 allPendingTransaction.push(payments[z].txn_hash);
+              }
               payment_txHash =
                 payments[z].txn_hash.toString().slice(0, 11) + "...";
               if (payments[z].autoBurn) {
@@ -447,8 +500,11 @@
                 // wont burn
                 burn_txHash = "NA";
               }
-              pay_hash_link = `<a href="${etherScanIo +
-                payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+              pay_hash_link = `<a href="${
+                payments[z].tokenName === "xdce"
+                  ? etherScanIo + payments[z].txn_hash
+                  : apothemExplorer + payments[z].txn_hash
+              }" target="_blank">${payment_txHash}</a>`;
               status += `( ${payments[z].confirmations}/${
                 payments[z].tokenName === "xdce"
                   ? payments[z].xdceConfirmation
@@ -457,14 +513,20 @@
               burn_hash_link = burn_txHash;
             }
 
-            retHtml += `<tr><td>${payments[z].courseName[0].toUpperCase()+payments[z].courseName.slice(1)}</td><td>${payments[
+            retHtml += `<tr><td>${payments[z].courseName[0].toUpperCase() +
+              payments[z].courseName.slice(1)}</td><td>${payments[
               z
             ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${
-              payments[z].status != "not yet mined" ? payments[z].status : "notYetMined"
-            }">${payments[z].status != "not yet mined" ? status : "not yet mined"}</td><td>${burn_hash_link}</td></tr>`;
+              payments[z].status != "not yet mined"
+                ? payments[z].status
+                : "notYetMined"
+            }">${
+              payments[z].status != "not yet mined" ? status : "not yet mined"
+            }</td><td>${burn_hash_link}</td></tr>`;
           }
           tableBody.innerHTML = retHtml;
           tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;
+          console.log(allPendingTransaction);
           if (allPendingTransaction.length == 0) {
             // clear listener
             clearInterval(pendingEventListener);
@@ -485,7 +547,6 @@
     });
 
     // setInterval for pending transactions
-    callPendingListener();
   }
 
   function callPendingListener() {

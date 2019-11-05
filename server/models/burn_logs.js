@@ -9,10 +9,11 @@ const burnLogSchema = mongoose.Schema({
   course: String,
   tokenName: String,
   tokenAmt: String,
-  principal_from:String,
-  from:String,
-  to:String,
-  creationDate: String
+  principal_from: String,
+  from: String,
+  to: String,
+  creationDate: String,
+  burn_network: String
 });
 
 module.exports = mongoose.model("Burn_Log", burnLogSchema);

@@ -12,9 +12,9 @@ const coursePrice = require("../models/coursePrice");
 const PaymentLog = require("../models/payment_token");
 
 const contractConfig = require("../config/smartContractConfig");
-const keyConfig = require("../config/keyConfig").mainnetPrivateKey;
+const keyConfig = require("../config/keyConfig").rinkebyPrivateKey;
 
-const xdceAddrMainnet = contractConfig.address.xdceMainnet;
+const xdceAddrMainnet = contractConfig.address.xdceRinkeby;
 const xdceABI = contractConfig.XdceABI;
 const xdceOwnerPubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
 const blockdegreePubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";

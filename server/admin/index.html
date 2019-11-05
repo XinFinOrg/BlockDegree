@@ -77,6 +77,7 @@
                     <div class="sidenav">
                             <div onclick="openPage('promoCode')">PromoCode</div>
                             <div onclick="openPage('course_payment')">Course Payments</div>
+                            <div onclick="openPage('wallet_config')">Wallet Config</div>
                           </div>
                           <div class="main">
                                 <section class="main-section">
@@ -246,12 +247,32 @@
                                                                                                 <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="disableBurning()">Disable Burning</button>
                                                                                         </div><br/>
                                                                                         
+                                        <div id="wallet_config" class="tabcontent" style="display: none;">
+                                        <h1>Wallet Configuration</h1>
+
+                                        <h4>Add Wallet</h4>
+                                        <input class="form-control" type="text" id="newWallet_wallet_address" placeholder="Enter the address of the wallet" />
+                                        <input class="form-control" type="text" id="newWallet_wallet_type" placeholder="Enter the type of the wallet" />
+                                        <input class="form-control" type="text" id="newWallet_wallet_token_name" placeholder="Enter the token which the wallet is intented to accept" />
+                                        <input class="form-control" type="text" id="newWallet_wallet_network" placeholder="Enter the relevant network on which the wallet wishes to operate" />
+                                        <input class="form-control" type="text" id="newWallet_wallet_purpose" placeholder="Enter the purpose of the wallet" />
+                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="addNewWallet()">Add New Wallet</button>
+
+                                        <h4>Switch Active Wallet</h4>
+                                        <input class="form-control" type="text" id="switchWallet_wallet_address" placeholder="Enter the address of the wallet" />
+                                        <input class="form-control" type="text" id="switchWallet_wallet_type" placeholder="Enter the type of the wallet" />
+                                        <input class="form-control" type="text" id="switchWallet_wallet_token_name" placeholder="Enter the token which the wallet is intented to accept" />
+                                        <input class="form-control" type="text" id="switchWallet_wallet_network" placeholder="Enter the relevant network on which the wallet wishes to operate" />                                        
+                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="switchToWallet()">Switch Wallet</button>
+
                                         </div>
                                     </section>
+                                </div>
                           </div>                    
               </body>
 
         <script>
+
             function openPage(pageName) {
                 let allTabContent = document.getElementsByClassName("tabcontent");
                 for (let i = 0; i < allTabContent.length; i++) {
@@ -476,7 +497,34 @@
                         }                        
                     },
                     error: xhr => {
-                        $.notify("Some error occured while making an Ajax Call",{type:"danger"})
+                        $.notify("Some error occured while making an Ajax Call",{type:"danger"})}})};
+            function addNewWallet() {
+                const wallet_address = document.getElementById("newWallet_wallet_address").value;
+                const wallet_network = document.getElementById("newWallet_wallet_network").value;
+                const wallet_token_name = document.getElementById("newWallet_wallet_token_name").value;
+                const wallet_type = document.getElementById("newWallet_wallet_type").value;
+                const wallet_purpose = document.getElementById("newWallet_wallet_purpose").value;
+                if (wallet_address == "" || wallet_network == "" || wallet_token_name == "" || wallet_type == "" || wallet_purpose == "" ) {
+                    alert("Invalid Parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/addWallet",
+                    data:{wallet_address:wallet_address, wallet_network:wallet_network, wallet_purpose:wallet_purpose, wallet_type:wallet_type, wallet_token_name:wallet_token_name},
+                    success: data => {
+                        console.log(data)
+                        if (data.status){
+                            alert("Success");
+                            return;
+                        }else{
+                            alert("Error: "+data.error);
+                            return;
+                        }
+                    },
+                    error: xhr => {
+                        alert("Some error occured");
+                        return;
                     }
                 })
             }
@@ -505,5 +553,32 @@
                 })
             }
                         
+            function switchToWallet() {
+                const wallet_address = document.getElementById("switchWallet_wallet_address").value;
+                const wallet_network = document.getElementById("switchWallet_wallet_network").value;
+                const wallet_type = document.getElementById("switchWallet_wallet_type").value;
+                const wallet_token_name = document.getElementById("switchWallet_wallet_token_name").value;
+                if (wallet_address == "" || wallet_network == "" || wallet_token_name == "" || wallet_token_name == ""){
+                    alert("Invalid Parameter Value");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/switchWalletTo",
+                    data:{wallet_address:wallet_address, wallet_network:wallet_network, wallet_type:wallet_type, wallet_token_name:wallet_token_name},
+                    success: data => {
+                        if (data.status){
+                            alert("Success");
+                        }
+                        else{
+                            alert("Error: "+data.error);
+                        }
+                    },
+                    error: xhr => {
+                        alert("Some error occured");
+                    }
+                })
+            }
+            
         </script>
 </html>

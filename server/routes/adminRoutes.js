@@ -44,7 +44,6 @@ module.exports = app => {
     userStatsService.setCoordsFromIP
   );
 
-
   // API to cache all the user certificates which are not cached yet
   app.get(
     "/api/certificatesCacheSync",
@@ -119,14 +118,18 @@ module.exports = app => {
   //   userStatsService.getMostActive
   // );
 
-  app.post("/api/addCourse",requireLogin,requrieAdmin,adminServices.addCourse);
-  app.post("/api/setXdceTolerance",requireLogin,requrieAdmin,adminServices.setXdceTolerance);
-  app.post("/api/setXdcTolerance",requireLogin,requrieAdmin,adminServices.setXdcTolerance);
-  app.post("/api/setPriceUsd",requireLogin,requrieAdmin,adminServices.setPriceUsd);
-  app.post("/api/setXdceConfirmation",requireLogin,requrieAdmin,adminServices.setXdceConfirmation);
-  app.post("/api/setXdcConfirmation",requireLogin,requrieAdmin,adminServices.setXdcConfirmation);
-  app.post("/api/setCourseBurnPercent",requireLogin,requrieAdmin,adminServices.setCourseBurnPercent);
-  app.post("/api/enableBurning",requireLogin,requrieAdmin,adminServices.enableBurning);
-  app.post("/api/disableBurning",requireLogin,requrieAdmin,adminServices.disableBurning);
-
+  // prettier-ignore
+  {
+    app.post("/api/addCourse",requireLogin,requrieAdmin,adminServices.addCourse);
+    app.post("/api/setXdceTolerance",requireLogin,requrieAdmin,adminServices.setXdceTolerance);
+    app.post("/api/setXdcTolerance",requireLogin,requrieAdmin,adminServices.setXdcTolerance);
+    app.post("/api/setPriceUsd",requireLogin,requrieAdmin,adminServices.setPriceUsd);
+    app.post("/api/setXdceConfirmation",requireLogin,requrieAdmin,adminServices.setXdceConfirmation);
+    app.post("/api/setXdcConfirmation",requireLogin,requrieAdmin,adminServices.setXdcConfirmation);
+    app.post("/api/setCourseBurnPercent",requireLogin,requrieAdmin,adminServices.setCourseBurnPercent);
+    app.post("/api/enableBurning",requireLogin,requrieAdmin,adminServices.enableBurning);
+    app.post("/api/disableBurning",requireLogin,requrieAdmin,adminServices.disableBurning);
+    app.post("/api/addWallet",requireLogin,requrieAdmin,adminServices.addWallet);
+    app.post("/api/switchWalletTo",requireLogin, requrieAdmin,adminServices.switchWalletTo);
+  }
 };
