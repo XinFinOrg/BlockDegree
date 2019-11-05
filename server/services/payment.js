@@ -24,7 +24,7 @@ const xdcPrice = 10;
 // const xdc3 = new XDC3("https://rpc.xinfin.network/"); // setting up the instance for xinfin's mainnet provider
 
 const txReceiptUrl = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
-const txReceiptUrlApothem = "https://explorer.apothem.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
+const txReceiptUrlApothem = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
 
 const xinfinApothemRPC = "http://rpc.apothem.network";
 const xinfinMainnetRPC = "http://rpc.xinfin.network";
@@ -33,7 +33,7 @@ const xinfinMainnetRPC = "http://rpc.xinfin.network";
 
 const contractAddrRinkeby = contractConfig.address.rinkeby;
 const contractABI = contractConfig.ABI;
-const xdceAddrMainnet = contractConfig.address.xdceRinkeby;
+const xdceAddrMainnet = contractConfig.address.xdceMainnet;
 const xdceABI = contractConfig.XdceABI;
 const transferFunctionStr = "transfer(address,uint)";
 const XDCE = "xdce";
@@ -471,7 +471,7 @@ exports.payViaXdc = async (req, res) => {
     newPaymentXdc.price = coursePrice.priceUsd;
     newPaymentXdc.status = "not yet mined";
     newPaymentXdc.autoBurn = toAutoBurn; // capture the status of autoburn at the moment, this will be forwarded.
-    newPaymentXdc.payment_network = "51"; // 50 - mainnet; 51 apothem
+    newPaymentXdc.payment_network = "50"; // 50 - mainnet; 51 apothem
     await newPaymentXdc.save();
     console.log("saved");
 
@@ -485,10 +485,10 @@ exports.payViaXdc = async (req, res) => {
     }
     const xdcTolerance = coursePrice.xdcTolerance;
     const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://rpc.apothem.network")
+      new Web3.providers.HttpProvider("http://rpc.xinfin.network")
     );
     const xdc3 = new XDC3(
-      new XDC3.providers.HttpProvider("http://rpc.apothem.network")
+      new XDC3.providers.HttpProvider("http://rpc.xinfin.network")
     );
 
     // for demo: 0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed, 0x55ede32eae710eed3d21456db6fb01c5e16fcfb04292e72bc0e451fc6693ff8a
@@ -506,7 +506,7 @@ exports.payViaXdc = async (req, res) => {
     let txReceipt = "";
     let txMinedLimit = 55 * 1000; // will listen for mining of the trn_hash for about 1 minute.
     let startTime = Date.now();
-    let xdcOwnerPubAddr = await getXDCRecipient("51");
+    let xdcOwnerPubAddr = await getXDCRecipient("50");
     if (xdcOwnerPubAddr == null) {
       console.error(
         "Some error occured at payment.payViaXdc while fetching the XDC recipient: "
@@ -534,7 +534,7 @@ exports.payViaXdc = async (req, res) => {
         eventEmitter.emit(
           "listenTxMined",
           txn_hash,
-          51,
+          50,
           req.user.email,
           coursePrice.priceUsd,
           course,
@@ -641,7 +641,7 @@ exports.payViaXdc = async (req, res) => {
         eventEmitter.emit(
           "listenTxConfirm",
           txn_hash,
-          51,
+          50,
           req.user.email,
           course,
           newNotiId,
@@ -683,7 +683,7 @@ exports.payViaXdce = async (req, res) => {
     let fullPrice = coursePrice.priceUsd;
     const discObj = await promoCodeService.usePromoCode(req);
 
-    const xdceOwnerPubAddr = await getXDCeRecipient("4");
+    const xdceOwnerPubAddr = await getXDCeRecipient("1");
     if (xdceOwnerPubAddr === null) {
       // some error occured while fetching the XdceOwnerPubAddr
       res.json({ error: "internal error", status: false });
@@ -794,7 +794,7 @@ exports.payViaXdce = async (req, res) => {
     newPaymentXdce.price = coursePrice.priceUsd;
     newPaymentXdce.status = "not yet mined";
     newPaymentXdce.autoBurn = toAutoBurn; // capture trhe status of autoburn at the moment, this will be forwarded.
-    newPaymentXdce.payment_network = "4";
+    newPaymentXdce.payment_network = "1";
     await newPaymentXdce.save();
     console.log("saved");
 
@@ -809,7 +809,7 @@ exports.payViaXdce = async (req, res) => {
     const xdceTolerance = coursePrice.xdceTolerance;
     const web3 = new Web3(
       new Web3.providers.WebsocketProvider(
-        "wss://rinkeby.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49"
+        "wss://mainnet.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49"
       )
     );
 
@@ -831,7 +831,7 @@ exports.payViaXdce = async (req, res) => {
         eventEmitter.emit(
           "listenTxMined",
           txn_hash,
-          4,
+          1,
           req.user.email,
           price,
           course,
@@ -998,7 +998,7 @@ exports.payViaXdce = async (req, res) => {
         eventEmitter.emit(
           "listenTxConfirm",
           txn_hash,
-          4,
+          1,
           req.user.email,
           course,
           newNotiId,

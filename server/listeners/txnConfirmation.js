@@ -21,7 +21,7 @@ let eventEmitter = new EventEmitter();
 // const xinConfirmation = 3;
 const contractAddrRinkeby = contractConfig.address.rinkeby;
 const contractABI = contractConfig.ABI;
-const xdceAddrMainnet = contractConfig.address.xdceRinkeby;
+const xdceAddrMainnet = contractConfig.address.xdceMainnet;
 const xdceABI = contractConfig.XdceABI;
 
 const xdceOwnerPubAddr = "0x4F85F740aCDCf01DF73Be4EB9558247E573097ff";
@@ -30,9 +30,9 @@ const blockdegreePubAddrXDCApothm =
   "0x289da729d69ce09de5b543bc40be01e2cd9c1227";
 const xdcOwnerPubAddr = "xdc289da729d69ce09de5b543bc40be01e2cd9c1227";
 
-const xinfinApothemRPC = "http://rpc.apothem.network";
+const xinfinApothemRPC = "http://rpc.xinfin.network";
 
-const txReceiptUrlApothem = "https://explorer.apothem.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
+const txReceiptUrlApothem = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
 
 // 0x3C7a500D32C3A8317c943293c2a123A0456aa2D0 - test on rinkeBy
 // 0x4F85F740aCDCf01DF73Be4EB9558247E573097ff - on mainnet
@@ -71,9 +71,9 @@ function listenForConfirmation(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
     );
     switch (network) {
-      case 4: {
+      case 1: {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
+          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
         );
         try {
           const txReceipt = await web3.eth.getTransactionReceipt(txHash);
@@ -228,7 +228,7 @@ function listenForConfirmation(
       case 4: {
         break;
       }
-      case 51: {
+      case 50: {
         const xdc3 = new XDC3(
           new XDC3.providers.HttpProvider(xinfinApothemRPC)
         );
@@ -361,9 +361,9 @@ function listenForConfirmation(
         }
         break;
       }
-      case 50: {
-        break;
-      }
+      // case 50: {
+      //   break;
+      // }
       default: {
         console.error(
           `No listener registered for the chain with networkid ${network}`
@@ -376,14 +376,14 @@ function listenForConfirmation(
 function listenForMined(txHash, network, userEmail, price, course, req) {
   setImmediate(async () => {
     switch (network) {
-      case 4: {
+      case 1: {
         try {
           const web3 = new Web3(
-            new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
+            new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
           );
           const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
           const coursePrice = await CoursePrice.findOne({ courseId: course });
-          const blockdegreePubAddr = await getXDCeRecipient("4");
+          const blockdegreePubAddr = await getXDCeRecipient("1");
           if (blockdegreePubAddr === null) {
             console.error(
               "Error occured while fetching blockdegreePubAddr at txnConfirmation.listenForMined"
@@ -597,7 +597,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               );
               listenForConfirmation(
                 txHash,
-                4,
+                1,
                 userEmail,
                 course,
                 newNotiId,
@@ -620,10 +620,10 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
 
         break;
       }
+      // case 50: {
+      //   break;
+      // }
       case 50: {
-        break;
-      }
-      case 51: {
         try {
           const coursePrice = await CoursePrice.findOne({ courseId: course });
           if (coursePrice == null) {
@@ -701,7 +701,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               let xdcTokenAmnt = parseFloat(txReceipt.value) * Math.pow(10, 18);
               let tknRecipient = txReceipt.to;
               console.log(txReceipt);
-              let xdcOwnerPubAddr = await getXDCRecipient("51");
+              let xdcOwnerPubAddr = await getXDCRecipient("50");
               if (xdcOwnerPubAddr == null) {
                 console.error(
                   "Some error occured at payment.payViaXdc while fetching the XDC recipient: "
@@ -783,7 +783,7 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
               eventEmitter.emit(
                 "listenTxConfirm",
                 txHash,
-                51,
+                50,
                 userEmail,
                 course
               );
@@ -885,7 +885,7 @@ async function handleBurnToken(
     case "xdce": {
       try {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws")
+          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
         );
 
         let course = await CoursePrice.findOne({ courseId: courseId });

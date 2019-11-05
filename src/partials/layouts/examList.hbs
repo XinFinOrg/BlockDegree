@@ -227,8 +227,8 @@
   const divisor = 1; // for testing purposes 1 million'th of actual value will be used
   const coinMarketCapUrl = "/api/wrapCoinMarketCap";
   const etherScanIo = "https://etherscan.io/tx/";
-    const apothemExplorer = "https://explorer.apothem.network/tx/";
-    const mainnetExplorer = "https://explorer.mainnet.network/tx/";
+    const apothemExplorer = "https://explorer.xinfin.network/tx/";
+    const mainnetExplorer = "https://explorer.xinfin.network/tx/";
 
   function takeExam(slug) {
 
@@ -360,7 +360,7 @@
 
       // 1 - Mainnet
       // 4 - Rinkeby
-      if (providerNetworkId == 4) {
+      if (providerNetworkId == 1) {
         // is on ethereum mainnet; all ok
         $.ajax({
           method: "get",
@@ -374,7 +374,7 @@
             }
             const priceUsd = parseFloat(response[0].price_usd);
             const codeName = document.getElementById(course_id.id + "codeName").value;
-            const xdceRecipient = await getTokenRecipient("4", "xdce");
+            const xdceRecipient = await getTokenRecipient("1", "xdce");
             if (xdceRecipient == null) {
               $.notify("Something went wrong while fetching the XDCe recipient, please try again later", { type: "danger" });
               return;
@@ -1077,7 +1077,7 @@
     web3.version.getNetwork((err, providerNetworkId) => {
       if (err) { $.notify("Oops, error occurred while getting the network ID"); return; }
 
-      if (providerNetworkId == 51) {
+      if (providerNetworkId == 50) {
         if (web3.eth.coinbase == undefined) {
           $.notify("Please login & setup your <strong>XinPay</strong> web-extension to continue, if already did please <a onclick='window.location.reload()'>refresh</a>")
           return;
@@ -1097,7 +1097,7 @@
             const coursePriceXdc = parseFloat(txPrice) / priceUsd
             console.log(`Original Price: ${txPrice} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
             await ethereum.enable();
-            const xdcRecipient = await getTokenRecipient("51", "xdc");
+            const xdcRecipient = await getTokenRecipient("50", "xdc");
             if (xdcRecipient == null) {
               $.notify("Something went wrong while fetching the XDC recipient, please try again later", { type: "danger" });
               return;
@@ -1138,7 +1138,7 @@
                     } else {
 
                     const modTitle = "<strong>Transaction Received Successfully</strong>";
-                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a>. Click on link to view on etherscan.`;
+                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a>. Click on link to view on XinFin Explorer.`;
                     openModal("modal-success", modTitle, modBody);
                     $.notifyClose('bottom-right')
                     return;
