@@ -180,14 +180,14 @@
       background-color: rgba(0, 119, 181, 1);
     }
 
-    .social-g + {
+    .social-g+ {
       color: #ffffff;
       background-color: rgba(221, 75, 57, 0.8);
       border-radius: 50px;
       border: none;
     }
 
-    .social-g + :hover {
+    .social-g+ :hover {
       background-color: rgba(221, 75, 57, 1);
     }
   }
@@ -229,14 +229,15 @@
   }
 
   .exam-choice {
+
     [type="radio"]:checked,
     [type="radio"]:not(:checked) {
       position: absolute;
       left: -9999px;
     }
 
-    [type="radio"]:checked + label,
-    [type="radio"]:not(:checked) + label {
+    [type="radio"]:checked+label,
+    [type="radio"]:not(:checked)+label {
       position: relative;
       padding-left: 28px;
       cursor: pointer;
@@ -245,8 +246,8 @@
       color: #666;
     }
 
-    [type="radio"]:checked + label:before,
-    [type="radio"]:not(:checked) + label:before {
+    [type="radio"]:checked+label:before,
+    [type="radio"]:not(:checked)+label:before {
       content: "";
       position: absolute;
       left: 0;
@@ -258,8 +259,8 @@
       background: #fff;
     }
 
-    [type="radio"]:checked + label:after,
-    [type="radio"]:not(:checked) + label:after {
+    [type="radio"]:checked+label:after,
+    [type="radio"]:not(:checked)+label:after {
       content: "";
       width: 12px;
       height: 12px;
@@ -272,13 +273,13 @@
       transition: all 0.2s ease;
     }
 
-    [type="radio"]:not(:checked) + label:after {
+    [type="radio"]:not(:checked)+label:after {
       opacity: 0;
       -webkit-transform: scale(0);
       transform: scale(0);
     }
 
-    [type="radio"]:checked + label:after {
+    [type="radio"]:checked+label:after {
       opacity: 1;
       -webkit-transform: scale(1);
       transform: scale(1);
@@ -324,7 +325,7 @@
       background-color: $btn--secondary;
       border: 2px solid transparent;
 
-      & + label {
+      &+label {
         color: $primary-color;
       }
     }
@@ -349,8 +350,7 @@
     border-top-right-radius: 10px;
     width: 100%;
 
-    @media (min-width: 1200px) {
-    }
+    @media (min-width: 1200px) {}
 
     @media (min-width: 992px) and (max-width: 1199.98px) {
       font-size: 16px;
@@ -496,10 +496,12 @@
   outline: none;
   margin: 10px;
 }
+
 .btn-payment:hover {
   background: #fff;
   color: #1aab8a;
 }
+
 .btn-payment:before,
 .btn-payment:after {
   content: "";
@@ -511,14 +513,31 @@
   background: #1aab8a;
   transition: 400ms ease all;
 }
+
 .btn-payment:after {
   right: inherit;
   top: inherit;
   left: 0;
   bottom: 0;
 }
+
 .btn-payment:hover:before,
 .btn-payment:hover:after {
   width: 100%;
   transition: 800ms ease all;
+}
+
+.pay-with {
+  float: right;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 0.5px;
+  border-color: lightgrey;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: fit-content;
+  margin-right: 18px;
+  
 }
