@@ -1,6 +1,7 @@
 const CoursePrice = require("../models/coursePrice");
 const AllWallet = require("../models/wallet");
 const KeyConfig = require("../config/keyConfig");
+const ReferralCode = require("../models/referral_code");
 
 exports.addCourse = async (req, res) => {
   if (
@@ -721,7 +722,7 @@ exports.switchWalletTo = async (req, res) => {
           let walletPKExists = false;
           if (wallet_address.slice(0, 3) == "xdc") {
             // is an XDC wallet;
-            console.log("XDC wallet")
+            console.log("XDC wallet");
             walletPKExists =
               KeyConfig["0x" + wallet_address.slice(3)] !== undefined &&
               KeyConfig["0x" + wallet_address.slice(3)].privateKey !== "";
@@ -731,9 +732,7 @@ exports.switchWalletTo = async (req, res) => {
               KeyConfig[wallet_address].privateKey !== "";
           }
           console.log(KeyConfig[wallet_address]);
-          if (
-            walletPKExists
-          ) {
+          if (walletPKExists) {
             // stuff exists
             console.log("Stuff exists in the KeyConfig");
 
@@ -871,6 +870,92 @@ exports.addNotification = async (req, res) => {
   return res.json({ status: true, error: null });
 };
 
+exports.addReferralCode = async (req, res) => {
+  console.log("Called Referral Code");
+  const codeName = req.body.referralCodeName;
+  const purpose = req.body.purpose;
+  const referralEmail = req.user.email;
+
+  if (
+    codeName == undefined ||
+    codeName == null ||
+    codeName == "" ||
+    purpose == undefined ||
+    purpose == null ||
+    purpose == ""
+  ) {
+    // bad request
+    return res.json({ error: "bad request", status: false });
+  }
+
+  const newRefCode = newReferralCode();
+  newRefCode.referralCode = codeName;
+  newRefCode.purpose = purpose;
+  newRefCode.referralEmail = referralEmail;
+  newRefCode.created = Date.now();
+  newRefCode.lastUsed = Date.now();
+  try {
+    await newRefCode.save();
+  } catch (e) {
+    console.error(
+      "Some error occured while saving the newRefCode at adminServices.addReferralCode: ",
+      e
+    );
+    return res.json({ status: false, error: "internal error" });
+  }
+  return res.json({ status: true, error: null });
+};
+
+exports.enableRefCode = async (req, res) => {
+  console.log("Called Enable Ref Code");
+  const codeName = req.body.referralCodeName;
+
+  if (codeName == undefined || codeName == null || codeName == "") {
+    return res.json({ error: "bad request", status: false });
+  }
+
+  try {
+    const refCode = await ReferralCode.findOne({ referralCode: codeName });
+    if (refCode == null) {
+      return res.json({ error: "no such referral code exists", status: false });
+    }
+    if (refCode.status) {
+      return res.json({ error: "already enabled", status: false });
+    }
+    refCode.status = true;
+    await refCode.save();
+    return res.json({ error: null, status: true });
+  } catch (e) {
+    console.error("Some error occured at adminServices.enableRefCode: ", e);
+    return res.json({ erorr: "internal error", status: false });
+  }
+};
+
+exports.disableRefCode = async (req, res) => {
+  console.log("Called Enable Ref Code");
+  const codeName = req.body.referralCodeName;
+
+  if (codeName == undefined || codeName == null || codeName == "") {
+    return res.json({ error: "bad request", status: false });
+  }
+
+  try {
+    const refCode = await ReferralCode.findOne({ referralCode: codeName });
+    if (refCode == null) {
+      return res.json({ error: "no such referral code exists", status: false });
+    }
+    if (!refCode.status) {
+      return res.json({ error: "already disabled", status: false });
+    }
+    refCode.status = false;
+    await refCode.save();
+    return res.json({ error: null, status: true });
+  } catch (e) {
+    console.error("Some error occured at adminServices.disableRefCode: ", e);
+    return res.json({ erorr: "internal error", status: false });
+  }
+};
+
 function newDefCourse(courseId) {
   return new CoursePrice({
     courseId: courseId,
@@ -895,5 +980,18 @@ function newDefNotification() {
     displayed: "",
     emails: [],
     sendAll: false
+  });
+}
+
+function newReferralCode() {
+  return ReferralCode({
+    referralCode: "",
+    purpose: "",
+    status: false,
+    count: 0,
+    users: [],
+    created: "",
+    lastUsed: "",
+    referrerEmail: ""
   });
 }

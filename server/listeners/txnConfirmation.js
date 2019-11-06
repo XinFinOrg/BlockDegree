@@ -63,9 +63,10 @@ function listenForConfirmation(
   userEmail,
   course,
   newNotiId,
-  codeName
+  codeName,
+  refCode
 ) {
-  console.log("CodeName: ",codeName);
+  console.log("CodeName: ", codeName);
   setImmediate(async () => {
     console.log(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
@@ -170,6 +171,10 @@ function listenForConfirmation(
                       codeName == ""
                         ? _payment
                         : _payment + `;promocode:${codeName}`;
+                    _payment =
+                      refCode == null
+                        ? _payment
+                        : _payment + `;referralcode:${refCode}`;
                     user.examData.payment[
                       paymentLog.course + "_payment"
                     ] = _payment;
@@ -317,6 +322,10 @@ function listenForConfirmation(
                   codeName == undefined || codeName == null || codeName == ""
                     ? _payment
                     : _payment + `;promocode:${codeName}`;
+                _payment =
+                  refCode == null
+                    ? _payment
+                    : _payment + `;referralcode:${refCode}`;
                 user.examData.payment[
                   paymentLog.course + "_payment"
                 ] = _payment;
@@ -373,7 +382,15 @@ function listenForConfirmation(
   });
 }
 
-function listenForMined(txHash, network, userEmail, price, course, req) {
+function listenForMined(
+  txHash,
+  network,
+  userEmail,
+  price,
+  course,
+  req,
+  refCode
+) {
   setImmediate(async () => {
     switch (network) {
       case 1: {
@@ -601,7 +618,8 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                 userEmail,
                 course,
                 newNotiId,
-                req.body.codeName
+                req.body.codeName,
+                refCode
               );
               return;
             }
@@ -785,7 +803,9 @@ function listenForMined(txHash, network, userEmail, price, course, req) {
                 txHash,
                 50,
                 userEmail,
-                course
+                course,
+                req.body.codeName,
+                refCode
               );
               return;
             }
@@ -897,8 +917,6 @@ async function handleBurnToken(
 
         const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
 
-
-        
         const allWallet = await AllWallet.findOne({
           burnActive: {
             $elemMatch: {
@@ -925,7 +943,6 @@ async function handleBurnToken(
 
         const blockdegreePubAddr = xdceOwnerPubAddr;
 
-
         if (xdceOwnerPubAddr == null) {
           console.error(
             "Some error occured while fethcing the XDCe recipient address txnConfirmation."
@@ -937,7 +954,7 @@ async function handleBurnToken(
           );
           return;
         }
-        
+
         let burnAmnt = "";
 
         if (!paymentLog.autoBurn) {
@@ -982,10 +999,8 @@ async function handleBurnToken(
           to: xdceAddrMainnet,
           gas: 60000,
           data: encodedData,
-          nonce: await web3.eth.getTransactionCount(
-            blockdegreePubAddr            
-          )
-        };        
+          nonce: await web3.eth.getTransactionCount(blockdegreePubAddr)
+        };
 
         web3.eth.accounts
           .signTransaction(tx, keyConfig[xdceOwnerPubAddr].privateKey)
@@ -1124,9 +1139,7 @@ async function handleBurnToken(
           gas: 21000,
           gasPrice: 9000,
           value: burnAmnt,
-          nonce: await web3.eth.getTransactionCount(
-            blockdegreePubAddrXDCApothm
-          )
+          nonce: await web3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
         };
 
         const privKey = Buffer.from(
