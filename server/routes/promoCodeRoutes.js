@@ -15,4 +15,6 @@ module.exports = app => {
     app.post("/api/checkCode",requireLogin,promoCodeServices.checkCode);
     app.post("/api/setPromoCodeCap",requireLogin, requireAdmin, promoCodeServices.setPromoCodeCap);
     app.post("/api/setPromoCodeUseLimit",requireLogin, requireAdmin,promoCodeServices.setPromoCodeUseLimit);
+
+    app.post("/api/checkReferralCode",requireLogin,promoCodeServices.checkReferralCode);
 }

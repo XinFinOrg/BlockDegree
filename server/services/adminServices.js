@@ -872,9 +872,9 @@ exports.addNotification = async (req, res) => {
 
 exports.addReferralCode = async (req, res) => {
   console.log("Called Referral Code");
-  const codeName = req.body.referralCodeName;
+  const codeName = req.body.referralCode;
   const purpose = req.body.purpose;
-  const referralEmail = req.user.email;
+  const referralEmail = req.body.referralEmail;
 
   if (
     codeName == undefined ||
@@ -908,7 +908,7 @@ exports.addReferralCode = async (req, res) => {
 
 exports.enableRefCode = async (req, res) => {
   console.log("Called Enable Ref Code");
-  const codeName = req.body.referralCodeName;
+  const codeName = req.body.referralCode;
 
   if (codeName == undefined || codeName == null || codeName == "") {
     return res.json({ error: "bad request", status: false });
@@ -933,7 +933,7 @@ exports.enableRefCode = async (req, res) => {
 
 exports.disableRefCode = async (req, res) => {
   console.log("Called Enable Ref Code");
-  const codeName = req.body.referralCodeName;
+  const codeName = req.body.referralCode;
 
   if (codeName == undefined || codeName == null || codeName == "") {
     return res.json({ error: "bad request", status: false });

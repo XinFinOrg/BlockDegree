@@ -363,16 +363,58 @@ $(document).ready(async function() {
     $("#course_1PromoCodeBlock")
       .stop()
       .slideToggle();
+    if ($("#course_1ReferralCodeBlock").is(":visible"))
+      $("#course_1ReferralCodeBlock")
+        .stop()
+        .slideToggle();
   });
 
   $("#course_2PromoCodeBtn").on("click", function() {
     $("#course_2PromoCodeBlock")
       .stop()
       .slideToggle();
+    if ($("#course_2ReferralCodeBlock").is(":visible"))
+      $("#course_2ReferralCodeBlock")
+        .stop()
+        .slideToggle();
   });
 
   $("#course_3PromoCodeBtn").on("click", function() {
     $("#course_3PromoCodeBlock")
+      .stop()
+      .slideToggle();
+    if ($("#course_3ReferralCodeBlock").is(":visible"))
+      $("#course_3ReferralCodeBlock")
+        .stop()
+        .slideToggle();
+  });
+
+  $("#course_1ReferralCodeBtn").on("click", function() {
+    if ($("#course_1PromoCodeBlock").is(":visible"))
+      $("#course_1PromoCodeBlock")
+        .stop()
+        .slideToggle();
+    $("#course_1ReferralCodeBlock")
+      .stop()
+      .slideToggle();
+  });
+
+  $("#course_2ReferralCodeBtn").on("click", function() {
+    if ($("#course_2PromoCodeBlock").is(":visible"))
+      $("#course_2PromoCodeBlock")
+        .stop()
+        .slideToggle();
+    $("#course_2ReferralCodeBlock")
+      .stop()
+      .slideToggle();
+  });
+
+  $("#course_3ReferralCodeBtn").on("click", function() {
+    if ($("#course_3PromoCodeBlock").is(":visible"))
+      $("#course_3PromoCodeBlock")
+        .stop()
+        .slideToggle();
+    $("#course_3ReferralCodeBlock")
       .stop()
       .slideToggle();
   });
