@@ -52,7 +52,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      maxAge: 3600000
+      maxAge: 10800000
     }
   })
 ); // session secret

@@ -40,8 +40,9 @@ exports.submitExam = async (req, res, next) => {
   try {
     currUser = await User.findOne({ email: req.user.email });
   } catch (e) {
-    console.log("Error ", e);
-    res.render("displayError", {
+    console.error("Some error occured at exam.submitExam: ", e);
+    res.json({
+      status: false,
       error:
         "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
     });
@@ -55,11 +56,13 @@ exports.submitExam = async (req, res, next) => {
         if (attempts != null && attempts < 3) {
           questions.findOne({ exam: "firstExam" }).then((result, error) => {
             if (error) {
-              console.error("Error while finding questions: ", error);
-              return res.render("displayError", {
+              console.error("Some error occured at exam.submitExam: ", error);
+              res.json({
+                status: false,
                 error:
-                  "Something went wrong while submitting your exam, please try again later or contact us at info@blockdegree.org"
+                  "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
               });
+              return;
             }
             for (let index = 0; index < result.questionsBasic.length; index++) {
               if (
@@ -86,13 +89,15 @@ exports.submitExam = async (req, res, next) => {
               { upsert: false },
               (err, doc) => {
                 if (err) {
-                  console.log("Something went wrong when updating data!");
-                  return res.render("displayError", {
+                  console.error("Some error occured at exam.submitExam: ", err);
+                  res.json({
+                    status: false,
                     error:
-                      "Something went wrong while submitting your exam, please try again later or contact us at info@blockdegree.org"
+                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
                   });
+                  return;
                 }
-                res.redirect("/exam-result");
+                res.json({ status: true, error: null });
                 return;
               }
             );
@@ -112,13 +117,14 @@ exports.submitExam = async (req, res, next) => {
             { upsert: false },
             (err, doc) => {
               if (err) {
-                console.log("Something went wrong when updating data!");
-                return res.render("displayError", {
+                console.error("Some error occured at exam.submitExam: ", err);
+                return res.json({
+                  status: false,
                   error:
-                    "Something went wrong while submitting your exam, please try again later or contact us at info@blockdegree.org"
+                    "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
                 });
               }
-              res.redirect("/exam-result");
+              res.json({ status: true, error: null });
               return;
             }
           );
@@ -158,13 +164,14 @@ exports.submitExam = async (req, res, next) => {
               { upsert: false },
               (err, doc) => {
                 if (err) {
-                  console.log("Something wrong when updating data!: ", err);
-                  return res.render("displayError", {
+                  console.error("Some error occured at exam.submitExam: ", err);
+                  return res.json({
+                    status: false,
                     error:
-                      "Something went wrong while submitting your exam, please try again later or contact us at info@blockdegree.org"
+                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
                   });
                 }
-                res.redirect("/exam-result");
+                res.json({ status: true, error: null });
                 return;
               }
             );
@@ -184,13 +191,14 @@ exports.submitExam = async (req, res, next) => {
             { upsert: false },
             (err, doc) => {
               if (err) {
-                console.log("Something went wrong when updating data!: ", err);
-                return res.render("displayError", {
+                console.error("Some error occured at exam.submitExam: ", err);
+                return res.json({
+                  status: false,
                   error:
-                    "Something went wrong while submitting your exam, please try again later or contact us at info@blockdegree.org"
+                    "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
                 });
               }
-              res.redirect("/exam-result");
+              res.json({ status: true, error: null });
               return;
             }
           );
@@ -229,13 +237,14 @@ exports.submitExam = async (req, res, next) => {
               (err, doc) => {
                 console.log("err?", err);
                 if (err) {
-                  console.log("Something wrong when updating data!: ", err);
-                  return res.render("displayError", {
+                  console.error("Some error occured at exam.submitExam: ", err);
+                  return res.json({
+                    status: false,
                     error:
-                      "Something went wrong while submitting your exam, please try again later or contact us at info@blockdegree.org"
+                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
                   });
                 }
-                res.redirect("/exam-result");
+                res.json({ status: true, error: null });
                 return;
               }
             );
@@ -255,13 +264,14 @@ exports.submitExam = async (req, res, next) => {
             { upsert: false },
             (err, doc) => {
               if (err) {
-                console.log("Something went wrong when updating data!: ", err);
-                return res.render("displayError", {
+                console.error("Some error occured at exam.submitExam: ", err);
+                return res.json({
+                  status: false,
                   error:
-                    "Something went wrong while submitting your exam, please try again later or contact us at info@blockdegree.org"
+                    "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
                 });
               }
-              res.redirect("/exam-result");
+              res.json({ status: true, error: null });
               return;
             }
           );
@@ -275,13 +285,14 @@ exports.getBasicExam = (req, res) => {
   readJSONFile(
     path.join(process.cwd(), "/server/protected/blockchain-basic.json"),
     (err, json) => {
-      if (err) {
+      if (err != null) {
         return res.render("displayError", {
           error:
             "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org"
         });
       }
-      res.render("blockchainBasic", json);
+      console.log("Called getBasicExam");
+      res.render("blockchainBasic", { examStr: JSON.stringify(json) });
     }
   );
 };
@@ -296,7 +307,7 @@ exports.getAdvancedExam = (req, res) => {
             "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org"
         });
       }
-      res.render("blockchainAdvanced", json);
+      res.render("blockchainAdvanced", { examStr: JSON.stringify(json) });
     }
   );
 };
@@ -311,7 +322,7 @@ exports.getProfessionalExam = (req, res) => {
             "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org"
         });
       }
-      res.render("blockchainProfessional", json);
+      res.render("blockchainProfessional", { examStr: JSON.stringify(json) });
     }
   );
 };
@@ -328,7 +339,12 @@ exports.getExamResult = async (req, res) => {
     return;
   }
   let trailPath = backUrl.split("/")[3];
-  if (trailPath == undefined || trailPath == null || trailPath.split("-")[1] == undefined || trailPath.split("-")[1] == null) {
+  if (
+    trailPath == undefined ||
+    trailPath == null ||
+    trailPath.split("-")[1] == undefined ||
+    trailPath.split("-")[1] == null
+  ) {
     // redirect from some other page
     res.render("error");
     return;
