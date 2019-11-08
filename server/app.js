@@ -52,7 +52,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      maxAge: 3600000
+      maxAge: 10800000
     }
   })
 ); // session secret
@@ -89,7 +89,7 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
-app.listen("3005", async () => {
+app.listen("3000", async () => {
   pendingTx.emit("initiatePendingTx");
   await adminServices.initiateWalletConfig();
   console.log("server started");
