@@ -109,9 +109,10 @@
 
     let ansArr = [];
     for (let i=0;i<examArr.length;i++){
-      if (subObjKeys[i]) {
+      console.log(subObj[i]);
+      if (subObj[i] != undefined) {
         // object exists
-        ansArr.push(subObj[subObjKeys[i]]);        
+        ansArr.push(subObj[i]);        
       }else{
         // does not exist
         ansArr.push(5);
