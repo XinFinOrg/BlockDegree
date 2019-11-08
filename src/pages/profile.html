@@ -536,7 +536,14 @@
                 ? payments[z].status
                 : "notYetMined"
             }">${
-              payments[z].status != "not yet mined" ? (status == "completed"||status=="not yet mined") ? "<div style='width:100%;text-align:center;'>"+status+"</div>" : status  : "<div style='width:100%;text-align:center;'>not yet mined</div>"
+              payments[z].status != "not yet mined"
+                ? status == "completed" || status == "not yet mined"
+                  ? "<div style='width:100%;text-align:center;'>" +
+                    status[0].toUpperCase() +
+                    status.slice(1) +
+                    "</div>"
+                  : status
+                : "<div style='width:100%;text-align:center;'>Not Yet Mined</div>"
             }</td><td>${burn_hash_link}</td><td>${
               burnAmnt == null
                 ? "-"
@@ -609,7 +616,7 @@
       // pending
       let width = Math.round((curr / max) * 100);
       return `<div id="myProgress">
-  	<span id="myBarText" >pending (${curr}/${max}) </span>
+  	<span id="myBarText" ><strong>pending (${curr}/${max})</strong> </span>
   <div id="myBar" style="width:${width}%">
 </div>
 </div>`;
