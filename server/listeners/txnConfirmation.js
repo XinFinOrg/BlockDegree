@@ -67,6 +67,7 @@ function listenForConfirmation(
   refCode
 ) {
   console.log("CodeName: ", codeName);
+  console.log("RefCode: ",refCode);
   setImmediate(async () => {
     console.log(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
@@ -391,6 +392,7 @@ function listenForMined(
   req,
   refCode
 ) {
+  console.log("RefCode: ",refCode)
   setImmediate(async () => {
     switch (network) {
       case 1: {
@@ -1205,7 +1207,7 @@ async function getXDCeRecipient(network) {
     console.log("Wallet not configured");
     return null;
   }
-  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+  for (let i = 0; i < configWallet.recipientActive.length; i++) {
     if (
       configWallet.recipientActive[i].wallet_token_name === "xdce" &&
       configWallet.recipientActive[i].wallet_network === network
@@ -1222,7 +1224,7 @@ async function getXDCRecipient(network) {
     console.log("Wallet not configured");
     return null;
   }
-  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+  for (let i = 0; i < configWallet.recipientActive.length; i++) {
     if (
       configWallet.recipientActive[i].wallet_token_name === "xdc" &&
       configWallet.recipientActive[i].wallet_network === network

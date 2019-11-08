@@ -398,6 +398,7 @@
             }
             const priceUsd = parseFloat(response[0].price_usd);
             const codeName = document.getElementById(course_id.id + "codeName").value;
+            const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
             const xdceRecipient = await getTokenRecipient("1", "xdce");
             if (xdceRecipient == null) {
               $.notify("Something went wrong while fetching the XDCe recipient, please try again later", { type: "danger" });
@@ -443,6 +444,7 @@
             await ethereum.enable();
 
             const xdceAddrMainnet = "0x41ab1b6fcbb2fa9dced81acbdec13ea6315f2bf2";
+            {{!-- const xdceAddrMainnet = "0xF53048a4429DbFE150B4Bc0F3Cd3C19d7b093429"; --}}
             const xdceABI = [
               {
                 constant: false,
@@ -995,7 +997,7 @@
               $.ajax({
                 method: "post",
                 url: "/api/payViaXdce",
-                data: { txn_hash: result, course: course_id.id, price: price, codeName: codeName },
+                data: { txn_hash: result, course: course_id.id, price: price, codeName: codeName, referralCode: referralCode },
                 success: resp => {
                   if (resp.status) {
                     const modTitle = "<strong>Transaction Received Successfully</strong>";
@@ -1054,6 +1056,8 @@
   async function launchXinPay(course_id, price) {
 
     const codeName = document.getElementById(course_id.id + "codeName").value;
+    const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
+
     let txPrice = price;
     try {
       const codeResp = await $.ajax({
@@ -1150,7 +1154,7 @@
                 $.ajax({
                   method: "post",
                   url: "/api/payViaXdc",
-                  data: { course: course_id.id, price: txPrice, txn_hash: result, codeName: codeName },
+                  data: { course: course_id.id, price: txPrice, txn_hash: result, codeName: codeName,referralCode:referralCode },
                   success: response => {
                     if (!response.status) {
                       // Error, its ok.

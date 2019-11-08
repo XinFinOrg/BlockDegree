@@ -16,7 +16,9 @@ const tokenLogSchema = mongoose.Schema({
   autoBurn: Boolean,
   burn_txn_hash: String,
   burn_token_amnt: String,
-  payment_network: String
+  payment_network: String,
+  promoCode:String,
+  referralCode:String
 });
 
 module.exports = mongoose.model("Payment_Token", tokenLogSchema);

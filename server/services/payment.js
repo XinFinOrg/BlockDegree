@@ -357,6 +357,8 @@ exports.payPaypal = async (req, res) => {
               payment_logs.payment_id = invoice_number;
               payment_logs.payment_status = false;
               payment_logs.amount = price;
+              payment_logs.promoCode = req.body.codeName;
+              payment_logs.referralCode = referralCode;
               await payment_logs.save();
 
               return res.redirect(payment.links[i].href);
@@ -514,6 +516,8 @@ exports.payViaXdc = async (req, res) => {
     newPaymentXdc.status = "not yet mined";
     newPaymentXdc.autoBurn = toAutoBurn; // capture the status of autoburn at the moment, this will be forwarded.
     newPaymentXdc.payment_network = "50"; // 50 - mainnet; 51 apothem
+    newPaymentXdc.referralCode = referralCode;
+    newPaymentXdc.promoCode = req.body.codeName;
     await newPaymentXdc.save();
     console.log("saved");
 
@@ -851,6 +855,8 @@ exports.payViaXdce = async (req, res) => {
     newPaymentXdce.status = "not yet mined";
     newPaymentXdce.autoBurn = toAutoBurn; // capture trhe status of autoburn at the moment, this will be forwarded.
     newPaymentXdce.payment_network = "1";
+    newPaymentXdce.promoCode = req.body.codeName;
+    newPaymentXdce.referralCode = referralCode;
     await newPaymentXdce.save();
     console.log("saved");
 
@@ -889,7 +895,7 @@ exports.payViaXdce = async (req, res) => {
           txn_hash,
           1,
           req.user.email,
-          price,
+          coursePrice.priceUsd,
           course,
           req,
           usedRefCode ? referralCode : null
@@ -1269,7 +1275,7 @@ async function getXDCeRecipient(network) {
     console.log("Wallet not configured");
     return null;
   }
-  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+  for (let i = 0; i < configWallet.recipientActive.length; i++) {
     if (
       configWallet.recipientActive[i].wallet_token_name === "xdce" &&
       configWallet.recipientActive[i].wallet_network === network
@@ -1286,7 +1292,7 @@ async function getXDCRecipient(network) {
     console.log("Wallet not configured");
     return null;
   }
-  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+  for (let i = 0; i < configWallet.recipientActive.length; i++) {
     if (
       configWallet.recipientActive[i].wallet_token_name === "xdc" &&
       configWallet.recipientActive[i].wallet_network === network
