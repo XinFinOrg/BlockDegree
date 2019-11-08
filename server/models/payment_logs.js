@@ -11,7 +11,8 @@ var paymentlogsSchema = mongoose.Schema({
     payment_date : String,
     payment_amount : String,
     payment_status : Boolean,
-
+    promoCode: String,
+    referralCode: String
 });
 
 // create the model for users and expose it to our app

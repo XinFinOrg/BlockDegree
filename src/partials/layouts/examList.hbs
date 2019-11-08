@@ -89,12 +89,26 @@
               </div>
             </div>
 
+            <div class="promoCode-block" id="{{this.type}}ReferralCodeBlock">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="referralCode" placeholder="referral code (optional)"
+                  id="{{this.type}}ReferralCode">            
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-dark"
+                    onclick="checkReferralCode({{this.type}})">Check</button>
+                </div>    
+              </div>
+            </div>
+
             <button onclick="handlePayment({{this.type}},{{this.price}})" class="btn text-body btn-light mb-3"
               data-price="{{this.price}}" id="{{this.type}}">
               ENROLL
             </button>
-            <div class="promoCode-btn" id="{{this.type}}PromoCodeBtn">*Apply promo code</div>
-
+            <div>
+            <span class="promoCode-txt">Apply</span> 
+            <span class="promoCode-btn" id="{{this.type}}PromoCodeBtn">PROMO CODE</span>&nbsp;<span class="promoCode-txt">or</span> 
+            <span class="promoCode-btn" id="{{this.type}}ReferralCodeBtn">REFERRAL CODE</span>  
+            </div>
             <div id="btn-paymentModal{{this.type}}" style="display:none" data-toggle="modal"
               data-target="#paymentModal{{this.type}}">
             </div>
@@ -297,6 +311,7 @@
   function pay(course_id, price) {
     const email = localStorage.getItem('email');
     const codeName = document.getElementById(course_id.id + "codeName").value;
+    const referralCode = document.getElementById(course_id.id+"ReferralCode").value;
     console.log(course_id.id + "codeName");
     console.log(codeName);
     $(`#${course_id.id}`).attr("disabled", true);
@@ -309,6 +324,7 @@
     let elementCourseId = document.createElement("input");
     let elementPrice = document.createElement("input");
     let elementCodeName = document.createElement("input");
+    let elementReferralCode = document.createElement("input");
 
     elementEmail.name = "email";
     elementEmail.value = email;
@@ -325,6 +341,10 @@
     elementCodeName.name = "codeName";
     elementCodeName.value = codeName;
     formNew.appendChild(elementCodeName);
+
+    elementReferralCode.name="referralCode";
+    elementReferralCode.value=referralCode;
+    formNew.appendChild(elementReferralCode);
 
     document.body.appendChild(formNew);
     formNew.submit();
@@ -378,6 +398,7 @@
             }
             const priceUsd = parseFloat(response[0].price_usd);
             const codeName = document.getElementById(course_id.id + "codeName").value;
+            const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
             const xdceRecipient = await getTokenRecipient("1", "xdce");
             if (xdceRecipient == null) {
               $.notify("Something went wrong while fetching the XDCe recipient, please try again later", { type: "danger" });
@@ -423,6 +444,7 @@
             await ethereum.enable();
 
             const xdceAddrMainnet = "0x41ab1b6fcbb2fa9dced81acbdec13ea6315f2bf2";
+            {{!-- const xdceAddrMainnet = "0xF53048a4429DbFE150B4Bc0F3Cd3C19d7b093429"; --}}
             const xdceABI = [
               {
                 constant: false,
@@ -975,7 +997,7 @@
               $.ajax({
                 method: "post",
                 url: "/api/payViaXdce",
-                data: { txn_hash: result, course: course_id.id, price: price, codeName: codeName },
+                data: { txn_hash: result, course: course_id.id, price: price, codeName: codeName, referralCode: referralCode },
                 success: resp => {
                   if (resp.status) {
                     const modTitle = "<strong>Transaction Received Successfully</strong>";
@@ -1034,6 +1056,8 @@
   async function launchXinPay(course_id, price) {
 
     const codeName = document.getElementById(course_id.id + "codeName").value;
+    const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
+
     let txPrice = price;
     try {
       const codeResp = await $.ajax({
@@ -1130,7 +1154,7 @@
                 $.ajax({
                   method: "post",
                   url: "/api/payViaXdc",
-                  data: { course: course_id.id, price: txPrice, txn_hash: result, codeName: codeName },
+                  data: { course: course_id.id, price: txPrice, txn_hash: result, codeName: codeName,referralCode:referralCode },
                   success: response => {
                     if (!response.status) {
                       // Error, its ok.
@@ -1327,6 +1351,27 @@
       return null;
     }
 
+  }
+
+  function checkReferralCode(course) {
+    const courseId = course.id;
+    const referralCode = document.getElementById(`${courseId}ReferralCode`).value;
+    console.log(`Referral Code: ${referralCode}`);
+    $.ajax({
+      method:"post",
+      url:"/api/checkReferralCode",
+      data:{referralCode:referralCode},
+      success: res => {
+        if (!res.status){
+          $.notify(`<strong>Error</strong>: ${res.error}`,{type:'danger'});
+          return;
+        }
+        $.notify(`Referral code is <strong>valid</strong> !`)
+      },
+      error: xhr => {
+        return $.notify(`<strong>Error</strong>: Some error occured while making a request to the server`,{type:"danger"});
+      }
+    })
   }
 
 </script>

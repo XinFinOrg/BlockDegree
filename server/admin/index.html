@@ -78,6 +78,7 @@
                             <div onclick="openPage('promoCode')">PromoCode</div>
                             <div onclick="openPage('course_payment')">Course Payments</div>
                             <div onclick="openPage('wallet_config')">Wallet Config</div>
+                            <div onclick="openPage('referral_code')">Referral Code</div>
                           </div>
                           <div class="main">
                                 <section class="main-section">
@@ -265,6 +266,24 @@
                                         <input class="form-control" type="text" id="switchWallet_wallet_network" placeholder="Enter the relevant network on which the wallet wishes to operate" />                                        
                                         <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="switchToWallet()">Switch Wallet</button>
 
+                                        </div>
+
+                                        <div id="referral_code" class="tabcontent" style="display: none;">
+                                            <h1>Referral Codes Config</h1>
+
+                                            <h4>Add New Referral Code</h4>
+                                            <input class="form-control" type="text" id="addNew_referralCode" placeholder="Enter the code name" />
+                                            <input class="form-control" type="text" id="addNew_referrerEmail" placeholder="Enter the Referrer's email" />
+                                            <input class="form-control" type="text" id="addNew_purpose" placeholder="Enter the purpose of this referral code" />
+                                            <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="addReferralCode()">Add Referral Code</button>
+
+                                            <h4>Enable Referral Code</h4>
+                                            <input class="form-control" type="text" id="enable_referralCode" placeholder="Enter the code name" />                                    
+                                            <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="enableReferralCode()">Enable Referral Code</button>
+
+                                            <h4>Disable Referral Code</h4>
+                                            <input class="form-control" type="text" id="disable_referralCode" placeholder="Enter the code name" />                                            
+                                            <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="disableReferralCode()">Disable Referral Code</button>
                                         </div>
                                     </section>
                                 </div>
@@ -578,6 +597,81 @@
                         alert("Some error occured");
                     }
                 })
+            }
+
+            function addReferralCode(){
+                const referralCode = document.getElementById("addNew_referralCode").value;
+                const referrerEmail = document.getElementById("addNew_referrerEmail").value;
+                const purpose = document.getElementById("addNew_purpose").value;
+
+                if (referralCode == "" || referralCode == undefined || referralCode == null || referrerEmail == undefined ||referrerEmail == null || referrerEmail == "" || purpose == undefined || purpose == null || purpose == ""){
+                   alert("Bad parameters");
+                   return; 
+                }
+
+                $.ajax({
+                    method:"post",
+                    url:"/api/addReferralCode",
+                    data:{referralCode:referralCode,referrerEmail:referrerEmail,purpose:purpose},
+                    success:res => {
+                        if (!res.status){
+                            return alert(`Error: ${res.error}`);
+                        }
+                        else alert(`Success`);
+                    },
+                    error:xhr => {
+                        return alert(`Error occured while making a request to server`);
+                    }
+                })
+
+            }
+
+            function enableReferralCode(){
+                const referralCode = document.getElementById("enable_referralCode").value;
+            
+                if (referralCode == "" || referralCode == undefined || referralCode == null ){
+                   alert("Bad parameters");
+                   return; 
+                }
+
+                $.ajax({
+                    method:"post",
+                    url:"/api/enableReferralCode",
+                    data:{referralCode:referralCode},
+                    success:res => {
+                        if (!res.status){
+                            return alert(`Error: ${res.error}`);
+                        }
+                        else alert(`Success`);
+                    },
+                    error:xhr => {
+                        return alert(`Error occured while making a request to server`);
+                    }
+                })
+            }
+
+            function disableReferralCode() {
+                const referralCode = document.getElementById("disable_referralCode").value;
+            
+            if (referralCode == "" || referralCode == undefined || referralCode == null ){
+               alert("Bad parameters");
+               return; 
+            }
+
+            $.ajax({
+                method:"post",
+                url:"/api/disableReferralCode",
+                data:{referralCode:referralCode},
+                success:res => {
+                    if (!res.status){
+                        return alert(`Error: ${res.error}`);
+                    }
+                    else alert(`Success`);
+                },
+                error:xhr => {
+                    return alert(`Error occured while making a request to server`);
+                }
+            })
             }
             
         </script>

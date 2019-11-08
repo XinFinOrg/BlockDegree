@@ -1,5 +1,6 @@
 const PromoCode = require("../models/promo_code");
 const PromoCodeLog = require("../models/promocode_log");
+const ReferralCode = require("../models/referral_code");
 
 function checkReqBody_NewPromo(obj, list) {
   if (typeof list === "string") {
@@ -142,10 +143,7 @@ exports.usePromoCode = async req => {
       await currPromoCode.save();
       return { error: `Promocode limit reached` };
     } catch (e) {
-      console.error(
-        "Some error occured while saving the promocode state ",
-        e
-      );
+      console.error("Some error occured while saving the promocode state ", e);
       return { error: "internal error" };
     }
   }
@@ -156,7 +154,7 @@ exports.usePromoCode = async req => {
         user.email != "" &&
         user.email != undefined &&
         user.email == userEmail
-      ) {      
+      ) {
         currPromoCode.lastUsed = Date.now();
         currPromoCode.count += 1;
         let discAmt = parseFloat(currPromoCode.discAmt);
@@ -381,10 +379,7 @@ exports.checkCode = async (req, res) => {
       await currPromoCode.save();
       return res.json({ error: "promocode limit reached" });
     } catch (e) {
-      console.error(
-        "Some error occured while saving the promocode state ",
-        e
-      );
+      console.error("Some error occured while saving the promocode state ", e);
       return res.json({ error: "internal error" });
     }
   }
@@ -414,7 +409,7 @@ exports.setPromoCodeCap = async (req, res) => {
     return res.json({ error: "bad request", status: false });
   }
   const codeName = req.body.codeName;
-  const setCap = req.body.setCap === 'true';
+  const setCap = req.body.setCap === "true";
   try {
     const promoCode = await PromoCode.findOne({ codeName: codeName });
     if (promoCode === null) {
@@ -468,4 +463,85 @@ exports.setPromoCodeUseLimit = async (req, res) => {
     console.log("Some error occured at promoCodes.setUseLimit: ", e);
     return res.json({ error: "internal error", status: false });
   }
+};
+
+exports.useReferralCode = async req => {
+  console.log("called useReferralCode")
+  const userEmail = req.user.email;
+  const referralCode = req.body.referralCode;
+  const course = req.body.course_id;
+  console.log(userEmail,referralCode,course);
+  if (referralCode == undefined || referralCode == null || referralCode == "") {
+    return { error: "bad request" };
+  }
+  try {
+    const refCode = await ReferralCode.findOne({ referralCode: referralCode });
+    if (refCode == null) {
+      return { error: "no such referral code exists!" };
+    }
+    if (!refCode.status) {
+      return { error: "referral code no longer valid!" };
+    }
+    refCode.count++;
+    let userExists = false;
+    for (let i = 0; i < refCode.users.length; i++) {
+      console.log(refCode.users[i]);
+      if (refCode.users[i].email == userEmail) {
+        userExists = true;
+        if (!(`${course}_count` in refCode.users[i])) {
+          // does not exist
+          refCode.users[i][`${course}_count`] = 1;
+        } else {
+          refCode.users[i][`${course}_count`]++;
+        }
+        let currTimeStamp = Date.now();
+        refCode.users[i].count++;
+        refCode.users[i].lastUsed = currTimeStamp;
+        refCode.lastUsed = currTimeStamp;
+      }
+    }
+    if (!userExists) {
+      let currTimeStamp = Date.now();
+      let newObj = {
+        email: userEmail,
+        created: currTimeStamp,
+        lastUsed: currTimeStamp,
+        count:1
+      };
+      newObj[`${course}_count`] = 1;
+      refCode.users.push(newObj);
+    }
+    refCode.markModified("users");
+    await refCode.save();
+    return { error: null };
+  } catch (e) {
+    console.error("Some exception occured at promoCodes.useReferralCodes: ", e);
+    return { error: "internal error" };
+  }
+};
+
+exports.checkReferralCode = async (req, res) => {
+  const referralCode = req.body.referralCode;
+  if (referralCode == undefined || referralCode == null || referralCode == "") {
+    return res.json({ status: false, error: "bad request" });
+  }
+  try {
+    const refCode = await ReferralCode.findOne({ referralCode: referralCode });
+    if (refCode == null) {
+      return res.json({
+        status: false,
+        error: "no such referral code exists!"
+      });
+    }
+    if (!refCode.status) {
+      return res.json({
+        status: false,
+        error: "referral code no longer valid!"
+      });
+    }
+  } catch (e) {
+    console.error("Some error occured at promoCodes.checkReferralCode: ", e);
+    return res.json({ status: false, error: "internal error" });
+  }
+  return res.json({ error: null, status: true });
 };

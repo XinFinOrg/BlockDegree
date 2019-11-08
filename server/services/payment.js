@@ -79,8 +79,14 @@ exports.payPaypalSuccess = (req, res) => {
       let course_id = payment.transactions[0].item_list.items[0].name;
       let invoice_number = payment.transactions[0].invoice_number;
       let custom = payment.transactions[0].custom;
+      console.log(custom);
       const email = custom.split(";")[0].split(":")[1];
       const codeName = custom.split(";")[1].split(":")[1];
+      const referralCode =
+        custom.split(";").length > 2
+          ? custom.split(";")[2].split(":")[1]
+          : null;
+      console.log("Referral Code: ", referralCode);
       console.log(custom.split(";"));
       console.log("Payment received from user ", email);
 
@@ -101,13 +107,19 @@ exports.payPaypalSuccess = (req, res) => {
         }
         if (course_id == "course_1") {
           user.examData.payment.course_1 = true;
-          user.examData.payment.course_1_payment = `paypal:${invoice_number};promocode:${codeName}`;
+          user.examData.payment.course_1_payment = referralCode
+            ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
+            : `paypal:${invoice_number};promocode:${codeName}`;
         } else if (course_id == "course_2") {
           user.examData.payment.course_2 = true;
-          user.examData.payment.course_2_payment = `paypal:${invoice_number};promocode:${codeName}`;
+          user.examData.payment.course_2_payment = referralCode
+            ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
+            : `paypal:${invoice_number};promocode:${codeName}`;
         } else if (course_id == "course_3") {
           user.examData.payment.course_3 = true;
-          user.examData.payment.course_3_payment = `paypal:${invoice_number};promocode:${codeName}`;
+          user.examData.payment.course_3_payment = referralCode
+            ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
+            : `paypal:${invoice_number};promocode:${codeName}`;
         }
         try {
           await user.save();
@@ -189,6 +201,20 @@ exports.payPaypal = async (req, res) => {
     let payment_status;
     const discObj = await promoCodeService.usePromoCode(req);
     const course = await CoursePrice.findOne({ courseId: course_id });
+    const refRet = await promoCodeService.useReferralCode(req);
+    let usedRefCode = false;
+    const referralCode = req.body.referralCode;
+    console.log(referralCode);
+    if (refRet.error != null) {
+      if (refRet.error != "bad request") {
+        // not ok
+        console.log(refRet);
+        return res.render("displayError", { error: refRet.error });
+      }
+    } else {
+      usedRefCode = true;
+    }
+
     if (course === null) {
       // invalid course ID
       return res.render("displayError", {
@@ -246,9 +272,9 @@ exports.payPaypal = async (req, res) => {
       if (!payment_status) {
         // if already not paid
         user.examData.payment[course_id] = true;
-        user.examData.payment[
-          course_id + "_payment"
-        ] = `promocode:${req.body.codeName}`;
+        user.examData.payment[course_id + "_payment"] = usedRefCode
+          ? `promocode:${req.body.codeName};referralcode:${referralCode}`
+          : `promocode:${req.body.codeName}`;
         try {
           user.save();
         } catch (err) {
@@ -300,9 +326,13 @@ exports.payPaypal = async (req, res) => {
             },
             description: `Payment for enrolling in the course by user ${req.user.email}`,
             invoice_number: invoice_number,
-            custom: `email:${req.user.email.toString()};codeName:${
-              req.body.codeName
-            }`
+            custom: usedRefCode
+              ? `email:${req.user.email.toString()};codeName:${
+                  req.body.codeName
+                };referralcode:${referralCode}`
+              : `email:${req.user.email.toString()};codeName:${
+                  req.body.codeName
+                }`
           }
         ]
       };
@@ -327,6 +357,8 @@ exports.payPaypal = async (req, res) => {
               payment_logs.payment_id = invoice_number;
               payment_logs.payment_status = false;
               payment_logs.amount = price;
+              payment_logs.promoCode = req.body.codeName;
+              payment_logs.referralCode = referralCode;
               await payment_logs.save();
 
               return res.redirect(payment.links[i].href);
@@ -370,6 +402,18 @@ exports.payViaXdc = async (req, res) => {
     const coursePrice = await CoursePrice.findOne({ courseId: course });
     let fullPrice = coursePrice.priceUsd;
     const discObj = await promoCodeService.usePromoCode(req);
+
+    const refRet = await promoCodeService.useReferralCode(req);
+    let usedRefCode = false;
+    const referralCode = req.body.referralCode;
+    if (refRet.error != null) {
+      if (refRet.error != "bad request") {
+        // not ok
+        return res.render("displayError", { error: refRet.error });
+      }
+    } else {
+      usedRefCode = true;
+    }
 
     // check if the price is 9.99 if not then check if a propoer codeName has been supplied else makr invalid transfer.
     if (price != fullPrice) {
@@ -416,9 +460,9 @@ exports.payViaXdc = async (req, res) => {
       if (user != null) {
         if (!user.examData.payment[course]) {
           user.examData.payment[course] = true;
-          user.examData.payment[
-            course + "_payment"
-          ] = `promocode:${req.body.codeName}`;
+          user.examData.payment[course + "_payment"] = usedRefCode
+            ? `promocode:${req.body.codeName};referralcode:${referralCode}`
+            : `promocode:${req.body.codeName}`;
           await user.save();
           return res.json({ status: true, error: null });
         } else {
@@ -472,6 +516,8 @@ exports.payViaXdc = async (req, res) => {
     newPaymentXdc.status = "not yet mined";
     newPaymentXdc.autoBurn = toAutoBurn; // capture the status of autoburn at the moment, this will be forwarded.
     newPaymentXdc.payment_network = "50"; // 50 - mainnet; 51 apothem
+    newPaymentXdc.referralCode = referralCode;
+    newPaymentXdc.promoCode = req.body.codeName;
     await newPaymentXdc.save();
     console.log("saved");
 
@@ -538,7 +584,8 @@ exports.payViaXdc = async (req, res) => {
           req.user.email,
           coursePrice.priceUsd,
           course,
-          req
+          req,
+          usedRefCode ? referralCode : null
         );
         return;
       }
@@ -645,7 +692,8 @@ exports.payViaXdc = async (req, res) => {
           req.user.email,
           course,
           newNotiId,
-          req.body.codeName
+          req.body.codeName,
+          usedRefCode ? referralCode : null
         );
         return;
       }
@@ -682,6 +730,18 @@ exports.payViaXdce = async (req, res) => {
     const coursePrice = await CoursePrice.findOne({ courseId: course });
     let fullPrice = coursePrice.priceUsd;
     const discObj = await promoCodeService.usePromoCode(req);
+
+    const refRet = await promoCodeService.useReferralCode(req);
+    let usedRefCode = false;
+    const referralCode = req.body.referralCode;
+    if (refRet.error != null) {
+      if (refRet.error != "bad request") {
+        // not ok
+        return res.render("displayError", { error: refRet.error });
+      }
+    } else {
+      usedRefCode = true;
+    }
 
     const xdceOwnerPubAddr = await getXDCeRecipient("1");
     if (xdceOwnerPubAddr === null) {
@@ -739,9 +799,9 @@ exports.payViaXdce = async (req, res) => {
       if (user != null) {
         if (!user.examData.payment[course]) {
           user.examData.payment[course] = true;
-          user.examData.payment[
-            course + "_payment"
-          ] = `promocode:${req.body.codeName}`;
+          user.examData.payment[course + "_payment"] = usedRefCode
+            ? `promocode:${req.body.codeName};referralcode:${referralCode}`
+            : `promocode:${req.body.codeName}`;
           await user.save();
           return res.json({ status: true, error: null });
         } else {
@@ -795,6 +855,8 @@ exports.payViaXdce = async (req, res) => {
     newPaymentXdce.status = "not yet mined";
     newPaymentXdce.autoBurn = toAutoBurn; // capture trhe status of autoburn at the moment, this will be forwarded.
     newPaymentXdce.payment_network = "1";
+    newPaymentXdce.promoCode = req.body.codeName;
+    newPaymentXdce.referralCode = referralCode;
     await newPaymentXdce.save();
     console.log("saved");
 
@@ -833,9 +895,10 @@ exports.payViaXdce = async (req, res) => {
           txn_hash,
           1,
           req.user.email,
-          price,
+          coursePrice.priceUsd,
           course,
-          req
+          req,
+          usedRefCode ? referralCode : null
         );
         return;
       }
@@ -1002,7 +1065,8 @@ exports.payViaXdce = async (req, res) => {
           req.user.email,
           course,
           newNotiId,
-          req.body.codeName
+          req.body.codeName,
+          usedRefCode ? referralCode : null
         );
         return;
       }
@@ -1211,7 +1275,7 @@ async function getXDCeRecipient(network) {
     console.log("Wallet not configured");
     return null;
   }
-  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+  for (let i = 0; i < configWallet.recipientActive.length; i++) {
     if (
       configWallet.recipientActive[i].wallet_token_name === "xdce" &&
       configWallet.recipientActive[i].wallet_network === network
@@ -1228,7 +1292,7 @@ async function getXDCRecipient(network) {
     console.log("Wallet not configured");
     return null;
   }
-  for (let i = 0; i < configWallet.recipientWallets.length; i++) {
+  for (let i = 0; i < configWallet.recipientActive.length; i++) {
     if (
       configWallet.recipientActive[i].wallet_token_name === "xdc" &&
       configWallet.recipientActive[i].wallet_network === network

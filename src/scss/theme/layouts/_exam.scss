@@ -426,6 +426,15 @@
     }
   }
 
+  .promoCode-txt {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0px;
+    margin: 0px;
+    line-height: 16px;
+
+  }
+
   .input-group .btn {
     @include transition(all 0.4s);
     width: 100%;

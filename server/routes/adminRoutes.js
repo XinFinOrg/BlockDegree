@@ -131,5 +131,9 @@ module.exports = app => {
     app.post("/api/disableBurning",requireLogin,requrieAdmin,adminServices.disableBurning);
     app.post("/api/addWallet",requireLogin,requrieAdmin,adminServices.addWallet);
     app.post("/api/switchWalletTo",requireLogin, requrieAdmin,adminServices.switchWalletTo);
+    app.post("/api/addReferralCode",requireLogin,requrieAdmin,adminServices.addReferralCode);
+    app.post("/api/enableReferralCode",requireLogin, requrieAdmin,adminServices.enableRefCode);
+    app.post("/api/disableReferralCode",requireLogin, requrieAdmin,adminServices.disableRefCode);
+
   }
 };
