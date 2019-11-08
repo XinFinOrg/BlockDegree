@@ -116,14 +116,15 @@
           Payment Via Tokens
         </h3>
         <div class="table-responsive">
-          <table class="table table-hover">
+          <table class="table table-hover" id="cryptoTokenList">
             <thead>
               <tr>
                 <th>Course Name</th>
                 <th>Payment Token</th>
-                <th>Transaction Hash</th>
-                <th>Status</th>
-                <th>Burn Transaction Hash</th>
+                <th>Tx Hash</th>
+                <th style="text-align: center;">Status</th>
+                <th>Burn Tx Hash</th>
+                <th>Burn Amount</th>
               </tr>
             </thead>
             <tbody id="tokenPayment-tbody"></tbody>
@@ -382,7 +383,11 @@
         } else {
           for (let z = 0; z < payments.length; z++) {
             let status = payments[z].status;
-            let payment_txHash, burn_txHash, pay_hash_link, burn_hash_link;
+            let payment_txHash,
+              burn_txHash,
+              pay_hash_link,
+              burn_hash_link,
+              burnAmnt = null;
             if (status === "completed") {
               if (payments[z].tokenName === "xdce") {
                 payment_txHash =
@@ -431,6 +436,7 @@
                     burn_hash_link = `<a href="${etherScanIo +
                       payments[z]
                         .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                    burnAmnt = payments[z].burn_token_amnt;
                   }
                 } else {
                   burn_hash_link = "-";
@@ -482,6 +488,7 @@
                     burn_hash_link = `<a href="${apothemExplorer +
                       payments[z]
                         .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                    burnAmnt = payments[z].burn_token_amnt;
                   }
                 } else {
                   burn_hash_link = "-";
@@ -505,11 +512,19 @@
                   ? etherScanIo + payments[z].txn_hash
                   : apothemExplorer + payments[z].txn_hash
               }" target="_blank">${payment_txHash}</a>`;
-              status += `( ${payments[z].confirmations}/${
-                payments[z].tokenName === "xdce"
-                  ? payments[z].xdceConfirmation
-                  : payments[z].xdcConfirmation
-              } )`;
+              // status += `( ${payments[z].confirmations}/${
+              //   payments[z].tokenName === "xdce"
+              //     ? payments[z].xdceConfirmation
+              //     : payments[z].xdcConfirmation
+              // } )`;
+              status = getProgressBar(
+                parseFloat(payments[z].confirmations),
+                parseFloat(
+                  payments[z].tokenName === "xdce"
+                    ? payments[z].xdceConfirmation
+                    : payments[z].xdcConfirmation
+                )
+              );
               burn_hash_link = burn_txHash;
             }
 
@@ -521,12 +536,17 @@
                 ? payments[z].status
                 : "notYetMined"
             }">${
-              payments[z].status != "not yet mined" ? status : "not yet mined"
-            }</td><td>${burn_hash_link}</td></tr>`;
+              payments[z].status != "not yet mined" ? (status == "completed"||status=="not yet mined") ? "<div style='width:100%;text-align:center;'>"+status+"</div>" : status  : "<div style='width:100%;text-align:center;'>not yet mined</div>"
+            }</td><td>${burn_hash_link}</td><td>${
+              burnAmnt == null
+                ? "-"
+                : Math.round((burnAmnt / Math.pow(10, 18)) * 100) / 100 +
+                  " " +
+                  payments[z].tokenName.toUpperCase()
+            }</td></tr>`;
           }
           tableBody.innerHTML = retHtml;
           tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;
-          console.log(allPendingTransaction);
           if (allPendingTransaction.length == 0) {
             // clear listener
             clearInterval(pendingEventListener);
@@ -571,6 +591,29 @@
       arr.splice(removeIndex, 1);
     }
     return arr;
+  }
+
+  function getProgressBar(curr, max) {
+    console.log(`Current ${curr} & Max ${max}`);
+    if (curr >= max) {
+      // completed
+      return `<div id="myProgress">
+  	<span id="myBarText" style="color: white;">completed</span>
+    <div id="myBarPercent"></div>
+  <div id="myBar" style="width: 100%;
+		background-color: #28a745 ;
+		">
+</div>
+</div>`;
+    } else {
+      // pending
+      let width = Math.round((curr / max) * 100);
+      return `<div id="myProgress">
+  	<span id="myBarText" >pending (${curr}/${max}) </span>
+  <div id="myBar" style="width:${width}%">
+</div>
+</div>`;
+    }
   }
 </script>
 {{/inline}}

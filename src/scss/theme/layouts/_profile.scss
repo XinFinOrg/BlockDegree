@@ -1,15 +1,16 @@
 /* Style the tab */
 #profile {
 	.tabbed-section {
-		-webkit-box-shadow: 0 10px 23px -14px rgba(0,0,0,0.2);
-    	box-shadow: 0 10px 23px -14px rgba(0,0,0,0.2);
+		-webkit-box-shadow: 0 10px 23px -14px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 10px 23px -14px rgba(0, 0, 0, 0.2);
 	}
+
 	.tab {
 		overflow: hidden;
 		/*border: 1px solid #ccc;
 		background-color: #f1f1f1;*/
 	}
-	
+
 	.tab button {
 		background-color: inherit;
 		float: left;
@@ -22,7 +23,7 @@
 		font-size: 18px;
 		transition: all 500ms ease-in-out;
 	}
-	
+
 	.tab button:after {
 		content: "";
 		display: block;
@@ -30,16 +31,16 @@
 		border-bottom: 3px solid #2073D4;
 		transition: all 500ms ease-in-out;
 	}
-	
+
 	.tab button:hover:after {
 		width: 0%;
 	}
-	
+
 	/* Change background color of buttons on hover */
 	.tab button:hover {
 		background-color: transparent;
 	}
-	
+
 	/* Create an active/current tablink class */
 	.tab button.active {
 		color: #2073D4;
@@ -49,83 +50,84 @@
 	.tab button.active:after {
 		width: 100%;
 	}
-	
+
 	/* Style the tab content */
 	.tabcontent {
 		display: none;
 		/*padding: 6px 12px;
 		border: 1px solid #ccc;
 		border-top: none;*/
-	
-	.profile-Heading {
-		font-size: 24px;
-		font-weight: 400;
-		margin-bottom: 0px;
-	}
-	
-	.profile-subHeading {
-		color: #0a4886;
-		font-size: 22px;
-		font-weight: 400;
-		background-color: #e1eaff;
-		padding: 15px;
-		border-top-left-radius: .25rem;
-		border-top-right-radius: .25rem;
-	}
-	
-	.table-responsive {
-		background-color: #fafbfb;
-		border: 1px solid #e1eaff;
-	}
-	
-	table {
-		font-family: arial, sans-serif;
-		border-collapse: collapse;
-		margin-bottom: 0px;
-		width: 100%;
-	}
-	
-	td,
-	th {
-		/*border: 1px solid #dddddd;*/
-		text-align: left;
-		padding: 15px;
-		vertical-align: middle;
-	}
-	
-	th {
-		text-transform: uppercase;
-		background-color: #FFFFFF;
-		line-height: 22px;
-	}
-	
-	.table-hover tbody tr:hover {
-    	background-color: rgba(255,255,255,1);
-	}
-	
-	/*tr:nth-child(even) {
+
+		.profile-Heading {
+			font-size: 24px;
+			font-weight: 400;
+			margin-bottom: 0px;
+		}
+
+		.profile-subHeading {
+			color: #0a4886;
+			font-size: 22px;
+			font-weight: 400;
+			background-color: #e1eaff;
+			padding: 15px;
+			border-top-left-radius: .25rem;
+			border-top-right-radius: .25rem;
+		}
+
+		.table-responsive {
+			background-color: #fafbfb;
+			border: 1px solid #e1eaff;
+		}
+
+		table {
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			margin-bottom: 0px;
+			width: 100%;
+		}
+
+		td,
+		th {
+			/*border: 1px solid #dddddd;*/
+			text-align: left;
+			padding: 15px;
+			vertical-align: middle;
+		}
+
+		th {
+			text-transform: uppercase;
+			background-color: #FFFFFF;
+			line-height: 22px;
+		}
+
+		.table-hover tbody tr:hover {
+			background-color: rgba(255, 255, 255, 1);
+		}
+
+		/*tr:nth-child(even) {
 		background-color: #dddddd;
 	}*/
 	}
-	
+
 	.form-control {
 		max-width: 300px;
 		width: 100%;
 		background-color: #f6f6f6;
 		border: 1px solid #ccc;
-			
-		&:focus, &:hover {
-			box-shadow: none!important;
+
+		&:focus,
+		&:hover {
+			box-shadow: none !important;
 			background-color: #fff;
 			border-color: #2073D4;
 		}
-    }
+	}
 
 	input {
-    	border-radius: 50px;
+		border-radius: 50px;
 		padding: 10px;
 	}
-	
+
 	.btn {
 		border: none !important;
 		padding: 0.275rem 1rem !important;
@@ -136,28 +138,41 @@
 		-moz-transition-duration: 0.5s;
 		-o-transition-duration: 0.5s;
 	}
-	
+
 	.btn-update {
 		border: none !important;
 		border-radius: 50px !important;
-    	font-size: 14px;
-    	text-transform: uppercase;
-    	line-height: 40px;
-    	padding: 0 30px !important;
-    	text-align: center;
-    	font-weight: 600;
+		font-size: 14px;
+		text-transform: uppercase;
+		line-height: 40px;
+		padding: 0 30px !important;
+		text-align: center;
+		font-weight: 600;
 		-webkit-transition: all 0.3s ease 0s;
-    	-moz-transition: all 0.3s ease 0s;
-    	-o-transition: all 0.3s ease 0s;
-    	transition: all 0.3s ease 0s;
-		
-		&:hover {			
+		-moz-transition: all 0.3s ease 0s;
+		-o-transition: all 0.3s ease 0s;
+		transition: all 0.3s ease 0s;
+
+		&:hover {
 			background-color: #2196F3 !important;
 		}
 	}
 
 	.completed {
 		color: #28a745;
+		text-align: center;
+	}
+
+	.barCompleted {
+		width: 100%;
+		background-color: #28a745;
+		color: #FFFFFF;
+	}
+
+	.completed,
+	.pending,
+	.notYetMined {
+		width: fit-content;
 	}
 
 	.pending {
@@ -167,8 +182,51 @@
 	.notYetMined {
 		color: purple;
 	}
-	
-	#googleLink span, #facebookLink span, #twitterLink span, #linkedinLink span {font-size: 22px; color: #28a745;}
-	#googleLink span:after, #facebookLink span:after, #twitterLink span:after, #linkedinLink span:after {content: "\2713"; padding-left: 10px;}
-		
+
+	#myProgress {
+		width: 150px;
+		background-color: #ddd;
+		border-radius: 10px;
+		position: relative;
+	}
+
+	#myBarPercent {
+		float: right;
+		padding: 5px;
+		color: grey
+	}
+
+	#myBarText {
+		text-align: center;
+		color: blueviolet;
+		position: absolute;
+		width: 100%;
+	}
+
+
+	#myBar {
+		width: 4%;
+		height: 30px;
+		background-color: orange;
+		border-radius: 10px;
+	}
+
+
+
+	#googleLink span,
+	#facebookLink span,
+	#twitterLink span,
+	#linkedinLink span {
+		font-size: 22px;
+		color: #28a745;
+	}
+
+	#googleLink span:after,
+	#facebookLink span:after,
+	#twitterLink span:after,
+	#linkedinLink span:after {
+		content: "\2713";
+		padding-left: 10px;
+	}
+
 }
