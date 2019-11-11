@@ -87,5 +87,114 @@ if (typeof jQuery != "undefined") {
         }
       }
     });
+
+    getAllSiteStats();
+
+    setInterval(() => {
+      getAllSiteStats();
+    }, 10000);
   });
+}
+
+function getAllSiteStats() {
+  $.ajax({
+    method: "get",
+    url: "/api/userCount",
+    success: res => {
+      if (!res.status) {
+        $.notify(res.error, { type: "danger" });
+        return;
+      }
+      let currVal = document.getElementById("userCnt_stat_content")
+        .innerHTML;
+      animateNumberIncrease(currVal, res.count, "userCnt_stat_content");
+      return;
+    },
+    error: xhr => {
+      $.notify("Something went wrong while getting site stats", {
+        type: "danger"
+      });
+      return;
+    }
+  });
+
+  $.ajax({
+    method: "get",
+    url: "/api/certCount",
+    success: res => {
+      console.log(res);
+      if (!res.status) {
+        $.notify(res.error, { type: "danger" });
+        return;
+      }
+      let currVal = parseInt(
+        document.getElementById("certCnt_stat_content").innerHTML
+      );
+      animateNumberIncrease(currVal, res.count, "certCnt_stat_content");
+      return;
+    },
+    error: xhr => {
+      $.notify("Something went wrong while getting site stats", {
+        type: "danger"
+      });
+      return;
+    }
+  });
+
+  $.ajax({
+    method: "get",
+    url: "/api/visitCount",
+    success: res => {
+      if (!res.status) {
+        $.notify(res.error, { type: "danger" });
+        return;
+      }
+      let currVal = document.getElementById("visitCnt_stat_content")
+        .innerHTML;
+      animateNumberIncrease(currVal, res.count, "visitCnt_stat_content");
+      return;
+    },
+    error: xhr => {
+      $.notify("Something went wrong while getting site stats", {
+        type: "danger"
+      });
+      return;
+    }
+  });
+
+  $.ajax({
+    method: "get",
+    url: "/api/caCount",
+    success: res => {
+      if (!res.status) {
+        $.notify(res.error, { type: "danger" });
+        return;
+      }
+      let currVal = document.getElementById("ca_stat_content").innerHTML;
+      animateNumberIncrease(currVal, res.count, "ca_stat_content");
+      return;
+    },
+    error: xhr => {
+      $.notify("Something went wrong while getting site stats", {
+        type: "danger"
+      });
+      return;
+    }
+  });
+}
+
+function animateNumberIncrease(currVal, desiredVal, elemId) {
+  const interval = setInterval(() => {
+    let exisVal = parseInt(document.getElementById(elemId).innerHTML);
+    if (exisVal != NaN)
+      if (exisVal >= desiredVal) {
+        document.getElementById(elemId).innerHTML = desiredVal;
+        clearInterval(interval);
+        return;
+      }
+    let incr = Math.floor((30 * (desiredVal - currVal)) / 1000)
+      ? Math.floor((30 * (desiredVal - currVal)) / 1000)
+      : Math.ceil((30 * (desiredVal - currVal)) / 1000);
+    document.getElementById(elemId).innerHTML = exisVal + incr;
+  }, 30);
 }

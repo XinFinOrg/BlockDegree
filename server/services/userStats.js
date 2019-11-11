@@ -273,7 +273,10 @@ exports.setCoordsFromIP = async (req, res) => {
         try {
           await visits[i].save();
         } catch (e) {
-          console.log("Some error occured while saving the updated visits: ", e);
+          console.log(
+            "Some error occured while saving the updated visits: ",
+            e
+          );
           return res.json({
             status: false,
             error: "error occired while saving the updated schema"
@@ -284,3 +287,45 @@ exports.setCoordsFromIP = async (req, res) => {
   }
   return res.json({ status: true, error: null });
 };
+
+exports.currUserCount = async (req, res) => {
+  let allUsers = await User.find({});
+  if (allUsers == null) {
+    return res.json({ status: false, error: "no users found", count: null });
+  } else {
+    return res.json({ status: true, error: null, count: allUsers.length });
+  }
+};
+
+exports.currVisitCount = async (req, res) => {
+  let allVisits = await Visited.find({});
+  if (allVisits == null) {
+    res.json({
+      status: false,
+      error: `no visits found`
+    });
+  } else {
+    res.json({ status: true, error: null, count: allVisits.length });
+  }
+};
+
+exports.currCertificateCount = async (req, res) => {
+  let totCertis = 0;
+  const allUsers = await User.find({
+    "examData.certificateHash.1": { $exists: true }
+  }).catch(e => res.json({ status: false, users: null, error: e }));
+  if (allUsers == null) {
+    res.json({ status: false, count: null, error: "No users found" });
+  }
+
+  for (let y = 0; y < allUsers.length; y++) {
+    if (allUsers[y].examData.certificateHash) {
+      totCertis += allUsers[y].examData.certificateHash.length - 1;
+    }
+  }
+  return res.json({ status: true, error: null, count: totCertis });
+};
+
+exports.currCACount = async (req,res) => {
+  return res.json({status:true, error: null, count:20});
+}

@@ -442,3 +442,34 @@
 	.modal-body h4 {font-size: 22px;color:#FFFFFF;line-height: 38px!important;}
 	.modal-body h4 span {background-color: rgba(0,0,0,0.4);padding: 5px 15px;border-radius: 5px;color:#ffc107;}
 }
+
+
+/* ------------------ Start of the userStats ------------------------ */
+
+
+.stat_column {
+  @media(max-width: 500px){
+    width: 100%;
+    text-align: center;
+  }
+
+  @media(min-width: 500px){
+    float: left;
+    width: 25%;
+    padding: 10px;
+    text-align: center;
+  }
+}
+
+.stat_row::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+
+
+
+
+/* ------------------ End of the userStats ------------------------ */
