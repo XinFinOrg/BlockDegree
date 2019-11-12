@@ -111,9 +111,9 @@ function getAllSiteStats() {
       return;
     },
     error: xhr => {
-      $.notify("Something went wrong while getting site stats", {
-        type: "danger"
-      });
+      // $.notify("Something went wrong while getting site stats", {
+      //   type: "danger"
+      // });
       return;
     }
   });
@@ -134,9 +134,9 @@ function getAllSiteStats() {
       return;
     },
     error: xhr => {
-      $.notify("Something went wrong while getting site stats", {
-        type: "danger"
-      });
+      // $.notify("Something went wrong while getting site stats", {
+      //   type: "danger"
+      // });
       return;
     }
   });
@@ -155,9 +155,9 @@ function getAllSiteStats() {
       return;
     },
     error: xhr => {
-      $.notify("Something went wrong while getting site stats", {
-        type: "danger"
-      });
+      // $.notify("Something went wrong while getting site stats", {
+      //   type: "danger"
+      // });
       return;
     }
   });
@@ -175,9 +175,9 @@ function getAllSiteStats() {
       return;
     },
     error: xhr => {
-      $.notify("Something went wrong while getting site stats", {
-        type: "danger"
-      });
+      // $.notify("Something went wrong while getting site stats", {
+      //   type: "danger"
+      // });
       return;
     }
   });
