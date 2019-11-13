@@ -422,7 +422,8 @@
   img {
     height: 175px;
     width: 175px;
-	border: 4px solid #ccc;
+	border: 2px solid #ccc;
+	border-radius: 5px;
   }
 }
 /*-------- End Contributors Area Style ------------*/
@@ -442,6 +443,8 @@
 	.modal-body h4 {font-size: 22px;color:#FFFFFF;line-height: 38px!important;}
 	.modal-body h4 span {background-color: rgba(0,0,0,0.4);padding: 5px 15px;border-radius: 5px;color:#ffc107;}
 }
+
+
 
 
 /* ------------------ Start of the userStats ------------------------ */
@@ -471,5 +474,58 @@
 
 
 
+.stats-counter {
+	background-image: url(../img/community.jpg);
+	padding-top: 30px;
+	padding-bottom: 30px;
+	background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.stats-counter .statistic-block { 
+	padding: 0 12%;
+}
+
+.s-number { 
+	font-size: 2rem;
+	line-height: 1;	
+	letter-spacing: 1px;
+	display: inline-block;
+	font-weight: 400;
+	margin-bottom: 15px;
+}
+
+/*.s-number:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+	top: 50%;
+    width: 45px;
+    height: 1px;
+    margin: 0 auto;
+    background-color: #ff4718;
+}*/
+
+.stats-counter .statistic-block h5.h5-medium { 
+	color: #FFFFFF;
+	line-height: 1.4;
+	font-weight: 300;
+	margin-bottom: 0;
+	margin-top: 15px;
+}
+
+.stats-counter .divider {
+    content: " ";
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 60%;
+    width: 45px;
+    height: 1px;
+    margin: 0 auto;
+    background-color: #ff4718;
+}
 
 /* ------------------ End of the userStats ------------------------ */

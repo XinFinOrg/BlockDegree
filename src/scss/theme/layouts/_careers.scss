@@ -1,0 +1,74 @@
+// Ambassadors Page css
+
+#campus-mbassadors .genric-btn{
+	border-radius: 50px !important;
+	padding: 0 20px!important;
+}
+.our-ambassadors{
+	margin-bottom: 15px;
+}
+.our-ambassadors img{
+    width: 100%;
+    height: auto;
+    border: 1px solid #b4afaf;
+    border-radius: 5px;
+    transition: all 0.30s linear 0s;
+}
+.our-ambassadors:hover img{
+    border: 1px solid #3CD3AD;
+}
+.our-ambassadors .ambassadors-prof h3{
+    font-size: 16px;
+    font-weight: 500;
+    color: #002844;
+    margin: 20px 0px 8px;
+    text-transform: uppercase;
+}
+.our-ambassadors .ambassadors-prof span{
+    font-size: 14px;
+    color: #808080;
+    line-height: 16px;
+	display: block;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+	font-weight: 400;
+}
+.our-ambassadors .ambassadors-prof .description{
+    color: #002844;
+    margin-bottom: 5px;
+    font-size: 13px;
+    line-height: 18px;
+	font-weight: 600;
+}
+.our-ambassadors .social-links{
+    padding:0;
+    margin:0;
+    list-style: none;
+}
+.our-ambassadors .social-links li{
+    display: inline-block;
+    margin-right: 15px;
+}
+.our-ambassadors .social-links li a{
+    color: #6a6060;
+    font-size: 18px;
+    transition: all 0.30s linear 0s;
+}
+.our-ambassadors .social-links li a:hover{
+    color: #14b8b1;
+    text-decoration: none;
+}
+.our-ambassadors .description:after{
+    content: "";
+    display: block;
+    width: 25%;
+    margin-top: 20px;
+    border-bottom: 2px solid #fff;
+    transition: all 0.30s linear 0s;
+}
+.our-ambassadors:hover .description:after{
+    border-bottom: 2px solid #3CD3AD;
+}
+@media only screen and (max-width: 990px){
+    .our-ambassadors{ margin-bottom:20px; }
+}
