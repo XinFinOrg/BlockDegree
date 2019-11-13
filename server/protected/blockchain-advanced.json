@@ -7,7 +7,7 @@
 		 },
 
 	     {
-		  "question": " Is Bitcoin really anonymous? ",
+		  "question": " Is Bitcoin anonymous? ",
 	    "choices": ["Yes, people who use bitcoin cannot have their transactions tracked by anyone.", "No, bitcoin addresses are derived from IP addresses.", "No, all transactions are recorded on a global transparent ledger that can be traced using analytical technologies.", " No, addresses openly show the name of the user. "]
 		 },
 
