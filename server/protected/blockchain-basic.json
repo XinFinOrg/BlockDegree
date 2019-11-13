@@ -1,370 +1,370 @@
-﻿{
-	"exam": [
-		{
-			"question": "When was Blockchain Invented?",
-			"choices": ["Since 1993", "Since 2008", "Since 1991", "Since 1967"]
-		},
-		{
-			"question": "What is a node?",
-			"choices": ["A type of cryptocurrency",
-				"A blockchain",
-				"A computer on a blockchain network",
-				"An exchange"
-			]
-		},
-		{
-			"question": " What is a blockchain?",
-			"choices": ["  A distributed ledger on a peer to peer network",
-				"A type of cryptocurrency",
-				"An exchange",
-				"A centralized ledger."
-			]
-		},
-		{
-			"question": "What is not a ledger type considered by users in Blockchain",
-			"choices": ["Distributed Ledger",
-				" Decentralized Ledger",
-				"Both a and b",
-				"None of these"
-			]
-		},
-		{
-			"question": "Hash identifying each block within the Blockchain is generated using that cryptographic algorithmic rule. Which algorithm is it?",
-			"choices": ["Hash identifying is generated using SHA256 Algorithm.",
-				" Hash identifying is generated using SHA201 Algorithm.",
-				"Hash identifying is generated using SHA223 Algorithm.",
-				"Hash identifying is generated using SHA224 Algoritham."
-			]
-		},
-		{
-			"question": "Who invented  a concept “How to Time-Stamp a Digital Document” similar to blockchain?",
-			"choices": ["Haber and Stornetta",
-				" Satoshi Nakamato",
-				"Gavin Andresen",
-				"Andreas Antonopoulos"
-			]
-		},
-		{
-			"question": "What is the purpose of a nonce?",
-			"choices": [" Follows nouns",
-				"A hash function                ",
-				"Prevents double spending",
-				"Sends information to the blockchain network."
-			]
-		},
-		{
-			"question": "An orphan block is only created when 51% attack is successful",
-			"choices": [" True",
-				"False"
-			]
-		},
-		{
-			"question": " What is SHA-256 ?      ",
-			"choices": ["The hashing algorithm used in Litecoin",
-				"The hashing algorithm used in both Litecoin and Bitcoin ",
-				"The hashing algorithm used in Bitcoin and some other crypto currencies",
-				"A hashing algorithm used to generate a private key from a public key."
-			]
-		},
-		{
-			"question": " First step of Blockchain project implementation is?",
-			"choices": ["Requirement identification",
-				"Feasible study on the security",
-				"Controlling and monitoring the project",
-				"Screen idea consideration"
-			]
-		},
-		{
-			"question": "What is Miner?      ",
-			"choices": [" A type of Blockchain        ",
-				"an algorithm that predicts the next part of the chain",
-				"A person doing calculations to verify a transaction.",
-				"Computer the validate and process blockchain transaction  "
-			]
-		},
-		{
-			"question": "What is Hashing & Digital Signature in The Blockchain?",
-			"choices": [" Hashing refers to the concept of taking an arbitrary amount of input data, applying some algorithm to it, and generating a fixed-size output data called the hash.        ",
-				"######Adding Hash",
-				"Adding hash to transaction Signing transaction using only public key"
-			]
-		},
-		{
-			"question": " which is not apart of asymmetric encryption?",
-			"choices": [" Mining.",
-				"Public Key.",
-				"passphere.",
-				"Private Key."
-			]
-		},
-		{
-			"question": "what is SHA-256 ?      ",
-			"choices": ["A secure hashing algorithm used by Bitcoin, originally designed by the NSA",
-				"A set of rules that miners and nodes must follow                 ",
-				"A scheme devised by Craig Wright to convince people he is Satoshi",
-				"An annual conference in New York for blockchain enthusiasts ",
-				"The language Satoshi and early developers used to communicate behind closed doors "
-			]
-		},
-		{
-			"question": "In blockchain, blocks are linked ________?      ",
-			"choices": ["Backward to the previous block        ",
-				"Forward to next block",
-				"Not linked with each other"
-			]
-		},
-		{
-			"question": "Out of THe Following Which is Hybrid Blockchain .?      ",
-			"choices": ["Ripple Protocol.",
-				"XDC01 Protocol.",
-				"Lisk Protocol.",
-				"Neon Protocol"
-			]
-		},
-		{
-			"question": "Bitcoin consumes roughly 1 percent of the world’s energy consumption. What does this mean about its security?      ",
-			"choices": ["A malicious actor doesn’t need to consider the total energy consumption in order to successfully execute a 51% attack.        ",
-				"Bitcoin is secure to the point that it would require approximately 0 .0001% of the entire world’s energy consumption to attack the network.",
-				"Bitcoin is secure to the point that it would require approximately 1% of the entire world’s energy consumption to attack the network.",
-				"A malicious actor would need 10 times the amount of Bitcoin’s energy consumption in order to successfully attack the network.              "
-			]
-		},
-		{
-			"question": " When a record is on a blockchain, who can access it?",
-			"choices": [" Multiple people simultaneously.        ",
-				"One person at a time.",
-				"Only the people involved in the transaction."
-			]
-		},
-		{
-			"question": " What is a third generation blockchain?",
-			"choices": [" The  application of blockchain is money. For the first time it is possible for two parties to transfer money directly to each other: secure, worldwide and without third-party intervention. The blockchain transfers ownership and records the transaction. This type of money is called cryptocurrency, the first generation of blockchain.",
-				"In addition to money and assets, agreements can also be registered on the blockchain. Such a digital contract enforces the participants to keep their promise. As an example, think of an insurance contract that requires regular payments. The contract can end the agreement unilaterally when the participant misses payments.                ",
-				" The use of cryptocurrencies brought the idea to apply the blockchain ledger to broader use cases, by offering the administration of assets in general. In this generation anyone can issue shares on the blockchain. These shares may receive dividends and voting rights can be granted to owners of the shares. All on the blockchain."
-			]
-		},
-		{
-			"question": " what decentralized and centralized/permissionless blockchain ?",
-			"choices": ["Blockchains enable anybody to take an interest. The exchanges are approved and handled by votes/agreement. A vote does not rely upon having an earlier character of any sort inside the record and no previous trust is expected between taking an interest hubs.",
-				"blockchains limit access regarding who can perform different activities on the Blockchain. The exchanges are approved and handled by the individuals who are as of now perceived by the record and some level of prior trust is accepted and demonstrated",
-				"The  network operates on an incentivizing scheme that encourages new participants to join and keep the network agile. Public blockchains offer particularly valuable solution from the point of view of a truly decentralized, democratized and authority-free operation."
-			]
-		},
-		{
-			"question": "How does a block is recognized in the Blockchain approach?",
-			"choices": ["Every block in this online ledger basically consists of a pointer which points to its previous block,  block hash,  transactions, timestamp.",
-				"Every block in this online ledger basically consists of a hash pointer which acts as a link to the block which is prior to it, Merkel Tree and in fact a difficulty.",
-				"Every block in this online ledger basically consists of a hash pointer which acts as a link to the block number  which is prior to in fact a difficulty."
-			]
-		},
-		{
-			"question": "Crypto currency Is Just Going Through Normal Product Cycle.?",
-			"choices": ["Fluctuations of the economy does not make an industry unworthy. Losses and profits are normal and expected in any market.",
-				"oscillate of the economy does make an industry unworthy."
-			]
-		},
-		{
-			"question": "Asymmetric encryption uses:",
-			"choices": ["Public keys only",
-				"Private keys only",
-				"Public and Private keys",
-				"Proof of Stake"
-			]
+{
+    "exam": [
+        {
+            "question": "When was Blockchain Invented?",
+            "choices": ["Since 1993", "Since 2008", "Since 1991", "Since 1967"]
+        },
+        {
+            "question": "What is a node?",
+            "choices": ["A type of cryptocurrency",
+                "A blockchain",
+                "A computer on a blockchain network",
+                "An exchange"
+            ]
+        },
+        {
+            "question": " What is a blockchain?",
+            "choices": ["  A distributed ledger on a peer to peer network",
+                "A type of cryptocurrency",
+                "An exchange",
+                "A centralized ledger."
+            ]
+        },
+        {
+            "question": "What is not a ledger type considered by users in Blockchain",
+            "choices": ["Distributed Ledger",
+                " Decentralized Ledger",
+                "Both a and b",
+                "None of these"
+            ]
+        },
+        {
+            "question": "Hash identifying each block within the Blockchain is generated using that cryptographic algorithmic rule. Which algorithm is it?",
+            "choices": ["Hash identifying is generated using SHA256 Algorithm.",
+                " Hash identifying is generated using SHA201 Algorithm.",
+                "Hash identifying is generated using SHA223 Algorithm.",
+                "Hash identifying is generated using SHA224 Algoritham."
+            ]
+        },
+        {
+            "question": "Who invented  a concept “How to Time-Stamp a Digital Document” similar to blockchain?",
+            "choices": ["Haber and Stornetta",
+                " Satoshi Nakamato",
+                "Gavin Andresen",
+                "Andreas Antonopoulos"
+            ]
+        },
+        {
+            "question": "What is the purpose of a nonce?",
+            "choices": [" Follows nouns",
+                "A hash function                ",
+                "Prevents double spending",
+                "Sends information to the blockchain network."
+            ]
+        },
+        {
+            "question": "An orphan block is only created when 51% attack is successful",
+            "choices": [" True",
+                "False"
+            ]
+        },
+        {
+            "question": " What is SHA-256 ?      ",
+            "choices": ["The hashing algorithm used in Litecoin",
+                "The hashing algorithm used in both Litecoin and Bitcoin ",
+                "The hashing algorithm used in Bitcoin and some other crypto currencies",
+                "A hashing algorithm used to generate a private key from a public key."
+            ]
+        },
+        {
+            "question": " First step of Blockchain project implementation is?",
+            "choices": ["Requirement identification",
+                "Feasible study on the security",
+                "Controlling and monitoring the project",
+                "Screen idea consideration"
+            ]
+        },
+        {
+            "question": "What is Miner?      ",
+            "choices": [" A type of Blockchain        ",
+                "an algorithm that predicts the next part of the chain",
+                "A person doing calculations to verify a transaction.",
+                "Computer the validate and process blockchain transaction  "
+            ]
+        },
+        {
+            "question": "What is Hashing & Digital Signature in The Blockchain?",
+            "choices": [" Hashing refers to the concept of taking an arbitrary amount of input data, applying some algorithm to it, and generating a fixed-size output data called the hash.        ",
+                "######Adding Hash",
+                "Adding hash to transaction Signing transaction using only public key"
+            ]
+        },
+        {
+            "question": " which is not apart of asymmetric encryption?",
+            "choices": [" Mining.",
+                "Public Key.",
+                "passphere.",
+                "Private Key."
+            ]
+        },
+        {
+            "question": "what is SHA-256 ?      ",
+            "choices": ["A secure hashing algorithm used by Bitcoin, originally designed by the NSA",
+                "A set of rules that miners and nodes must follow                 ",
+                "A scheme devised by Craig Wright to convince people he is Satoshi",
+                "An annual conference in New York for blockchain enthusiasts ",
+                "The language Satoshi and early developers used to communicate behind closed doors "
+            ]
+        },
+        {
+            "question": "In blockchain, blocks are linked ________?      ",
+            "choices": ["Backward to the previous block        ",
+                "Forward to next block",
+                "Not linked with each other"
+            ]
+        },
+        {
+            "question": "Out of THe Following Which is Hybrid Blockchain .?      ",
+            "choices": ["Ripple Protocol.",
+                "XDC01 Protocol.",
+                "Lisk Protocol.",
+                "Neon Protocol"
+            ]
+        },
+        {
+            "question": "Bitcoin consumes roughly 1 percent of the world’s energy consumption. What does this mean about its security?      ",
+            "choices": ["A malicious actor doesn’t need to consider the total energy consumption to successfully execute a 51% attack.        ",
+                "Bitcoin is secure to the point that it would require approximately 0 .0001% of the entire world’s energy consumption to attack the network.",
+                "Bitcoin is secure to the point that it would require approximately 1% of the entire world’s energy consumption to attack the network.",
+                "A malicious actor would need 10 times the amount of Bitcoin’s energy consumption to successfully attack the network.              "
+            ]
+        },
+        {
+            "question": " When a record is on a blockchain, who can access it?",
+            "choices": [" Multiple people simultaneously.        ",
+                "One person at a time.",
+                "Only the people involved in the transaction."
+            ]
+        },
+        {
+            "question": " What is a third generation blockchain?",
+            "choices": [" The  application of blockchain is money. For the first time two parties can transfer money directly to each other: secure, worldwide and without third-party intervention. The blockchain transfers ownership and records the transaction. This type of money is called cryptocurrency, the first generation of blockchain.",
+                "In addition to money and assets, agreements can also be registered on the blockchain. Such a digital contract enforces the participants to keep their promise. As an example, think of an insurance contract that requires regular payments. The contract can end the agreement unilaterally when the participant misses payments.                ",
+                " The use of cryptocurrencies brought the idea to apply the blockchain ledger to broader use cases, by offering the administration of assets in general. In this generation anyone can issue shares on the blockchain. These shares may receive dividends and voting rights can be granted to owners of the shares. All on the blockchain."
+            ]
+        },
+        {
+            "question": " what decentralized and centralized/permissionless blockchain ?",
+            "choices": ["Blockchains enable anybody to take an interest. The exchanges are approved and handled by votes/agreement. A vote does not rely upon having an earlier character of any sort inside the record and no previous trust is expected between taking an interest hubs.",
+                "blockchains limit access regarding who can perform different activities on the Blockchain. The exchanges are approved and handled by the individuals who are as of now perceived by the record and some level of prior trust is accepted and demonstrated",
+                "The  network operates on an incentivizing scheme that encourages new participants to join and keep the network agile. Public blockchains offer particularly valuable solution from a truly decentralized, democratized and authority-free operation."
+            ]
+        },
+        {
+            "question": "How does a block is recognized in the Blockchain approach?",
+            "choices": ["Every block in this online ledger consists of a pointer which points to its previous block,  block hash,  transactions, timestamp.",
+                "Every block in this online ledger consists of a hash pointer which acts as a link to the block which is before it, Merkel Tree and a difficulty.",
+                "Every block in this online ledger consists of a hash pointer which acts as a link to the block number  which is before in fact a difficulty."
+            ]
+        },
+        {
+            "question": "Crypto currency Is Just Going Through Normal Product Cycle.?",
+            "choices": ["Fluctuations of the economy does not make an industry unworthy. Losses and profits are normal and expected in any market.",
+                "oscillate of the economy does make an industry unworthy."
+            ]
+        },
+        {
+            "question": "Asymmetric encryption uses:",
+            "choices": ["Public keys only",
+                "Private keys only",
+                "Public and Private keys",
+                "Proof of Stake"
+            ]
 
-		},
-		{
-			"question": "What are Merkle trees ?",
-			"choices": ["Merkle Tree also known as ‘hash tree’ is a data structure in cryptography in which each leaf node is a hash of a block of data, and each non-leaf node is a hash of its child nodes.",
-				"Merkle Tree also known as Block number is a data structure in cryptography in which each node is a hash of a block of data.",
-				"Merkle Tree also known as ‘Timestamp’ is a data structure in cryptography in which hash of a hash rate  of data, and hash of its parent nodes."
-			]
+        },
+        {
+            "question": "What are Merkle trees ?",
+            "choices": ["Merkle Tree also known as ‘hash tree’ is a data structure in cryptography in which each leaf node is a hash of a block of data, and each non-leaf node is a hash of its child nodes.",
+                "Merkle Tree also known as Block number is a data structure in cryptography in which each node is a hash of a block of data.",
+                "Merkle Tree also known as ‘Timestamp’ is a data structure in cryptography in which hash of a hash rate  of data, and hash of its parent nodes."
+            ]
 
-		},
-		{
-			"question": "What is the purpose of a nonce?",
-			"choices": ["Follows nouns",
-				"A hash function",
-				"Prevents double spending",
-				"Sends information to the blockchain network"
-			]
-		},
-		{
-			"question": "What consensus has been achieved with a blockchain?",
-			"choices": ["monopoly",
-				"decentralized",
-				"centralized",
-				" world"
-			]
-		},
-		{
-			"question": "What blockchain has absolutely no access restrictions?",
-			"choices": ["public",
-				"private",
-				"consortium",
-				"bank"
-			]
-		},
-		{
-			"question": "What Are hash function in blockchain ?",
-			"choices": ["A fork",
-				"gas",
-				"Hash functions take any string of fixed size ( 256 bits in this case ) and generate a fixed size alphanumeric string.",
-				"ledger"
-			]
-		},
-		{
-			"question": "What does a ledger in blockchain does ?",
-			"choices": ["Mapping Between owner and project.",
-				" identification of object owned.",
-				"identification of owners.",
-				"None of this."
-			]
+        },
+        {
+            "question": "What is the purpose of a nonce?",
+            "choices": ["Follows nouns",
+                "A hash function",
+                "Prevents double spending",
+                "Sends information to the blockchain network"
+            ]
+        },
+        {
+            "question": "What consensus has been achieved with a blockchain?",
+            "choices": ["monopoly",
+                "decentralized",
+                "centralized",
+                " world"
+            ]
+        },
+        {
+            "question": "What blockchain has absolutely no access restrictions?",
+            "choices": ["public",
+                "private",
+                "consortium",
+                "bank"
+            ]
+        },
+        {
+            "question": "What Are hash function in blockchain ?",
+            "choices": ["A fork",
+                "gas",
+                "Hash functions take any string of fixed size ( 256 bits in this case ) and generate a fixed size alphanumeric string.",
+                "ledger"
+            ]
+        },
+        {
+            "question": "What does a ledger in blockchain does ?",
+            "choices": ["Mapping Between owner and project.",
+                " identification of object owned.",
+                "identification of owners.",
+                "None of this."
+            ]
 
-		},
-		{
-			"question": "what is the initial application for which Blockchain was designed ?",
-			"choices": ["Peer-to-Peer Finance application.",
-				"Research Project.",
-				"Open Source Finance Software to Connect Banks",
-				"None of these"
-			]
-		},
-		{
-			"question": "First Step of Blockchain Project Implementation it ?",
-			"choices": [" Requirement Identification",
-				"Feasible Study on the security.",
-				"Controlling and monitoring The Project.",
-				"Screen idea Consideration"
-			]
+        },
+        {
+            "question": "what is the initial application for which Blockchain was designed ?",
+            "choices": ["Peer-to-Peer Finance application.",
+                "Research Project.",
+                "Open Source Finance Software to Connect Banks",
+                "None of these"
+            ]
+        },
+        {
+            "question": "First Step of Blockchain Project Implementation it ?",
+            "choices": [" Requirement Identification",
+                "Feasible Study on the security.",
+                "Controlling and monitoring The Project.",
+                "Screen idea Consideration"
+            ]
 
-		},
-		{
-			"question": "which of the Following is important for blockchain.?",
-			"choices": ["Database security", "Auditing", "Planing", "All of These"]
+        },
+        {
+            "question": "which of the Following is important for blockchain.?",
+            "choices": ["Database security", "Auditing", "Planing", "All of These"]
 
-		},
-		{
-			"question": "what is the term for when a  blockchain splits ?",
-			"choices": ["A Fork", "A merge", "A Sidechain", "A Divison"]
-		},
-		{
-			"question": "Cryptographic hash function transforms an arbitrary length of a fixed length string that act more or less as a Fingerprint of the document?",
-			"choices": ["true", "false"]
+        },
+        {
+            "question": "what is the term for when a  blockchain splits ?",
+            "choices": ["A Fork", "A merge", "A Sidechain", "A Divison"]
+        },
+        {
+            "question": "Cryptographic hash function transforms an arbitrary length of a fixed length string that act more or less as a Fingerprint of the document?",
+            "choices": ["true", "false"]
 
-		},
-		{
-			"question": "which benefits of a blockchain-enabled business network engender trust ?",
-			"choices": ["Consensus, Provenance,immutability and finality",
-				"Scalable, reliable, secure, maintainable",
-				"Efficient, dynamic, cognitive, reliable",
-				"Modern, ideally, suitable to digital transformation, social enabled"
-			]
-		},
-		{
-			"question": "which type of use case is a good place to start a blockchain journey?",
-			"choices": ["International equities exchange",
-				"Citizen-owned identity",
-				"Digital Currency",
-				"Compliance ledger, such as Asset Management"
-			]
+        },
+        {
+            "question": "which benefits of a blockchain-enabled business network engender trust ?",
+            "choices": ["Consensus, Provenance,immutability and finality",
+                "Scalable, reliable, secure, maintainable",
+                "Efficient, dynamic, cognitive, reliable",
+                "Modern, ideally, suitable to digital transformation, social enabled"
+            ]
+        },
+        {
+            "question": "which type of use case is a good place to start a blockchain journey?",
+            "choices": ["International equities exchange",
+                "Citizen-owned identity",
+                "Digital Currency",
+                "Compliance ledger, such as Asset Management"
+            ]
 
-		},
-		{
-			"question": "Once records are submitted on a blockchain, can they be altered ?",
-			"choices": ["Yes - the parties can go back in and alter them at any time",
-				"Yes - but only within a certain time frame.",
-				"NO - they cannot be altered"
-			]
-
-
-		},
-		{
-			"question": "which of the following statement is false ?",
-			"choices": ["Blockchain Captures a record of every committed transaction in chronological order.",
-				"Blockchain add a cognitive analytics capability to the asset supply chain.",
-				"Blockchain provide smart contract  features that can be used to model assets of any description.",
-				"Blockchain can help provide provenance for an asset."
-			]
-		},
-		{
-			"question": "what is the appropriate use of business blockchain ?",
-			"choices": ["To make low value, high volume micro-payment system more efficient.",
-				"Modern, cognitive and transformational fabric for the 21st century and beyond",
-				"A more efficient transaction system across a business network.",
-				"none of these."
-			]
-
-		},
-		{
-			"question": "what is the name of the first academic paper that describes bitcoin commonly referred to as ?",
-			"choices": ["The origin of money.",
-				"The bitcoin Constitution.",
-				"The Bitcoin whitepaper.",
-				"The great unravelling."
-			]
-
-		},
-		{
-			"question": "Blockchain it is ?",
-			"choices": ["Authorized Access",
-				" CRUD Method",
-				"Public Database ,anyone can access it",
-				" No record of ownership"
-			]
+        },
+        {
+            "question": "Once records are submitted on a blockchain, can they be altered ?",
+            "choices": ["Yes - the parties can go back in and alter them at any time",
+                "Yes - but only within a certain time frame.",
+                "NO - they cannot be altered"
+            ]
 
 
-		},
-		{
-			"question": "Single source of truth: At any point in time, all the parties will refer to the same data since it is a ___________?",
-			"choices": ["single shared ledger", "Database", "Public Blockchain", "Private Blockchain"]
-		},
-		{
-			"question": "which generation blockchains started the use of maintaining assets in general by a blockchain. In this generation, anyone can issue shares on the blockchain.?",
-			"choices": ["4th Generation", "2nd Generation", "3rd Generation", "1st Generation"]
+        },
+        {
+            "question": "which of the following statement is false ?",
+            "choices": ["Blockchain Captures a record of every committed transaction in chronological order.",
+                "Blockchain add a cognitive analytics capability to the asset supply chain.",
+                "Blockchain provide smart contract  features that can be used to model assets of any description.",
+                "Blockchain can help provide provenance for an asset."
+            ]
+        },
+        {
+            "question": "what is the appropriate use of business blockchain ?",
+            "choices": ["To make low value, high volume micro-payment system more efficient.",
+                "Modern, cognitive and transformational fabric for the 21st century and beyond",
+                "A more efficient transaction system across a business network.",
+                "none of these."
+            ]
 
-		},
-		{
-			"question": "which process of solving the puzzle is called “Proof of Work”. ?",
-			"choices": [" Increased capacity.", "Centralized system.", "Proof-of-work.", "Safe & Secure System"]
+        },
+        {
+            "question": "what is the name of the first academic paper that describes bitcoin commonly referred to as ?",
+            "choices": ["The origin of money.",
+                "The bitcoin Constitution.",
+                "The Bitcoin whitepaper.",
+                "The great unravelling."
+            ]
+
+        },
+        {
+            "question": "Blockchain it is ?",
+            "choices": ["Authorized Access",
+                " CRUD Method",
+                "Public Database ,anyone can access it",
+                " No record of ownership"
+            ]
 
 
-		},
-		{
-			"question": "Which Blockchains allow anyone to take an interest. The exchanges on the platform are approved and handled by votes or agreement.?",
-			"choices": ["Consortium Blockchain.", "federation Blockchain.", "Permissionless Blockchain.", "Permissioned blockchain."]
+        },
+        {
+            "question": "Single source of truth: At any point in time, all the parties will refer to the same data since it is a ___________?",
+            "choices": ["single shared ledger", "Database", "Public Blockchain", "Private Blockchain"]
+        },
+        {
+            "question": "which generation blockchains started the use of maintaining assets in general by a blockchain. In this generation, anyone can issue shares on the blockchain.?",
+            "choices": ["4th Generation", "2nd Generation", "3rd Generation", "1st Generation"]
 
-		},
-		{
-			"question": "What are cryptographic keys?",
-			"choices": ["A key is simply a string of numbers and letters which are made by key generators also known as keygens.",
-				"key as inputs to the decryption function, and the output is the original plaintext.",
-				"string or number generated from a string of text. The resulting string or number is a fixed length,",
-				"The process of hiding digital information in a carrier signal. A digital watermark is basically a digital signature embedded in a noise-tolerant signal."
-			]
+        },
+        {
+            "question": "which process of solving the puzzle is called “Proof of Work”. ?",
+            "choices": [" Increased capacity.", "Centralized system.", "Proof-of-work.", "Safe & Secure System"]
 
-		},
-		{
-			"question": "What is ledger ?",
-			"choices": ["A blockchain, originally blockchain, is a growing list of records, called blocks, which are linked using cryptography.... For use as a distributed ledger.",
-				"database and an application to capture transactions and how products move through the chain.",
-				"ledger is to be considered. With the help of default options and filters, this can easily be done without making a lot of efforts.",
-				"The system relies on the network servicing protocol and the nodes of the network."
-			]
 
-		},
-		{
-			"question": "An orphan block is only created when 51% attack is successful ?",
-			"choices": ["True", "False"]
+        },
+        {
+            "question": "Which Blockchains allow anyone to take an interest. The exchanges on the platform are approved and handled by votes or agreement.?",
+            "choices": ["Consortium Blockchain.", "federation Blockchain.", "Permissionless Blockchain.", "Permissioned blockchain."]
 
-		},
-		{
-			"question": "What is a Satoshi?",
-			"choices": ["A denomination in Bitcoin like pence and pounds", "A comment from Satoshi Nakamoto on BitcoinTalk", "100 Bitcoin", "A transaction send to the Bitcoin Foundation."]
+        },
+        {
+            "question": "What are cryptographic keys?",
+            "choices": ["A key is simply a string of numbers and letters which are made by key generators also known as keygens.",
+                "key as inputs to the decryption function, and the output is the original plaintext.",
+                "string or number generated from a string of text. The resulting string or number is a fixed length,",
+                "The process of hiding digital information in a carrier signal. A digital watermark is a digital signature embedded in a noise-tolerant signal."
+            ]
 
-		},
-		{
-			"question": "Why is mining becoming centralised?",
-			"choices": ["Economies of Scale & Moore's Law", "Government Regulation", "The Bitcoin Foundation guidelines", "The Blockchain getting smaller"]
-		}
-	]
+        },
+        {
+            "question": "What is ledger ?",
+            "choices": ["A blockchain, originally blockchain, is a growing list of records, called blocks, which are linked using cryptography.... For use as a distributed ledger.",
+                "database and an application to capture transactions and how products move through the chain.",
+                "ledger is to be considered. With the help of default options and filters, this can easily be done without making a lot of efforts.",
+                "The system relies on the network servicing protocol and the nodes of the network."
+            ]
+
+        },
+        {
+            "question": "An orphan block is only created when 51% attack is successful ?",
+            "choices": ["True", "False"]
+
+        },
+        {
+            "question": "What is a Satoshi?",
+            "choices": ["A denomination in Bitcoin like pence and pounds", "A comment from Satoshi Nakamoto on BitcoinTalk", "100 Bitcoin", "A transaction send to the Bitcoin Foundation."]
+
+        },
+        {
+            "question": "Why is mining becoming centralised?",
+            "choices": ["Economies of Scale & Moore's Law", "Government Regulation", "The Bitcoin Foundation guidelines", "The Blockchain getting smaller"]
+        }
+    ]
 }
