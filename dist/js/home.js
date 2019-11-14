@@ -111,7 +111,7 @@ function getAllSiteStats() {
       animateNumberIncrease(currVal, res.userCnt, "userCnt_stat_content");
       animateNumberIncrease(currVal, res.visitCnt, "visitCnt_stat_content");
       animateNumberIncrease(currVal, res.caCnt, "ca_stat_content");
-      animateNumberIncrease(currVal, res.certCnt, "certCnt_stat_content");
+      animateNumberIncrease(currVal, res.totCertis, "certCnt_stat_content");
 
       return;
     },
