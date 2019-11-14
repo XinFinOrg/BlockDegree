@@ -326,6 +326,38 @@ exports.currCertificateCount = async (req, res) => {
   return res.json({ status: true, error: null, count: totCertis });
 };
 
-exports.currCACount = async (req,res) => {
-  return res.json({status:true, error: null, count:20});
-}
+exports.currCACount = async (req, res) => {
+  return res.json({ status: true, error: null, count: 20 });
+};
+
+exports.getSiteStats = async (req, res) => {
+  console.log("called")
+  let allUsers = await User.find({});
+  let allVisits = await Visited.find({});
+
+  let userCnt = 0,
+    visitCnt = 0,
+    caCnt = 20,
+    totCertis = 0;
+  if (allUsers != null) {
+    userCnt = allUsers.length;
+  }
+
+  if (allVisits != null) {
+    visitCnt = allVisits.length;
+  }
+
+  for (let y = 0; y < allUsers.length; y++) {
+    if (allUsers[y].examData.certificateHash) {
+      totCertis += allUsers[y].examData.certificateHash.length - 1;
+    }
+  }
+
+  return res.json({
+    status: true,
+    userCnt: userCnt,
+    visitCnt: visitCnt,
+    totCertis: totCertis,
+    caCnt: caCnt
+  });
+};

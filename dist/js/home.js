@@ -92,92 +92,30 @@ if (typeof jQuery != "undefined") {
 
     setInterval(() => {
       getAllSiteStats();
-    }, 10000);
+    }, 60000);
   });
 }
 
 function getAllSiteStats() {
   $.ajax({
     method: "get",
-    url: "/api/userCount",
+    url: "/api/getSiteStats",
     success: res => {
       if (!res.status) {
         $.notify(res.error, { type: "danger" });
         return;
       }
+      console.log(res)
       let currVal = document.getElementById("userCnt_stat_content")
         .innerHTML;
-      animateNumberIncrease(currVal, res.count, "userCnt_stat_content");
-      return;
-    },
-    error: xhr => {
-      // $.notify("Something went wrong while getting site stats", {
-      //   type: "danger"
-      // });
-      return;
-    }
-  });
+      animateNumberIncrease(currVal, res.userCnt, "userCnt_stat_content");
+      animateNumberIncrease(currVal, res.visitCnt, "visitCnt_stat_content");
+      animateNumberIncrease(currVal, res.caCnt, "ca_stat_content");
+      animateNumberIncrease(currVal, res.certCnt, "certCnt_stat_content");
 
-  $.ajax({
-    method: "get",
-    url: "/api/certCount",
-    success: res => {
-      console.log(res);
-      if (!res.status) {
-        $.notify(res.error, { type: "danger" });
-        return;
-      }
-      let currVal = parseInt(
-        document.getElementById("certCnt_stat_content").innerHTML
-      );
-      animateNumberIncrease(currVal, res.count, "certCnt_stat_content");
       return;
     },
     error: xhr => {
-      // $.notify("Something went wrong while getting site stats", {
-      //   type: "danger"
-      // });
-      return;
-    }
-  });
-
-  $.ajax({
-    method: "get",
-    url: "/api/visitCount",
-    success: res => {
-      if (!res.status) {
-        $.notify(res.error, { type: "danger" });
-        return;
-      }
-      let currVal = document.getElementById("visitCnt_stat_content")
-        .innerHTML;
-      animateNumberIncrease(currVal, res.count, "visitCnt_stat_content");
-      return;
-    },
-    error: xhr => {
-      // $.notify("Something went wrong while getting site stats", {
-      //   type: "danger"
-      // });
-      return;
-    }
-  });
-
-  $.ajax({
-    method: "get",
-    url: "/api/caCount",
-    success: res => {
-      if (!res.status) {
-        $.notify(res.error, { type: "danger" });
-        return;
-      }
-      let currVal = document.getElementById("ca_stat_content").innerHTML;
-      animateNumberIncrease(currVal, res.count, "ca_stat_content");
-      return;
-    },
-    error: xhr => {
-      // $.notify("Something went wrong while getting site stats", {
-      //   type: "danger"
-      // });
       return;
     }
   });

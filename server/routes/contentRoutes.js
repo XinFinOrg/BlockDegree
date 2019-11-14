@@ -10,8 +10,10 @@ module.exports = app => {
     courseService.renderCourseContent
   );
   app.get("/api/callCurriculum", courseService.callCurriculum);
-  app.get("/api/certCount",userStats.currCertificateCount);
-  app.get("/api/userCount",userStats.currUserCount);
-  app.get("/api/visitCount",userStats.currVisitCount);
-  app.get("/api/caCount",userStats.currCACount);
+  // app.get("/api/certCount",userStats.currCertificateCount);
+  // app.get("/api/userCount",userStats.currUserCount);
+  // app.get("/api/visitCount",userStats.currVisitCount);
+  // app.get("/api/caCount",userStats.currCACount);
+
+  app.get("/api/getSiteStats", userStats.getSiteStats);
 };
