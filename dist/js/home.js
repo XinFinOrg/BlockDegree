@@ -90,9 +90,9 @@ if (typeof jQuery != "undefined") {
 
     getAllSiteStats();
 
-    setInterval(() => {
-      getAllSiteStats();
-    }, 60000);
+    // setInterval(() => {
+    //   getAllSiteStats();
+    // }, 60000);
   });
 }
 
