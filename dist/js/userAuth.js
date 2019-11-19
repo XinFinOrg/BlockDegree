@@ -45,6 +45,7 @@ if (typeof jQuery != "undefined") {
 
       loginForm.on("submit", e => {
         e.preventDefault();
+        email.value = email.value.toLowerCase();
         if (validEm) {
           new submitForm(loginForm);
         }
@@ -247,6 +248,7 @@ if (typeof jQuery != "undefined") {
       registerForm.on("submit", e => {
         e.preventDefault();
         if (validFN && validLN && validPWD && pwdMatch) {
+          registerForm.email.value = registerForm.email.value.toLowerCase();
           new submitForm(registerForm);
         }
       });
