@@ -18,8 +18,14 @@ if (process.env.IPFS_NETWORK == "local") {
   });
 }
 
-exports.renderForIPFSHash = (name, percent, examType, date, callback) => {
+exports.renderForIPFSHash = (name, percent, examType, d, callback) => {
   console.log("Called RENDER IPFS");
+  let date = d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+  let ts = d.getTime();
   if (name == "" || percent == null || examType == "") {
     return callback({ uploaded: false, error: "bad parameters", hash: "" });
   }
@@ -30,7 +36,9 @@ exports.renderForIPFSHash = (name, percent, examType, date, callback) => {
       name: name,
       course: `Certified Blockchain ${examType} Expert`,
       score: percent,
-      date: date
+      date: date,
+      ts:ts,
+      examType: examType
     },
     (err, data) => {
       if (err != null) {
@@ -52,7 +60,7 @@ exports.renderForIPFSHash = (name, percent, examType, date, callback) => {
           });
         }
         console.log("Uploaded");
-        renderWithQR(name, percent, examType, date, ipfsHash[0].hash, obj => {
+        renderWithQR(name, percent, examType, d, ipfsHash[0].hash, obj => {
           callback({
             uploaded: obj.uploaded,
             info: obj.info,
@@ -65,7 +73,13 @@ exports.renderForIPFSHash = (name, percent, examType, date, callback) => {
   );
 };
 
-var renderWithQR = async (name, percent, examType, date, hash, callback) => {
+var renderWithQR = async (name, percent, examType, d, hash, callback) => {
+  let date = d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+  let ts = d.getTime();
   if (name == "" || percent == null || examType == "") {
     return callback({ uploaded: false, error: "bad parameters", hash: "" });
   }
@@ -84,7 +98,9 @@ var renderWithQR = async (name, percent, examType, date, hash, callback) => {
         examType.slice(1)} Expert`,
       score: percent,
       date: date,
-      dataURL: dataURL
+      dataURL: dataURL,
+      ts:ts,
+      examType: examType
     },
     (err, data) => {
       if (err != null) {

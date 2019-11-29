@@ -402,17 +402,12 @@ exports.getExamResult = async (req, res) => {
       if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
         return res.redirect("/exams");
       }
-      let date = d.toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      });
       // Post the 2 certificates
       renderCertificate.renderForIPFSHash(
         name,
         percentObtained,
         examName,
-        date,
+        d,
         bothRender => {
           if (!bothRender.uploaded) {
             console.log("error:", bothRender);
@@ -425,6 +420,10 @@ exports.getExamResult = async (req, res) => {
             user.examData[examTypes[examName].courseName].attempts = 0;
             user.examData.payment[examTypes[examName].coursePayment_id] = false;
             var obj = {};
+            const expiryDate = d;
+            expiryDate.setDate(expiryDate.getDate()-1);
+            expiryDate.setFullYear(expiryDate.getFullYear() + 2);
+            expiryDate.setHours(23,59,59,999);
             obj["timestamp"] = Date.now();
             obj["marks"] = marksObtained;
             obj["total"] = totalQuestions;
@@ -439,6 +438,7 @@ exports.getExamResult = async (req, res) => {
                 : user.examData.payment[
                     examTypes[examName].coursePayment_id + "_payment"
                   ];
+            obj["expiryDate"] = expiryDate.getTime();
             user.examData.certificateHash.push(obj);
             user.examData.payment[
               examTypes[examName].coursePayment_id + "_payment"

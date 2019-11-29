@@ -34,7 +34,8 @@ var userSchema = mongoose.Schema({
       examType : String,
       headlessHash: String,
       clientHash : String,
-      paymentMode : String
+      paymentMode : String,
+      expiryDate : String
     }]
   },
   auth : {

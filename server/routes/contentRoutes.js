@@ -16,4 +16,5 @@ module.exports = app => {
   // app.get("/api/caCount",userStats.currCACount);
 
   app.get("/api/getSiteStats", userStats.getSiteStats);
+  app.get("/api/getCurrentTimestamp",courseService.getCurrentTimestamp);
 };
