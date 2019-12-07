@@ -874,7 +874,7 @@ exports.addReferralCode = async (req, res) => {
   console.log("Called Referral Code");
   const codeName = req.body.referralCode;
   const purpose = req.body.purpose;
-  const referralEmail = req.body.referralEmail;
+  const referrerEmail = req.body.referrerEmail;
 
   if (
     codeName == undefined ||
@@ -891,9 +891,9 @@ exports.addReferralCode = async (req, res) => {
   const newRefCode = newReferralCode();
   newRefCode.referralCode = codeName;
   newRefCode.purpose = purpose;
-  newRefCode.referralEmail = referralEmail;
+  newRefCode.referrerEmail = referrerEmail;
   newRefCode.created = Date.now();
-  newRefCode.lastUsed = Date.now();
+  newRefCode.lastUsed = "";
   try {
     await newRefCode.save();
   } catch (e) {

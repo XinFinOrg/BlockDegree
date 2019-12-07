@@ -8,7 +8,7 @@ const referralSchema = mongoose.Schema({
     users:[],
     created:String,
     lastUsed:String,
-    refererEmail:String  
+    referrerEmail:String  
 });
 
 module.exports = mongoose.model("ReferralCode",referralSchema);
