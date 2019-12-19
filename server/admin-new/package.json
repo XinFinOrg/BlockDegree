@@ -6,10 +6,10 @@
     "/api/*": {
       "target": "https://www.blockdegree.org"
     },
-    "/logout" : {
-      "target":"https://www.blockdegree.org"
+    "/logout": {
+      "target": "https://www.blockdegree.org"
     }
-  },  
+  },
   "dependencies": {
     "animate.css": "^3.5.2",
     "autoprefixer": "7.1.2",

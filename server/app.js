@@ -75,7 +75,7 @@ require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
 
 // remove the comment to serve from build
-// app.use("/newadmin", dynamicMiddleware);
+app.use("/newadmin", dynamicMiddleware);
 
 // catch 404 and render 404 page
 app.use("*", function(req, res) {
