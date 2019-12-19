@@ -2,18 +2,27 @@ const CoursePrice = require("../models/coursePrice");
 const AllWallet = require("../models/wallet");
 const KeyConfig = require("../config/keyConfig");
 const ReferralCode = require("../models/referral_code");
+const PromoCodeLog = require("../models/promocode_log.js");
+const PaymentLog = require("../models/payment_logs");
+const CryptoLog = require("../models/payment_token");
+const BurnLog = require("../models/burn_logs");
 
 exports.addCourse = async (req, res) => {
   if (
     req.body.courseId == undefined ||
     req.body.courseId == "" ||
-    (req.body.courseName == undefined || req.body.courseName == "") ||
-    (req.body.coursePriceUsd == undefined || req.body.coursePriceUsd == "") ||
-    (req.body.xdceTolerance == undefined || req.body.xdceTolerance == "") ||
-    (req.body.xdceConfirmation == undefined ||
-      req.body.xdceConfirmation == "") ||
-    (req.body.xdceTolerance == undefined || req.body.xdceTolerance == "") ||
-    (req.body.xdcConfirmation == undefined || req.body.xdcConfirmation == "")
+    req.body.courseName == undefined ||
+    req.body.courseName == "" ||
+    req.body.coursePriceUsd == undefined ||
+    req.body.coursePriceUsd == "" ||
+    req.body.xdceTolerance == undefined ||
+    req.body.xdceTolerance == "" ||
+    req.body.xdceConfirmation == undefined ||
+    req.body.xdceConfirmation == "" ||
+    req.body.xdcTolerance == undefined ||
+    req.body.xdcTolerance == "" ||
+    req.body.xdcConfirmation == undefined ||
+    req.body.xdcConfirmation == ""
   ) {
     res.json({ error: "bad request", status: false });
     return;
@@ -285,7 +294,10 @@ exports.setCourseBurnPercent = async (req, res) => {
 
   try {
     let course = await CoursePrice.findOne({ courseId: req.body.courseId });
-    let filteredTokenName = req.body.tokenName.trim();
+    let filteredTokenName = req.body.tokenName.trim().toLowerCase();
+    if (!(filteredTokenName == "xdc" || filteredTokenName == "xdce")) {
+      return res.json({ status: false, error: "invalid token name" });
+    }
     let burnPercent = req.body.burnPercent.trim();
     if (course == null) {
       console.error(
@@ -363,12 +375,37 @@ exports.enableBurning = async (req, res) => {
 
   try {
     // course found
-    let filteredTokenName = req.body.tokenName.trim();
+
+    const courseExists = await CoursePrice.findOne({
+      courseId: req.body.courseId
+    });
+
+    let filteredTokenName = req.body.tokenName.trim().toLowerCase();
+    if (!(filteredTokenName == "xdce" || filteredTokenName == "xdc")) {
+      return res.json({ status: false, error: "token not supported" });
+    }
+    if (courseExists === null) {
+      return res.json({ error: "course not found", status: false });
+    }
+    for (let x = 0; x < courseExists.burnToken.length; x++) {
+      if (
+        courseExists.burnToken[x].tokenName === filteredTokenName &&
+        courseExists.burnToken[x].autoBurn == true
+      ) {
+        return res.json({ error: "already enabled", status: false });
+      }
+    }
+
     await CoursePrice.update(
       { courseId: req.body.courseId, "burnToken.tokenName": filteredTokenName },
       { $set: { "burnToken.$.autoBurn": true } },
-      (err, course) => {
-        console.log(err, course);
+      (err, resp) => {
+        console.log(err, resp);
+        if (resp.nModified == 0) {
+          return res.json({ error: "not modified", status: false });
+        } else {
+          res.json({ status: true, error: null });
+        }
       }
     );
   } catch (e) {
@@ -379,7 +416,6 @@ exports.enableBurning = async (req, res) => {
     res.json({ status: false, error: "internal error" });
     return;
   }
-  res.json({ status: true, error: null });
 };
 
 exports.disableBurning = async (req, res) => {
@@ -395,12 +431,35 @@ exports.disableBurning = async (req, res) => {
   }
 
   try {
-    let filteredTokenName = req.body.tokenName.trim();
+    const courseExists = await CoursePrice.findOne({
+      courseId: req.body.courseId
+    });
+
+    let filteredTokenName = req.body.tokenName.trim().toLowerCase();
+    if (!(filteredTokenName == "xdce" || filteredTokenName == "xdc")) {
+      return res.json({ status: false, error: "token not supported" });
+    }
+    if (courseExists === null) {
+      return res.json({ error: "course not found", status: false });
+    }
+    for (let x = 0; x < courseExists.burnToken.length; x++) {
+      if (
+        courseExists.burnToken[x].tokenName === filteredTokenName &&
+        courseExists.burnToken[x].autoBurn == true
+      ) {
+        return res.json({ error: "already enabled", status: false });
+      }
+    }
     await CoursePrice.update(
       { courseId: req.body.courseId, "burnToken.tokenName": filteredTokenName },
       { $set: { "burnToken.$.autoBurn": false } },
-      (err, course) => {
-        console.log(err, course);
+      (err, resp) => {
+        console.log(err, resp);
+        if (resp.nModified == 0) {
+          return res.json({ error: "not modified", status: false });
+        } else {
+          res.json({ status: true, error: null });
+        }
       }
     );
   } catch (e) {
@@ -411,7 +470,6 @@ exports.disableBurning = async (req, res) => {
     res.json({ status: false, error: "internal error" });
     return;
   }
-  res.json({ status: true, error: null });
 };
 
 // add a wallet address
@@ -953,6 +1011,62 @@ exports.disableRefCode = async (req, res) => {
   } catch (e) {
     console.error("Some error occured at adminServices.disableRefCode: ", e);
     return res.json({ erorr: "internal error", status: false });
+  }
+};
+
+exports.getPromoCodeLogs = async (req, res) => {
+  try {
+    const promoCodeLogs = await PromoCodeLog.find({}).lean();
+    res.json({ status: true, error: null, logs: promoCodeLogs });
+  } catch (e) {
+    console.error("error at adminServices.getPromoCodeLogs");
+    console.error(e);
+    res.status(500).json({ status: false, error: "internal error" });
+  }
+};
+
+exports.getBurnLogs = async (req, res) => {
+  try {
+    const burnLogs = await BurnLog.find({}).lean();
+    res.json({ status: true, error: null, logs: burnLogs });
+  } catch (e) {
+    console.error("error at adminServices.getBurnLogs");
+    console.error(e);
+    res.status(500).json({ status: false, error: "internal error" });
+  }
+};
+
+exports.getPaymentLogs = async (req, res) => {
+  console.log("called payment logs")
+  try {
+    let retData = [];
+    const paymentLogs = await PaymentLog.find({});
+    for (let x = 0; x < paymentLogs.length; x++) {
+      const currData = {
+        email: paymentLogs[x].email,
+        course_id: paymentLogs[x].course_id,
+        payment_id: paymentLogs[x].payment_id,
+        payment_status: paymentLogs[x].payment_status,
+        timestamp: paymentLogs[x]._id.getTimestamp()
+      };
+      retData.push(currData);
+    }
+    res.json({ status: true, error: null, logs: retData });
+  } catch (e) {
+    console.error("error at adminServices.getPaymentLogs");
+    console.error(e);
+    res.status(500).json({ status: false, error: "internal error" });
+  }
+};
+
+exports.getCryptoLogs = async (req, res) => {
+  console.log("called getCryptoLogs");
+  try {
+    const cryptoLogs = await CryptoLog.find({}).lean();
+    res.json({ status: true, logs: cryptoLogs });
+  } catch (e) {
+    console.log("exception while fetching the crypto logs: ", e);
+    res.json({ status: false, error: "internal error" });
   }
 };
 

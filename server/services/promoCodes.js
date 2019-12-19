@@ -18,12 +18,19 @@ function checkReqBody_NewPromo(obj, list) {
 // admin functionality
 exports.addPromoCode = async (req, res) => {
   console.log("called add promo-code");
-  console.log(req.body);
   if (!checkReqBody_NewPromo(req.body, "codeName|discAmt|purpose|restricted")) {
     // bad request
-    return res.status(400).json({ error: "Bad request" });
+    return res.status(400).json({ status: false, error: "Bad request" });
   } else {
     try {
+      const codeExists = await PromoCode.findOne({
+        codeName: req.body.codeName
+      });
+      if (codeExists !== null) {
+        return res
+          .status(400)
+          .json({ status: false, error: "code with that name already exists" });
+      }
       let newPromoCode = new PromoCode({
         codeName: req.body.codeName,
         discAmt: req.body.discAmt,
@@ -39,72 +46,82 @@ exports.addPromoCode = async (req, res) => {
       await newPromoCode.save();
     } catch (e) {
       console.log(`Exception while creating new promocode: `, e);
-      return res.status(500).json({ error: "Internal error" });
+      return res.status(500).json({ status: false, error: "Internal error" });
     }
-    res.status(200).json({ error: null });
+    res.status(200).json({ status: true, error: null });
   }
 };
 
 // admin functionality
 exports.activatePromoCode = async (req, res) => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
-    return res.status(400).json({ error: "Bad request" });
+    return res.status(400).json({ status: false, error: "Bad request" });
   }
   let codeName = req.body.codeName;
   let currPromoCode;
   try {
     currPromoCode = await PromoCode.findOne({ codeName: codeName });
   } catch (e) {
-    res
-      .status(500)
-      .json({ error: "Internal error while accessing promo-code" });
+    res.status(500).json({
+      status: false,
+      error: "Internal error while accessing promo-code"
+    });
   }
   if (currPromoCode == null) {
-    return res.status(200).json({ error: `no promo-code ${codeName} exists` });
+    return res
+      .status(200)
+      .json({ status: false, error: `no promo-code ${codeName} exists` });
   }
   if (currPromoCode.status) {
-    return res.status(200).json({ error: null, msg: "Already activated" });
+    return res.status(200).json({ status: false, error: "Already activated" });
   }
   currPromoCode.status = true;
   try {
     currPromoCode.save();
   } catch (e) {
-    res
-      .status(500)
-      .json({ error: "Internal error while accessing promo-code" });
+    res.status(500).json({
+      status: false,
+      error: "Internal error while accessing promo-code"
+    });
   }
-  res.status(200).json({ error: null, msg: "ok" });
+  res.status(200).json({ status: true, error: null, msg: "ok" });
 };
 
 // admin functionality
 exports.deactivatePromoCode = async (req, res) => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
-    return res.status(400).json({ error: "Bad request" });
+    return res.status(400).json({ status: false, error: "Bad request" });
   }
   let codeName = req.body.codeName;
   let currPromoCode;
   try {
     currPromoCode = await PromoCode.findOne({ codeName: codeName });
   } catch (e) {
-    return res
-      .status(500)
-      .json({ error: "Internal error while accessing promo-code" });
+    return res.status(500).json({
+      status: false,
+      error: "Internal error while accessing promo-code"
+    });
   }
   if (currPromoCode == null) {
-    return res.status(200).json({ error: `no promo-code ${codeName} exists` });
+    return res
+      .status(200)
+      .json({ status: false, error: `no promo-code ${codeName} exists` });
   }
   if (!currPromoCode.status) {
-    return res.status(200).json({ error: null, msg: "Already deactivated" });
+    return res
+      .status(200)
+      .json({ status: false, error: "Already deactivated" });
   }
   currPromoCode.status = false;
   try {
     currPromoCode.save();
   } catch (e) {
-    res
-      .status(500)
-      .json({ error: "Internal error while accessing promo-code" });
+    res.status(500).json({
+      status: false,
+      error: "Internal error while accessing promo-code"
+    });
   }
-  res.status(200).json({ error: null, msg: "ok" });
+  return res.status(200).json({ status: true, error: null, msg: "ok" });
 };
 
 // user functionality
@@ -244,71 +261,89 @@ exports.usePromoCode = async req => {
 
 exports.restrictPromoCode = async (req, res) => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
-    return { error: "bad request" };
+    return res.json({ status: false, error: "bad request" });
   }
   let codeName = req.body.codeName;
   let currPromoCode;
   try {
     currPromoCode = await PromoCode.findOne({ codeName: codeName });
   } catch (e) {
-    return {
+    return res.json({
+      status: false,
       error: `Error while fetching the promo-code ${codeName} from the DB ${e}`
-    };
+    });
   }
   if (currPromoCode == null) {
-    return { error: `No such promo-code ${codeName}` };
+    return res.json({ status: false, error: `No such promo-code ${codeName}` });
   }
   if (currPromoCode.restricted) {
     // already restricted, no need to save.
-    return {
-      error: null,
-      msg: `Promo-code ${codeName} is already restricted :)`
-    };
+    return res.json({
+      status: false,
+      error: `Promo-code ${codeName} is already restricted :)`
+    });
   }
   currPromoCode.restricted = true;
   try {
     await currPromoCode.save();
   } catch (e) {
-    return { error: "Some error occured while saving the promo-code" };
+    return res.json({
+      status: false,
+      error: "Some error occured while saving the promo-code"
+    });
   }
-  return { error: null, msg: `Promo-code ${codeName} is now restricted !` };
+  return res.json({
+    status: true,
+    error: null,
+    msg: `Promo-code ${codeName} is now restricted !`
+  });
 };
 
 exports.unrestrictPromoCode = async (req, res) => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
-    return { error: "bad request" };
+    return res.json({ status: false, error: "bad request" });
   }
   let codeName = req.body.codeName;
   let currPromoCode;
   try {
     currPromoCode = await PromoCode.findOne({ codeName: codeName });
   } catch (e) {
-    return {
+    return res.json({
+      status: false,
       error: `Error while fetching the promo-code ${codeName} from the DB ${e}`
-    };
+    });
   }
   if (currPromoCode == null) {
-    return { error: `No such promo-code ${codeName}` };
+    return res.json({ status: false, error: `No such promo-code ${codeName}` });
   }
   if (!currPromoCode.restricted) {
     // already restricted, no need to save.
-    return {
-      error: null,
-      msg: `Promo-code ${codeName} is already un-restricted :)`
-    };
+    return res.json({
+      error: `Promo-code ${codeName} is already un-restricted :)`,
+      status: false
+    });
   }
   currPromoCode.restricted = false;
   try {
     await currPromoCode.save();
   } catch (e) {
-    return { error: "Some error occured while saving the promocode" };
+    return res.json({
+      status: false,
+      error: "Some error occured while saving the promocode"
+    });
   }
-  return { error: null, msg: `Promo-code ${codeName} is now un-restricted !` };
+  return res.json({
+    status: true,
+    error: `Promo-code ${codeName} is now un-restricted !`
+  });
 };
 
 exports.addAllowedUser = async (req, res) => {
   if (req.body.codeName == undefined || req.body.codeName == "") {
-    return res.status(400), json({ error: "Bad request" });
+    return res.status(400).json({ status: false, error: "Bad request" });
+  }
+  if (req.body.email == undefined || req.body.email == "") {
+    return res.status(400).json({ status: false, error: "Bad request" });
   }
   let codeName = req.body.codeName;
   let email = req.body.email;
@@ -316,13 +351,30 @@ exports.addAllowedUser = async (req, res) => {
   try {
     currPromoCode = await PromoCode.findOne({ codeName: codeName });
   } catch (e) {
-    res
-      .status(500)
-      .json({ error: "Internal error while accessing promo-code" });
+    res.status(500).json({
+      status: false,
+      error: "Internal error while accessing promo-code"
+    });
   }
   if (currPromoCode == null) {
-    return res.status(200).json({ error: `no promo-code ${codeName} exists` });
+    return res
+      .status(200)
+      .json({ status: false, error: `no promo-code ${codeName} exists` });
   }
+
+  for (let i = 0; i < currPromoCode.allowedUsers.length; i++) {
+    console.log(currPromoCode.allowedUsers[i]["email"]);
+    console.log(currPromoCode.allowedUsers[i]["email"] === email);
+    if (
+      currPromoCode.allowedUsers[i]["email"] != undefined &&
+      currPromoCode.allowedUsers[i]["email"] === email
+    ) {
+      return res
+        .status(200)
+        .json({ status: false, error: `user already allowed` });
+    }
+  }
+
   let user = {
     email: email,
     count: 0,
@@ -339,12 +391,12 @@ exports.addAllowedUser = async (req, res) => {
       `Exception at addAllowedUser for user ${req.user.email} : `,
       e
     );
-    res
-      .status(500)
-      .json({ error: "Internal error while accessing promo-code" });
+    res.status(500).json({
+      status: false,
+      error: "Internal error while accessing promo-code"
+    });
   }
-
-  res.status(200).json({ error: null, msg: "all ok" });
+  res.status(200).json({ status: true, error: null, msg: "all ok" });
 };
 
 exports.checkCode = async (req, res) => {
@@ -456,6 +508,8 @@ exports.setPromoCodeUseLimit = async (req, res) => {
       } else {
         promoCode.useLimit = useLimit;
       }
+    } else {
+      return res.json({ error: "cap has not been initialized", status: false });
     }
     await promoCode.save();
     return res.json({ error: null, status: true });
@@ -466,11 +520,11 @@ exports.setPromoCodeUseLimit = async (req, res) => {
 };
 
 exports.useReferralCode = async req => {
-  console.log("called useReferralCode")
+  console.log("called useReferralCode");
   const userEmail = req.user.email;
   const referralCode = req.body.referralCode;
   const course = req.body.course_id;
-  console.log(userEmail,referralCode,course);
+  console.log(userEmail, referralCode, course);
   if (referralCode == undefined || referralCode == null || referralCode == "") {
     return { error: "bad request" };
   }
@@ -506,7 +560,7 @@ exports.useReferralCode = async req => {
         email: userEmail,
         created: currTimeStamp,
         lastUsed: currTimeStamp,
-        count:1
+        count: 1
       };
       newObj[`${course}_count`] = 1;
       refCode.users.push(newObj);

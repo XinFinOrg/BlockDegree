@@ -22,7 +22,7 @@
   align-items: center;
   justify-content: space-between; // space out brand from logo
   padding: $navbar-padding-y $navbar-padding-x;
-
+  z-index: 1;
   // Because flex properties aren't inherited, we need to redeclare these first
   // few properities so that content nested within behave properly.
   > .container,

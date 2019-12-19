@@ -134,6 +134,13 @@ module.exports = app => {
     app.post("/api/addReferralCode",requireLogin,requrieAdmin,adminServices.addReferralCode);
     app.post("/api/enableReferralCode",requireLogin, requrieAdmin,adminServices.enableRefCode);
     app.post("/api/disableReferralCode",requireLogin, requrieAdmin,adminServices.disableRefCode);
-
+    app.get("/api/getCourseVisits",requireLogin, requrieAdmin,userStatsService.getCourseVisits);
+    app.get("/api/getAllUser",requireLogin, requrieAdmin,userStatsService.getAllUser);
+    app.get("/api/getAllPromoCodes",requireLogin, requrieAdmin,userStatsService.getAllPromoCodes);
+    app.get("/api/getAllReferralCodes",requireLogin, requrieAdmin,userStatsService.getAllReferralCodes);
+    app.get("/api/getPromoCodeLogs",requireLogin, requrieAdmin,adminServices.getPromoCodeLogs);
+    app.get("/api/getPaymentLogs",requireLogin, requrieAdmin,adminServices.getPaymentLogs);
+    app.get("/api/getBurnlogs",requireLogin, requrieAdmin,adminServices.getBurnLogs);
+    app.get("/api/getCryptoLogs",requireLogin, requrieAdmin,adminServices.getCryptoLogs);
   }
 };
