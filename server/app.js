@@ -13,6 +13,7 @@ let cors = require("cors");
 let fs = require("fs");
 let pendingTx = require("./listeners/pendingTx").em;
 const adminServices = require("./services/adminServices");
+
 let app = express();
 require("dotenv").config();
 mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true });
@@ -73,6 +74,9 @@ require("./routes/promoCodeRoutes")(app);
 require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
 
+// remove the comment to serve from build
+// app.use("/newadmin", dynamicMiddleware);
+
 // catch 404 and render 404 page
 app.use("*", function(req, res) {
   res.render("error");
@@ -101,6 +105,18 @@ if (!fs.existsSync("./tmp")) {
 
 if (!fs.existsSync("./server/cached")) {
   fs.mkdirSync("./server/cached");
+}
+
+function dynamicMiddleware(req,res,next) {
+  if (req.isAuthenticated()) {
+    if (process.env.ADMIN_ID.split("|").includes(req.user.email)) {
+      express.static(path.join(__dirname, "./admin-new/build"))(req,res,next);
+    } else {
+      res.render("error");
+    }
+  } else {
+    res.render("error");
+  }
 }
 
 module.exports = app;

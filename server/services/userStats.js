@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const PromoCode = require("../models/promo_code");
+const ReferralCode = require("../models/referral_code");
 const Visited = require("../models/visited");
 const PaymentLogs = require("../models/payment_logs");
 const GeoIP = require("geoip-lite");
@@ -331,7 +332,7 @@ exports.currCACount = async (req, res) => {
 };
 
 exports.getSiteStats = async (req, res) => {
-  console.log("called")
+  console.log("called");
   let allUsers = await User.find({});
   let allVisits = await Visited.find({});
 
@@ -360,4 +361,56 @@ exports.getSiteStats = async (req, res) => {
     totCertis: totCertis,
     caCnt: caCnt
   });
+};
+
+exports.getCourseVisits = async (req, res) => {
+  console.log("called get course visits");
+  let allVisits = null;
+  try {
+    allVisits = await Visited.find({});
+  } catch (e) {
+    console.log("some error occured while fetching the course visits");
+    console.log(e);
+    return res.json({ status: false, error: "internal error" });
+  }
+  return res.json({ status: true, error: null, visits: allVisits });
+};
+
+exports.getAllUser = async (req, res) => {
+  console.log("called get all user");
+  let allUser = null;
+  try {
+    allUser = await User.find({});
+  } catch (e) {
+    console.log("some error occured while fetching the lates users");
+    console.log(e);
+    return res.json({ status: false, error: "internal error" });
+  }
+  return res.json({ status: true, error: null, users: allUser });
+};
+
+exports.getAllPromoCodes = async (req, res) => {
+  console.log("called get the promo-codes");
+  let allPromoCode = null;
+  try {
+    allPromoCode = await PromoCode.find({});
+  } catch (e) {
+    console.log("some error occured while fetching the lates users");
+    console.log(e);
+    return res.json({ status: false, error: "internal error" });
+  }
+  return res.json({ status: true, error: null, codes: allPromoCode });
+};
+
+exports.getAllReferralCodes = async (req, res) => {
+  console.log("called get the promo-codes");
+  let allPromoCode = null;
+  try {
+    allPromoCode = await ReferralCode.find({});
+  } catch (e) {
+    console.log("some error occured while fetching the lates users");
+    console.log(e);
+    return res.json({ status: false, error: "internal error" });
+  }
+  return res.json({ status: true, error: null, codes: allPromoCode });
 };
