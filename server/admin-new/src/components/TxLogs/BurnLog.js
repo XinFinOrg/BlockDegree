@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 // import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
-
+import * as actions from "../../actions";
 import paginationFactory from "react-bootstrap-table2-paginator";
 
 import filterFactory, {
@@ -127,6 +127,10 @@ const columns = [
 ];
 
 class BurnLogs extends Component {
+  componentDidMount() {
+    this.props.fetchAllBurnLog(); // load on table
+  }
+
   filterLogsData() {
     console.log("called filter user data");
     const logs = this.props.burnLogs.logs;
@@ -150,7 +154,7 @@ class BurnLogs extends Component {
         to: log.to,
         creationDate: new Date(parseFloat(log.creationDate)).toString()
       });
-    })
+    });
 
     return retData;
   }
@@ -200,7 +204,7 @@ function mapsStateToProps({ burnLogs }) {
 function evaluateDateExpression(a, b, comparator) {
   const a_date = new Date(a);
   const b_date = new Date(b);
-  b_date.setHours(0,0,0,0);
+  b_date.setHours(0, 0, 0, 0);
   switch (comparator) {
     case "=": {
       if (
@@ -241,4 +245,4 @@ function evaluateDateExpression(a, b, comparator) {
   }
 }
 
-export default connect(mapsStateToProps)(BurnLogs);
+export default connect(mapsStateToProps,actions)(BurnLogs);

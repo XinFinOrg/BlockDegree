@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 // import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
-
+import * as actions from "../../actions";
 import paginationFactory from "react-bootstrap-table2-paginator";
 
 import filterFactory, {
@@ -95,6 +95,11 @@ const columns = [
 ];
 
 class PaymentLog extends Component {
+
+  componentDidMount(){
+    this.props.fetchAllPaymentLog(); // load on table
+  }
+
   filterPaymentLogsData() {
     console.log("called filter payment logs");
     console.log(this.props.paymentLogs)
@@ -202,4 +207,4 @@ function evaluateDateExpression(a, b, comparator) {
   }
 }
 
-export default connect(mapsStateToProps)(PaymentLog);
+export default connect(mapsStateToProps,actions)(PaymentLog);

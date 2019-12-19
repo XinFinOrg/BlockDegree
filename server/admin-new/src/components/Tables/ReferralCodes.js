@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 // import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
-
+import * as actions from "../../actions";
 import paginationFactory from "react-bootstrap-table2-paginator";
 
 import filterFactory, {
@@ -138,6 +138,11 @@ const columns = [
 ];
 
 class ReferralCodes extends Component {
+
+  componentDidMount(){
+    this.props.fetchAllReferralCodes(); // load on table
+  }
+
   paginationOption = () => {
     return {
       custom: true,
@@ -262,4 +267,4 @@ function mapsStateToProps({ referralCodes }) {
   return { referralCodes };
 }
 
-export default connect(mapsStateToProps)(ReferralCodes);
+export default connect(mapsStateToProps,actions)(ReferralCodes);

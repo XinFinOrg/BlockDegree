@@ -9,12 +9,7 @@ class UserInfo extends Component {
     this.props.fetchUser();
     this.props.fetchCourseVisits();
     this.props.fetchAllUser();
-    this.props.fetchAllPromoCodes();
-    this.props.fetchAllReferralCodes();
-    this.props.fetchAllPromoCodeLog();
-    this.props.fetchAllBurnLog();
-    this.props.fetchAllPaymentLog();
-    this.props.fetchAllCryptoLog();
+    this.props.fetchAllPromoCodeLog(); 
   }
 
   state = {

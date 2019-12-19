@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 // import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
-
+import * as actions from "../../actions";
 import paginationFactory
   
  from "react-bootstrap-table2-paginator";
@@ -150,6 +150,11 @@ const columns = [
 ];
 
 class PromoCodes extends Component {
+
+  componentDidMount(){
+    this.props.fetchAllPromoCodes(); // load on table
+  }
+
   paginationOption = () => {
     return {
       custom: true,
@@ -277,4 +282,4 @@ function mapsStateToProps({ promoCodes }) {
   return { promoCodes };
 }
 
-export default connect(mapsStateToProps)(PromoCodes);
+export default connect(mapsStateToProps,actions)(PromoCodes);
