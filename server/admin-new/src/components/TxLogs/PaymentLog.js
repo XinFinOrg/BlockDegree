@@ -114,7 +114,7 @@ class PaymentLog extends Component {
         course_id: log.course_id, 
         payment_id: log.payment_id,
         payment_status: log.payment_status,
-        timestamp: new Date(parseFloat(log.timestamp)).toString()
+        timestamp: new Date(log.timestamp).toString()
       });
     });
     return retData;
