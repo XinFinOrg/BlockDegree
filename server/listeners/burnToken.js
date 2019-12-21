@@ -100,12 +100,14 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
     console.log(
       `[*] Amount to be burned ${burn_amnt} for the payment of ${amnt_usd}`
     );
-    const account = web3.eth.accounts.privateKeyToAccount(
-      currWallet.privateKey
-    );
-    console.log("current wallet: ",currWallet);
-    console.log("current account: ",account);
-    console.log("current network: ",currNetwork);
+    let currPrivKey = currWallet.privateKey;
+    if (!currPrivKey.startsWith("0x")) {
+      currPrivKey = "0x" + currPrivKey;
+    }
+    const account = web3.eth.accounts.privateKeyToAccount(currPrivKey);
+    console.log("current wallet: ", currWallet);
+    console.log("current account: ", account);
+    console.log("current network: ", currNetwork);
     const accountBalance = await web3.eth.getBalance(account.address);
     console.log(`[*] Current burn balance: `, accountBalance);
     if (
@@ -138,7 +140,7 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
     const signed = await makePayment(
       "",
       burnAddress,
-      currWallet.privateKey,
+      currPrivKey,
       chainId,
       burn_amnt,
       web3
