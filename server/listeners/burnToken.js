@@ -118,7 +118,7 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
         "blockdegree-bot@blockdegree.org",
         process.env.SUPP_EMAIL_ID,
         `Burn Token Threshhold Reached`,
-        `Please top-up the account ${account.address} with XDC tokens as the balance is not less than 3000 XDC.`
+        `Please top-up the account ${account.address} with XDC tokens as the balance is less than 3000 XDC.`
       );
     } else if (accountBalance < burn_amnt) {
       console.error("[*] insufficient balance");

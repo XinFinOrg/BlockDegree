@@ -19,7 +19,7 @@ class UserInfo extends Component {
   render() {
     let { auth } = this.props;
     // if (!auth || !auth.status){
-    //   window.location.replace("https://uat.blockdegree.org");
+    //   window.location.replace("https://www.blockdegree.org");
     // }
     return (
       <div className="user-wrapper">
