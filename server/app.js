@@ -95,6 +95,7 @@ app.use(function(err, req, res, next) {
 
 app.listen("3000", async () => {
   pendingTx.emit("initiatePendingTx");
+  pendingTx.emit("initiatePendingBurn");
   await adminServices.initiateWalletConfig();
   console.log("server started");
 });

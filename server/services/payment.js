@@ -14,6 +14,7 @@ const uuidv4 = require("uuid/v4");
 const contractConfig = require("../config/smartContractConfig");
 const eventEmitter = require("../listeners/txnConfirmation").em;
 const abiDecoder = require("abi-decoder");
+const burnEmitter = require("../listeners/burnToken").em;
 
 const coinMarketCapAPI =
   "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
@@ -74,7 +75,8 @@ exports.payPaypalSuccess = (req, res) => {
       );
       return;
     } else {
-      // console.log(JSON.stringify(payment));
+      console.log(JSON.stringify(payment));
+      console.log(payment.transactions[0]);
       // res.send("Success");
       let course_id = payment.transactions[0].item_list.items[0].name;
       let invoice_number = payment.transactions[0].invoice_number;
@@ -188,6 +190,9 @@ exports.payPaypalSuccess = (req, res) => {
         console.log("course_id", course_id, email);
         await emailer.sendTokenMail(email, "", req, course_id);
         res.redirect("/payment-success");
+
+        //  payment is a success, initiate the burn.
+        burnEmitter.emit("burnTokenPaypal",invoice_number,payment.transactions[0].amount.total,"50",course_id, email);
       });
     }
   });
@@ -356,7 +361,7 @@ exports.payPaypal = async (req, res) => {
               payment_logs.course_id = course_id;
               payment_logs.payment_id = invoice_number;
               payment_logs.payment_status = false;
-              payment_logs.amount = price;
+              payment_logs.payment_amount = price;
               payment_logs.promoCode = req.body.codeName;
               payment_logs.referralCode = referralCode;
               await payment_logs.save();

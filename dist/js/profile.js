@@ -92,6 +92,18 @@ if (typeof jQuery != "undefined") {
                 console.log("called in focus");
                 return;
               }
+              else if (key === "inFocus" && value === "paypalPayment") {
+                $("html, body").animate(
+                  {
+                    scrollTop:
+                      $("#payment-via-paypal").offset().top -
+                      document.getElementById("header").scrollHeight - 20
+                  },
+                  2000
+                );
+                console.log("called in focus");
+                return;
+              }
             }
           }
         }
@@ -133,7 +145,7 @@ if (typeof jQuery != "undefined") {
                 console.log(result);
                 if (result.updated) {
                   alert("New Name successfully set");
-                  location.reload();
+                  window.location.replace("/profile")
                   return;
                 } else {
                   $.notify(result.error, { type: "danger" });

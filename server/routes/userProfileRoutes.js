@@ -25,4 +25,6 @@ module.exports = app => {
     profileService.getUserCryptoPayment
   );
   app.post("/api/getCourseMeta", requireLogin, profileService.getCourseMeta);
+  app.get("/api/getUserPaypalPayment", requireLogin, profileService.getUserPaypalPayment);
+
 };

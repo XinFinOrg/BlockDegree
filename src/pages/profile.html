@@ -1,7 +1,6 @@
-{{#> base}}
-{{> layouts/base title="Blockchain Profile"}}
-{{#*inline "body-block"}}
-{{> includes/hero hero-title="Profile" hero-copy="View / Update your profile"}}
+{{#> base}} {{> layouts/base title="Blockchain Profile"}} {{#*inline
+"body-block"}} {{> includes/hero hero-title="Profile" hero-copy="View / Update
+your profile"}}
 
 <div id="profile">
   <div class="tabbed-section">
@@ -110,6 +109,29 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <h3 id="payment-via-paypal" class="profile-subHeading mt-5">
+          Payment Via Paypal
+        </h3>
+        <div class="table-responsive">
+          <table class="table table-hover" id="cryptoTokenList">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Payment Id</th>
+                <th>Burn Status</th>
+                <th>Burn Token Name</th>
+                <th>Burn Token Amount</th>
+                <th>Burn TX</th>
+              </tr>
+            </thead>
+            <tbody id="paypalPayment-tbody"></tbody>
+          </table>
+          <!-- <div
+            style="background-color:lightsteelblue;"
+            id="tokenPayment-tfooter"
+          ></div> -->
         </div>
 
         <h3 id="payment-via-tokens" class="profile-subHeading mt-5">
@@ -263,16 +285,23 @@
   </div>
 </div>
 
-{{/inline}}
-{{#*inline "scripts-block"}}
+{{/inline}} {{#*inline "scripts-block"}}
 
 <script src="js/profile.js?v=1.3"></script>
 <script>
   let allPendingTransaction = [];
   let pendingEventListener;
   let listeningForPending = false;
+
+  const courseName = {
+    course_1: "Basic",
+    course_2: "Advanced",
+    course_3: "Professional"
+  };
+
   $("document").ready(() => {
     fetchCryptoTransactions();
+    fetchPaypalPayment();
     setTimeout(() => {
       fetchCryptoTransactions();
       callPendingListener();
@@ -349,6 +378,65 @@
     }, 1000);
   }
 
+  function fetchPaypalPayment() {
+    console.log("called paypal payment");
+    const paypalTokenBody = document.getElementById("paypalPayment-tbody");
+    const apothemExplorer = "https://explorer.apothem.network/tx/";
+    const mainnetExplorer = "https://explorer.xinfin.network/tx/";
+
+    let retHtml = "";
+    $.ajax({
+      method: "get",
+      url: "/api/getUserPaypalPayment",
+      success: result => {
+        if (result.status == true) {
+          // ok
+          let logs = result.logs;
+          console.log("User paypal logs: ", logs);
+          if (logs == null || logs.length <= 0) {
+            // not paypal tx done yet
+            retHtml += `<tr><td>No payment done yet</td></tr>`;
+          } else {
+            // push paypal tx
+            for (let x = logs.length - 1; x >= logs.length - 5 && x>= 0; x--) {
+              // log filed
+              retHtml += `<tr><td>${courseName[logs[x].course_id]}</td><td>${
+                logs[x].payment_id
+              }</td><td>${
+                logs[x].burnStatus
+                  ? logs[x].burnStatus === "awaiting balance"
+                    ? "pending"
+                    : logs[x].burnStatus
+                  : "-"
+              }</td>
+              <td>${
+                logs[x].burnTokenName ? logs[x].burnTokenName : "-"
+              }</td>
+              
+              <td>${logs[x].burnAmnt ? logs[x].burnAmnt : "-"}</td><td>${
+                logs[x].burnTx ? `<a target="_blank" href="${mainnetExplorer+logs[x].burnTx}">${logs[x].burnTx.slice(0,11)}...</a>` : "-"
+              }</td></tr>`;
+            }
+          }
+          paypalTokenBody.innerHTML = retHtml;
+        } else {
+          // not ok
+          $.notify(
+            result.error || "Some error occured while fetching payment logs",
+            { type: "danger" }
+          );
+          return;
+        }
+      },
+      error: xhr => {
+        $.notify("Some error occured while fetching payment logs", {
+          type: "danger"
+        });
+        return;
+      }
+    });
+  }
+
   function fetchCryptoTransactions() {
     console.log("called crypto transactions");
     const etherScanIo = "https://etherscan.io/tx/";
@@ -375,10 +463,10 @@
         // <th>Burn Transaction Hash</th>
 
         const payments = result.allPayments;
-        console.log(payments.length);
         let retHtml = "";
-        if (payments.length == 0) {
-          retHtml = "<div>No transactions made yet</div>";
+        if (payments.length <= 0) {
+          retHtml = "<tr><td>No transactions made yet</td></tr>";
+          tableBody.innerHTML = retHtml;
           return;
         } else {
           for (let z = 0; z < payments.length; z++) {
@@ -605,23 +693,22 @@
     if (curr >= max) {
       // completed
       return `<div id="myProgress">
-  	<span id="myBarText" style="color: white;">completed</span>
-    <div id="myBarPercent"></div>
-  <div id="myBar" style="width: 100%;
-		background-color: #28a745 ;
-		">
-</div>
-</div>`;
+    	<span id="myBarText" style="color: white;">completed</span>
+      <div id="myBarPercent"></div>
+    <div id="myBar" style="width: 100%;
+  		background-color: #28a745 ;
+  		">
+  </div>
+  </div>`;
     } else {
       // pending
       let width = Math.round((curr / max) * 100);
       return `<div id="myProgress">
-  	<span id="myBarText" ><strong>pending (${curr}/${max})</strong> </span>
-  <div id="myBar" style="width:${width}%">
-</div>
-</div>`;
+    	<span id="myBarText" ><strong>pending (${curr}/${max})</strong> </span>
+    <div id="myBar" style="width:${width}%">
+  </div>
+  </div>`;
     }
   }
 </script>
-{{/inline}}
-{{/base}}
+{{/inline}} {{/base}}

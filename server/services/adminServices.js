@@ -6,6 +6,7 @@ const PromoCodeLog = require("../models/promocode_log.js");
 const PaymentLog = require("../models/payment_logs");
 const CryptoLog = require("../models/payment_token");
 const BurnLog = require("../models/burn_logs");
+const pendingEmitter = require("../listeners/pendingTx").em;
 
 exports.addCourse = async (req, res) => {
   if (
@@ -1037,7 +1038,7 @@ exports.getBurnLogs = async (req, res) => {
 };
 
 exports.getPaymentLogs = async (req, res) => {
-  console.log("called payment logs")
+  console.log("called payment logs");
   try {
     let retData = [];
     const paymentLogs = await PaymentLog.find({});
@@ -1067,6 +1068,17 @@ exports.getCryptoLogs = async (req, res) => {
   } catch (e) {
     console.log("exception while fetching the crypto logs: ", e);
     res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.forcePendingBurn = (req, res) => {
+  console.log(`called burnPending`);
+  try {
+    pendingEmitter.emit("initiatePendingBurn");
+    res.status(200).json({ status: true });
+  } catch (e) {
+    console.log("error: ", e);
+    return res.status(500).json({ status: false, error: "internal error" });
   }
 };
 

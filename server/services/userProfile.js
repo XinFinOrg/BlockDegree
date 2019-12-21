@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const PaymentToken = require("../models/payment_token");
 const CoursePrice = require("../models/coursePrice");
-
+const PaymentLog = require("../models/payment_logs");
 /*
 
 All the below APIs (except setProfileName) are NOT in use; no need to OPTIMIZE
@@ -182,6 +182,31 @@ exports.setProfileName = async (req, res) => {
     updated: true,
     error: null
   });
+};
+
+exports.getUserPaypalPayment = async (req, res) => {
+  console.log("Called getUserPaypalPayment");
+  try {
+    const logs = await PaymentLog.find({
+      email: req.user.email
+    }).lean();
+
+    return res.json({
+      status: true,
+      error: null,
+      logs: logs
+    });
+  } catch (e) {
+    console.error(
+      "Some error occured at userProfile.getUserPaypalPayment while fetching the payments: ",
+      e
+    );
+    return res.json({
+      status: false,
+      error: "internal error",
+      allPayments: null
+    });
+  }
 };
 
 /*
