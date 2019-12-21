@@ -142,5 +142,6 @@ module.exports = app => {
     app.get("/api/getPaymentLogs",requireLogin, requrieAdmin,adminServices.getPaymentLogs);
     app.get("/api/getBurnlogs",requireLogin, requrieAdmin,adminServices.getBurnLogs);
     app.get("/api/getCryptoLogs",requireLogin, requrieAdmin,adminServices.getCryptoLogs);
+    app.get("/api/forcePendingBurn",requireLogin, requrieAdmin,adminServices.forcePendingBurn);
   }
 };

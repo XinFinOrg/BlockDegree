@@ -9,6 +9,7 @@ import SetConXDCe from "./SetConXDCe";
 import SetPriceUsd from "./SetPriceUsd";
 import SetTolXDC from "./SetTolXDC";
 import SetTolXDCe from "./SetTolXDCe";
+import ForceBurn from "./ForceBurn";
 
 class CoursePayment extends Component {
   render() {
@@ -45,6 +46,11 @@ class CoursePayment extends Component {
           </div>
           <div className="col-md-6">
             <SetPriceUsd />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <ForceBurn />
           </div>
         </div>
       </div>

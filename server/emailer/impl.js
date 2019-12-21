@@ -31,6 +31,27 @@ module.exports = {
       });
     });
   },
+
+
+  sendMailInternal: (from,mail, subject, msg) => {
+    return new Promise(function(resolve, reject) {
+      var mailOptions = {
+        from: from,
+        to: mail,
+        subject: subject,
+        html: `<div>${msg}</div>`
+      };
+      transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+          console.log(error);
+          reject(error);
+        } else {
+          console.log("Email sent: " + info.response);
+          resolve(info);
+        }
+      });
+    });
+  },
   // sendMail2:()=>{}
 
   sendTokenMail: (mail, token, req, type) => {

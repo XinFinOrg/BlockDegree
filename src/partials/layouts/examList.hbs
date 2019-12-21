@@ -317,6 +317,7 @@
     $(`#${course_id.id}`).attr("disabled", true);
 
     let formNew = document.createElement('form');
+    formNew.style.display="none";
     formNew.action = "/pay";
     formNew.method = "post";
     formNew.style.display="none";
