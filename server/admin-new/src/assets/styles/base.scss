@@ -113,10 +113,12 @@ body {
     font-weight: 300;
     margin-bottom: 10px;
   }
+
   .header {
     padding: 15px 30px 0px;
     font-weight: 600;
     font-size: 22px;
+
     h1,
     h2,
     h3,
@@ -129,6 +131,7 @@ body {
       line-height: 17px;
       font-weight: 300;
     }
+
     p {
       color: $black-color;
       font-size: 12px;
@@ -136,39 +139,48 @@ body {
       font-weight: 300;
     }
   }
+
   .content {
     padding: 10px 30px 20px 30px;
   }
+
   .footer {
     padding: 0 30px 5px;
     background-color: transparent;
     line-height: 30px;
+
     .legend {
       padding: 5px 0;
       display: flex;
       align-items: center;
+
       .item {
         margin-right: 10px;
       }
     }
+
     .stats {
       color: $medium-dark-gray;
     }
+
     hr {
       margin-top: 5px;
       margin-bottom: 5px;
       border-color: $medium-gray;
     }
   }
+
   .form-group label,
   fieldset label {
     font-size: 12px;
     line-height: 18px;
     font-weight: 300;
+
     &.control-label {
       color: #25265f;
       text-transform: uppercase;
     }
+
     &.error {
       text-transform: none;
       color: #fb404b;
@@ -240,7 +252,7 @@ body {
     }
   }
 
-  input:checked ~ label {
+  input:checked~label {
     color: #fff;
 
     &:before {
@@ -276,6 +288,7 @@ body {
     box-shadow: none;
     border: 0.5px solid lightgrey;
     padding: 5px;
+
     &:focus {
       border-color: #5562eb;
     }
@@ -300,8 +313,32 @@ body {
   padding: 10px;
   margin: 15px 10px;
   border-radius: 10px;
+
   &:hover {
     color: white;
     background-color: #6d71ef;
   }
+}
+
+.checkbox-grp {
+  label {
+    display: block;
+    padding-left: 15px;
+    text-indent: -15px;
+  }
+
+  input {
+    width: 13px;
+    height: 13px;
+    padding: 5px;
+    margin: 0;
+    vertical-align: bottom;
+    position: relative;
+    *overflow: hidden;
+  }
+}
+
+.file-reset-btn {
+  float: right;
+  cursor: pointer;
 }

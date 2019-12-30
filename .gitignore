@@ -19,6 +19,7 @@ server/config/paypalKeys.js
 server/config/*
 server/keystore
 server/routes/testRoutes.js
+server/tmp-event/*
 
 server/helpers/*.ejs
 server/helpers/*.sol

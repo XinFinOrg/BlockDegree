@@ -11,6 +11,7 @@ let session = require("express-session");
 let hbs = require("express-handlebars");
 let cors = require("cors");
 let fs = require("fs");
+const expressFileUpload = require("express-fileupload");
 let pendingTx = require("./listeners/pendingTx").em;
 const adminServices = require("./services/adminServices");
 
@@ -43,11 +44,15 @@ app.use(
   express.static("server/protected/courses", { extensions: ["html", "htm"] })
 );
 app.use(cors());
-
+app.use(
+  expressFileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 }
+  })
+);
 // required for passport
 app.use(
   session({
-    secret: "",
+    secret: "test",
     resave: true,
     rolling: true,
     saveUninitialized: true,
@@ -77,6 +82,7 @@ require("./routes/userProfileRoutes")(app);
 // remove the comment to serve from build
 app.use("/newadmin", dynamicMiddleware);
 
+require("./listeners/postSocial");
 // catch 404 and render 404 page
 app.use("*", function(req, res) {
   res.render("error");
@@ -108,10 +114,10 @@ if (!fs.existsSync("./server/cached")) {
   fs.mkdirSync("./server/cached");
 }
 
-function dynamicMiddleware(req,res,next) {
+function dynamicMiddleware(req, res, next) {
   if (req.isAuthenticated()) {
     if (process.env.ADMIN_ID.split("|").includes(req.user.email)) {
-      express.static(path.join(__dirname, "./admin-new/build"))(req,res,next);
+      express.static(path.join(__dirname, "./admin-new/build"))(req, res, next);
     } else {
       res.render("error");
     }
