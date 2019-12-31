@@ -131,6 +131,10 @@ class BurnLogs extends Component {
     this.props.fetchAllBurnLog(); // load on table
   }
 
+  handleDataChange = data => {
+    document.getElementById("currDataCount").innerHTML = data.dataSize;
+  };
+
   filterLogsData() {
     console.log("called filter user data");
     const logs = this.props.burnLogs.logs;
@@ -155,7 +159,7 @@ class BurnLogs extends Component {
         creationDate: new Date(parseFloat(log.creationDate)).toString()
       });
     });
-
+    document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 
@@ -165,8 +169,34 @@ class BurnLogs extends Component {
         <div className="row">
           <div className="col-md-12">
             <div className="header">
-              <h4>Burn Logs Table</h4>
-              <p>Table with all burn logs</p>
+              <div className="row">
+                <div className="col-md-6">
+                  <h4>Burn Logs Table</h4>
+                  <p>Table with all burn logs</p>
+                </div>
+                <div className="col-md-6">
+                  <div
+                    id="currRowCount"
+                    className="right table-row-count-wrapper"
+                  >
+                    <span>
+                      <span className="table-row-count-label">
+                        Current Row Count&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;
+                      </span>
+                      <span id="currDataCount" className="table-row-count">
+                        {" "}
+                        <i
+                          className="fa fa-cogs"
+                          style={{ color: "black" }}
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div>
               {this.props.burnLogs ? (
@@ -179,6 +209,7 @@ class BurnLogs extends Component {
                     pagination={paginationFactory({
                       hideSizePerPage: true
                     })}
+                    onDataSizeChange={this.handleDataChange}
                   />
                 </div>
               ) : (
@@ -245,4 +276,4 @@ function evaluateDateExpression(a, b, comparator) {
   }
 }
 
-export default connect(mapsStateToProps,actions)(BurnLogs);
+export default connect(mapsStateToProps, actions)(BurnLogs);

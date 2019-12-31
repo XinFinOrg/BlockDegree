@@ -95,14 +95,17 @@ const columns = [
 ];
 
 class PaymentLog extends Component {
-
-  componentDidMount(){
+  componentDidMount() {
     this.props.fetchAllPaymentLog(); // load on table
   }
 
+  handleDataChange = data => {
+    document.getElementById("currDataCount").innerHTML = data.dataSize;
+  };
+
   filterPaymentLogsData() {
     console.log("called filter payment logs");
-    console.log(this.props.paymentLogs)
+    console.log(this.props.paymentLogs);
     const logs = this.props.paymentLogs.logs;
     // SR NO, EmailID, E.TYPE, Marks, T. Marks, Headless Hash, Certificate Hash, Issue Date, Payment Mode, Expiry
     let srNo = 1;
@@ -111,12 +114,13 @@ class PaymentLog extends Component {
       retData.push({
         srNo: srNo++,
         email: log.email,
-        course_id: log.course_id, 
+        course_id: log.course_id,
         payment_id: log.payment_id,
         payment_status: log.payment_status,
         timestamp: new Date(log.timestamp).toString()
       });
     });
+    document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 
@@ -126,8 +130,34 @@ class PaymentLog extends Component {
         <div className="row">
           <div className="col-md-12">
             <div className="header">
-              <h4>Payment Logs</h4>
-              <p>Table with all payment logs</p>
+              <div className="row">
+                <div className="col-md-6">
+                  <h4>Payment Logs</h4>
+                  <p>Table with all payment logs</p>
+                </div>
+                <div className="col-md-6">
+                  <div
+                    id="currRowCount"
+                    className="right table-row-count-wrapper"
+                  >
+                    <span>
+                      <span className="table-row-count-label">
+                        Current Row Count&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;
+                      </span>
+                      <span id="currDataCount" className="table-row-count">
+                        {" "}
+                        <i
+                          className="fa fa-cogs"
+                          style={{ color: "black" }}
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div>
               {this.props.paymentLogs ? (
@@ -140,6 +170,7 @@ class PaymentLog extends Component {
                     pagination={paginationFactory({
                       hideSizePerPage: true
                     })}
+                    onDataSizeChange={this.handleDataChange}
                   />
                 </div>
               ) : (
@@ -165,7 +196,7 @@ function mapsStateToProps({ paymentLogs }) {
 function evaluateDateExpression(a, b, comparator) {
   const a_date = new Date(a);
   const b_date = new Date(b);
-  b_date.setHours(0,0,0,0);
+  b_date.setHours(0, 0, 0, 0);
   switch (comparator) {
     case "=": {
       if (
@@ -207,4 +238,4 @@ function evaluateDateExpression(a, b, comparator) {
   }
 }
 
-export default connect(mapsStateToProps,actions)(PaymentLog);
+export default connect(mapsStateToProps, actions)(PaymentLog);

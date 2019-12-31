@@ -105,11 +105,20 @@ const columns = [
 ];
 
 class Users extends Component {
+  // to load the current count
+  componentDidMount() {
+    if (this.props.allUsers) this.filterUserData();
+  }
+
   paginationOption = () => {
     return {
       custom: true,
       totalSize: this.props.allUsers.users.length
     };
+  };
+
+  handleDataChange = data => {
+    document.getElementById("currDataCount").innerHTML = data.dataSize;
   };
 
   filterUserData() {
@@ -133,6 +142,8 @@ class Users extends Component {
     });
     console.log("FILTERED DATA::");
     console.log(retData);
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 
@@ -142,8 +153,34 @@ class Users extends Component {
         <div className="row">
           <div className="col-md-12">
             <div className="header">
-              <h4>Users Table</h4>
-              <p>Table with all Users</p>
+              <div className="row">
+                <div className="col-md-6">
+                  <h4>Users Table</h4>
+                  <p>Table with all Users</p>
+                </div>
+                <div className="col-md-6">
+                  <div
+                    id="currRowCount"
+                    className="right table-row-count-wrapper"
+                  >
+                    <span>
+                      <span className="table-row-count-label">
+                        Current Row Count&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;
+                      </span>
+                      <span id="currDataCount" className="table-row-count">
+                        {" "}
+                        <i
+                          className="fa fa-cogs"
+                          style={{ color: "black" }}
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div>
               {this.props.allUsers ? (
@@ -156,6 +193,7 @@ class Users extends Component {
                     pagination={paginationFactory({
                       hideSizePerPage: true
                     })}
+                    onDataSizeChange={this.handleDataChange}
                   />
                 </div>
               ) : (
@@ -181,7 +219,7 @@ function mapsStateToProps({ allUsers }) {
 function evaluateDateExpression(a, b, comparator) {
   const a_date = new Date(a);
   const b_date = new Date(b);
-  b_date.setHours(0,0,0,0);
+  b_date.setHours(0, 0, 0, 0);
   switch (comparator) {
     case "=": {
       if (

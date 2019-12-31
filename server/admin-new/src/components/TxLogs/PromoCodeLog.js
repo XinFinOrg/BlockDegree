@@ -33,7 +33,7 @@ function createdPostFilter(filterVal, data) {
 function defHeadFormatter(column, colIndex, { sortElement, filterElement }) {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-    {console.log(filterElement)}
+      {console.log(filterElement)}
       <div>{filterElement}</div>
       <div>
         {column.text}
@@ -87,13 +87,22 @@ const columns = [
     dataField: "usedDate",
     text: "Used Date",
     filter: dateFilter({
-      onFilter:createdPostFilter
+      onFilter: createdPostFilter
     }),
-    headerFormatter: defHeadFormatter,
+    headerFormatter: defHeadFormatter
   }
 ];
 
 class PromoCodeLogs extends Component {
+  // to load the current count
+  componentDidMount() {
+    if (this.props.promoCodeLogs) this.filterLogData();
+  }
+
+  handleDataChange = data => {
+    document.getElementById("currDataCount").innerHTML = data.dataSize;
+  };
+
   filterLogData() {
     console.log("called filter user data");
     const logs = this.props.promoCodeLogs.logs;
@@ -113,6 +122,8 @@ class PromoCodeLogs extends Component {
         discAmt: log.discAmt
       });
     });
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 
@@ -122,8 +133,34 @@ class PromoCodeLogs extends Component {
         <div className="row">
           <div className="col-md-12">
             <div className="header">
-              <h4>PromoCode Logs</h4>
-              <p>Table with all promocode logs</p>
+              <div className="row">
+                <div className="col-md-6">
+                  <h4>PromoCode Logs</h4>
+                  <p>Table with all promocode logs</p>
+                </div>
+                <div className="col-md-6">
+                  <div
+                    id="currRowCount"
+                    className="right table-row-count-wrapper"
+                  >
+                    <span>
+                      <span className="table-row-count-label">
+                        Current Row Count&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;
+                      </span>
+                      <span id="currDataCount" className="table-row-count">
+                        {" "}
+                        <i
+                          className="fa fa-cogs"
+                          style={{ color: "black" }}
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div>
               {this.props.promoCodeLogs ? (
@@ -136,6 +173,7 @@ class PromoCodeLogs extends Component {
                     pagination={paginationFactory({
                       hideSizePerPage: true
                     })}
+                    onDataSizeChange={this.handleDataChange}
                   />
                 </div>
               ) : (
@@ -161,7 +199,7 @@ function mapsStateToProps({ promoCodeLogs }) {
 function evaluateDateExpression(a, b, comparator) {
   const a_date = new Date(a);
   const b_date = new Date(b);
-  b_date.setHours(0,0,0,0);
+  b_date.setHours(0, 0, 0, 0);
   switch (comparator) {
     case "=": {
       if (
