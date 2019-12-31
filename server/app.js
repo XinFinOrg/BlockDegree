@@ -52,7 +52,7 @@ app.use(
 // required for passport
 app.use(
   session({
-    secret: "test",
+    secret: "",
     resave: true,
     rolling: true,
     saveUninitialized: true,

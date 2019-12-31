@@ -62,7 +62,7 @@ class GenerateEventTS extends Component {
   }
 
   handleEventPurposeChange(event) {
-    this.setState({ postStatus: event.target.value });
+    this.setState({ eventPurpose: event.target.value });
   }
 
   handleUseCustomChange(event) {
@@ -211,6 +211,7 @@ class GenerateEventTS extends Component {
             postTime: "",
             useCustomFile: "false",
             inputFile: "",
+            postStatus:"",
             postOnFacebook: false,
             postOnLinkedin: false,
             postOnTwitter: false,
@@ -275,7 +276,7 @@ class GenerateEventTS extends Component {
                   type="text"
                   value={this.state.postStatus}
                   placeholder="post status"
-                  onChange={this.handleEventPurposeChange}
+                  onChange={this.handlePostStatusChange}
                 />
               </div>
             </div>

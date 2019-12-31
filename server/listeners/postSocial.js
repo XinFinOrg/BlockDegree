@@ -6,9 +6,10 @@ const axios = require("axios");
 const socialPostConfig = require("../config/socialPostKeys");
 const FormData = require("form-data");
 const concat = require("concat-stream");
-const EventConfig = require("../models/social_post_event");
+const Event = require("../models/social_post_event");
 const SocialConfig = require("../models/social_post_config");
 const SocialPost = require("../models/social_post");
+const schedule = require("node-schedule");
 let exec = require("child_process").exec;
 
 const em = new EventEmitter();
@@ -16,11 +17,104 @@ const em = new EventEmitter();
 const filePath = path.join(__dirname, "../../Certificate.jpg");
 console.log("FilePath: ", filePath);
 
-async function postSocial(eventId, pathToFile) {
-  console.log("called post social");
+/**
+ * PostSocial function posts the event on the respective social-medias corresponding to the param eventId.
+ * @todo
+ * 1. contained error-handling in all posting functions.
+ * 2. Add Bot for telegram.
+ * 3. Functionality to auto-renew access token for facebook.
+ * @note Should be called internally only - triggered by timestamp or state-update.
+ * @param {string} eventId
+ */
+async function postSocial(eventId) {
+  console.log("called function post social");
+  try {
+    const currEvent = await Event.findOne({ id: eventId });
+    const postedTwitter = currEvent.platform.twitter,
+      postedLinkedIn = currEvent.platform.linkedin,
+      postedFacebook = currEvent.platform.facebook,
+      postTwitErr = false,
+      postLinkErr = false,
+      postFaceErr = false;
+    let linkedInPostId = "",
+      twitterPostId = "",
+      facebookPostId = "";
+    if (currEvent === null) {
+      console.error(
+        `event with id:${eventId} not found, quiting the function postSocial.postSocial`
+      );
+      return;
+    }
+    const eventFilePath = currEvent.nextPostPath;
+    const eventStatus = currEvent.nextPostStatus;
+
+    console.log(
+      "Post Social EventFilePath: %s, EventStatus: %s\n",
+      eventFilePath,
+      eventStatus
+    );
+    if (postedTwitter) {
+      try {
+        twitterPostId = await postTwitter(eventFilePath, eventStatus, eventId);
+      } catch (twitter_error) {
+        console.error(`error while posting the status on twitter`);
+        console.error(twitter_error);
+        postedTwitter = false;
+        postTwitErr = true;
+      }
+    }
+
+    if (postedLinkedIn) {
+      try {
+        linkedInPostId = await postLinkedin(
+          eventFilePath,
+          eventStatus,
+          eventId
+        );
+      } catch (linkedin_error) {
+        console.error(`error while posting the status on linkedin`);
+        console.error(linkedin_error);
+        postedLinkedIn = false;
+        postLinkErr = true;
+      }
+    }
+
+    if (postedFacebook) {
+      try {
+        facebookPostId = await postFacebook(
+          eventFilePath,
+          eventStatus,
+          eventId
+        );
+      } catch (facebook_error) {
+        console.error(`error while posting the status on facebook`);
+        console.error(facebook_error);
+        postedFacebook = false;
+        postFaceErr = true;
+      }
+    }
+
+    if (postTwitErr || postLinkErr || postFaceErr) {
+      console.error(
+        "some occured while posting at listeners.postSocial.postSocial error in posting"
+      );
+      console.log(
+        `Twitter Error: ${postTwitErr} LinkedIn Error: ${postLinkErr} Facebook Error: ${postFaceErr}`
+      );
+      // notify admin
+    } else {
+      // no error at all
+      console.log("[*] no errors");
+      currEvent.save();
+    }
+  } catch (e) {
+    console.error("exception at postSocial.postSocial");
+    console.error(e);
+    return;
+  }
 }
 
-async function postLinkedin(eventId) {
+async function postLinkedin(fp, postStatus, eventId) {
   // register an upload : will get upload URL
   let authToken = socialPostConfig.linkedin.accessToken;
   let personURN = socialPostConfig.linkedin.id;
@@ -62,16 +156,13 @@ async function postLinkedin(eventId) {
 
   console.log("ASSET: ", asset);
   console.log("UploadURL : ", uploadURL);
-  // let localPath = "";
-  let pathToFile = path.join(__dirname, "../../Certificate.jpg");
 
-  msg = "test";
   /**
    * Old way to upload using IO, exec if a file is given at  a path.
    */
   let os = new os_func();
   os.execCommand(
-    `curl -i --upload-file ${pathToFile} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
+    `curl -i --upload-file ${fp} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
     async function(returnValue) {
       let resp;
       try {
@@ -88,7 +179,7 @@ async function postLinkedin(eventId) {
             specificContent: {
               "com.linkedin.ugc.ShareContent": {
                 shareCommentary: {
-                  text: msg
+                  text: postStatus
                 },
                 shareMediaCategory: "IMAGE",
                 media: [
@@ -110,11 +201,19 @@ async function postLinkedin(eventId) {
             }
           }
         });
+        console.log("Post on linkedin status: ", resp.status);
+        console.log("Linkedin Response Data", resp.data);
+
+        const currEvent = await Event.findOne({ id: eventId });
+        if (currEvent === null) {
+          console.error("event not found");
+          return;
+        }
+        currEvent.posts.linkedin.push({ postId: resp.data.id });
+        await currEvent.save();
       } catch (e) {
         console.error("Exception while making axios request: ", e);
       }
-
-      console.log(resp.status);
     },
     err => {
       console.error("Error while uploading the media to the asset: ", err);
@@ -122,7 +221,7 @@ async function postLinkedin(eventId) {
   );
 }
 
-async function postTwitter(eventId) {
+async function postTwitter(fp, postStatus, eventId) {
   var config = getTwitterConfig(
     process.env.TWITTER_CLIENT_ID,
     process.env.TWITTER_CLIENT_SECRET,
@@ -131,7 +230,7 @@ async function postTwitter(eventId) {
   );
   let T = new twit(config);
 
-  let buffer = fs.readFileSync(pathToFile).toString("base64");
+  let buffer = fs.readFileSync(fp).toString("base64");
 
   // User should be able to set the status for post
   T.post("media/upload", { media_data: buffer }, function(
@@ -145,20 +244,29 @@ async function postTwitter(eventId) {
       console.log(err);
       return;
     } else {
-      console.log("Twitter Response (1): ", response);
       T.post(
         "statuses/update",
         {
-          status: msg, // need to check the length for the length of tweet.
+          status: postStatus, // need to check the length for the length of tweet.
           media_ids: new Array(data.media_id_string)
         },
-        function(err, data, response) {
+        async function(err, data, response) {
           if (err) {
             console.log("ERROR: ", err);
           } else {
             console.log("Posted the status on twitter!");
-            console.log("Twitter Media Uploaded data: ", data);
-            console.log("Twitter Media Uploaded Respinse: ", response);
+            try {
+              const currEvent = await Event.findOne({ id: eventId });
+              if (currEvent === null) {
+                console.error("event not found");
+                return;
+              }
+              currEvent.posts.twitter.push({ postId: data.id });
+              await currEvent.save();
+            } catch (catch_e) {
+              console.log("catch expression: ", catch_e);
+            }
+            return data.id_str;
           }
         }
       ).catch(e => {
@@ -173,48 +281,71 @@ async function postTwitter(eventId) {
   });
 }
 
-async function postFacebook(eventId) {
-  console.log("called postFacebook");
-  const pageId = "105301110986098";
-  const uploadFile = fs.createReadStream(filePath);
-  const accessToken =
-    "EAAG6hQoZBb1sBAI6dP57rySZB4ScuV6jw33tZAA3OKrnM2ZBv0ZBS96mDxcNAI2P0mNcj2kpnkWPBWGr3KTel5FGkUB7ZCkoNG10esLxZBaMR37btPDZCzwXJji8KZBhsVJLZCQIejFGXgWMpZCxgsxwOzGaRZCHRbeJ92YwqzSmYbV3DFrm1lkv0cUPeGZCkndCZA8fBV9LYi7Pf2WAZDZD";
-  let newForm = new FormData();
-  newForm.append("file", uploadFile);
-  axios
-    .post(`https://graph.facebook.com/${socialPostConfig.facebook.pageId}/photos`, newForm, {
-      headers: newForm.getHeaders(),
-      mimeType: "multipart/form-data",
-      contentType: false,
-      processData: false,
-      params: {
-        access_token:socialPostConfig.facebook.accessToken,
-        message: "This is a new test, pepepls"
-      }
-    })
-    .then(res => {
-      console.log("response from user: ", res);
-      if (res.status == 200) {
-        console.log("successfully posted the message");
-      }
-    })
-    .catch(e => {
-      console.log(
-        "error while making the API call to graph.facebook.com : ",
-        e
-      );
-    });
+async function postFacebook(fp, postStatus, eventId) {
+  try {
+    console.log("called postFacebook");
+    const uploadFile = fs.createReadStream(fp);
+    /*
+      1. make get to https://graph.facebook.com/${page_id}?fields=access_token&access_token=${user_access_token}
+      2. will return {access_token:"",id:""}
+    */
+    const res = await axios.get(
+      `https://graph.facebook.com/${socialPostConfig.facebook.pageId}?fields=access_token&access_token=${socialPostConfig.facebook.accessToken}`
+    );
+    let newForm = new FormData();
+    newForm.append("file", uploadFile);
+    axios
+      .post(
+        `https://graph.facebook.com/${socialPostConfig.facebook.pageId}/photos`,
+        newForm,
+        {
+          headers: newForm.getHeaders(),
+          mimeType: "multipart/form-data",
+          contentType: false,
+          processData: false,
+          params: {
+            access_token: res.data.access_token,
+            message: postStatus
+          }
+        }
+      )
+      .then(async res => {
+        if (res.status == 200) {
+          console.log("successfully posted image on facebook");
+          const currEvent = await Event.findOne({ id: eventId });
+          if (currEvent === null) {
+            console.error("event not found");
+            return;
+          }
+          currEvent.posts.facebook.push({ postId: res.data.id });
+          await currEvent.save();
+        }
+      })
+      .catch(e => {
+        console.log(
+          "error while making the API call to graph.facebook.com : ",
+          e
+        );
+      });
+  } catch (e) {
+    console.log(`exception at postSocial.postFacebook: `);
+    console.log(e);
+    return;
+  }
+}
+
+async function postTelegram(fp, postStatus) {
+  console.log("called postTelegram.");
 }
 
 em.on("postSocial", postSocial);
-
+exports.em = em;
 /*
 
 	Miscellaneous Functions
 
 	1. New OS Job
 	2. Get Twitter Configuration
-	3. Check Tweet Characters Length
 
 */
 

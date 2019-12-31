@@ -1,6 +1,7 @@
 const schedule = require("node-schedule");
 const Event = require("../models/social_post_event");
 const Emailer = require("../emailer/impl");
+const emitPostSocial = require("../listeners/postSocial").em;
 const PostConfig = require("../models/social_post_config");
 const Post = require("../models/social_post");
 const _ = require("lodash");
@@ -36,6 +37,8 @@ if (!fs.existsSync(tmpFilePath)) {
 
 /**
  * scheduleEventByTime generates an event which will triggered at the appropriate timestamp ( provided as a parameter ).
+ * @param {object} req - http request object
+ * @param {object} res - http response object
  */
 exports.scheduleEventByTime = (req, res) => {
   try {
@@ -121,6 +124,7 @@ exports.scheduleEventByTime = (req, res) => {
         event.save();
         schedule.scheduleJob(dateObj, () => {
           console.log(`[*] Event fired ------- ${currEvntId}`);
+          emitPostSocial.emit('postSocial',currEvntId);
         });
         return res.json({ status: true, message: "new event generated" });
       } catch (e) {
