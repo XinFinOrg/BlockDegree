@@ -242,7 +242,7 @@ class TrafficChart extends Component {
     currMonth = currDate.getMonth().toString();
 
     for (let x = 0; x <= 6; x++) {
-      if (parseInt(currMonth) - offset <= 0) {
+      if (parseInt(currMonth) - offset < 0) {
         currYear = (parseInt(currYear) - 1).toString();
         currMonth="11";
         offset = 0;
@@ -268,7 +268,7 @@ class TrafficChart extends Component {
     currYear = currDate.getFullYear().toString();
     currMonth = currDate.getMonth().toString();
     for (let x = 0; x <= 6; x++) {
-      if (parseInt(currMonth) - offset <= 0) {
+      if (parseInt(currMonth) - offset < 0) {
         currYear = (parseInt(currYear) - 1).toString();
         currMonth="11";
         offset = 0;
