@@ -110,47 +110,49 @@ class CertificateBar extends Component {
 
     const currDate = new Date();
     let currYear = currDate.getFullYear().toString();
+    let currMonth = currDate.getMonth().toString();
     let offset = 0;
     for (let x = 0; x < 12; x++) {
-      if (currDate.getMonth() - offset < 0) {
+      if (parseInt(currMonth) - offset < 0) {
         currYear = (parseInt(currYear) - 1).toString();
+        currMonth="11";
         offset = 0;
       }
       if (
         Object.keys(certCount).includes(currYear) &&
         Object.keys(certCount[currYear]).includes(
-          (currDate.getMonth() - offset).toString()
+          (currMonth - offset).toString()
         )
       ) {
         course_1_Arr.push(
-          certCount[currYear][(currDate.getMonth() - offset).toString()][
+          certCount[currYear][(currMonth - offset).toString()][
             "basic"
           ]
-            ? certCount[currYear][(currDate.getMonth() - offset).toString()][
+            ? certCount[currYear][(currMonth - offset).toString()][
                 "basic"
               ]
             : 0
         );
         course_2_Arr.push(
-          certCount[currYear][(currDate.getMonth() - offset).toString()][
+          certCount[currYear][(currMonth - offset).toString()][
             "advanced"
           ]
-            ? certCount[currYear][(currDate.getMonth() - offset).toString()][
+            ? certCount[currYear][(currMonth - offset).toString()][
                 "advanced"
               ]
             : 0
         );
         course_3_Arr.push(
-          certCount[currYear][(currDate.getMonth() - offset).toString()][
+          certCount[currYear][(currMonth - offset).toString()][
             "professional"
           ]
-            ? certCount[currYear][(currDate.getMonth() - offset).toString()][
+            ? certCount[currYear][(currMonth - offset).toString()][
                 "professional"
               ]
             : 0
         );
         labels.push(
-          months[(currDate.getMonth() - offset).toString()] +
+          months[(currMonth - offset).toString()] +
             "'" +
             currYear.slice(2)
         );
@@ -161,7 +163,7 @@ class CertificateBar extends Component {
         course_2_Arr.push(0);
         course_3_Arr.push(0);
         labels.push(
-          months[(currDate.getMonth() - offset).toString()] +
+          months[(currMonth - offset).toString()] +
             "'" +
             currYear.slice(2)
         );
