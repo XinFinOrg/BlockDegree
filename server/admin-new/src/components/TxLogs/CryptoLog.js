@@ -215,7 +215,8 @@ class PaymentLog extends Component {
         referralCode: log.referralCode
       });
     });
-    document.getElementById("currDataCount").innerHTML = retData.length;
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 

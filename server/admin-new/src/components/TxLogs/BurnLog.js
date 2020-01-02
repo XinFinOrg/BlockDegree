@@ -159,7 +159,8 @@ class BurnLogs extends Component {
         creationDate: new Date(parseFloat(log.creationDate)).toString()
       });
     });
-    document.getElementById("currDataCount").innerHTML = retData.length;
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 

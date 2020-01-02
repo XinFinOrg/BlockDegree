@@ -193,7 +193,8 @@ class PromoCodes extends Component {
     });
     console.log("FILTERED DATA::");
     console.log(retData);
-    document.getElementById("currDataCount").innerHTML = retData.length;
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 

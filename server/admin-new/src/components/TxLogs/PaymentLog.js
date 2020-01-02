@@ -120,7 +120,8 @@ class PaymentLog extends Component {
         timestamp: new Date(log.timestamp).toString()
       });
     });
-    document.getElementById("currDataCount").innerHTML = retData.length;
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 
