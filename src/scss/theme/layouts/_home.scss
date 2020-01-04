@@ -131,13 +131,13 @@
       width: 100%!important;
       height: 100%;
       /*@include linear-gradient(60deg, rgba(#fff, 80%), rgba(#fff, 0.3));*/
-	  @include linear-gradient(60deg, rgba(#00265e, 0.2));
-      @include media-breakpoint-up(md) {
-        width: 80%;
-      }
-      @include media-breakpoint-up(xl){
-        @include linear-gradient(80deg, rgba(#fff, 80%), rgba(#fff, 0));
-      }
+	  // @include linear-gradient(60deg, rgba(#00265e, 0.2));
+    //   @include media-breakpoint-up(md) {
+    //     width: 80%;
+    //   }
+      // @include media-breakpoint-up(xl){
+      //   @include linear-gradient(80deg, rgba(#fff, 80%), rgba(#fff, 0));
+      // }
     }
 }
 
