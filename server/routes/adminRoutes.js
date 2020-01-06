@@ -8,6 +8,9 @@ const adminServices = require("../services/adminServices");
 const postSocial = require("../services/postSocials");
 const cacheSync = require("../services/cacheSync");
 const User = require("../models/user");
+const multer = require("multer");
+let storage = multer.memoryStorage()
+let upload = multer({ storage: storage })
 
 module.exports = app => {
   app.get("/admin", requireLogin, requireAdmin, (req, res) => {
@@ -145,5 +148,6 @@ module.exports = app => {
     app.get("/api/getCryptoLogs",requireLogin, requireAdmin,adminServices.getCryptoLogs);
     app.get("/api/forcePendingBurn",requireLogin, requireAdmin,adminServices.forcePendingBurn);
     app.post("/api/scheduleEventByTime",postSocial.scheduleEventByTime);
+    app.post("/api/addPostTemplate",postSocial.addPostTemplate);
   }
 };

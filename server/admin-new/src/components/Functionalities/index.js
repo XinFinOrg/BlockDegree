@@ -11,7 +11,7 @@ class Functionalities extends React.Component {
   render() {
     // prettier-ignore
     return (
-      <div className="content" style={{overflowX:"hidden"}}>
+      <div className="content" style={{overflowX:"hidden",  overflowY: "scroll"}}>
         <Route path={`${this.props.match.url}/promocodes`} component={Promocode} />
         <Route path={`${this.props.match.url}/referral-codes`} component={ReferralCode} />
         <Route path={`${this.props.match.url}/wallet-config`} component={WalletConfig} />

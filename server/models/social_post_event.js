@@ -16,12 +16,13 @@ const socialPostEventSchema = mongoose.Schema({
     telegram: Boolean
   },
   posts: {
-    facebook: [{ postId: String }],
-    twitter: [{ postId: String }],
-    linkedin: [{ postId: String }],
-    telegram: [{ postId: String }]
+    facebook: [{ postId: String, timestamp: String }],
+    twitter: [{ postId: String, timestamp: String }],
+    linkedin: [{ postId: String, timestamp: String }],
+    telegram: [{ postId: String, timestamp: String }]
   },
   recurring: Boolean, // optional
+  recurringRule: {},
   /* 
   
     Event-Based Triggers
@@ -30,12 +31,14 @@ const socialPostEventSchema = mongoose.Schema({
     2. scope for the condition
 
   */
+  variableTrigger: Boolean,
   conditionVar: String,
   conditionScope: String,
   conditionOperator: String,
   conditionValue: Number,
   conditionScopeStart: String,
   conditionScopeStop: String,
+  postTemplateId: String, 
   /*
 
   Next Scheduled Post Timestamp

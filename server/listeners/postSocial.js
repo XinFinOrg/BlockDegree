@@ -10,6 +10,9 @@ const Event = require("../models/social_post_event");
 const SocialConfig = require("../models/social_post_config");
 const SocialPost = require("../models/social_post");
 const schedule = require("node-schedule");
+const getEventNextInvocation = require("../services/postSocials")
+  .getEventNextInvocation;
+
 let exec = require("child_process").exec;
 
 const em = new EventEmitter();
@@ -36,9 +39,6 @@ async function postSocial(eventId) {
       postTwitErr = false,
       postLinkErr = false,
       postFaceErr = false;
-    let linkedInPostId = "",
-      twitterPostId = "",
-      facebookPostId = "";
     if (currEvent === null) {
       console.error(
         `event with id:${eventId} not found, quiting the function postSocial.postSocial`
@@ -53,6 +53,7 @@ async function postSocial(eventId) {
       eventFilePath,
       eventStatus
     );
+    // !This will probably never be reached, need to refactor to throw on error by keeping the execution stack in check.
     if (postedTwitter) {
       try {
         twitterPostId = await postTwitter(eventFilePath, eventStatus, eventId);
@@ -105,8 +106,26 @@ async function postSocial(eventId) {
     } else {
       // no error at all
       console.log("[*] no errors");
-      currEvent.save();
     }
+    currEvent.status = "completed";
+    if (currEvent.recurring && !currEvent.variableTrigger) {
+      console.log("[*] event is recurring");
+      //  update the next post innvocation time, next post innvocation status, next post innvocation filepath
+      //  -> nextPostScheduleTS
+      //  -> nextPostStatus
+      //  -> nextPostPath
+      const currJob = getEventNextInvocation(currEvent.id);
+      console.log(
+        `next job innvocation for event with id: ${currEvent.id}, name: ${currEvent.eventName}: `,
+        currObj.refVar.nextInvocation()._date.toDate()
+      );
+    } else if (currEvent.variableTrigger) {
+      console.log(
+        "[*] event has variable trigger : ",
+        currEvent.variableTrigger
+      );
+    }
+    currEvent.save();
   } catch (e) {
     console.error("exception at postSocial.postSocial");
     console.error(e);
@@ -114,6 +133,12 @@ async function postSocial(eventId) {
   }
 }
 
+/**
+ *
+ * @param {*} fp
+ * @param {*} postStatus
+ * @param {*} eventId
+ */
 async function postLinkedin(fp, postStatus, eventId) {
   // register an upload : will get upload URL
   let authToken = socialPostConfig.linkedin.accessToken;
@@ -209,7 +234,10 @@ async function postLinkedin(fp, postStatus, eventId) {
           console.error("event not found");
           return;
         }
-        currEvent.posts.linkedin.push({ postId: resp.data.id });
+        currEvent.posts.linkedin.push({
+          postId: resp.data.id,
+          timestamp: new Date().getTime()
+        });
         await currEvent.save();
       } catch (e) {
         console.error("Exception while making axios request: ", e);
@@ -221,6 +249,12 @@ async function postLinkedin(fp, postStatus, eventId) {
   );
 }
 
+/**
+ *
+ * @param {*} fp
+ * @param {*} postStatus
+ * @param {*} eventId
+ */
 async function postTwitter(fp, postStatus, eventId) {
   var config = getTwitterConfig(
     process.env.TWITTER_CLIENT_ID,
@@ -261,7 +295,10 @@ async function postTwitter(fp, postStatus, eventId) {
                 console.error("event not found");
                 return;
               }
-              currEvent.posts.twitter.push({ postId: data.id });
+              currEvent.posts.twitter.push({
+                postId: data.id,
+                timestamp: new Date().getTime()
+              });
               await currEvent.save();
             } catch (catch_e) {
               console.log("catch expression: ", catch_e);
@@ -281,65 +318,66 @@ async function postTwitter(fp, postStatus, eventId) {
   });
 }
 
+/**
+ * @todo 1. The Facebook token generation is broken, need to make it short-lived & renew at even intervals
+ * @param {string} fp absolute filepath to the event at tmp-event
+ * @param {string} postStatus status ( msg ) to be attached to the post-image
+ * @param {string} eventId ID of the event in the DB
+ */
+// !Facebook Page_Access_Token Flow is broken, please fix it.
 async function postFacebook(fp, postStatus, eventId) {
-  try {
-    console.log("called postFacebook");
-    const uploadFile = fs.createReadStream(fp);
-    /*
+  console.log("called postFacebook");
+  const uploadFile = fs.createReadStream(fp);
+  /*
       1. make get to https://graph.facebook.com/${page_id}?fields=access_token&access_token=${user_access_token}
       2. will return {access_token:"",id:""}
     */
-    const res = await axios.get(
-      `https://graph.facebook.com/${socialPostConfig.facebook.pageId}?fields=access_token&access_token=${socialPostConfig.facebook.accessToken}`
-    );
-    let newForm = new FormData();
-    newForm.append("file", uploadFile);
-    axios
-      .post(
-        `https://graph.facebook.com/${socialPostConfig.facebook.pageId}/photos`,
-        newForm,
-        {
-          headers: newForm.getHeaders(),
-          mimeType: "multipart/form-data",
-          contentType: false,
-          processData: false,
-          params: {
-            access_token: res.data.access_token,
-            message: postStatus
-          }
+  const res = await axios.get(
+    `https://graph.facebook.com/${socialPostConfig.facebook.pageId}?fields=access_token&access_token=${socialPostConfig.facebook.accessToken}`
+  );
+  // console.log(res);
+  let newForm = new FormData();
+  newForm.append("file", uploadFile);
+  axios
+    .post(
+      `https://graph.facebook.com/${socialPostConfig.facebook.pageId}/photos`,
+      newForm,
+      {
+        headers: newForm.getHeaders(),
+        mimeType: "multipart/form-data",
+        contentType: false,
+        processData: false,
+        params: {
+          access_token: res.data.access_token,
+          message: postStatus
         }
-      )
-      .then(async res => {
-        if (res.status == 200) {
-          console.log("successfully posted image on facebook");
-          const currEvent = await Event.findOne({ id: eventId });
-          if (currEvent === null) {
-            console.error("event not found");
-            return;
-          }
-          currEvent.posts.facebook.push({ postId: res.data.id });
-          await currEvent.save();
+      }
+    )
+    .then(async res => {
+      if (res.status == 200) {
+        console.log("successfully posted image on facebook");
+        const currEvent = await Event.findOne({ id: eventId });
+        if (currEvent === null) {
+          console.error("event not found");
+          return;
         }
-      })
-      .catch(e => {
-        console.log(
-          "error while making the API call to graph.facebook.com : ",
-          e
-        );
-      });
-  } catch (e) {
-    console.log(`exception at postSocial.postFacebook: `);
-    console.log(e);
-    return;
-  }
+        currEvent.posts.facebook.push({
+          postId: res.data.id,
+          timestamp: new Date().getTime()
+        });
+        await currEvent.save();
+      }
+    });
 }
 
+// !Needs to be implemented
 async function postTelegram(fp, postStatus) {
   console.log("called postTelegram.");
 }
 
 em.on("postSocial", postSocial);
 exports.em = em;
+
 /*
 
 	Miscellaneous Functions

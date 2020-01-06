@@ -341,4 +341,43 @@ body {
 .file-reset-btn {
   float: right;
   cursor: pointer;
+  margin-top: 1%;
 }
+
+.add-btn {
+  color: white;
+  padding: 1%;
+  border-radius: 50%;
+  background-color: #54e0c7;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+
+.recur-weekly div {
+  max-height: 100px;
+}
+
+.react-datepicker-wrapper {
+  width: 100px !important;
+
+  div {
+    height: 100%;
+  }
+}
+
+.inline-timepicker {
+  padding-top: 5px;
+  margin-left: 10px;
+}
+
+.pad-20 {
+  padding: 20px;
+}
+
+.sselect-type {
+  vertical-align: top;
+}
+

@@ -1,15 +1,72 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Alert from "sweetalert-react";
-import { SingleDatePicker } from "react-dates";
+import { SingleDatePicker } from "react-dates"; //not to be used
+import DatePicker from "react-datepicker";
 import TimePicker from "rc-time-picker";
 import moment from "moment";
 import FormData from "form-data";
+
+import "react-datepicker/dist/react-datepicker.css";
+
+import "react-dropdown/style.css";
+
+import Select from "react-select";
 
 import { store } from "react-notifications-component";
 // code, email, integer, float, address, text
 import validate from "../validate";
 import "rc-time-picker/assets/index.css";
+
+const options = [
+  { value: "annually", label: "Annually" },
+  { value: "monthly", label: "Monthly" },
+  { value: "weekly", label: "Weekly" }
+];
+
+const monthlyDay = [
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
+  { value: 3, label: "3" },
+  { value: 4, label: "4" },
+  { value: 5, label: "5" },
+  { value: 6, label: "6" },
+  { value: 7, label: "7" },
+  { value: 8, label: "8" },
+  { value: 9, label: "9" },
+  { value: 10, label: "10" },
+  { value: 11, label: "11" },
+  { value: 12, label: "12" },
+  { value: 13, label: "13" },
+  { value: 14, label: "14" },
+  { value: 15, label: "15" },
+  { value: 16, label: "16" },
+  { value: 17, label: "17" },
+  { value: 18, label: "18" },
+  { value: 19, label: "19" },
+  { value: 20, label: "20" },
+  { value: 21, label: "21" },
+  { value: 22, label: "22" },
+  { value: 23, label: "23" },
+  { value: 24, label: "24" },
+  { value: 25, label: "25" },
+  { value: 26, label: "26" },
+  { value: 27, label: "27" },
+  { value: 28, label: "28" },
+  { value: 29, label: "29" },
+  { value: 30, label: "30" },
+  { value: 31, label: "31" }
+];
+
+const weeklyDay = [
+  { value: "monday", label: "Monday" },
+  { value: "tuesday", label: "Tuesday" },
+  { value: "wednesday", label: "Wednesday" },
+  { value: "thursday", label: "Thursday" },
+  { value: "friday", label: "Friday" },
+  { value: "saturday", label: "Saturday" },
+  { value: "sunday", label: "Sunday" }
+];
 
 class GenerateEventTS extends Component {
   constructor(props) {
@@ -24,7 +81,15 @@ class GenerateEventTS extends Component {
       useCustomFile: "false",
       inputFile: "",
       postStatus: "",
-      postAll: false
+      postAll: false,
+      isRecurring: "false",
+      recurrCyclePeriod: null,
+      recurrEventDateAnnual: new Date(),
+      recurrEventTimeAnnual: moment(),
+      recurrCycleMonthly: null,
+      recurrCycleWeekly: null,
+      recurrEventTimeWeekly: moment(),
+      recurrEventTimeMonthly: moment()
     };
 
     this.handlePostFacebookChange = this.handlePostFacebookChange.bind(this);
@@ -40,12 +105,174 @@ class GenerateEventTS extends Component {
     this.handleEventNameChange = this.handleEventNameChange.bind(this); // customFileInputChange
     this.customFileInputChange = this.customFileInputChange.bind(this); // handleFileReset
     this.handleFileReset = this.handleFileReset.bind(this);
-    this.handlePostStatusChange = this.handlePostStatusChange.bind(this);
+    this.handlePostStatusChange = this.handlePostStatusChange.bind(this); // handleRecurrToggle
+    this.handleRecurrToggle = this.handleRecurrToggle.bind(this);
+    this.handleRecurrCycleChange = this.handleRecurrCycleChange.bind(this);
+    this.renderRecurringInput = this.renderRecurringInput.bind(this);
+    this.handleRecurrCycleDateChange = this.handleRecurrCycleDateChange.bind(
+      this
+    );
+    this.handleRecurrCycleDayChange = this.handleRecurrCycleDayChange.bind(
+      this
+    );
     this.fileInput = React.createRef();
   }
 
+  renderRecurringInput() {
+    if (this.state.recurrCyclePeriod === null) {
+      return "";
+    }
+    switch (this.state.recurrCyclePeriod.value) {
+      case "annually": {
+        return (
+          <div className="form-group">
+            <label className="control-label col-md-4">Recurring Annually</label>
+            {/* <div className="col-md-4"></div> */}
+
+            <div className="col-md-8 pad-20">
+              <div className="row">
+                <div className="col-md-1"></div>
+                <div className="col-md-11">
+                  <DatePicker
+                    popperPlacement="top-start"
+                    selected={this.state.recurrEventDateAnnual}
+                    onChange={recurrEventDateAnnual =>
+                      this.setState({ recurrEventDateAnnual })
+                    }
+                    minDate={new Date()}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-1"></div>
+                <div className="col-md-11">
+                  <TimePicker
+                    showSecond={false}
+                    defaultValue={moment()}
+                    value={this.state.recurrEventTimeAnnual}
+                    className="xxx"
+                    onChange={recurrEventTimeAnnual => {
+                      this.setState({ recurrEventTimeAnnual });
+                    }}
+                    format={"h:mm a"}
+                    use12Hours
+                    inputReadOnly
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+      case "monthly": {
+        return (
+          <div className="form-group recur-weekly">
+            <label className="control-label col-md-4 ">Recurring Monthly</label>
+            {/* <div className="col-md-4"></div> */}
+            <div className="col-md-8 pad-20">
+              <div className="row">
+                <div className="col-md-1"></div>
+                <div className="col-md-11 select-up">
+                  <Select
+                    value={this.state.recurrCycleMonthly}
+                    onChange={this.handleRecurrCycleDateChange}
+                    options={monthlyDay}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-1"></div>
+                <div className="col-md-11">
+                  <TimePicker
+                    showSecond={false}
+                    defaultValue={moment()}
+                    value={this.state.recurrEventTimeMonthly}
+                    className="xxx"
+                    onChange={recurrEventTimeMonthly => {
+                      this.setState({ recurrEventTimeMonthly });
+                    }}
+                    format={"h:mm a"}
+                    use12Hours
+                    inputReadOnly
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+      case "weekly": {
+        return (
+          <div className="form-group recur-weekly">
+            <label className="control-label col-md-4">Recurring Weekly</label>
+            {/* <div className="col-md-4"></div> */}
+            <div className="col-md-8 pad-20">
+              <div className="row">
+                <div className="col-md-1"></div>
+                <div className="col-md-11">
+                  <Select
+                    value={this.state.recurrCycleWeekly}
+                    onChange={this.handleRecurrCycleDayChange}
+                    options={weeklyDay}
+                  />
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-1"></div>
+                <div className="col-md-11">
+                  <TimePicker
+                    showSecond={false}
+                    defaultValue={moment()}
+                    value={this.state.recurrEventTimeWeekly}
+                    className="xxx"
+                    onChange={recurrEventTimeWeekly => {
+                      this.setState({ recurrEventTimeWeekly });
+                    }}
+                    format={"h:mm a"}
+                    use12Hours
+                    inputReadOnly
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+      default: {
+        return;
+      }
+    }
+  }
+
+  handleRecurrToggle(event) {
+    console.log("called handleRecurrToggle -> ", this.state.isRecurring);
+    this.setState({ isRecurring: event.target.value });
+    document
+      .getElementById("gen-evnt-btn-ts")
+      .scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  handleRecurrCycleChange(option) {
+    console.log("RecurrCycleChange called; option:", option);
+    this.setState({ recurrCyclePeriod: option });
+    document
+      .getElementById("gen-evnt-btn-ts")
+      .scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  handleRecurrCycleDateChange(option) {
+    console.log("RecurrCycleDateChange called; option:", option);
+    this.setState({ recurrCycleMonthly: option });
+  }
+
+  handleRecurrCycleDayChange(option) {
+    console.log("RecurrCycleDayChange called; option:", option);
+    this.setState({ recurrCycleWeekly: option });
+  }
+
   handleFileReset() {
-    this.setState({ inputFile: null });
+    this.setState({ inputFile: "" });
     document.getElementById("customFileInput").value = "";
   }
 
@@ -122,7 +349,7 @@ class GenerateEventTS extends Component {
 
   // type, title, message
   handleSubmit() {
-    const eventNameValid = validate("code", this.state.eventName);
+    const eventNameValid = validate("text", this.state.eventName);
     const eventPurposeValid = validate("text", this.state.eventPurpose);
     const postStatus = validate("text", this.state.postStatus);
 
@@ -178,6 +405,73 @@ class GenerateEventTS extends Component {
       );
     }
 
+    if (this.state.isRecurring === "true") {
+      // isRecurring, check if appropriate inputs are provided
+      switch (this.state.recurrCyclePeriod.value) {
+        case "annually": {
+          if (this.state.recurrEventDateAnnual === null) {
+            console.error("annually recurring date is null");
+            return showNotification(
+              "danger",
+              "Generate Event By Timestamp",
+              "Please select annually recurring date!"
+            );
+          }
+          if (this.state.recurrEventTimeAnnual === null) {
+            console.error("annually recurring time is null");
+            return showNotification(
+              "danger",
+              "Generate Event By Timestamp",
+              "Please select annually recurring time!"
+            );
+          }
+          break;
+        }
+        case "monthly": {
+          if (this.state.recurrCycleMonthly === null) {
+            console.error("monthly recurring cycle period is null");
+            return showNotification(
+              "danger",
+              "Generate Event By Timestamp",
+              "Please select monthly recurring date!"
+            );
+          }
+          if (this.state.recurrEventTimeMonthly === null) {
+            console.error("monthly recurring cycle period time is null");
+            return showNotification(
+              "danger",
+              "Generate Event By Timestamp",
+              "Please select monthly recurring time!"
+            );
+          }
+          break;
+        }
+        case "weekly": {
+          // recurrCycleWeekly
+          if (this.state.recurrCycleMonthly === null) {
+            console.error("weekly recurring cycle period is null");
+            return showNotification(
+              "danger",
+              "Generate Event By Timestamp",
+              "Please select recurring cycle period day!"
+            );
+          }
+          if (this.state.recurrEventTimeWeekly === null) {
+            console.error("weekly recurring cycle period time is null");
+            return showNotification(
+              "danger",
+              "Generate Event By Timestamp",
+              "Please select recurring cycle period time!"
+            );
+          }
+          break;
+        }
+        default: {
+          return;
+        }
+      }
+    }
+
     const form = new FormData();
     form.append("eventName", this.state.eventName);
     form.append("eventPurpose", this.state.eventPurpose);
@@ -186,6 +480,24 @@ class GenerateEventTS extends Component {
     form.append("socialPlatform", JSON.stringify(socialPlatform));
     form.append("useCustom", this.state.useCustomFile);
     form.append("postStatus", this.state.postStatus);
+    form.append("isRecurring", this.state.isRecurring);
+    form.append(
+      "recurrCyclePeriod",
+      JSON.stringify(this.state.recurrCyclePeriod)
+    );
+    form.append("recurrEventDateAnnual", this.state.recurrEventDateAnnual);
+    form.append("recurrEventTimeAnnual", this.state.recurrEventTimeAnnual);
+    form.append(
+      "recurrCycleMonthly",
+      JSON.stringify(this.state.recurrCycleMonthly)
+    );
+    form.append("recurrEventTimeMonthly", this.state.recurrEventTimeMonthly);
+    form.append(
+      "recurrCycleWeekly",
+      JSON.stringify(this.state.recurrCycleWeekly)
+    );
+    form.append("recurrEventTimeWeekly", this.state.recurrEventTimeWeekly);
+
     // return;
     // data is valid
     axios
@@ -211,12 +523,16 @@ class GenerateEventTS extends Component {
             postTime: "",
             useCustomFile: "false",
             inputFile: "",
-            postStatus:"",
+            postStatus: "",
             postOnFacebook: false,
             postOnLinkedin: false,
             postOnTwitter: false,
             postOnTelegram: false,
-            postAll: false
+            postAll: false,
+            recurrEventDateAnnual: moment(),
+            recurrEventTimeAnnual: moment(),
+            recurrCycleMonthly: null,
+            recurrCycleWeekly: null
           });
           this.handleFileReset();
         } else {
@@ -373,58 +689,119 @@ class GenerateEventTS extends Component {
             </div>
 
             <div className="form-group">
-              <label className="control-label col-md-4">Use Custom File</label>
+              <label className="control-label col-md-4">
+                Is Event Recurring
+              </label>
               <div className="col-md-8 radio-group  ">
-                <div className="radio-input-group">
+                <div className="radio-input-group no-delay">
                   <input
-                    id="customYes"
-                    name="restrictCode"
+                    id="recurrYes"
+                    name="recurrEvent"
                     value="true"
-                    checked={this.state.useCustomFile === "true"}
-                    onChange={this.handleUseCustomChange}
+                    checked={this.state.isRecurring === "true"}
+                    onChange={this.handleRecurrToggle}
                     type="radio"
                   />
-                  <label for="customYes">Yes</label>
+                  <label for="recurrYes">Yes</label>
                 </div>
-                <div className="radio-input-group">
+                <div className="radio-input-group no-delay">
                   <input
-                    id="customNo"
-                    name="restrictCode"
+                    id="recurrNo"
+                    name="recurrEvent"
                     type="radio"
                     value="false"
-                    checked={this.state.useCustomFile === "false"}
-                    onChange={this.handleUseCustomChange}
+                    checked={this.state.isRecurring === "false"}
+                    onChange={this.handleRecurrToggle}
                   />
-                  <label for="customNo">No</label>
+                  <label for="recurrNo">No</label>
                 </div>
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="control-label col-md-4">Custom File</label>
-              <div className="control-label col-md-4">
-                <input
-                  type="file"
-                  name="customFile"
-                  onChange={this.customFileInputChange}
-                  disabled
-                  id="customFileInput"
-                  style={{ width: "260px" }}
-                />
+            {this.state.isRecurring === "true" ? (
+              <div className="form-group">
+                <label className="control-label col-md-4">
+                  Recurring Cycle
+                </label>
+                <div className="col-md-4"></div>
+                <div className="col-md-8">
+                  <div className="col-md-10">
+                    <Select
+                      value={this.state.recurrCyclePeriod}
+                      onChange={this.handleRecurrCycleChange}
+                      options={options}
+                    />
+                  </div>
+                  <div className="col-md-2">
+                    {/* <i class="fa fa-plus add-btn" aria-hidden="true"></i> */}
+                  </div>
+                </div>
               </div>
-              <div
-                style={{ paddingTop: "15px" }}
-                onClick={this.handleFileReset}
-                className="file-reset-btn"
-              >
-                <i class="fa fa-times" aria-hidden="true"></i>
+            ) : (
+              <div>
+                <div className="form-group">
+                  <label className="control-label col-md-4">
+                    Use Custom File
+                  </label>
+                  <div className="col-md-8 radio-group  ">
+                    <div className="radio-input-group">
+                      <input
+                        id="customYes"
+                        name="restrictCode"
+                        value="true"
+                        checked={this.state.useCustomFile === "true"}
+                        onChange={this.handleUseCustomChange}
+                        type="radio"
+                      />
+                      <label for="customYes">Yes</label>
+                    </div>
+                    <div className="radio-input-group">
+                      <input
+                        id="customNo"
+                        name="restrictCode"
+                        type="radio"
+                        value="false"
+                        checked={this.state.useCustomFile === "false"}
+                        onChange={this.handleUseCustomChange}
+                      />
+                      <label for="customNo">No</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="control-label col-md-4">Custom File</label>
+                  <div className="control-label col-md-4">
+                    <input
+                      type="file"
+                      name="customFile"
+                      onChange={this.customFileInputChange}
+                      disabled
+                      id="customFileInput"
+                      style={{ width: "240px" }}
+                    />
+                  </div>
+                  <div
+                    style={{ paddingTop: "3%" }}
+                    onClick={this.handleFileReset}
+                    className="file-reset-btn"
+                  >
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+
+            {this.state.isRecurring === "true" &&
+            this.state.recurrCyclePeriod !== null
+              ? this.renderRecurringInput()
+              : ""}
 
             <div className="form-group">
               <label className="col-md-3"></label>
               <div className="col-md-9">
                 <button
+                  id="gen-evnt-btn-ts"
                   type="button"
                   onClick={this.handleSubmit}
                   className="right btn btn-fill btn-info"
