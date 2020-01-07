@@ -17,11 +17,19 @@ import { store } from "react-notifications-component";
 // code, email, integer, float, address, text
 import validate from "../validate";
 import "rc-time-picker/assets/index.css";
+import { templates } from "handlebars";
 
 const options = [
   { value: "annually", label: "Annually" },
   { value: "monthly", label: "Monthly" },
   { value: "weekly", label: "Weekly" }
+];
+
+const eventTypesOpts = [
+  { label: "Certificates", value: "certificates" },
+  { label: "Registrations", value: "registrations" },
+  { label: "Course Visits", value: "visits" },
+  { label: "One Time", value: "one-time" }
 ];
 
 const monthlyDay = [
@@ -74,6 +82,7 @@ class GenerateEventTS extends Component {
     this.state = {
       eventName: "",
       eventPurpose: "",
+      eventType: null,
       eventDate: moment(),
       eventTime: moment(),
       postDate: "",
@@ -84,14 +93,17 @@ class GenerateEventTS extends Component {
       postAll: false,
       isRecurring: "false",
       recurrCyclePeriod: null,
-      recurrEventDateAnnual: new Date(),
+      recurrEventDateAnnual: moment(),
       recurrEventTimeAnnual: moment(),
       recurrCycleMonthly: null,
       recurrCycleWeekly: null,
       recurrEventTimeWeekly: moment(),
-      recurrEventTimeMonthly: moment()
+      recurrEventTimeMonthly: moment(),
+      templatesOpts: [],
+      selectedTemplate: null
     };
 
+    this.handleEventTypeChange = this.handleEventTypeChange.bind(this);
     this.handlePostFacebookChange = this.handlePostFacebookChange.bind(this);
     this.handlePostTwitterChange = this.handlePostTwitterChange.bind(this);
     this.handlePostTelegramChange = this.handlePostTelegramChange.bind(this);
@@ -115,7 +127,34 @@ class GenerateEventTS extends Component {
     this.handleRecurrCycleDayChange = this.handleRecurrCycleDayChange.bind(
       this
     );
+    this.generateTemplateOpts = this.generateTemplateOpts.bind(this);
+    this.handlePostTemplateChange = this.handlePostTemplateChange.bind(this);
     this.fileInput = React.createRef();
+  }
+
+  handlePostTemplateChange(option) {
+    this.setState({ selectedTemplate: option });
+  }
+
+  generateTemplateOpts() {
+    console.log("postTemplates: ", this.props.postTemplates);
+    if (this.props.postTemplates !== undefined) {
+      const opts = [];
+      this.props.postTemplates.forEach(template => {
+        opts.push({
+          label: template.templateName,
+          value: template.id
+        });
+      });
+      console.log("opts: ", opts);
+      return opts;
+    }
+    return [];
+  }
+
+  handleEventTypeChange(option) {
+    console.log("called handle event type change");
+    this.setState({ eventType: option });
   }
 
   renderRecurringInput() {
@@ -248,9 +287,10 @@ class GenerateEventTS extends Component {
   handleRecurrToggle(event) {
     console.log("called handleRecurrToggle -> ", this.state.isRecurring);
     this.setState({ isRecurring: event.target.value });
-    document
-      .getElementById("gen-evnt-btn-ts")
-      .scrollIntoView({ behavior: "smooth", block: "start" });
+    if (event.target.value === "true")
+      document
+        .getElementById("gen-evnt-btn-ts")
+        .scrollIntoView({ behavior: "smooth", block: "end" });
   }
 
   handleRecurrCycleChange(option) {
@@ -258,7 +298,7 @@ class GenerateEventTS extends Component {
     this.setState({ recurrCyclePeriod: option });
     document
       .getElementById("gen-evnt-btn-ts")
-      .scrollIntoView({ behavior: "smooth", block: "start" });
+      .scrollIntoView({ behavior: "smooth", block: "end" });
   }
 
   handleRecurrCycleDateChange(option) {
@@ -273,7 +313,15 @@ class GenerateEventTS extends Component {
 
   handleFileReset() {
     this.setState({ inputFile: "" });
-    document.getElementById("customFileInput").value = "";
+    console.log(
+      "called handleFileReset: ",
+      document.getElementById("customFileInput")
+    );
+    if (
+      document.getElementById("customFileInput") !== undefined &&
+      document.getElementById("customFileInput") !== null
+    )
+      document.getElementById("customFileInput").value = "";
   }
 
   handlePostStatusChange(event) {
@@ -293,12 +341,6 @@ class GenerateEventTS extends Component {
   }
 
   handleUseCustomChange(event) {
-    const customFileInput = document.getElementById("customFileInput");
-    if (event.target.value === "true") {
-      customFileInput.disabled = false;
-    } else if (event.target.value === "false") {
-      customFileInput.disabled = true;
-    }
     this.setState({ useCustomFile: event.target.value });
   }
 
@@ -375,6 +417,35 @@ class GenerateEventTS extends Component {
       );
     }
 
+    if (this.state.eventType === null) {
+      showNotification(
+        "danger",
+        "Generate Event By Timestamp",
+        "Please select the event type"
+      );
+      return;
+    }
+
+    if (this.state.useCustomFile === "true") {
+      if (this.state.inputFile === "") {
+        showNotification(
+          "danger",
+          "Generate Event By Timestamp",
+          "Please upload post template"
+        );
+        return;
+      }
+    } else if (this.state.useCustomFile === "false") {
+      if (this.state.selectedTemplate === null) {
+        showNotification(
+          "danger",
+          "Generate Event By Timestamp",
+          "Please select post template"
+        );
+        return;
+      }
+    }
+
     const eventDayDate = this.state.eventDate.toDate();
     const eventDayTime = this.state.eventTime.toDate();
 
@@ -448,7 +519,7 @@ class GenerateEventTS extends Component {
         }
         case "weekly": {
           // recurrCycleWeekly
-          if (this.state.recurrCycleMonthly === null) {
+          if (this.state.recurrCycleWeekly === null) {
             console.error("weekly recurring cycle period is null");
             return showNotification(
               "danger",
@@ -476,9 +547,16 @@ class GenerateEventTS extends Component {
     form.append("eventName", this.state.eventName);
     form.append("eventPurpose", this.state.eventPurpose);
     form.append("eventTS", eventDayDate);
+    form.append("eventType", this.state.eventType.value);
     form.append("file", this.state.inputFile);
     form.append("socialPlatform", JSON.stringify(socialPlatform));
     form.append("useCustom", this.state.useCustomFile);
+    form.append(
+      "templateId",
+      this.state.selectedTemplate === null
+        ? ""
+        : this.state.selectedTemplate.value
+    );
     form.append("postStatus", this.state.postStatus);
     form.append("isRecurring", this.state.isRecurring);
     form.append(
@@ -511,7 +589,12 @@ class GenerateEventTS extends Component {
         if (resp.data.status === true) {
           // all good
           // show success image, on confirm empty state.
-          document.getElementById("customFileInput").disabled = true;
+          if (
+            document.getElementById("customFileInput") !== undefined &&
+            document.getElementById("customFileInput") !== null
+          ) {
+            document.getElementById("customFileInput").disabled = true;
+          }
           this.setState({
             showSuccess: true,
             successMsg: "New Event Generated!",
@@ -532,7 +615,10 @@ class GenerateEventTS extends Component {
             recurrEventDateAnnual: moment(),
             recurrEventTimeAnnual: moment(),
             recurrCycleMonthly: null,
-            recurrCycleWeekly: null
+            recurrCycleWeekly: null,
+            selectedTemplate: null,
+            eventType: null,
+            recurrCyclePeriod: null
           });
           this.handleFileReset();
         } else {
@@ -657,33 +743,12 @@ class GenerateEventTS extends Component {
             </div>
 
             <div className="form-group">
-              <label className="control-label col-md-4">Scheduled Date</label>
-              <div className="control-label col-md-4">
-                <SingleDatePicker
-                  date={this.state.eventDate}
-                  onDateChange={eventDate => this.setState({ eventDate })}
-                  focused={this.state.focused}
-                  onFocusChange={({ focused }) => this.setState({ focused })}
-                  minDate={moment()}
-                  numberOfMonths={1}
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="control-label col-md-4">Scheduled Time</label>
-              <div className="control-label col-md-4">
-                <TimePicker
-                  showSecond={false}
-                  defaultValue={moment()}
-                  value={this.state.eventTime}
-                  className="xxx"
-                  onChange={eventTime => {
-                    this.setState({ eventTime });
-                  }}
-                  format={"h:mm a"}
-                  use12Hours
-                  inputReadOnly
+              <label className="col-md-4 control-label">Event Type</label>
+              <div className="col-md-8">
+                <Select
+                  value={this.state.eventType}
+                  onChange={this.handleEventTypeChange}
+                  options={eventTypesOpts}
                 />
               </div>
             </div>
@@ -719,26 +784,77 @@ class GenerateEventTS extends Component {
             </div>
 
             {this.state.isRecurring === "true" ? (
-              <div className="form-group">
-                <label className="control-label col-md-4">
-                  Recurring Cycle
-                </label>
-                <div className="col-md-4"></div>
-                <div className="col-md-8">
-                  <div className="col-md-10">
-                    <Select
-                      value={this.state.recurrCyclePeriod}
-                      onChange={this.handleRecurrCycleChange}
-                      options={options}
-                    />
+              <div>
+                <div className="form-group">
+                  <label className="control-label col-md-4">
+                    Recurring Cycle
+                  </label>
+                  <div className="col-md-4"></div>
+                  <div className="col-md-8">
+                    <div className="col-md-10">
+                      <Select
+                        value={this.state.recurrCyclePeriod}
+                        onChange={this.handleRecurrCycleChange}
+                        options={options}
+                      />
+                    </div>
+                    <div className="col-md-2">
+                      {/* <i class="fa fa-plus add-btn" aria-hidden="true"></i> */}
+                    </div>
                   </div>
-                  <div className="col-md-2">
-                    {/* <i class="fa fa-plus add-btn" aria-hidden="true"></i> */}
+                </div>
+                <div className="form-group">
+                  <label className="control-label col-md-4">
+                    Select Template
+                  </label>
+                  <div className="col-md-8">
+                    <Select
+                      value={this.state.selectedTemplate}
+                      onChange={this.handlePostTemplateChange}
+                      options={this.generateTemplateOpts()}
+                    />
                   </div>
                 </div>
               </div>
             ) : (
               <div>
+                <div className="form-group">
+                  <label className="control-label col-md-4">
+                    Scheduled Date
+                  </label>
+                  <div className="control-label col-md-4">
+                    <SingleDatePicker
+                      date={this.state.eventDate}
+                      onDateChange={eventDate => this.setState({ eventDate })}
+                      focused={this.state.focused}
+                      onFocusChange={({ focused }) =>
+                        this.setState({ focused })
+                      }
+                      minDate={moment()}
+                      numberOfMonths={1}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="control-label col-md-4">
+                    Scheduled Time
+                  </label>
+                  <div className="control-label col-md-4">
+                    <TimePicker
+                      showSecond={false}
+                      defaultValue={moment()}
+                      value={this.state.eventTime}
+                      className="xxx"
+                      onChange={eventTime => {
+                        this.setState({ eventTime });
+                      }}
+                      format={"h:mm a"}
+                      use12Hours
+                      inputReadOnly
+                    />
+                  </div>
+                </div>
                 <div className="form-group">
                   <label className="control-label col-md-4">
                     Use Custom File
@@ -769,26 +885,42 @@ class GenerateEventTS extends Component {
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label className="control-label col-md-4">Custom File</label>
-                  <div className="control-label col-md-4">
-                    <input
-                      type="file"
-                      name="customFile"
-                      onChange={this.customFileInputChange}
-                      disabled
-                      id="customFileInput"
-                      style={{ width: "240px" }}
-                    />
+                {this.state.useCustomFile === "true" ? (
+                  <div className="form-group">
+                    <label className="control-label col-md-4">
+                      Custom File
+                    </label>
+                    <div className="control-label col-md-4">
+                      <input
+                        type="file"
+                        name="customFile"
+                        onChange={this.customFileInputChange}
+                        id="customFileInput"
+                        style={{ width: "240px" }}
+                      />
+                    </div>
+                    <div
+                      style={{ paddingTop: "3%" }}
+                      onClick={this.handleFileReset}
+                      className="file-reset-btn"
+                    >
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
                   </div>
-                  <div
-                    style={{ paddingTop: "3%" }}
-                    onClick={this.handleFileReset}
-                    className="file-reset-btn"
-                  >
-                    <i class="fa fa-times" aria-hidden="true"></i>
+                ) : (
+                  <div className="form-group">
+                    <label className="control-label col-md-4">
+                      Select Template
+                    </label>
+                    <div className="col-md-8">
+                      <Select
+                        value={this.state.selectedTemplate}
+                        onChange={this.handlePostTemplateChange}
+                        options={this.generateTemplateOpts()}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
 
@@ -806,7 +938,7 @@ class GenerateEventTS extends Component {
                   onClick={this.handleSubmit}
                   className="right btn btn-fill btn-info"
                 >
-                  Generate New Event
+                  Generate Event
                 </button>
               </div>
             </div>

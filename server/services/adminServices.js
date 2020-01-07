@@ -6,6 +6,7 @@ const PromoCodeLog = require("../models/promocode_log.js");
 const PaymentLog = require("../models/payment_logs");
 const CryptoLog = require("../models/payment_token");
 const BurnLog = require("../models/burn_logs");
+const SocialPostTemplates = require("../models/socialPostTemplates");
 const pendingEmitter = require("../listeners/pendingTx").em;
 
 exports.addCourse = async (req, res) => {
@@ -1068,6 +1069,17 @@ exports.getCryptoLogs = async (req, res) => {
   } catch (e) {
     console.log("exception while fetching the crypto logs: ", e);
     res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.getSocialPostTemplates = async (req, res) => {
+  console.log("called getSocialPostTemplates");
+  try {
+    const templates = await SocialPostTemplates.find({});
+    res.json({ status: true, templates: templates });
+  } catch (e) {
+    console.error("errot at adminServices.getSocialPostTemplates: ", e);
+    return res.status(500).json({ status: false, error: "internal error" });
   }
 };
 

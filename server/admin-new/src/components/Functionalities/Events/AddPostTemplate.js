@@ -15,7 +15,8 @@ import validate from "../validate";
 const eventTypesOpts = [
   { label: "Certificates", value: "certificates" },
   { label: "Registrations", value: "registrations" },
-  { label: "Course Visits", value: "visits" }
+  { label: "Course Visits", value: "visits" },
+  { label: "One Time", value: "one-time" }
 ];
 
 class AddPostTemplate extends Component {
@@ -23,16 +24,34 @@ class AddPostTemplate extends Component {
     super(props);
     this.state = {
       eventType: null,
-      eventStatus: "",
+      templateStatus: "",
       inputFile: "",
-      inputFileName: ""
+      inputFileName: "",
+      templateName: "",
+      templatePurpose: ""
     };
 
+    this.handleTemplateNameChange = this.handleTemplateNameChange.bind(this);
+    this.handleTemplatePurposeChange = this.handleTemplatePurposeChange.bind(
+      this
+    );
     this.handleFileReset = this.handleFileReset.bind(this);
     this.templateFileInputChange = this.templateFileInputChange.bind(this);
-    this.handleEventStatusChange = this.handleEventStatusChange.bind(this);
+    this.handleTemplateStatusChange = this.handleTemplateStatusChange.bind(
+      this
+    );
     this.handleEventTypeChange = this.handleEventTypeChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleTemplateNameChange(event) {
+    console.log("called handleTemplateNameChange: ");
+    this.setState({ templateName: event.target.value });
+  }
+
+  handleTemplatePurposeChange(event) {
+    console.log("called handleTemplatePurposeChange");
+    this.setState({ templatePurpose: event.target.value });
   }
 
   handleFileReset() {
@@ -48,13 +67,13 @@ class AddPostTemplate extends Component {
     });
   }
 
-  handleEventStatusChange(event) {
-    console.log("called handle event status change");
-    this.setState({ eventStatus: event.target.value });
+  handleTemplateStatusChange(event) {
+    console.log("called handle Template Status change");
+    this.setState({ templateStatus: event.target.value });
   }
 
   handleSubmit() {
-    const eventStatusValid = validate("text", this.state.eventStatus);
+    const templateStatusValid = validate("text", this.state.templateStatus);
     if (this.state.eventType === null) {
       showNotification(
         "danger",
@@ -63,15 +82,15 @@ class AddPostTemplate extends Component {
       );
       return;
     }
-    if (!eventStatusValid) {
-      console.log("eventStatus is not valid");
+    if (!templateStatusValid) {
+      console.log("templateStatus is not valid");
       showNotification("danger", "Add Post Template", "Invalid post status");
       return;
     }
     if (this.state.inputFile === "") {
       showNotification("danger", "Add Post Template", "Please select a file");
       return;
-    }                                                                                                               
+    }
     // if (
     //   this.state.inputFileName.split(".")[
     //     this.state.inputFileName.split(".").length - 1
@@ -82,13 +101,15 @@ class AddPostTemplate extends Component {
     //     "Add Post Template",
     //     "Invalid template type, we only accept .ejs"
     //   );
-    //   return;                                                                                                                                                                                                                                                                                                                              
+    //   return;
     // }
     // all data ok!
     const form = new FormData();
     form.append("eventType", this.state.eventType.value);
-    form.append("eventStatus", this.state.eventStatus);
+    form.append("templateStatus", this.state.templateStatus);
     form.append("file", this.state.inputFile);
+    form.append("templateName", this.state.templateName);
+    form.append("templatePurpose", this.state.templatePurpose);
     axios
       .post("/api/addPostTemplate", form, {
         headers: {
@@ -102,8 +123,11 @@ class AddPostTemplate extends Component {
             showSuccess: true,
             successMsg: "New Template Added!",
             eventType: null,
-            eventStatus: "",
-            inputFile: ""
+            templateStatus: "",
+            inputFile: "",
+            inputFileName: "",
+            templateName: "",
+            templatePurpose: ""
           });
         } else {
           this.setState({
@@ -146,14 +170,38 @@ class AddPostTemplate extends Component {
             </div>
 
             <div className="form-group">
-              <label className="col-md-4 control-label">Event Status</label>
+              <label className="col-md-4 control-label">Template Name</label>
+              <div className="col-md-8">
+                <input
+                  type="text"
+                  value={this.state.templateName}
+                  placeholder="Template Name"
+                  onChange={this.handleTemplateNameChange}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-md-4 control-label">Template Purpose</label>
+              <div className="col-md-8">
+                <input
+                  type="text"
+                  value={this.state.templatePurpose}
+                  placeholder="Template Purpose"
+                  onChange={this.handleTemplatePurposeChange}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-md-4 control-label">Template Status</label>
               <div className="col-md-8">
                 <textarea
                   width="100%"
                   type="text"
-                  value={this.state.eventStatus}
-                  placeholder="event status ( __count__ is the placeholder )"
-                  onChange={this.handleEventStatusChange}
+                  value={this.state.templateStatus}
+                  placeholder="Template Status ( __count__ is the placeholder )"
+                  onChange={this.handleTemplateStatusChange}
                 />
               </div>
             </div>
@@ -182,7 +230,6 @@ class AddPostTemplate extends Component {
               <label className="col-md-3"></label>
               <div className="col-md-9">
                 <button
-                  id="gen-evnt-btn-var"
                   type="button"
                   onClick={this.handleSubmit}
                   className="right btn btn-fill btn-info"

@@ -5,6 +5,8 @@ const socialPostEventSchema = mongoose.Schema({
   autoPost: Boolean,
   eventName: String,
   eventPurpose: String,
+  eventType: { type: String, required: true }, // type of event, value can be one of registrations, certificates, visits or one-time
+  templateId: String,
   /**
    * Status the current status of the events
    */
@@ -38,7 +40,7 @@ const socialPostEventSchema = mongoose.Schema({
   conditionValue: Number,
   conditionScopeStart: String,
   conditionScopeStop: String,
-  postTemplateId: String, 
+  postTemplateId: String,
   /*
 
   Next Scheduled Post Timestamp

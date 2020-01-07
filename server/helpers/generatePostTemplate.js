@@ -4,18 +4,19 @@ const fs = require("fs");
 const _ = require("lodash");
 const uuid = require("uuid/v4");
 const path = require("path");
-const SocialPostTemplate = require("../models/postTemplate");
+const SocialPostTemplate = require("../models/socialPostTemplates");
 
+const eventFolder = path.join(__dirname, "../tmp-event");
 const postTemplatePath = path.join(__dirname, "../post-templates");
 if (!fs.existsSync(postTemplatePath)) {
   console.log("[*] template folder does not exists, creating...");
-  fs.mkdir(postTemplatePath);
+  fs.mkdirSync(postTemplatePath);
 }
 
 /**
  * GeneratePostImage dynamixally genrates the post-image based on type & count
  * @param {string} type the type of the event - certifcates, accounts, visits, one-time event
- * @param {Number} count the count of the variable
+ * @param {string} count the count of the variable
  * @param {string} [templateId] the ID of the template to choose; will override the one selected by default based on type
  * @returns {string} returns the path of the social post image
  */
@@ -31,7 +32,7 @@ exports.generatePostImage = async (type, count, templateId) => {
       console.error("[*] template not found, returning");
       return new Error(`Template with ID ${templateId} doers not exists`);
     }
-    templatePath = currTemplate.templatePath;
+    templatePath = currTemplate.templateFilePath;
   }
   if (templatePath === "") {
     // templateId provided, select any one.
@@ -40,37 +41,37 @@ exports.generatePostImage = async (type, count, templateId) => {
       console.error(`[*]  no compatible templates found, quiting...`);
       return new Error("No complatible template found.");
     }
-    templatePath = rndTemplate.templatePath;
+    templatePath = rndTemplate.templateFilePath;
   }
   console.log(`Using template at the path ${templatePath}`);
-  ejs.renderFile(templatePath, { count: count }, async (err, fileData) => {
+  try {
+    const fileData = await ejs.renderFile(templatePath, { count: count });
     let browser;
-    const imagePath = postTemplatePath + uuid();
-    try {
-      browser = await puppeteer.launch({
-        args: ["--no-sandbox", "--disable-setuid-sandbox"]
-      });
-      const page = await browser.newPage();
-      await page.setViewport({
-        width: 800,
-        height: 600,
-        deviceScaleFactor: 1
-      });
-      await page.setContent(fileData);
-      await page.screenshot({ path: imagePath });
-      console.log(
-        `[*] successfully ceated the new post from template: ${templateId}`
-      );
-      return imagePath;
-    } catch (browserException) {
-      console.error(
-        `[*] browserException at generatePostTemplate: `,
-        browserException
-      );
-      return new Error(JSON.stringify(browserException));
-    }
-  });
+    const imagePath = eventFolder + "/" + uuid() + ".png";
+    browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    });
+    const page = await browser.newPage();
+    await page.setViewport({
+      width: 800,
+      height: 600,
+      deviceScaleFactor: 1
+    });
+    await page.setContent(fileData);
+    await page.screenshot({ path: imagePath });
+    console.log(
+      `[*] successfully ceated the new post from template: ${templateId}`
+    );
+    return imagePath;
+  } catch (browserException) {
+    console.error(
+      `[*] browserException at generatePostTemplate: `,
+      browserException
+    );
+    return new Error(JSON.stringify(browserException));
+  }
 };
+
 /**
  * GeneratePostStatus will generate the status for post based on the tmeplate.
  * @param {string} type event type {"certificates", "accounts","visits"}
@@ -103,4 +104,7 @@ exports.generatePostStatus = async (type, count, templateId) => {
     templateStatus = rndTemplate.templateStatus;
   }
   console.log(`selected template status: ${templateStatus}`);
+  templateStatus = templateStatus.replace("__count__", count);
+  console.log("updated template status: ", templateStatus);
+  return templateStatus;
 };

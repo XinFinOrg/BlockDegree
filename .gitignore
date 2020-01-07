@@ -20,6 +20,7 @@ server/config/*
 server/keystore
 server/routes/testRoutes.js
 server/tmp-event/*
+server/postTemplates/*
 
 server/helpers/*.ejs
 server/helpers/*.sol

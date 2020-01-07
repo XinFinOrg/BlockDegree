@@ -9,11 +9,12 @@ const _ = require("lodash");
 const uuid = require("uuid/v4");
 const fs = require("fs");
 const path = require("path");
+const generatePostTemplate = require("../helpers/generatePostTemplate");
 
 const tmpFilePath = path.join(__dirname, "../tmp-event");
 const postTemplatesPath = path.join(__dirname, "../postTemplates");
 
-if (!fs.existsSync(postTemplatesPath)){
+if (!fs.existsSync(postTemplatesPath)) {
   fs.mkdirSync(postTemplatesPath);
 }
 
@@ -24,8 +25,8 @@ if (!fs.existsSync(postTemplatesPath)){
  *  refVar: Job
  * }
  */
-const activeJobs = [];
-activeJobs.push = function() {
+global.ActiveJobs = [];
+ActiveJobs.push = function() {
   Array.prototype.push.apply(this, arguments);
   testActiveJobRefVar();
 };
@@ -69,16 +70,18 @@ const weekdayToInt = {
  * @param {object} req - http request object
  * @param {object} res - http response object
  */
-exports.scheduleEventByTime = (req, res) => {
+exports.scheduleEventByTime = async (req, res) => {
   try {
-    // ! can't parse null, need to bring validations on-top
+    // ! can't parse null, need to perform validations first.
     console.log("called schedule event by time");
     const eventTS = req.body.eventTS;
     const eventPurpose = req.body.eventPurpose;
     const eventName = req.body.eventName;
+    const eventType = req.body.eventType;
     const socialPlatform = JSON.parse(req.body.socialPlatform);
     const useCustom = req.body.useCustom;
-    const postStatus = req.body.postStatus;
+    let postStatus = req.body.postStatus;
+    const templateId = req.body.templateId;
     const isRecurring = req.body.isRecurring;
     const recurrCyclePeriod = JSON.parse(req.body.recurrCyclePeriod);
     const recurrEventDateAnnual = req.body.recurrEventDateAnnual;
@@ -106,46 +109,45 @@ exports.scheduleEventByTime = (req, res) => {
       recurrEventTimeWeekly
     );
 
-    if (useCustom === "true" && _.isEmpty(req.files)) {
-      console.log("bad request no files provided");
-      return res.status(400).json({ error: "no file provided" });
-    }
-
-    let file = {};
     if (useCustom === "true") {
-      console.log("using custom file");
-      file = req.files.file;
-    } else {
-      // generate the file dynamically from the template.
-      /*
-
-        1. Generate the post from the html-template 
-        2. Save the template in tmp-event.
-        3. Generate the status from the text-template.
-        4. Schedule & save the event.
-
-      */
+      if (_.isEmpty(req.files)) {
+        console.log("bad request no files provided");
+        return res
+          .status(400)
+          .json({ error: "no file provided", status: false });
+      }
+      if (_.isEmpty(postStatus)) {
+        console.log(
+          "bad request at postSocials.scheduleEventByTime, missing post status"
+        );
+        return res
+          .status(400)
+          .json({ error: "bad request, empty post status", status: false });
+      }
     }
 
-    const dateObj = new Date(eventTS);
-    if (!_.isDate(dateObj)) {
-      console.log("bad request, invalid date ts");
-      return res
-        .status(400)
-        .json({ status: false, error: "bad request, invalid date" });
-    }
     if (
       // _.isNull(file) ||
-      _.isEmpty(eventTS) ||
+      // _.isEmpty(eventTS) ||
+      _.isEmpty(eventType) ||
       _.isEmpty(eventPurpose) ||
       _.isNull(socialPlatform) ||
-      _.isEmpty(postStatus) ||
       _.isEmpty(isRecurring)
     ) {
       console.log("bad requests, paramters missing");
       return res
         .status(400)
         .json({ error: "bad request, missing parameters", status: false });
+    }
+
+    if (
+      !["registrations", "certificates", "visits", "one-time"].includes(
+        eventType
+      )
+    ) {
+      return res
+        .status(400)
+        .json({ status: false, error: "bad request, invalid event type" });
     }
 
     if (
@@ -161,105 +163,151 @@ exports.scheduleEventByTime = (req, res) => {
       });
     }
 
+    let file = {};
+    const event = newEvent();
+    let postImagePath = "";
+
+    if (useCustom === "true") {
+      console.log("using custom file");
+      file = req.files.file;
+      const currentFilePath = tmpFilePath + "/" + event.id + "__" + file.name;
+      fs.writeFileSync(currentFilePath, file.data);
+      postImagePath = currentFilePath;
+    } else {
+      // generate the file dynamically from the template.
+      /*
+
+        1. Generate the post from the html-template 
+        2. Save the template in tmp-event.
+        3. Generate the status from the text-template.
+
+      */
+      console.log(
+        "Typeof templateId: ",
+        typeof templateId,
+        "Template ID: ",
+        templateId
+      );
+      const currTemplate = await SocialPostTemplate.findOne({ id: templateId });
+      if (currTemplate === null) {
+        console.error(`template with id ${templateId} does not exists.`);
+        return res
+          .status(400)
+          .json({ status: false, error: "bad request, template not found" });
+      }
+      const templateImagePath = await generatePostTemplate.generatePostImage(
+        eventType,
+        "test",
+        templateId
+      );
+      const templateStatus = await generatePostTemplate.generatePostStatus(
+        eventType,
+        "test",
+        templateId
+      );
+
+      console.log(
+        `Generated templateImagepath: ${templateImagePath} \n templateStatus: ${templateStatus}`
+      );
+      postStatus = templateStatus;
+      postImagePath = templateImagePath;
+    }
+
     // common validations complete.
     if (isRecurring === "false") {
       console.log("[*] inside isRecurring false");
-      const event = newEvent();
-      const currentFilePath = tmpFilePath + "/" + event.id + "__" + file.name;
-      fs.writeFile(currentFilePath, file.data, err => {
-        if (err != null) {
-          console.error("error while saving the new file");
-          return res
-            .status(400)
-            .json({ error: "internal error", status: false });
-        }
 
-        event.eventName = eventName;
-        event.eventPurpose = eventPurpose;
-        event.nextPostPath = currentFilePath;
-        event.nextPostScheduleTS = "" + dateObj.getTime();
-        event.nextPostStatus = postStatus;
-        event.platform = socialPlatform;
-        const currEvntId = event.id;
+      if (_.isEmpty(eventTS)) {
+        console.error(
+          "error at postSocials.scheduleEventByTime, missing event TS"
+        );
+        return res
+          .status(400)
+          .json({ status: false, error: "bad request, missing eventTS" });
+      }
 
-        event.save();
-        schedule.scheduleJob(dateObj, () => {
-          console.log(`[*] Event fired ------- ${currEvntId}`);
-          emitPostSocial.emit("postSocial", currEvntId);
-          removeEvent(currEvntId);
-        });
-        return res.json({ status: true, message: "new event generated" });
+      const dateObj = new Date(eventTS);
+      if (!_.isDate(dateObj)) {
+        console.log("bad request, invalid date ts");
+        return res
+          .status(400)
+          .json({ status: false, error: "bad request, invalid date" });
+      }
+
+      event.eventName = eventName;
+      event.eventPurpose = eventPurpose;
+      event.eventType = eventType;
+      event.nextPostPath = postImagePath;
+      event.nextPostScheduleTS = "" + dateObj.getTime();
+      event.nextPostStatus = postStatus;
+      event.platform = socialPlatform;
+      event.templateId = templateId;
+      const currEvntId = event.id;
+
+      await event.save();
+      schedule.scheduleJob(dateObj, () => {
+        console.log(`[*] Event fired ------- ${currEvntId}`);
+        emitPostSocial.emit("postSocial", currEvntId);
+        removeEvent(currEvntId);
       });
+      return res.json({ status: true, message: "new event generated" });
     } else if (isRecurring === "true") {
       console.log("[*] inside isRecurring true");
-      const event = newEvent();
-      const currentFilePath = tmpFilePath + "/" + event.id + "__" + file.name;
-      fs.writeFile(currentFilePath, file.data, err => {
-        if (err != null) {
-          console.error("error while saving the new file");
-          return res
-            .status(400)
-            .json({ error: "internal error", status: false });
-        }
 
-        event.eventName = eventName;
-        event.eventPurpose = eventPurpose;
-        event.nextPostPath = currentFilePath;
-        event.nextPostScheduleTS = "" + dateObj.getTime();
-        event.nextPostStatus = postStatus;
-        event.platform = socialPlatform;
-        event.recurring = isRecurring === "true";
-        const recurringRule = generateRecurringPattern(
-          recurrCyclePeriod,
-          new Date(recurrEventDateAnnual),
-          new Date(recurrEventTimeAnnual),
-          recurrCycleMonthly === null
-            ? null
-            : parseInt(recurrCycleMonthly.value),
-          new Date(recurrEventTimeMonthly),
-          recurrCycleWeekly === null ? null : recurrCycleWeekly.value,
-          new Date(recurrEventTimeWeekly)
+      event.eventName = eventName;
+      event.eventPurpose = eventPurpose;
+      event.nextPostPath = postImagePath;
+
+      event.nextPostStatus = postStatus;
+      event.platform = socialPlatform;
+      event.recurring = isRecurring === "true";
+      event.eventType = eventType;
+      event.templateId = templateId;
+      const recurringRule = generateRecurringPattern(
+        recurrCyclePeriod,
+        new Date(recurrEventDateAnnual),
+        new Date(recurrEventTimeAnnual),
+        recurrCycleMonthly === null ? null : parseInt(recurrCycleMonthly.value),
+        new Date(recurrEventTimeMonthly),
+        recurrCycleWeekly === null ? null : recurrCycleWeekly.value,
+        new Date(recurrEventTimeWeekly)
+      );
+      console.log(
+        "RecurringRule: ",
+        recurringRule,
+        "Typeof RecurringRule: ",
+        typeof recurringRule
+      );
+
+      if (recurringRule === null) {
+        console.error(
+          "exception occured at generateRecurringRule: ",
+          recurringRule
         );
-        console.log(
-          "RecurringRule: ",
-          recurringRule,
-          "Typeof RecurringRule: ",
-          typeof recurringRule
-        );
+        return res.status(500).json({ status: false, error: "internal error" });
+      }
 
-        if (recurringRule === null) {
-          console.error(
-            "exception occured at generateRecurringRule: ",
-            recurringRule
-          );
-          return res
-            .status(500)
-            .json({ status: false, error: "internal error" });
-        }
-
-        event.recurringRule = recurringRule;
-        const currEvntId = event.id;
-
-        let currJob = schedule.scheduleJob(recurringRule, () => {
-          console.log(`[*] Event fired ------- ${currEvntId}`);
-          emitPostSocial.emit("postSocial", currEvntId);
-          removeEvent(currEvntId);
-        });
-
-        if (currJob === null) {
-          console.error(
-            `some error occured while scheduling the job at postSocials.scheduleEventByTime; job returned was null `
-          );
-          return res
-            .status(500)
-            .json({ status: false, error: "internal error" });
-        }
-
-        activeJobs.push({ eventId: currEvntId, refVar: currJob });
-
-        console.log("Current Job Next Innvocation: ", currJob.nextInvocation());
-        // event.save();
+      event.recurringRule = recurringRule;
+      await event.save();
+      const currEvntId = event.id;
+      console.log("saved the new event");
+      let currJob = schedule.scheduleJob(recurringRule, () => {
+        console.log(`[*] Event fired ------- ${currEvntId}`);
+        emitPostSocial.emit("postSocial", currEvntId);
+        // Don't remove recurring events
+        // removeEvent(currEvntId);
       });
+
+      if (currJob === null) {
+        console.error(
+          `some error occured while scheduling the job at postSocials.scheduleEventByTime; job returned was null `
+        );
+        return res.status(500).json({ status: false, error: "internal error" });
+      }
+
+      ActiveJobs.push({ eventId: currEvntId, refVar: currJob });
+      console.log("Current Job Next Innvocation: ", currJob.nextInvocation());
+      return res.json({ status: true, message: "event generated" });
     }
   } catch (e) {
     console.error("exception at postSocials.scheduleEventByTime: ");
@@ -283,6 +331,8 @@ exports.cancelScheduledPost = (req, res) => {
 /**
  * ForceResync function to be called on every restart as node-schedule
  * is an in-application internal process manager.
+ * @param req express request object
+ * @param res express response object
  */
 exports.forceReSync = async (req, res) => {
   console.log("called forceReSync");
@@ -310,13 +360,13 @@ exports.forceReSync = async (req, res) => {
               console.log(`[*] Event fired --------- ${evnt.id}`);
             }
           );
-          activeJobs.push({ eventId: evnt.id, refVar: refVar });
+          ActiveJobs.push({ eventId: evnt.id, refVar: refVar });
         } else if (evnt.recurring === true) {
           console.log("[*] scheduling recurring event");
           const refVar = schedule.scheduleJob(evnt.recurringRule, () => {
             console.log(`[*] Event fired -------- ${evnt.id}`);
           });
-          activeJobs.push({ eventId: evnt.id, refVar: refVar });
+          ActiveJobs.push({ eventId: evnt.id, refVar: refVar });
         } else if (evnt.variableTrigger === true) {
           console.log(`[*] scheduleing variable recurring event`);
           // !implement the logic to process the recurring event based on the variable trigger
@@ -361,8 +411,8 @@ exports.getEventNextInvocation = eventId => {
   console.log(
     `called getEventNextInvocation at postSocial for event: ${eventId}`
   );
-  for (let i = 0; i < activeJobs.length; i++) {
-    if (activeJobs[i].eventId === eventId) return activeJobs[i].currJob;
+  for (let i = 0; i < ActiveJobs.length; i++) {
+    if (ActiveJobs[i].eventId === eventId) return ActiveJobs[i].currJob;
   }
   return null;
 };
@@ -398,12 +448,16 @@ exports.addPostTemplate = (req, res) => {
   }
   const eventType = req.body.eventType;
   const templateFile = req.files.file;
-  const templateStatus = req.body.eventStatus;
+  const templateStatus = req.body.templateStatus;
+  const templateName = req.body.templateName;
+  const templatePurpose = req.body.templatePurpose;
 
   if (
     _.isEmpty(eventType) ||
     _.isNull(templateFile) ||
-    _.isEmpty(templateStatus)
+    _.isEmpty(templateStatus) ||
+    _.isEmpty(templateName) ||
+    _.isEmpty(templatePurpose)
   ) {
     console.error(
       "error at services.postSocials.addPostTemplate, bad request missing parameters"
@@ -416,12 +470,14 @@ exports.addPostTemplate = (req, res) => {
   // all data is valid
   try {
     const postTemplate = newPostTemplate();
+    postTemplate.templateName = templateName;
+    postTemplate.templatePurpose = templatePurpose;
     postTemplate.eventType = eventType;
     postTemplate.createdBy = req.user || "rudresh@xinfin.org";
     postTemplate.isActive = false;
     postTemplate.createdAt = Date.now();
     postTemplate.lastUsed = "";
-    postTemplate.templateStatus = "";
+    postTemplate.templateStatus = templateStatus;
     const eventFolder = path.join(postTemplatesPath, eventType);
     if (!fs.existsSync(eventFolder)) {
       console.log(`[*] folder at ${eventFolder} does not exists, creating...`);
@@ -430,7 +486,7 @@ exports.addPostTemplate = (req, res) => {
     const templateFilePath = eventFolder + "/" + postTemplate.id + ".ejs";
     fs.writeFileSync(templateFilePath, templateFile.data);
     console.log(`saved the file at the path ${templateFilePath}`);
-    postTemplate.templatePath = templateFilePath;
+    postTemplate.templateFilePath = templateFilePath;
     postTemplate.save();
     console.log(`saved the template`);
     res.json({ status: true, message: "added new template" });
@@ -566,15 +622,15 @@ function generateRecurringPattern(
 
 /**
  * ! FWD call to WebSocket
- * removes the event from the activeJobs array by its eventId
+ * removes the event from the ActiveJobs array by its eventId
  * @param {string} eventId
  * @returns {boolean} deleted
  */
 function removeEvent(eventId) {
   console.log(`called removeEvent ${eventId}`);
-  for (let x = 0; x < activeJobs.length; x++) {
-    if (activeJobs[x].eventId === eventId) {
-      delete activeJobs[x];
+  for (let x = 0; x < ActiveJobs.length; x++) {
+    if (ActiveJobs[x].eventId === eventId) {
+      delete ActiveJobs[x];
       return true;
     }
   }
@@ -586,8 +642,8 @@ function removeEvent(eventId) {
  */
 function testActiveJobRefVar() {
   console.log("pushed into active jobs");
-  console.log("currently active jobs: ", activeJobs.length);
-  activeJobs.forEach(currObj => {
+  console.log("currently active jobs: ", ActiveJobs.length);
+  ActiveJobs.forEach(currObj => {
     const nextInnvocation = currObj.refVar.nextInvocation()._date.toDate();
     console.log("Next Invocation at testActiveJobRefVar: ", nextInnvocation);
   });

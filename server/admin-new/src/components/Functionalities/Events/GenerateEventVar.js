@@ -30,6 +30,13 @@ const stateVarIntervalOpts = [
   { label: "500", value: 500 }
 ];
 
+const eventTypesOpts = [
+  { label: "Certificates", value: "certificates" },
+  { label: "Registrations", value: "registrations" },
+  { label: "Course Visits", value: "visits" },
+  { label: "One Time", value: "one-time" }
+];
+
 class GenerateEventVar extends Component {
   constructor(props) {
     super(props);
@@ -49,6 +56,7 @@ class GenerateEventVar extends Component {
       postNearestTime: moment()
     };
 
+    this.handleEventTypeChange = this.handleEventTypeChange.bind(this);
     this.handlePostFacebookChange = this.handlePostFacebookChange.bind(this);
     this.handlePostTwitterChange = this.handlePostTwitterChange.bind(this);
     this.handlePostTelegramChange = this.handlePostTelegramChange.bind(this);
@@ -96,6 +104,15 @@ class GenerateEventVar extends Component {
         "Generate Event By Timestamp",
         "Invalid Post Status"
       );
+    }
+
+    if (this.state.eventType === null) {
+      showNotification(
+        "danger",
+        "Generate Event By Timestamp",
+        "Please select the event type"
+      );
+      return;
     }
 
     if (this.state.stateVarName === null) {
@@ -181,7 +198,10 @@ class GenerateEventVar extends Component {
           );
           return;
         }
-        if (this.state.stateVarValue === null || isNaN(this.state.stateVarValue)) {
+        if (
+          this.state.stateVarValue === null ||
+          isNaN(this.state.stateVarValue)
+        ) {
           showNotification(
             "danger",
             "Generate Event By Var",
@@ -193,7 +213,11 @@ class GenerateEventVar extends Component {
     }
 
     // all data ok!
-    
+  }
+
+  handleEventTypeChange(option) {
+    console.log("called handle event type change");
+    this.setState({ eventType: option });
   }
 
   handleStateVarStartChange(event) {
@@ -219,9 +243,10 @@ class GenerateEventVar extends Component {
     } else if (event.target.value === "true") {
       this.setState({ stateVarValue: null, isRecurring: event.target.value });
     }
-    document
-      .getElementById("gen-evnt-btn-var")
-      .scrollIntoView({ behavior: "smooth", block: "start" });
+    if (event.target.value === "true")
+      document
+        .getElementById("gen-evnt-btn-var")
+        .scrollIntoView({ behavior: "smooth", block: "end" });
   }
 
   handleStateVarNameChange(option) {
@@ -404,6 +429,17 @@ class GenerateEventVar extends Component {
             </div>
 
             <div className="form-group">
+              <label className="col-md-4 control-label">Event Type</label>
+              <div className="col-md-8">
+                <Select
+                  value={this.state.eventType}
+                  onChange={this.handleEventTypeChange}
+                  options={eventTypesOpts}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
               <label className="control-label col-md-4">
                 State Variable Name
               </label>
@@ -581,7 +617,7 @@ class GenerateEventVar extends Component {
                   onClick={this.handleSubmit}
                   className="right btn btn-fill btn-info"
                 >
-                  Generate New Event
+                  Generate Event
                 </button>
               </div>
             </div>

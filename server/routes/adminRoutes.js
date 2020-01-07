@@ -149,5 +149,6 @@ module.exports = app => {
     app.get("/api/forcePendingBurn",requireLogin, requireAdmin,adminServices.forcePendingBurn);
     app.post("/api/scheduleEventByTime",postSocial.scheduleEventByTime);
     app.post("/api/addPostTemplate",postSocial.addPostTemplate);
+    app.get("/api/getSocialPostTemplates",adminServices.getSocialPostTemplates);
   }
 };

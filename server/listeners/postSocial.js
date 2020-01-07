@@ -10,12 +10,16 @@ const Event = require("../models/social_post_event");
 const SocialConfig = require("../models/social_post_config");
 const SocialPost = require("../models/social_post");
 const schedule = require("node-schedule");
-const getEventNextInvocation = require("../services/postSocials")
-  .getEventNextInvocation;
+// ! causes circular dependencies, need to make the ActiveJobs array GLOBAL
+// const getEventNextInvocation = require("../services/postSocials")
+//   .getEventNextInvocation;
+const generatePostTemplate = require("../helpers/generatePostTemplate");
 
 let exec = require("child_process").exec;
 
 const em = new EventEmitter();
+
+let postCount = 0;
 
 const filePath = path.join(__dirname, "../../Certificate.jpg");
 console.log("FilePath: ", filePath);
@@ -30,107 +34,136 @@ console.log("FilePath: ", filePath);
  * @param {string} eventId
  */
 async function postSocial(eventId) {
-  console.log("called function post social");
-  try {
-    const currEvent = await Event.findOne({ id: eventId });
-    const postedTwitter = currEvent.platform.twitter,
-      postedLinkedIn = currEvent.platform.linkedin,
-      postedFacebook = currEvent.platform.facebook,
-      postTwitErr = false,
-      postLinkErr = false,
-      postFaceErr = false;
-    if (currEvent === null) {
-      console.error(
-        `event with id:${eventId} not found, quiting the function postSocial.postSocial`
+  setImmediate(async () => {
+    console.log("called function post social");
+    try {
+      const currEvent = await Event.findOne({ id: eventId });
+      const postedTwitter = currEvent.platform.twitter,
+        postedLinkedIn = currEvent.platform.linkedin,
+        postedFacebook = currEvent.platform.facebook,
+        postTwitErr = false,
+        postLinkErr = false,
+        postFaceErr = false;
+      if (currEvent === null) {
+        console.error(
+          `event with id:${eventId} not found, quiting the function postSocial.postSocial`
+        );
+        return;
+      }
+      const eventFilePath = currEvent.nextPostPath;
+      const eventStatus = currEvent.nextPostStatus;
+  
+      console.log(
+        "Post Social EventFilePath: %s, EventStatus: %s\n",
+        eventFilePath,
+        eventStatus
       );
+      // !This will probably never be reached, need to refactor to throw on error by keeping the execution stack in check.
+      if (postedTwitter) {
+        try {
+          twitterPostId = await postTwitter(eventFilePath, eventStatus, eventId);
+        } catch (twitter_error) {
+          console.error(`error while posting the status on twitter`);
+          console.error(twitter_error);
+          postedTwitter = false;
+          postTwitErr = true;
+        }
+      }
+  
+      if (postedLinkedIn) {
+        try {
+          linkedInPostId = await postLinkedin(
+            eventFilePath,
+            eventStatus,
+            eventId
+          );
+        } catch (linkedin_error) {
+          console.error(`error while posting the status on linkedin`);
+          console.error(linkedin_error);
+          postedLinkedIn = false;
+          postLinkErr = true;
+        }
+      }
+  
+      if (postedFacebook) {
+        try {
+          facebookPostId = await postFacebook(
+            eventFilePath,
+            eventStatus,
+            eventId
+          );
+        } catch (facebook_error) {
+          console.error(`error while posting the status on facebook`);
+          console.error(facebook_error);
+          postedFacebook = false;
+          postFaceErr = true;
+        }
+      }
+  
+      if (postTwitErr || postLinkErr || postFaceErr) {
+        console.error(
+          "some occured while posting at listeners.postSocial.postSocial error in posting"
+        );
+        console.log(
+          `Twitter Error: ${postTwitErr} LinkedIn Error: ${postLinkErr} Facebook Error: ${postFaceErr}`
+        );
+        // notify admin
+      } else {
+        // no error at all
+        console.log("[*] no errors");
+      }
+      currEvent.status = "completed";
+      if (currEvent.recurring && !currEvent.variableTrigger) {
+        console.log("[*] event is recurring");
+        //  update the next post innvocation time, next post innvocation status, next post innvocation filepath
+        //  -> nextPostScheduleTS
+        //  -> nextPostStatus
+        //  -> nextPostPath
+        const currJob = findActiveJob(currEvent.id);
+        console.log("current Job from ActiveJobs : ", currJob);
+        console.log(
+          `next job innvocation for event with id: ${currEvent.id}, name: ${currEvent.eventName}: `,
+          currJob.refVar.nextInvocation()._date.toDate()
+        );
+        currEvent.nextPostScheduleTS = currJob.refVar
+          .nextInvocation()
+          ._date.toDate()
+          .getTime();
+        const templateImage = await generatePostTemplate.generatePostImage(
+          currEvent.eventType,
+          `next test ${++postCount}`,
+          currEvent.templateId
+        );
+        const templateStatus = await generatePostTemplate.generatePostStatus(
+          currEvent.eventType,
+          `next test ${++postCount}`,
+          currEvent.templateId
+        );
+        currEvent.nextPostPath = templateImage;
+        currEvent.nextPostStatus = templateStatus;
+  
+        console.log("updated the nextPostPath: ", templateImage);
+        console.log("updated the nextPostStatus: ", templateStatus);
+  
+        /*
+          1. Generate the post's image & save to the event document
+          2. Generate the post's status & save the filepath to the event document
+          3. Save the document
+        */
+      } else if (currEvent.variableTrigger) {
+        console.log(
+          "[*] event has variable trigger : ",
+          currEvent.variableTrigger
+        );
+      }
+      await currEvent.save();
+    } catch (e) {
+      console.error("exception at postSocial.postSocial");
+      console.error(e);
       return;
     }
-    const eventFilePath = currEvent.nextPostPath;
-    const eventStatus = currEvent.nextPostStatus;
-
-    console.log(
-      "Post Social EventFilePath: %s, EventStatus: %s\n",
-      eventFilePath,
-      eventStatus
-    );
-    // !This will probably never be reached, need to refactor to throw on error by keeping the execution stack in check.
-    if (postedTwitter) {
-      try {
-        twitterPostId = await postTwitter(eventFilePath, eventStatus, eventId);
-      } catch (twitter_error) {
-        console.error(`error while posting the status on twitter`);
-        console.error(twitter_error);
-        postedTwitter = false;
-        postTwitErr = true;
-      }
-    }
-
-    if (postedLinkedIn) {
-      try {
-        linkedInPostId = await postLinkedin(
-          eventFilePath,
-          eventStatus,
-          eventId
-        );
-      } catch (linkedin_error) {
-        console.error(`error while posting the status on linkedin`);
-        console.error(linkedin_error);
-        postedLinkedIn = false;
-        postLinkErr = true;
-      }
-    }
-
-    if (postedFacebook) {
-      try {
-        facebookPostId = await postFacebook(
-          eventFilePath,
-          eventStatus,
-          eventId
-        );
-      } catch (facebook_error) {
-        console.error(`error while posting the status on facebook`);
-        console.error(facebook_error);
-        postedFacebook = false;
-        postFaceErr = true;
-      }
-    }
-
-    if (postTwitErr || postLinkErr || postFaceErr) {
-      console.error(
-        "some occured while posting at listeners.postSocial.postSocial error in posting"
-      );
-      console.log(
-        `Twitter Error: ${postTwitErr} LinkedIn Error: ${postLinkErr} Facebook Error: ${postFaceErr}`
-      );
-      // notify admin
-    } else {
-      // no error at all
-      console.log("[*] no errors");
-    }
-    currEvent.status = "completed";
-    if (currEvent.recurring && !currEvent.variableTrigger) {
-      console.log("[*] event is recurring");
-      //  update the next post innvocation time, next post innvocation status, next post innvocation filepath
-      //  -> nextPostScheduleTS
-      //  -> nextPostStatus
-      //  -> nextPostPath
-      const currJob = getEventNextInvocation(currEvent.id);
-      console.log(
-        `next job innvocation for event with id: ${currEvent.id}, name: ${currEvent.eventName}: `,
-        currObj.refVar.nextInvocation()._date.toDate()
-      );
-    } else if (currEvent.variableTrigger) {
-      console.log(
-        "[*] event has variable trigger : ",
-        currEvent.variableTrigger
-      );
-    }
-    currEvent.save();
-  } catch (e) {
-    console.error("exception at postSocial.postSocial");
-    console.error(e);
-    return;
-  }
+  })
+  
 }
 
 /**
@@ -408,4 +441,13 @@ function getTwitterConfig(consumerKey, consumerSecret, token, tokenSecret) {
     access_token: token,
     access_token_secret: tokenSecret
   };
+}
+
+function findActiveJob(eventId) {
+  for (let i = 0; i < ActiveJobs.length; i++) {
+    if (ActiveJobs[i].eventId === eventId) {
+      return ActiveJobs[i];
+    }
+  }
+  return null;
 }
