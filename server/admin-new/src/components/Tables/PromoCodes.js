@@ -206,7 +206,17 @@ class PromoCodes extends Component {
             <div className="header">
               <div className="row">
                 <div className="col-md-6">
-                  <h4>Promocode Tables</h4>
+                  <h4>
+                    Promocode Tables{" "}
+                    <span
+                      onClick={() => {
+                        this.props.fetchAllPromoCodes();
+                      }}
+                      className="table-refresh-btn"
+                    >
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                  </h4>
                   <p>Table with all Promocodes</p>
                 </div>
                 <div className="col-md-6">
@@ -229,6 +239,14 @@ class PromoCodes extends Component {
                         />
                       </span>
                     </span>
+                    <br />
+                    <div className="table-updated right">
+                      <i className="fa fa-history"></i> Updated at{" "}
+                      <strong>
+                        {new Date().getHours() + ":" + new Date().getMinutes()}
+                      </strong>{" "}
+                      Hours
+                    </div>
                   </div>
                 </div>
               </div>

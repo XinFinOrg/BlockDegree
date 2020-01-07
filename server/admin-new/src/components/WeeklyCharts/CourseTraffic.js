@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
+import * as actions from "../../actions";
 import ReactChartist from "react-chartist";
 import ctPointLabels from "chartist-plugin-pointlabels";
 
@@ -20,14 +20,13 @@ class CourseTraffic extends Component {
   getChartData() {
     const visits = this.props.courseVisits.visits;
     console.log("Accounts Created : ", visits.length);
-    let today = new Date();
     let maxCnt = 0;
     let xData = {};
     let currDate = new Date();
     let retData = {
       data: {
         labels: [],
-        series: [[],[],[],[],[],[], []]
+        series: [[], [], [], [], [], [], []]
       },
       options: {
         lineSmooth: false,
@@ -52,9 +51,9 @@ class CourseTraffic extends Component {
     currDate.setMinutes(0);
     currDate.setSeconds(0);
     visits.forEach(visit => {
-        if (!visit.lastVisit){
-            return;
-        }
+      if (!visit.lastVisit) {
+        return;
+      }
       let currlastVisit = parseFloat(visit.lastVisit);
       if (parseFloat(currlastVisit) > currDate.getTime() - 0 * dayToMS) {
         // falls in valid ts
@@ -155,10 +154,10 @@ class CourseTraffic extends Component {
 
     for (let i = 0; i <= 7; i++) {
       if (xDataKeys.includes(i + "")) {
-        if (i != 0) retData.data.labels.push(dayToLabel[xData[i + ""].day]);
+        if (i !== 0) retData.data.labels.push(dayToLabel[xData[i + ""].day]);
         retData.data.series[6].push(xData[i + ""].count);
       } else {
-        if (i != 0)
+        if (i !== 0)
           retData.data.labels.push(
             dayToLabel[new Date(currDate.getTime() - i * dayToMS).getDay()]
           );
@@ -177,7 +176,9 @@ class CourseTraffic extends Component {
       <div className="card">
         <div className="header">
           <h4>Course / Curriculum Visits</h4>
-          <p className="category">Unique visit count for Course Curriculum & Course Content</p>
+          <p className="category">
+            Unique visit count for Course Curriculum & Course Content
+          </p>
         </div>
         <div className="content">
           {this.props.courseVisits ? (
@@ -196,6 +197,22 @@ class CourseTraffic extends Component {
             </div>
           )}
         </div>
+        <hr />
+        <div className="weekly-updated">
+          <i className="fa fa-history"></i> Updated at{" "}
+          <strong>
+            {new Date().getHours() + ":" + new Date().getMinutes()}
+          </strong>{" "}
+          Hours
+          <div
+            onClick={() => {
+              this.props.fetchCourseVisits();
+            }}
+            className="right chart-refresh-btn"
+          >
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+          </div>
+        </div>
       </div>
     );
   }
@@ -205,4 +222,4 @@ function mapsStateToProps({ courseVisits }) {
   return { courseVisits };
 }
 
-export default connect(mapsStateToProps)(CourseTraffic);
+export default connect(mapsStateToProps, actions)(CourseTraffic);

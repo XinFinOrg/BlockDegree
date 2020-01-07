@@ -228,8 +228,18 @@ class PaymentLog extends Component {
             <div className="header">
               <div className="row">
                 <div className="col-md-6">
-                  <h4>Payment Logs</h4>
-                  <p>Table with all payment logs</p>
+                  <h4>
+                    Crypto Payment Logs
+                    <span
+                      onClick={() => {
+                        this.props.fetchAllCryptoLog();
+                      }}
+                      className="table-refresh-btn"
+                    >
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                  </h4>
+                  <p>Table with all crypto payment logs</p>
                 </div>
                 <div className="col-md-6">
                   <div
@@ -251,6 +261,14 @@ class PaymentLog extends Component {
                         />
                       </span>
                     </span>
+                    <br />
+                    <div className="table-updated right">
+                      <i className="fa fa-history"></i> Updated at{" "}
+                      <strong>
+                        {new Date().getHours() + ":" + new Date().getMinutes()}
+                      </strong>{" "}
+                      Hours
+                    </div>
                   </div>
                 </div>
               </div>

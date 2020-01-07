@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 // import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
+import * as actions from "../../actions";
 
 import paginationFactory from "react-bootstrap-table2-paginator";
 
@@ -155,7 +156,17 @@ class Users extends Component {
             <div className="header">
               <div className="row">
                 <div className="col-md-6">
-                  <h4>Users Table</h4>
+                  <h4>
+                    Users Table{" "}
+                    <span
+                      onClick={() => {
+                        this.props.fetchAllUser();
+                      }}
+                      className="table-refresh-btn"
+                    >
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                  </h4>
                   <p>Table with all Users</p>
                 </div>
                 <div className="col-md-6">
@@ -178,6 +189,14 @@ class Users extends Component {
                         />
                       </span>
                     </span>
+                    <br />
+                    <div className="table-updated right">
+                      <i className="fa fa-history"></i> Updated at{" "}
+                      <strong>
+                        {new Date().getHours() + ":" + new Date().getMinutes()}
+                      </strong>{" "}
+                      Hours
+                    </div>
                   </div>
                 </div>
               </div>
@@ -260,4 +279,4 @@ function evaluateDateExpression(a, b, comparator) {
   }
 }
 
-export default connect(mapsStateToProps)(Users);
+export default connect(mapsStateToProps, actions)(Users);

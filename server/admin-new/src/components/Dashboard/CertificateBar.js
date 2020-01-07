@@ -1,29 +1,7 @@
 import React, { Component } from "react";
 import Chart from "react-chartist";
 import { connect } from "react-redux";
-
-
-let data = {
-  labels: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-  ],
-  series: [
-    [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-    [412, 243, 280, 580, 453, 353, 300, 364, 368, 410, 636, 695],
-    [412, 243, 280, 580, 453, 353, 300, 364, 368, 410, 636, 695]
-  ]
-};
+import * as actions from "../../actions";
 
 const months = {
   "0": "Jan",
@@ -115,7 +93,7 @@ class CertificateBar extends Component {
     for (let x = 0; x < 12; x++) {
       if (parseInt(currMonth) - offset < 0) {
         currYear = (parseInt(currYear) - 1).toString();
-        currMonth="11";
+        currMonth = "11";
         offset = 0;
       }
       if (
@@ -125,36 +103,24 @@ class CertificateBar extends Component {
         )
       ) {
         course_1_Arr.push(
-          certCount[currYear][(currMonth - offset).toString()][
-            "basic"
-          ]
-            ? certCount[currYear][(currMonth - offset).toString()][
-                "basic"
-              ]
+          certCount[currYear][(currMonth - offset).toString()]["basic"]
+            ? certCount[currYear][(currMonth - offset).toString()]["basic"]
             : 0
         );
         course_2_Arr.push(
-          certCount[currYear][(currMonth - offset).toString()][
-            "advanced"
-          ]
-            ? certCount[currYear][(currMonth - offset).toString()][
-                "advanced"
-              ]
+          certCount[currYear][(currMonth - offset).toString()]["advanced"]
+            ? certCount[currYear][(currMonth - offset).toString()]["advanced"]
             : 0
         );
         course_3_Arr.push(
-          certCount[currYear][(currMonth - offset).toString()][
-            "professional"
-          ]
+          certCount[currYear][(currMonth - offset).toString()]["professional"]
             ? certCount[currYear][(currMonth - offset).toString()][
                 "professional"
               ]
             : 0
         );
         labels.push(
-          months[(currMonth - offset).toString()] +
-            "'" +
-            currYear.slice(2)
+          months[(currMonth - offset).toString()] + "'" + currYear.slice(2)
         );
         offset++;
       } else {
@@ -163,9 +129,7 @@ class CertificateBar extends Component {
         course_2_Arr.push(0);
         course_3_Arr.push(0);
         labels.push(
-          months[(currMonth - offset).toString()] +
-            "'" +
-            currYear.slice(2)
+          months[(currMonth - offset).toString()] + "'" + currYear.slice(2)
         );
         offset++;
       }
@@ -221,6 +185,22 @@ class CertificateBar extends Component {
                 <i className="fa fa-circle text-warning"></i> Professional
               </div>
             </div>
+            <hr />
+            <div className="stats">
+              <i className="fa fa-history"></i> Updated at{" "}
+              <strong>
+                {new Date().getHours() + ":" + new Date().getMinutes()}
+              </strong>{" "}
+              Hours
+              <div
+                onClick={() => {
+                  this.props.fetchAllUser();
+                }}
+                className="right chart-refresh-btn"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -232,4 +212,4 @@ function mapsStateToProps({ allUsers }) {
   return { allUsers };
 }
 
-export default connect(mapsStateToProps)(CertificateBar);
+export default connect(mapsStateToProps, actions)(CertificateBar);

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ChartistGraph from "react-chartist";
 import { connect } from "react-redux";
 import Chartist from "chartist";
+import * as actions from "../../actions";
 
 // let dataSales = {
 //   labels: ["1", "2", "3", "4", "5", "6"],
@@ -357,6 +358,21 @@ class TrafficChart extends Component {
               <i className="fa fa-circle text-warning"></i> Professional
             </div>
           </div>
+          <div className="stats">
+              <i className="fa fa-history"></i> Updated at{" "}
+              <strong>
+                {new Date().getHours() + ":" + new Date().getMinutes()}
+              </strong>{" "}
+              Hours
+              <div
+                onClick={() => {
+                  this.props.fetchCourseVisits();
+                }}
+                className="right chart-refresh-btn"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </div>
+            </div>
         </div>
       </div>
     );
@@ -367,4 +383,4 @@ function mapsStateToProps({ courseVisits }) {
   return { courseVisits };
 }
 
-export default connect(mapsStateToProps)(TrafficChart);
+export default connect(mapsStateToProps,actions)(TrafficChart);

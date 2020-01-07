@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 // import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
-
+import * as actions from "../../actions";
 import paginationFactory from "react-bootstrap-table2-paginator";
 
 import filterFactory, {
@@ -135,7 +135,17 @@ class PromoCodeLogs extends Component {
             <div className="header">
               <div className="row">
                 <div className="col-md-6">
-                  <h4>PromoCode Logs</h4>
+                  <h4>
+                    PromoCode Logs
+                    <span
+                      onClick={() => {
+                        this.props.fetchAllPromoCodeLog();
+                      }}
+                      className="table-refresh-btn"
+                    >
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                  </h4>
                   <p>Table with all promocode logs</p>
                 </div>
                 <div className="col-md-6">
@@ -158,6 +168,14 @@ class PromoCodeLogs extends Component {
                         />
                       </span>
                     </span>
+                    <br />
+                    <div className="table-updated right">
+                      <i className="fa fa-history"></i> Updated at{" "}
+                      <strong>
+                        {new Date().getHours() + ":" + new Date().getMinutes()}
+                      </strong>{" "}
+                      Hours
+                    </div>
                   </div>
                 </div>
               </div>
@@ -240,4 +258,4 @@ function evaluateDateExpression(a, b, comparator) {
   }
 }
 
-export default connect(mapsStateToProps)(PromoCodeLogs);
+export default connect(mapsStateToProps, actions)(PromoCodeLogs);

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
+import * as actions from "../../actions";
 import ReactChartist from "react-chartist";
 import ctPointLabels from "chartist-plugin-pointlabels";
 
@@ -20,7 +20,6 @@ class CertificatesIssued extends Component {
   getChartData() {
     const users = this.props.allUsers.users;
     console.log("Accounts Created : ", users.length);
-    let today = new Date();
     let maxAcnt = 0;
     let xData = {};
     let currDate = new Date();
@@ -167,10 +166,10 @@ class CertificatesIssued extends Component {
 
     for (let i = 0; i <= 7; i++) {
       if (xDataKeys.includes(i + "")) {
-        if (i != 0) retData.data.labels.push(dayToLabel[xData[i + ""].day]);
+        if (i !== 0) retData.data.labels.push(dayToLabel[xData[i + ""].day]);
         retData.data.series[0].push(xData[i + ""].count);
       } else {
-        if (i != 0)
+        if (i !== 0)
           retData.data.labels.push(
             dayToLabel[new Date(currDate.getTime() - i * dayToMS).getDay()]
           );
@@ -208,6 +207,22 @@ class CertificatesIssued extends Component {
             </div>
           )}
         </div>
+        <hr />
+        <div className="weekly-updated">
+          <i className="fa fa-history"></i> Updated at{" "}
+          <strong>
+            {new Date().getHours() + ":" + new Date().getMinutes()}
+          </strong>{" "}
+          Hours
+          <div
+            onClick={() => {
+              this.props.fetchAllUser();
+            }}
+            className="right chart-refresh-btn"
+          >
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+          </div>
+        </div>
       </div>
     );
   }
@@ -217,4 +232,4 @@ function mapsStateToProps({ allUsers }) {
   return { allUsers };
 }
 
-export default connect(mapsStateToProps)(CertificatesIssued);
+export default connect(mapsStateToProps, actions)(CertificatesIssued);

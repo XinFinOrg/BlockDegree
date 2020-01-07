@@ -172,7 +172,17 @@ class BurnLogs extends Component {
             <div className="header">
               <div className="row">
                 <div className="col-md-6">
-                  <h4>Burn Logs Table</h4>
+                  <h4>
+                    Burn Logs Table
+                    <span
+                      onClick={() => {
+                        this.props.fetchAllBurnLog();
+                      }}
+                      className="table-refresh-btn"
+                    >
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                  </h4>
                   <p>Table with all burn logs</p>
                 </div>
                 <div className="col-md-6">
@@ -195,6 +205,14 @@ class BurnLogs extends Component {
                         />
                       </span>
                     </span>
+                    <br />
+                    <div className="table-updated right">
+                      <i className="fa fa-history"></i> Updated at{" "}
+                      <strong>
+                        {new Date().getHours() + ":" + new Date().getMinutes()}
+                      </strong>{" "}
+                      Hours
+                    </div>
                   </div>
                 </div>
               </div>
