@@ -198,21 +198,27 @@ class CourseTraffic extends Component {
           )}
         </div>
         <hr />
-        <div className="weekly-updated">
-          <i className="fa fa-history"></i> Updated at{" "}
-          <strong>
-            {new Date().getHours() + ":" + new Date().getMinutes()}
-          </strong>{" "}
-          Hours
-          <div
-            onClick={() => {
-              this.props.fetchCourseVisits();
-            }}
-            className="right chart-refresh-btn"
-          >
-            <i class="fa fa-refresh" aria-hidden="true"></i>
+        {this.props.courseVisits ? (
+          <div className="weekly-updated">
+            <i className="fa fa-history"></i> Updated at{" "}
+            <strong>
+              {new Date(this.props.courseVisits.fetchedTS).getHours() +
+                ":" +
+                new Date(this.props.courseVisits.fetchedTS).getMinutes()}
+            </strong>{" "}
+            Hours
+            <div
+              onClick={() => {
+                this.props.fetchCourseVisits();
+              }}
+              className="right chart-refresh-btn"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
       </div>
     );
   }

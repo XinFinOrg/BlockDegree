@@ -206,13 +206,21 @@ class BurnLogs extends Component {
                       </span>
                     </span>
                     <br />
-                    <div className="table-updated right">
-                      <i className="fa fa-history"></i> Updated at{" "}
-                      <strong>
-                        {new Date().getHours() + ":" + new Date().getMinutes()}
-                      </strong>{" "}
-                      Hours
-                    </div>
+                    {this.props.burnLogs ? (
+                      <div className="table-updated right">
+                        <i className="fa fa-history"></i> Updated at{" "}
+                        <strong>
+                          {new Date(this.props.burnLogs.fetchedTS).getHours() +
+                            ":" +
+                            new Date(
+                              this.props.burnLogs.fetchedTS
+                            ).getMinutes()}
+                        </strong>{" "}
+                        Hours
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>

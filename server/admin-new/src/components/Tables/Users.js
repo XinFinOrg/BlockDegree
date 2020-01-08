@@ -190,13 +190,21 @@ class Users extends Component {
                       </span>
                     </span>
                     <br />
-                    <div className="table-updated right">
-                      <i className="fa fa-history"></i> Updated at{" "}
-                      <strong>
-                        {new Date().getHours() + ":" + new Date().getMinutes()}
-                      </strong>{" "}
-                      Hours
-                    </div>
+                    {this.props.allUsers ? (
+                      <div className="table-updated right">
+                        <i className="fa fa-history"></i> Updated at{" "}
+                        <strong>
+                          {new Date(this.props.allUsers.fetchedTS).getHours() +
+                            ":" +
+                            new Date(
+                              this.props.allUsers.fetchedTS
+                            ).getMinutes()}
+                        </strong>{" "}
+                        Hours
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>

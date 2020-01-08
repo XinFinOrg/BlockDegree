@@ -186,21 +186,27 @@ class CertificateBar extends Component {
               </div>
             </div>
             <hr />
-            <div className="stats">
-              <i className="fa fa-history"></i> Updated at{" "}
-              <strong>
-                {new Date().getHours() + ":" + new Date().getMinutes()}
-              </strong>{" "}
-              Hours
-              <div
-                onClick={() => {
-                  this.props.fetchAllUser();
-                }}
-                className="right chart-refresh-btn"
-              >
-                <i class="fa fa-refresh" aria-hidden="true"></i>
+            {this.props.allUsers ? (
+              <div className="stats">
+                <i className="fa fa-history"></i> Updated at{" "}
+                <strong>
+                  {new Date(this.props.allUsers.fetchedTS).getHours() +
+                    ":" +
+                    new Date(this.props.allUsers.fetchedTS).getMinutes()}
+                </strong>{" "}
+                Hours
+                <div
+                  onClick={() => {
+                    this.props.fetchAllUser();
+                  }}
+                  className="right chart-refresh-btn"
+                >
+                  <i class="fa fa-refresh" aria-hidden="true"></i>
+                </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

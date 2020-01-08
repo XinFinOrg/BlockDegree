@@ -245,7 +245,7 @@ class TrafficChart extends Component {
     for (let x = 0; x <= 6; x++) {
       if (parseInt(currMonth) - offset < 0) {
         currYear = (parseInt(currYear) - 1).toString();
-        currMonth="11";
+        currMonth = "11";
         offset = 0;
       }
       if (
@@ -271,7 +271,7 @@ class TrafficChart extends Component {
     for (let x = 0; x <= 6; x++) {
       if (parseInt(currMonth) - offset < 0) {
         currYear = (parseInt(currYear) - 1).toString();
-        currMonth="11";
+        currMonth = "11";
         offset = 0;
       }
       if (
@@ -358,21 +358,28 @@ class TrafficChart extends Component {
               <i className="fa fa-circle text-warning"></i> Professional
             </div>
           </div>
-          <div className="stats">
+          <hr />
+          {this.props.courseVisits ? (
+            <div className="stats">
               <i className="fa fa-history"></i> Updated at{" "}
               <strong>
-                {new Date().getHours() + ":" + new Date().getMinutes()}
+                {new Date(this.props.courseVisits.fetchedTS).getHours() +
+                  ":" +
+                  new Date(this.props.courseVisits.fetchedTS).getMinutes()}
               </strong>{" "}
               Hours
               <div
                 onClick={() => {
-                  this.props.fetchCourseVisits();
+                  this.props.fetchAllUser();
                 }}
                 className="right chart-refresh-btn"
               >
                 <i class="fa fa-refresh" aria-hidden="true"></i>
               </div>
             </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );
@@ -383,4 +390,4 @@ function mapsStateToProps({ courseVisits }) {
   return { courseVisits };
 }
 
-export default connect(mapsStateToProps,actions)(TrafficChart);
+export default connect(mapsStateToProps, actions)(TrafficChart);

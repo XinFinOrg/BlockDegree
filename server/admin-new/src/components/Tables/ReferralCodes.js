@@ -229,13 +229,23 @@ class ReferralCodes extends Component {
                       </span>
                     </span>
                     <br />
-                    <div className="table-updated right">
-                      <i className="fa fa-history"></i> Updated at{" "}
-                      <strong>
-                        {new Date().getHours() + ":" + new Date().getMinutes()}
-                      </strong>{" "}
-                      Hours
-                    </div>
+                    {this.props.referralCodes ? (
+                      <div className="table-updated right">
+                        <i className="fa fa-history"></i> Updated at{" "}
+                        <strong>
+                          {new Date(
+                            this.props.referralCodes.fetchedTS
+                          ).getHours() +
+                            ":" +
+                            new Date(
+                              this.props.referralCodes.fetchedTS
+                            ).getMinutes()}
+                        </strong>{" "}
+                        Hours
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>

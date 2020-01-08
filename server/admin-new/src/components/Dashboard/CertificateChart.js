@@ -123,10 +123,10 @@ class CertificateStats extends Component {
               </div>
             </div>
             <hr />
-            <div className="stats">
+            {this.props.allUsers?<div className="stats">
               <i className="fa fa-history"></i> Updated at{" "}
               <strong>
-                {new Date().getHours() + ":" + new Date().getMinutes()}
+                {new Date(this.props.allUsers.fetchedTS).getHours() + ":" + new Date(this.props.allUsers.fetchedTS).getMinutes()}
               </strong>{" "}
               Hours
               <div
@@ -137,7 +137,8 @@ class CertificateStats extends Component {
               >
                 <i class="fa fa-refresh" aria-hidden="true"></i>
               </div>
-            </div>
+            </div>:""}
+            
           </div>
         </div>
       </div>
