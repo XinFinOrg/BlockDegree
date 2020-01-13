@@ -17,12 +17,6 @@ const socialPostEventSchema = mongoose.Schema({
     linkedin: Boolean,
     telegram: Boolean
   },
-  posts: {
-    facebook: [{ postId: String, timestamp: String }],
-    twitter: [{ postId: String, timestamp: String }],
-    linkedin: [{ postId: String, timestamp: String }],
-    telegram: [{ postId: String, timestamp: String }]
-  },
   recurring: Boolean, // optional
   recurringRule: {},
   /* 

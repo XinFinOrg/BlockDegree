@@ -9,8 +9,8 @@ const postSocial = require("../services/postSocials");
 const cacheSync = require("../services/cacheSync");
 const User = require("../models/user");
 const multer = require("multer");
-let storage = multer.memoryStorage()
-let upload = multer({ storage: storage })
+let storage = multer.memoryStorage();
+let upload = multer({ storage: storage });
 
 module.exports = app => {
   app.get("/admin", requireLogin, requireAdmin, (req, res) => {
@@ -150,5 +150,9 @@ module.exports = app => {
     app.post("/api/scheduleEventByTime",postSocial.scheduleEventByTime);
     app.post("/api/addPostTemplate",postSocial.addPostTemplate);
     app.get("/api/getSocialPostTemplates",adminServices.getSocialPostTemplates);
+    app.get("/api/initiateSocialPostConfig",postSocial.initiateSocialPostConfig);
+    app.get("/api/enableAutoPost",postSocial.enableAutoPost);
+    app.get("/api/disableAutoPost",postSocial.disableAutoPost);
+    app.get("/api/getCurrentEventJobs",postSocial.getCurrentEventJobs);
   }
 };

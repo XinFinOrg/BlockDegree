@@ -26,7 +26,8 @@ const socialPostConfigSchema = mongoose.Schema({
       lastPost: String,
       firstPost: String
     }
-  }
+  },
+  autoPost:Boolean
 });
 
 module.exports = mongoose.model("Social_Post_Config", socialPostConfigSchema);

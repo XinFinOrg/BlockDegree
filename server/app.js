@@ -17,9 +17,11 @@ const adminServices = require("./services/adminServices");
 
 let app = express();
 require("dotenv").config();
-mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true });
-require("./services/passport")(passport);
 mongoose.set("useCreateIndex", true);
+
+require("./services/passport")(passport);
+
+connectToMongoDB();
 
 // view engine setup
 app.engine(
@@ -78,7 +80,6 @@ require("./routes/contactUsRoutes")(app);
 require("./routes/promoCodeRoutes")(app);
 require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
-
 // remove the comment to serve from build
 app.use("/newadmin", dynamicMiddleware);
 
@@ -123,6 +124,29 @@ function dynamicMiddleware(req, res, next) {
     }
   } else {
     res.render("error");
+  }
+}
+
+function connectToMongoDB() {
+  try {
+    mongoose
+      .connect(process.env.DATABASE_URI, { useNewUrlParser: true })
+      .then(() => {
+        console.log("[*] connected to mongodb");
+      })
+      .catch(e => {
+        console.log("[*] error while connecting to mongodb: ", e);
+        console.log("[*] Retrying connection to mongodb in 5 seconds...");
+        setTimeout(connectToMongoDB, 5000);
+      });
+  } catch (err0) {
+    console.log("[*] error while connecting to mongodb: ", err0);
+    console.log(
+      "[*] error while connecting to mongodb at :",
+      process.env.DATABASE_URI
+    );
+    console.log("[*] Retrying connection to mongodb in 5 seconds...");
+    setTimeout(connectToMongoDB, 5000);
   }
 }
 

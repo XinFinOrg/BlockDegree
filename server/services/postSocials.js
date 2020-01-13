@@ -1,5 +1,6 @@
 const schedule = require("node-schedule");
 const Event = require("../models/social_post_event");
+const SocialPostConfig = require("../models/social_post_config");
 const SocialPostTemplate = require("../models/socialPostTemplates");
 const Emailer = require("../emailer/impl");
 const emitPostSocial = require("../listeners/postSocial").em;
@@ -245,11 +246,34 @@ exports.scheduleEventByTime = async (req, res) => {
       const currEvntId = event.id;
 
       await event.save();
-      schedule.scheduleJob(dateObj, () => {
-        console.log(`[*] Event fired ------- ${currEvntId}`);
-        emitPostSocial.emit("postSocial", currEvntId);
-        removeEvent(currEvntId);
+      let currJob = schedule.scheduleJob(dateObj, () => {
+        setImmediate(async () => {
+          try {
+            console.log(`[*] Event fired ------- ${currEvntId}`);
+            const socialPostConfig = await SocialPostConfig.findOne({});
+            if (
+              socialPostConfig === null ||
+              socialPostConfig.autoPost === false
+            ) {
+              console.log(
+                "social config not initiated / autoPost has been turned off, skipping the event ",
+                currEvntId
+              );
+              return;
+            }
+            emitPostSocial.emit("postSocial", currEvntId);
+            removeEvent(currEvntId);
+          } catch (err2) {
+            console.log(
+              "exception at services.postSocials.scheduleEventByTime: ",
+              err2
+            );
+            console.log(`skipping the event ${currEvntId}`);
+            return;
+          }
+        });
       });
+      ActiveJobs.push({ eventId: currEvntId, refVar: currJob });
       return res.json({ status: true, message: "new event generated" });
     } else if (isRecurring === "true") {
       console.log("[*] inside isRecurring true");
@@ -291,13 +315,32 @@ exports.scheduleEventByTime = async (req, res) => {
       await event.save();
       const currEvntId = event.id;
       console.log("saved the new event");
-      let currJob = schedule.scheduleJob(recurringRule, () => {
-        console.log(`[*] Event fired ------- ${currEvntId}`);
-        emitPostSocial.emit("postSocial", currEvntId);
-        // Don't remove recurring events
-        // removeEvent(currEvntId);
+      let currJob = schedule.scheduleJob(recurringRule, async () => {
+        try {
+          console.log(`[*] Event fired ------- ${currEvntId}`);
+          const socialPostConfig = await SocialPostConfig.findOne({});
+          if (
+            socialPostConfig === null ||
+            socialPostConfig.autoPost === false
+          ) {
+            console.log(
+              "[*] Auto post has been disabled, skipping the current event"
+            );
+            return;
+          }
+          emitPostSocial.emit("postSocial", currEvntId);
+        } catch (err2) {
+          console.log(
+            "exception at services.postSocials.scheduleEventByTime: ",
+            err2
+          );
+          console.log(`skipping the event ${currEvntId}`);
+          return;
+        }
       });
 
+      // Don't remove recurring events
+      // removeEvent(currEvntId);
       if (currJob === null) {
         console.error(
           `some error occured while scheduling the job at postSocials.scheduleEventByTime; job returned was null `
@@ -348,33 +391,36 @@ exports.forceReSync = async (req, res) => {
           message: "no pending events to Re-Sync"
         });
     }
-    // has pending events, schedule them
-    pendingEvents.forEach(evnt => {
-      // only schedule events which are in future.
-      if (new Date(evnt.nextPostScheduleTS).getTime() > Date.now()) {
-        if (!evnt.recurring && !evnt.variableTrigger) {
-          console.log("[*] scheduling one-time event");
-          const refVar = schedule.scheduleJob(
-            new Date(evnt.nextPostScheduleTS),
-            () => {
-              console.log(`[*] Event fired --------- ${evnt.id}`);
-            }
-          );
-          ActiveJobs.push({ eventId: evnt.id, refVar: refVar });
-        } else if (evnt.recurring === true) {
-          console.log("[*] scheduling recurring event");
-          const refVar = schedule.scheduleJob(evnt.recurringRule, () => {
-            console.log(`[*] Event fired -------- ${evnt.id}`);
-          });
-          ActiveJobs.push({ eventId: evnt.id, refVar: refVar });
-        } else if (evnt.variableTrigger === true) {
-          console.log(`[*] scheduleing variable recurring event`);
-          // !implement the logic to process the recurring event based on the variable trigger
+    // if AutoPost is true, has pending events, schedule them
+    const socialPostConfig = await SocialPostConfig.findOne({});
+    if (socialPostConfig !== null || socialPostConfig.autoPost === true) {
+      pendingEvents.forEach(evnt => {
+        // only schedule events which are in future.
+        if (new Date(evnt.nextPostScheduleTS).getTime() > Date.now()) {
+          if (!evnt.recurring && !evnt.variableTrigger) {
+            console.log("[*] scheduling one-time event");
+            const refVar = schedule.scheduleJob(
+              new Date(evnt.nextPostScheduleTS),
+              () => {
+                console.log(`[*] Event fired --------- ${evnt.id}`);
+              }
+            );
+            ActiveJobs.push({ eventId: evnt.id, refVar: refVar });
+          } else if (evnt.recurring === true) {
+            console.log("[*] scheduling recurring event");
+            const refVar = schedule.scheduleJob(evnt.recurringRule, () => {
+              console.log(`[*] Event fired -------- ${evnt.id}`);
+            });
+            ActiveJobs.push({ eventId: evnt.id, refVar: refVar });
+          } else if (evnt.variableTrigger === true) {
+            console.log(`[*] scheduleing variable recurring event`);
+            // !implement the logic to process the recurring event based on the variable trigger
+          }
+        } else {
+          surpassedTS.push(event.id);
         }
-      } else {
-        surpassedTS.push(event.id);
-      }
-    });
+      });
+    }
 
     // if any events were not fired due to server-downtime & their TS were surpassed, mail admin.
     if (surpassedTS.length > 0) {
@@ -496,6 +542,140 @@ exports.addPostTemplate = (req, res) => {
   }
 };
 
+exports.enableAutoPost = async (req, res) => {
+  console.log("called enableAutoPost");
+  try {
+    const currConfig = await SocialPostConfig.findOne({});
+    if (currConfig === null) {
+      console.log("no config found.");
+      return res.json({
+        status: false,
+        error: "internal error, no config doc found"
+      });
+    }
+    if (currConfig.autoPost === true) {
+      return res.json({
+        status: false,
+        error: "bad request, autoPost already enabled"
+      });
+    }
+    currConfig.autoPost = true;
+    await currConfig.save();
+    return res.json({ status: true, message: "AutoPost Enabled" });
+  } catch (e) {
+    console.log("error at services.postSocials.enableAutoPost: ", e);
+    return res.status(500).json({ status: false, error: "internal error" });
+  }
+};
+
+exports.disableAutoPost = async (req, res) => {
+  console.log("called disableAutoPost");
+  try {
+    const currConfig = await SocialPostConfig.findOne({});
+    if (currConfig === null) {
+      console.log("no config found.");
+      return res.json({
+        status: false,
+        error: "internal error, no config doc found"
+      });
+    }
+    if (currConfig.autoPost === false) {
+      return res.json({
+        status: false,
+        error: "bad request, autoPost already disabled"
+      });
+    }
+    currConfig.autoPost = false;
+    await currConfig.save();
+    return res.json({ status: true, message: "AutoPost Disabled" });
+  } catch (e) {
+    console.log("error at services.postSocials.disableAutoPost: ", e);
+    return res.status(500).json({ status: false, error: "internal error" });
+  }
+};
+
+exports.initiateSocialPostConfig = async (req, res) => {
+  console.log("called initiateSocialPostConfig");
+  try {
+    const configExists = await SocialPostConfig.find();
+    if (configExists.length > 0) {
+      console.log(
+        "error at services.postSocials.initiateSocialPostConfig, config already initiated"
+      );
+      return res.json({
+        status: false,
+        error: "bad request, config already initiated"
+      });
+    }
+    const newConfig = newSocialPostConfig();
+    await newConfig.save();
+    res.json({
+      status: true,
+      message: "initiated the configuration for social post"
+    });
+  } catch (e) {
+    console.log("exception at services.postSocials.initiateSocialPostConfig");
+    return res.status(500).json({ status: false, error: "internal error" });
+  }
+};
+
+exports.getCurrentEventJobs = async (req, res) => {
+  console.log("called getCurrentEventJobs");
+  try {
+    let retJobs = [];
+    for (let x = 0; x < ActiveJobs.length; x++) {
+      const currJob = ActiveJobs[x];
+      const currEvent = await Event.findOne({ id: currJob.eventId });
+      if (currEvent === null) {
+        continue;
+      }
+      retJobs.push({
+        eventName: currEvent.eventName,
+        eventPurpose: currEvent.eventPurpose,
+        eventId: currJob.eventId,
+        nextInvocation: currJob.refVar.nextInvocation()._date.toDate()
+      });
+    }
+
+    return res.json({ status: true, jobs: retJobs });
+  } catch (e) {
+    console.log("exception at services.postSocials.getCurrentEventJobs: ", e);
+    return res.status(500).json({ status: false, error: "internal error" });
+  }
+};
+
+function newSocialPostConfig() {
+  return new SocialPostConfig({
+    platforms: {
+      facebook: {
+        postCount: 0,
+        autoPost: false,
+        lastPost: "",
+        firstPost: ""
+      },
+      twitter: {
+        postCount: 0,
+        autoPost: false,
+        lastPost: "",
+        firstPost: ""
+      },
+      linkedin: {
+        postCount: 0,
+        autoPost: false,
+        lastPost: "",
+        firstPost: ""
+      },
+      telegram: {
+        postCount: 0,
+        autoPost: false,
+        lastPost: "",
+        firstPost: ""
+      }
+    },
+    autoPost: false
+  });
+}
+
 function newPostTemplate() {
   return new SocialPostTemplate({
     id: uuid(),
@@ -588,10 +768,11 @@ function generateRecurringPattern(
       case "annually": {
         console.log("generateRecurringPattern inside annually");
         let rule = new schedule.RecurrenceRule();
-        rule.month = recurrEventDateAnnual.getMonth();
-        rule.date = recurrEventDateAnnual.getDate();
-        rule.hour = recurrEventTimeAnnual.getHours();
-        rule.minute = recurrEventTimeAnnual.getMinutes();
+        // rule.month = recurrEventDateAnnual.getMonth();
+        // rule.date = recurrEventDateAnnual.getDate();
+        // rule.hour = recurrEventTimeAnnual.getHours();
+        rule.second = recurrEventTimeAnnual.getMinutes();
+        console.log("[*] Recurring Minute Span: ", rule.minute);
         return rule;
       }
       case "monthly": {

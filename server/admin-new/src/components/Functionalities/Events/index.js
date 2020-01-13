@@ -3,6 +3,10 @@ import axios from "axios";
 import GenerateEventTS from "./GenerateEventTS";
 import GenerateEventVar from "./GenerateEventVar";
 import AddPostTemplate from "./AddPostTemplate";
+import EnableAutoPost from "./EnableAutoPost";
+import DisableAutoPost from "./DisableAutoPost";
+import InitiateConfig from "./InitiateConfig";
+import ActiveJobs from "./ActiveJobs";
 import { store } from "react-notifications-component";
 
 class PromoCodeForms extends Component {
@@ -36,6 +40,25 @@ class PromoCodeForms extends Component {
         <div className="row" style={{ width: "100%" }}>
           <div className="col-md-6">
             <AddPostTemplate />
+          </div>
+          <div className="col-md-6">
+            <InitiateConfig />
+          </div>
+        </div>
+
+        <div className="row" style={{ width: "100%" }}>
+          <div className="col-md-6">
+            <EnableAutoPost />
+          </div>
+
+          <div className="col-md-6">
+            <DisableAutoPost />
+          </div>
+        </div>
+
+        <div className="row" style={{ width: "100%" }}>
+          <div className="col-md-6">
+            <ActiveJobs />
           </div>
         </div>
       </div>

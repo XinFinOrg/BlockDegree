@@ -93,7 +93,7 @@ class GenerateEventTS extends Component {
       postAll: false,
       isRecurring: "false",
       recurrCyclePeriod: null,
-      recurrEventDateAnnual: moment(),
+      recurrEventDateAnnual: new Date(),
       recurrEventTimeAnnual: moment(),
       recurrCycleMonthly: null,
       recurrCycleWeekly: null,
@@ -409,13 +409,14 @@ class GenerateEventTS extends Component {
         "Invalid Event Purpose"
       );
     }
-    if (!postStatus) {
-      return showNotification(
-        "danger",
-        "Generate Event By Timestamp",
-        "Invalid Post Status"
-      );
-    }
+    if (this.state.useCustomFile === false)
+      if (!postStatus) {
+        return showNotification(
+          "danger",
+          "Generate Event By Timestamp",
+          "Invalid Post Status"
+        );
+      }
 
     if (this.state.eventType === null) {
       showNotification(
@@ -612,8 +613,10 @@ class GenerateEventTS extends Component {
             postOnTwitter: false,
             postOnTelegram: false,
             postAll: false,
-            recurrEventDateAnnual: moment(),
+            recurrEventDateAnnual: new Date(),
             recurrEventTimeAnnual: moment(),
+            recurrEventTimeWeekly: moment(),
+            recurrEventTimeMonthly: moment(),
             recurrCycleMonthly: null,
             recurrCycleWeekly: null,
             selectedTemplate: null,
@@ -674,12 +677,22 @@ class GenerateEventTS extends Component {
             <div className="form-group">
               <label className="col-md-4 control-label">Post Status</label>
               <div className="col-md-8">
-                <input
-                  type="text"
-                  value={this.state.postStatus}
-                  placeholder="post status"
-                  onChange={this.handlePostStatusChange}
-                />
+                {this.state.useCustomFile === "true" ? (
+                  <input
+                    type="text"
+                    value={this.state.postStatus}
+                    placeholder="post status"
+                    onChange={this.handlePostStatusChange}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    disabled
+                    value={this.state.postStatus}
+                    placeholder="post status"
+                    onChange={this.handlePostStatusChange}
+                  />
+                )}
               </div>
             </div>
 

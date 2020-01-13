@@ -1,0 +1,96 @@
+.active-job-purpose {
+  grid-area: purpose;
+}
+
+.active-job-next-invocation {
+  grid-area: next_invocation;
+}
+
+.active-job-id {
+  grid-area: id;
+}
+
+.active-job-recurr {
+  grid-area: recurring;
+}
+
+
+.active-job-container {
+  background-color: whitesmoke;
+  overflow-y: auto;
+  scroll-behavior: auto;
+  height: 300px;
+}
+
+.job-content {
+  .active-job-title {
+    font-size: large;
+    color: orange;
+  }
+
+  .active-job-desc {
+    font-size: small;
+  }
+
+  .active-job-ts {
+    color: #6d71ef;
+  }
+
+  .active-job-val {
+    color: #1dc3e6;
+  }
+
+  .active-job-id {
+    color: rgb(168, 168, 168);
+    font-size: smaller;
+  }
+}
+
+.active-job-card {
+  border-radius: 10px;
+
+  display: grid;
+  margin: 5px;
+  background-color: white;
+  grid-template-columns: 80% 20%;
+
+  .job-content {
+    padding: 10px;
+
+
+    .active-job-desc {
+      display: grid;
+      grid-template-areas:
+        'purpose purpose'
+        'next_invocation recurring'
+        'id id';
+    }
+  }
+
+  .job-cancel {
+    padding: 10px;
+    text-align: center;
+    border-left: 2px solid whitesmoke;
+
+    .fa {
+      margin-top: 30%;
+    }
+
+    &:hover {
+      // border: none;
+      // background-color: #1dc7ea;
+      color: red;
+      cursor: pointer;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+  }
+}
+
+.isRecurring {
+  color: #0fe23d
+}
+
+.notRecurring {
+  color: #ea911d;
+}

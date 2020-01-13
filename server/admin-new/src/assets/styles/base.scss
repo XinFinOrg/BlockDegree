@@ -21,6 +21,7 @@ $pe-7s-font-path: "~pe7-icon/dist/fonts" !default;
 @import "base/form";
 @import "base/tags";
 @import "react-dates/styles";
+@import "base/active_jobs";
 
 html,
 body {
@@ -381,3 +382,9 @@ body {
   vertical-align: top;
 }
 
+.table-refresh-btn {
+  cursor: pointer;
+  padding: 2px;
+  color: #dbb405;
+  border-radius: 10px;
+}

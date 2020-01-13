@@ -4,9 +4,11 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const socialPostConfig = require("../config/socialPostKeys");
+const SocialPostConfig = require("../models/social_post_config");
 const FormData = require("form-data");
 const concat = require("concat-stream");
 const Event = require("../models/social_post_event");
+const SocialPostLog = require("../models/social_post_log");
 const SocialConfig = require("../models/social_post_config");
 const SocialPost = require("../models/social_post");
 const schedule = require("node-schedule");
@@ -34,136 +36,134 @@ console.log("FilePath: ", filePath);
  * @param {string} eventId
  */
 async function postSocial(eventId) {
-  setImmediate(async () => {
-    console.log("called function post social");
-    try {
-      const currEvent = await Event.findOne({ id: eventId });
-      const postedTwitter = currEvent.platform.twitter,
-        postedLinkedIn = currEvent.platform.linkedin,
-        postedFacebook = currEvent.platform.facebook,
-        postTwitErr = false,
-        postLinkErr = false,
-        postFaceErr = false;
-      if (currEvent === null) {
-        console.error(
-          `event with id:${eventId} not found, quiting the function postSocial.postSocial`
-        );
-        return;
-      }
-      const eventFilePath = currEvent.nextPostPath;
-      const eventStatus = currEvent.nextPostStatus;
-  
-      console.log(
-        "Post Social EventFilePath: %s, EventStatus: %s\n",
-        eventFilePath,
-        eventStatus
+  console.log("called function post social");
+  try {
+    const currEvent = await Event.findOne({ id: eventId });
+    let postedTwitter = currEvent.platform.twitter,
+      postedLinkedIn = currEvent.platform.linkedin,
+      postedFacebook = currEvent.platform.facebook,
+      postTwitErr = false,
+      postLinkErr = false,
+      postFaceErr = false;
+    if (currEvent === null) {
+      console.error(
+        `event with id:${eventId} not found, quiting the function postSocial.postSocial`
       );
-      // !This will probably never be reached, need to refactor to throw on error by keeping the execution stack in check.
-      if (postedTwitter) {
-        try {
-          twitterPostId = await postTwitter(eventFilePath, eventStatus, eventId);
-        } catch (twitter_error) {
-          console.error(`error while posting the status on twitter`);
-          console.error(twitter_error);
-          postedTwitter = false;
-          postTwitErr = true;
-        }
+      return;
+    }
+    const eventFilePath = currEvent.nextPostPath;
+    const eventStatus = currEvent.nextPostStatus;
+
+    console.log(
+      "Post Social EventFilePath: %s, EventStatus: %s\n",
+      eventFilePath,
+      eventStatus
+    );
+    // !This will probably never be reached, need to refactor to throw on error by keeping the execution stack in check.
+    if (postedTwitter) {
+      try {
+        twitterPostId = await postTwitter(eventFilePath, eventStatus, eventId);
+      } catch (twitter_error) {
+        console.error(`error while posting the status on twitter`);
+        console.error(twitter_error);
+        postedTwitter = false;
+        postTwitErr = true;
       }
-  
-      if (postedLinkedIn) {
-        try {
-          linkedInPostId = await postLinkedin(
-            eventFilePath,
-            eventStatus,
-            eventId
-          );
-        } catch (linkedin_error) {
-          console.error(`error while posting the status on linkedin`);
-          console.error(linkedin_error);
-          postedLinkedIn = false;
-          postLinkErr = true;
-        }
+    }
+
+    if (postedLinkedIn) {
+      try {
+        linkedInPostId = await postLinkedin(
+          eventFilePath,
+          eventStatus,
+          eventId
+        );
+      } catch (linkedin_error) {
+        console.error(`error while posting the status on linkedin`);
+        console.error(linkedin_error);
+        postedLinkedIn = false;
+        postLinkErr = true;
       }
-  
-      if (postedFacebook) {
-        try {
-          facebookPostId = await postFacebook(
-            eventFilePath,
-            eventStatus,
-            eventId
-          );
-        } catch (facebook_error) {
-          console.error(`error while posting the status on facebook`);
-          console.error(facebook_error);
-          postedFacebook = false;
-          postFaceErr = true;
-        }
+    }
+
+    if (postedFacebook) {
+      try {
+        facebookPostId = await postFacebook(
+          eventFilePath,
+          eventStatus,
+          eventId
+        );
+      } catch (facebook_error) {
+        console.error(`error while posting the status on facebook`);
+        console.error(facebook_error);
+        postedFacebook = false;
+        postFaceErr = true;
       }
-  
-      if (postTwitErr || postLinkErr || postFaceErr) {
-        console.error(
-          "some occured while posting at listeners.postSocial.postSocial error in posting"
-        );
-        console.log(
-          `Twitter Error: ${postTwitErr} LinkedIn Error: ${postLinkErr} Facebook Error: ${postFaceErr}`
-        );
-        // notify admin
-      } else {
-        // no error at all
-        console.log("[*] no errors");
-      }
-      currEvent.status = "completed";
-      if (currEvent.recurring && !currEvent.variableTrigger) {
-        console.log("[*] event is recurring");
-        //  update the next post innvocation time, next post innvocation status, next post innvocation filepath
-        //  -> nextPostScheduleTS
-        //  -> nextPostStatus
-        //  -> nextPostPath
-        const currJob = findActiveJob(currEvent.id);
-        console.log("current Job from ActiveJobs : ", currJob);
-        console.log(
-          `next job innvocation for event with id: ${currEvent.id}, name: ${currEvent.eventName}: `,
-          currJob.refVar.nextInvocation()._date.toDate()
-        );
-        currEvent.nextPostScheduleTS = currJob.refVar
-          .nextInvocation()
-          ._date.toDate()
-          .getTime();
-        const templateImage = await generatePostTemplate.generatePostImage(
-          currEvent.eventType,
-          `next test ${++postCount}`,
-          currEvent.templateId
-        );
-        const templateStatus = await generatePostTemplate.generatePostStatus(
-          currEvent.eventType,
-          `next test ${++postCount}`,
-          currEvent.templateId
-        );
-        currEvent.nextPostPath = templateImage;
-        currEvent.nextPostStatus = templateStatus;
-  
-        console.log("updated the nextPostPath: ", templateImage);
-        console.log("updated the nextPostStatus: ", templateStatus);
-  
-        /*
+    }
+
+    if (postTwitErr || postLinkErr || postFaceErr) {
+      console.error(
+        "some occured while posting at listeners.postSocial.postSocial error in posting"
+      );
+      console.log(
+        `Twitter Error: ${postTwitErr} LinkedIn Error: ${postLinkErr} Facebook Error: ${postFaceErr}`
+      );
+      // notify admin
+    } else {
+      // no error at all
+      console.log("[*] no errors");
+    }
+    if (currEvent.recurring && !currEvent.variableTrigger) {
+      console.log("[*] event is recurring");
+      //  update the next post innvocation time, next post innvocation status, next post innvocation filepath
+      //  -> nextPostScheduleTS
+      //  -> nextPostStatus
+      //  -> nextPostPath
+      const currJob = findActiveJob(currEvent.id);
+      console.log("current Job from ActiveJobs : ", currJob);
+      console.log(
+        `next job innvocation for event with id: ${currEvent.id}, name: ${currEvent.eventName}: `,
+        currJob.refVar.nextInvocation()._date.toDate()
+      );
+      currEvent.nextPostScheduleTS = currJob.refVar
+        .nextInvocation()
+        ._date.toDate()
+        .getTime();
+      const templateImage = await generatePostTemplate.generatePostImage(
+        currEvent.eventType,
+        `next test ${++postCount}`,
+        currEvent.templateId
+      );
+      const templateStatus = await generatePostTemplate.generatePostStatus(
+        currEvent.eventType,
+        `next test ${postCount}`,
+        currEvent.templateId
+      );
+      currEvent.nextPostPath = templateImage;
+      currEvent.nextPostStatus = templateStatus;
+
+      console.log("updated the nextPostPath: ", templateImage);
+      console.log("updated the nextPostStatus: ", templateStatus);
+
+      /*
           1. Generate the post's image & save to the event document
           2. Generate the post's status & save the filepath to the event document
           3. Save the document
         */
-      } else if (currEvent.variableTrigger) {
-        console.log(
-          "[*] event has variable trigger : ",
-          currEvent.variableTrigger
-        );
-      }
-      await currEvent.save();
-    } catch (e) {
-      console.error("exception at postSocial.postSocial");
-      console.error(e);
-      return;
+    } else if (currEvent.variableTrigger) {
+      console.log(
+        "[*] event has variable trigger : ",
+        currEvent.variableTrigger
+      );
+    } else {
+      currEvent.status = "completed";
     }
-  })
-  
+    await currEvent.save();
+  } catch (e) {
+    console.error("exception at postSocial.postSocial");
+    console.error(e);
+    return;
+  }
 }
 
 /**
@@ -262,16 +262,41 @@ async function postLinkedin(fp, postStatus, eventId) {
         console.log("Post on linkedin status: ", resp.status);
         console.log("Linkedin Response Data", resp.data);
 
-        const currEvent = await Event.findOne({ id: eventId });
-        if (currEvent === null) {
-          console.error("event not found");
-          return;
+        const socialPostConfig = await SocialPostConfig.findOne({});
+        // No need to check for AutoPost.
+        if (socialPostConfig !== null) {
+          socialPostConfig.platforms.linkedin.postCount++;
+          socialPostConfig.platforms.linkedin.lastPost = "" + Date.now();
+          if (socialPostConfig.platforms.linkedin.firstPost === "") {
+            socialPostConfig.platforms.linkedin.firstPost = "" + Date.now();
+          }
         }
-        currEvent.posts.linkedin.push({
-          postId: resp.data.id,
-          timestamp: new Date().getTime()
-        });
-        await currEvent.save();
+        // currEvent.posts.linkedin.push({
+        //   postId: resp.data.id,
+        //   timestamp: "" + Date.now()
+        // });
+        // await currEvent.save();
+
+        // setImmediate(() => {
+        //   DefChannel.sendToQueue(
+        //     "db_queue",
+        //     Buffer.from(
+        //       JSON.stringify({
+        //         eventId: eventId,
+        //         data: {
+        //           linkedin: {
+        //             postId: resp.data.id,
+        //             timestamp: "" + Date.now()
+        //           }
+        //         }
+        //       })
+        //     )
+        //   );
+        // });
+
+        await newSocialPostLog(eventId, "linkedin", resp.data.id).save();
+
+        await socialPostConfig.save();
       } catch (e) {
         console.error("Exception while making axios request: ", e);
       }
@@ -323,16 +348,41 @@ async function postTwitter(fp, postStatus, eventId) {
           } else {
             console.log("Posted the status on twitter!");
             try {
-              const currEvent = await Event.findOne({ id: eventId });
-              if (currEvent === null) {
-                console.error("event not found");
-                return;
+              const socialPostConfig = await SocialPostConfig.findOne({});
+              // No need to check for AutoPost.
+              if (socialPostConfig !== null) {
+                socialPostConfig.platforms.twitter.postCount++;
+                socialPostConfig.platforms.twitter.lastPost = "" + Date.now();
+                if (socialPostConfig.platforms.twitter.firstPost === "") {
+                  socialPostConfig.platforms.twitter.firstPost =
+                    "" + Date.now();
+                }
               }
-              currEvent.posts.twitter.push({
-                postId: data.id,
-                timestamp: new Date().getTime()
-              });
-              await currEvent.save();
+              // currEvent.posts.twitter.push({
+              //   postId: data.id,
+              //   timestamp: "" + Date.now()
+              // });
+              // await currEvent.save();
+              // setImmediate(() => {
+              //   DefChannel.sendToQueue(
+              //     "db_queue",
+              //     Buffer.from(
+              //       JSON.stringify({
+              //         eventId: eventId,
+              //         data: {
+              //           twitter: {
+              //             postId: data.id,
+              //             timestamp: "" + Date.now()
+              //           }
+              //         }
+              //       })
+              //     )
+              //   );
+              // });
+
+              await newSocialPostLog(eventId, "twitter", data.id).save();
+
+              await socialPostConfig.save();
             } catch (catch_e) {
               console.log("catch expression: ", catch_e);
             }
@@ -389,16 +439,40 @@ async function postFacebook(fp, postStatus, eventId) {
     .then(async res => {
       if (res.status == 200) {
         console.log("successfully posted image on facebook");
-        const currEvent = await Event.findOne({ id: eventId });
-        if (currEvent === null) {
-          console.error("event not found");
-          return;
+        const socialPostConfig = await SocialPostConfig.findOne({});
+        // No need to check for AutoPost.
+        if (socialPostConfig !== null) {
+          socialPostConfig.platforms.facebook.postCount++;
+          socialPostConfig.platforms.facebook.lastPost = "" + Date.now();
+          if (socialPostConfig.platforms.facebook.firstPost === "") {
+            socialPostConfig.platforms.facebook.firstPost = "" + Date.now();
+          }
         }
-        currEvent.posts.facebook.push({
-          postId: res.data.id,
-          timestamp: new Date().getTime()
-        });
-        await currEvent.save();
+        // currEvent.posts.facebook.push({
+        //   postId: res.data.id,
+        //   timestamp: "" + Date.now()
+        // });
+        // await currEvent.save();
+        // setImmediate(() => {
+        //   DefChannel.sendToQueue(
+        //     "db_queue",
+        //     Buffer.from(
+        //       JSON.stringify({
+        //         eventId: eventId,
+        //         data: {
+        //           facebook: {
+        //             postId: res.data.id,
+        //             timestamp: "" + Date.now()
+        //           }
+        //         }
+        //       })
+        //     )
+        //   );
+        // });
+
+        await newSocialPostLog(eventId, "facebook", res.data.id).save();
+
+        await socialPostConfig.save();
       }
     });
 }
@@ -450,4 +524,13 @@ function findActiveJob(eventId) {
     }
   }
   return null;
+}
+
+function newSocialPostLog(eventId, platform, postId) {
+  return new SocialPostLog({
+    eventId: eventId,
+    platform: platform,
+    postId: postId,
+    timestamp: "" + Date.now()
+  });
 }
