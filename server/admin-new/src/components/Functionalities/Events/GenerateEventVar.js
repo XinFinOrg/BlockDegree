@@ -53,10 +53,11 @@ class GenerateEventVar extends Component {
       stateVarInterval: null,
       stateVarStartValue: null,
       stateVarStopValue: null,
-      postNearestTime: moment()
+      postNearestTime: moment(),
+      selectedTemplate: null
     };
 
-    this.handleEventTypeChange = this.handleEventTypeChange.bind(this);
+    // this.handleEventTypeChange = this.handleEventTypeChange.bind(this);
     this.handlePostFacebookChange = this.handlePostFacebookChange.bind(this);
     this.handlePostTwitterChange = this.handlePostTwitterChange.bind(this);
     this.handlePostTelegramChange = this.handlePostTelegramChange.bind(this);
@@ -77,13 +78,40 @@ class GenerateEventVar extends Component {
     this.handleStateVarStartChange = this.handleStateVarStartChange.bind(this);
     this.handleStateVarStopChange = this.handleStateVarStopChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.generateTemplateOpts = this.generateTemplateOpts.bind(this);
+    this.handlePostTemplateChange = this.handlePostTemplateChange.bind(this);
+  }
+
+  handlePostTemplateChange(option) {
+    this.setState({ selectedTemplate: option });
+  }
+
+  generateTemplateOpts() {
+    console.log("postTemplates: ", this.props.postTemplates);
+    if (this.props.postTemplates !== undefined) {
+      const opts = [];
+      this.props.postTemplates.forEach(template => {
+        opts.push({
+          label: template.templateName,
+          value: template.id
+        });
+      });
+      console.log("opts: ", opts);
+      return opts;
+    }
+    return [];
   }
 
   handleSubmit() {
     const eventNameValid = validate("text", this.state.eventName);
     const eventPurposeValid = validate("text", this.state.eventPurpose);
     const postStatus = validate("text", this.state.postStatus);
-
+    const validStateVarVal = validate("integer", this.state.stateVarValue);
+    const validStateVarStart = validate(
+      "integer",
+      this.state.stateVarStartValue
+    );
+    const validStateVarStop = validate("integer", this.state.stateVarStopValue);
     if (!eventNameValid) {
       return showNotification(
         "danger",
@@ -96,30 +124,6 @@ class GenerateEventVar extends Component {
         "danger",
         "Generate Event By Timestamp",
         "Invalid Event Purpose"
-      );
-    }
-    if (!postStatus) {
-      return showNotification(
-        "danger",
-        "Generate Event By Timestamp",
-        "Invalid Post Status"
-      );
-    }
-
-    if (this.state.eventType === null) {
-      showNotification(
-        "danger",
-        "Generate Event By Timestamp",
-        "Please select the event type"
-      );
-      return;
-    }
-
-    if (this.state.stateVarName === null) {
-      showNotification(
-        "danger",
-        "Generate Event By Timestamp",
-        "Please select a variable name"
       );
     }
 
@@ -143,6 +147,24 @@ class GenerateEventVar extends Component {
       );
     }
 
+    // if (this.state.eventType === null) {
+    //   showNotification(
+    //     "danger",
+    //     "Generate Event By Timestamp",
+    //     "Please select the event type"
+    //   );
+    //   return;
+    // }
+
+    if (this.state.stateVarName === null) {
+      showNotification(
+        "danger",
+        "Generate Event By Timestamp",
+        "Please select a variable name"
+      );
+      return;
+    }
+
     const isRecurring = this.state.isRecurring === "true";
     console.log("State variable value: ", this.state.stateVarValue);
     if (isRecurring) {
@@ -154,20 +176,14 @@ class GenerateEventVar extends Component {
           "Please select state variable interval"
         );
         return;
-      } else if (
-        this.state.stateVarStartValue === null ||
-        isNaN(this.state.stateVarStartValue)
-      ) {
+      } else if (!validStateVarStart) {
         showNotification(
           "danger",
           "Generate Event By Var",
           "Invalid interval start value"
         );
         return;
-      } else if (
-        this.state.stateVarStopValue === null ||
-        isNaN(this.state.stateVarStopValue)
-      ) {
+      } else if (!validStateVarStop) {
         showNotification(
           "danger",
           "Generate Event By Var",
@@ -182,6 +198,15 @@ class GenerateEventVar extends Component {
         );
         return;
       }
+      document.getElementById("postStatusVar").value = "";
+      document.getElementById("postStatusVar").disabled = true;
+      if (this.state.selectedTemplate === null) {
+        return showNotification(
+          "danger",
+          "Generate Event By Var",
+          "Please select a template"
+        );
+      }
     } else {
       console.log("not recurring");
       console.log(
@@ -190,13 +215,19 @@ class GenerateEventVar extends Component {
         typeof this.state.stateVarValue
       );
       if (this.state.useCustomFile === "true") {
+        if (!postStatus) {
+          return showNotification(
+            "danger",
+            "Generate Event By Timestamp",
+            "Invalid Post Status"
+          );
+        }
         if (this.state.inputFile === "") {
-          showNotification(
+          return showNotification(
             "danger",
             "Generate Event By Var",
             "Please select a file"
           );
-          return;
         }
         if (
           this.state.stateVarValue === null ||
@@ -209,16 +240,107 @@ class GenerateEventVar extends Component {
           );
           return;
         }
+      } else {
+        // check if a template is selected
+        if (this.state.selectedTemplate === null) {
+          return showNotification(
+            "danger",
+            "Generate Event By Var",
+            "Please select a template"
+          );
+        }
+      }
+
+      if (!validStateVarVal) {
+        return showNotification(
+          "danger",
+          "Generate Event By Var",
+          "Please enter a valid value"
+        );
       }
     }
 
     // all data ok!
+    // make an axios post request
+
+    const form = new FormData();
+    form.append("eventName", this.state.eventName);
+    form.append("eventPurpose", this.state.eventPurpose);
+    // form.append("eventType", this.state.eventType);
+    form.append("nearestTS", this.state.postNearestTime.toDate().toString());
+    form.append("platforms", JSON.stringify(socialPlatform));
+    form.append("stateVarName", this.state.stateVarName.value);
+    form.append("useCustomFile", this.state.useCustomFile);
+    if (this.state.useCustomFile === "true") {
+      // append postStatus, inputFile
+      form.append("postStatus", this.state.postStatus);
+      form.append("file", this.state.inputFile);
+    } else {
+      form.append("templateId", this.state.selectedTemplate.value);
+    }
+    form.append("isRecurring", this.state.isRecurring);
+    if (this.state.isRecurring === "true") {
+      form.append("stateVarInterval", this.state.stateVarInterval.value);
+      form.append("stateVarStartValue", this.state.stateVarStartValue);
+      form.append("stateVarStopValue", this.state.stateVarStopValue);
+    } else {
+      // variable value
+      form.append("stateVarValue", this.state.stateVarValue);
+    }
+
+    axios
+      .post("/api/scheduleEventByState", form, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      .then(resp => {
+        console.log(resp.data);
+        if (resp.data.status === true) {
+          this.setState({
+            showSuccess: true,
+            successMsg: "New Event Generated!",
+            eventName: "",
+            eventPurpose: "",
+            useCustomFile: "false",
+            inputFile: "",
+            postStatus: "",
+            postOnFacebook: false,
+            postOnLinkedin: false,
+            postOnTwitter: false,
+            postOnTelegram: false,
+            postAll: false,
+            stateVarName: null,
+            stateVarValue: "",
+            isRecurring: "false",
+            stateVarInterval: null,
+            stateVarStartValue: null,
+            stateVarStopValue: null,
+            postNearestTime: moment(),
+            selectedTemplate: null,
+            // eventType: null
+          });
+          this.handleFileReset();
+        } else {
+          this.setState({
+            showError: true,
+            errorMsg: resp.data.error
+          });
+        }
+      })
+      .catch(err0 => {
+        console.log(err0);
+        this.setState({
+          showError: true,
+          errorMsg: err0
+        });
+      });
   }
 
-  handleEventTypeChange(option) {
-    console.log("called handle event type change");
-    this.setState({ eventType: option });
-  }
+  // handleEventTypeChange(option) {
+  //   console.log("called handle event type change");
+  //   this.setState({ eventType: option });
+  // }
 
   handleStateVarStartChange(event) {
     this.setState({ stateVarStartValue: event.target.value });
@@ -271,7 +393,15 @@ class GenerateEventVar extends Component {
 
   handleFileReset() {
     this.setState({ inputFile: "" });
-    document.getElementById("customFileInput_Var").value = "";
+    console.log(
+      "called handleFileReset: ",
+      document.getElementById("customFileInput_Var")
+    );
+    if (
+      document.getElementById("customFileInput_Var") !== undefined &&
+      document.getElementById("customFileInput_Var") !== null
+    )
+      document.getElementById("customFileInput_Var").value = "";
   }
 
   customFileInputChange(event) {
@@ -279,11 +409,11 @@ class GenerateEventVar extends Component {
   }
 
   handleUseCustomChange(event) {
-    const customFileInput = document.getElementById("customFileInput_Var");
-    if (event.target.value === "true") {
-      customFileInput.disabled = false;
-    } else if (event.target.value === "false") {
-      customFileInput.disabled = true;
+    if (event.target.value === "false") {
+      document.getElementById("postStatusVar").value = "";
+      document.getElementById("postStatusVar").disabled = true;
+    } else {
+      document.getElementById("postStatusVar").disabled = false;
     }
     this.setState({ useCustomFile: event.target.value });
   }
@@ -362,6 +492,8 @@ class GenerateEventVar extends Component {
               <div className="col-md-8">
                 <input
                   type="text"
+                  id="postStatusVar"
+                  disabled
                   value={this.state.postStatus}
                   placeholder="post status"
                   onChange={this.handlePostStatusChange}
@@ -428,7 +560,7 @@ class GenerateEventVar extends Component {
               </div>
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
               <label className="col-md-4 control-label">Event Type</label>
               <div className="col-md-8">
                 <Select
@@ -437,7 +569,7 @@ class GenerateEventVar extends Component {
                   options={eventTypesOpts}
                 />
               </div>
-            </div>
+            </div> */}
 
             <div className="form-group">
               <label className="control-label col-md-4">
@@ -498,6 +630,18 @@ class GenerateEventVar extends Component {
                 </div>
                 <div className="form-group">
                   <label className="control-label col-md-4">
+                    Select Template
+                  </label>
+                  <div className="col-md-8">
+                    <Select
+                      value={this.state.selectedTemplate}
+                      onChange={this.handlePostTemplateChange}
+                      options={this.generateTemplateOpts()}
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="control-label col-md-4">
                     Interval Start Value
                   </label>
                   <div className="col-md-8">
@@ -553,26 +697,43 @@ class GenerateEventVar extends Component {
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label className="control-label col-md-4">Custom File</label>
-                  <div className="control-label col-md-4">
-                    <input
-                      type="file"
-                      name="customFile"
-                      onChange={this.customFileInputChange}
-                      disabled
-                      id="customFileInput_Var"
-                      style={{ width: "240px" }}
-                    />
+                {this.state.useCustomFile === "true" ? (
+                  <div className="form-group">
+                    <label className="control-label col-md-4">
+                      Custom File
+                    </label>
+                    <div className="control-label col-md-4">
+                      <input
+                        type="file"
+                        name="customFile"
+                        onChange={this.customFileInputChange}
+                        id="customFileInput_Var"
+                        style={{ width: "240px" }}
+                      />
+                    </div>
+                    <div
+                      style={{ paddingTop: "3%" }}
+                      onClick={this.handleFileReset}
+                      className="file-reset-btn"
+                    >
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
                   </div>
-                  <div
-                    style={{ paddingTop: "3%" }}
-                    onClick={this.handleFileReset}
-                    className="file-reset-btn"
-                  >
-                    <i class="fa fa-times" aria-hidden="true"></i>
+                ) : (
+                  <div className="form-group">
+                    <label className="control-label col-md-4">
+                      Select Template
+                    </label>
+                    <div className="col-md-8">
+                      <Select
+                        value={this.state.selectedTemplate}
+                        onChange={this.handlePostTemplateChange}
+                        options={this.generateTemplateOpts()}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
+
                 <div className="form-group">
                   <label className="control-label col-md-4">
                     State Variable Value
@@ -623,6 +784,24 @@ class GenerateEventVar extends Component {
             </div>
           </form>
         </div>
+        <Alert
+          title="Success"
+          show={this.state.showSuccess}
+          text={this.state.successMsg}
+          type="success"
+          onConfirm={() =>
+            this.setState({ showSuccess: false, successMsg: "success" })
+          }
+        />
+        <Alert
+          title="Error"
+          show={this.state.showError}
+          text={this.state.errorMsg}
+          type="error"
+          onConfirm={() =>
+            this.setState({ showError: false, errorMsg: "error" })
+          }
+        />
       </div>
     );
   }

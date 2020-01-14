@@ -3,6 +3,7 @@ var User = require("../models/user");
 const questions = require("../models/question");
 const utils = require("../utils.js");
 const renderCertificate = require("../helpers/renderCertificate");
+const socialPostListener = require("../listeners/postSocial").em;
 // const blockchainHelper = require("../helpers/blockchainHelpers");
 
 const examTypes = {
@@ -421,9 +422,9 @@ exports.getExamResult = async (req, res) => {
             user.examData.payment[examTypes[examName].coursePayment_id] = false;
             var obj = {};
             const expiryDate = d;
-            expiryDate.setDate(expiryDate.getDate()-1);
+            expiryDate.setDate(expiryDate.getDate() - 1);
             expiryDate.setFullYear(expiryDate.getFullYear() + 2);
-            expiryDate.setHours(23,59,59,999);
+            expiryDate.setHours(23, 59, 59, 999);
             obj["timestamp"] = Date.now();
             obj["marks"] = marksObtained;
             obj["total"] = totalQuestions;
@@ -445,6 +446,7 @@ exports.getExamResult = async (req, res) => {
             ] = "";
             user.save();
             res.render("examResult", jsonData);
+            socialPostListener.emit("varTriggerUpdate", "certificates");
             return;
           }
         }

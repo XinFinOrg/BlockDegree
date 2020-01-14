@@ -12,7 +12,6 @@ const SocialPostLog = require("../models/social_post_log");
 const SocialConfig = require("../models/social_post_config");
 const SocialPost = require("../models/social_post");
 const schedule = require("node-schedule");
-// ! causes circular dependencies, need to make the ActiveJobs array GLOBAL
 // const getEventNextInvocation = require("../services/postSocials")
 //   .getEventNextInvocation;
 const generatePostTemplate = require("../helpers/generatePostTemplate");
@@ -155,6 +154,8 @@ async function postSocial(eventId) {
         "[*] event has variable trigger : ",
         currEvent.variableTrigger
       );
+      //! Need to implement logic to update the Status / Image based
+      //! on the current state value.
     } else {
       currEvent.status = "completed";
     }
@@ -482,7 +483,35 @@ async function postTelegram(fp, postStatus) {
   console.log("called postTelegram.");
 }
 
+async function varTriggerUpdate(varName) {
+  console.log("called varTriggerUpdate");
+  switch (varName) {
+    case "certificates": {
+      console.log("certificates");
+      const pendingEvents = await Event.find({ conditionVar: "certificates" });
+      pendingEvents.forEach(currEvent => {
+        console.log(`task id: ${currEvent.id}`);
+      });
+    }
+    case "registrations": {
+      console.log("registrations");
+      const pendingEvents = await Event.find({ conditionVar: "registrations" });
+      pendingEvents.forEach(currEvent => {
+        console.log(`task id: ${currEvent.id}`);
+      });
+    }
+    case "visits": {
+      console.log("visits");
+      const pendingEvents = await Event.find({ conditionVar: "visits" });
+      pendingEvents.forEach(currEvent => {
+        console.log(`task id: ${currEvent.id}`);
+      });
+    }
+  }
+}
+
 em.on("postSocial", postSocial);
+em.on("varTriggerUpdate", varTriggerUpdate);
 exports.em = em;
 
 /*

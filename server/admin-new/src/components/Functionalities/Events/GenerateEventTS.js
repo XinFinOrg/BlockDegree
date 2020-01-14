@@ -17,7 +17,6 @@ import { store } from "react-notifications-component";
 // code, email, integer, float, address, text
 import validate from "../validate";
 import "rc-time-picker/assets/index.css";
-import { templates } from "handlebars";
 
 const options = [
   { value: "annually", label: "Annually" },

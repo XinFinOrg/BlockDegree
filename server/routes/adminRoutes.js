@@ -149,10 +149,13 @@ module.exports = app => {
     app.get("/api/forcePendingBurn",requireLogin, requireAdmin,adminServices.forcePendingBurn);
     app.post("/api/scheduleEventByTime",postSocial.scheduleEventByTime);
     app.post("/api/addPostTemplate",postSocial.addPostTemplate);
+    app.post("/api/scheduleEventByState",postSocial.scheduleEventByState);
     app.get("/api/getSocialPostTemplates",adminServices.getSocialPostTemplates);
     app.get("/api/initiateSocialPostConfig",postSocial.initiateSocialPostConfig);
     app.get("/api/enableAutoPost",postSocial.enableAutoPost);
     app.get("/api/disableAutoPost",postSocial.disableAutoPost);
     app.get("/api/getCurrentEventJobs",postSocial.getCurrentEventJobs);
+    app.get("/api/forceSyncEvents",postSocial.forceReSync);
+    app.post("/api/removePost",postSocial.removePost);
   }
 };

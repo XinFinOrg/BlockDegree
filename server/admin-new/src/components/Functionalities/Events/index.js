@@ -7,6 +7,7 @@ import EnableAutoPost from "./EnableAutoPost";
 import DisableAutoPost from "./DisableAutoPost";
 import InitiateConfig from "./InitiateConfig";
 import ActiveJobs from "./ActiveJobs";
+import ForceSync from "./ForceSync";
 import { store } from "react-notifications-component";
 
 class PromoCodeForms extends Component {
@@ -42,17 +43,16 @@ class PromoCodeForms extends Component {
             <AddPostTemplate />
           </div>
           <div className="col-md-6">
-            <InitiateConfig />
-          </div>
-        </div>
-
-        <div className="row" style={{ width: "100%" }}>
-          <div className="col-md-6">
-            <EnableAutoPost />
-          </div>
-
-          <div className="col-md-6">
-            <DisableAutoPost />
+            <div className="row">
+              <div className="col-md-12">
+                <InitiateConfig />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-12">
+                <ForceSync />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -60,7 +60,25 @@ class PromoCodeForms extends Component {
           <div className="col-md-6">
             <ActiveJobs />
           </div>
+
+          <div className="col-md-6">
+            <div className="row">
+              <div className="col-md-12">
+                <EnableAutoPost />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-12">
+                <DisableAutoPost />
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* <div className="row" style={{ width: "100%" }}>
+          <div className="col-md-6">
+          </div>
+        </div> */}
       </div>
     );
   }

@@ -24,6 +24,8 @@ if (!fs.existsSync(postTemplatesPath)) {
  * {
  *  eventId: string
  *  refVar: Job
+ *  triggerType: string (variable | timestamp)
+ *  recurring: Boolean
  * }
  */
 global.ActiveJobs = [];
@@ -55,7 +57,7 @@ const weekdayToInt = {
 	Services: 
 	
 	1. Schedule Post with Time Trigger
-	2. Schedule Post with Event Trigger
+	2. Schedule Post with State Trigger
 	3. Re-schedule Scheduled Post
 	4. Cancel Scheduled Post
 	5. Force Re-Sync
@@ -273,7 +275,12 @@ exports.scheduleEventByTime = async (req, res) => {
           }
         });
       });
-      ActiveJobs.push({ eventId: currEvntId, refVar: currJob });
+      ActiveJobs.push({
+        eventId: currEvntId,
+        refVar: currJob,
+        recurring: false,
+        triggerType: "timestamp"
+      });
       return res.json({ status: true, message: "new event generated" });
     } else if (isRecurring === "true") {
       console.log("[*] inside isRecurring true");
@@ -348,7 +355,12 @@ exports.scheduleEventByTime = async (req, res) => {
         return res.status(500).json({ status: false, error: "internal error" });
       }
 
-      ActiveJobs.push({ eventId: currEvntId, refVar: currJob });
+      ActiveJobs.push({
+        eventId: currEvntId,
+        refVar: currJob,
+        recurring: false,
+        triggerType: "timestamp"
+      });
       console.log("Current Job Next Innvocation: ", currJob.nextInvocation());
       return res.json({ status: true, message: "event generated" });
     }
@@ -359,8 +371,158 @@ exports.scheduleEventByTime = async (req, res) => {
   }
 };
 
-exports.scheduleEventByEvent = (req, res) => {
-  console.log("called schedule event by event");
+exports.scheduleEventByState = async (req, res) => {
+  console.log("called schedule event by state based trigger");
+
+  const eventName = req.body.eventName;
+  const eventPurpose = req.body.eventPurpose;
+  // const eventType = req.body.eventType;
+  const platforms = JSON.parse(req.body.platforms);
+  const nearestTS = new Date(req.body.nearestTS);
+  const stateVarName = req.body.stateVarName;
+  const useCustomFile = req.body.useCustomFile;
+  const isRecurring = req.body.isRecurring;
+  const event = newEvent();
+  if (
+    _.isEmpty(eventName) ||
+    _.isEmpty(eventPurpose) ||
+    _.isEmpty(stateVarName) ||
+    _.isEmpty(useCustomFile) ||
+    _.isEmpty(isRecurring) ||
+    // _.isEmpty(eventType) ||
+    nearestTS === null
+  ) {
+    console.log("missing parameters");
+    return res.status(400).json({ status: false, error: "missing parameters" });
+  }
+
+  if (
+    !platforms.postFacebook &&
+    !platforms.twitter &&
+    !platforms.linkedin &&
+    !platforms.telegram
+  ) {
+    // no platform selected
+    return res.status(400).json({ status: false, error: "bad request" });
+  }
+
+  let file,
+    postStatus,
+    postImagePath,
+    templateId,
+    currTemplate,
+    stateVarInterval,
+    stateVarStartValue,
+    stateVarStopValue,
+    stateVarValue;
+
+  if (useCustomFile === "true") {
+    if (_.isEmpty(req.body.postStatus)) {
+      return res
+        .status(400)
+        .json({ status: false, error: "bad request, missing postStatus" });
+    }
+    postStatus = req.body.postStatus;
+    if (req.files && req.files.file) {
+      file = req.files.file;
+      const currentFilePath = tmpFilePath + "/" + event.id + "__" + file.name;
+      fs.writeFileSync(currentFilePath, file.data);
+      postImagePath = currentFilePath;
+    } else {
+      return res
+        .status(400)
+        .json({ status: false, error: "bad request,missing file" });
+    }
+  } else {
+    // templateId
+    templateId = req.body.templateId;
+    if (_.isEmpty(templateId)) {
+      return res
+        .status(400)
+        .json({ status: false, error: "bad request, missing template" });
+    }
+    currTemplate = await SocialPostTemplate.findOne({ id: templateId });
+    if (currTemplate === null) {
+      console.log("cannot find template: ", templateId);
+      return res.json({
+        status: false,
+        error: "cannot find the templateId"
+      });
+    }
+    // found the template
+    const templateImagePath = await generatePostTemplate.generatePostImage(
+      "",
+      "test",
+      templateId
+    );
+    const templateStatus = await generatePostTemplate.generatePostStatus(
+      "",
+      "test",
+      templateId
+    );
+
+    console.log(
+      `Generated templateImagepath: ${templateImagePath} \n templateStatus: ${templateStatus}`
+    );
+    postStatus = templateStatus;
+    postImagePath = templateImagePath;
+
+    event.templateId = templateId;
+  }
+
+  event.postStatus = postStatus;
+  event.postImagePath = postImagePath;
+
+  if (isRecurring === "true") {
+    // isRecurring
+    stateVarInterval = req.body.stateVarInterval;
+    stateVarStartValue = req.body.stateVarStartValue;
+    stateVarStopValue = req.body.stateVarStopValue;
+    if (
+      _.isEmpty(stateVarInterval) ||
+      _.isEmpty(stateVarStartValue) ||
+      _.isEmpty(stateVarStopValue)
+    ) {
+      return res
+        .status(400)
+        .json({ status: false, error: "bad request, missing state vars" });
+    }
+    event.conditionVar = stateVarName;
+    event.conditionInterval = stateVarInterval;
+    event.conditionScopeStart = stateVarStartValue;
+    event.consitionScopeStop = stateVarStopValue;
+    event.conditionPrevTrigger = "";
+  } else {
+    // is not recurring
+    stateVarValue = req.body.stateVarValue;
+    if (_.isEmpty(stateVarValue)) {
+      return res
+        .status(400)
+        .json({ status: false, error: "bad request, missing state var value" });
+    }
+    event.conditionValue = parseFloat(stateVarValue);
+  }
+
+  event.eventName = eventName;
+  event.eventPurpose = eventPurpose;
+  event.platforms = platforms;
+  event.nearestTS = "" + nearestTS.getTime();
+  event.conditionVar = stateVarName;
+  event.nextPostPath = postImagePath;
+  event.nextPostStatus = postStatus;
+  event.platform = platforms;
+  event.variableTrigger = true;
+
+  ActiveJobs.push({
+    eventId: event.id,
+    recurring: event.recurring,
+    triggerType: "variable",
+    stateVarName: stateVarName,
+    refVar: null
+  });
+  await event.save();
+
+  res.json({ status: true, message: "event generated" });
 };
 
 exports.reschedulePost = (req, res) => {
@@ -394,30 +556,71 @@ exports.forceReSync = async (req, res) => {
     // if AutoPost is true, has pending events, schedule them
     const socialPostConfig = await SocialPostConfig.findOne({});
     if (socialPostConfig !== null || socialPostConfig.autoPost === true) {
+      console.log("config file found & auto post is true");
       pendingEvents.forEach(evnt => {
         // only schedule events which are in future.
-        if (new Date(evnt.nextPostScheduleTS).getTime() > Date.now()) {
+        if (eventExists(evnt.id)) {
+          // skip already schduled jobs
+          return;
+        }
+        console.log(
+          "Current Event: ",
+          evnt.nextPostScheduleTS,
+          typeof evnt.nextPostScheduleTS
+        );
+        if (
+          evnt.variableTrigger === true ||
+          new Date(parseFloat(evnt.nextPostScheduleTS)).getTime() > Date.now()
+        ) {
+          console.log("future event");
           if (!evnt.recurring && !evnt.variableTrigger) {
             console.log("[*] scheduling one-time event");
             const refVar = schedule.scheduleJob(
-              new Date(evnt.nextPostScheduleTS),
+              new Date(parseFloat(evnt.nextPostScheduleTS)),
               () => {
                 console.log(`[*] Event fired --------- ${evnt.id}`);
               }
             );
-            ActiveJobs.push({ eventId: evnt.id, refVar: refVar });
-          } else if (evnt.recurring === true) {
+            ActiveJobs.push({
+              eventId: evnt.id,
+              refVar: refVar,
+              recurring: evnt.recurring,
+              triggerType: "timestamp"
+            });
+          } else if (
+            evnt.recurring === true &&
+            evnt.variableTrigger === false
+          ) {
             console.log("[*] scheduling recurring event");
             const refVar = schedule.scheduleJob(evnt.recurringRule, () => {
               console.log(`[*] Event fired -------- ${evnt.id}`);
+              emitPostSocial.emit("postSocial", evnt.id);
             });
-            ActiveJobs.push({ eventId: evnt.id, refVar: refVar });
+            ActiveJobs.push({
+              eventId: evnt.id,
+              refVar: refVar,
+              recurring: evnt.recurring,
+              triggerType: "timestamp",
+              stateVarName: null
+            });
           } else if (evnt.variableTrigger === true) {
-            console.log(`[*] scheduleing variable recurring event`);
+            console.log(`[*] scheduleing variable based event`);
             // !implement the logic to process the recurring event based on the variable trigger
+            /**
+             * Cannot schedule the event using node-schedule
+             * Push to ActiveJobs array
+             */
+            ActiveJobs.push({
+              eventId: evnt.id,
+              refVar: null,
+              nextInvocation: null,
+              recurring: evnt.recurring,
+              triggerType: "variable",
+              stateVarName: evnt.conditionVar
+            });
           }
         } else {
-          surpassedTS.push(event.id);
+          surpassedTS.push(evnt.id);
         }
       });
     }
@@ -425,12 +628,12 @@ exports.forceReSync = async (req, res) => {
     // if any events were not fired due to server-downtime & their TS were surpassed, mail admin.
     if (surpassedTS.length > 0) {
       console.log("[*] surpassed events exists, mailing admin...");
-      Emailer.sendMailInternal(
-        "blockdegree-bot@blockdegree.org",
-        process.env.SUPP_EMAIL_ID,
-        "Unable to fire event",
-        `Due to some internal issues / server went down we were not able to fire the following events ${surpassedTS.toString()}`
-      );
+      // Emailer.sendMailInternal(
+      //   "blockdegree-bot@blockdegree.org",
+      //   process.env.SUPP_EMAIL_ID,
+      //   "Unable to fire event",
+      //   `Due to some internal issues / server went down we were not able to fire the following events ${surpassedTS.toString()}`
+      // );
     }
     console.log("[*] event sync successfull");
     if (res != undefined)
@@ -444,6 +647,31 @@ exports.forceReSync = async (req, res) => {
 
 exports.forcePost = (req, res) => {
   console.log("called forcePost");
+};
+
+exports.removePost = (req, res) => {
+  console.log("called remove post");
+  const eventId = req.body.eventId;
+  if (_.isEmpty(eventId)) {
+    return res
+      .status(400)
+      .json({ status: false, error: "bad request, missing event id" });
+  }
+  for (let i = 0; i < ActiveJobs.length; i++) {
+    let currJob = ActiveJobs[i];
+    if (currJob.eventId === eventId) {
+      // found the event job
+      currJob.refVar.cancel();
+      if (removeEvent(eventId)) {
+        return res.json({
+          status: true,
+          message: "succesfully deleted the event"
+        });
+      }
+    }
+  }
+  console.log("event not found in active jobs array");
+  res.json({ status: false, error: "event not found" });
 };
 
 exports.directPost = (req, res) => {
@@ -633,7 +861,13 @@ exports.getCurrentEventJobs = async (req, res) => {
         eventName: currEvent.eventName,
         eventPurpose: currEvent.eventPurpose,
         eventId: currJob.eventId,
-        nextInvocation: currJob.refVar.nextInvocation()._date.toDate()
+        nextInvocation:
+          currJob.refVar === null
+            ? null
+            : currJob.refVar.nextInvocation()._date.toDate(),
+        recurring: currJob.recurring,
+        triggerType: currJob.triggerType,
+        stateVarName: currJob.stateVarName
       });
     }
 
@@ -695,6 +929,7 @@ function newEvent() {
     autoPost: false,
     eventName: "",
     eventPurpose: "",
+    templateId: "",
     /**
      * Status the current status of the events
      */
@@ -705,30 +940,25 @@ function newEvent() {
       linkedin: false,
       telegram: false
     },
-    posts: [
-      // {
-      //   facebook: { postId: String, timestamp: String },
-      //   twitter: { postId: String, timestamp: String },
-      //   linkedin: { postId: String, timestamp: String },
-      //   telegram: { postId: String, timestamp: String }
-      // }
-    ],
     recurring: false, // optional
+    recurringRule: {},
     /* 
     
       Event-Based Triggers
-  
+    
       1. conditionVar, ConditionScope, conditionOperator, conditionOperator -> Required to evaluate the expression.
       2. scope for the condition
-  
+    
     */
     variableTrigger: false,
     conditionVar: "",
-    conditionScope: "",
+    conditionInterval: "",
     conditionOperator: "",
     conditionValue: "",
     conditionScopeStart: "",
     conditionScopeStop: "",
+    conditionPrevTrigger: "",
+    postTemplateId: "",
     /*
   
     Next Scheduled Post Timestamp
@@ -768,10 +998,10 @@ function generateRecurringPattern(
       case "annually": {
         console.log("generateRecurringPattern inside annually");
         let rule = new schedule.RecurrenceRule();
-        // rule.month = recurrEventDateAnnual.getMonth();
-        // rule.date = recurrEventDateAnnual.getDate();
-        // rule.hour = recurrEventTimeAnnual.getHours();
-        rule.second = recurrEventTimeAnnual.getMinutes();
+        rule.month = recurrEventDateAnnual.getMonth();
+        rule.date = recurrEventDateAnnual.getDate();
+        rule.hour = recurrEventTimeAnnual.getHours();
+        // rule.second = recurrEventTimeAnnual.getMinutes();
         console.log("[*] Recurring Minute Span: ", rule.minute);
         return rule;
       }
@@ -812,6 +1042,16 @@ function removeEvent(eventId) {
   for (let x = 0; x < ActiveJobs.length; x++) {
     if (ActiveJobs[x].eventId === eventId) {
       delete ActiveJobs[x];
+      ActiveJobs.length = --ActiveJobs.length;
+      return true;
+    }
+  }
+  return false;
+}
+
+function eventExists(eventId) {
+  for (let i = 0; i < ActiveJobs.length; i++) {
+    if (ActiveJobs[i].eventId === eventId) {
       return true;
     }
   }
@@ -825,7 +1065,9 @@ function testActiveJobRefVar() {
   console.log("pushed into active jobs");
   console.log("currently active jobs: ", ActiveJobs.length);
   ActiveJobs.forEach(currObj => {
-    const nextInnvocation = currObj.refVar.nextInvocation()._date.toDate();
-    console.log("Next Invocation at testActiveJobRefVar: ", nextInnvocation);
+    if (currObj.refVar !== null) {
+      const nextInnvocation = currObj.refVar.nextInvocation()._date.toDate();
+      console.log("Next Invocation at testActiveJobRefVar: ", nextInnvocation);
+    }
   });
 }

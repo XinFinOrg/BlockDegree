@@ -8,10 +8,11 @@ class ActiveJobs extends Component {
     this.state = {
       jobs: [],
       confirmMsg: "Are you sure you want to delete this Event?",
-      showConfim: false
+      showConfirm: false
     };
     this.renderCard = this.renderCard.bind(this);
     this.fetchActiveJobs = this.fetchActiveJobs.bind(this);
+    this.removePost = this.removePost.bind(this);
   }
 
   fetchActiveJobs() {
@@ -32,6 +33,34 @@ class ActiveJobs extends Component {
       });
   }
 
+  removePost(eventId) {
+    console.log("called remove event");
+    axios
+      .post("/api/removePost", { eventId: eventId })
+      .then(resp => {
+        console.log("repsonse in removePost: ", resp);
+        if (resp.data.status === true) {
+          this.setState({
+            showSuccess: true,
+            successMsg: "Removed Event!",
+            currEvent: null
+          });
+        } else {
+          this.setState({
+            showError: true,
+            errorMsg: resp.data.error
+          });
+        }
+      })
+      .catch(e => {
+        console.log("exception at removePost func");
+        this.setState({
+          showError: true,
+          errorMsg: e
+        });
+      });
+  }
+
   componentWillMount() {
     this.fetchActiveJobs();
   }
@@ -44,28 +73,30 @@ class ActiveJobs extends Component {
           <div className="active-job-desc">
             <div className="active-job-purpose">{item.eventPurpose}</div>
             <div className="active-job-next-invocation">
-              <span className="active-job-ts">TS:</span>
+              <span className="active-job-ts">Next Post:</span>
               <span className="active-job-val">
-                {new Date(item.nextInvocation).getHours() +
-                  ":" +
-                  new Date(item.nextInvocation).getMinutes()}
-                ,
-                {new Date(item.nextInvocation).getDate() +
-                  "/" +
-                  (new Date(item.nextInvocation).getMonth() + 1) +
-                  "/" +
-                  new Date(item.nextInvocation).getFullYear()}{" "}
+                {item.nextInvocation
+                  ? ` ${new Date(item.nextInvocation).getHours()}:${new Date(
+                      item.nextInvocation
+                    ).getMinutes()} , ${new Date(
+                      item.nextInvocation
+                    ).getDate()}/${new Date(item.nextInvocation).getMonth() +
+                      1}/${new Date(item.nextInvocation).getFullYear()}`
+                  : `${item.stateVarName}`}
               </span>
             </div>
 
             <div className="active-job-recurr">test</div>
-            <div className="active-job-id">Event-ID: {item.eventId}</div>
+            <div className="active-job-id">
+              <span>Event-ID:</span>
+              <span> {item.eventId}</span>
+            </div>
           </div>
         </div>
         <div
           className="job-cancel"
           onClick={() => {
-            this.setState({ showConfim: true });
+            this.removePost(item.eventId);
           }}
         >
           <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
@@ -91,17 +122,44 @@ class ActiveJobs extends Component {
           </h4>
         </div>
         <div className="content active-job-container">
-          {this.state.jobs.map(item => {
-            return this.renderCard(item);
-          })}
+          {this.state.jobs.length === 0
+            ? "No Active Jobs"
+            : this.state.jobs.map(item => {
+                return this.renderCard(item);
+              })}
         </div>
 
         <Alert
           title="Confirm"
-          show={this.state.showConfim}
+          show={this.state.showConfirm}
           text={this.state.confirmMsg}
           type="warning"
-          onConfirm={() => this.setState({ showConfim: false })}
+          showCancelButton="true"
+          onCancel={() => this.setState({ showConfirm: false })}
+          onConfirm={() => {
+            // this.setState({ showConfirm: false });
+            this.removePost();
+          }}
+        />
+
+        <Alert
+          title="Success"
+          show={this.state.showSuccess}
+          text={this.state.successMsg}
+          type="success"
+          onConfirm={() => {
+            this.fetchActiveJobs();
+            this.setState({ showSuccess: false, successMsg: "success" });
+          }}
+        />
+        <Alert
+          title="Error"
+          show={this.state.showError}
+          text={this.state.errorMsg}
+          type="error"
+          onConfirm={() =>
+            this.setState({ showError: false, errorMsg: "error" })
+          }
         />
       </div>
     );
