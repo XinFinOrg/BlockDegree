@@ -12,6 +12,9 @@ const fs = require("fs");
 const path = require("path");
 const generatePostTemplate = require("../helpers/generatePostTemplate");
 
+const User = require("../models/user");
+const Visited = require("../models/visited");
+
 const tmpFilePath = path.join(__dirname, "../tmp-event");
 const postTemplatesPath = path.join(__dirname, "../postTemplates");
 
@@ -26,6 +29,7 @@ if (!fs.existsSync(postTemplatesPath)) {
  *  refVar: Job
  *  triggerType: string (variable | timestamp)
  *  recurring: Boolean
+ *  derivedFrom: string
  * }
  */
 global.ActiveJobs = [];
@@ -450,14 +454,33 @@ exports.scheduleEventByState = async (req, res) => {
       });
     }
     // found the template
+    let count;
+
+    if (isRecurring === "true") {
+      if (_.isEmpty(req.body.stateVarStartValue)) {
+        return res
+          .status(400)
+          .json({ status: false, error: "missing parameters" });
+      }
+      count = req.body.stateVarStartValue;
+    } else {
+      stateVarValue = req.body.stateVarValue;
+      if (_.isEmpty(stateVarValue)) {
+        return res.status(400).json({
+          status: false,
+          error: "bad request, missing state var value"
+        });
+      }
+      count = stateVarValue;
+    }
     const templateImagePath = await generatePostTemplate.generatePostImage(
       "",
-      "test",
+      count,
       templateId
     );
     const templateStatus = await generatePostTemplate.generatePostStatus(
       "",
-      "test",
+      count,
       templateId
     );
 
@@ -488,9 +511,9 @@ exports.scheduleEventByState = async (req, res) => {
         .json({ status: false, error: "bad request, missing state vars" });
     }
     event.conditionVar = stateVarName;
-    event.conditionInterval = stateVarInterval;
+    event.conditionInterval = "" + parseInt(stateVarInterval) / 100;
     event.conditionScopeStart = stateVarStartValue;
-    event.consitionScopeStop = stateVarStopValue;
+    event.conditionScopeStop = stateVarStopValue;
     event.conditionPrevTrigger = "";
   } else {
     // is not recurring
@@ -512,17 +535,21 @@ exports.scheduleEventByState = async (req, res) => {
   event.nextPostStatus = postStatus;
   event.platform = platforms;
   event.variableTrigger = true;
+  event.recurring = isRecurring === "true";
 
   ActiveJobs.push({
     eventId: event.id,
     recurring: event.recurring,
     triggerType: "variable",
     stateVarName: stateVarName,
-    refVar: null
+    refVar: null,
+    stateVarNextVal:
+      isRecurring === "true" ? stateVarStartValue : conditionValue
   });
   await event.save();
 
   res.json({ status: true, message: "event generated" });
+  emitPostSocial.emit("varTriggerUpdate", stateVarName);
 };
 
 exports.reschedulePost = (req, res) => {
@@ -618,6 +645,7 @@ exports.forceReSync = async (req, res) => {
               triggerType: "variable",
               stateVarName: evnt.conditionVar
             });
+            emitPostSocial.emit("varTriggerUpdate", evnt.conditionVar);
           }
         } else {
           surpassedTS.push(evnt.id);
@@ -651,22 +679,37 @@ exports.forcePost = (req, res) => {
 
 exports.removePost = (req, res) => {
   console.log("called remove post");
+  console.log(req.body);
   const eventId = req.body.eventId;
-  if (_.isEmpty(eventId)) {
+  const derivedFrom = req.body.derivedFrom;
+  if (_.isEmpty(eventId) && _.isEmpty(derivedFrom)) {
     return res
       .status(400)
       .json({ status: false, error: "bad request, missing event id" });
   }
   for (let i = 0; i < ActiveJobs.length; i++) {
     let currJob = ActiveJobs[i];
-    if (currJob.eventId === eventId) {
-      // found the event job
-      currJob.refVar.cancel();
-      if (removeEvent(eventId)) {
-        return res.json({
-          status: true,
-          message: "succesfully deleted the event"
-        });
+    if (_.isEmpty(derivedFrom)) {
+      if (currJob.eventId === eventId) {
+        // found the event job
+        if (currJob.refVar) currJob.refVar.cancel();
+        if (removeEvent(eventId, derivedFrom)) {
+          return res.json({
+            status: true,
+            message: "succesfully deleted the event"
+          });
+        }
+      }
+    } else {
+      if (currJob.derivedFrom === derivedFrom) {
+        // found the event job
+        if (currJob.refVar) currJob.refVar.cancel();
+        if (removeEvent(eventId, derivedFrom)) {
+          return res.json({
+            status: true,
+            message: "succesfully deleted the event"
+          });
+        }
       }
     }
   }
@@ -853,9 +896,12 @@ exports.getCurrentEventJobs = async (req, res) => {
     let retJobs = [];
     for (let x = 0; x < ActiveJobs.length; x++) {
       const currJob = ActiveJobs[x];
-      const currEvent = await Event.findOne({ id: currJob.eventId });
+      let currEvent = await Event.findOne({ id: currJob.eventId });
       if (currEvent === null) {
-        continue;
+        currEvent = await Event.findOne({ id: currJob.derivedFrom });
+        if (currEvent === null) {
+          continue;
+        }
       }
       retJobs.push({
         eventName: currEvent.eventName,
@@ -863,11 +909,13 @@ exports.getCurrentEventJobs = async (req, res) => {
         eventId: currJob.eventId,
         nextInvocation:
           currJob.refVar === null
-            ? null
+            ? currJob.nextInvocation
             : currJob.refVar.nextInvocation()._date.toDate(),
         recurring: currJob.recurring,
         triggerType: currJob.triggerType,
-        stateVarName: currJob.stateVarName
+        stateVarName: currJob.stateVarName,
+        stateVarNextVal: currJob.stateVarNextVal,
+        derivedFrom: currJob.derivedFrom
       });
     }
 
@@ -1037,12 +1085,16 @@ function generateRecurringPattern(
  * @param {string} eventId
  * @returns {boolean} deleted
  */
-function removeEvent(eventId) {
+function removeEvent(eventId, derivedFrom) {
   console.log(`called removeEvent ${eventId}`);
   for (let x = 0; x < ActiveJobs.length; x++) {
-    if (ActiveJobs[x].eventId === eventId) {
-      delete ActiveJobs[x];
-      ActiveJobs.length = --ActiveJobs.length;
+    if (derivedFrom === "true") {
+      if (ActiveJobs[x].derivedFrom === eventId) {
+        ActiveJobs.splice(x, 1);
+        return true;
+      }
+    } else if (ActiveJobs[x].eventId === eventId) {
+      ActiveJobs.splice(x, 1);
       return true;
     }
   }
@@ -1070,4 +1122,39 @@ function testActiveJobRefVar() {
       console.log("Next Invocation at testActiveJobRefVar: ", nextInnvocation);
     }
   });
+}
+
+async function getSiteStats() {
+  try {
+    let allUsers = await User.find({});
+    let allVisits = await Visited.find({});
+
+    let userCnt = 0,
+      visitCnt = 0,
+      caCnt = 20,
+      totCertis = 0;
+    if (allUsers != null) {
+      userCnt = allUsers.length;
+    }
+
+    if (allVisits != null) {
+      visitCnt = allVisits.length;
+    }
+
+    for (let y = 0; y < allUsers.length; y++) {
+      if (allUsers[y].examData.certificateHash) {
+        totCertis += allUsers[y].examData.certificateHash.length - 1;
+      }
+    }
+
+    return {
+      userCnt: userCnt,
+      visitCnt: visitCnt,
+      totCertis: totCertis,
+      caCnt: caCnt
+    };
+  } catch (e) {
+    console.log(`exception at getUserStat: `, e);
+    return null;
+  }
 }

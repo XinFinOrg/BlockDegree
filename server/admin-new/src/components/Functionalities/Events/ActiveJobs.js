@@ -33,10 +33,10 @@ class ActiveJobs extends Component {
       });
   }
 
-  removePost(eventId) {
+  removePost(eventId, derivedFrom) {
     console.log("called remove event");
     axios
-      .post("/api/removePost", { eventId: eventId })
+      .post("/api/removePost", { eventId: eventId, derivedFrom: derivedFrom })
       .then(resp => {
         console.log("repsonse in removePost: ", resp);
         if (resp.data.status === true) {
@@ -75,7 +75,8 @@ class ActiveJobs extends Component {
             <div className="active-job-next-invocation">
               <span className="active-job-ts">Next Post:</span>
               <span className="active-job-val">
-                {item.nextInvocation
+                {item.nextInvocation !== null &&
+                item.nextInvocation !== undefined
                   ? ` ${new Date(item.nextInvocation).getHours()}:${new Date(
                       item.nextInvocation
                     ).getMinutes()} , ${new Date(
@@ -86,17 +87,40 @@ class ActiveJobs extends Component {
               </span>
             </div>
 
-            <div className="active-job-recurr">test</div>
+            <div className="active-job-recurr">
+              Type:
+              {item.recurring ? (
+                <div className="recurr-yes">recurring</div>
+              ) : (
+                <div className="recurr-no">one-time</div>
+              )}
+            </div>
             <div className="active-job-id">
-              <span>Event-ID:</span>
-              <span> {item.eventId}</span>
+              {item.eventId === "" ? (
+                <div>
+                  <span>Derived From:</span>
+                  <span> {item.derivedFrom}</span>
+                </div>
+              ) : (
+                <div>
+                  <span>Event-ID:</span>
+                  <span> {item.eventId}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
         <div
           className="job-cancel"
           onClick={() => {
-            this.removePost(item.eventId);
+            this.removePost(
+              item.eventId,
+              item.derivedFrom === "" ||
+                item.derivedFrom === null ||
+                item.derivedFrom === undefined
+                ? null
+                : item.derivedFrom
+            );
           }}
         >
           <i class="fa fa-trash fa-lg" aria-hidden="true"></i>

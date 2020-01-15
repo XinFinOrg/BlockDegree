@@ -12,6 +12,17 @@
 
 .active-job-recurr {
   grid-area: recurring;
+  display: grid;
+  grid-template-columns: 30% 70%;
+  color: #6d71ef;
+
+  .recurr-yes {
+    color: #71eb00
+  }
+
+  .recurr-no {
+    color: black;
+  }
 }
 
 

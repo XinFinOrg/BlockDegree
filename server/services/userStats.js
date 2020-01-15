@@ -349,7 +349,7 @@ exports.getSiteStats = async (req, res) => {
   }
 
   for (let y = 0; y < allUsers.length; y++) {
-    if (allUsers[y].examData.certificateHash) {
+    if (allUsers[y].examData.certificateHash.length > 1) {
       totCertis += allUsers[y].examData.certificateHash.length - 1;
     }
   }

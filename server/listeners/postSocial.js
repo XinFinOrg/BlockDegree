@@ -12,6 +12,9 @@ const SocialPostLog = require("../models/social_post_log");
 const SocialConfig = require("../models/social_post_config");
 const SocialPost = require("../models/social_post");
 const schedule = require("node-schedule");
+const userStats = require("../services/userStats");
+const User = require("../models/user");
+const Visited = require("../models/visited");
 // const getEventNextInvocation = require("../services/postSocials")
 //   .getEventNextInvocation;
 const generatePostTemplate = require("../helpers/generatePostTemplate");
@@ -156,6 +159,62 @@ async function postSocial(eventId) {
       );
       //! Need to implement logic to update the Status / Image based
       //! on the current state value.
+
+      if (currEvent.recurring === false) {
+        // one timetime
+        // status='completed'
+        currEvent.status = "completed";
+        removeEvent("", currEvent.id);
+        removeEvent(currEvent.id);
+      } else {
+        // recurring
+        // cnt<conditionScopeStop ? goAhead : Mark 'completed'
+        // update nextPostStatus
+        // update nextPostPath
+        // update conditionPrevTrigger
+        const currStat = await getSiteStats(currEvent.conditionVar);
+        let currTrigVal, nextTrigVal;
+        if (currEvent.conditionPrevTrigger === "") {
+          // first time executing
+          currTrigVal = parseFloat(currEvent.conditionScopeStart);
+          nextTrigVal = currTrigVal + parseFloat(currEvent.conditionInterval);
+        } else {
+          currTrigVal =
+            parseFloat(currEvent.conditionPrevTrigger) +
+            parseFloat(currEvent.conditionInterval);
+          nextTrigVal = currTrigVal + parseFloat(currEvent.conditionInterval);
+        }
+
+        console.log(
+          `inside recurring event: currTrigVal ${currTrigVal}, nextTrigVal ${nextTrigVal}`
+        );
+        if (
+          currStat >= parseFloat(currEvent.conditionScopeStop) ||
+          nextTrigVal > parseFloat(currEvent.conditionScopeStop)
+        ) {
+          // stop is reached; mark the event completed
+          currEvent.status = "completed";
+          removeEvent("", currEvent.id);
+          removeEvent(currEvent.id);
+        } else {
+          // more events possible; set next post status, templateImage
+
+          const templateImage = await generatePostTemplate.generatePostImage(
+            currEvent.eventType,
+            `next test ${nextTrigVal}`,
+            currEvent.templateId
+          );
+          const templateStatus = await generatePostTemplate.generatePostStatus(
+            currEvent.eventType,
+            `next test ${nextTrigVal}`,
+            currEvent.templateId
+          );
+          currEvent.nextPostPath = templateImage;
+          currEvent.nextPostStatus = templateStatus;
+          currEvent.conditionPrevTrigger = currTrigVal + "";
+          removeEvent("", currEvent.id);
+        }
+      }
     } else {
       currEvent.status = "completed";
     }
@@ -485,28 +544,210 @@ async function postTelegram(fp, postStatus) {
 
 async function varTriggerUpdate(varName) {
   console.log("called varTriggerUpdate");
+  const siteStat = await getSiteStats();
+  console.log("siteStat: ", siteStat);
   switch (varName) {
     case "certificates": {
       console.log("certificates");
-      const pendingEvents = await Event.find({ conditionVar: "certificates" });
+      const pendingEvents = await Event.find({
+        conditionVar: "certificates",
+        status: "pending",
+        variableTrigger: true
+      });
       pendingEvents.forEach(currEvent => {
         console.log(`task id: ${currEvent.id}`);
+        if (currEvent.recurring === false) {
+          console.log(`not recurring`);
+          // if curr certi count >= currEvent.conditionValue then emit 'postSocial'
+          if (siteStat.totCertis >= parseFloat(currEvent.conditionValue)) {
+            // em.emit("postSocial", currEvent.id);
+            scheduleVarTrigger(currEvent.id);
+          } else {
+            console.log("condition not met, quiting...");
+          }
+        } else {
+          console.log("is recurring");
+          if (currEvent.conditionPrevTrigger === "") {
+            // has never been invoked
+            // if curr certi count >= currEvent.conditionScopeStart then emit 'postSocial'
+            // update currEvent.conditionPrevTrigger
+            // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
+            console.log("has never been invoked");
+            if (
+              siteStat.totCertis >= parseFloat(currEvent.conditionScopeStart)
+            ) {
+              // em.emit("postSocial", currEvent.id);
+              scheduleVarTrigger(currEvent.id);
+            } else {
+              console.log("condition not met, quiting...");
+            }
+          } else {
+            // if curr certi count >= currEvent.conditionPrevTrigger then emit 'postSocial'
+            // update currEvent.conditionPrevTrigger
+            // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
+            if (
+              siteStat.totCertis >= parseFloat(currEvent.conditionPrevTrigger)
+            ) {
+              // em.emit("postSocial", currEvent.id);
+              scheduleVarTrigger(currEvent.id);
+            } else {
+              console.log("condition not met, quiting...");
+            }
+          }
+        }
       });
+      break;
     }
     case "registrations": {
       console.log("registrations");
-      const pendingEvents = await Event.find({ conditionVar: "registrations" });
+      const pendingEvents = await Event.find({
+        conditionVar: "registrations",
+        status: "pending",
+        variableTrigger: true
+      });
       pendingEvents.forEach(currEvent => {
         console.log(`task id: ${currEvent.id}`);
+        if (currEvent.recurring === false) {
+          console.log(`not recurring`);
+          // if curr certi count >= currEvent.conditionValue then emit 'postSocial'
+          if (siteStat.userCnt >= parseFloat(currEvent.conditionValue)) {
+            // em.emit("postSocial", currEvent.id);
+            scheduleVarTrigger(currEvent.id);
+          } else {
+            console.log("condition not met, quiting...");
+          }
+        } else {
+          console.log("is recurring");
+          if (currEvent.conditionPrevTrigger === "") {
+            // has never been invoked
+            // if curr certi count >= currEvent.conditionScopeStart then emit 'postSocial'
+            // update currEvent.conditionPrevTrigger
+            // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
+            console.log("has never been invoked");
+            if (siteStat.userCnt >= parseFloat(currEvent.conditionScopeStart)) {
+              // em.emit("postSocial", currEvent.id);
+              scheduleVarTrigger(currEvent.id);
+            } else {
+              console.log("condition not met, quiting...");
+            }
+          } else {
+            // if curr certi count >= currEvent.conditionPrevTrigger then emit 'postSocial'
+            // update currEvent.conditionPrevTrigger
+            // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
+            if (
+              siteStat.userCnt >= parseFloat(currEvent.conditionPrevTrigger)
+            ) {
+              // em.emit("postSocial", currEvent.id);
+              scheduleVarTrigger(currEvent.id);
+            } else {
+              console.log("condition not met, quiting...");
+            }
+          }
+        }
       });
+      break;
     }
     case "visits": {
       console.log("visits");
-      const pendingEvents = await Event.find({ conditionVar: "visits" });
+      const pendingEvents = await Event.find({
+        conditionVar: "visits",
+        status: "pending",
+        variableTrigger: true
+      });
       pendingEvents.forEach(currEvent => {
         console.log(`task id: ${currEvent.id}`);
+
+        if (currEvent.recurring === false) {
+          console.log(`not recurring`);
+          // if curr certi count >= currEvent.conditionValue then emit 'postSocial'
+          if (siteStat.visitCnt >= parseFloat(currEvent.conditionValue)) {
+            // em.emit("postSocial", currEvent.id);
+            scheduleVarTrigger(currEvent.id);
+          } else {
+            console.log("condition not met, quiting...");
+          }
+        } else {
+          console.log("is recurring");
+          if (currEvent.conditionPrevTrigger === "") {
+            // has never been invoked
+            // if curr certi count >= currEvent.conditionScopeStart then emit 'postSocial'
+            // update currEvent.conditionPrevTrigger
+            // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
+            console.log("has never been invoked");
+            if (
+              siteStat.visitCnt >= parseFloat(currEvent.conditionScopeStart)
+            ) {
+              // em.emit("postSocial", currEvent.id);
+              scheduleVarTrigger(currEvent.id);
+            } else {
+              console.log("condition not met, quiting...");
+            }
+          } else {
+            // if curr certi count >= currEvent.conditionPrevTrigger then emit 'postSocial'
+            // update currEvent.conditionPrevTrigger
+            // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
+            if (
+              siteStat.visitCnt >= parseFloat(currEvent.conditionPrevTrigger)
+            ) {
+              // em.emit("postSocial", currEvent.id);
+              scheduleVarTrigger(currEvent.id);
+            } else {
+              console.log("condition not met, quiting...");
+            }
+          }
+        }
       });
+      break;
     }
+  }
+}
+
+async function scheduleVarTrigger(eventId) {
+  console.log(`called scheduleVarTriggger: ${eventId}`);
+  try {
+    const currEvent = await Event.findOne({ id: eventId });
+    if (currEvent === null) {
+      console.log(`event not found, quiting...`);
+      return;
+    }
+    console.log(`event found`);
+    const scheduledTime = new Date(parseFloat(currEvent.nearestTS));
+    const hours = scheduledTime.getHours();
+    const minutes = scheduledTime.getMinutes();
+    let today = new Date();
+    // today.setHours(15);
+    today.setMinutes(today.getMinutes() + 1);
+    const currJob = schedule.scheduleJob(today, async () => {
+      console.log("[*] Fired trigger for event");
+      const socialPostConfig = await SocialPostConfig.findOne({});
+      if (socialPostConfig === null || socialPostConfig.autoPost === false) {
+        console.log(
+          "social config not initiated / autoPost has been turned off, skipping the event ",
+          eventId
+        );
+        return;
+      }
+      // autoPostActive, postSocial
+      postSocial(eventId);
+    });
+    console.log("today: ", today.toString());
+    if (today.getTime() < Date.now()) {
+      today.setDate(today.getDate() + 1);
+    }
+    ActiveJobs.push({
+      eventName: currEvent.eventName,
+      eventPurpose: currEvent.eventPurpose,
+      eventId: "",
+      triggerType: "timestamp",
+      refVar: currJob,
+      derivedFrom: currEvent.id,
+      nextInvocation: today.toString()
+    });
+    console.log("scheduled the var trigger by timestamp");
+  } catch (e) {
+    console.log("exception at scheduleVarTrigger: ", e);
+    console.log("quiting...");
+    return;
   }
 }
 
@@ -555,6 +796,22 @@ function findActiveJob(eventId) {
   return null;
 }
 
+function removeEvent(eventId, derivedFrom) {
+  console.log(`called removeEvent ${eventId}`);
+  for (let x = 0; x < ActiveJobs.length; x++) {
+    if (derivedFrom === "true") {
+      if (ActiveJobs[x].derivedFrom === eventId) {
+        ActiveJobs.splice(x, 1);
+        return true;
+      }
+    } else if (ActiveJobs[x].eventId === eventId) {
+      ActiveJobs.splice(x, 1);
+      return true;
+    }
+  }
+  return false;
+}
+
 function newSocialPostLog(eventId, platform, postId) {
   return new SocialPostLog({
     eventId: eventId,
@@ -562,4 +819,52 @@ function newSocialPostLog(eventId, platform, postId) {
     postId: postId,
     timestamp: "" + Date.now()
   });
+}
+
+async function getSiteStats(type) {
+  try {
+    let allUsers = await User.find({});
+    let allVisits = await Visited.find({});
+
+    let userCnt = 0,
+      visitCnt = 0,
+      caCnt = 20,
+      totCertis = 0;
+    if (allUsers != null) {
+      userCnt = allUsers.length;
+    }
+
+    if (allVisits != null) {
+      visitCnt = allVisits.length;
+    }
+
+    for (let y = 0; y < allUsers.length; y++) {
+      if (allUsers[y].examData.certificateHash.length > 1) {
+        totCertis += allUsers[y].examData.certificateHash.length - 1;
+      }
+    }
+
+    switch (type) {
+      case "certificates": {
+        return totCertis;
+      }
+      case "registrations": {
+        return userCnt;
+      }
+      case "visits": {
+        return visitCnt;
+      }
+      default: {
+        return {
+          userCnt: userCnt,
+          visitCnt: visitCnt,
+          totCertis: totCertis,
+          caCnt: caCnt
+        };
+      }
+    }
+  } catch (e) {
+    console.log(`exception at getUserStat: `, e);
+    return null;
+  }
 }
