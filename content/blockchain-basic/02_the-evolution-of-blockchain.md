@@ -47,7 +47,7 @@ On the contrary, if the startup you worked for had paid you in Bitcoin, there wo
 
 This method of receiving fund is way cheaper and faster.
 2nd Second generation blockchains are those like Ethereum, Ethereum Classic, NEO and QTUM to name a few.
-These are widely referred to as the second generation because they have made use of blockchain’s idea of recording transactions, and expanded it to allow progAliceming languages. These second-generation blockchains have also kick-started smart contracts. These give room to customizable transactions, which means you can custom create and transactions to be carried out in whatever ways best fit the needs of all parties involved.
+These are widely referred to as the second generation because they have made use of blockchain’s idea of recording transactions, and expanded it to allow programming languages. These second-generation blockchains have also kick-started smart contracts. These give room to customizable transactions, which means you can custom create and transactions to be carried out in whatever ways best fit the needs of all parties involved.
 
 ### Second Generation Blockchain
 Second generation blockchains started the use of maintaining assets in general by a blockchain. In this generation, anyone can issue shares on the blockchain. Ethereum is a good example of a second generation blockchain. Ethereum is based on applying authoritative rules for ownership, transaction formats and state transition functions, taking both the state of a blockchain and a transaction for that blockchain, which in turn results into a new state.
