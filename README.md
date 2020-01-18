@@ -74,20 +74,20 @@ You are ready to take on roles in the blockchain industry. Also, as blockchain i
 Module 1: https://xinfinorg.github.io/Blockchain_Tutorial-website/blockchain.html
 
 ## To do
-- [ ] Google & Github Login functionality
+- [x] Google, Twitter, Facebook Login functionality
 - [X] Login functionality
 - [X] Pages for the link at footer
 - [X] Email sign up (only UI )(Backend )
 - [X] Enroll today, start lesson.
 - [X] Enroll today, start lesson.
 - [X] Functionality for IPFS Hash through certificate page
-- [ ] Functionality for contact form
+- [x] Functionality for contact form
 - [X] Become partner button at university course offline
 - [X] Previous and next arrow when use finish reading the documents
 - [X] Content for become partner popup
-- [ ] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
+- [x] No page showing all courses, clicking on online blockchain training goes to blockchain basic course for engineer
 - [X] Code to read the images in folder for gallery and automatically generate it
-- [ ] 404 page
+- [x] 404 page
 
 ## Running the website
 The src file runs on Gulp, handlebars, livereload and other relevant packages. Using handlebars, the templates could be reused easily and the code is more maintainable. Otherwise, the dist folder is good to go as well. Have to run on server environment.
