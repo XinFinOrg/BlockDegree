@@ -8,7 +8,7 @@ courseIdx: 0
 <img src="/img/courses/bc-basic/hst2.png"   style="width:300px; height: 400px; align-content: center; margin: 25px;"/>
 
 
-In 1991, Dr W. Scott Stornetta published a whitepaper with his co-author Dr Stuart Haber to introduce ‘blockchain’. The term blockchain can be defined as a decentralised, cryptic database on which digital transactions take place.
+In 1991, Dr. W. Scott Stornetta published a whitepaper with his co-author Dr. Stuart Haber to introduce ‘blockchain’. The term blockchain can be defined as a decentralised, cryptic database on which digital transactions take place.
 
 The origin of Blockchain can be traced back to 1991. A structure which was almost the same as Blockchain was mentioned in a research paper by Haber and Stornetta with the title: “How to Time-Stamp a Digital Document” in 1991.
 
@@ -18,6 +18,6 @@ From this paper, it can be observed that the following two properties are method
 
 1. Finding a way for automatic time-stamping, without relying on the characteristics of the data medium, making it impossible to change any part of the document without the change being very apparent.
 
-2. It would be impossible to stamp a document with a different time and date from the actual one
+2. It would be impossible to stamp a document with a different time and date from the actual one.
 
 The next and certainly the most important Blockchain innovation was the Bitcoin. Satoshi Nakamoto published a white-paper in 2008, titled “Bitcoin: A Peer to Peer Electronic Cash System”. The paper mentioned that with peer-to-peer networking, there will be a solution to the problem of double spending in digital currency. The paper was aimed at building a peer-to-peer digital currency version which would enable people to spend it directly without involving a financial institution. It was a great development that allowed the user to make direct transactions without relying on a third party.
