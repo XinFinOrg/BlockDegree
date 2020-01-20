@@ -8,12 +8,15 @@ import DisableAutoPost from "./DisableAutoPost";
 import InitiateConfig from "./InitiateConfig";
 import ActiveJobs from "./ActiveJobs";
 import ForceSync from "./ForceSync";
+import CancelEvent from "./CancelEvent";
 import { store } from "react-notifications-component";
 
 class PromoCodeForms extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { jobs: [] };
+
+    this.fetchActiveJobs = this.fetchActiveJobs.bind(this);
   }
 
   componentDidMount() {
@@ -26,15 +29,41 @@ class PromoCodeForms extends Component {
       }
     });
   }
+
+  fetchActiveJobs() {
+    console.log("called fetch active jobs in parent");
+    axios
+      .get("/api/getCurrentEventJobs")
+      .then(resp => {
+        console.log("Response from fetchActiveJobs: ", resp);
+        if (resp.data.status === true) {
+          // allGood, set state
+          this.setState({ jobs: resp.data.jobs });
+        } else {
+          // display error
+          console.log("error while  fetching the jobs: ", resp.data.error);
+        }
+      })
+      .catch(e => {
+        console.log("error while fetching resp: ", e);
+      });
+  }
+
   render() {
     return (
       <div>
         <div className="row" style={{ width: "100%" }}>
           <div className="col-md-6">
-            <GenerateEventTS postTemplates={this.state.postTemplates} />
+            <GenerateEventTS
+              postTemplates={this.state.postTemplates}
+              fetchActiveJobs={this.fetchActiveJobs}
+            />
           </div>
           <div className="col-md-6">
-            <GenerateEventVar postTemplates={this.state.postTemplates} />
+            <GenerateEventVar
+              postTemplates={this.state.postTemplates}
+              fetchActiveJobs={this.fetchActiveJobs}
+            />
           </div>
         </div>
 
@@ -50,7 +79,12 @@ class PromoCodeForms extends Component {
             </div>
             <div className="row">
               <div className="col-md-12">
-                <ForceSync />
+                <ForceSync fetchActiveJobs={this.fetchActiveJobs} />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-12">
+                <CancelEvent fetchActiveJobs={this.fetchActiveJobs} />
               </div>
             </div>
           </div>
@@ -58,7 +92,10 @@ class PromoCodeForms extends Component {
 
         <div className="row" style={{ width: "100%" }}>
           <div className="col-md-6">
-            <ActiveJobs />
+            <ActiveJobs
+              jobs={this.state.jobs}
+              fetchActiveJobs={this.fetchActiveJobs}
+            />
           </div>
 
           <div className="col-md-6">

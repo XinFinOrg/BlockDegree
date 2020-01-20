@@ -44,8 +44,10 @@ async function postSocial(eventId) {
     let postedTwitter = currEvent.platform.twitter,
       postedLinkedIn = currEvent.platform.linkedin,
       postedFacebook = currEvent.platform.facebook,
+      postedTelegram = currEvent.platform.telegram,
       postTwitErr = false,
       postLinkErr = false,
+      postTelErr = false,
       postFaceErr = false;
     if (currEvent === null) {
       console.error(
@@ -103,7 +105,18 @@ async function postSocial(eventId) {
       }
     }
 
-    if (postTwitErr || postLinkErr || postFaceErr) {
+    if (postedTelegram) {
+      try {
+        await postTelegram(eventFilePath, eventStatus, eventId);
+      } catch (telegram_error) {
+        console.error(`error while posting the status on facebook`);
+        console.error(telegram_error);
+        postedTelegram = false;
+        postTelErr = true;
+      }
+    }
+
+    if (postTwitErr || postLinkErr || postFaceErr || postTelErr) {
       console.error(
         "some occured while posting at listeners.postSocial.postSocial error in posting"
       );
@@ -116,7 +129,7 @@ async function postSocial(eventId) {
       console.log("[*] no errors");
     }
     if (currEvent.recurring && !currEvent.variableTrigger) {
-      console.log("[*] event is recurring");
+      console.log("[*] event is recurring, timestamp");
       //  update the next post innvocation time, next post innvocation status, next post innvocation filepath
       //  -> nextPostScheduleTS
       //  -> nextPostStatus
@@ -538,9 +551,60 @@ async function postFacebook(fp, postStatus, eventId) {
 }
 
 // !Needs to be implemented
-async function postTelegram(fp, postStatus) {
+const postTelegram = (fp, postStatus, eventId) => {
   console.log("called postTelegram.");
-}
+  // https://api.telegram.org/bot<token>/METHOD_NAME
+  // https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe
+  // multipart/form-data (use to upload files)
+  try {
+    const postUrl = `https://api.telegram.org/bot${socialPostConfig.telegram.token}/sendPhoto`;
+    console.log("postUrl: ", postUrl);
+
+    let newForm = new FormData();
+    newForm.append("chat_id", "@monkaWin");
+    newForm.append("photo", fs.createReadStream(fp));
+    newForm.append("caption", postStatus);
+
+    axios
+      .post(postUrl, newForm, { headers: newForm.getHeaders() })
+      .then(async resp => {
+        if (resp.data.ok === true) {
+          const socialPostConfig = await SocialPostConfig.findOne({});
+          // No need to check for AutoPost.
+          if (socialPostConfig !== null) {
+            socialPostConfig.platforms.facebook.postCount++;
+            socialPostConfig.platforms.facebook.lastPost = "" + Date.now();
+            if (socialPostConfig.platforms.facebook.firstPost === "") {
+              socialPostConfig.platforms.facebook.firstPost = "" + Date.now();
+            }
+          }
+          await newSocialPostLog(
+            eventId,
+            "telegram",
+            resp.data.message_id
+          ).save();
+        } else {
+          console.log("error while generating the new post");
+          console.log("Response: ", resp);
+          console.log("quiting...");
+        }
+      })
+      .catch(e => {
+        console.log(
+          "exception while generating the post at postSocials.postTelegram ",
+          e
+        );
+        console.log("quiting...");
+        // console.log("error");
+      });
+  } catch (e) {
+    console.log(
+      "exception while generating the post at postSocials.postTelegram ",
+      e
+    );
+    console.log("quiting...");
+  }
+};
 
 async function varTriggerUpdate(varName) {
   console.log("called varTriggerUpdate");
@@ -586,7 +650,7 @@ async function varTriggerUpdate(varName) {
             // update currEvent.conditionPrevTrigger
             // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
             if (
-              siteStat.totCertis >= parseFloat(currEvent.conditionPrevTrigger)
+              siteStat.totCertis > parseFloat(currEvent.conditionPrevTrigger)
             ) {
               // em.emit("postSocial", currEvent.id);
               scheduleVarTrigger(currEvent.id);
@@ -620,7 +684,7 @@ async function varTriggerUpdate(varName) {
           console.log("is recurring");
           if (currEvent.conditionPrevTrigger === "") {
             // has never been invoked
-            // if curr certi count >= currEvent.conditionScopeStart then emit 'postSocial'
+            // if count >= currEvent.conditionScopeStart then emit 'postSocial'
             // update currEvent.conditionPrevTrigger
             // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
             console.log("has never been invoked");
@@ -631,12 +695,10 @@ async function varTriggerUpdate(varName) {
               console.log("condition not met, quiting...");
             }
           } else {
-            // if curr certi count >= currEvent.conditionPrevTrigger then emit 'postSocial'
+            // if curr certi count > currEvent.conditionPrevTrigger then emit 'postSocial'
             // update currEvent.conditionPrevTrigger
             // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
-            if (
-              siteStat.userCnt >= parseFloat(currEvent.conditionPrevTrigger)
-            ) {
+            if (siteStat.userCnt > parseFloat(currEvent.conditionPrevTrigger)) {
               // em.emit("postSocial", currEvent.id);
               scheduleVarTrigger(currEvent.id);
             } else {
@@ -659,7 +721,7 @@ async function varTriggerUpdate(varName) {
 
         if (currEvent.recurring === false) {
           console.log(`not recurring`);
-          // if curr certi count >= currEvent.conditionValue then emit 'postSocial'
+          // if count >= currEvent.conditionValue then emit 'postSocial'
           if (siteStat.visitCnt >= parseFloat(currEvent.conditionValue)) {
             // em.emit("postSocial", currEvent.id);
             scheduleVarTrigger(currEvent.id);
@@ -683,11 +745,11 @@ async function varTriggerUpdate(varName) {
               console.log("condition not met, quiting...");
             }
           } else {
-            // if curr certi count >= currEvent.conditionPrevTrigger then emit 'postSocial'
+            // if count > currEvent.conditionPrevTrigger then emit 'postSocial'
             // update currEvent.conditionPrevTrigger
             // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
             if (
-              siteStat.visitCnt >= parseFloat(currEvent.conditionPrevTrigger)
+              siteStat.visitCnt > parseFloat(currEvent.conditionPrevTrigger)
             ) {
               // em.emit("postSocial", currEvent.id);
               scheduleVarTrigger(currEvent.id);
@@ -715,8 +777,14 @@ async function scheduleVarTrigger(eventId) {
     const hours = scheduledTime.getHours();
     const minutes = scheduledTime.getMinutes();
     let today = new Date();
-    // today.setHours(15);
-    today.setMinutes(today.getMinutes() + 1);
+    today.setHours(hours);
+    today.setMinutes(minutes);
+    today.setSeconds(0);
+    // Event missed today's time, schedule to post on the next day
+    console.log("today: ", today.toString());
+    if (today.getTime() < Date.now()) {
+      today.setDate(today.getDate() + 1);
+    }
     const currJob = schedule.scheduleJob(today, async () => {
       console.log("[*] Fired trigger for event");
       const socialPostConfig = await SocialPostConfig.findOne({});
@@ -730,10 +798,6 @@ async function scheduleVarTrigger(eventId) {
       // autoPostActive, postSocial
       postSocial(eventId);
     });
-    console.log("today: ", today.toString());
-    if (today.getTime() < Date.now()) {
-      today.setDate(today.getDate() + 1);
-    }
     ActiveJobs.push({
       eventName: currEvent.eventName,
       eventPurpose: currEvent.eventPurpose,

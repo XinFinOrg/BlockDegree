@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Alert from "sweetalert-react";
-import { SingleDatePicker } from "react-dates"; //not to be used
-import DatePicker from "react-datepicker";
 import TimePicker from "rc-time-picker";
-import moment, { relativeTimeThreshold } from "moment";
+import moment from "moment";
 import FormData from "form-data";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -25,17 +23,19 @@ const stateVarNameOpts = [
 ];
 
 const stateVarIntervalOpts = [
+  { label: "1", value: 1 },
+  { label: "10", value: 10 },
   { label: "100", value: 100 },
   { label: "200", value: 200 },
   { label: "500", value: 500 }
 ];
 
-const eventTypesOpts = [
-  { label: "Certificates", value: "certificates" },
-  { label: "Registrations", value: "registrations" },
-  { label: "Course Visits", value: "visits" },
-  { label: "One Time", value: "one-time" }
-];
+// const eventTypesOpts = [
+//   { label: "Certificates", value: "certificates" },
+//   { label: "Registrations", value: "registrations" },
+//   { label: "Course Visits", value: "visits" },
+//   { label: "One Time", value: "one-time" }
+// ];
 
 class GenerateEventVar extends Component {
   constructor(props) {
@@ -317,7 +317,7 @@ class GenerateEventVar extends Component {
             stateVarStartValue: null,
             stateVarStopValue: null,
             postNearestTime: moment(),
-            selectedTemplate: null,
+            selectedTemplate: null
             // eventType: null
           });
           this.handleFileReset();
@@ -789,9 +789,10 @@ class GenerateEventVar extends Component {
           show={this.state.showSuccess}
           text={this.state.successMsg}
           type="success"
-          onConfirm={() =>
-            this.setState({ showSuccess: false, successMsg: "success" })
-          }
+          onConfirm={() => {
+            this.setState({ showSuccess: false, successMsg: "success" });
+            this.props.fetchActiveJobs();
+          }}
         />
         <Alert
           title="Error"

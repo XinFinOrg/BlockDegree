@@ -1,6 +1,7 @@
 let EventEmitter = require("events").EventEmitter;
 const Visited = require("../models/visited");
 const GeoIP = require("geoip-lite");
+const socialPostListener = require("../listeners/postSocial").em;
 
 let eventEmitter = new EventEmitter();
 
@@ -50,6 +51,7 @@ let visitedCourseHandler = (req, course) => {
       newStat.country = geo.country;
       try {
         await newStat.save();
+        socialPostListener.emit("varTriggerUpdate", "visits");
       } catch (e) {
         console.error(`Error while saving to DB at listeners.visited ${e}`);
         return;
@@ -84,6 +86,7 @@ let visitedCourseCurriculum = (req, courseCurriculum) => {
         newStat.lastVisit = Date.now();
         try {
           await newStat.save();
+          socialPostListener.emit("varTriggerUpdate", "visits");
         } catch (e) {
           console.error(`Error while saving to DB at listeners.visited ${e}`);
           return;
@@ -112,6 +115,7 @@ let visitedCourseCurriculum = (req, courseCurriculum) => {
         newStat.lastVisit = Date.now();
         try {
           await newStat.save();
+          socialPostListener.emit("varTriggerUpdate", "visits");
         } catch (e) {
           console.error(`Error while saving to DB at listeners.visited ${e}`);
           return;

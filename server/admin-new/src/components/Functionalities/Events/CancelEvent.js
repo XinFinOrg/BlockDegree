@@ -1,31 +1,39 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Alert from "sweetalert-react";
+import validate from "../validate";
 
-class ForceSync extends Component {
+import { store } from "react-notifications-component";
+
+class CancelPost extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      eventId: ""
+    };
 
-    this.state = {};
-
+    this.handleEventIdChange = this.handleEventIdChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  handleEventIdChange(event) {
+    this.setState({ eventId: event.target.value });
+  }
+
   handleSubmit() {
+    const validEventId = validate("text", this.state.eventId);
+    if (validEventId !== true) {
+      return showNotification("danger", "Cancel Event", "Invalid event id");
+    }
     axios
-      .get("/api/forceSyncEvents")
+      .post("/api/cancelEvent", { eventId: this.state.eventId })
       .then(resp => {
         console.log(resp.data);
         if (resp.data.status === true) {
           this.setState({
             showSuccess: true,
-            successMsg: "Re-Synced the Events",
-            eventType: null,
-            templateStatus: "",
-            inputFile: "",
-            inputFileName: "",
-            templateName: "",
-            templatePurpose: ""
+            successMsg: "Event Cancelled",
+            eventId: ""
           });
         } else {
           this.setState({
@@ -47,11 +55,22 @@ class ForceSync extends Component {
     return (
       <div className="card">
         <div className="header">
-          <h4>Force Sync Events</h4>
+          <h4>Cancel Post</h4>
         </div>
-
         <div className="content">
           <form className="form-horizontal soft-input">
+            <div className="form-group">
+              <label className="col-md-3">Event ID</label>
+              <div className="col-md-9">
+                <input
+                  type="text"
+                  placeholder="please enter an event id"
+                  onChange={this.handleEventIdChange}
+                  value={this.state.eventId}
+                />
+              </div>
+            </div>
+
             <div className="form-group">
               <label className="col-md-3"></label>
               <div className="col-md-9">
@@ -60,7 +79,7 @@ class ForceSync extends Component {
                   onClick={this.handleSubmit}
                   className="right btn btn-fill btn-info"
                 >
-                  Sync the Events
+                  Submit
                 </button>
               </div>
             </div>
@@ -91,4 +110,21 @@ class ForceSync extends Component {
   }
 }
 
-export default ForceSync;
+function showNotification(type, title, message) {
+  store.addNotification({
+    title: title,
+    message: message,
+    type: type,
+    insert: "top",
+    container: "top-right",
+    animationIn: ["animated", "fadeIn"],
+    animationOut: ["animated", "fadeOut"],
+    width: 200,
+    dismiss: {
+      duration: 3000,
+      onScreen: true
+    }
+  });
+}
+
+export default CancelPost;

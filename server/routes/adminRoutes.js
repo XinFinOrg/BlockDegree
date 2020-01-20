@@ -157,5 +157,6 @@ module.exports = app => {
     app.get("/api/getCurrentEventJobs",postSocial.getCurrentEventJobs);
     app.get("/api/forceSyncEvents",postSocial.forceReSync);
     app.post("/api/removePost",postSocial.removePost);
+    app.post("/api/cancelEvent", postSocial.cancelScheduledPost);
   }
 };

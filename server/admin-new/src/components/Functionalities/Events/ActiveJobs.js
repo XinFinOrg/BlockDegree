@@ -11,27 +11,27 @@ class ActiveJobs extends Component {
       showConfirm: false
     };
     this.renderCard = this.renderCard.bind(this);
-    this.fetchActiveJobs = this.fetchActiveJobs.bind(this);
+    // this.props.fetchActiveJobs = this.props.fetchActiveJobs.bind(this);
     this.removePost = this.removePost.bind(this);
   }
 
-  fetchActiveJobs() {
-    console.log("called fetchActiveJobs");
-    axios
-      .get("/api/getCurrentEventJobs")
-      .then(resp => {
-        console.log("Response from fetchActiveJobs: ", resp);
-        if (resp.data.status === true) {
-          // allGood, set state
-          this.setState({ jobs: resp.data.jobs });
-        } else {
-          // display error
-        }
-      })
-      .catch(e => {
-        console.log("error while fetching resp: ", e);
-      });
-  }
+  // fetchActiveJobs() {
+  //   console.log("called fetchActiveJobs");
+  //   axios
+  //     .get("/api/getCurrentEventJobs")
+  //     .then(resp => {
+  //       console.log("Response from fetchActiveJobs: ", resp);
+  //       if (resp.data.status === true) {
+  //         // allGood, set state
+  //         this.setState({ jobs: resp.data.jobs });
+  //       } else {
+  //         // display error
+  //       }
+  //     })
+  //     .catch(e => {
+  //       console.log("error while fetching resp: ", e);
+  //     });
+  // }
 
   removePost(eventId, derivedFrom) {
     console.log("called remove event");
@@ -62,30 +62,36 @@ class ActiveJobs extends Component {
   }
 
   componentWillMount() {
-    this.fetchActiveJobs();
+    this.props.fetchActiveJobs();
   }
 
   renderCard(item) {
     return (
-      <div className="active-job-card">
+      <div key={item.eventId} className="active-job-card">
         <div className="job-content">
           <div className="active-job-title">{item.eventName}</div>
           <div className="active-job-desc">
             <div className="active-job-purpose">{item.eventPurpose}</div>
-            <div className="active-job-next-invocation">
-              <span className="active-job-ts">Next Post:</span>
-              <span className="active-job-val">
-                {item.nextInvocation !== null &&
-                item.nextInvocation !== undefined
-                  ? ` ${new Date(item.nextInvocation).getHours()}:${new Date(
-                      item.nextInvocation
-                    ).getMinutes()} , ${new Date(
-                      item.nextInvocation
-                    ).getDate()}/${new Date(item.nextInvocation).getMonth() +
-                      1}/${new Date(item.nextInvocation).getFullYear()}`
-                  : `${item.stateVarName}`}
-              </span>
-            </div>
+            {item.nextInvocation !== null &&
+            item.nextInvocation !== undefined ? (
+              <div className="active-job-next-invocation">
+                <span className="active-job-ts">Next Post:&nbsp;</span>
+                <span className="active-job-val">
+                  {new Date(item.nextInvocation).getHours()}:
+                  {new Date(item.nextInvocation).getMinutes()},&nbsp; 
+                  {new Date(item.nextInvocation).getDate()}/
+                  {new Date(item.nextInvocation).getMonth() + 1}/
+                  {new Date(item.nextInvocation).getFullYear()}
+                </span>
+              </div>
+            ) : (
+              <div className="active-job-next-invocation">
+                <span className="active-job-ts">Next:&nbsp;</span>
+                <span className="active-job-val">
+                {item.stateVarName}:{item.nextTrigger}
+                </span>
+              </div>
+            )}
 
             <div className="active-job-recurr">
               Type:
@@ -137,7 +143,7 @@ class ActiveJobs extends Component {
             Active Jobs{" "}
             <span
               onClick={() => {
-                this.fetchActiveJobs();
+                this.props.fetchActiveJobs();
               }}
               className="table-refresh-btn right"
             >
@@ -146,9 +152,9 @@ class ActiveJobs extends Component {
           </h4>
         </div>
         <div className="content active-job-container">
-          {this.state.jobs.length === 0
+          {this.props.jobs.length === 0
             ? "No Active Jobs"
-            : this.state.jobs.map(item => {
+            : this.props.jobs.map(item => {
                 return this.renderCard(item);
               })}
         </div>
@@ -172,7 +178,7 @@ class ActiveJobs extends Component {
           text={this.state.successMsg}
           type="success"
           onConfirm={() => {
-            this.fetchActiveJobs();
+            this.props.fetchActiveJobs();
             this.setState({ showSuccess: false, successMsg: "success" });
           }}
         />

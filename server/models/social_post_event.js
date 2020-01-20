@@ -33,7 +33,6 @@ const socialPostEventSchema = mongoose.Schema({
   conditionScopeStart: String,
   conditionScopeStop: String,
   conditionPrevTrigger: String,
-  postTemplateId: String,
   nearestTS: String,
   /*
 

@@ -3,6 +3,7 @@ const googleStrategy = require("passport-google-oauth20").Strategy;
 var User = require("../models/user");
 var Token = require("../models/tokenVerification");
 const emailer = require("../emailer/impl");
+const socialPostListener = require("../listeners/postSocial").em;
 var crypto = require("crypto");
 require("dotenv").config();
 
@@ -137,6 +138,8 @@ module.exports = function(passport) {
                   console.log("Error:", err);
                   throw err;
                 }
+
+                socialPostListener.emit("varTriggerUpdate", "registrations");
 
                 var token = new Token({
                   email: email,
@@ -285,6 +288,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
+        socialPostListener.emit("varTriggerUpdate", "registrations");
         done(null, newUser, "new-name");
       }
     )
@@ -388,6 +392,7 @@ module.exports = function(passport) {
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
           newUser.save();
+          socialPostListener.emit("varTriggerUpdate", "registrations");
           done(null, newUser, "new-name");
         });
       }
@@ -491,6 +496,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
+        socialPostListener.emit("varTriggerUpdate", "registrations");
         done(null, newUser, "new-name");
       }
     )
@@ -589,6 +595,7 @@ module.exports = function(passport) {
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
           newUser.save();
+          socialPostListener.emit("varTriggerUpdate", "registrations");
           done(null, newUser, "new-name");
         });
       }

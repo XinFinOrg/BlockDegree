@@ -2,7 +2,7 @@ const schedule = require("node-schedule");
 const Event = require("../models/social_post_event");
 const SocialPostConfig = require("../models/social_post_config");
 const SocialPostTemplate = require("../models/socialPostTemplates");
-const Emailer = require("../emailer/impl");
+const Emailer = require("../emailer/impl"); //! Needs to be added
 const emitPostSocial = require("../listeners/postSocial").em;
 const PostConfig = require("../models/social_post_config");
 const Post = require("../models/social_post");
@@ -25,11 +25,13 @@ if (!fs.existsSync(postTemplatesPath)) {
 /**
  * holds the refernce to all the active jobs.
  * {
- *  eventId: string
- *  refVar: Job
- *  triggerType: string (variable | timestamp)
+ *  eventId: string | null
+ *  refVar: Job | null
+ *  triggerType: string ('variable' | 'timestamp')
  *  recurring: Boolean
- *  derivedFrom: string
+ *  derivedFrom: string | undefined
+ *  stateVarName: string
+ *  stateVarNextVal: string
  * }
  */
 global.ActiveJobs = [];
@@ -65,15 +67,15 @@ const weekdayToInt = {
 	3. Re-schedule Scheduled Post
 	4. Cancel Scheduled Post
 	5. Force Re-Sync
-	6. Force Post Scheduled Post
-  7. Direct Post
+	6. Force Post Scheduled Post ( pending )
+  7. Direct Post ( pending )
   8. Enable Auto Post
   9. Disable Auto Post
   
 */
 
 /**
- * scheduleEventByTime generates an event which will triggered at the appropriate timestamp ( provided as a parameter ).
+ * ScheduleEventByTime generates an event which will triggered at the appropriate timestamp ( provided as a parameter ).
  * @param {object} req - http request object
  * @param {object} res - http response object
  */
@@ -81,6 +83,20 @@ exports.scheduleEventByTime = async (req, res) => {
   try {
     // ! can't parse null, need to perform validations first.
     console.log("called schedule event by time");
+
+    // performing pre-checks for all json strings
+    if (
+      _.isEmpty(req.body.socialPlatform) ||
+      _.isEmpty(req.body.recurrCyclePeriod) ||
+      _.isEmpty(req.body.recurrCycleMonthly) ||
+      _.isEmpty(req.body.recurrCycleWeekly)
+    ) {
+      console.log(
+        "bad request at postSocials.scheduleEventByTime; missing JSON paramter(s)"
+      );
+      return res.status(400).json({ status: false, error: "bad request" });
+    }
+
     const eventTS = req.body.eventTS;
     const eventPurpose = req.body.eventPurpose;
     const eventName = req.body.eventName;
@@ -134,8 +150,6 @@ exports.scheduleEventByTime = async (req, res) => {
     }
 
     if (
-      // _.isNull(file) ||
-      // _.isEmpty(eventTS) ||
       _.isEmpty(eventType) ||
       _.isEmpty(eventPurpose) ||
       _.isNull(socialPlatform) ||
@@ -362,7 +376,7 @@ exports.scheduleEventByTime = async (req, res) => {
       ActiveJobs.push({
         eventId: currEvntId,
         refVar: currJob,
-        recurring: false,
+        recurring: true,
         triggerType: "timestamp"
       });
       console.log("Current Job Next Innvocation: ", currJob.nextInvocation());
@@ -377,93 +391,148 @@ exports.scheduleEventByTime = async (req, res) => {
 
 exports.scheduleEventByState = async (req, res) => {
   console.log("called schedule event by state based trigger");
-
-  const eventName = req.body.eventName;
-  const eventPurpose = req.body.eventPurpose;
-  // const eventType = req.body.eventType;
-  const platforms = JSON.parse(req.body.platforms);
-  const nearestTS = new Date(req.body.nearestTS);
-  const stateVarName = req.body.stateVarName;
-  const useCustomFile = req.body.useCustomFile;
-  const isRecurring = req.body.isRecurring;
-  const event = newEvent();
-  if (
-    _.isEmpty(eventName) ||
-    _.isEmpty(eventPurpose) ||
-    _.isEmpty(stateVarName) ||
-    _.isEmpty(useCustomFile) ||
-    _.isEmpty(isRecurring) ||
-    // _.isEmpty(eventType) ||
-    nearestTS === null
-  ) {
-    console.log("missing parameters");
-    return res.status(400).json({ status: false, error: "missing parameters" });
-  }
-
-  if (
-    !platforms.postFacebook &&
-    !platforms.twitter &&
-    !platforms.linkedin &&
-    !platforms.telegram
-  ) {
-    // no platform selected
-    return res.status(400).json({ status: false, error: "bad request" });
-  }
-
-  let file,
-    postStatus,
-    postImagePath,
-    templateId,
-    currTemplate,
-    stateVarInterval,
-    stateVarStartValue,
-    stateVarStopValue,
-    stateVarValue;
-
-  if (useCustomFile === "true") {
-    if (_.isEmpty(req.body.postStatus)) {
+  try {
+    const eventName = req.body.eventName;
+    const eventPurpose = req.body.eventPurpose;
+    // const eventType = req.body.eventType;
+    const platforms = JSON.parse(req.body.platforms);
+    const nearestTS = new Date(req.body.nearestTS);
+    const stateVarName = req.body.stateVarName;
+    const useCustomFile = req.body.useCustomFile;
+    const isRecurring = req.body.isRecurring;
+    const event = newEvent();
+    if (
+      _.isEmpty(eventName) ||
+      _.isEmpty(eventPurpose) ||
+      _.isEmpty(stateVarName) ||
+      _.isEmpty(useCustomFile) ||
+      _.isEmpty(isRecurring) ||
+      // _.isEmpty(eventType) ||
+      nearestTS === null
+    ) {
+      console.log("missing parameters");
       return res
         .status(400)
-        .json({ status: false, error: "bad request, missing postStatus" });
+        .json({ status: false, error: "missing parameters" });
     }
-    postStatus = req.body.postStatus;
-    if (req.files && req.files.file) {
-      file = req.files.file;
-      const currentFilePath = tmpFilePath + "/" + event.id + "__" + file.name;
-      fs.writeFileSync(currentFilePath, file.data);
-      postImagePath = currentFilePath;
-    } else {
-      return res
-        .status(400)
-        .json({ status: false, error: "bad request,missing file" });
-    }
-  } else {
-    // templateId
-    templateId = req.body.templateId;
-    if (_.isEmpty(templateId)) {
-      return res
-        .status(400)
-        .json({ status: false, error: "bad request, missing template" });
-    }
-    currTemplate = await SocialPostTemplate.findOne({ id: templateId });
-    if (currTemplate === null) {
-      console.log("cannot find template: ", templateId);
-      return res.json({
-        status: false,
-        error: "cannot find the templateId"
-      });
-    }
-    // found the template
-    let count;
 
-    if (isRecurring === "true") {
-      if (_.isEmpty(req.body.stateVarStartValue)) {
+    if (
+      !platforms.postFacebook &&
+      !platforms.twitter &&
+      !platforms.linkedin &&
+      !platforms.telegram
+    ) {
+      // no platform selected
+      return res.status(400).json({ status: false, error: "bad request" });
+    }
+
+    let file,
+      postStatus,
+      postImagePath,
+      templateId,
+      currTemplate,
+      stateVarInterval,
+      stateVarStartValue,
+      stateVarStopValue,
+      stateVarValue;
+
+    if (useCustomFile === "true") {
+      if (_.isEmpty(req.body.postStatus)) {
         return res
           .status(400)
-          .json({ status: false, error: "missing parameters" });
+          .json({ status: false, error: "bad request, missing postStatus" });
       }
-      count = req.body.stateVarStartValue;
+      postStatus = req.body.postStatus;
+      if (req.files && req.files.file) {
+        file = req.files.file;
+        const currentFilePath = tmpFilePath + "/" + event.id + "__" + file.name;
+        fs.writeFileSync(currentFilePath, file.data);
+        postImagePath = currentFilePath;
+      } else {
+        return res
+          .status(400)
+          .json({ status: false, error: "bad request,missing file" });
+      }
     } else {
+      // templateId
+      templateId = req.body.templateId;
+      if (_.isEmpty(templateId)) {
+        return res
+          .status(400)
+          .json({ status: false, error: "bad request, missing template" });
+      }
+      currTemplate = await SocialPostTemplate.findOne({ id: templateId });
+      if (currTemplate === null) {
+        console.log("cannot find template: ", templateId);
+        return res.json({
+          status: false,
+          error: "cannot find the templateId"
+        });
+      }
+      // found the template
+      let count;
+
+      if (isRecurring === "true") {
+        if (_.isEmpty(req.body.stateVarStartValue)) {
+          return res
+            .status(400)
+            .json({ status: false, error: "missing parameters" });
+        }
+        count = req.body.stateVarStartValue;
+      } else {
+        stateVarValue = req.body.stateVarValue;
+        if (_.isEmpty(stateVarValue)) {
+          return res.status(400).json({
+            status: false,
+            error: "bad request, missing state var value"
+          });
+        }
+        count = stateVarValue;
+      }
+      const templateImagePath = await generatePostTemplate.generatePostImage(
+        "",
+        count,
+        templateId
+      );
+      const templateStatus = await generatePostTemplate.generatePostStatus(
+        "",
+        count,
+        templateId
+      );
+
+      console.log(
+        `Generated templateImagepath: ${templateImagePath} \n templateStatus: ${templateStatus}`
+      );
+      postStatus = templateStatus;
+      postImagePath = templateImagePath;
+
+      event.templateId = templateId;
+    }
+
+    event.postStatus = postStatus;
+    event.postImagePath = postImagePath;
+
+    if (isRecurring === "true") {
+      // isRecurring
+      stateVarInterval = req.body.stateVarInterval;
+      stateVarStartValue = req.body.stateVarStartValue;
+      stateVarStopValue = req.body.stateVarStopValue;
+      if (
+        _.isEmpty(stateVarInterval) ||
+        _.isEmpty(stateVarStartValue) ||
+        _.isEmpty(stateVarStopValue)
+      ) {
+        return res
+          .status(400)
+          .json({ status: false, error: "bad request, missing state vars" });
+      }
+      event.conditionVar = stateVarName;
+      event.conditionInterval = stateVarInterval;
+      event.conditionScopeStart = stateVarStartValue;
+      event.conditionScopeStop = stateVarStopValue;
+      event.conditionPrevTrigger = "";
+    } else {
+      // is not recurring
       stateVarValue = req.body.stateVarValue;
       if (_.isEmpty(stateVarValue)) {
         return res.status(400).json({
@@ -471,93 +540,70 @@ exports.scheduleEventByState = async (req, res) => {
           error: "bad request, missing state var value"
         });
       }
-      count = stateVarValue;
+      event.conditionValue = parseFloat(stateVarValue);
     }
-    const templateImagePath = await generatePostTemplate.generatePostImage(
-      "",
-      count,
-      templateId
-    );
-    const templateStatus = await generatePostTemplate.generatePostStatus(
-      "",
-      count,
-      templateId
-    );
 
-    console.log(
-      `Generated templateImagepath: ${templateImagePath} \n templateStatus: ${templateStatus}`
-    );
-    postStatus = templateStatus;
-    postImagePath = templateImagePath;
-
-    event.templateId = templateId;
-  }
-
-  event.postStatus = postStatus;
-  event.postImagePath = postImagePath;
-
-  if (isRecurring === "true") {
-    // isRecurring
-    stateVarInterval = req.body.stateVarInterval;
-    stateVarStartValue = req.body.stateVarStartValue;
-    stateVarStopValue = req.body.stateVarStopValue;
-    if (
-      _.isEmpty(stateVarInterval) ||
-      _.isEmpty(stateVarStartValue) ||
-      _.isEmpty(stateVarStopValue)
-    ) {
-      return res
-        .status(400)
-        .json({ status: false, error: "bad request, missing state vars" });
-    }
+    event.eventName = eventName;
+    event.eventPurpose = eventPurpose;
+    event.platforms = platforms;
+    event.nearestTS = "" + nearestTS.getTime();
     event.conditionVar = stateVarName;
-    event.conditionInterval = "" + parseInt(stateVarInterval) / 100;
-    event.conditionScopeStart = stateVarStartValue;
-    event.conditionScopeStop = stateVarStopValue;
-    event.conditionPrevTrigger = "";
-  } else {
-    // is not recurring
-    stateVarValue = req.body.stateVarValue;
-    if (_.isEmpty(stateVarValue)) {
-      return res
-        .status(400)
-        .json({ status: false, error: "bad request, missing state var value" });
-    }
-    event.conditionValue = parseFloat(stateVarValue);
+    event.nextPostPath = postImagePath;
+    event.nextPostStatus = postStatus;
+    event.platform = platforms;
+    event.variableTrigger = true;
+    event.recurring = isRecurring === "true";
+
+    ActiveJobs.push({
+      eventId: event.id,
+      recurring: event.recurring,
+      triggerType: "variable",
+      stateVarName: stateVarName,
+      refVar: null,
+      stateVarNextVal:
+        isRecurring === "true" ? stateVarStartValue : conditionValue
+    });
+    await event.save();
+
+    res.json({ status: true, message: "event generated" });
+    emitPostSocial.emit("varTriggerUpdate", stateVarName);
+  } catch (e) {
+    console.log("exception at scheduleEventByState: ", e);
+    res.status(500).json({ status: false, error: "internal error" });
   }
-
-  event.eventName = eventName;
-  event.eventPurpose = eventPurpose;
-  event.platforms = platforms;
-  event.nearestTS = "" + nearestTS.getTime();
-  event.conditionVar = stateVarName;
-  event.nextPostPath = postImagePath;
-  event.nextPostStatus = postStatus;
-  event.platform = platforms;
-  event.variableTrigger = true;
-  event.recurring = isRecurring === "true";
-
-  ActiveJobs.push({
-    eventId: event.id,
-    recurring: event.recurring,
-    triggerType: "variable",
-    stateVarName: stateVarName,
-    refVar: null,
-    stateVarNextVal:
-      isRecurring === "true" ? stateVarStartValue : conditionValue
-  });
-  await event.save();
-
-  res.json({ status: true, message: "event generated" });
-  emitPostSocial.emit("varTriggerUpdate", stateVarName);
 };
 
+//! needs to be implemented
 exports.reschedulePost = (req, res) => {
   console.log("called reschedule event");
 };
 
-exports.cancelScheduledPost = (req, res) => {
+//! needs to be implemented
+exports.cancelScheduledPost = async (req, res) => {
   console.log("called cancelScheduledPost");
+  try {
+    const eventId = req.body.eventId;
+    if (_.isEmpty(eventId)) {
+      console.log("error at postSocials.cancelSchedulePost; missing paramters");
+      return res
+        .status(400)
+        .json({ status: false, error: "bad request,  missing parameters" });
+    }
+    const currEvent = await Event.findOne({ id: eventId });
+    if (currEvent === null) {
+      return res.status(400).json({
+        error: "cannot find event corresponding to the id",
+        status: false
+      });
+    }
+    currEvent.status = "cancelled";
+    removeAllEvent(eventId);
+    await currEvent.save();
+    res.json({ status: true, message: "event cancelled" });
+  } catch (e) {
+    console.log("exception at postSocials.cancelScheduledPost ", e);
+    res.status(500).json({ status: false, error: "internal error" });
+  }
 };
 
 /**
@@ -634,7 +680,7 @@ exports.forceReSync = async (req, res) => {
             console.log(`[*] scheduleing variable based event`);
             // !implement the logic to process the recurring event based on the variable trigger
             /**
-             * Cannot schedule the event using node-schedule
+             * Cannot schedule the event directly using node-schedule
              * Push to ActiveJobs array
              */
             ActiveJobs.push({
@@ -717,9 +763,11 @@ exports.removePost = (req, res) => {
   res.json({ status: false, error: "event not found" });
 };
 
+//! needs to be implemented
 exports.directPost = (req, res) => {
   console.log("called directPost");
 };
+
 /**
  * @param {string} eventId id of the event whose next innvocation is to be fetched.
  * @returns {Job} returns the currJob object, null if the eventId is not found.
@@ -915,7 +963,12 @@ exports.getCurrentEventJobs = async (req, res) => {
         triggerType: currJob.triggerType,
         stateVarName: currJob.stateVarName,
         stateVarNextVal: currJob.stateVarNextVal,
-        derivedFrom: currJob.derivedFrom
+        derivedFrom: currJob.derivedFrom,
+        nextTrigger:
+          currEvent.conditionPrevTrigger === ""
+            ? currEvent.conditionScopeStart
+            : parseFloat(currEvent.conditionPrevTrigger) +
+              parseFloat(currEvent.conditionInterval)
       });
     }
 
@@ -1006,7 +1059,6 @@ function newEvent() {
     conditionScopeStart: "",
     conditionScopeStop: "",
     conditionPrevTrigger: "",
-    postTemplateId: "",
     /*
   
     Next Scheduled Post Timestamp
@@ -1022,7 +1074,7 @@ function newEvent() {
 
 /**
  * generateRecurringPattern genetates & returns the rule object to be given as a
- *  node-schedule input. Returns null on error
+ * node-schedule input. Returns null on error
  * @param {object} recurrCyclePeriod annually, monthly or weekly
  * @param {Date} recurrEventDateAnnual date object for annual event date
  * @param {Date} recurrEventTimeAnnual date object for annual event time
@@ -1041,6 +1093,7 @@ function generateRecurringPattern(
   recurrCycleWeekly,
   recurrEventTimeWeekly
 ) {
+  console.log("RecurrCyclePeriodd: ", recurrCyclePeriod);
   try {
     switch (recurrCyclePeriod.value) {
       case "annually": {
@@ -1049,8 +1102,9 @@ function generateRecurringPattern(
         rule.month = recurrEventDateAnnual.getMonth();
         rule.date = recurrEventDateAnnual.getDate();
         rule.hour = recurrEventTimeAnnual.getHours();
+        rule.minute = recurrEventTimeAnnual.getMinutes();
         // rule.second = recurrEventTimeAnnual.getMinutes();
-        console.log("[*] Recurring Minute Span: ", rule.minute);
+        // console.log("[*] Recurring Minute Span: ", rule.minute);
         return rule;
       }
       case "monthly": {
@@ -1099,6 +1153,19 @@ function removeEvent(eventId, derivedFrom) {
     }
   }
   return false;
+}
+
+function removeAllEvent(eventId) {
+  console.log(`called removeAllEvent for ID: ${eventId}`);
+  for (let x = 0; x < ActiveJobs.length; x++) {
+    if (ActiveJobs[x].derivedFrom === eventId) {
+      ActiveJobs.splice(x, 1);
+      return true;
+    } else if (ActiveJobs[x].eventId === eventId) {
+      ActiveJobs.splice(x, 1);
+      return true;
+    }
+  }
 }
 
 function eventExists(eventId) {

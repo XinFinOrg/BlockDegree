@@ -959,9 +959,10 @@ class GenerateEventTS extends Component {
               show={this.state.showSuccess}
               text={this.state.successMsg}
               type="success"
-              onConfirm={() =>
-                this.setState({ showSuccess: false, successMsg: "success" })
-              }
+              onConfirm={() => {
+                this.setState({ showSuccess: false, successMsg: "success" });
+                this.props.fetchActiveJobs();
+              }}
             />
             <Alert
               title="Error"
