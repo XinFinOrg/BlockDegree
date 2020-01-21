@@ -15,16 +15,14 @@ const schedule = require("node-schedule");
 const userStats = require("../services/userStats");
 const User = require("../models/user");
 const Visited = require("../models/visited");
+const FacebookConfig = require("../models/facebookConfig");
+const Emailer = require("../emailer/impl");
 // const getEventNextInvocation = require("../services/postSocials")
 //   .getEventNextInvocation;
 const generatePostTemplate = require("../helpers/generatePostTemplate");
-
 let exec = require("child_process").exec;
-
 const em = new EventEmitter();
-
 let postCount = 0;
-
 const filePath = path.join(__dirname, "../../Certificate.jpg");
 console.log("FilePath: ", filePath);
 
@@ -488,10 +486,28 @@ async function postFacebook(fp, postStatus, eventId) {
       1. make get to https://graph.facebook.com/${page_id}?fields=access_token&access_token=${user_access_token}
       2. will return {access_token:"",id:""}
     */
-  const res = await axios.get(
-    `https://graph.facebook.com/${socialPostConfig.facebook.pageId}?fields=access_token&access_token=${socialPostConfig.facebook.accessToken}`
-  );
+  // const res = await axios.get(
+  //   `https://graph.facebook.com/${socialPostConfig.facebook.pageId}?fields=access_token&access_token=${socialPostConfig.facebook.accessToken}`
+  // );
   // console.log(res);
+
+  const currConfig = await FacebookConfig.findOne({});
+  if (currConfig === null) {
+    console.log("config not set for facebook social posts, quitting...");
+    return;
+  }
+  const lastUpdateDate = new Date(parseFloat(currConfig.lastUpdate));
+  const currDate = new Date();
+  currDate.setMonth(currDate.getMonth() + 1);
+  if (lastUpdateDate.getTime() > currDate.getTime()) {
+    console.log("one month since last month, pls refresh token.");
+    Emailer.sendMailInternal(
+      "blockdegree-bot@blockdegree.org",
+      process.env.SUPP_EMAIL_ID,
+      "Refresh Facebo0k Token (ADMIN)",
+      "Please update the facebook token from the newadmin."
+    );
+  }
   let newForm = new FormData();
   newForm.append("file", uploadFile);
   axios
@@ -504,7 +520,7 @@ async function postFacebook(fp, postStatus, eventId) {
         contentType: false,
         processData: false,
         params: {
-          access_token: res.data.access_token,
+          access_token: currConfig.longTermToken,
           message: postStatus
         }
       }

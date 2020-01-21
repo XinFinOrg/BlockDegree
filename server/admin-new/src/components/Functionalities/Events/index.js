@@ -9,6 +9,7 @@ import InitiateConfig from "./InitiateConfig";
 import ActiveJobs from "./ActiveJobs";
 import ForceSync from "./ForceSync";
 import CancelEvent from "./CancelEvent";
+import FacebookRefresh from "./FacebookRefresh";
 import { store } from "react-notifications-component";
 
 class PromoCodeForms extends Component {
@@ -109,6 +110,12 @@ class PromoCodeForms extends Component {
                 <DisableAutoPost />
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-6">
+            <FacebookRefresh />
           </div>
         </div>
 

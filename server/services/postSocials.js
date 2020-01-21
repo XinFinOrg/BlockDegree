@@ -11,7 +11,7 @@ const uuid = require("uuid/v4");
 const fs = require("fs");
 const path = require("path");
 const generatePostTemplate = require("../helpers/generatePostTemplate");
-
+const FacebookConfig = require("../models/facebookConfig");
 const User = require("../models/user");
 const Visited = require("../models/visited");
 
@@ -977,6 +977,15 @@ exports.getCurrentEventJobs = async (req, res) => {
     console.log("exception at services.postSocials.getCurrentEventJobs: ", e);
     return res.status(500).json({ status: false, error: "internal error" });
   }
+};
+
+exports.fetchFacebookLastUpdate = async (req, res) => {
+  console.log("called fetchTimeToExpire");
+  const config = await FacebookConfig.findOne({});
+  if (config === null) {
+    return res.json({ status: false, error: "config not initiated" });
+  }
+  return res.json({ status: true, lastUpdate: config.lastUpdate });
 };
 
 function newSocialPostConfig() {

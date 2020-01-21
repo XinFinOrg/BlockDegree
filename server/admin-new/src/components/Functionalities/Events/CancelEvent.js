@@ -60,7 +60,7 @@ class CancelPost extends Component {
         <div className="content">
           <form className="form-horizontal soft-input">
             <div className="form-group">
-              <label className="col-md-3">Event ID</label>
+              <label className="control-label col-md-3">Event ID</label>
               <div className="col-md-9">
                 <input
                   type="text"
