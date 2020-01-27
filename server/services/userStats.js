@@ -4,6 +4,91 @@ const ReferralCode = require("../models/referral_code");
 const Visited = require("../models/visited");
 const PaymentLogs = require("../models/payment_logs");
 const GeoIP = require("geoip-lite");
+const axios = require("axios");
+
+const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
+
+// burning xdc = https://explorerapi.xinfin.network/totalBurntValue
+// masternode count = https://explorerapi.xinfin.network/totalMasterNodes
+// masternode xdc staked = https://explorerapi.xinfin.network/totalStakedValue
+// total xdc = https://explorerapi.xinfin.network/publicAPI?module=balance&action=totalXDC&apikey=YourApiKeyToken
+// rewards = https://explorer.xinfin.network/todayRewards
+exports.getXinFinStats = async (req, res) => {
+  console.log("called getXinFinStats");
+  try {
+
+    console.log("called getSiteStats");
+    let allUsers = await User.find({});
+    let allVisits = await Visited.find({});
+  
+    let userCnt = 0,
+      visitCnt = 0,
+      caCnt = 20,
+      totCertis = 0;
+    if (allUsers != null) {
+      userCnt = allUsers.length;
+    }
+  
+    if (allVisits != null) {
+      visitCnt = allVisits.length;
+    }
+  
+    for (let y = 0; y < allUsers.length; y++) {
+      if (allUsers[y].examData.certificateHash.length > 1) {
+        totCertis += allUsers[y].examData.certificateHash.length - 1;
+      }
+    }
+  
+
+
+    const burntToken = await axios.post(
+      "https://explorerapi.xinfin.network/totalBurntValue"
+    );
+    const masterCount = await axios.post(
+      "https://explorerapi.xinfin.network/totalMasterNodes"
+    );
+    const totalStaked = await axios.post(
+      "https://explorerapi.xinfin.network/totalStakedValue"
+    );
+    const totalXdc = await axios.post(
+      "https://explorerapi.xinfin.network/publicAPI?module=balance&action=totalXDC&apikey=YourApiKeyToken"
+    );
+    const rewards = await axios.post(
+      "https://explorer.xinfin.network/todayRewards"
+    );
+    let xdc_price = await axios.get(cmc);
+    console.log(xdc_price.data);
+    xdc_price = xdc_price.data[0];
+    console.log(
+      burntToken.data,
+      masterCount.data,
+      totalStaked.data,
+      totalXdc.data.result,
+      rewards.data,
+      xdc_price.price_usd
+    );
+    res.json({
+      status: true,
+      burnTokenValue: burntToken.data,
+      masterNodeCount: masterCount.data,
+      totalStaked: totalStaked.data,
+      totalXdc: totalXdc.data.result,
+      rewards: rewards.data,
+      priceUsd: xdc_price.price_usd,
+      monthlyRewards: parseFloat(rewards.data) * 31,
+      dailyVolume: xdc_price["24h_volume_usd"],
+      monthlyRewardPer: ((parseFloat(rewards.data) * 31) / 10000000) * 100,
+      yearlyRewardPer: ((parseFloat(rewards.data) * 31 * 12) / 10000000) * 100,
+      userCnt: userCnt,
+      visitCnt: visitCnt,
+      totCertis: totCertis,
+      caCnt: caCnt
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "internal error", status: false });
+  }
+};
 
 exports.getAllUserTimestamp = async (req, res) => {
   const users = await User.find({});

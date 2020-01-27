@@ -429,7 +429,14 @@
 /*-------- End Contributors Area Style ------------*/
 
 
-
+.video_slider {
+  img {
+    height: 300px;
+    width: 200px;
+	border: 2px solid #ccc;
+	border-radius: 5px;
+  }
+}
 
 
 .offerModal-open .modal-backdrop {background-color:black;opacity:0.9;}
@@ -470,8 +477,20 @@
     clear: both;
 }
 
-
-
+.video {
+  border: 1px solid #1ebae9;
+  border-radius: 10px;
+  padding: 5px;
+  margin:2px;
+  text-align: center;
+  
+  height: 240px;
+  iframe {
+    border-radius: 10px;
+    height: 100%;
+    width: 100%;
+  }
+}
 
 
 .stats-counter {
