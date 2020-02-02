@@ -10,7 +10,7 @@ $("document").ready(() => {
         align: "right"
       }
     });
-  }, 1000);
+  }, 2000);
 
   // $.ajax({
   //   url: "/api/getSiteStats",
@@ -82,7 +82,7 @@ $("document").ready(() => {
         animateNumberIncrease(0, res.yearlyRewardPer, "returnApprAnnual");
         animateNumberIncrease(
           0,
-          Math.round(stakedMillUsd * 100000000 * res.priceUsd),
+          Math.round(stakedMillUsd * 1000000 * res.priceUsd),
           "lockedTokenFiat"
         );
         animateNumberIncrease(0, parseFloat(res.monthlyRewards), "rewardsXDC"); // rewardsFIAT
