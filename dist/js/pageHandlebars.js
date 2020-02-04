@@ -54,6 +54,10 @@ Handlebars.registerHelper("inc", function(value, options) {
   return parseInt(value) + 1;
 });
 
+Handlebars.registerHelper("json", function(context) {
+  return JSON.stringify(context);
+});
+
 // Special case for login button
 // (function() {
 //   if (document.getElementById("login-btn") != null) {
