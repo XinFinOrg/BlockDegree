@@ -6,7 +6,11 @@ const visitedSchema = mongoose.Schema({
   course: String,
   count: Number,
   firstVisit: String,
-  lastVisit: String
+  lastVisit: String,
+  region: String,
+  city: String,
+  country: String,
+  coordinates: [String]
 });
 
 module.exports = mongoose.model("Visited", visitedSchema);

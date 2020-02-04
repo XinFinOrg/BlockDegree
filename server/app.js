@@ -1,18 +1,20 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var mongoose = require("mongoose");
-var passport = require("passport");
-var flash = require("connect-flash");
-var bodyParser = require("body-parser");
-var session = require("express-session");
-var hbs = require("express-handlebars");
-var cors = require("cors");
-var fs = require("fs");
+let createError = require("http-errors");
+let express = require("express");
+let path = require("path");
+let cookieParser = require("cookie-parser");
+let logger = require("morgan");
+let mongoose = require("mongoose");
+let passport = require("passport");
+let flash = require("connect-flash");
+let bodyParser = require("body-parser");
+let session = require("express-session");
+let hbs = require("express-handlebars");
+let cors = require("cors");
+let fs = require("fs");
+let pendingTx = require("./listeners/pendingTx").em;
+const adminServices = require("./services/adminServices");
 
-var app = express();
+let app = express();
 require("dotenv").config();
 mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true });
 require("./services/passport")(passport);
@@ -47,10 +49,11 @@ app.use(
   session({
     secret: "",
     resave: true,
+    rolling: true,
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      maxAge: 3600000
+      maxAge: 10800000
     }
   })
 ); // session secret
@@ -72,6 +75,9 @@ require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
 require("./routes/blogsRoutes")(app);
 
+// remove the comment to serve from build
+app.use("/newadmin", dynamicMiddleware);
+
 // catch 404 and render 404 page
 app.use("*", function(req, res) {
   res.render("error");
@@ -88,12 +94,31 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
-app.listen("3000", () => {
+app.listen("3000", async () => {
+  pendingTx.emit("initiatePendingTx");
+  pendingTx.emit("initiatePendingBurn");
+  await adminServices.initiateWalletConfig();
   console.log("server started");
 });
 
 if (!fs.existsSync("./tmp")) {
   fs.mkdirSync("./tmp");
+}
+
+if (!fs.existsSync("./server/cached")) {
+  fs.mkdirSync("./server/cached");
+}
+
+function dynamicMiddleware(req,res,next) {
+  if (req.isAuthenticated()) {
+    if (process.env.ADMIN_ID.split("|").includes(req.user.email)) {
+      express.static(path.join(__dirname, "./admin-new/build"))(req,res,next);
+    } else {
+      res.render("error");
+    }
+  } else {
+    res.render("error");
+  }
 }
 
 module.exports = app;

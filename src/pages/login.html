@@ -106,28 +106,27 @@
     "message",
     function(event) {
       if (event.origin == "https://www.blockdegree.org") {
-
-      console.log("From PopUp", event.data);
-      document.cookie = event.data;
-      checkAuth();
+        console.log("From PopUp", event.data);
+        document.cookie = event.data;
+        checkAuth();
       }
     },
     false
   );
   function handleAuthGoogle() {
-    window.location.replace("https://www.blockdegree.org/auth/google")
+    window.location.replace("https://www.blockdegree.org/auth/google");
     // popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
   }
   function handleAuthFacebook() {
-    window.location.replace("https://www.blockdegree.org/auth/facebook")
+    window.location.replace("https://www.blockdegree.org/auth/facebook");
     // popupLogin({ path: "https://www.blockdegree.org/auth/facebook?close=true" });
   }
   function handleAuthTwitter() {
-    window.location.replace("https://www.blockdegree.org/auth/twitter")
+    window.location.replace("https://www.blockdegree.org/auth/twitter");
     // popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
   }
   function handleAuthLinkedin() {
-    window.location.replace("https://www.blockdegree.org/auth/linkedin")
+    window.location.replace("https://www.blockdegree.org/auth/linkedin");
     // popupLogin({ path: "https://www.blockdegree.org/auth/linkedin?close=true" });
   }
 
@@ -182,6 +181,34 @@
     }, 1000);
   }
 </script>
-<script src="/js/userAuth.js?v=1.0"></script>
+<script src="/js/userAuth.js?v=1.4"></script>
+<script>
+  let currentUrl = location.href;
+  let paramsStr = currentUrl.split("?");
+  let params = paramsStr[1].split("&");
+  console.log(params);
+  for (let i = 0; i < params.length; i++) {
+    let key = params[i].split("=")[0],
+      value = params[i].split("=")[1];
+    console.log(key, value);
+    if (key == "emailConfirmed" && value == "true") {
+      setTimeout(() => {
+        $.notify("Your email was successfully confirmed! Please Login-in now", {
+          type: "success"
+        });
+      }, 1000);
+    }
+    if (key == "alreadyVerified" && value == "true") {
+      setTimeout(() => {
+        $.notify(
+          "Your email addess is already verified.Please continue to login.",
+          {
+            type: "info"
+          }
+        );
+      }, 1000);
+    }
+  }
+</script>
 {{/inline}}
 {{/base}}

@@ -1,0 +1,154 @@
+{{#> base}}
+{{> layouts/base title="Blockdegree Statistics"}}
+
+{{#*inline "body-block"}}
+{{> includes/hero hero-title="Statistics" hero-copy="View the site's current statistics"}}
+
+<script src="./js/statistics.js?v=1.01"></script>
+
+<!-- Inside Page Financiers -->
+<div class="sub_page_wraper site-stat-page">
+
+<!-- Statistics -->
+<section id="statistics" class="section">
+
+  <br/>
+  <div class="container">			
+
+    <div class="stat-title">Site Statistics</div>
+    <hr/>
+    <br/>
+    <div class="row flex-row whiteSmoke">                
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle"><span id="stat-certiIssued" class="counter">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Certificates Issued</p>
+                </div>
+      </div>
+
+
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle"><span id="stat-userRegistrations" class="counter">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>User Registrations</p>
+                </div>
+      </div>
+
+
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle"><span id="stat-courseVisits" class="counter">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Course Visits</p>
+                </div>
+      </div>
+
+
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle"><span id="stat-campAmbas" class="counter">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Campus Ambassadors</p>
+                </div>
+      </div>
+      
+    </div>
+
+<hr/>
+<br/>
+<div class="stat-title">Network Statistics</div>
+    <hr/>
+    <br/>
+    <div class="row flex-row">                
+      <!-- <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle">$ <span class="counter">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Utility Fees Paid in XDC Protocol for Peer to Peer Trade Assets Distribution</p>
+                </div>
+      </div> -->
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+        <a href="https://explorer.xinfin.network/addr/xdc0000000000000000000000000000000000000000" target="_blank">
+        <div class="factTitle"><span class="counter" id="burnTokenAmnt">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>XDC Protocol tokens sent to burning contract for Fee processing</p></a>
+                </div>
+      </div>
+      
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle">$ <span class="counter" id="currXDCPrice">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Current Price of XDC Protocol Token</p>
+                </div>
+              </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle">$ <span class="counter" id="marketCap">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Fully diluted Market Cap of XDC Protocol Tokens</p>
+                </div>
+              </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+        <a href="https://master.xinfin.network/" target="_blank">
+                      <div class="factTitle"><span class="counter" id="masterLiveCnt">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Number of Live Masternodes in XDC Network</p><a>
+                </div>
+              </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+        <a href="https://explorer.xinfin.network/addr/xdc0000000000000000000000000000000000000088" target="_blank">
+                      <div class="factTitle"><span class="counter" id="lockedTokensXDC">0</span> Million XDC</div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Total capital locked in XDC Masternodes</p></a>
+                </div>
+              </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle">$ <span class="counter" id="lockedTokenFiat">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Fiat Value of Total Capital locked in XDC Masternodes</p>
+                </div>
+              </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle"><span class="counter" id="rewardsXDC">0</span> XDC</div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Monthly Masternode rewards generated for XDC Masternodes</p>
+                </div>
+              </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle">$ <span class="counter" id="rewardsFIAT">0</span></div>
+          <div class="tf-divider"><hr /></div>
+                    <p>Fiat Value of rewards generated by XDC Masternodes</p>
+                </div>
+              </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle"><span class="counter" id="returnApprMonth">0</span> % Per Month</div>
+          <div class="tf-divider"><hr /></div>
+                      <p><span class="counter" id="returnApprAnnual">0</span> % Per Year</p>
+                    <p>Approx Return on Peer to Peer XDC Masternodes</p>
+                </div>
+              </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="counterFact bgOffWhiteShadow">
+                      <div class="factTitle">$ <span class="counter" id="dailyVol" >0</span></div>
+            <div class="tf-divider"><hr /></div>
+                    <p>Daily Volume of XDC Tokens</p>
+                </div>
+              </div>
+          </div> 
+  </div>
+</section>
+
+
+
+</div>
+{{/inline}} {{/base}}

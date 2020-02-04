@@ -1,10 +1,22 @@
 const User = require("../models/user");
+const PaymentToken = require("../models/payment_token");
+const CoursePrice = require("../models/coursePrice");
+const PaymentLog = require("../models/payment_logs");
+/*
+
+All the below APIs (except setProfileName) are NOT in use; no need to OPTIMIZE
+
+*/
 
 exports.setupProfile = async (req, res) => {
   console.log("called setup profile");
-  const user = await User.findOne({ email: req.user.email }).catch(e =>
-    console.error(`Exception in setupProfile ${e}`)
-  );
+  let user;
+  try {
+    user = await User.findOne({ email: req.user.email });
+  } catch (e) {
+    console.error(`Exception in setupProfile ${e}`);
+    res.render("displayError", { error: "Exception in setup profile" });
+  }
   if (!user) {
     return console.error(`User not found, seems like the DB is down`);
   }
@@ -20,7 +32,11 @@ exports.setupProfile = async (req, res) => {
   newProfile.photo.name = res.locals.file_name;
   newProfile.photo.buffer = req.file.buffer.toString("base64");
   user.profile = newProfile;
-  await user.save();
+  try {
+    await user.save();
+  } catch (e) {
+    res.render("displayError", { error: "error while saving the newProfile" });
+  }
   res.json({ msg: "ok" });
 };
 
@@ -123,15 +139,159 @@ exports.removeSocial = async (req, res) => {
   }
 };
 
+/*
+
+The API below is the only API which is in USE
+
+*/
 exports.setProfileName = async (req, res) => {
-  const user = await User.findOne({ email: req.user.email }).catch(e => {
-    console.error(`Error : ${e}`);
-    return res.render("displayError", { error: `error : ${e}` });
-  });
+  let user;
+  try {
+    user = await User.findOne({ email: req.user.email });
+  } catch (e) {
+    console.error(
+      `Error occured at setProfileName for user : ${req.user.email} : ${e}`
+    );
+    return res.json({
+      updated: false,
+      error:
+        "Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org"
+    });
+  }
   if (user == null) {
-    return res.render("displayError", { error: `no such user` });
+    return res.json({
+      updated: false,
+      error: `No user ${req.user.email} found!!`
+    });
   }
   user.name = req.body.fullName;
-  await user.save();
-  res.json({ msg: `Name set: ${req.body.fullName}` });
+  try {
+    await user.save();
+  } catch (e) {
+    console.error(
+      `Error occured at setProfileName for user ${req.user.email} `,
+      e
+    );
+    return res.json({
+      updated: false,
+      error:
+        "Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org"
+    });
+  }
+  res.json({
+    updated: true,
+    error: null
+  });
+};
+
+exports.getUserPaypalPayment = async (req, res) => {
+  console.log("Called getUserPaypalPayment");
+  try {
+    const logs = await PaymentLog.find({
+      email: req.user.email
+    }).lean();
+
+    return res.json({
+      status: true,
+      error: null,
+      logs: logs
+    });
+  } catch (e) {
+    console.error(
+      "Some error occured at userProfile.getUserPaypalPayment while fetching the payments: ",
+      e
+    );
+    return res.json({
+      status: false,
+      error: "internal error",
+      allPayments: null
+    });
+  }
+};
+
+/*
+
+  Mini explorer for user payments based in crypto payments
+
+*/
+exports.getUserCryptoPayment = async (req, res) => {
+  console.log("Called getUserCryptoPayment");
+  try {
+    const allUserPayments = await PaymentToken.find({
+      email: req.user.email
+    }).lean();
+    for (let i = 0; i < allUserPayments.length; i++) {
+      const course = await CoursePrice.findOne({
+        courseId: allUserPayments[i].course
+      });
+      allUserPayments[i].courseName = course.courseName;
+      allUserPayments[i].coursePriceUsd = course.priceUsd;
+      allUserPayments[i].xdceConfirmation = course.xdceConfirmation;
+      allUserPayments[i].xdcConfirmation = course.xdcConfirmation;
+      let willBurn = false;
+      for (let x = 0; x < course.burnToken.length; x++) {
+        if (course.burnToken[x].tokenName == allUserPayments[i].tokenName) {
+          // found the token
+          willBurn = course.burnToken[x].autoBurn;
+        }
+      }
+      allUserPayments[i].willBurn = willBurn;
+    }
+    return res.json({
+      status: true,
+      error: null,
+      allPayments: allUserPayments
+    });
+  } catch (e) {
+    console.error(
+      "Some error occured at userProfile.getUserCryptoPayment while fetching the payments: ",
+      e
+    );
+    return res.json({
+      status: false,
+      error: "internal error",
+      allPayments: null
+    });
+  }
+};
+
+exports.getCourseMeta = async (req, res) => {
+  try {
+    if (
+      req.body.courseId.trim() == undefined ||
+      req.body.courseId.trim() == null ||
+      req.body.courseId.trim() == ""
+    ) {
+      return res.json({ status: false, error: "bad request", data: null });
+    }
+    const courseMeta = await CoursePrice.findOne({
+      courseId: req.body.courseId.trim()
+    });
+    if (courseMeta == null) {
+      // no course found with
+      return res.json({
+        status: false,
+        error: "no course exixts with given courseId",
+        data: null
+      });
+    }
+    let retObj = {
+      courseId: courseMeta.courseId,
+      courseName: courseMeta.courseName,
+      xdceConfirmation: courseMeta.xdceConfirmation,
+      xdcConfirmation: courseMeta.xdcConfirmation,
+      priceUsd: courseMeta.priceUsd
+    };
+    return res.json({ status: true, error: null, data: retObj });
+  } catch (e) {
+    console.error(
+      "Some error occured at userProfile.getCourseMeta while fetching the payments: ",
+      e
+    );
+    return res.json({
+      status: false,
+      error: "internal error",
+      data: null
+    });
+  }
 };

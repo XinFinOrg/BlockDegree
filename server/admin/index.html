@@ -2,6 +2,14 @@
         <head>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
                 <style>
                   body {
                     font-family: "Lato", sans-serif;
@@ -52,7 +60,6 @@
             
                   .main {
                     margin-left: 230px;
-                    font-size: 28px;
                     padding: 0px 10px;
                   }
             
@@ -69,7 +76,9 @@
               <body>
                     <div class="sidenav">
                             <div onclick="openPage('promoCode')">PromoCode</div>
-                            <div onclick="openPage('blogs')">Blogs</div>
+                            <div onclick="openPage('course_payment')">Course Payments</div>
+                            <div onclick="openPage('wallet_config')">Wallet Config</div>
+                            <div onclick="openPage('referral_code')">Referral Code</div>
                           </div>
                           <div class="main">
                                 <section class="main-section">
@@ -77,101 +86,207 @@
                                                 <p>
                                                         <h1>Promo Codes</h1>
                                                         <!-- Form for adding new promo-code -->
-                                                        <form action="/admin/newPromoCode" method="POST">
+                                                        <form action="/api/newPromoCode" method="POST">
                                                             <h3>Add Promo Code</h3>
                                                             <div>
                                                                 CodeName : 
-                                                                <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                             </div>
                                                             <div>
                                                                 Discount Amount : 
-                                                                <input type="number" name="discAmt" placeholder="enter the discount amount" >
+                                                                <input class="form-control" type="number" name="discAmt" placeholder="enter the discount amount" >
                                                             </div>
                                                             <div>
                                                                 Purpose for new code : 
-                                                                <input type="text" name="purpose" placeholder="enter the purpose" >
+                                                                <input class="form-control" type="text" name="purpose" placeholder="enter the purpose" >
                                                             </div> 
                                                             <div>
                                                                 Promo-code access ?<br>
-                                                                <input type="radio" name="restricted" id="restricted" value="true">restricted<br>
-                                                                <input type="radio" name="restricted" id="unrestricted" value="false">unrestricted
+                                                                <input type="radio" name="restricted" id="restricted" value="true"><label for="restricted">&nbsp;Restricted</label>&nbsp;&nbsp;&nbsp;
+                                                                <input type="radio" name="restricted" id="unrestricted" value="false"><label for="unrestricted">&nbsp;Unrestricted</label>
                                                             </div>
-                                                            <input type="submit" value="OK">
+                                                            <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                         </form>
                                                       
                                                     </p>
                                                     <p>
                                                         <!-- Form for making promo-code active -->
-                                                        <form action="/admin/activatePromoCode" method="POST">
+                                                        <form action="/api/activatePromoCode" method="POST">
                                                             <h3>Activate Promo Code</h3>
                                                             <div>
                                                                 CodeName : 
-                                                                <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                             </div>
-                                                            <input type="submit" value="OK">
+                                                            <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                         </form>
                                                     </p>
                                                     <p>
                                                             <!-- Form for making promo-code inactive -->
-                                                            <form action="/admin/deactivatePromoCode" method="POST">
+                                                            <form action="/api/deactivatePromoCode" method="POST">
                                                                 <h3>Deactivate Promo Code</h3>
                                                                 <div>
                                                                     CodeName : 
-                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                    <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                                 </div>
-                                                                <input type="submit" value="OK">
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
                                                         </p>     
                                                         
                                                         <p>
                                                             <!-- Form for making promo-code inactive -->
-                                                            <form action="/admin/restrictPromoCode" method="POST">
+                                                            <form action="/api/restrictPromoCode" method="POST">
                                                                 <h3>Restrict Promo Code</h3>
                                                                 <div>
                                                                     CodeName : 
-                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                    <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                                 </div>
-                                                                <input type="submit" value="OK">
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
-                                                        </p>  
-                                                        
+                                                        </p>                                                          
                                                         <p>
                                                             <!-- Form for making promo-code inactive -->
-                                                            <form action="/admin/unrestrictPromoCode" method="POST">
+                                                            <form action="/api/unrestrictPromoCode" method="POST">
                                                                 <h3>Un-Restrict Promo Code</h3>
                                                                 <div>
                                                                     CodeName : 
                                                                     <input type="text" name="codeName" placeholder="enter the codename" >
                                                                 </div>
-                                                                <input type="submit" value="OK">
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
                                                         </p> 
                                                         <p>
                                                             <!-- Form for making promo-code inactive -->
-                                                            <form action="/admin/addAllowedUser" method="POST">
+                                                            <form action="/api/addAllowedUser" method="POST">
                                                                 <h3>Allow User for restricted Promo Code</h3>
                                                                 <div>
                                                                     User email : 
-                                                                    <input type="text" name="email" placeholder="enter the user email" >
+                                                                    <input class="form-control" type="text" name="email" placeholder="enter the user email" >
                                                                 </div>
                                                                 <div>
                                                                     CodeName : 
-                                                                    <input type="text" name="codeName" placeholder="enter the codename" >
+                                                                    <input class="form-control" type="text" name="codeName" placeholder="enter the codename" >
                                                                 </div>
-                                                                <input type="submit" value="OK">
+                                                                <input class="btn btn-primary"  style="float:right" type="submit" value="Submit"><br/>
                                                             </form>
-                                                        </p>   
+                                                        </p>
+                                                        <p>
+                                                            <h3>Set Cap for Promocode Use</h3>
+                                                            <input class="form-control" type="text" id="promoCodeCap_codeName" placeholder="Enter the code-name" ><br>
+                                                            <div>
+                                                                Select the state for the PromoCode cap: <br>
+                                                                <input type="radio" name="promoCodeCap" id="promoCodeCap__true" value="true"><label for="promoCodeCap__true">&nbsp;True</label>&nbsp;&nbsp;&nbsp;
+                                                                <input type="radio" name="promoCodeCap" id="promoCodeCap__false" value="false"><label for="promoCodeCap__false">&nbsp;False</label>
+                                                            </div><br>
+                                                            <button class="btn btn-primary" style="float: right;" type="button" onclick="setPromoCodeCap()">Set PromoCode Cap</button>                                                            
+                                                        </p>                                                                                                                 
+                                                        <p>
+                                                                <h3>Set Use Limit for Promocode</h3>
+                                                                <input class="form-control" type="text" id="promoCodeUL_codeName" placeholder="Enter the code-name" >
+                                                                <input class="form-control" type="number" id="promoCodeUL_useLimit" placeholder="Enter the use limit"><br>
+                                                                <button class="btn btn-primary" style="float: right;" type="button" onclick="setPromoCodeUL()">Set Promo Code Use Limit</button>                                                            
+                                                        </p>        
                                         </div>
-                                        <div id="blogs" class="tabcontent" style="display:none">
-                                                <h1>Blogs</h1>
+                                        <div id="course_payment" class="tabcontent" style="display:none">
+                                                <h1>Course Payments - tread carefully </h1>
                                                 <div>
-                                                    <button onclick="newPost()">New Post</button>
-                                                </div>
+                                                    <h4>Register New Course</h4>
+                                                    <input class="form-control" class="form-control" id="new_course_id" placeholder="Enter the course ID"/>
+                                                    <input class="form-control" class="form-control" id="new_course_name" placeholder="Enter the course name" />
+                                                    <input class="form-control" class="form-control" id="new_course_priceUsd" placeholder="Enter the price in USD"/>
+                                                    <input class="form-control" class="form-control" id="new_course_xdceTolerance" placeholder="Enter the XDCe tolerance ( in percentage ) "/>
+                                                    <input class="form-control" class="form-control" id="new_course_xdcTolerance" placeholder="Enter the XDC tolerance ( in percentage ) " />
+                                                    <input class="form-control" class="form-control" id="new_course_xdceConfirmation" placeholder="Enter the XDCe Confirmations ( in blocks ) " />
+                                                    <input class="form-control" class="form-control" id="new_course_xdcConfirmation" placeholder="Enter the XDC Confirmations ( in blocks ) " />
+                                                    <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="newCourse()">New Course</button>
+                                                </div><br/>                                                
                                                 <div>
-                                                    <input id="blog_id" type="text" placeholder="enter the post hash"><button onclick="editPost()">Edit Post</button>
-                                                </div>
+                                                <h4>Set Price Usd For Course</h4>
+                                                        <input class="form-control" class="form-control" id="setPrice_course_id" placeholder="Enter the course ID"/>
+                                                        <input class="form-control" class="form-control" id="setPrice_course_priceUsd" placeholder="Enter the price in USD"/>
+                                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setPriceUsd()">Set Price in USD</button>
+                                                </div><br/>
+                                                <div>
+                                                        <h4>Set XdceTolerance For Course</h4>
+                                                                <input class="form-control" class="form-control" id="setTolXdce_course_id" placeholder="Enter the course ID"/>
+                                                                <input class="form-control" class="form-control" id="setTolXdce_course_tol" placeholder="Enter the XDCE tolerance in percentage"/>
+                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setToleranceXdce()">Set XDCe Tolerance</button>
+                                                        </div><br/>
+                                                        <div>
+                                                                <h4>Set XdcTolerance For Course</h4>
+                                                                        <input class="form-control" class="form-control" id="setTolXdc_course_id" placeholder="Enter the course ID"/>
+                                                                        <input class="form-control" class="form-control" id="setTolXdc_course_tol" placeholder="Enter the XDC tolerance in percentage"/>
+                                                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setToleranceXdc()">Set XDC Tolerance</button>
+                                                                </div><br/>
+                                                                <div>
+                                                                        <h4>Set Xdce Confirmations For Course</h4>
+                                                                                <input class="form-control" class="form-control" id="setConXdce_course_id" placeholder="Enter the course ID"/>
+                                                                                <input class="form-control" class="form-control" id="setConXdce_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
+                                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setConfirmationsXdce()">Set XDCe Confirmations</button>
+                                                                        </div><br/>
+                                                                        <div>
+                                                                                <h4>Set Xdc Confirmations For Course</h4>
+                                                                                        <input class="form-control" class="form-control" id="setConXdc_course_id" placeholder="Enter the course ID"/>
+                                                                                        <input class="form-control" class="form-control" id="setConXdc_course_con" placeholder="Enter the XDCe confirmations in blocknumber"/>
+                                                                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setConfirmationsXdc()">Set XDC Confirmations</button>
+                                                                                </div><br/>
+                                                                                <div>
+                                                                                    <h4>Set Token Burn Percent For Course</h4>
+                                                                                            <input class="form-control" class="form-control" id="setBurnPer_course_id" placeholder="Enter the course ID"/>
+                                                                                            <input class="form-control" class="form-control" id="setBurnPer_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                            <input class="form-control" class="form-control" id="setBurnPer_course_burnPercent" placeholder="Enter the Token Burn Percent"/>
+                                                                                            <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="setTokenBurnPercent()">Set Burn Percent</button>
+                                                                                    </div><br/>
+                                                                                    <div>
+                                                                                        <h4>Enable Burning For Course</h4>
+                                                                                                <input class="form-control" class="form-control" id="enableBurn_course_id" placeholder="Enter the course ID"/>
+                                                                                                <input class="form-control" class="form-control" id="enableBurn_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="enableBurning()">Enable Burning</button>
+                                                                                        </div><br/>
+                                                                                        <h4>Disable Burning For Course</h4>
+                                                                                                <input class="form-control" class="form-control" id="disableBurn_course_id" placeholder="Enter the course ID"/>
+                                                                                                <input class="form-control" class="form-control" id="disableBurn_course_tokenName" placeholder="Enter the Token Name"/>
+                                                                                                <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="disableBurning()">Disable Burning</button>
+                                                                                        </div><br/>
+                                                                                        
+                                        <div id="wallet_config" class="tabcontent" style="display: none;">
+                                        <h1>Wallet Configuration</h1>
+
+                                        <h4>Add Wallet</h4>
+                                        <input class="form-control" type="text" id="newWallet_wallet_address" placeholder="Enter the address of the wallet" />
+                                        <input class="form-control" type="text" id="newWallet_wallet_type" placeholder="Enter the type of the wallet" />
+                                        <input class="form-control" type="text" id="newWallet_wallet_token_name" placeholder="Enter the token which the wallet is intented to accept" />
+                                        <input class="form-control" type="text" id="newWallet_wallet_network" placeholder="Enter the relevant network on which the wallet wishes to operate" />
+                                        <input class="form-control" type="text" id="newWallet_wallet_purpose" placeholder="Enter the purpose of the wallet" />
+                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="addNewWallet()">Add New Wallet</button>
+
+                                        <h4>Switch Active Wallet</h4>
+                                        <input class="form-control" type="text" id="switchWallet_wallet_address" placeholder="Enter the address of the wallet" />
+                                        <input class="form-control" type="text" id="switchWallet_wallet_type" placeholder="Enter the type of the wallet" />
+                                        <input class="form-control" type="text" id="switchWallet_wallet_token_name" placeholder="Enter the token which the wallet is intented to accept" />
+                                        <input class="form-control" type="text" id="switchWallet_wallet_network" placeholder="Enter the relevant network on which the wallet wishes to operate" />                                        
+                                        <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="switchToWallet()">Switch Wallet</button>
+
+                                        </div>
+
+                                        <div id="referral_code" class="tabcontent" style="display: none;">
+                                            <h1>Referral Codes Config</h1>
+
+                                            <h4>Add New Referral Code</h4>
+                                            <input class="form-control" type="text" id="addNew_referralCode" placeholder="Enter the code name" />
+                                            <input class="form-control" type="text" id="addNew_referrerEmail" placeholder="Enter the Referrer's email" />
+                                            <input class="form-control" type="text" id="addNew_purpose" placeholder="Enter the purpose of this referral code" />
+                                            <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="addReferralCode()">Add Referral Code</button>
+
+                                            <h4>Enable Referral Code</h4>
+                                            <input class="form-control" type="text" id="enable_referralCode" placeholder="Enter the code name" />                                    
+                                            <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="enableReferralCode()">Enable Referral Code</button>
+
+                                            <h4>Disable Referral Code</h4>
+                                            <input class="form-control" type="text" id="disable_referralCode" placeholder="Enter the code name" />                                            
+                                            <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="disableReferralCode()">Disable Referral Code</button>
                                         </div>
                                     </section>
+                                </div>
                           </div>                    
               </body>
 
@@ -184,24 +299,379 @@
                 document.getElementById(pageName).style.display = "block";
             }
 
-            function newPost(){
-                // make a get to create a new post
+            function newCourse() {
+
+                const courseId = document.getElementById("new_course_id").value.trim();
+                const courseName = document.getElementById("new_course_name").value.trim();
+                const coursePriceUsd = document.getElementById("new_course_priceUsd").value.trim();
+                const courseXdcTolerance = document.getElementById("new_course_xdcTolerance").value.trim();
+                const courseXdceTolerance = document.getElementById("new_course_xdceTolerance").value.trim();
+                const courseXdceConfirmation = document.getElementById("new_course_xdceConfirmation").value.trim();
+                const courseXdcConfirmation = document.getElementById("new_course_xdcConfirmation").value.trim();
+
+                if (courseId == "" || courseName == "" || coursePriceUsd == "" || courseXdcTolerance == "" || courseXdceTolerance == "" || courseXdceConfirmation == "" || courseXdcConfirmation == ""){
+                    alert("Invalid parameters");
+                    return;
+                }
+
                 $.ajax({
-                    method:"get",
-                    url:"/api/blogs/createNewPost",
-                    success: response => {
-                        if (response.error==null){
-                            // no error
-                            let hash = response.hash
-                            window.location.replace(`https://www.blockdegree.org/blogs/editBlog?blog_id=${hash}`);
+                    method:"post",
+                    url:"/api/addCourse",
+                    data : {courseId : courseId,courseName:courseName,coursePriceUsd:coursePriceUsd,xdcTolerance:courseXdcTolerance,xdceTolerance:courseXdceTolerance,xdceConfirmation:courseXdceConfirmation, xdcConfirmation:courseXdcConfirmation},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
                         }
                     }
                 })
             }
 
-            function editPost(){
-                let blog_id = document.getElementById("blog_id");
-                window.location.replace(`https://www.blockdegree.org/blogs/editBlog?blog_id=${blog_id.value}`);
+            function setPriceUsd() {
+                const courseId = document.getElementById("setPrice_course_id").value.trim();
+                const coursePriceUsd = document.getElementById("setPrice_course_priceUsd").value.trim();
+                if (courseId == "" || coursePriceUsd == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setPriceUsd",
+                    data : {courseId : courseId,coursePriceUsd:coursePriceUsd},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
             }
+
+            function setToleranceXdce() {
+                const courseId = document.getElementById("setTolXdce_course_id").value.trim();
+                const courseXdceTolerance = document.getElementById("setTolXdce_course_tol").value.trim();
+                if (courseId == "" || courseXdceTolerance == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdceTolerance",
+                    data : {courseId : courseId,xdceTolerance:courseXdceTolerance},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setToleranceXdc() {
+                const courseId = document.getElementById("setTolXdc_course_id").value.trim();
+                const courseXdcTolerance = document.getElementById("setTolXdc_course_tol").value.trim();
+                if (courseId == "" || courseXdcTolerance == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdcTolerance",
+                    data : {courseId : courseId,xdcTolerance:xdcTolerance},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setConfirmationsXdce() {
+                const courseId = document.getElementById("setConXdce_course_id").value.trim();
+                const xdceCons = document.getElementById("setConXdce_course_con").value.trim();
+                if (courseId == "" || xdceCons == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdceConfirmation",
+                    data : {courseId : courseId,xdceConfirmation:xdceCons},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setConfirmationsXdc() {
+                const courseId = document.getElementById("setConXdc_course_id").value.trim();
+                const xdcCons = document.getElementById("setConXdc_course_con").value.trim();
+                if (courseId == "" || xdcCons == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setXdcConfirmation",
+                    data : {courseId : courseId,xdcConfirmation:xdcCons},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setTokenBurnPercent(){
+                const courseId = document.getElementById("setBurnPer_course_id").value.trim();
+                const tokenName = document.getElementById("setBurnPer_course_tokenName").value.trim(); 
+                const burnPercent = document.getElementById("setBurnPer_course_burnPercent").value.trim(); 
+                if (courseId == "" || tokenName == "" || burnPercent == "" ){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/setCourseBurnPercent",
+                    data : {courseId : courseId,tokenName:tokenName, burnPercent:burnPercent},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function enableBurning(){
+                const courseId = document.getElementById("enableBurn_course_id").value.trim();
+                const tokenName = document.getElementById("enableBurn_course_tokenName").value.trim(); 
+                if (courseId == "" || tokenName == ""){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/enableBurning",
+                    data : {courseId : courseId,tokenName:tokenName},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function disableBurning(){
+                const courseId = document.getElementById("disableBurn_course_id").value.trim();
+                const tokenName = document.getElementById("disableBurn_course_tokenName").value.trim(); 
+                if (courseId == "" || tokenName == ""){
+                    alert("Invalid parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/disableBurning",
+                    data : {courseId : courseId,tokenName:tokenName},
+                    success: result => {
+                        if (!result.status){
+                            alert(result.error);
+                        }else{
+                            alert("Success")
+                        }
+                    }
+                })
+            }
+
+            function setPromoCodeCap() {
+                console.log("Called set promocode cap");
+                const codeName = document.getElementById("promoCodeCap_codeName").value;
+                const setCap = $("input[name='promoCodeCap']:checked").val(); 
+                console.log(codeName,setCap)
+                $.ajax({
+                    method:"post",
+                    url:"/api/setPromoCodeCap",
+                    data:{codeName:codeName, setCap:setCap},
+                    success: data => {
+                        if (data.status){
+                            console.log("Set Promo Code Cap response ",data);
+                        alert("Success");
+                        }else{
+                            alert(data.error,{type:"danger"})
+                        }                        
+                    },
+                    error: xhr => {
+                        $.notify("Some error occured while making an Ajax Call",{type:"danger"})}})};
+            function addNewWallet() {
+                const wallet_address = document.getElementById("newWallet_wallet_address").value;
+                const wallet_network = document.getElementById("newWallet_wallet_network").value;
+                const wallet_token_name = document.getElementById("newWallet_wallet_token_name").value;
+                const wallet_type = document.getElementById("newWallet_wallet_type").value;
+                const wallet_purpose = document.getElementById("newWallet_wallet_purpose").value;
+                if (wallet_address == "" || wallet_network == "" || wallet_token_name == "" || wallet_type == "" || wallet_purpose == "" ) {
+                    alert("Invalid Parameters");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/addWallet",
+                    data:{wallet_address:wallet_address, wallet_network:wallet_network, wallet_purpose:wallet_purpose, wallet_type:wallet_type, wallet_token_name:wallet_token_name},
+                    success: data => {
+                        console.log(data)
+                        if (data.status){
+                            alert("Success");
+                            return;
+                        }else{
+                            alert("Error: "+data.error);
+                            return;
+                        }
+                    },
+                    error: xhr => {
+                        alert("Some error occured");
+                        return;
+                    }
+                })
+            }
+
+            function setPromoCodeUL(){
+                console.log("called set promocode use limit");
+                const codeName = document.getElementById("promoCodeUL_codeName").value;
+                const useLimit = document.getElementById("promoCodeUL_useLimit").value;
+                $.ajax({
+                    method:"post",
+                    url:"/api/setPromoCodeUseLimit",
+                    data:{codeName:codeName,useLimit:useLimit},
+                    success: data => {
+                        if (data.status){
+                            // success
+                            alert("Success");
+                        }else{
+                            // some error occured
+                            alert(data.error);
+                        }
+
+                    },
+                    error: xhr => {
+                        alert("Some error occured while making the request")
+                    }
+                })
+            }
+                        
+            function switchToWallet() {
+                const wallet_address = document.getElementById("switchWallet_wallet_address").value;
+                const wallet_network = document.getElementById("switchWallet_wallet_network").value;
+                const wallet_type = document.getElementById("switchWallet_wallet_type").value;
+                const wallet_token_name = document.getElementById("switchWallet_wallet_token_name").value;
+                if (wallet_address == "" || wallet_network == "" || wallet_token_name == "" || wallet_token_name == ""){
+                    alert("Invalid Parameter Value");
+                    return;
+                }
+                $.ajax({
+                    method:"post",
+                    url:"/api/switchWalletTo",
+                    data:{wallet_address:wallet_address, wallet_network:wallet_network, wallet_type:wallet_type, wallet_token_name:wallet_token_name},
+                    success: data => {
+                        if (data.status){
+                            alert("Success");
+                        }
+                        else{
+                            alert("Error: "+data.error);
+                        }
+                    },
+                    error: xhr => {
+                        alert("Some error occured");
+                    }
+                })
+            }
+
+            function addReferralCode(){
+                const referralCode = document.getElementById("addNew_referralCode").value;
+                const referrerEmail = document.getElementById("addNew_referrerEmail").value;
+                const purpose = document.getElementById("addNew_purpose").value;
+
+                if (referralCode == "" || referralCode == undefined || referralCode == null || referrerEmail == undefined ||referrerEmail == null || referrerEmail == "" || purpose == undefined || purpose == null || purpose == ""){
+                   alert("Bad parameters");
+                   return; 
+                }
+
+                $.ajax({
+                    method:"post",
+                    url:"/api/addReferralCode",
+                    data:{referralCode:referralCode,referrerEmail:referrerEmail,purpose:purpose},
+                    success:res => {
+                        if (!res.status){
+                            return alert(`Error: ${res.error}`);
+                        }
+                        else alert(`Success`);
+                    },
+                    error:xhr => {
+                        return alert(`Error occured while making a request to server`);
+                    }
+                })
+
+            }
+
+            function enableReferralCode(){
+                const referralCode = document.getElementById("enable_referralCode").value;
+            
+                if (referralCode == "" || referralCode == undefined || referralCode == null ){
+                   alert("Bad parameters");
+                   return; 
+                }
+
+                $.ajax({
+                    method:"post",
+                    url:"/api/enableReferralCode",
+                    data:{referralCode:referralCode},
+                    success:res => {
+                        if (!res.status){
+                            return alert(`Error: ${res.error}`);
+                        }
+                        else alert(`Success`);
+                    },
+                    error:xhr => {
+                        return alert(`Error occured while making a request to server`);
+                    }
+                })
+            }
+
+            function disableReferralCode() {
+                const referralCode = document.getElementById("disable_referralCode").value;
+            
+            if (referralCode == "" || referralCode == undefined || referralCode == null ){
+               alert("Bad parameters");
+               return; 
+            }
+
+            $.ajax({
+                method:"post",
+                url:"/api/disableReferralCode",
+                data:{referralCode:referralCode},
+                success:res => {
+                    if (!res.status){
+                        return alert(`Error: ${res.error}`);
+                    }
+                    else alert(`Success`);
+                },
+                error:xhr => {
+                    return alert(`Error occured while making a request to server`);
+                }
+            })
+            }
+            
         </script>
 </html>

@@ -1,34 +1,191 @@
 {{> includes/hero hero-title="Blockchain Advanced Exam"}}
+
+
 <div class="container__cstm">
   <div class="exam-heading">Blockchain Advanced Exam</div>
 
   <div id="exam">
-
-    <form id="basicExamForm">
-      {{#each exam}}
-      <div class="card bg-light py-3 px-4 mb-4">
-        <h4 id="q{{@index}}" class="mb-3 exam-qns">
-          {{this.question}}
-        </h4>
-
-        <div class="row">
-          {{#each choices as |choice| }}
-          <div class="col-12 col-md-6">
-            <div class="exam-choice">
-              <input type="radio" id="q{{@../index}}-c{{@index}}" name="{{@../index}}" value="{{@index}}" />
-              <label for="q{{@../index}}-c{{@index}}">{{choice}}</label>
-            </div>
-          </div>
-          {{/each}}
-        </div>
-      </div>
-      {{/each}}
-      <div>
-        <input id="exam-submit" type="submit" class="btn btn-primary py-2 mt-4 text-white"
-          onclick="this.disabled=true; this.value='Sending…';" value="Submit Your Answers">
-      </div>
+    <div id="overview-container">
+      <div id="overview-title">Questions Overview</div>
+      
+    </div>
+    <form id = "basicExamForm">
+      
     </form>
   </div>
 
 </div>
-<script src="/js/exam.js?v=1.0"></script>
+
+<script src="/js/exam.js?v=1.2"></script>
+<script>
+  let submitted = false;
+
+  const actualExamStr = {{{examStr}}};
+  const actualExam = actualExamStr.exam;
+  let examArr = [];
+  window.onload = () => {
+    const examStr = {{{examStr}}}
+    examArr = examStr.exam;
+    examArr = scrambleQuestions(examArr);
+
+    const overview = document.getElementById("overview-title");
+    const basicExamForm = document.getElementById("basicExamForm");
+    
+    let overviewHTML = "";
+    let basicExamFormHTML = "";
+
+    for(let i=0;i<examArr.length;i++){
+      // load into overview & div with options
+      overviewHTML += `<div class="q_no" onclick="focusQuestion('q.n.${i}')" id="q.n.${i}">${i+1}</div>`;
+      basicExamFormHTML += `<div class="card bg-light py-3 px-4 mb-4">
+        <h4 id="q${i}" class="mb-3 exam-qns">
+          ${i+1}. ${examArr[i].question}
+        </h4>
+
+        <div class="row">`;
+      for (let j=0;j<examArr[i].choices.length;j++){
+        basicExamFormHTML += `<div class="col-12 col-md-6">
+            <div class="exam-choice">
+              <input class="q_option" onclick="clickedOption('${i}')" type="radio" id="q${i}-c${j}" name="${i}"
+                value="${j}" />
+              <label for="q${i}-c${j}">${examArr[i].choices[j]}</label>
+            </div>
+          </div>`;
+      }
+          
+      basicExamFormHTML += `</div>
+      </div>`;
+    }
+
+    basicExamFormHTML += `<div>
+        <button id="exam-submit" type="button" onclick="handleSubmitClicked()"
+          class="btn btn-primary py-2 mt-4 text-white">Submit Your Answers</button>
+      </div>`;
+
+    overview.innerHTML = overviewHTML;
+    basicExamForm.innerHTML = basicExamFormHTML;
+  }
+
+  window.onbeforeunload = function (event) {
+    if (!submitted)
+      event.returnValue = "Something clever"
+  }
+
+  function focusQuestion(id) {
+    $(window).scrollTop($(`#q${id.split(".")[2]}`).offset().top - $(this).height() / 2)
+  }
+
+  function handleSubmitClicked() {
+    /* 
+    parse through all the rows; duplicate the answers but send in order.
+    */
+    submitted = true;
+    let subObj = {};
+    const allAnswers = document.getElementsByClassName("q_option");
+    let submitForm = document.createElement("form");
+    let basicForm = document.getElementById("basicExamForm")
+    document.getElementById("exam-submit").disabled = true;
+    document.getElementById("exam-submit").innerHTML = "Sending...";
+
+    submitForm.id = "basicExamForm-submit";
+    submitForm.action = "/postExam";
+    submitForm.method = "POST";
+
+    for (let i=0;i<allAnswers.length;i++){
+      if ($(`#${allAnswers[i].getAttribute("id")}`).is(':checked')){
+        /*
+          answer exists
+          get actual question no & answer
+        */
+      console.log(allAnswers[i]);
+      const currQ = parseInt(allAnswers[i].getAttribute("name"));
+      const currA = parseInt(allAnswers[i].getAttribute("value"));
+        let actuals = getActualIndexChoice(actualExam,examArr[currQ].question ,examArr[currQ].choices[currA]);
+        subObj[actuals[0].toString()]=actuals[1];
+      }
+    }
+
+    let subObjKeys = Object.keys(subObj);
+
+    let ansArr = [];
+    for (let i=0;i<examArr.length;i++){
+      console.log(subObj[i]);
+      if (subObj[i] != undefined) {
+        // object exists
+        ansArr.push(subObj[i]);        
+      }else{
+        // does not exist
+        ansArr.push(5);
+      }
+    }
+
+    console.log("Answer Arr: ",ansArr);
+    $.ajax({
+       type: "POST",
+       url: '/postExam',
+       data: {...ansArr},
+       dataType: 'json',
+       success : function(result) {
+         if (result.status){
+           window.location.replace("/exam-result");
+         }else{
+           $.notify(result.error,{type:"danger"});
+         }
+       },
+       error: function(err) {
+        console.log(err);
+        $.notify("Error while making request",{type:"danger"});
+       }
+     });
+  }
+
+  function clickedOption(qNoId){
+    console.log("called clicked option; id: ",qNoId)
+    document.getElementById(`q.n.${qNoId}`).style = "background-color:#A3C5FC;color:white";
+  }
+
+// Fisher-Yates alogorithm
+  function scrambleQuestions(arr) {
+    /*
+      get random digit 
+    */
+    console.log("Called Scramble Questions")
+    let retArr = arr;
+    for (let i=0;i<retArr.length;i++){
+      retArr[i].choices = fisherYates(retArr[i].choices);
+    }
+    retArr = fisherYates(retArr);
+    return retArr;
+  }
+
+  function fisherYates (arr) {
+    console.log("Called Fisher Yates");
+    let fyArr = arr;
+    for (let j=fyArr.length-1;j>0;j--){
+      let rndDgt = Math.floor(Math.random()*10) % fyArr.length;
+      let tmp = fyArr[j];
+      fyArr[j] = fyArr[rndDgt];
+      fyArr[rndDgt] = tmp;
+    }
+    return fyArr;
+  }
+
+  function getActualIndexChoice(actualArr, question, answer) {
+    for (let g=0;g<actualExam.length;g++){
+      if (actualExam[g].question === question) {
+        if (answer == ""){
+          let retArr = [g,5];
+          return retArr;
+        }
+        for (let h=0;h < actualExam[g].choices.length;h++){
+          if (actualExam[g].choices[h] === answer) {
+            let retArr = [g,h];            
+            return retArr;
+          }
+        }
+      }
+    }
+  }
+
+</script>
+

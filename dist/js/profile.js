@@ -62,29 +62,50 @@ if (typeof jQuery != "undefined") {
 
           // getting elements in the edit-page
           let edit_name = document.getElementById("edit_name"),
-            edit_email = document.getElementById("edit_email"),
-            edit_googleLink = document.getElementById("edit_googleLink"),
-            edit_facebookLink = document.getElementById("edit_facebookLink"),
-            edit_twitterLink = document.getElementById("edit_twitterLink"),
-            edit_linkedinLink = document.getElementById("edit_linkedinLink");
+            edit_email = document.getElementById("edit_email");
           edit_email.value = userProfile.email;
           edit_name.value = userProfile.name;
-          edit_googleLink.innerHTML =
-            userProfile.auth.google.id != ""
-              ? "<span>linked</span>"
-              : '<button onclick="handleAuthGoogle()">Link Google</button>';
-          edit_facebookLink.innerHTML =
-            userProfile.auth.facebook.id != ""
-              ? "<span>linked</span>"
-              : '<button onclick="handleAuthFacebook()">Link Facebook</button>';
-          edit_twitterLink.innerHTML =
-            userProfile.auth.twitter.id != ""
-              ? "<span>linked</span>"
-              : '<button onclick="handleAuthTwitter()">Link Twitter</button>';
-          edit_linkedinLink.innerHTML =
-            userProfile.auth.linkedin.id != ""
-              ? "<span>linked</span>"
-              : '<button onclick="handleAuthLinkedin()">Link Linkdedin</button>';
+
+          let currentUrl = window.location.href;
+          let paramsString = currentUrl.split("?")[1];
+          if (paramsString) {
+            console.log(`ParamsString: ${paramsString}`);
+            let params = paramsString.split("&");
+            console.log(params);
+            for (let i = 0; i < params.length; i++) {
+              let key = params[i].split("=")[0],
+                value = params[i].split("=")[1];
+              console.log(`Key: ${key} & Value: ${value}`);
+              if (key == "confirmName" && value.startsWith("true")) {
+                // new registration, need to confirm the name.
+                document.getElementById("btn-confirmName").click();
+                return;
+              } else if (key === "inFocus" && value === "cryptoPayment") {
+                $("html, body").animate(
+                  {
+                    scrollTop:
+                      $("#payment-via-tokens").offset().top -
+                      document.getElementById("header").scrollHeight - 20
+                  },
+                  2000
+                );
+                console.log("called in focus");
+                return;
+              }
+              else if (key === "inFocus" && value === "paypalPayment") {
+                $("html, body").animate(
+                  {
+                    scrollTop:
+                      $("#payment-via-paypal").offset().top -
+                      document.getElementById("header").scrollHeight - 20
+                  },
+                  2000
+                );
+                console.log("called in focus");
+                return;
+              }
+            }
+          }
         }
       }
     });
@@ -94,7 +115,16 @@ if (typeof jQuery != "undefined") {
     let newName = document.getElementById("edit_name").value;
     let newNameTrim = formatName(newName);
     if (newNameTrim.length < 2) {
-      return alert("Invalid Name");
+      $.notify("The length of name has to be atleast 2", {
+        type: "danger"
+      });
+      return;
+    }
+    if (containsNumber(newName)) {
+      $.notify("Name cannot have number", {
+        type: "danger"
+      });
+      return;
     }
     $.ajax({
       method: "get",
@@ -105,14 +135,22 @@ if (typeof jQuery != "undefined") {
           let currentUser = result.user;
           if (currentUser.name == newNameTrim) {
             $.notify("Same Name", { type: "danger" });
+            return;
           } else {
             $.ajax({
               method: "post",
               url: "/api/setName",
               data: { fullName: newNameTrim },
               success: result => {
-                alert("New name set");
-                window.location.reload();
+                console.log(result);
+                if (result.updated) {
+                  alert("New Name successfully set");
+                  window.location.replace("/profile")
+                  return;
+                } else {
+                  $.notify(result.error, { type: "danger" });
+                  return;
+                }
               },
               error: err => {
                 $.notify("Error while updating the name", { type: "danger" });
@@ -129,32 +167,6 @@ if (typeof jQuery != "undefined") {
         window.location.replace("https://www.blockdegree.org/login");
       }
     });
-    let trimName = newName.trim();
-    console.log("Current Name ", currentName);
-    console.log("Trim name ", trimName);
-    if (trimName.length < 2) {
-      alert("Invalid name");
-      return;
-    }
-    if (currentName == trimName) {
-      // they are same duh!
-      alert("New name same as old name");
-    } else {
-      $.ajax({
-        method: "post",
-        url: "/api/setName",
-        data: { fullName: trimName },
-        success: result => {
-          console.log(result);
-          alert("New name set!");
-          window.location.reload();
-        },
-        error: err => {
-          alert("Some Error Occured!");
-          console.log(err);
-        }
-      });
-    }
   }
 
   function handleUpdateLink(social) {
@@ -289,7 +301,7 @@ if (typeof jQuery != "undefined") {
       console.log("Originating event: ", event.origin);
       console.log(event.origin);
       if (event.origin == "https://www.blockdegree.org" && event.data == "ok") {
-        $.notify("Login linked!", { type: "success" });
+        $.notify("Social linked!", { type: "success" });
         checkAuth();
       }
     },
@@ -308,38 +320,27 @@ if (typeof jQuery != "undefined") {
           facebookLink = document.getElementById("facebookLink"),
           twitterLink = document.getElementById("twitterLink"),
           linkedinLink = document.getElementById("linkedinLink");
-        let edit_googleLink = document.getElementById("edit_googleLink"),
-          edit_facebookLink = document.getElementById("edit_facebookLink"),
-          edit_twitterLink = document.getElementById("edit_twitterLink"),
-          edit_linkedinLink = document.getElementById("edit_linkedinLink");
+
         // get & update edit-profile links
         if (auths.googleAuth) {
           googleLink.innerHTML = "<span>linked</span>";
-          edit_googleLink.innerHTML = "<span>linked</span>";
         } else {
-          googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
-          edit_googleLink.innerHTML = `<button onclick="handleAuthGoogle()">Link Google</button>`;
+          googleLink.innerHTML = `<button class="btn btn-primary social-g+" onclick="handleAuthGoogle()">Link Google</button>`;
         }
         if (auths.facebookAuth) {
           facebookLink.innerHTML = "<span>linked</span>";
-          edit_facebookLink.innerHTML = "<span>linked</span>";
         } else {
-          facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
-          edit_facebookLink.innerHTML = `<button onclick="handleAuthFacebook()">Link Facebook</button>`;
+          facebookLink.innerHTML = `<button class="btn btn-primary social-fb" onclick="handleAuthFacebook()">Link Facebook</button>`;
         }
         if (auths.twitterAuth) {
           twitterLink.innerHTML = "<span>linked</span>";
-          edit_twitterLink.innerHTML = "<span>linked</span>";
         } else {
-          twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
-          edit_twitterLink.innerHTML = `<button onclick="handleAuthTwitter()">Link Twitter</button>`;
+          twitterLink.innerHTML = `<button class="class="btn btn-primary social-tw" onclick="handleAuthTwitter()">Link Twitter</button>`;
         }
         if (auths.linkedinAuth) {
           linkedinLink.innerHTML = "<span>linked</span>";
-          edit_linkedinLink.innerHTML = "<span>linked</span>";
         } else {
-          linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
-          edit_linkedinLink.innerHTML = `<button onclick="handleAuthLinkedin()">Link Linkedin</button>`;
+          linkedinLink.innerHTML = `<button class="class="btn btn-primary social-li" onclick="handleAuthLinkedin()">Link Linkedin</button>`;
         }
       }
     });
@@ -355,4 +356,8 @@ function formatName(fullName) {
   }
   const finalFN = formattedName.trim();
   return finalFN;
+}
+
+function containsNumber(fullName) {
+  return /\d/.test(fullName);
 }

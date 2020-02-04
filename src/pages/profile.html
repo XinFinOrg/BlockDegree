@@ -1,144 +1,214 @@
-{{#> base}}
-{{> layouts/base title="Blockchain Profile"}}
-{{#*inline "body-block"}}
-{{> includes/hero hero-title="Profile" hero-copy="View / Update your profile"}}
+{{#> base}} {{> layouts/base title="Blockchain Profile"}} {{#*inline
+"body-block"}} {{> includes/hero hero-title="Profile" hero-copy="View / Update
+your profile"}}
 
 <div id="profile">
-	<div class="tabbed-section">
-		<div class="container">
-			<div class="tab">
-				<button id="view-profile-btn" class="tablinks" onclick="openTab(event, 'view_profile')">View Profile</button>
-				<button id="edit-profile-btn" class="tablinks" onclick="openTab(event, 'edit_profile')">Edit Profile</button>
-			</div>
-		</div>
-	</div>
-	
-	<div class="bg-muted py-5">
-		<div class="container">
-			<div id="view_profile" class="tabcontent">
-				<h2 class="profile-Heading">User Profile</h2>
-		
-				<h3 class="profile-subHeading mt-4">Basic Details</h3>
-				<div class="table-responsive">
-				<table class="table table-hover">
-					<thead>
-					<tr>
-						<th>Field</th>
-						<th>Value</th>
-		
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td>Email-ID</td>
-						<td id="emailId"></td>
-		
-					</tr>
-					<tr>
-						<td>Full Name</td>
-						<td id="name"></td>
-					</tr>
-					</tbody>
-				</table>
-				</div>
-		
-				<h3 class="profile-subHeading mt-5">Socials</h3>
-				<div class="table-responsive">
-				<table class="table table-hover">
-					<thead>
-					<tr>
-						<th>Social's Name</th>
-						<th>Link Status</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td>Google</td>
-						<td id="googleLink">
-						</td>
-					</tr>
-					<tr>
-						<td>Facebook</td>
-						<td id="facebookLink"></td>
-					</tr>
-					<tr>
-						<td>Twitter</td>
-						<td id="twitterLink">
-						</td>
-					</tr>
-					<tr>
-						<td>Linkedin</td>
-						<td id="linkedinLink"></td>
-					</tr>
-					</tbody>
-				</table>
-				</div>
-		
-				<h3 class="profile-subHeading mt-5">Payment Details</h3>
-				<div class="table-responsive">
-				<table class="table table-hover">
-					<thead>
-					<tr>
-						<th>Course Name</th>
-						<th>Payment Status</th>
-						<th>Attempts Made (Total 3) </th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td>Basic</td>
-						<td id="basicStatus"></td>
-						<td id="basicAttempt"></td>
-					</tr>
-					<tr>
-						<td>Advanced</td>
-						<td id="advancedStatus"></td>
-						<td id="advancedAttempt"></td>
-					</tr>
-					<tr>
-						<td>Professional</td>
-						<td id="professionalStatus"></td>
-						<td id="professionalAttempt"></td>
-					</tr>
-					</tbody>
-				</table>
-				</div>
-			</div>
-		
-			<div id="edit_profile" class="tabcontent">
-				<h2 class="profile-Heading">Edit Profile</h2>
-				<h3 class="profile-subHeading mt-4">Basic Details</h3>
-				<div class="table-responsive">
-				<table class="table table-hover">
-					<thead>
-					<tr>
-						<th>Field</th>
-						<th>Value</th>		
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td>Email-ID</td>
-						<td><input type="text" class="form-control" id="edit_email" disabled></td>
-		
-					</tr>
-					<tr>
-						<td>Full Name</td>
-						<td>
-							<input type="text" class="form-control" id="edit_name" name="fullName">
-						</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>
-							<button type="button" class="btn btn-primary btn-update" onclick="handleUpdateName()">Update</button>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-				</div>
-		
-				<!-- <table>   
+  <div class="tabbed-section">
+    <div class="container">
+      <div class="tab">
+        <button
+          id="view-profile-btn"
+          class="tablinks"
+          onclick="openTab(event, 'view_profile')"
+        >
+          View Profile
+        </button>
+        <button
+          id="edit-profile-btn"
+          class="tablinks"
+          onclick="openTab(event, 'edit_profile')"
+        >
+          Edit Profile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-muted py-5">
+    <div class="container">
+      <div id="view_profile" class="tabcontent">
+        <h2 class="profile-Heading">User Profile</h2>
+
+        <h3 class="profile-subHeading mt-4">Basic Details</h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Email-ID</td>
+                <td id="emailId"></td>
+              </tr>
+              <tr>
+                <td>Full Name</td>
+                <td id="name"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="profile-subHeading mt-5">Socials</h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Social's Name</th>
+                <th>Link Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Google</td>
+                <td id="googleLink"></td>
+              </tr>
+              <tr>
+                <td>Facebook</td>
+                <td id="facebookLink"></td>
+              </tr>
+              <tr>
+                <td>Twitter</td>
+                <td id="twitterLink"></td>
+              </tr>
+              <tr>
+                <td>Linkedin</td>
+                <td id="linkedinLink"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="profile-subHeading mt-5">Course Enrollment Details</h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Payment Status</th>
+                <th>Attempts Made (Total 3)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Basic</td>
+                <td id="basicStatus"></td>
+                <td id="basicAttempt"></td>
+              </tr>
+              <tr>
+                <td>Advanced</td>
+                <td id="advancedStatus"></td>
+                <td id="advancedAttempt"></td>
+              </tr>
+              <tr>
+                <td>Professional</td>
+                <td id="professionalStatus"></td>
+                <td id="professionalAttempt"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="payment-via-paypal" class="profile-subHeading mt-5">
+          Payment Via Paypal
+        </h3>
+        <div class="table-responsive">
+          <table class="table table-hover" id="cryptoTokenList">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Payment Id</th>
+                <th>Burn Status</th>
+                <th>Burn Token Name</th>
+                <th>Burn Token Amount</th>
+                <th>Burn TX</th>
+              </tr>
+            </thead>
+            <tbody id="paypalPayment-tbody"></tbody>
+          </table>
+          <!-- <div
+            style="background-color:lightsteelblue;"
+            id="tokenPayment-tfooter"
+          ></div> -->
+        </div>
+
+        <h3 id="payment-via-tokens" class="profile-subHeading mt-5">
+          Payment Via Tokens
+        </h3>
+        <div class="table-responsive">
+          <table class="table table-hover" id="cryptoTokenList">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Payment Token</th>
+                <th>Tx Hash</th>
+                <th style="text-align: center;">Status</th>
+                <th>Burn Tx Hash</th>
+                <th>Burn Amount</th>
+              </tr>
+            </thead>
+            <tbody id="tokenPayment-tbody"></tbody>
+          </table>
+          <div
+            style="background-color:lightsteelblue;"
+            id="tokenPayment-tfooter"
+          ></div>
+        </div>
+      </div>
+
+      <div id="edit_profile" class="tabcontent">
+        <h2 class="profile-Heading">Edit Profile</h2>
+        <h3 class="profile-subHeading mt-4">Basic Details</h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Email-ID</td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="edit_email"
+                    disabled
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Full Name</td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="edit_name"
+                    name="fullName"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-update"
+                    onclick="handleUpdateName()"
+                  >
+                    Update
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- <table>   
 			  <h3>Socials</h3>
 			  <table> 
 			  <tr>   
@@ -169,81 +239,476 @@
 			  <td><button type="button" onclick="handleRemoveLink('linkedin')">Remove Social</button><button type="button" onclick="handleUpdateLink('linkedin')">Update Social</button></td>
 			  </tr>   
 			  </table>-->
-			</div>
-		</div>
-	</div>
+      </div>
+    </div>
+  </div>
 </div>
 
-{{/inline}}
-{{#*inline "scripts-block"}}
+<button
+  type="button"
+  id="btn-confirmName"
+  style="display: none"
+  class="btn btn-primary"
+  data-toggle="modal"
+  data-target="#modalConfirmName"
+>
+  Launch demo modal
+</button>
 
-<script src="js/profile.js?v=1.0"></script>
+<div class="modal" id="modalConfirmName" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          <strong>CONFIRM NAME</strong>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        We have retrieved your name from your social account, please do update
+        your name if necessary as your certificate will be issued on this name
+        only.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{/inline}} {{#*inline "scripts-block"}}
+
+<script src="js/profile.js?v=1.3"></script>
 <script>
-    function openTab(evt, cityName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
+  let allPendingTransaction = [];
+  let pendingEventListener;
+  let listeningForPending = false;
 
-    function handleAuthGoogle() {
-        // window.location.replace("https://www.blockdegree.org/auth/google")
-        popupLogin({
-            path: "https://www.blockdegree.org/auth/google?close=true"
-        });
-    }
+  const courseName = {
+    course_1: "Basic",
+    course_2: "Advanced",
+    course_3: "Professional"
+  };
 
-    function handleAuthFacebook() {
-        // window.location.replace("https://www.blockdegree.org/auth/facebook")
-        popupLogin({
-            path: "https://www.blockdegree.org/auth/facebook?close=true"
-        });
-    }
+  $("document").ready(() => {
+    fetchCryptoTransactions();
+    fetchPaypalPayment();
+    setTimeout(() => {
+      fetchCryptoTransactions();
+      callPendingListener();
+    }, 3000);
+  });
 
-    function handleAuthTwitter() {
-        // window.location.replace("https://www.blockdegree.org/auth/twitter")
-        popupLogin({
-            path: "https://www.blockdegree.org/auth/twitter?close=true"
-        });
+  $("#modalConfirmName").on("hidden.bs.modal", function() {
+    document.getElementById("edit-profile-btn").click();
+    document.getElementById("edit_name").focus();
+  });
+  function openTab(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
     }
-
-    function handleAuthLinkedin() {
-        // window.location.replace("https://www.blockdegree.org/auth/linkedin")
-        popupLogin({
-            path: "https://www.blockdegree.org/auth/linkedin?close=true"
-        });
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
 
-    function popupLogin(options) {
-        options.windowName = options.windowName || "ConnectWithOAuth"; // should not include space for IE
-        options.windowOptions =
-            options.windowOptions || "location=0,status=0,width=600,height=600";
-        options.callback =
-            options.callback ||
-            function() {
-                window.location.reload();
-            };
-        var that = this;
-        console.log(options.path);
-        that._oauthWindow = window.open(
-            options.path,
-            options.windowName,
-            options.windowOptions
-        );
-        that._oauthInterval = window.setInterval(function() {
-            if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
-                that._oauthWindow.location.href ==
-                    "https://www.blockdegree.org/closeCallback";
+  function handleAuthGoogle() {
+    // window.location.replace("https://www.blockdegree.org/auth/google")
+    popupLogin({
+      path: "https://www.blockdegree.org/auth/google?close=true"
+    });
+  }
+
+  function handleAuthFacebook() {
+    // window.location.replace("https://www.blockdegree.org/auth/facebook")
+    popupLogin({
+      path: "https://www.blockdegree.org/auth/facebook?close=true"
+    });
+  }
+
+  function handleAuthTwitter() {
+    // window.location.replace("https://www.blockdegree.org/auth/twitter")
+    popupLogin({
+      path: "https://www.blockdegree.org/auth/twitter?close=true"
+    });
+  }
+
+  function handleAuthLinkedin() {
+    // window.location.replace("https://www.blockdegree.org/auth/linkedin")
+    popupLogin({
+      path: "https://www.blockdegree.org/auth/linkedin?close=true"
+    });
+  }
+
+  function popupLogin(options) {
+    options.windowName = options.windowName || "ConnectWithOAuth"; // should not include space for IE
+    options.windowOptions =
+      options.windowOptions || "location=0,status=0,width=600,height=600";
+    options.callback =
+      options.callback ||
+      function() {
+        window.location.reload();
+      };
+    var that = this;
+    console.log(options.path);
+    that._oauthWindow = window.open(
+      options.path,
+      options.windowName,
+      options.windowOptions
+    );
+    that._oauthInterval = window.setInterval(function() {
+      if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
+        that._oauthWindow.location.href ==
+          "https://www.blockdegree.org/closeCallback";
+      }
+    }, 1000);
+  }
+
+  function fetchPaypalPayment() {
+    console.log("called paypal payment");
+    const paypalTokenBody = document.getElementById("paypalPayment-tbody");
+    const apothemExplorer = "https://explorer.apothem.network/tx/";
+    const mainnetExplorer = "https://explorer.xinfin.network/tx/";
+
+    let retHtml = "";
+    $.ajax({
+      method: "get",
+      url: "/api/getUserPaypalPayment",
+      success: result => {
+        if (result.status == true) {
+          // ok
+          let logs = result.logs;
+          console.log("User paypal logs: ", logs);
+          if (logs == null || logs.length <= 0) {
+            // not paypal tx done yet
+            retHtml += `<tr><td>No payment done yet</td></tr>`;
+          } else {
+            // push paypal tx
+            for (let x = logs.length - 1; x >= logs.length - 5 && x>= 0; x--) {
+              // log filed
+              retHtml += `<tr><td>${courseName[logs[x].course_id]}</td><td>${
+                logs[x].payment_id
+              }</td><td>${
+                logs[x].burnStatus
+                  ? logs[x].burnStatus === "awaiting balance"
+                    ? "pending"
+                    : logs[x].burnStatus
+                  : "-"
+              }</td>
+              <td>${
+                logs[x].burnTokenName ? logs[x].burnTokenName : "-"
+              }</td>
+              
+              <td>${logs[x].burnAmnt ? logs[x].burnAmnt : "-"}</td><td>${
+                logs[x].burnTx ? `<a target="_blank" href="${mainnetExplorer+logs[x].burnTx}">${logs[x].burnTx.slice(0,11)}...</a>` : "-"
+              }</td></tr>`;
             }
-        }, 1000);
+          }
+          paypalTokenBody.innerHTML = retHtml;
+        } else {
+          // not ok
+          $.notify(
+            result.error || "Some error occured while fetching payment logs",
+            { type: "danger" }
+          );
+          return;
+        }
+      },
+      error: xhr => {
+        $.notify("Some error occured while fetching payment logs", {
+          type: "danger"
+        });
+        return;
+      }
+    });
+  }
+
+  function fetchCryptoTransactions() {
+    console.log("called crypto transactions");
+    const etherScanIo = "https://etherscan.io/tx/";
+    const apothemExplorer = "https://explorer.xinfin.network/tx/";
+    const mainnetExplorer = "https://explorer.xinfin.network/tx/";
+    const tableBody = document.getElementById("tokenPayment-tbody");
+    const tableFooter = document.getElementById("tokenPayment-tfooter");
+    $.ajax({
+      method: "get",
+      url: "/api/getUserCryptoPayment",
+      success: result => {
+        if (!result.status) {
+          console.error("Error in /api/getUserCryptoPayment: ", result);
+          $.notify(
+            "Error occured while fetching your payments via cryptocurrencies",
+            { type: "danger" }
+          );
+        }
+
+        // <th>Course Name</th>
+        // <th>Payment Token</th>
+        // <th>Transaction Hash</th>
+        // <th>Status</th>
+        // <th>Burn Transaction Hash</th>
+
+        const payments = result.allPayments;
+        let retHtml = "";
+        if (payments.length <= 0) {
+          retHtml = "<tr><td>No transactions made yet</td></tr>";
+          tableBody.innerHTML = retHtml;
+          return;
+        } else {
+          for (let z = 0; z < payments.length; z++) {
+            let status = payments[z].status;
+            let payment_txHash,
+              burn_txHash,
+              pay_hash_link,
+              burn_hash_link,
+              burnAmnt = null;
+            if (status === "completed") {
+              if (payments[z].tokenName === "xdce") {
+                payment_txHash =
+                  payments[z].txn_hash.toString().slice(0, 11) + "...";
+
+                if (allPendingTransaction.indexOf(payments[z].txn_hash) > -1) {
+                  // was one of the pending tx.
+                  allPendingTransaction = removeFromArray(
+                    allPendingTransaction,
+                    payments[z].txn_hash
+                  );
+                }
+
+                pay_hash_link = `<a href="${etherScanIo +
+                  payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+
+                if (payments[z].autoBurn) {
+                  // will burn
+                  if (payments[z].burn_txn_hash == "") {
+                    // not yet burned
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) < 0
+                    )
+                      allPendingTransaction.push(
+                        payments[z].txn_hash + "_burn"
+                      );
+                    burn_txHash = "Burning is in process...";
+                    burn_hash_link = burn_txHash;
+                  } else {
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) > -1
+                    ) {
+                      // was one of the pending tx.
+                      allPendingTransaction = removeFromArray(
+                        allPendingTransaction,
+                        payments[z].txn_hash + "_burn"
+                      );
+                    }
+
+                    burn_txHash =
+                      payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
+                    burn_hash_link = `<a href="${etherScanIo +
+                      payments[z]
+                        .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                    burnAmnt = payments[z].burn_token_amnt;
+                  }
+                } else {
+                  burn_hash_link = "-";
+                }
+              } else if (payments[z].tokenName === "xdc") {
+                payment_txHash =
+                  payments[z].txn_hash.toString().slice(0, 11) + "...";
+
+                if (allPendingTransaction.indexOf(payments[z].txn_hash) > -1) {
+                  // was one of the pending tx.
+                  allPendingTransaction = removeFromArray(
+                    allPendingTransaction,
+                    payments[z].txn_hash
+                  );
+                }
+
+                pay_hash_link = `<a href="${apothemExplorer +
+                  payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+
+                if (payments[z].autoBurn) {
+                  // will burn
+                  if (payments[z].burn_txn_hash == "") {
+                    // not yet burned
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) < 0
+                    )
+                      allPendingTransaction.push(
+                        payments[z].txn_hash + "_burn"
+                      );
+                    burn_txHash = "Burning is in process...";
+                    burn_hash_link = burn_txHash;
+                  } else {
+                    if (
+                      allPendingTransaction.indexOf(
+                        payments[z].txn_hash + "_burn"
+                      ) > -1
+                    ) {
+                      // was one of the pending tx.
+                      allPendingTransaction = removeFromArray(
+                        allPendingTransaction,
+                        payments[z].txn_hash + "_burn"
+                      );
+                    }
+
+                    burn_txHash =
+                      payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
+                    burn_hash_link = `<a href="${apothemExplorer +
+                      payments[z]
+                        .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                    burnAmnt = payments[z].burn_token_amnt;
+                  }
+                } else {
+                  burn_hash_link = "-";
+                }
+              }
+            } else {
+              if (allPendingTransaction.indexOf(payments[z].txn_hash) < 0) {
+                allPendingTransaction.push(payments[z].txn_hash);
+              }
+              payment_txHash =
+                payments[z].txn_hash.toString().slice(0, 11) + "...";
+              if (payments[z].autoBurn) {
+                // will burn
+                burn_txHash = "Will burn after confirmation";
+              } else {
+                // wont burn
+                burn_txHash = "NA";
+              }
+              pay_hash_link = `<a href="${
+                payments[z].tokenName === "xdce"
+                  ? etherScanIo + payments[z].txn_hash
+                  : apothemExplorer + payments[z].txn_hash
+              }" target="_blank">${payment_txHash}</a>`;
+              // status += `( ${payments[z].confirmations}/${
+              //   payments[z].tokenName === "xdce"
+              //     ? payments[z].xdceConfirmation
+              //     : payments[z].xdcConfirmation
+              // } )`;
+              status = getProgressBar(
+                parseFloat(payments[z].confirmations),
+                parseFloat(
+                  payments[z].tokenName === "xdce"
+                    ? payments[z].xdceConfirmation
+                    : payments[z].xdcConfirmation
+                )
+              );
+              burn_hash_link = burn_txHash;
+            }
+
+            retHtml += `<tr><td>${payments[z].courseName[0].toUpperCase() +
+              payments[z].courseName.slice(1)}</td><td>${payments[
+              z
+            ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${
+              payments[z].status != "not yet mined"
+                ? payments[z].status
+                : "notYetMined"
+            }">${
+              payments[z].status != "not yet mined"
+                ? status == "completed" || status == "not yet mined"
+                  ? "<div style='width:100%;text-align:center;'>" +
+                    status[0].toUpperCase() +
+                    status.slice(1) +
+                    "</div>"
+                  : status
+                : "<div style='width:100%;text-align:center;'>Not Yet Mined</div>"
+            }</td><td>${burn_hash_link}</td><td>${
+              burnAmnt == null
+                ? "-"
+                : Math.round((burnAmnt / Math.pow(10, 18)) * 100) / 100 +
+                  " " +
+                  payments[z].tokenName.toUpperCase()
+            }</td></tr>`;
+          }
+          tableBody.innerHTML = retHtml;
+          tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;
+          if (allPendingTransaction.length == 0) {
+            // clear listener
+            clearInterval(pendingEventListener);
+            listeningForPending = false;
+          }
+        }
+      },
+      error: xhr => {
+        console.error(
+          "Error occured while making a get request to /api/getUserCryptoPayment"
+        );
+        $.notify(
+          "Error occured while fetching your payments via cryptocurrencies",
+          { type: "danger" }
+        );
+        return;
+      }
+    });
+
+    // setInterval for pending transactions
+  }
+
+  function callPendingListener() {
+    console.log("called callPendingListener");
+    console.log(allPendingTransaction);
+    console.log(allPendingTransaction[0]);
+    console.log(allPendingTransaction.length);
+    if (allPendingTransaction.length > 0 && !listeningForPending) {
+      // some tx are still in pending phase
+      listeningForPending = true;
+      pendingEventListener = setInterval(() => {
+        console.log("fired listener");
+        console.log(allPendingTransaction);
+        fetchCryptoTransactions();
+      }, 5000);
     }
+  }
+
+  function removeFromArray(arr, element) {
+    let removeIndex = arr.indexOf(element);
+    if (removeIndex > -1) {
+      arr.splice(removeIndex, 1);
+    }
+    return arr;
+  }
+
+  function getProgressBar(curr, max) {
+    console.log(`Current ${curr} & Max ${max}`);
+    if (curr >= max) {
+      // completed
+      return `<div id="myProgress">
+    	<span id="myBarText" style="color: white;">completed</span>
+      <div id="myBarPercent"></div>
+    <div id="myBar" style="width: 100%;
+  		background-color: #28a745 ;
+  		">
+  </div>
+  </div>`;
+    } else {
+      // pending
+      let width = Math.round((curr / max) * 100);
+      return `<div id="myProgress">
+    	<span id="myBarText" ><strong>pending (${curr}/${max})</strong> </span>
+    <div id="myBar" style="width:${width}%">
+  </div>
+  </div>`;
+    }
+  }
 </script>
-{{/inline}}
-{{/base}}
+{{/inline}} {{/base}}

@@ -56,36 +56,37 @@ $(function() {
     alert('post exam after');
   }
 
-  $('#exam-submit').on('click', (e) => {
-    e.preventDefault();
-    var form = $('#basicExamForm');
-    var ansArray = [];
-    for(var i = 0; i < form[0].length; i++) {
-      var ans = $('input[name='+i+']:checked').val();
-      if(ans) {
-        ansArray.push(ans);
-      } else {
-        ans = 5;
-        ansArray.push(ans); 
-      }      
-    }
-    // console.log('data', JSON.stringify(ansArray));
+
+  // $('#exam-submit').on('click', (e) => {
+  //   e.preventDefault();
+  //   var form = $('#basicExamForm-submit');
+  //   var ansArray = [];
+  //   document.getElementById("exam-submit").disabled = true;
+  //   document.getElementById("exam-submit").value = "Sending...";
+  //   for(var i = 0; i < form[0].length; i++) {
+  //     var ans = $('input[name='+i+']:checked').val();
+  //     if(ans) {
+  //       ansArray.push(ans);
+  //     } else {
+  //       ans = 5;
+  //       ansArray.push(ans); 
+  //     }      
+  //   }
+  //   // console.log('data', JSON.stringify(ansArray));
     
-    $.ajax({
-      type: "POST",
-      url: '/postExam',
-      data: {...ansArray},
-      dataType: 'json',
-      success : function(result) {
-        console.log(result);
-        postExamData(result);
-        window.location = '/exam-result';
-      },
-      error: function(err) {
-        console.log(err);
-        window.location = '/exam-result';
-      }
-    });
+  //   $.ajax({
+  //     type: "POST",
+  //     url: '/postExam',
+  //     data: {...ansArray},
+  //     dataType: 'json',
+  //     success : function(result) {
+  //       console.log(result);
+  //       postExamData(result);
+  //     },
+  //     error: function(err) {
+  //       console.log(err);
+  //     }
+  //   });
    
-  })  
+  // })  
 });

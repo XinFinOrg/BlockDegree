@@ -1,100 +1,213 @@
 /*------ Exam result css -----*/
 .exam-result-heading {
-	  font-size: 20px;
-	  font-weight: 500;
-	  margin-bottom: 20px;
-	}
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
 
-#exam {	
-	
-	.btn-primary {padding: 8px 22px; border-radius: 50px; border: none!important;}
-	.btn-primary:hover {background-color: #2196f3;}
-	
-	.card-body {
-	  border-radius: .25rem;
-	  
-		.exam-result-subHeading {
-		  color: #0a4886;
-		  font-size: 20px;
-		  font-weight: 400;
-		  margin-bottom: 25px!important;
-		  background-color: #e1eaff;
-		  margin: -1.25rem;
-		  padding: 15px;
-		  border-top-left-radius: .25rem;
-		  border-top-right-radius: .25rem;
-		}
-	  
-	  .list-group-item {
-        font-size: 18px;     
-		padding-left: 0px;
-		background-color: transparent;
-		
-	    span {
-	      font-weight: 500;
-	    }
-	  }
-		  p {margin-bottom: 10px;}
-		  .redText {color: #ff0000!important;}
-		  .greenText {color: #04a62a;}
-		  .fw-6 {font-weight: 600;}
-		  .btn-primary {padding: 8px 22px; border-radius: 50px; border: none!important;}
-		  .btn-primary a {color: #FFFFFF;}
-		  .btn-download {color: #FFFFFF!important; background-color: #FF8348!important;padding: 8px 22px; border-radius: 50px!important; border: none;}
-	      .btn-download:hover {background-color: #eb4f05;}
-		  
-		  .social-sharing {
-		   border-radius: 50%;
-		   -webkit-transition-duration: 0.5s;
-		   -moz-transition-duration: 0.5s;
-		   -o-transition-duration: 0.5s;
-		  }	
-		  .social-sharing a {width:inherit; height: inherit;}
-		 
-		 /*-- Multicoloured Hover Variations --*/
-		 .social-fb {
-			color: #FFFFFF;
-			background-color: rgba(59,89,152,0.8);
-			border-radius: 50px;
-			border: none;
-		 } 
-		 .social-fb:hover {
-			background-color: rgba(59,89,152,1);
-		 }
-		 .social-tw {
-			color: #FFFFFF;
-			background-color: rgba(29,161,242,0.8);
-			border-radius: 50px;
-			border: none;
-		 }
-		 .social-tw:hover {
-			background-color: rgba(29,161,242,1);
-		 }
-		 .social-li {
-			color: #FFFFFF;
-			background-color: rgba(0,119,181,0.8);
-			border-radius: 50px;
-			border: none;
-		 }
-		 .social-li:hover {
-			background-color: rgba(0,119,181,1);
-		 }
-		 .social-g+ {
-			color: #FFFFFF;
-			background-color: rgba(221,75,57,0.8);
-			border-radius: 50px;
-			border: none;
-		 }
-		 .social-g+:hover {
-			background-color: rgba(221,75,57,1);
-		 }
-	}
+#basicExamForm {
+  @media (min-width: 700px) {
+    width: 60%;
+  }
+
+  @media (max-width: 699px) {
+    width: 100%;
+  }
+}
+
+#overview-container {
+  float: right;
+  background-color: beige;
+  margin: 5%;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 20%;
+  width: 30%;
+  padding: 2%;
+  border-radius: 25px;
+
+  @media (min-width: 700px) {
+    display: inline;
+  }
+
+  @media (max-width: 699px) {
+    display: none;
+  }
+}
+
+#overview-title {
+  margin: 2%;
+  text-align: center;
+  border-radius: 20px;
+  background-color: white;
+}
+
+#exam {
+  .q_no {
+    text-align: center;
+    float: left;
+    position: relative;
+    width: 10%;
+    height: 10%;
+    margin: 2%;
+    background-color: #ffffff;
+    padding: 0.5%;
+    border-radius: 10px;
+    font-size: small;
+  }
+
+  .q_no:hover {
+    background-color: lightpink;
+    color: white;
+  }
+
+  .btn-primary {
+    padding: 8px 22px;
+    border-radius: 50px;
+    border: none !important;
+  }
+
+  .btn-primary:hover {
+    background-color: #2196f3;
+  }
+
+  .card-body {
+    border-radius: 0.25rem;
+
+    .exam-result-subHeading {
+      color: #0a4886;
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 25px !important;
+      background-color: #e1eaff;
+      margin: -1.25rem;
+      padding: 15px;
+      border-top-left-radius: 0.25rem;
+      border-top-right-radius: 0.25rem;
+    }
+
+    .list-group-item {
+      font-size: 18px;
+      padding-left: 0px;
+      background-color: transparent;
+
+      span {
+        font-weight: 500;
+      }
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    .redText {
+      color: #ff0000 !important;
+    }
+
+    .greenText {
+      color: #04a62a;
+    }
+
+    .fw-6 {
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      padding: 8px 22px;
+      border-radius: 50px;
+      border: none !important;
+    }
+
+    .btn-primary a {
+      color: #ffffff;
+    }
+
+    .btn-download {
+      color: #ffffff !important;
+      background-color: #ff8348 !important;
+      padding: 8px 22px;
+      border-radius: 50px !important;
+      border: none;
+    }
+
+    .btn-download:hover {
+      background-color: #eb4f05;
+    }
+
+    .social-sharing {
+      border-radius: 50%;
+      -webkit-transition-duration: 0.5s;
+      -moz-transition-duration: 0.5s;
+      -o-transition-duration: 0.5s;
+    }
+
+    .social-sharing a {
+      width: inherit;
+      height: inherit;
+    }
+
+    /*-- Multicoloured Hover Variations --*/
+    .social-fb {
+      color: #ffffff;
+      background-color: rgba(59, 89, 152, 0.8);
+      border-radius: 50px;
+      border: none;
+    }
+
+    .social-fb:hover {
+      background-color: rgba(59, 89, 152, 1);
+    }
+
+    .social-tw {
+      color: #ffffff;
+      background-color: rgba(29, 161, 242, 0.8);
+      border-radius: 50px;
+      border: none;
+    }
+
+    .social-tw:hover {
+      background-color: rgba(29, 161, 242, 1);
+    }
+
+    .social-li {
+      color: #ffffff;
+      background-color: rgba(0, 119, 181, 0.8);
+      border-radius: 50px;
+      border: none;
+    }
+
+    .social-li:hover {
+      background-color: rgba(0, 119, 181, 1);
+    }
+
+    .social-g+ {
+      color: #ffffff;
+      background-color: rgba(221, 75, 57, 0.8);
+      border-radius: 50px;
+      border: none;
+    }
+
+    .social-g+ :hover {
+      background-color: rgba(221, 75, 57, 1);
+    }
+  }
 }
 
 #postTwitter {
+  textarea {
+    width: 100% !important;
+    background-color: #f6f6f6;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+  }
 
-	textarea {width: 100%!important; background-color: #f6f6f6; border: 1px solid #ccc; padding: 10px; border-radius: 6px;}
-	textarea:focus, textarea:hover {box-shadow: none!important; background-color: #fff; border-color: #2073D4;}
+  textarea:focus,
+  textarea:hover {
+    box-shadow: none !important;
+    background-color: #fff;
+    border-color: #2073d4;
+  }
 }
 
 /*------ Exam result css -----*/
@@ -106,70 +219,77 @@
 }
 
 #basicExamForm {
-	.card {
-	  border:none;
-	}
-	h4 {
-	  font-size: 16px;
-	  font-weight: 500;
-	}
-	.exam-choice {
-	    [type="radio"]:checked,
-		[type="radio"]:not(:checked) {
-			position: absolute;
-			left: -9999px;
-		}
-		[type="radio"]:checked + label,
-		[type="radio"]:not(:checked) + label
-		{
-			position: relative;
-			padding-left: 28px;
-			cursor: pointer;
-			line-height: 20px;
-			display: inline-block;
-			color: #666;
-		}
-		[type="radio"]:checked + label:before,
-		[type="radio"]:not(:checked) + label:before {
-			content: '';
-			position: absolute;
-			left: 0;
-			top: 0;
-			width: 18px;
-			height: 18px;
-			border: 1px solid #788088;
-			border-radius: 100%;
-			background: #FFF;
-		}
-		[type="radio"]:checked + label:after,
-		[type="radio"]:not(:checked) + label:after {
-			content: '';
-			width: 12px;
-			height: 12px;
-			background: #FF8348;
-			position: absolute;
-			top: 3px;
-			left: 3px;
-			border-radius: 100%;
-			-webkit-transition: all 0.2s ease;
-			transition: all 0.2s ease;
-		}
-		[type="radio"]:not(:checked) + label:after {
-			opacity: 0;
-			-webkit-transform: scale(0);
-			transform: scale(0);
-		}
-		[type="radio"]:checked + label:after {
-			opacity: 1;
-			-webkit-transform: scale(1);
-			transform: scale(1);
-		}
-	}
-	
-	.btn-primary {
-	  border-radius: 50px;
-      padding: 8px 20px !important;
-	}
+  .card {
+    border: none;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .exam-choice {
+
+    [type="radio"]:checked,
+    [type="radio"]:not(:checked) {
+      position: absolute;
+      left: -9999px;
+    }
+
+    [type="radio"]:checked+label,
+    [type="radio"]:not(:checked)+label {
+      position: relative;
+      padding-left: 28px;
+      cursor: pointer;
+      line-height: 20px;
+      display: inline-block;
+      color: #666;
+    }
+
+    [type="radio"]:checked+label:before,
+    [type="radio"]:not(:checked)+label:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 18px;
+      height: 18px;
+      border: 1px solid #788088;
+      border-radius: 100%;
+      background: #fff;
+    }
+
+    [type="radio"]:checked+label:after,
+    [type="radio"]:not(:checked)+label:after {
+      content: "";
+      width: 12px;
+      height: 12px;
+      background: #ff8348;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      border-radius: 100%;
+      -webkit-transition: all 0.2s ease;
+      transition: all 0.2s ease;
+    }
+
+    [type="radio"]:not(:checked)+label:after {
+      opacity: 0;
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    }
+
+    [type="radio"]:checked+label:after {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+  }
+
+  .btn-primary {
+    border-radius: 50px;
+    padding: 8px 20px !important;
+  }
 }
 
 .exam-choice {
@@ -205,7 +325,7 @@
       background-color: $btn--secondary;
       border: 2px solid transparent;
 
-      & + label {
+      &+label {
         color: $primary-color;
       }
     }
@@ -219,117 +339,214 @@
 #exams__list {
   .card {
     border-radius: 10px;
-	border: none;
-	background-color: #f1f5f7;
+    border: none;
+    background-color: #f1f5f7;
   }
+
   .card-title {
-    font-size:20px;
-	color: white;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-	width: 100%;
-	
-	  @media (min-width: 1200px) {}
-	  @media (min-width: 992px) and (max-width: 1199.98px) {font-size:16px;}
-	  @media (min-width: 768px) and (max-width: 991.98px) {font-size:16px;}
-	  @media (min-width: 576px) and (max-width: 767.98px) {font-size:16px;}
-	  @media (max-width: 575.98px) {font-size:18px;}
+    font-size: 20px;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    width: 100%;
+
+    @media (min-width: 1200px) {}
+
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+      font-size: 16px;
+    }
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      font-size: 16px;
+    }
+
+    @media (min-width: 576px) and (max-width: 767.98px) {
+      font-size: 16px;
+    }
+
+    @media (max-width: 575.98px) {
+      font-size: 18px;
+    }
   }
 
   .card-price {
     padding: 20px;
-	/*min-height: 230px;*/
-	border-bottom-left-radius: 10px;
-	border-bottom-right-radius: 10px;
-	width: 100%;
-	
+    /*min-height: 230px;*/
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    width: 100%;
+
     .btn {
       @include transition(all 0.4s);
       position: relative;
       width: 100%;
       padding: 10px 15px;
-      background: rgba(255,255,255,1);
-	  border-radius: 50px;
+      background: rgba(255, 255, 255, 1);
+      border-radius: 50px;
 
       &:hover {
-		box-shadow: rgba(0,0,0,0.5) 0px 10px 25px -5px!important;
+        box-shadow: rgba(0, 0, 0, 0.5) 0px 10px 25px -5px !important;
       }
     }
-	
-	h2 {
-	  min-height: 52px;
-	}
+
+    h2 {
+      min-height: 52px;
+    }
   }
 
-  .single-exam__course:nth-child(3n+1) .card-title,
-  .single-exam__course:nth-child(3n+1) .card-price {
+  .single-exam__course:nth-child(3n + 1) .card-title,
+  .single-exam__course:nth-child(3n + 1) .card-price {
     background: #1abc9c;
   }
-  .single-exam__course:nth-child(3n+2) .card-title,
-  .single-exam__course:nth-child(3n+2) .card-price {
+
+  .single-exam__course:nth-child(3n + 2) .card-title,
+  .single-exam__course:nth-child(3n + 2) .card-price {
     background: $primary-color;
   }
-  .single-exam__course:nth-child(3n+3) .card-title,
-  .single-exam__course:nth-child(3n+3) .card-price {
+
+  .single-exam__course:nth-child(3n + 3) .card-title,
+  .single-exam__course:nth-child(3n + 3) .card-price {
     background: #fe6c6c;
   }
-  
+
   .promoCode-block {
     display: none;
   }
-  
+
   .promoCode-btn {
     font-size: 14px;
-	color: rgba(255,255,255,0.8);
-	padding: 0px;
-	margin: 0px;
-	line-height: 16px;
-	
-	&:hover {
-	  cursor: pointer;
-	  color: rgba(255,255,255,1);
-	}
-  }  
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0px;
+    margin: 0px;
+    line-height: 16px;
+
+    &:hover {
+      cursor: pointer;
+      color: rgba(255, 255, 255, 1);
+    }
+  }
+
+  .promoCode-txt {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0px;
+    margin: 0px;
+    line-height: 16px;
+
+  }
 
   .input-group .btn {
     @include transition(all 0.4s);
-	width: 100%;
+    width: 100%;
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
-	background: rgba(0,0,0,0.3)!important;
-	border: none;
-	padding: 10px 15px;
-	
-	&:hover {
-		background: rgba(0,0,0,0.2)!important;
-		box-shadow: none!important;
-      }
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: none;
+    padding: 10px 15px;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.2) !important;
+      box-shadow: none !important;
+    }
   }
-  
+
   .input-group {
     width: 100%;
     margin: 0 auto;
- 
-	  input {
-		@include transition(all 0.4s);
-		border-top-left-radius: 50px;
-		border-bottom-left-radius: 50px;
-		border-top-right-radius: 0px;
-		border-bottom-right-radius: 0px;
-		background: rgba(255,255,255,0.9)!important;
-		border: none;
-		padding: .375rem 1rem!important;
-		font-size: 0.9rem;
-		height: 46px;
-		
-		&:hover,
-		&:focus,
-		&:active {
-		  background: rgba(255,255,255,1)!important;
-		  box-shadow: none!important;
-		}
-	  }
+
+    input {
+      @include transition(all 0.4s);
+      border-top-left-radius: 50px;
+      border-bottom-left-radius: 50px;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+      background: rgba(255, 255, 255, 0.9) !important;
+      border: none;
+      padding: 0.375rem 1rem !important;
+      font-size: 0.9rem;
+      height: 46px;
+
+      &:hover,
+      &:focus,
+      &:active {
+        background: rgba(255, 255, 255, 1) !important;
+        box-shadow: none !important;
+      }
+    }
   }
+}
+
+.modal-success {
+  background-color: lightgreen;
+}
+
+.modal-info {
+  background-color: lightskyblue;
+}
+
+.modal-warning {
+  background-color: orange;
+}
+
+// Cool buttons.
+
+.btn-payment {
+  background: #1aab8a;
+  color: #fff;
+  border: none;
+  position: relative;
+  height: 60px;
+  font-size: 1 em;
+  padding: 0 2em;
+  cursor: pointer;
+  transition: 800ms ease all;
+  outline: none;
+  margin: 10px;
+}
+
+.btn-payment:hover {
+  background: #fff;
+  color: #1aab8a;
+}
+
+.btn-payment:before,
+.btn-payment:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2px;
+  width: 0;
+  background: #1aab8a;
+  transition: 400ms ease all;
+}
+
+.btn-payment:after {
+  right: inherit;
+  top: inherit;
+  left: 0;
+  bottom: 0;
+}
+
+.btn-payment:hover:before,
+.btn-payment:hover:after {
+  width: 100%;
+  transition: 800ms ease all;
+}
+
+.pay-with {
+  float: right;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 0.5px;
+  border-color: lightgrey;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: fit-content;
+  margin-right: 18px;
+  
 }

@@ -11,13 +11,35 @@ var transporter = nodemailer.createTransport({
 });
 
 module.exports = {
-  sendMail: mail => {
+  // only for internal use
+  sendMail: (mail, subject, msg) => {
     return new Promise(function(resolve, reject) {
       var mailOptions = {
         from: "Blockchain@XinFin.Org",
         to: mail,
-        subject: "Login",
-        html: "<h3>Ankit Patel</h3>" + Date.now()
+        subject: subject,
+        html: `<div>${msg}</div>`
+      };
+      transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+          console.log(error);
+          reject(error);
+        } else {
+          console.log("Email sent: " + info.response);
+          resolve(info);
+        }
+      });
+    });
+  },
+
+
+  sendMailInternal: (from,mail, subject, msg) => {
+    return new Promise(function(resolve, reject) {
+      var mailOptions = {
+        from: from,
+        to: mail,
+        subject: subject,
+        html: `<div>${msg}</div>`
       };
       transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
@@ -39,7 +61,7 @@ module.exports = {
     let link = "https://www.blockdegree.org/confirmation/?token=" + token.token;
     if (type === "signup" || type === "resend") {
       mailOptions = {
-        from: "blockdegree@xinfin.org",
+        from: "info@blockdegree.org",
         to: mail,
         subject: "Login",
         html: `<div>Click on the link to confirm email address : <a href="${link}">Link</a></div>`

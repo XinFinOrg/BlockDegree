@@ -1,6 +1,4 @@
-{{#> base}}
-{{> layouts/baseIndex}}
-{{#*inline "body-block"}}
+{{#> base}} {{> layouts/baseIndex}} {{#*inline "body-block"}}
 <!-- Start banner Area -->
 <div id="fb-root"></div>
 <script
@@ -10,26 +8,38 @@
   src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.3"
 ></script>
 
-
 <!-- Start Offer Modal -->
-<div class="modal fade text-center py-5" id="offerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<div
+  class="modal fade text-center py-5"
+  id="offerModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-			<div class="modal-body pb-50">				
-                <h2>Providing Free Online Blockchain Courses for Students and Colleges</h2>
-                <h3 class="pt-3 mb-0">Get Free Certificate</h3>
-                <h4 class="pt-3 mb-0">Use Promo Code: <span>code10</span></h4>
-            </div>
-        </div>
+      <div class="modal-body pb-50">
+        <h2>
+          Providing Free Online Blockchain Courses for Students and Colleges
+        </h2>
+        <h3 class="pt-3 mb-0">Get Free Certificate</h3>
+        <h4 class="pt-3 mb-0">Use Promo Code: <span>code10</span></h4>
+      </div>
     </div>
+  </div>
 </div>
 <!-- End Offer Modal -->
-
 
 <div class="banner-area relative" id="home">
   <div class="container">
@@ -100,37 +110,103 @@
 </div>
 <!-- end abovefold area -->
 
-<!-- Start technological partner Area 
-  <div class="container py-5 my-5">
-    <div class="row align-items-center">
+<div class="stats-counter">
+  <div class="container">
+    <div class="row text-white">
+      <!--<div class="stat_row">
+			<div class="stat_column" >
+				<div><h3>Certificate Count</h3></div>
+				<p id="certCnt_stat_content">0</p>
+			</div>
+			<div class="stat_column" >
+				<h3>User Registrations</h3>
+				<p id="userCnt_stat_content">0</p>
+			</div>
+		    <div class="stat_column" >
+				<h3>Course Visits</h3>
+				<p id="visitCnt_stat_content">0</p>
+		    </div>
+		    <div class="stat_column" >
+				<h3>Campus Ambassadors</h3>
+				<p id="ca_stat_content">0</p>
+		    </div>-->
 
-      <div class="col-12 col-md-5">
-        <div class="title text-left text-sm-left">
-          <h2 class="mb-10">Our Technological Partners</h2>
-          <p>Blockchain programs built with our growing network of industry and educational partners</p>
+      <!-- Data Block #1 -->
+      <div class="col-md-4 col-sm-6 col-lg-3">
+        <div class="statistic-block text-center mt-4 mb-4">
+          <div class="s-number">
+            <span id="certCnt_stat_content" class="statistic-number">0</span>
+          </div>
+          <div class="divider"></div>
+          <h5 class="h5-medium">Certificate Count</h5>
         </div>
       </div>
 
-      <div class="col-12 col-md-7 px-sm-5">
-        <div class="row align-items-center">
-          <div class="col-4">
-            <img src="img/spit1.jpg" class="img-fluid" alt="Sardar Patel Institute of Technology">
+      <!-- Data Block #2 -->
+      <div class="col-md-4 col-sm-6 col-lg-3">
+        <div class="statistic-block text-center mt-4 mb-4">
+          <div class="s-number">
+            <span id="userCnt_stat_content" class="statistic-number">0</span>
           </div>
-
-          <div class="col-4">
-            <img src="img/KJ-Somaiya-College-of-Engineering-Mumbai.jpg" class="img-fluid" alt="Somaiya College of Engineering Mumbai">
-          </div>
-
-          <div class="col-4">
-            <img src="img/temasek-polytechnic-logo.jpg" class="img-fluid" alt="Temasek Polytechnic">
-
-          </div>
+          <div class="divider"></div>
+          <h5 class="h5-medium">User Registrations</h5>
         </div>
       </div>
 
+      <!-- Data Block #3 -->
+      <div class="col-md-4 col-sm-6 col-lg-3">
+        <div class="statistic-block text-center mt-4 mb-4">
+          <div class="s-number">
+            <span id="visitCnt_stat_content" class="statistic-number">0</span>
+          </div>
+          <div class="divider"></div>
+          <h5 class="h5-medium">Course Visits</h5>
+        </div>
+      </div>
+
+      <!-- Data Block #4 -->
+      <div class="col-md-4 col-sm-6 col-lg-3">
+        <div class="statistic-block text-center mt-4 mb-4">
+          <div class="s-number">
+            <span id="ca_stat_content" class="statistic-number">0</span>
+          </div>
+          <div class="divider"></div>
+          <h5 class="h5-medium">Campus Ambassadors</h5>
+        </div>
+      </div>
     </div>
   </div>
-  <!-- End technological partner Area-->
+</div>
+
+<!-- Start of Site Stats -->
+<!-- <div class="bg-muted py-5">
+  <div class="container">
+    <div class="py-2">
+      <h2 class="text-center mb-3">Our Stats!</h2>
+      <div class="row course">
+        <div class="col-sm-2 text-white p-2 stat__single">
+            <h3 class="mb-4 mt-1 stat_title">Certificate Count</h3>
+            <p class="mb-0 pt-2 stat_content" id="certCnt_stat_content">0</p>
+        </div>
+
+        <div class="col-sm-2 text-white p-2 stat__single">
+            <h3 class="mb-4 mt-1 stat_title">User Registrations</h3>
+            <p class="mb-0 pt-2 stat_content" id="userCnt_stat_content">0</p>
+        </div>
+        <div class="col-sm-2 text-white p-2 stat__single">
+            <h3 class="mb-4 mt-1 stat_title">Course<br>Visits</h3>
+            <p class="mb-0 pt-2 stat_content" id="visitCnt_stat_content">0</p>
+        </div>
+
+        <div class="col-sm-2 text-white p-2 stat__single">
+            <h3 class="mb-4 mt-1 stat_title">Campus Ambassadors</h3>
+            <p class="mb-0 pt-2 stat_content" id="ca_stat_content">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- End of Site Stats -->
 
 <!-- Start online class Area -->
 <div class="bg-muted py-5">
@@ -190,9 +266,30 @@
         <div>
           <div class="image">
             <img
-              data-lazy="img/contributors/ankit.jpg"
-              class="rounded-circle mx-auto"
+              data-lazy="img/contributors/ritesh-kakkad.jpg"
+              class="mx-auto"
             />
+          </div>
+          <h4 class="mt-3 text-center">Ritesh Kakkad</h4>
+        </div>
+        <div>
+          <div class="image">
+            <img
+              data-lazy="img/contributors/atul-khekade.jpg"
+              class="mx-auto"
+            />
+          </div>
+          <h4 class="mt-3 text-center">Atul Khekade</h4>
+        </div>
+        <div>
+          <div class="image">
+            <img data-lazy="img/contributors/peter-yeo.jpg" class="mx-auto" />
+          </div>
+          <h4 class="mt-3 text-center">Peter Yeo</h4>
+        </div>
+        <div>
+          <div class="image">
+            <img data-lazy="img/contributors/ankit.jpg" class="mx-auto" />
           </div>
           <h4 class="mt-3 text-center">Ankit Patel</h4>
         </div>
@@ -201,8 +298,22 @@
   </div>
 </div>
 <!-- End Contributors Area = inline code -->
+<div class="bg-muted pt-5">
+  <div class="container position-relative py-4">
+    <div class="contributors-block bg-white border content--rounded py-5">
+      <h2 class="text-center mb-4">Our Videos</h2>
+      <div class="slider video_slider">
+        <div>
+          <div class="video">
+            <iframe src="https://www.youtube.com/embed/_A_BhSVSA6g"> </iframe>
+          </div>
+          <div class="text-center mt-10">Introduction To Blockdegree</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!-- Start contributors Area 
+  <!-- Start contributors Area 
   <div class="bg-muted">
     <div class="container position-relative py-4">
       <div class="contributors bg-white border content--rounded py-5">
@@ -224,32 +335,29 @@
   </div>
   <!-- End contributors Area -->
 
-<!-- Start Become a contributor Area -->
-<div class="home__cta position-relative">
-  <div class="home__cta--container">
-    <div class="container">
-      <div class="row align-items-center text-center">
-        <div class="col-12 overlay__content text-white">
-          <h2 class="text-white">Become a Contributor</h2>
-          <p>Be part of the blockchain movement</p>
-          <a
-            href="https://github.com/XinFinOrg/Blockchain_Tutorial-website"
-            target="_blank"
-            ><button type="button" class="btn btn-outline-light px-5">
-              Start Teaching
-            </button></a
-          >
+  <!-- Start Become a contributor Area -->
+  <div class="home__cta position-relative">
+    <div class="home__cta--container">
+      <div class="container">
+        <div class="row align-items-center text-center">
+          <div class="col-12 overlay__content text-white">
+            <h2 class="text-white">Become a Contributor</h2>
+            <p>Be part of the blockchain movement</p>
+            <a
+              href="https://github.com/XinFinOrg/Blockchain_Tutorial-website"
+              target="_blank"
+              ><button type="button" class="btn btn-outline-light px-5">
+                Start Teaching
+              </button></a
+            >
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <!-- End Become a contributor Area -->
+
+  {{/inline}} {{#*inline "scripts-block"}}
+  <script src="/js/home.js?v=1.43"></script>
+  {{/inline}} {{/base}}
 </div>
-<!-- End Become a contributor Area -->
-
-
-{{/inline}}
-
-{{#*inline "scripts-block"}}
-<script src="/js/home.js?v=1.0"></script>
-{{/inline}}
-{{/base}}

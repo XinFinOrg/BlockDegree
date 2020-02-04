@@ -26,7 +26,7 @@ Let us imagine that 10 people in one room decide to make a unique currency. They
   <img src="/img/courses/bc-basic/hash-function.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 
-Alice noticed that someone had tampered with his diary and wants to find a solution to this. He finds a progAlice called a Hash function which turns text into a set of numbers and letters, as shown in the table below.
+Alice noticed that someone had tampered with his diary and wants to find a solution to this. He finds a program called a Hash function which turns text into a set of numbers and letters, as shown in the table below.
   <img src="/img/courses/bc-basic/hash-function1.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 
@@ -119,9 +119,9 @@ Once the message is sent it is broadcast to the Blockchain network. The network 
 A cryptographic key is simply a string of numbers and letters which are made by key generators also known as keygens. These keygens make use of a very advanced mathematics involving prime numbers to create these keys.
 
 ### Protocols
-The Blockchain comprises of individual behaviour specifications and a large set of rules that are progAlicemed into it. Those specifications are referred to as protocols. The implementation of individual protocols basically made Blockchain what it is (a distributed, peer-to-peer and secured information database).
+The Blockchain comprises of individual behaviour specifications and a large set of rules that are programmed into it. Those specifications are referred to as protocols. The implementation of individual protocols basically made Blockchain what it is (a distributed, peer-to-peer and secured information database).
 
-The Blockchain protocols make sure that the network operates the way it was progAlicemed to by its creators, although it is completely autonomous and not controlled by anyone. Listed below are few samples of protocols implemented in Blockchain:
+The Blockchain protocols make sure that the network operates the way it was programmed to by its creators, although it is completely autonomous and not controlled by anyone. Listed below are few samples of protocols implemented in Blockchain:
 
 * Input data for every hash number has to include the previous block’s hash number.
 

@@ -29,18 +29,25 @@ exports.submitExam = async (req, res, next) => {
   var marks = 0;
   const backUrl = req.header("Referer");
   const examName = backUrl.split("/")[3].split("-")[1];
-  console.log(req.user);
-  console.log(req.user.examData.examBasic.attempts);
+  console.log(`User ${req.user.email} submitted the exam ${examName}.`);
   const request = JSON.parse(JSON.stringify(req.body, null, 2));
-  console.log("requestffff", examName);
   let attempts = req.user.examData.examBasic.attempts;
   let attemptsAdvanced = req.user.examData.examAdvanced.attempts;
   let attemptsProfessional = req.user.examData.examProfessional.attempts;
   var query = {};
   query = { email: req.user.email };
-  let currUser = await User.findOne({ email: req.user.email }).catch(e => {
-    console.log("Error ", e);
-  });
+  let currUser;
+  try {
+    currUser = await User.findOne({ email: req.user.email });
+  } catch (e) {
+    console.error("Some error occured at exam.submitExam: ", e);
+    res.json({
+      status: false,
+      error:
+        "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+    });
+    return;
+  }
   if (currUser != null) {
     if (
       currUser.examData.payment[examTypes[examName].coursePayment_id] == true
@@ -48,6 +55,15 @@ exports.submitExam = async (req, res, next) => {
       if (examName === "basic") {
         if (attempts != null && attempts < 3) {
           questions.findOne({ exam: "firstExam" }).then((result, error) => {
+            if (error) {
+              console.error("Some error occured at exam.submitExam: ", error);
+              res.json({
+                status: false,
+                error:
+                  "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+              });
+              return;
+            }
             for (let index = 0; index < result.questionsBasic.length; index++) {
               if (
                 parseInt(request[index]) + 1 ==
@@ -63,16 +79,26 @@ exports.submitExam = async (req, res, next) => {
                 $set: {
                   "examData.examBasic.attempts": attempts > 2 ? 0 : attempts,
                   "examData.examBasic.marks": marks,
-                  "examData.payment.course_1": attempts <= 2
+                  "examData.payment.course_1": attempts <= 2,
+                  "examData.payment.course_1_payment":
+                    attempts <= 2
+                      ? currUser.examData.payment.course_1_payment
+                      : ""
                 }
               },
               { upsert: false },
               (err, doc) => {
                 if (err) {
-                  console.log("Something went wrong when updating data!");
-                  res.send({ status: "false", message: info });
+                  console.error("Some error occured at exam.submitExam: ", err);
+                  res.json({
+                    status: false,
+                    error:
+                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+                  });
+                  return;
                 }
-                res.redirect("/exam-result");
+                res.json({ status: true, error: null });
+                return;
               }
             );
           });
@@ -84,27 +110,29 @@ exports.submitExam = async (req, res, next) => {
               $set: {
                 "examData.examBasic.attempts": attempts,
                 "examData.examBasic.marks": marks,
-                "examData.payment.course_1": false
+                "examData.payment.course_1": false,
+                "examData.payment.course_1_payment": ""
               }
             },
             { upsert: false },
             (err, doc) => {
               if (err) {
-                console.log("Something went wrong when updating data!");
-                res.send({ status: "false", message: info });
+                console.error("Some error occured at exam.submitExam: ", err);
+                return res.json({
+                  status: false,
+                  error:
+                    "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+                });
               }
-              res.redirect("/exam-result");
+              res.json({ status: true, error: null });
+              return;
             }
           );
         }
       } else if (examName === "advanced") {
         console.log("inside advanced");
-        // console.log(attemptsAdvanced);
         if (attemptsAdvanced != null && attemptsAdvanced < 3) {
-          // console.log("valid attempt");
           questions.findOne({ exam: "firstExam" }).then((result, error) => {
-            // console.log("advanced result", result);
-            // console.log("advanced result:::", result.questionsAdvanced);
             for (
               let index = 0;
               index < result.questionsAdvanced.length;
@@ -126,16 +154,25 @@ exports.submitExam = async (req, res, next) => {
                   "examData.examAdvanced.attempts":
                     attemptsAdvanced > 2 ? 0 : attemptsAdvanced,
                   "examData.examAdvanced.marks": marks,
-                  "examData.payment.course_2": attemptsAdvanced <= 2
+                  "examData.payment.course_2": attemptsAdvanced <= 2,
+                  "examData.payment.course_2_payment":
+                    attemptsAdvanced <= 2
+                      ? currUser.examData.payment.course_2_payment
+                      : ""
                 }
               },
               { upsert: false },
               (err, doc) => {
                 if (err) {
-                  console.log("Something wrong when updating data!");
+                  console.error("Some error occured at exam.submitExam: ", err);
+                  return res.json({
+                    status: false,
+                    error:
+                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+                  });
                 }
-                console.log(doc);
-                res.redirect("/exam-result");
+                res.json({ status: true, error: null });
+                return;
               }
             );
           });
@@ -147,16 +184,22 @@ exports.submitExam = async (req, res, next) => {
               $set: {
                 "examData.examAdvanced.attempts": attemptsAdvanced,
                 "examData.examAdvanced.marks": marks,
-                "examData.payment.course_2": false
+                "examData.payment.course_2": false,
+                "examData.payment.course_2_payment": ""
               }
             },
             { upsert: false },
             (err, doc) => {
               if (err) {
-                console.log("Something went wrong when updating data!");
-                res.send({ status: "false", message: info });
+                console.error("Some error occured at exam.submitExam: ", err);
+                return res.json({
+                  status: false,
+                  error:
+                    "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+                });
               }
-              res.redirect("/exam-result");
+              res.json({ status: true, error: null });
+              return;
             }
           );
         }
@@ -176,7 +219,6 @@ exports.submitExam = async (req, res, next) => {
               }
             }
             attemptsProfessional += 1;
-            console.log("Marks", marks);
             User.findOneAndUpdate(
               query,
               {
@@ -184,16 +226,26 @@ exports.submitExam = async (req, res, next) => {
                   "examData.examProfessional.attempts":
                     attemptsProfessional > 2 ? 0 : attemptsProfessional,
                   "examData.examProfessional.marks": marks,
-                  "examData.payment.course_3": attemptsProfessional <= 2
+                  "examData.payment.course_3": attemptsProfessional <= 2,
+                  "examData.payment.course_3_payment":
+                    attemptsProfessional <= 2
+                      ? currUser.examData.payment.course_3_payment
+                      : ""
                 }
               },
               { upsert: false },
               (err, doc) => {
                 console.log("err?", err);
                 if (err) {
-                  console.log("Something wrong when updating data!");
+                  console.error("Some error occured at exam.submitExam: ", err);
+                  return res.json({
+                    status: false,
+                    error:
+                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+                  });
                 }
-                res.redirect("/exam-result");
+                res.json({ status: true, error: null });
+                return;
               }
             );
           });
@@ -205,17 +257,22 @@ exports.submitExam = async (req, res, next) => {
               $set: {
                 "examData.examProfessional.attempts": attemptsProfessional,
                 "examData.examProfessional.marks": marks,
-                "examData.payment.course_3": false
+                "examData.payment.course_3": false,
+                "examData.payment.course_3_payment": ""
               }
             },
             { upsert: false },
             (err, doc) => {
-              console.log("err2?", err);
               if (err) {
-                console.log("Something went wrong when updating data!");
-                res.send({ status: "false", message: info });
+                console.error("Some error occured at exam.submitExam: ", err);
+                return res.json({
+                  status: false,
+                  error:
+                    "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+                });
               }
-              res.redirect("/exam-result");
+              res.json({ status: true, error: null });
+              return;
             }
           );
         }
@@ -228,12 +285,14 @@ exports.getBasicExam = (req, res) => {
   readJSONFile(
     path.join(process.cwd(), "/server/protected/blockchain-basic.json"),
     (err, json) => {
-      if (err) {
-        throw err;
+      if (err != null) {
+        return res.render("displayError", {
+          error:
+            "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org"
+        });
       }
-      // json = scrambleQuestions(json);
-      // console.log("test quetions basic:", json);
-      res.render("blockchainBasic", json);
+      console.log("Called getBasicExam");
+      res.render("blockchainBasic", { examStr: JSON.stringify(json) });
     }
   );
 };
@@ -243,27 +302,27 @@ exports.getAdvancedExam = (req, res) => {
     path.join(process.cwd(), "/server/protected/blockchain-advanced.json"),
     (err, json) => {
       if (err) {
-        throw err;
+        return res.render("displayError", {
+          error:
+            "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org"
+        });
       }
-      // json = scrambleQuestions(json);
-      // console.log("test quetions advanced:", json);
-      res.render("blockchainAdvanced", json);
+      res.render("blockchainAdvanced", { examStr: JSON.stringify(json) });
     }
   );
 };
 
 exports.getProfessionalExam = (req, res) => {
-  // console.log("inside block prof");
   readJSONFile(
     path.join(process.cwd(), "/server/protected/blockchain-Professional.json"),
     (err, json) => {
-      // console.log("block pro 2", err, json);
       if (err) {
-        throw err;
+        return res.render("displayError", {
+          error:
+            "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org"
+        });
       }
-      // json = scrambleQuestions(json);
-      // console.log("test quetions professional:", json);
-      res.render("blockchainProfessional", json);
+      res.render("blockchainProfessional", { examStr: JSON.stringify(json) });
     }
   );
 };
@@ -273,6 +332,24 @@ exports.getExamResult = async (req, res) => {
     `called the exam-result endpoint by ${req.user.email} at ${Date.now()}`
   );
   const backUrl = req.header("Referer");
+  console.log("BackURL: ", backUrl);
+  if (backUrl == undefined) {
+    // not a redirect
+    res.render("error");
+    return;
+  }
+  let trailPath = backUrl.split("/")[3];
+  if (
+    trailPath == undefined ||
+    trailPath == null ||
+    trailPath.split("-")[1] == undefined ||
+    trailPath.split("-")[1] == null
+  ) {
+    // redirect from some other page
+    res.render("error");
+    return;
+  }
+  const examName = trailPath.split("-")[1];
   let name = "";
   if (req.user.name == "" || req.user.name == undefined) {
     // old email id.
@@ -282,24 +359,21 @@ exports.getExamResult = async (req, res) => {
   }
   var query = {};
   query = { email: req.user.email };
-  const examName = backUrl.split("/")[3].split("-")[1];
+  let user, ques;
+  try {
+    user = await User.findOne(query);
 
-  const user = await User.findOne(query).catch(err => {
+    ques = await questions.findOne({ exam: "firstExam" });
+  } catch (err) {
     if (err) {
       console.log("error: ", err);
       res.render("displayError", {
         error: "Its not you, its us. Please try again after sometime."
       });
     }
-  });
+    return;
+  }
 
-  const ques = await questions.findOne({ exam: "firstExam" }).catch(err =>
-    res.status(500).json({
-      error: err,
-      status: 500,
-      info: "error looking up questions db"
-    })
-  );
   const totalQuestions = ques[examTypes[examName].questionName].length;
   const marksObtained = user.examData[examTypes[examName].courseName].marks;
   const percentObtained = (marksObtained * 100) / totalQuestions;
@@ -323,22 +397,17 @@ exports.getExamResult = async (req, res) => {
     // This is prevents dual addition of the same object based on the timestamp of the previous addition
     if (
       findLastAttempt(user, examName) == null ||
-      Date.now() - findLastAttempt(user, examName) > 10000 // 10 second freeze time between giving exams
+      Date.now() - findLastAttempt(user, examName) > 60000 // 10 second freeze time between giving exams
     ) {
       if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
         return res.redirect("/exams");
       }
-      let date = d.toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      });
       // Post the 2 certificates
       renderCertificate.renderForIPFSHash(
         name,
         percentObtained,
         examName,
-        date,
+        d,
         bothRender => {
           if (!bothRender.uploaded) {
             console.log("error:", bothRender);
@@ -351,24 +420,32 @@ exports.getExamResult = async (req, res) => {
             user.examData[examTypes[examName].courseName].attempts = 0;
             user.examData.payment[examTypes[examName].coursePayment_id] = false;
             var obj = {};
+            const expiryDate = d;
+            expiryDate.setDate(expiryDate.getDate()-1);
+            expiryDate.setFullYear(expiryDate.getFullYear() + 2);
+            expiryDate.setHours(23,59,59,999);
             obj["timestamp"] = Date.now();
             obj["marks"] = marksObtained;
             obj["total"] = totalQuestions;
             obj["headlessHash"] = bothRender.hash[0];
             obj["clientHash"] = bothRender.hash[1];
             obj["examType"] = examName;
+            obj["paymentMode"] =
+              user.examData.payment[
+                examTypes[examName].coursePayment_id + "_payment"
+              ] === undefined
+                ? ""
+                : user.examData.payment[
+                    examTypes[examName].coursePayment_id + "_payment"
+                  ];
+            obj["expiryDate"] = expiryDate.getTime();
             user.examData.certificateHash.push(obj);
+            user.examData.payment[
+              examTypes[examName].coursePayment_id + "_payment"
+            ] = "";
             user.save();
             res.render("examResult", jsonData);
-            // blockchainHelper.addToSC({
-            //   courseName:examName,
-            //   userName:user.name,
-            //   timestamp:""+obj["timestamp"],
-            //   marksObtained:marksObtained,
-            //   totalQuestions:totalQuestions,
-            //   headlessHash:bothRender.hash[0],
-            //   clientHash:bothRender.hash[1]
-            // },user.email)
+            return;
           }
         }
       );
@@ -378,20 +455,21 @@ exports.getExamResult = async (req, res) => {
           user.examData.certificateHash.length - 1
         ].clientHash;
       jsonData.examStatus = examStatus;
-      res.render("examResult", jsonData);
+      return res.render("examResult", jsonData);
     }
   } else {
     // No!
     jsonData.examStatus = false;
     res.render("examResult", jsonData);
+    return;
   }
 };
 
-exports.getExamStatus = (req, res) => {
+exports.getExamStatus = async (req, res) => {
   console.log("local exam: ");
   var query = {};
   query = { email: req.user.email };
-  User.findOne(query, function(err, user) {
+  await User.findOne(query, function(err, user) {
     if (err != null) {
       console.log("error:", err);
       return res.render("displayError", {
@@ -415,7 +493,6 @@ exports.getExamStatus = (req, res) => {
           },
           json: json
         };
-        // console.log("examlist data:::", examListData);
         res.render("examList", examListData);
       }
     );

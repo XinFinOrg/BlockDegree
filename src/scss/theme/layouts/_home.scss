@@ -131,13 +131,13 @@
       width: 100%!important;
       height: 100%;
       /*@include linear-gradient(60deg, rgba(#fff, 80%), rgba(#fff, 0.3));*/
-	  @include linear-gradient(60deg, rgba(#00265e, 0.2));
-      @include media-breakpoint-up(md) {
-        width: 80%;
-      }
-      @include media-breakpoint-up(xl){
-        @include linear-gradient(80deg, rgba(#fff, 80%), rgba(#fff, 0));
-      }
+	  // @include linear-gradient(60deg, rgba(#00265e, 0.2));
+    //   @include media-breakpoint-up(md) {
+    //     width: 80%;
+    //   }
+      // @include media-breakpoint-up(xl){
+      //   @include linear-gradient(80deg, rgba(#fff, 80%), rgba(#fff, 0));
+      // }
     }
 }
 
@@ -422,13 +422,21 @@
   img {
     height: 175px;
     width: 175px;
-	border: 4px solid #ccc;
+	border: 2px solid #ccc;
+	border-radius: 5px;
   }
 }
 /*-------- End Contributors Area Style ------------*/
 
 
-
+.video_slider {
+  img {
+    height: 300px;
+    width: 200px;
+	border: 2px solid #ccc;
+	border-radius: 5px;
+  }
+}
 
 
 .offerModal-open .modal-backdrop {background-color:black;opacity:0.9;}
@@ -442,3 +450,101 @@
 	.modal-body h4 {font-size: 22px;color:#FFFFFF;line-height: 38px!important;}
 	.modal-body h4 span {background-color: rgba(0,0,0,0.4);padding: 5px 15px;border-radius: 5px;color:#ffc107;}
 }
+
+
+
+
+/* ------------------ Start of the userStats ------------------------ */
+
+
+.stat_column {
+  @media(max-width: 500px){
+    width: 100%;
+    text-align: center;
+  }
+
+  @media(min-width: 500px){
+    float: left;
+    width: 25%;
+    padding: 10px;
+    text-align: center;
+  }
+}
+
+.stat_row::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.video {
+  border: 1px solid #1ebae9;
+  border-radius: 10px;
+  padding: 5px;
+  margin:2px;
+  text-align: center;
+  
+  height: 240px;
+  iframe {
+    border-radius: 10px;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+
+.stats-counter {
+	background-image: url(../img/community.jpg);
+	padding-top: 30px;
+	padding-bottom: 30px;
+	background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.stats-counter .statistic-block { 
+	padding: 0 12%;
+}
+
+.s-number { 
+	font-size: 2rem;
+	line-height: 1;	
+	letter-spacing: 1px;
+	display: inline-block;
+	font-weight: 400;
+	margin-bottom: 15px;
+}
+
+/*.s-number:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+	top: 50%;
+    width: 45px;
+    height: 1px;
+    margin: 0 auto;
+    background-color: #ff4718;
+}*/
+
+.stats-counter .statistic-block h5.h5-medium { 
+	color: #FFFFFF;
+	line-height: 1.4;
+	font-weight: 300;
+	margin-bottom: 0;
+	margin-top: 15px;
+}
+
+.stats-counter .divider {
+    content: " ";
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 60%;
+    width: 45px;
+    height: 1px;
+    margin: 0 auto;
+    background-color: #ff4718;
+}
+
+/* ------------------ End of the userStats ------------------------ */

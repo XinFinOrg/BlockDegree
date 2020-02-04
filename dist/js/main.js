@@ -6,30 +6,43 @@ $(document).ready(async function() {
     loginButton = document.getElementById("login-btn"),
     profileBtn = document.getElementById("profile-btn");
   console.log(`current location: ${window.location.pathname}`);
-  if (window.location.pathname == "/exams") {
-    setTimeout(() => {
-      $.notify(
-        {
-          title: "AWAIL FREE CERTIFICATES",
-          message:
-            "Use promocode <strong>code10</strong> to get ENROLL for free on <strong>ANY</strong> course. HURRY! offer only for a limited time"
-        },
-        {
-          type: "pastel-info",
-          delay: Date.now(),
-          template:
-            '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
-            '<span data-notify="title">{1}</span>' +
-            '<span data-notify="message">{2}</span>' +
-            "</div>",
-          placement: {
-            from: "bottom"
-          }
-        }
-      );
-    }, 1000);
+
+  let allParams = window.location.href.split("?");
+  console.log(allParams);
+  for (let i = 0; i < allParams.length; i++) {
+    if (
+      allParams[i].split("=")[0] == "courseFree" &&
+      allParams[i].split("=")[1] == "true"
+    ) {
+      $.notify("Course awailed for free!!", { type: "success" });
+      return;
+    }
   }
+
+  // if (window.location.pathname == "/exams") {
+  //   setTimeout(() => {
+  //     $.notify(
+  //       {
+  //         title: "AWAIL FREE CERTIFICATES",
+  //         message:
+  //           "Use promocode <strong>code10</strong> to get ENROLL for free on <strong>ANY</strong> course. HURRY! offer only for a limited time"
+  //       },
+  //       {
+  //         type: "pastel-info",
+  //         delay: Date.now(),
+  //         template:
+  //           '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+  //           '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+  //           '<span data-notify="title">{1}</span>' +
+  //           '<span data-notify="message">{2}</span>' +
+  //           "</div>",
+  //         placement: {
+  //           from: "bottom"
+  //         }
+  //       }
+  //     );
+  //   }, 1000);
+  // }
   let resp = await fetch("/api/current_user");
   let respJSON = await resp.json();
   if (respJSON.status) {
@@ -39,6 +52,21 @@ $(document).ready(async function() {
     navLogin.setAttribute("href", "/logout");
     loginButton.style = "display:block";
     profileBtn.style = "display:block";
+
+    let pendingNotis = await fetch("/api/getUserNotis");
+    let pendingNotisJosn = await pendingNotis.json();
+    if (pendingNotisJosn.status) {
+      console.log(pendingNotisJosn);
+      pendingNotisJosn.notis.forEach(noti => {
+        $.notify(
+          {
+            title: "<strong>" + noti.title + "</strong>",
+            message: noti.message
+          },
+          { type: noti.type }
+        );
+      });
+    }
   } else {
     navLogin.innerHTML = "Login";
     navLogin.setAttribute("href", "/login");
@@ -68,20 +96,21 @@ $(document).ready(async function() {
   }
 
   //------- Open offer modal on pageload --------//
-  $(document).ready(function() {
-    console.log(sessionStorage.getItem("shown_offerModal"));
-    if (sessionStorage.getItem("shown_offerModal") == 1) {
-    } else {
-      $("#offerModal").modal({
-        show: false,
-        backdrop: "static",
-        minWidth: 300
-      });
-      $("body").addClass("offerModal-open");
-      $("#offerModal").modal("show");
-      sessionStorage.setItem("shown_offerModal", 1);
-    }
-  });
+
+  // $(document).ready(function() {
+  //   console.log(sessionStorage.getItem("shown_offerModal"));
+  //   if (sessionStorage.getItem("shown_offerModal") == 1) {
+  //   } else {
+  //     $("#offerModal").modal({
+  //       show: false,
+  //       backdrop: "static",
+  //       minWidth: 300
+  //     });
+  //     $("body").addClass("offerModal-open");
+  //     $("#offerModal").modal("show");
+  //     sessionStorage.setItem("shown_offerModal", 1);
+  //   }
+  // });
 
   //------- Superfist nav menu  js --------//
 
@@ -334,16 +363,58 @@ $(document).ready(async function() {
     $("#course_1PromoCodeBlock")
       .stop()
       .slideToggle();
+    if ($("#course_1ReferralCodeBlock").is(":visible"))
+      $("#course_1ReferralCodeBlock")
+        .stop()
+        .slideToggle();
   });
 
   $("#course_2PromoCodeBtn").on("click", function() {
     $("#course_2PromoCodeBlock")
       .stop()
       .slideToggle();
+    if ($("#course_2ReferralCodeBlock").is(":visible"))
+      $("#course_2ReferralCodeBlock")
+        .stop()
+        .slideToggle();
   });
 
   $("#course_3PromoCodeBtn").on("click", function() {
     $("#course_3PromoCodeBlock")
+      .stop()
+      .slideToggle();
+    if ($("#course_3ReferralCodeBlock").is(":visible"))
+      $("#course_3ReferralCodeBlock")
+        .stop()
+        .slideToggle();
+  });
+
+  $("#course_1ReferralCodeBtn").on("click", function() {
+    if ($("#course_1PromoCodeBlock").is(":visible"))
+      $("#course_1PromoCodeBlock")
+        .stop()
+        .slideToggle();
+    $("#course_1ReferralCodeBlock")
+      .stop()
+      .slideToggle();
+  });
+
+  $("#course_2ReferralCodeBtn").on("click", function() {
+    if ($("#course_2PromoCodeBlock").is(":visible"))
+      $("#course_2PromoCodeBlock")
+        .stop()
+        .slideToggle();
+    $("#course_2ReferralCodeBlock")
+      .stop()
+      .slideToggle();
+  });
+
+  $("#course_3ReferralCodeBtn").on("click", function() {
+    if ($("#course_3PromoCodeBlock").is(":visible"))
+      $("#course_3PromoCodeBlock")
+        .stop()
+        .slideToggle();
+    $("#course_3ReferralCodeBlock")
       .stop()
       .slideToggle();
   });

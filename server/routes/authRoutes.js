@@ -26,6 +26,7 @@ module.exports = app => {
     console.log("HIT current user");
 
     if (req.user) {
+      console.log(`User Logged In: ${req.user.email}`);
       res.json({ status: true, user: req.user });
     } else {
       res.json({ status: false, user: null });
@@ -155,7 +156,7 @@ module.exports = app => {
   app.get("/auth/google/callback", (req, res, next) => {
     passport.authenticate(
       "google",
-      { failureRedirect: "/login" },
+      { failureRedirect: "/" },
       (err, user, info) => {
         if (err != null) {
           console.log(`Error: ${err}`);
@@ -169,11 +170,14 @@ module.exports = app => {
         req.logIn(user, err => {
           if (err != null) {
             console.log(`Error while logging in ${err}`);
-            res.redirect("/login");
+            return res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
             return res.redirect("/closeCallback");
+          }
+          if (info == "new-name") {
+            return res.redirect("/profile?confirmName=true");
           }
           var url = req.session.redirectTo || "/";
           if (
@@ -194,8 +198,12 @@ module.exports = app => {
   app.get("/auth/facebook/callback", (req, res) => {
     passport.authenticate(
       "facebook",
-      { failureRedirect: "/login" },
+      { failureRedirect: "/" },
       (err, user, info) => {
+        console.log("CAllback URL: ", req.originalUrl);
+        if (req.originalUrl.split("?")[1].split("=")[0] == "error") {
+          return res.redirect("/login");
+        }
         if (err != null) {
           console.log(`Error: ${err}`);
           return res.render("displayError", {
@@ -214,6 +222,9 @@ module.exports = app => {
           if (req.session.closeOnCallback) {
             return res.redirect("/closeCallback");
           }
+          if (info == "new-name") {
+            return res.redirect("/profile?confirmName=true");
+          }
           var url = req.session.redirectTo || "/";
           if (
             url == "/login" ||
@@ -231,7 +242,7 @@ module.exports = app => {
   app.get("/auth/twitter/callback", (req, res) => {
     passport.authenticate(
       "twitter",
-      { failureRedirect: "/login" },
+      { failureRedirect: "/" },
       (err, user, info) => {
         console.log("Inside error is not null: ", err, user, info);
         if (err != null) {
@@ -253,6 +264,9 @@ module.exports = app => {
           if (req.session.closeOnCallback) {
             return res.redirect("/closeCallback");
           }
+          if (info == "new-name") {
+            return res.redirect("/profile?confirmName=true");
+          }
           var url = req.session.redirectTo || "/";
           if (
             url == "/login" ||
@@ -270,7 +284,7 @@ module.exports = app => {
   app.get("/auth/linkedin/callback", (req, res) => {
     passport.authenticate(
       "linkedin",
-      { failureRedirect: "/login" },
+      { failureRedirect: "/" },
       (err, user, info) => {
         if (err != null) {
           console.log("Inside error is not null: ", err, user, info);
@@ -291,6 +305,9 @@ module.exports = app => {
           if (req.session.closeOnCallback) {
             return res.redirect("/closeCallback");
           }
+          if (info == "new-name") {
+            return res.redirect("/profile?confirmName=true");
+          }
           var url = req.session.redirectTo || "/";
           if (
             url == "/login" ||
@@ -305,18 +322,27 @@ module.exports = app => {
     )(req, res);
   });
 
-  app.post("/api/getAuthStatus", requireLogin, async (req, res) => {
-    if (!req.user) {
-      res.redirect("/login");
+  app.post("/api/getAuthStatus", async (req, res) => {
+    if (req.user == undefined || req.user.email == undefined) {
+      return res.status(200).json({
+        localAuth: false,
+        twitterAuth: false,
+        facebookAuth: false,
+        googleAuth: false,
+        linkedinAuth: false
+      });
     }
-    const user = await User.findOne({ email: req.user.email }).catch(err => {
+    let user;
+    try {
+      user = await User.findOne({ email: req.user.email });
+    } catch (err) {
       console.error(err);
       res.status(500).json({
         error: err,
         status: 500,
         info: "error while looking up the database for the user"
       });
-    });
+    }
     res.status(200).json({
       localAuth: user.auth.local.password != "",
       twitterAuth: user.auth.twitter.id != "",

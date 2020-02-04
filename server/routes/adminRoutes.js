@@ -4,6 +4,8 @@ const path = require("path");
 const adminPath = path.join(__dirname, "../admin/");
 const migrationService = require("../services/migrate");
 const userStatsService = require("../services/userStats");
+const adminServices = require("../services/adminServices");
+const cacheSync = require("../services/cacheSync");
 const User = require("../models/user");
 
 module.exports = app => {
@@ -33,6 +35,22 @@ module.exports = app => {
   //     res.json({ msg: "ok" });
   //   }
   // );
+
+  // set coordinates, region, city for visiteds
+  app.get(
+    "/api/setCoords",
+    requireLogin,
+    requrieAdmin,
+    userStatsService.setCoordsFromIP
+  );
+
+  // API to cache all the user certificates which are not cached yet
+  app.get(
+    "/api/certificatesCacheSync",
+    requireLogin,
+    requrieAdmin,
+    cacheSync.syncCertificateCache
+  );
 
   app.get(
     "/api/getAllTimestamp",
@@ -99,4 +117,31 @@ module.exports = app => {
   //   requrieAdmin,
   //   userStatsService.getMostActive
   // );
+
+  // prettier-ignore
+  {
+    app.post("/api/addCourse",requireLogin,requrieAdmin,adminServices.addCourse);
+    app.post("/api/setXdceTolerance",requireLogin,requrieAdmin,adminServices.setXdceTolerance);
+    app.post("/api/setXdcTolerance",requireLogin,requrieAdmin,adminServices.setXdcTolerance);
+    app.post("/api/setPriceUsd",requireLogin,requrieAdmin,adminServices.setPriceUsd);
+    app.post("/api/setXdceConfirmation",requireLogin,requrieAdmin,adminServices.setXdceConfirmation);
+    app.post("/api/setXdcConfirmation",requireLogin,requrieAdmin,adminServices.setXdcConfirmation);
+    app.post("/api/setCourseBurnPercent",requireLogin,requrieAdmin,adminServices.setCourseBurnPercent);
+    app.post("/api/enableBurning",requireLogin,requrieAdmin,adminServices.enableBurning);
+    app.post("/api/disableBurning",requireLogin,requrieAdmin,adminServices.disableBurning);
+    app.post("/api/addWallet",requireLogin,requrieAdmin,adminServices.addWallet);
+    app.post("/api/switchWalletTo",requireLogin, requrieAdmin,adminServices.switchWalletTo);
+    app.post("/api/addReferralCode",requireLogin,requrieAdmin,adminServices.addReferralCode);
+    app.post("/api/enableReferralCode",requireLogin, requrieAdmin,adminServices.enableRefCode);
+    app.post("/api/disableReferralCode",requireLogin, requrieAdmin,adminServices.disableRefCode);
+    app.get("/api/getCourseVisits",requireLogin, requrieAdmin,userStatsService.getCourseVisits);
+    app.get("/api/getAllUser",requireLogin, requrieAdmin,userStatsService.getAllUser);
+    app.get("/api/getAllPromoCodes",requireLogin, requrieAdmin,userStatsService.getAllPromoCodes);
+    app.get("/api/getAllReferralCodes",requireLogin, requrieAdmin,userStatsService.getAllReferralCodes);
+    app.get("/api/getPromoCodeLogs",requireLogin, requrieAdmin,adminServices.getPromoCodeLogs);
+    app.get("/api/getPaymentLogs",requireLogin, requrieAdmin,adminServices.getPaymentLogs);
+    app.get("/api/getBurnlogs",requireLogin, requrieAdmin,adminServices.getBurnLogs);
+    app.get("/api/getCryptoLogs",requireLogin, requrieAdmin,adminServices.getCryptoLogs);
+    app.get("/api/forcePendingBurn",requireLogin, requrieAdmin,adminServices.forcePendingBurn);
+  }
 };

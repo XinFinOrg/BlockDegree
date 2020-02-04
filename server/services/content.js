@@ -50,3 +50,7 @@ exports.callCurriculum = (req, res) => {
   eventEmitter.emit("visitedCurriculum", req, `curri-${courseCurriculum}`);
   console.log("after");
 };
+
+exports.getCurrentTimestamp = (req,res) => {
+  return res.json({timestamp:Date.now()});
+}
