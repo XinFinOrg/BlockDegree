@@ -89,6 +89,7 @@
     "popper.js": "^1.15.0",
     "puppeteer": "^1.19.0",
     "qrcode": "^1.4.1",
+    "sharp": "^0.24.0",
     "tue": "0.0.4",
     "twit": "^2.2.11",
     "twitter-text": "^3.0.0",

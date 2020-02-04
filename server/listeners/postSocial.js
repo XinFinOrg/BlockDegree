@@ -393,7 +393,7 @@ async function postTwitter(fp, postStatus, eventId) {
   );
   let T = new twit(config);
 
-  let buffer = fs.readFileSync(fp).toString("base64");
+  let buffer = fs.readFileSync(fp.split(".")[0]+"__twitter.png").toString("base64");
 
   // User should be able to set the status for post
   T.post("media/upload", { media_data: buffer }, function(

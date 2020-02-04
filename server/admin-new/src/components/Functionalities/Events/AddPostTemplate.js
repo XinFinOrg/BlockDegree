@@ -55,7 +55,7 @@ class AddPostTemplate extends Component {
   }
 
   handleFileReset() {
-    this.setState({ inputFile: "" });
+    this.setState({ inputFile: "", inputFileName: "" });
     document.getElementById("templateFileInput").value = "";
   }
 
@@ -129,6 +129,7 @@ class AddPostTemplate extends Component {
             templateName: "",
             templatePurpose: ""
           });
+          this.props.fetchSocialPostTemplates();
         } else {
           this.setState({
             showError: true,

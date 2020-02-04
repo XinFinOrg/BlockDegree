@@ -408,9 +408,15 @@ module.exports = function(passport) {
         callbackURL: "https://www.blockdegree.org/admin/facebookRefresh/callback"
       },
       async (token, tokenSecret, profile, done) => {
-        console.log(`Token: ${token} TokenSecret: ${tokenSecret}`);
-        console.log(`Profile: ${profile}`);
-        done(null, { token: token, tokenSecret: tokenSecret });
+        if (profile.emails[0].value === socialPostKeys.facebook.email){
+          console.log(`Token: ${token} TokenSecret: ${tokenSecret}`);
+          console.log(`Profile: ${profile}`);
+          done(null, { token: token, tokenSecret: tokenSecret });
+        }
+        else{
+          console.log(`Admin tried to referesh token with different account ${profile.emails[0].value}, actual: ${socialPostKeys.facebook.email}.`);
+          done("invalid facaebook account", null);
+        }        
       }
     )
   );

@@ -5,6 +5,8 @@ const _ = require("lodash");
 const uuid = require("uuid/v4");
 const path = require("path");
 const SocialPostTemplate = require("../models/socialPostTemplates");
+const sharp  = require("sharp");
+const gm = require("gm");
 
 const eventFolder = path.join(__dirname, "../tmp-event");
 const postTemplatePath = path.join(__dirname, "../post-templates");
@@ -53,12 +55,17 @@ exports.generatePostImage = async (type, count, templateId) => {
     });
     const page = await browser.newPage();
     await page.setViewport({
-      width: 800,
-      height: 600,
+      width: 750,
+      height: 510,
       deviceScaleFactor: 1
     });
     await page.setContent(fileData);
     await page.screenshot({ path: imagePath });
+    const postImage = fs.readFileSync(imagePath);
+    const twitterImage = await sharp(postImage).resize(750, 424, {fit:"contain"}).toFile(imagePath.split(".")[0]+"__twitter.png");
+    // gm(imagePath).resize(750, 400, '^').write(imagePath.split(".")[0]+"__twitter.png",err => {
+    //   console.log("Err: at generatePostTemplate ", err)
+    // } );
     console.log(
       `[*] successfully ceated the new post from template: ${templateId}`
     );

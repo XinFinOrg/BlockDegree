@@ -18,9 +18,14 @@ class PromoCodeForms extends Component {
     this.state = { jobs: [] };
 
     this.fetchActiveJobs = this.fetchActiveJobs.bind(this);
+    this.fetchSocialPostTemplates = this.fetchSocialPostTemplates.bind(this);
   }
 
   componentDidMount() {
+    this.fetchSocialPostTemplates();
+  }
+
+  fetchSocialPostTemplates() {
     axios.get("/api/getSocialPostTemplates").then(resp => {
       if (resp.data.status === true) {
         this.setState({ postTemplates: resp.data.templates });
@@ -70,7 +75,9 @@ class PromoCodeForms extends Component {
 
         <div className="row" style={{ width: "100%" }}>
           <div className="col-md-6">
-            <AddPostTemplate />
+            <AddPostTemplate 
+              fetchSocialPostTemplates={this.fetchSocialPostTemplates}
+            />
           </div>
           <div className="col-md-6">
             <div className="row">

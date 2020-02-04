@@ -168,7 +168,7 @@ module.exports = app => {
       (err, msg) => {
         console.log("Response In Callback: ", err, msg);
         if (err) {
-          return res.render("error");
+          return res.render("displayError",{error:err});
         }
         const currToken = msg.token;
 
