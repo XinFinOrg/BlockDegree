@@ -1,10 +1,14 @@
 {
   "name": "blockdegree",
   "version": "1.0.0",
+  "jest": {
+    "setupFilesAfterEnv": ["./tests/setup.js"],
+    "modulePathIgnorePatterns": ["./server/admin-new"]
+  },
   "scripts": {
     "start": "node ./server/bin/www",
     "dev": "nodemon ./server/bin/www",
-    "test": "mocha",
+    "test": "jest --detectOpenHandles",
     "autotest": "supervisor -q -n exit -x mocha -- -b"
   },
   "repository": {
@@ -67,6 +71,7 @@
     "html-to-image": "^0.1.1",
     "http-errors": "~1.6.2",
     "ipfs-http-client": "^33.1.0",
+    "jest": "^25.1.0",
     "jquery": "^1.9.1",
     "lerna": "^3.16.4",
     "mongoose": "^5.4.7",
