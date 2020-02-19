@@ -18,7 +18,10 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 function createdPostFilter(filterVal, data) {
   if (filterVal.date != null && filterVal.comparator !== "") {
     return data.filter(row => {
-      if (!isNaN(Date.parse(row.creationDate)) && Date.parse(row.creationDate) > 0) {
+      if (
+        !isNaN(Date.parse(row.creationDate)) &&
+        Date.parse(row.creationDate) > 0
+      ) {
         return evaluateDateExpression(
           row.creationDate,
           filterVal.date,
@@ -51,7 +54,7 @@ const boolOptionStatus = {
 const statusSelect = {
   notYetMined: "not yet mined",
   pending: "pending",
-  completed:"completed"
+  completed: "completed"
 };
 
 // SR NO, EmailID, E.TYPE, Marks, T. Marks, Headless Hash, Certificate Hash, Issue Date, Payment Mode, Expiry
@@ -176,14 +179,17 @@ const columns = [
 ];
 
 class PaymentLog extends Component {
-
-  componentDidMount(){
+  componentDidMount() {
     this.props.fetchAllCryptoLog(); // load on table
   }
 
+  handleDataChange = data => {
+    document.getElementById("currDataCount").innerHTML = data.dataSize;
+  };
+
   filterPaymentLogsData() {
     console.log("called filter payment logs");
-    console.log(this.props.cryptoLogs)
+    console.log(this.props.cryptoLogs);
     const logs = this.props.cryptoLogs.logs;
     // SR NO, EmailID, E.TYPE, Marks, T. Marks, Headless Hash, Certificate Hash, Issue Date, Payment Mode, Expiry
     let srNo = 1;
@@ -209,6 +215,8 @@ class PaymentLog extends Component {
         referralCode: log.referralCode
       });
     });
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 
@@ -218,8 +226,62 @@ class PaymentLog extends Component {
         <div className="row">
           <div className="col-md-12">
             <div className="header">
-              <h4>Payment Logs</h4>
-              <p>Table with all payment logs</p>
+              <div className="row">
+                <div className="col-md-6">
+                  <h4>
+                    Crypto Payment Logs
+                    <span
+                      onClick={() => {
+                        this.props.fetchAllCryptoLog();
+                      }}
+                      className="table-refresh-btn"
+                    >
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                  </h4>
+                  <p>Table with all crypto payment logs</p>
+                </div>
+                <div className="col-md-6">
+                  <div
+                    id="currRowCount"
+                    className="right table-row-count-wrapper"
+                  >
+                    <span>
+                      <span className="table-row-count-label">
+                        Current Row Count&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;
+                      </span>
+                      <span id="currDataCount" className="table-row-count">
+                        {" "}
+                        <i
+                          className="fa fa-cogs"
+                          style={{ color: "black" }}
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </span>
+                    <br />
+                    {this.props.cryptoLogs ? (
+                      <div className="table-updated right">
+                        <i className="fa fa-history"></i> Updated at{" "}
+                        <strong>
+                          {new Date(
+                            this.props.cryptoLogs.fetchedTS
+                          ).getHours() +
+                            ":" +
+                            new Date(
+                              this.props.cryptoLogs.fetchedTS
+                            ).getMinutes()}
+                        </strong>{" "}
+                        Hours
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
             <div>
               {this.props.cryptoLogs ? (
@@ -232,6 +294,7 @@ class PaymentLog extends Component {
                     pagination={paginationFactory({
                       hideSizePerPage: true
                     })}
+                    onDataSizeChange={this.handleDataChange}
                   />
                 </div>
               ) : (
@@ -257,7 +320,7 @@ function mapsStateToProps({ cryptoLogs }) {
 function evaluateDateExpression(a, b, comparator) {
   const a_date = new Date(a);
   const b_date = new Date(b);
-  b_date.setHours(0,0,0,0);
+  b_date.setHours(0, 0, 0, 0);
   switch (comparator) {
     case "=": {
       if (
@@ -299,4 +362,4 @@ function evaluateDateExpression(a, b, comparator) {
   }
 }
 
-export default connect(mapsStateToProps,actions)(PaymentLog);
+export default connect(mapsStateToProps, actions)(PaymentLog);

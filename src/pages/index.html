@@ -1,6 +1,4 @@
-{{#> base}}
-{{> layouts/baseIndex}}
-{{#*inline "body-block"}}
+{{#> base}} {{> layouts/baseIndex}} {{#*inline "body-block"}}
 <!-- Start banner Area -->
 <div id="fb-root"></div>
 <script
@@ -108,16 +106,14 @@
         </div>
       </div>
     </div>
-    
   </div>
 </div>
 <!-- end abovefold area -->
 
-
 <div class="stats-counter">
-	<div class="container">
-		<div class="row text-white">
-		<!--<div class="stat_row">
+  <div class="container">
+    <div class="row text-white">
+      <!--<div class="stat_row">
 			<div class="stat_column" >
 				<div><h3>Certificate Count</h3></div>
 				<p id="certCnt_stat_content">0</p>
@@ -134,47 +130,53 @@
 				<h3>Campus Ambassadors</h3>
 				<p id="ca_stat_content">0</p>
 		    </div>-->
-			
-			<!-- Data Block #1 -->
-            <div class="col-md-4 col-sm-6 col-lg-3">
-				<div class="statistic-block text-center mt-4 mb-4">
-					<div class="s-number"><span id="certCnt_stat_content" class="statistic-number">0</span></div>
-                	<div class="divider"></div>
-					<h5 class="h5-medium">Certificate Count</h5>
-                </div>
-            </div>
-			
-			<!-- Data Block #2 -->
-            <div class="col-md-4 col-sm-6 col-lg-3">
-				<div class="statistic-block text-center mt-4 mb-4">
-                    <div class="s-number"><span id="userCnt_stat_content" class="statistic-number">0</span></div>
-					<div class="divider"></div>
-                	<h5 class="h5-medium">User Registrations</h5>
-                </div>
-            </div>
-			
-			<!-- Data Block #3 -->
-            <div class="col-md-4 col-sm-6 col-lg-3">
-				<div class="statistic-block text-center mt-4 mb-4">
-                    <div class="s-number"><span id="visitCnt_stat_content" class="statistic-number">0</span></div>
-					<div class="divider"></div>
-                	<h5 class="h5-medium">Course Visits</h5>
-                </div>
-            </div>
-			
-			<!-- Data Block #4 -->
-            <div class="col-md-4 col-sm-6 col-lg-3">
-				<div class="statistic-block text-center mt-4 mb-4">
-                    <div class="s-number"><span id="ca_stat_content" class="statistic-number">0</span></div>
-					<div class="divider"></div>
-                	<h5 class="h5-medium">Campus Ambassadors</h5>
-                </div>
-            </div>			
-			
-		</div>
-	</div>
-</div>
 
+      <!-- Data Block #1 -->
+      <div class="col-md-4 col-sm-6 col-lg-3">
+        <div class="statistic-block text-center mt-4 mb-4">
+          <div class="s-number">
+            <span id="certCnt_stat_content" class="statistic-number">0</span>
+          </div>
+          <div class="divider"></div>
+          <h5 class="h5-medium">Certificate Count</h5>
+        </div>
+      </div>
+
+      <!-- Data Block #2 -->
+      <div class="col-md-4 col-sm-6 col-lg-3">
+        <div class="statistic-block text-center mt-4 mb-4">
+          <div class="s-number">
+            <span id="userCnt_stat_content" class="statistic-number">0</span>
+          </div>
+          <div class="divider"></div>
+          <h5 class="h5-medium">User Registrations</h5>
+        </div>
+      </div>
+
+      <!-- Data Block #3 -->
+      <div class="col-md-4 col-sm-6 col-lg-3">
+        <div class="statistic-block text-center mt-4 mb-4">
+          <div class="s-number">
+            <span id="visitCnt_stat_content" class="statistic-number">0</span>
+          </div>
+          <div class="divider"></div>
+          <h5 class="h5-medium">Course Visits</h5>
+        </div>
+      </div>
+
+      <!-- Data Block #4 -->
+      <div class="col-md-4 col-sm-6 col-lg-3">
+        <div class="statistic-block text-center mt-4 mb-4">
+          <div class="s-number">
+            <span id="ca_stat_content" class="statistic-number">0</span>
+          </div>
+          <div class="divider"></div>
+          <h5 class="h5-medium">Campus Ambassadors</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Start of Site Stats -->
 <!-- <div class="bg-muted py-5">
@@ -244,14 +246,16 @@
 
     <div class="col-lg-12 mt-5 text-center">
       <a href="https://Xinfin.org" target="_blank">
-      		<img src="img/partners/XinFin_dark.png" class="img-fluid" style="height: 150px;width:150px"/>
+        <img
+          src="img/partners/XinFin_dark.png"
+          class="img-fluid"
+          style="height: 150px;width:150px"
+        />
       </a>
     </div>
   </div>
 </div>
 <!-- End Technological Partners Area-->
-
-
 
 <!-- Start Contributors Area = inline code -->
 <div class="bg-muted pt-5">
@@ -279,10 +283,13 @@
         </div>
         <div>
           <div class="image">
-            <img
-              data-lazy="img/contributors/ankit.jpg"
-              class="mx-auto"
-            />
+            <img data-lazy="img/contributors/peter-yeo.jpg" class="mx-auto" />
+          </div>
+          <h4 class="mt-3 text-center">Peter Yeo</h4>
+        </div>
+        <div>
+          <div class="image">
+            <img data-lazy="img/contributors/ankit.jpg" class="mx-auto" />
           </div>
           <h4 class="mt-3 text-center">Ankit Patel</h4>
         </div>
@@ -291,8 +298,22 @@
   </div>
 </div>
 <!-- End Contributors Area = inline code -->
+<div class="bg-muted pt-5">
+  <div class="container position-relative py-4">
+    <div class="contributors-block bg-white border content--rounded py-5">
+      <h2 class="text-center mb-4">Our Videos</h2>
+      <div class="slider video_slider">
+        <div>
+          <div class="video">
+            <iframe src="https://www.youtube.com/embed/_A_BhSVSA6g"> </iframe>
+          </div>
+          <div class="text-center mt-10">Introduction To Blockdegree</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!-- Start contributors Area 
+  <!-- Start contributors Area 
   <div class="bg-muted">
     <div class="container position-relative py-4">
       <div class="contributors bg-white border content--rounded py-5">
@@ -314,32 +335,29 @@
   </div>
   <!-- End contributors Area -->
 
-
-<!-- Start Become a contributor Area -->
-<div class="home__cta position-relative">
-  <div class="home__cta--container">
-    <div class="container">
-      <div class="row align-items-center text-center">
-        <div class="col-12 overlay__content text-white">
-          <h2 class="text-white">Become a Contributor</h2>
-          <p>Be part of the blockchain movement</p>
-          <a
-            href="https://github.com/XinFinOrg/Blockchain_Tutorial-website"
-            target="_blank"
-            ><button type="button" class="btn btn-outline-light px-5">
-              Start Teaching
-            </button></a
-          >
+  <!-- Start Become a contributor Area -->
+  <div class="home__cta position-relative">
+    <div class="home__cta--container">
+      <div class="container">
+        <div class="row align-items-center text-center">
+          <div class="col-12 overlay__content text-white">
+            <h2 class="text-white">Become a Contributor</h2>
+            <p>Be part of the blockchain movement</p>
+            <a
+              href="https://github.com/XinFinOrg/Blockchain_Tutorial-website"
+              target="_blank"
+              ><button type="button" class="btn btn-outline-light px-5">
+                Start Teaching
+              </button></a
+            >
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <!-- End Become a contributor Area -->
+
+  {{/inline}} {{#*inline "scripts-block"}}
+  <script src="/js/home.js?v=1.43"></script>
+  {{/inline}} {{/base}}
 </div>
-<!-- End Become a contributor Area -->
-
-{{/inline}}
-
-{{#*inline "scripts-block"}}
-<script src="/js/home.js?v=1.42"></script>
-{{/inline}}
-{{/base}}

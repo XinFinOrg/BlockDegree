@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
+import * as actions from "../../actions";
 import ReactChartist from "react-chartist";
 import ctPointLabels from "chartist-plugin-pointlabels";
 
@@ -20,14 +20,13 @@ class AccountCreated extends Component {
   getChartData() {
     const users = this.props.allUsers.users;
     console.log("Accounts Created : ", users.length);
-    let today = new Date();
     let maxAcnt = 0;
     let xData = {};
     let currDate = new Date();
     let retData = {
       data: {
         labels: [],
-        series: [[],[],[]]
+        series: [[], [], []]
       },
       options: {
         lineSmooth: false,
@@ -152,10 +151,10 @@ class AccountCreated extends Component {
 
     for (let i = 0; i <= 7; i++) {
       if (xDataKeys.includes(i + "")) {
-        if (i != 0) retData.data.labels.push(dayToLabel[xData[i + ""].day]);
+        if (i !== 0) retData.data.labels.push(dayToLabel[xData[i + ""].day]);
         retData.data.series[2].push(xData[i + ""].count);
       } else {
-        if (i != 0)
+        if (i !== 0)
           retData.data.labels.push(
             dayToLabel[new Date(currDate.getTime() - i * dayToMS).getDay()]
           );
@@ -193,6 +192,28 @@ class AccountCreated extends Component {
             </div>
           )}
         </div>
+        <hr />
+        {this.props.allUsers ? (
+          <div className="weekly-updated">
+            <i className="fa fa-history"></i> Updated at{" "}
+            <strong>
+              {new Date(this.props.allUsers.fetchedTS).getHours() +
+                ":" +
+                new Date(this.props.allUsers.fetchedTS).getMinutes()}
+            </strong>{" "}
+            Hours
+            <div
+              onClick={() => {
+                this.props.fetchAllUser();
+              }}
+              className="right chart-refresh-btn"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     );
   }
@@ -202,4 +223,4 @@ function mapsStateToProps({ allUsers }) {
   return { allUsers };
 }
 
-export default connect(mapsStateToProps)(AccountCreated);
+export default connect(mapsStateToProps, actions)(AccountCreated);

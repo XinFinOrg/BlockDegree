@@ -4,9 +4,7 @@ import { connect } from "react-redux";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
 import * as actions from "../../actions";
-import paginationFactory
-  
- from "react-bootstrap-table2-paginator";
+import paginationFactory from "react-bootstrap-table2-paginator";
 
 import filterFactory, {
   textFilter,
@@ -150,10 +148,13 @@ const columns = [
 ];
 
 class PromoCodes extends Component {
-
-  componentDidMount(){
-    this.props.fetchAllPromoCodes(); // load on table
+  componentDidMount() {
+    setTimeout(this.props.fetchAllPromoCodes(), 1000); // load on table
   }
+
+  handleDataChange = data => {
+    document.getElementById("currDataCount").innerHTML = data.dataSize;
+  };
 
   paginationOption = () => {
     return {
@@ -192,6 +193,8 @@ class PromoCodes extends Component {
     });
     console.log("FILTERED DATA::");
     console.log(retData);
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 
@@ -200,37 +203,88 @@ class PromoCodes extends Component {
       <div className="table-container">
         <div className="row">
           <div className="col-md-12">
-              <div className="header">
-                <h4>Promocode Tables</h4>
-                <p>Table with all Promocodes</p>
-              </div>
-              <div>
-                {this.props.promoCodes ? (
-                  
-                      <div>
-                        <BootstrapTable
-                          keyField="srNo"
-                          data={this.filterPromoCodeData()}
-                          columns={columns}
-                          filter={filterFactory()}
-                          pagination={paginationFactory({
-                            hideSizePerPage: true
-                          })}
+            <div className="header">
+              <div className="row">
+                <div className="col-md-6">
+                  <h4>
+                    Promocode Tables{" "}
+                    <span
+                      onClick={() => {
+                        this.props.fetchAllPromoCodes();
+                      }}
+                      className="table-refresh-btn"
+                    >
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                  </h4>
+                  <p>Table with all Promocodes</p>
+                </div>
+                <div className="col-md-6">
+                  <div
+                    id="currRowCount"
+                    className="right table-row-count-wrapper"
+                  >
+                    <span>
+                      <span className="table-row-count-label">
+                        Current Row Count&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;
+                      </span>
+                      <span id="currDataCount" className="table-row-count">
+                        {" "}
+                        <i
+                          className="fa fa-cogs"
+                          style={{ color: "black" }}
+                          aria-hidden="true"
                         />
+                      </span>
+                    </span>
+                    <br />
+                    {this.props.promoCodes ? (
+                      <div className="table-updated right">
+                        <i className="fa fa-history"></i> Updated at{" "}
+                        <strong>
+                          {new Date(this.props.promoCodes.fetchedTS).getHours() +
+                            ":" +
+                            new Date(
+                              this.props.promoCodes.fetchedTS
+                            ).getMinutes()}
+                        </strong>{" "}
+                        Hours
                       </div>
-
-                ) : (
-                  <div className="chart-preload">
-                    <div>
-                      <i className="fa fa-cogs fa-5x" aria-hidden="true" />
-                    </div>
-                    Loading
+                    ) : (
+                      ""
+                    )}
                   </div>
-                )}
+                </div>
               </div>
+            </div>
+            <div>
+              {this.props.promoCodes ? (
+                <div>
+                  <BootstrapTable
+                    keyField="srNo"
+                    data={this.filterPromoCodeData()}
+                    columns={columns}
+                    filter={filterFactory()}
+                    pagination={paginationFactory({
+                      hideSizePerPage: true
+                    })}
+                    onDataSizeChange={this.handleDataChange}
+                  />
+                </div>
+              ) : (
+                <div className="chart-preload">
+                  <div>
+                    <i className="fa fa-cogs fa-5x" aria-hidden="true" />
+                  </div>
+                  Loading
+                </div>
+              )}
             </div>
           </div>
         </div>
+      </div>
     );
   }
 }
@@ -238,7 +292,7 @@ class PromoCodes extends Component {
 function evaluateDateExpression(a, b, comparator) {
   const a_date = new Date(a);
   const b_date = new Date(b);
-  b_date.setHours(0,0,0,0);
+  b_date.setHours(0, 0, 0, 0);
   switch (comparator) {
     case "=": {
       if (
@@ -274,7 +328,8 @@ function evaluateDateExpression(a, b, comparator) {
       }
       return false;
     }
-    default:{}
+    default: {
+    }
   }
 }
 
@@ -282,4 +337,4 @@ function mapsStateToProps({ promoCodes }) {
   return { promoCodes };
 }
 
-export default connect(mapsStateToProps,actions)(PromoCodes);
+export default connect(mapsStateToProps, actions)(PromoCodes);

@@ -4,6 +4,48 @@ const ReferralCode = require("../models/referral_code");
 const Visited = require("../models/visited");
 const PaymentLogs = require("../models/payment_logs");
 const GeoIP = require("geoip-lite");
+const axios = require("axios");
+
+const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
+
+// burning xdc = https://explorerapi.xinfin.network/totalBurntValue
+// masternode count = https://explorerapi.xinfin.network/totalMasterNodes
+// masternode xdc staked = https://explorerapi.xinfin.network/totalStakedValue
+// total xdc = https://explorerapi.xinfin.network/publicAPI?module=balance&action=totalXDC&apikey=YourApiKeyToken
+// rewards = https://explorer.xinfin.network/todayRewards
+exports.getXinFinStats = async (req, res) => {
+  try {
+    console.log("called getSiteStats");
+    let allUsers = await User.find({});
+    let allVisits = await Visited.find({});
+
+    let userCnt = 0,
+      visitCnt = 0,
+      caCnt = 20,
+      totCertis = 0;
+    if (allUsers != null) {
+      userCnt = allUsers.length;
+    }
+
+    if (allVisits != null) {
+      visitCnt = allVisits.length;
+    }
+
+    for (let y = 0; y < allUsers.length; y++) {
+      if (allUsers[y].examData.certificateHash.length > 1) {
+        totCertis += allUsers[y].examData.certificateHash.length - 1;
+      }
+    }
+    const siteStatData = await axios.post(
+      "https://explorer.xinfin.network/getXinFinStats"
+    );
+    // console.log("Response from services.userStats: ", siteStatData);
+    res.json({ status: true, netData: siteStatData.data, siteData: {userCnt, visitCnt, caCnt, totCertis} });
+  } catch (e) {
+    console.log("exception at services.userStats: ", e);
+    res.json({ error: "internal error", status: false });
+  }
+};
 
 exports.getAllUserTimestamp = async (req, res) => {
   const users = await User.find({});

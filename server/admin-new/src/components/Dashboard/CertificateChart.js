@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ChartistGraph from "react-chartist";
+import * as actions from "../../actions";
 
 class CertificateStats extends Component {
   state = {
@@ -121,6 +122,23 @@ class CertificateStats extends Component {
                 <i className="fa fa-circle text-warning"></i> Professional
               </div>
             </div>
+            <hr />
+            {this.props.allUsers?<div className="stats">
+              <i className="fa fa-history"></i> Updated at{" "}
+              <strong>
+                {new Date(this.props.allUsers.fetchedTS).getHours() + ":" + new Date(this.props.allUsers.fetchedTS).getMinutes()}
+              </strong>{" "}
+              Hours
+              <div
+                onClick={() => {
+                  this.props.fetchAllUser();
+                }}
+                className="right chart-refresh-btn"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </div>
+            </div>:""}
+            
           </div>
         </div>
       </div>
@@ -132,4 +150,4 @@ function mapStateToProps({ allUsers }) {
   return { allUsers };
 }
 
-export default connect(mapStateToProps)(CertificateStats);
+export default connect(mapStateToProps, actions)(CertificateStats);

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ChartistGraph from "react-chartist";
 import { connect } from "react-redux";
 import Chartist from "chartist";
-import { parse } from "path";
+import * as actions from "../../actions";
 
 // let dataSales = {
 //   labels: ["1", "2", "3", "4", "5", "6"],
@@ -195,9 +195,9 @@ class TrafficChart extends Component {
     console.log("max visit: ", maxVisit);
     this.visitCap = maxVisit;
     const currDate = new Date();
-    const currMonth = currDate.getMonth().toString();
+    let currMonth = currDate.getMonth().toString();
     let currYear = currDate.getFullYear().toString();
-   
+
     const course_1_Arr = [];
     const course_2_Arr = [];
     const course_3_Arr = [];
@@ -206,8 +206,9 @@ class TrafficChart extends Component {
 
     let offset = 0;
     for (let x = 0; x <= 6; x++) {
-      if (currDate.getMonth() - offset < 0) {
+      if (parseInt(currMonth) - offset < 0) {
         currYear = (parseInt(currYear) - 1).toString();
+        currMonth = "" + 11;
         offset = 0;
       }
       if (
@@ -239,9 +240,12 @@ class TrafficChart extends Component {
 
     offset = 0;
     currYear = currDate.getFullYear().toString();
+    currMonth = currDate.getMonth().toString();
+
     for (let x = 0; x <= 6; x++) {
-      if (currDate.getMonth() - offset <= 0) {
+      if (parseInt(currMonth) - offset < 0) {
         currYear = (parseInt(currYear) - 1).toString();
+        currMonth = "11";
         offset = 0;
       }
       if (
@@ -263,9 +267,11 @@ class TrafficChart extends Component {
 
     offset = 0;
     currYear = currDate.getFullYear().toString();
+    currMonth = currDate.getMonth().toString();
     for (let x = 0; x <= 6; x++) {
-      if (currDate.getMonth() - offset <= 0) {
+      if (parseInt(currMonth) - offset < 0) {
         currYear = (parseInt(currYear) - 1).toString();
+        currMonth = "11";
         offset = 0;
       }
       if (
@@ -311,7 +317,7 @@ class TrafficChart extends Component {
     //   course_3_Arr.push(course_3_stats[i + ""]);
     // }
     return {
-      labels: labels.slice(0,labels.length-1),
+      labels: labels.slice(0, labels.length - 1),
       series: [course_1_Arr, course_2_Arr, course_3_Arr]
     };
   };
@@ -352,6 +358,28 @@ class TrafficChart extends Component {
               <i className="fa fa-circle text-warning"></i> Professional
             </div>
           </div>
+          <hr />
+          {this.props.courseVisits ? (
+            <div className="stats">
+              <i className="fa fa-history"></i> Updated at{" "}
+              <strong>
+                {new Date(this.props.courseVisits.fetchedTS).getHours() +
+                  ":" +
+                  new Date(this.props.courseVisits.fetchedTS).getMinutes()}
+              </strong>{" "}
+              Hours
+              <div
+                onClick={() => {
+                  this.props.fetchAllUser();
+                }}
+                className="right chart-refresh-btn"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );
@@ -362,4 +390,4 @@ function mapsStateToProps({ courseVisits }) {
   return { courseVisits };
 }
 
-export default connect(mapsStateToProps)(TrafficChart);
+export default connect(mapsStateToProps, actions)(TrafficChart);

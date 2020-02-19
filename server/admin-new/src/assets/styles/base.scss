@@ -382,9 +382,44 @@ body {
   vertical-align: top;
 }
 
+
+.table-row-count-wrapper {
+  font-size: medium;
+  color: #6d71ef;
+  height: 100%;
+  padding-top: 40px;
+
+  &>span>span>i {
+    color: #50d890;
+  }
+}
+
+.table-updated {
+  padding: 3px;
+  font-size: x-small;
+  color: #6d71ef;
+  font-weight: lighter;
+  margin: 3px;
+}
+
+.chart-refresh-btn {
+  cursor: pointer;
+
+  &:hover {
+    color: #07db00;
+  }
+}
+
 .table-refresh-btn {
   cursor: pointer;
   padding: 2px;
   color: #dbb405;
   border-radius: 10px;
+
+}
+
+.weekly-updated {
+  color: rgb(165, 165, 165);
+  margin: 10px;
+
 }

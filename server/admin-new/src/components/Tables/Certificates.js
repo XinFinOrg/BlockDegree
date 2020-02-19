@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 // import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
+import * as actions from "../../actions";
 
 import paginationFactory from "react-bootstrap-table2-paginator";
 
@@ -135,6 +136,11 @@ const columns = [
 ];
 
 class Certificates extends Component {
+  // to load the current count
+  componentDidMount() {
+    if (this.props.allUsers) this.filterCertificateData();
+  }
+
   filterCertificateData() {
     console.log("called filter user data");
     const userData = this.props.allUsers.users;
@@ -166,43 +172,102 @@ class Certificates extends Component {
         }
       }
     });
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
+
+  handleDataChange = data => {
+    document.getElementById("currDataCount").innerHTML = data.dataSize;
+  };
 
   render() {
     return (
       <div className="table-container">
         <div className="row">
           <div className="col-md-12">
-              <div className="header">
-                <h4>Certificates Table</h4>
-                <p>Table with all Users Users</p>
+            <div className="header">
+              <div className="row">
+                <div className="col-md-6">
+                  <h4>
+                    Certificates Table{" "}
+                    <span
+                      onClick={() => {
+                        this.props.fetchAllUser();
+                      }}
+                      className="table-refresh-btn"
+                    >
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                  </h4>
+                  <p>Table with all Users Users</p>
+                </div>
+                <div className="col-md-6">
+                  <div
+                    id="currRowCount"
+                    className="right table-row-count-wrapper"
+                  >
+                    <span>
+                      <span className="table-row-count-label">
+                        Current Row Count&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;
+                      </span>
+                      <span id="currDataCount" className="table-row-count">
+                        {" "}
+                        <i
+                          className="fa fa-cogs"
+                          style={{ color: "black" }}
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </span>
+                    <br />
+                    {this.props.allUsers ? (
+                      <div className="table-updated right">
+                        <i className="fa fa-history"></i> Updated at{" "}
+                        <strong>
+                          {new Date(this.props.allUsers.fetchedTS).getHours() +
+                            ":" +
+                            new Date(
+                              this.props.allUsers.fetchedTS
+                            ).getMinutes()}
+                        </strong>{" "}
+                        Hours
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
               </div>
-              <div>
-                {this.props.allUsers ? (
+            </div>
+            <div>
+              {this.props.allUsers ? (
+                <div>
+                  <BootstrapTable
+                    keyField="srNo"
+                    data={this.filterCertificateData()}
+                    columns={columns}
+                    filter={filterFactory()}
+                    pagination={paginationFactory({
+                      hideSizePerPage: true
+                    })}
+                    onDataSizeChange={this.handleDataChange}
+                  />
+                </div>
+              ) : (
+                <div className="chart-preload">
                   <div>
-                    <BootstrapTable
-                      keyField="srNo"
-                      data={this.filterCertificateData()}
-                      columns={columns}
-                      filter={filterFactory()}
-                      pagination={paginationFactory({
-                        hideSizePerPage: true
-                      })}
-                    />
+                    <i className="fa fa-cogs fa-5x" aria-hidden="true" />
                   </div>
-                ) : (
-                  <div className="chart-preload">
-                    <div>
-                      <i className="fa fa-cogs fa-5x" aria-hidden="true" />
-                    </div>
-                    Loading
-                  </div>
-                )}
-              </div>
+                  Loading
+                </div>
+              )}
             </div>
           </div>
         </div>
+      </div>
     );
   }
 }
@@ -214,7 +279,7 @@ function mapsStateToProps({ allUsers }) {
 function evaluateDateExpression(a, b, comparator) {
   const a_date = new Date(a);
   const b_date = new Date(b);
-  b_date.setHours(0,0,0,0);
+  b_date.setHours(0, 0, 0, 0);
   switch (comparator) {
     case "=": {
       if (
@@ -250,8 +315,9 @@ function evaluateDateExpression(a, b, comparator) {
       }
       return false;
     }
-    default:{}
+    default: {
+    }
   }
 }
 
-export default connect(mapsStateToProps)(Certificates);
+export default connect(mapsStateToProps, actions)(Certificates);

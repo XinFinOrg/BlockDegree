@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
+import * as actions from "../../actions";
 import ReactChartist from "react-chartist";
 import ctPointLabels from "chartist-plugin-pointlabels";
 
@@ -20,14 +20,13 @@ class AccountActive extends Component {
   getChartData() {
     const users = this.props.allUsers.users;
     console.log("Accounts Created : ", users.length);
-    let today = new Date();
     let maxAcnt = 0;
     let xData = {};
     let currDate = new Date();
     let retData = {
       data: {
         labels: [],
-        series: [[],[]]
+        series: [[], []]
       },
       options: {
         lineSmooth: false,
@@ -52,9 +51,9 @@ class AccountActive extends Component {
     currDate.setMinutes(0);
     currDate.setSeconds(0);
     users.forEach(user => {
-        if (!user.lastActive){
-            return;
-        }
+      if (!user.lastActive) {
+        return;
+      }
       let currLastActive = parseFloat(user.lastActive);
       if (parseFloat(currLastActive) > currDate.getTime() - 0 * dayToMS) {
         // falls in valid ts
@@ -155,10 +154,10 @@ class AccountActive extends Component {
 
     for (let i = 0; i <= 7; i++) {
       if (xDataKeys.includes(i + "")) {
-        if (i != 0) retData.data.labels.push(dayToLabel[xData[i + ""].day]);
+        if (i !== 0) retData.data.labels.push(dayToLabel[xData[i + ""].day]);
         retData.data.series[1].push(xData[i + ""].count);
       } else {
-        if (i != 0)
+        if (i !== 0)
           retData.data.labels.push(
             dayToLabel[new Date(currDate.getTime() - i * dayToMS).getDay()]
           );
@@ -196,6 +195,28 @@ class AccountActive extends Component {
             </div>
           )}
         </div>
+        <hr />
+        {this.props.allUsers ? (
+          <div className="weekly-updated">
+            <i className="fa fa-history"></i> Updated at{" "}
+            <strong>
+              {new Date(this.props.allUsers.fetchedTS).getHours() +
+                ":" +
+                new Date(this.props.allUsers.fetchedTS).getMinutes()}
+            </strong>{" "}
+            Hours
+            <div
+              onClick={() => {
+                this.props.fetchAllUser();
+              }}
+              className="right chart-refresh-btn"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     );
   }
@@ -205,4 +226,4 @@ function mapsStateToProps({ allUsers }) {
   return { allUsers };
 }
 
-export default connect(mapsStateToProps)(AccountActive);
+export default connect(mapsStateToProps, actions)(AccountActive);

@@ -131,13 +131,13 @@
       width: 100%!important;
       height: 100%;
       /*@include linear-gradient(60deg, rgba(#fff, 80%), rgba(#fff, 0.3));*/
-	  @include linear-gradient(60deg, rgba(#00265e, 0.2));
-      @include media-breakpoint-up(md) {
-        width: 80%;
-      }
-      @include media-breakpoint-up(xl){
-        @include linear-gradient(80deg, rgba(#fff, 80%), rgba(#fff, 0));
-      }
+	  // @include linear-gradient(60deg, rgba(#00265e, 0.2));
+    //   @include media-breakpoint-up(md) {
+    //     width: 80%;
+    //   }
+      // @include media-breakpoint-up(xl){
+      //   @include linear-gradient(80deg, rgba(#fff, 80%), rgba(#fff, 0));
+      // }
     }
 }
 
@@ -429,7 +429,14 @@
 /*-------- End Contributors Area Style ------------*/
 
 
-
+.video_slider {
+  img {
+    height: 300px;
+    width: 200px;
+	border: 2px solid #ccc;
+	border-radius: 5px;
+  }
+}
 
 
 .offerModal-open .modal-backdrop {background-color:black;opacity:0.9;}
@@ -470,8 +477,20 @@
     clear: both;
 }
 
-
-
+.video {
+  border: 1px solid #1ebae9;
+  border-radius: 10px;
+  padding: 5px;
+  margin:2px;
+  text-align: center;
+  
+  height: 240px;
+  iframe {
+    border-radius: 10px;
+    height: 100%;
+    width: 100%;
+  }
+}
 
 
 .stats-counter {

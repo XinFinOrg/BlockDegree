@@ -138,8 +138,7 @@ const columns = [
 ];
 
 class ReferralCodes extends Component {
-
-  componentDidMount(){
+  componentDidMount() {
     this.props.fetchAllReferralCodes(); // load on table
   }
 
@@ -148,6 +147,10 @@ class ReferralCodes extends Component {
       custom: true,
       totalSize: this.props.referralCodes.codes.length
     };
+  };
+
+  handleDataChange = data => {
+    document.getElementById("currDataCount").innerHTML = data.dataSize;
   };
 
   filterReferralCodesData() {
@@ -179,6 +182,8 @@ class ReferralCodes extends Component {
     });
     console.log("FILTERED DATA::");
     console.log(retData);
+    if (document.getElementById("currDataCount"))
+      document.getElementById("currDataCount").innerHTML = retData.length;
     return retData;
   }
 
@@ -188,8 +193,62 @@ class ReferralCodes extends Component {
         <div className="row">
           <div className="col-md-12">
             <div className="header">
-              <h4>Referral Code Tables</h4>
-              <p>Table with all Referral Code</p>
+              <div className="row">
+                <div className="col-md-6">
+                  <h4>
+                    Referral Code Tables{" "}
+                    <span
+                      onClick={() => {
+                        this.props.fetchAllReferralCodes();
+                      }}
+                      className="table-refresh-btn"
+                    >
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                  </h4>
+                  <p>Table with all Referral Code</p>
+                </div>
+                <div className="col-md-6">
+                  <div
+                    id="currRowCount"
+                    className="right table-row-count-wrapper"
+                  >
+                    <span>
+                      <span className="table-row-count-label">
+                        Current Row Count&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;
+                      </span>
+                      <span id="currDataCount" className="table-row-count">
+                        {" "}
+                        <i
+                          className="fa fa-cogs"
+                          style={{ color: "black" }}
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </span>
+                    <br />
+                    {this.props.referralCodes ? (
+                      <div className="table-updated right">
+                        <i className="fa fa-history"></i> Updated at{" "}
+                        <strong>
+                          {new Date(
+                            this.props.referralCodes.fetchedTS
+                          ).getHours() +
+                            ":" +
+                            new Date(
+                              this.props.referralCodes.fetchedTS
+                            ).getMinutes()}
+                        </strong>{" "}
+                        Hours
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
             <div>
               {this.props.referralCodes ? (
@@ -202,6 +261,7 @@ class ReferralCodes extends Component {
                     pagination={paginationFactory({
                       hideSizePerPage: true
                     })}
+                    onDataSizeChange={this.handleDataChange}
                   />
                 </div>
               ) : (
@@ -223,7 +283,7 @@ class ReferralCodes extends Component {
 function evaluateDateExpression(a, b, comparator) {
   const a_date = new Date(a);
   const b_date = new Date(b);
-  b_date.setHours(0,0,0,0);
+  b_date.setHours(0, 0, 0, 0);
   switch (comparator) {
     case "=": {
       if (
@@ -267,4 +327,4 @@ function mapsStateToProps({ referralCodes }) {
   return { referralCodes };
 }
 
-export default connect(mapsStateToProps,actions)(ReferralCodes);
+export default connect(mapsStateToProps, actions)(ReferralCodes);

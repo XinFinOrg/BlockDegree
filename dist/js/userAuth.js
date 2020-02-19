@@ -30,7 +30,10 @@ if (typeof jQuery != "undefined") {
       let validEm = false;
 
       if (getUrlVars()["from"]) {
-        $.notify({ message: preMsg });
+        console.log("getUrlVars");
+        setTimeout(() => {
+          $.notify({ message: preMsg });
+        }, 1000);
       }
 
       email.onkeyup = delay(() => {
