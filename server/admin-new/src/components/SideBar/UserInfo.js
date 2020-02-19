@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Collapse } from "react-bootstrap";
 import { connect } from "react-redux";
-import cx from "classnames";
 import * as actions from "../../actions";
 
 class UserInfo extends Component {

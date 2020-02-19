@@ -85,6 +85,11 @@ class Nav extends Component {
                 <li className={this.isPathActive('/functionalities/wallet-config') ? 'active' : null}>
                   <Link to="/functionalities/wallet-config">Wallet Config</Link>
                 </li>                
+              </ul>
+              <ul className="nav">
+                <li className={this.isPathActive('/functionalities/events') ? 'active' : null}>
+                  <Link to="/functionalities/events">Events</Link>
+                </li>                
               </ul>             
             </div>
           </Collapse>

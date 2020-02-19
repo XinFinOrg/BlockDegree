@@ -21,6 +21,7 @@ $pe-7s-font-path: "~pe7-icon/dist/fonts" !default;
 @import "base/form";
 @import "base/tags";
 @import "react-dates/styles";
+@import "base/active_jobs";
 
 html,
 body {
@@ -320,6 +321,68 @@ body {
   }
 }
 
+.checkbox-grp {
+  label {
+    display: block;
+    padding-left: 15px;
+    text-indent: -15px;
+  }
+
+  input {
+    width: 13px;
+    height: 13px;
+    padding: 5px;
+    margin: 0;
+    vertical-align: bottom;
+    position: relative;
+    *overflow: hidden;
+  }
+}
+
+.file-reset-btn {
+  float: right;
+  cursor: pointer;
+  margin-top: 1%;
+}
+
+.add-btn {
+  color: white;
+  padding: 1%;
+  border-radius: 50%;
+  background-color: #54e0c7;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+
+.recur-weekly div {
+  max-height: 100px;
+}
+
+.react-datepicker-wrapper {
+  width: 100px !important;
+
+  div {
+    height: 100%;
+  }
+}
+
+.inline-timepicker {
+  padding-top: 5px;
+  margin-left: 10px;
+}
+
+.pad-20 {
+  padding: 20px;
+}
+
+.sselect-type {
+  vertical-align: top;
+}
+
+
 .table-row-count-wrapper {
   font-size: medium;
   color: #6d71ef;
@@ -352,9 +415,11 @@ body {
   padding: 2px;
   color: #dbb405;
   border-radius: 10px;
+
 }
 
 .weekly-updated {
   color: rgb(165, 165, 165);
   margin: 10px;
+
 }

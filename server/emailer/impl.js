@@ -32,8 +32,7 @@ module.exports = {
     });
   },
 
-
-  sendMailInternal: (from,mail, subject, msg) => {
+  sendMailInternal: (from, mail, subject, msg) => {
     return new Promise(function(resolve, reject) {
       var mailOptions = {
         from: from,

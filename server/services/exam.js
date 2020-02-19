@@ -3,6 +3,7 @@ var User = require("../models/user");
 const questions = require("../models/question");
 const utils = require("../utils.js");
 const renderCertificate = require("../helpers/renderCertificate");
+const socialPostListener = require("../listeners/postSocial").em;
 // const blockchainHelper = require("../helpers/blockchainHelpers");
 
 const examTypes = {
@@ -394,69 +395,57 @@ exports.getExamResult = async (req, res) => {
     examStatus = true;
     let d = new Date();
     console.log(`Last Attemp timestamp : ${findLastAttempt(user, examName)}`);
-    // This is prevents dual addition of the same object based on the timestamp of the previous addition
-    if (
-      findLastAttempt(user, examName) == null ||
-      Date.now() - findLastAttempt(user, examName) > 60000 // 10 second freeze time between giving exams
-    ) {
-      if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
-        return res.redirect("/exams");
-      }
-      // Post the 2 certificates
-      renderCertificate.renderForIPFSHash(
-        name,
-        percentObtained,
-        examName,
-        d,
-        bothRender => {
-          if (!bothRender.uploaded) {
-            console.log("error:", bothRender);
-            return res.render("displayError", {
-              error: "Its not you, its us. Please try again after some time."
-            });
-          } else {
-            jsonData.certificateHash = bothRender.hash[1];
-            jsonData.examStatus = examStatus;
-            user.examData[examTypes[examName].courseName].attempts = 0;
-            user.examData.payment[examTypes[examName].coursePayment_id] = false;
-            var obj = {};
-            const expiryDate = d;
-            expiryDate.setDate(expiryDate.getDate()-1);
-            expiryDate.setFullYear(expiryDate.getFullYear() + 2);
-            expiryDate.setHours(23,59,59,999);
-            obj["timestamp"] = Date.now();
-            obj["marks"] = marksObtained;
-            obj["total"] = totalQuestions;
-            obj["headlessHash"] = bothRender.hash[0];
-            obj["clientHash"] = bothRender.hash[1];
-            obj["examType"] = examName;
-            obj["paymentMode"] =
-              user.examData.payment[
-                examTypes[examName].coursePayment_id + "_payment"
-              ] === undefined
-                ? ""
-                : user.examData.payment[
-                    examTypes[examName].coursePayment_id + "_payment"
-                  ];
-            obj["expiryDate"] = expiryDate.getTime();
-            user.examData.certificateHash.push(obj);
+    if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
+      return res.redirect("/exams");
+    }
+    // Post the 2 certificates
+    renderCertificate.renderForIPFSHash(
+      name,
+      percentObtained,
+      examName,
+      d,
+      bothRender => {
+        if (!bothRender.uploaded) {
+          console.log("error:", bothRender);
+          return res.render("displayError", {
+            error: "Its not you, its us. Please try again after some time."
+          });
+        } else {
+          jsonData.certificateHash = bothRender.hash[1];
+          jsonData.examStatus = examStatus;
+          user.examData[examTypes[examName].courseName].attempts = 0;
+          user.examData.payment[examTypes[examName].coursePayment_id] = false;
+          var obj = {};
+          const expiryDate = d;
+          expiryDate.setDate(expiryDate.getDate() - 1);
+          expiryDate.setFullYear(expiryDate.getFullYear() + 2);
+          expiryDate.setHours(23, 59, 59, 999);
+          obj["timestamp"] = Date.now();
+          obj["marks"] = marksObtained;
+          obj["total"] = totalQuestions;
+          obj["headlessHash"] = bothRender.hash[0];
+          obj["clientHash"] = bothRender.hash[1];
+          obj["examType"] = examName;
+          obj["paymentMode"] =
             user.examData.payment[
               examTypes[examName].coursePayment_id + "_payment"
-            ] = "";
-            user.save();
-            res.render("examResult", jsonData);
-            return;
-          }
+            ] === undefined
+              ? ""
+              : user.examData.payment[
+                  examTypes[examName].coursePayment_id + "_payment"
+                ];
+          obj["expiryDate"] = expiryDate.getTime();
+          user.examData.certificateHash.push(obj);
+          user.examData.payment[
+            examTypes[examName].coursePayment_id + "_payment"
+          ] = "";
+          user.save();
+          res.render("examResult", jsonData);
+          socialPostListener.emit("varTriggerUpdate", "certificates");
+          return;
         }
-      );
-    } else {
-      jsonData.certificateHash =
-        user.examData.certificateHash[
-          user.examData.certificateHash.length - 1
-        ].clientHash;
-      jsonData.examStatus = examStatus;
-      return res.render("examResult", jsonData);
-    }
+      }
+    );
   } else {
     // No!
     jsonData.examStatus = false;

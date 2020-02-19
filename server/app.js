@@ -11,14 +11,17 @@ let session = require("express-session");
 let hbs = require("express-handlebars");
 let cors = require("cors");
 let fs = require("fs");
+const expressFileUpload = require("express-fileupload");
 let pendingTx = require("./listeners/pendingTx").em;
 const adminServices = require("./services/adminServices");
 
 let app = express();
 require("dotenv").config();
-mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true });
-require("./services/passport")(passport);
 mongoose.set("useCreateIndex", true);
+
+require("./services/passport")(passport);
+
+connectToMongoDB();
 
 // view engine setup
 app.engine(
@@ -43,7 +46,11 @@ app.use(
   express.static("server/protected/courses", { extensions: ["html", "htm"] })
 );
 app.use(cors());
-
+app.use(
+  expressFileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 }
+  })
+);
 // required for passport
 app.use(
   session({
@@ -73,10 +80,10 @@ require("./routes/contactUsRoutes")(app);
 require("./routes/promoCodeRoutes")(app);
 require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
-
 // remove the comment to serve from build
 app.use("/newadmin", dynamicMiddleware);
 
+require("./listeners/postSocial");
 // catch 404 and render 404 page
 app.use("*", function(req, res) {
   res.render("error");
@@ -108,15 +115,38 @@ if (!fs.existsSync("./server/cached")) {
   fs.mkdirSync("./server/cached");
 }
 
-function dynamicMiddleware(req,res,next) {
+function dynamicMiddleware(req, res, next) {
   if (req.isAuthenticated()) {
     if (process.env.ADMIN_ID.split("|").includes(req.user.email)) {
-      express.static(path.join(__dirname, "./admin-new/build"))(req,res,next);
+      express.static(path.join(__dirname, "./admin-new/build"))(req, res, next);
     } else {
       res.render("error");
     }
   } else {
     res.render("error");
+  }
+}
+
+function connectToMongoDB() {
+  try {
+    mongoose
+      .connect(process.env.DATABASE_URI, { useNewUrlParser: true })
+      .then(() => {
+        console.log("[*] connected to mongodb");
+      })
+      .catch(e => {
+        console.log("[*] error while connecting to mongodb: ", e);
+        console.log("[*] Retrying connection to mongodb in 5 seconds...");
+        setTimeout(connectToMongoDB, 5000);
+      });
+  } catch (err0) {
+    console.log("[*] error while connecting to mongodb: ", err0);
+    console.log(
+      "[*] error while connecting to mongodb at :",
+      process.env.DATABASE_URI
+    );
+    console.log("[*] Retrying connection to mongodb in 5 seconds...");
+    setTimeout(connectToMongoDB, 5000);
   }
 }
 

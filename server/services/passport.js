@@ -1,9 +1,11 @@
-var LocalStrategy = require("passport-local").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 const googleStrategy = require("passport-google-oauth20").Strategy;
-var User = require("../models/user");
-var Token = require("../models/tokenVerification");
+const User = require("../models/user");
+const Token = require("../models/tokenVerification");
 const emailer = require("../emailer/impl");
-var crypto = require("crypto");
+const socialPostListener = require("../listeners/postSocial").em;
+const socialPostKeys = require("../config/socialPostKeys");
+const crypto = require("crypto");
 require("dotenv").config();
 
 const facebookStrategy = require("passport-facebook").Strategy;
@@ -138,6 +140,8 @@ module.exports = function(passport) {
                   throw err;
                 }
 
+                socialPostListener.emit("varTriggerUpdate", "registrations");
+
                 var token = new Token({
                   email: email,
                   token: crypto.randomBytes(16).toString("hex")
@@ -209,7 +213,6 @@ module.exports = function(passport) {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: "https://www.blockdegree.org/auth/google/callback",
-
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {
@@ -285,6 +288,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
+        socialPostListener.emit("varTriggerUpdate", "registrations");
         done(null, newUser, "new-name");
       }
     )
@@ -388,8 +392,31 @@ module.exports = function(passport) {
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
           newUser.save();
+          socialPostListener.emit("varTriggerUpdate", "registrations");
           done(null, newUser, "new-name");
         });
+      }
+    )
+  );
+
+  passport.use(
+    "facebookAdminRefresh",
+    new facebookStrategy(
+      {
+        clientID: socialPostKeys.facebook.app_id,
+        clientSecret: socialPostKeys.facebook.app_secret,
+        callbackURL: "https://www.blockdegree.org/admin/facebookRefresh/callback"
+      },
+      async (token, tokenSecret, profile, done) => {
+        if (profile.emails[0].value === socialPostKeys.facebook.email){
+          console.log(`Token: ${token} TokenSecret: ${tokenSecret}`);
+          console.log(`Profile: ${profile}`);
+          done(null, { token: token, tokenSecret: tokenSecret });
+        }
+        else{
+          console.log(`Admin tried to referesh token with different account ${profile.emails[0].value}, actual: ${socialPostKeys.facebook.email}.`);
+          done("invalid facaebook account", null);
+        }        
       }
     )
   );
@@ -491,6 +518,7 @@ module.exports = function(passport) {
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
         newUser.save();
+        socialPostListener.emit("varTriggerUpdate", "registrations");
         done(null, newUser, "new-name");
       }
     )
@@ -589,6 +617,7 @@ module.exports = function(passport) {
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
           newUser.save();
+          socialPostListener.emit("varTriggerUpdate", "registrations");
           done(null, newUser, "new-name");
         });
       }

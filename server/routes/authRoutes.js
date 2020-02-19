@@ -1,7 +1,10 @@
 var User = require("../models/user");
 const emailer = require("../emailer/impl");
 const passport = require("passport");
+const axios = require("axios");
+const FacebookConfig = require("../models/facebookConfig");
 const requireLogin = require("../middleware/requireLogin");
+const requireAdmin = require("../middleware/requireAdmin");
 const handleClose = require("../middleware/handleClose");
 const path = require("path");
 const bcrypt = require("bcrypt-nodejs");
@@ -148,6 +151,63 @@ module.exports = app => {
       scope: ["public_profile", "email"]
     })
   );
+
+  app.get(
+    "/admin/facebookRefresh",
+    handleClose,
+    // requireLogin, requireAdmin,
+    passport.authenticate("facebookAdminRefresh", {
+      scope: ["public_profile", "email"]
+    })
+  );
+
+  app.get("/admin/facebookRefresh/callback", (req, res, next) => {
+    passport.authenticate(
+      "facebookAdminRefresh",
+      { failureRedirect: "/" },
+      (err, msg) => {
+        console.log("Response In Callback: ", err, msg);
+        if (err) {
+          return res.render("displayError",{error:err});
+        }
+        const currToken = msg.token;
+
+        const url = `https://graph.facebook.com/105301110986098?fields=access_token&access_token=${currToken}`;
+
+        axios.get(url).then(async resp => {
+          console.log("Response from Facebook");
+          console.log(resp.data);
+          if (resp.data && resp.data.id !== "") {
+            const facebookConfig = await FacebookConfig.findOne({});
+            if (facebookConfig === null) {
+              console.log("config not initiated, initializing");
+              const newFacebookConfig = genFacebookConfig();
+              newFacebookConfig.shortTermToken = currToken;
+              newFacebookConfig.lastUpdate = Date.now() + "";
+              newFacebookConfig.longTermToken = resp.data.access_token;
+              await newFacebookConfig.save();
+              return res.redirect("/closeCallback");
+            } else {
+              console.log("already initiated, updating");
+              if (resp.data.access_token === facebookConfig.access_token) {
+                console.log("same token, not updated");
+                return res.json({
+                  status: false,
+                  error: "same access_tokem, no updation performed"
+                });
+              } else {
+                console.log("new access_token updating...");
+                facebookConfig.access_token = resp.data.access_token;
+                facebookConfig.lastUpdate = "" + Date.now();
+                await facebookConfig.save();
+                return res.redirect("/closeCallback");
+              }
+            }
+          }
+        });
+      }
+    )(req, res);
+  });
 
   app.get("/auth/twitter", handleClose, passport.authenticate("twitter"));
 
@@ -364,3 +424,12 @@ module.exports = app => {
     }
   });
 };
+
+function genFacebookConfig() {
+  return new FacebookConfig({
+    shortTermToken: "",
+    lastUpdate: "",
+    expiryTime: "",
+    longgTermToken: ""
+  });
+}

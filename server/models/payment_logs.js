@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 
 // define the schema for our user model
 var paymentlogsSchema = mongoose.Schema({
-
     email : String,
     payment_id : String,
     course_id : String,

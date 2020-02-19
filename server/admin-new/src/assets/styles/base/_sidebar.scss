@@ -235,8 +235,6 @@ a {
     border: 1px solid #A1A7BB;
     opacity: 0.1;
   }
-
-
 }
 
 .main-panel {
@@ -313,7 +311,7 @@ a {
   background-color: $sidebar-bg;
   height: calc(100vh - 160px);
   overflow: auto;
-  
+
   &::-webkit-scrollbar {
     width: 4px;
   }
