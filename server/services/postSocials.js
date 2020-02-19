@@ -37,7 +37,7 @@ if (!fs.existsSync(postTemplatesPath)) {
 global.ActiveJobs = [];
 ActiveJobs.push = function() {
   Array.prototype.push.apply(this, arguments);
-  testActiveJobRefVar();
+  // testActiveJobRefVar();
 };
 
 if (!fs.existsSync(tmpFilePath)) {
@@ -1189,16 +1189,16 @@ function eventExists(eventId) {
 /**
  * ! Re-Implement to FWD call to the WebSocket
  */
-function testActiveJobRefVar() {
-  console.log("pushed into active jobs");
-  console.log("currently active jobs: ", ActiveJobs.length);
-  ActiveJobs.forEach(currObj => {
-    if (currObj.refVar !== null) {
-      const nextInnvocation = currObj.refVar.nextInvocation()._date.toDate();
-      console.log("Next Invocation at testActiveJobRefVar: ", nextInnvocation);
-    }
-  });
-}
+// function testActiveJobRefVar() {
+//   console.log("pushed into active jobs");
+//   console.log("currently active jobs: ", ActiveJobs.length);
+//   ActiveJobs.forEach(currObj => {
+//     if (currObj.refVar !== null) {
+//       const nextInnvocation = currObj.refVar.nextInvocation()._date.toDate();
+//       console.log("Next Invocation at testActiveJobRefVar: ", nextInnvocation);
+//     }
+//   });
+// }
 
 async function getSiteStats() {
   try {

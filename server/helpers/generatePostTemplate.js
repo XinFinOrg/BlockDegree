@@ -6,7 +6,7 @@ const uuid = require("uuid/v4");
 const path = require("path");
 const SocialPostTemplate = require("../models/socialPostTemplates");
 const sharp  = require("sharp");
-const gm = require("gm");
+// const gm = require("gm");
 
 const eventFolder = path.join(__dirname, "../tmp-event");
 const postTemplatePath = path.join(__dirname, "../postTemplates");
