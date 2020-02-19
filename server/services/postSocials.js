@@ -561,7 +561,7 @@ exports.scheduleEventByState = async (req, res) => {
       stateVarName: stateVarName,
       refVar: null,
       stateVarNextVal:
-        isRecurring === "true" ? stateVarStartValue : conditionValue
+        isRecurring === "true" ? stateVarStartValue : stateVarValue
     });
     await event.save();
 

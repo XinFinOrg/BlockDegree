@@ -73,35 +73,35 @@ async function postSocial(eventId) {
       }
     }
 
-    if (postedLinkedIn) {
-      try {
-        linkedInPostId = await postLinkedin(
-          eventFilePath,
-          eventStatus,
-          eventId
-        );
-      } catch (linkedin_error) {
-        console.error(`error while posting the status on linkedin`);
-        console.error(linkedin_error);
-        postedLinkedIn = false;
-        postLinkErr = true;
-      }
-    }
+    // if (postedLinkedIn) {
+    //   try {
+    //     linkedInPostId = await postLinkedin(
+    //       eventFilePath,
+    //       eventStatus,
+    //       eventId
+    //     );
+    //   } catch (linkedin_error) {
+    //     console.error(`error while posting the status on linkedin`);
+    //     console.error(linkedin_error);
+    //     postedLinkedIn = false;
+    //     postLinkErr = true;
+    //   }
+    // }
 
-    if (postedFacebook) {
-      try {
-        facebookPostId = await postFacebook(
-          eventFilePath,
-          eventStatus,
-          eventId
-        );
-      } catch (facebook_error) {
-        console.error(`error while posting the status on facebook`);
-        console.error(facebook_error);
-        postedFacebook = false;
-        postFaceErr = true;
-      }
-    }
+    // if (postedFacebook) {
+    //   try {
+    //     facebookPostId = await postFacebook(
+    //       eventFilePath,
+    //       eventStatus,
+    //       eventId
+    //     );
+    //   } catch (facebook_error) {
+    //     console.error(`error while posting the status on facebook`);
+    //     console.error(facebook_error);
+    //     postedFacebook = false;
+    //     postFaceErr = true;
+    //   }
+    // }
 
     if (postedTelegram) {
       try {
@@ -577,7 +577,7 @@ const postTelegram = (fp, postStatus, eventId) => {
     console.log("postUrl: ", postUrl);
 
     let newForm = new FormData();
-    newForm.append("chat_id", "@monkaWin");
+    newForm.append("chat_id", "@blockdegree");
     newForm.append("photo", fs.createReadStream(fp));
     newForm.append("caption", postStatus);
 

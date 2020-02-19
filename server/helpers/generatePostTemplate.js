@@ -9,7 +9,7 @@ const sharp  = require("sharp");
 const gm = require("gm");
 
 const eventFolder = path.join(__dirname, "../tmp-event");
-const postTemplatePath = path.join(__dirname, "../post-templates");
+const postTemplatePath = path.join(__dirname, "../postTemplates");
 if (!fs.existsSync(postTemplatePath)) {
   console.log("[*] template folder does not exists, creating...");
   fs.mkdirSync(postTemplatePath);
