@@ -23,7 +23,7 @@ $("document").ready(() => {
       ); //totalXDCFiat
       animateNumberIncrease(0, rndDeci3(res.netData.monthlyRewards), "rewardsXDC"); // rewardsFIAT
       animateNumberIncrease(0, rndDeci3(res.netData.totalXDCFiat), "marketCap"); // rewardsFIAT
-      animateNumberIncrease(0, rndDeci3(res.netData.priceUsd), "currXDCPrice");
+      animateNumberIncrease(0, rndDeci4(res.netData.priceUsd), "currXDCPrice");
       animateNumberIncrease(0, rndDeci3(res.netData.monthlyRewardsFiat), "rewardsFIAT");
       $.notifyClose("bottom-right");
     },
@@ -52,4 +52,8 @@ function animateNumberIncrease(currVal, desiredVal, elemId) {
 
 function rndDeci3(n) {
   return Math.round(parseFloat(n) * 1000) / 1000;
+}
+
+function rndDeci4(n) {
+  return Math.round(parseFloat(n) * 10000) / 10000;
 }
