@@ -118,8 +118,6 @@ Go ahead and try the voting function. Once you do, you should see a Metamask con
 
 Once you click submit, you've successfully casted a vote! You'll still see a loading screen. For now, you'll have to refresh the page to see the votes recorded. We'll implement the functionality update the loader automatically
 
-The accompanying video footage for this portion of the tutorial begins at 1:48:05. You can download the code for this portion of the tutorial here. Feel free to use these as a reference point if you get stuck!
-
 The very last step in this tutorial is to trigger an event whenever a vote is cast. This will allow us to update our client-side application when an account has voted. Fortunately, this is quite easy. Let's start by declaring an event in our contract like this:
 <div class="precode">~/election/contracts/election.sol</div>
 
