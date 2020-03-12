@@ -59,7 +59,8 @@ $(document).ready(function() {
   // form submit event
   form.on("submit", function(e) {
     e.preventDefault(); // prevent default form submit
-    if (isEmailValid && isMsgValid && isNameValid && isSubValid) {
+    const response = grecaptcha.getResponse();
+    if (isEmailValid && isMsgValid && isNameValid && isSubValid && response.length!==0) {
       // all valid, good to go
       $.ajax({
         method: "post",
