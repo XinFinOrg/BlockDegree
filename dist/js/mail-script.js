@@ -69,7 +69,8 @@ $(document).ready(function() {
           name: name.value.trim(),
           subject: subject.value.trim(),
           email: email.value.toLowerCase(),
-          message: message.value.trim()
+          message: message.value.trim(),
+          reCaptcha:response
         },
         success: () => {
           name.value = "";
