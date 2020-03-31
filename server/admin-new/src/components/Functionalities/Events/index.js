@@ -119,12 +119,12 @@ class PromoCodeForms extends Component {
             </div>
           </div>
         </div>
-
+{/* 
         <div className="row">
           <div className="col-md-6">
             <FacebookRefresh />
           </div>
-        </div>
+        </div> */}
 
         {/* <div className="row" style={{ width: "100%" }}>
           <div className="col-md-6">
