@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import BlockdegreeWhite from "../../assets/images/brand/blockdegree_white.png";
 
 class Logo extends Component {
   render() {
@@ -7,7 +8,7 @@ class Logo extends Component {
         <div className="logo-wrapper">
           <a href="/">
             <img
-              src="https://www.blockdegree.org/img/brand/blockdegree_white.png"
+              src={BlockdegreeWhite}
               className="logo"
               alt="logo"
             />
