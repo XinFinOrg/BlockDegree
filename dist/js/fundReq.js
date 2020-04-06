@@ -94,6 +94,7 @@ function submitMetamask(addr, fundId) {
     if (providerNetworkId == 4) {
       console.log("on rinkeby");
       const tx = {
+        from: web3.eth.defaultAccount,
         to: addr,
         value: "1000000000000000000",
       };
