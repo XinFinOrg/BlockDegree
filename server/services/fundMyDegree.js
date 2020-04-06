@@ -44,11 +44,11 @@ exports.requestNewFund = async (req, res) => {
       return res.json({ status: false, error: "invalid description" });
     }
 
-    const hasProfanity = await profanityChecker.checkForProfinity(description);
+    // const hasProfanity = await profanityChecker.checkForProfinity(description);
 
-    if (hasProfanity === true) {
-      requiresApproval = true;
-    }
+    // if (hasProfanity === true) {
+    //   requiresApproval = true;
+    // }
 
     const amount = course.priceUsd;
 
