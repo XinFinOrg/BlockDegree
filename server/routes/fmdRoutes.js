@@ -1,8 +1,8 @@
 const fmdService = require("../services/fundMyDegree");
-const requireLogin = require("../middleware/requireAdmin");
+const requireLogin = require("../middleware/requireLogin");
 
 module.exports = (app) => {
-  app.get("/fund-my-degree", (req, res) => {
+  app.get("/fund-my-degree",requireLogin, (req, res) => {
     res.render("fundReq");
   });
   app.get("/fmd", requireLogin, (req, res) => {
