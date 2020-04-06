@@ -83,7 +83,9 @@ function submitMetamask(addr, fundId) {
     }
   }
 
-  web3.version.getNetwork((err, providerNetworkId) => {
+  web3.version.getNetwork(async (err, providerNetworkId) => {
+    await ethereum.enable();
+
     if (err) {
       $.notify("Oops, error occurred while getting the network ID");
       return;

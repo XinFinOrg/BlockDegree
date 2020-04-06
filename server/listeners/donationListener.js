@@ -66,7 +66,7 @@ function startProcessingDonation(fundId, tx, name) {
           );
           return null;
         }
-      }, 1000);
+      }, 10000);
     } catch (e) {
       console.log(`exception at ${__filename}.startProcessingDonation: `, e);
       return;
