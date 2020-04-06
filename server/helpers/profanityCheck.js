@@ -11,7 +11,7 @@ exports.checkForProfinity = text => {
     if (_.isEmpty(text)) {
       reject("empty text");
     }
-    const process = spawn("python", ["./test.py", text]);
+    const process = spawn("python", ["./server/scripts/profanityCheck.py", text]);
     process.stdout.on("data", function(data) {
       data = data.toString("utf-8").trim();
       const hasProfanity = data === "[1]";
