@@ -7,7 +7,7 @@ class Logo extends Component {
         <div className="logo-wrapper">
           <a href="/">
             <img
-              src="https://www.blockdegree.org/img/brand/blockdegree_white.png"
+              src="https://uat.blockdegree.org/img/brand/blockdegree_white.png"
               className="logo"
               alt="logo"
             />

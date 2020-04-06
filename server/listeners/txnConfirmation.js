@@ -15,6 +15,7 @@ const axios = require("axios");
 const promoCodeService = require("../services/promoCodes");
 const emailer = require("../emailer/impl");
 const EthereumTx = require("ethereumjs-tx");
+const cmcHelper = require("../helpers/cmcHelper");
 
 let eventEmitter = new EventEmitter();
 // const ethConfirmation = 3;
@@ -67,7 +68,7 @@ function listenForConfirmation(
   refCode
 ) {
   console.log("CodeName: ", codeName);
-  console.log("RefCode: ",refCode);
+  console.log("RefCode: ", refCode);
   setImmediate(async () => {
     console.log(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
@@ -392,7 +393,7 @@ function listenForMined(
   req,
   refCode
 ) {
-  console.log("RefCode: ",refCode)
+  console.log("RefCode: ", refCode);
   setImmediate(async () => {
     switch (network) {
       case 1: {
@@ -871,21 +872,12 @@ function newDefBurnLog(id, txHash) {
 
 async function getXinEquivalent(amnt) {
   try {
-    const currXinPrice = await axios.get(coinMarketCapAPI);
-    console.log("Parameter amnt: ", amnt);
-    console.log("Price usd: ", currXinPrice.data[0].price_usd);
-    if (
-      currXinPrice.data[0] != undefined ||
-      currXinPrice.data[0] != undefined
-    ) {
-      console.log(
-        (parseFloat(amnt) / parseFloat(currXinPrice.data[0].price_usd)) *
-          Math.pow(10, 18)
-      );
+    const cmcData = await cmcHelper.getXdcPrice();
+    const cmcPrice = cmcData.data.data["2634"].quote.USD;
+    if (cmcData !== null) {
+      console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
       return (
-        (parseFloat(amnt) /
-          (parseFloat(currXinPrice.data[0].price_usd) * divisor)) *
-        Math.pow(10, 18)
+        (parseFloat(amnt) / (parseFloat(cmcPrice) * divisor)) * Math.pow(10, 18)
       );
     }
   } catch (e) {

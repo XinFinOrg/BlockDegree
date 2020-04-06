@@ -18,7 +18,10 @@ if (process.env.IPFS_NETWORK == "local") {
   });
 }
 
-exports.renderForIPFSHash = (name, percent, examType, d, callback) => {
+exports.renderForIPFSHash = (name, percent, examType, d, donerName, callback) => {
+  if (donerName==undefined || donerName==null ){
+    donerName=""
+  }
   console.log("Called RENDER IPFS");
   let date = d.toLocaleDateString("en-GB", {
     day: "numeric",
@@ -60,7 +63,7 @@ exports.renderForIPFSHash = (name, percent, examType, d, callback) => {
           });
         }
         console.log("Uploaded");
-        renderWithQR(name, percent, examType, d, ipfsHash[0].hash, obj => {
+        renderWithQR(name, percent, examType, d, ipfsHash[0].hash, donerName, obj => {
           callback({
             uploaded: obj.uploaded,
             info: obj.info,
@@ -73,7 +76,7 @@ exports.renderForIPFSHash = (name, percent, examType, d, callback) => {
   );
 };
 
-var renderWithQR = async (name, percent, examType, d, hash, callback) => {
+var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) => {
   let date = d.toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
@@ -100,7 +103,8 @@ var renderWithQR = async (name, percent, examType, d, hash, callback) => {
       date: date,
       dataURL: dataURL,
       ts:ts,
-      examType: examType
+      examType: examType,
+      donerName:donerName
     },
     (err, data) => {
       if (err != null) {

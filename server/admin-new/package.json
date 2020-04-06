@@ -4,10 +4,10 @@
   "private": true,
   "proxy": {
     "/api/*": {
-      "target": "https://www.blockdegree.org"
+      "target": "https://uat.blockdegree.org"
     },
     "/logout": {
-      "target": "https://www.blockdegree.org"
+      "target": "https://uat.blockdegree.org"
     }
   },
   "dependencies": {

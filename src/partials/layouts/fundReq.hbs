@@ -1,0 +1,98 @@
+{{> includes/hero hero-title="Fund Requests"}}
+
+
+<div class="container__cstm">
+  <div>
+    <div class="row mb-4">
+      <div class="col-lg-12">
+        <h2 class="mb-3">Fund Request</h2>
+      </div>
+      <div class="col-lg-10 col-md-9">
+        <p>
+          Need help in getting your certification?<br />
+          You can apply for funding on this page and get your certification
+          sponsored
+        </p>
+      </div>
+      <div class="col-lg-2 col-md-3">
+        <button class="genric-btn primary" data-toggle="modal" data-target="#apply-fund-modal">
+          APPLY NOW
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div id="card-wrapper-fmd"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="apply-fund-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Apply For Funding</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="courseId" class="col-form-label">Course:</label>
+            <select class="form-control" id="courseId">
+              <option value="course_1">Blockchain Basic</option>
+              <option value="course_2">Blockchain Advanced</option>
+              <option value="course_3">Blockchain Professional</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Description:</label>
+            <textarea class="form-control" id="req-description" placeholder="describe your request"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" onclick="handleFundRequestSubmit()" class="btn btn-primary">
+          Apply
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/fundReq.js"></script>
+<script>
+  function handleFundRequestSubmit() {
+    console.log("called handleFundRequestSubmit");
+    const desc = document.getElementById("req-description").value;
+    const courseId = document.getElementById("courseId").value;
+    $.ajax({
+      method: "post",
+      url: "/api/requestNewFund",
+      data: {
+        desc: desc,
+        courseId: courseId,
+      },
+    })
+      .then((resp) => {
+        if (resp.status === true) {
+          $.notify("Successfully submitted the request", { type: "success" });
+        } else {
+          $.notify(resp.error, { type: "danger" });
+        }
+        $("#apply-fund-modal").modal("hide");
+        document.getElementById("req-description").value = "";
+        document.getElementById("courseId").value = "";
+      })
+      .catch((e) => {
+        $.notify("Some error occured", { type: "danger" });
+        $("#apply-fund-modal").modal("hide");
+        document.getElementById("req-description").value = "";
+        document.getElementById("courseId").value = "";
+      });
+  }
+</script>

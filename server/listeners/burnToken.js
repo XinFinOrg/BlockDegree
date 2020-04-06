@@ -9,6 +9,7 @@ let eventEmitter = new EventEmitter();
 const axios = require("axios");
 const CoursePrice = require("../models/coursePrice");
 const uuid = require("uuid/v4");
+const cmcHelper = require("../helpers/cmcHelper");
 
 const networks = {
   "51": "http://rpc.apothem.network",
@@ -200,20 +201,12 @@ async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
 
 async function getXinEquivalent(amnt) {
   try {
-    const currXinPrice = await axios.get(coinMarketCapAPI);
-    console.log("Price usd: ", currXinPrice.data[0].price_usd);
-    if (
-      currXinPrice.data[0] != undefined ||
-      currXinPrice.data[0] != undefined
-    ) {
-      console.log(
-        (parseFloat(amnt) / parseFloat(currXinPrice.data[0].price_usd)) *
-          Math.pow(10, 18)
-      );
+    const cmcData = await cmcHelper.getXdcPrice();
+    const cmcPrice = cmcData.data.data["2634"].quote.USD;
+    if (cmcData !== null) {
+      console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
       return (
-        (parseFloat(amnt) /
-          parseFloat(currXinPrice.data[0].price_usd * divisor)) *
-        Math.pow(10, 18)
+        (parseFloat(amnt) / (parseFloat(cmcPrice) * divisor)) * Math.pow(10, 18)
       );
     }
   } catch (e) {

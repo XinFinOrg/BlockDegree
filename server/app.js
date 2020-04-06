@@ -54,7 +54,7 @@ app.use(
 // required for passport
 app.use(
   session({
-    secret: "",
+    secret: "test",
     resave: true,
     rolling: true,
     saveUninitialized: true,
@@ -80,6 +80,8 @@ require("./routes/contactUsRoutes")(app);
 require("./routes/promoCodeRoutes")(app);
 require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
+require("./routes/fmdRoutes")(app);
+
 // remove the comment to serve from build
 app.use("/newadmin", dynamicMiddleware);
 

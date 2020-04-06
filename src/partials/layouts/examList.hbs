@@ -392,12 +392,13 @@
           url: coinMarketCapUrl,
           success: async respWhole => {
             let response = respWhole.data;
-            if (!response[0].price_usd) {
+            let resPriceUsd = response.data.data["2634"].quote.USD
+            if (!resPriceUsd) {
               // New format? 
               $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
               return;
             }
-            const priceUsd = parseFloat(response[0].price_usd);
+            const priceUsd = parseFloat(resPriceUsd);
             const codeName = document.getElementById(course_id.id + "codeName").value;
             const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
             const xdceRecipient = await getTokenRecipient("1", "xdce");
@@ -1117,12 +1118,14 @@
           url: coinMarketCapUrl,
           success: async respWhole => {
             let response = respWhole.data
-            if (!response[0].price_usd) {
+            let resPriceUsd = response.data.data["2634"].quote.USD
+
+            if (!resPriceUsd) {
               // New format? 
               $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
               return;
             }
-            const priceUsd = parseFloat(response[0].price_usd);
+            const priceUsd = parseFloat(resPriceUsd);
             const coursePriceXdc = parseFloat(txPrice) / priceUsd
             console.log(`Original Price: ${txPrice} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
             await ethereum.enable();
