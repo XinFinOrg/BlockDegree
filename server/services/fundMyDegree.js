@@ -114,6 +114,15 @@ exports.initiateDonation = async (req, res) => {
     }
 
     const fund = await UserFundReq.findOne({ fundId: fundId });
+
+    if (fund.valid !== true) {
+      return res.json({ status: false, error: "invalid funding" });
+    }
+
+    if (fund.status !== "uninitiated") {
+      return res.json({ status: false, error: "funding already in progress" });
+    }
+
     const course = await CoursePrice.findOne({ courseId: fund.courseId });
     const doner = await User.findOne({ email: donerEmail });
     const priceUsd = parseFloat(course.priceUsd);
@@ -169,11 +178,11 @@ exports.getUninitiatedFunds = async (req, res) => {
 /**
  *
  */
-exports.getUserFundReq = async () => {
+exports.getUserFundReq = async (req, res) => {
   try {
     const email = req.user ? req.user.email : "rudresh@xinfin.org";
     const userFmd = await UserFundReq.find({
-      email: "email",
+      email: email,
     })
       .select({ receiveAddrPrivKey: 0 })
       .lean();

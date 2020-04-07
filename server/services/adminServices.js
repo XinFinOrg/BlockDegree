@@ -10,6 +10,7 @@ const BurnLog = require("../models/burn_logs");
 const SocialPostTemplates = require("../models/socialPostTemplates");
 const UserFundRequest = require("../models/userFundRequest");
 const pendingEmitter = require("../listeners/pendingTx").em;
+const DonationListener = require("../listeners/donationListener");
 
 exports.addCourse = async (req, res) => {
   if (
@@ -1160,6 +1161,17 @@ exports.getAllFundRequests = async (req, res) => {
     res.json({ status: false, error: "internal error" });
   }
 };
+
+exports.syncRecipients = (req,res) => {
+  try{
+    DonationListener.em.emit("syncRecipients");
+    res.json({status:true})
+  }
+  catch(e){
+    console.log(`exception at ${__filename}.syncRecipients: `, e);
+    res.json({status:false, error:"internal error"})
+  }
+}
 
 //--------------------------------------Getters Stop----------------------------------------
 

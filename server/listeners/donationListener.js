@@ -1,13 +1,15 @@
 const Event = require("events");
 const uuidv4 = require("uuid/v4");
+const __ = require("lodash");
 const UserFundRequest = require("../models/userFundRequest");
 const User = require("../models/user");
 const Notification = require("../models/notifications");
 const Course = require("../models/coursePrice");
+const emailer = require("../emailer/impl");
 const xdc3 = require("../helpers/blockchainConnectors").rinkInst;
 const xdcToUsd = require("../helpers/cmcHelper").xdcToUsd;
 
-const txListener = [];
+const recipients = [];
 
 const em = new Event.EventEmitter();
 
@@ -45,6 +47,7 @@ function startProcessingDonation(fundId, tx, name) {
             currentReq.amountReached = await xdcToUsd(
               xdc3.utils.fromWei(txRecord.value)
             );
+            currFundReq.fundTx = tx;
             await currentReq.save();
             await currUser.save();
             clearInterval(currInterval);
@@ -74,6 +77,9 @@ function startProcessingDonation(fundId, tx, name) {
   });
 }
 
+/**
+ * syncPendingDonation will start processing pending tx
+ */
 function syncPendingDonation() {
   setImmediate(async () => {
     const allPendingDonation = await UserFundRequest.find({
@@ -94,6 +100,32 @@ function syncPendingDonation() {
   });
 }
 
+/**
+ * will sync the addresses to lookout for deposits in new headers
+ */
+async function syncRecipients() {
+  try {
+    let count = 0;
+    const uninitiatedRecipient = await UserFundRequest.find({
+      $and: [
+        {
+          status: "uninitiated",
+        },
+        { valid: true },
+      ],
+    }).lean();
+    uninitiatedRecipient.forEach((currReq) => {
+      if (!recipients.includes(currReq.receiveAddr)) {
+        count++;
+        recipients.push({ address: currReq.receiveAddr, id: currReq.fundId });
+      }
+    });
+  } catch (e) {
+    console.log(`[*] exception at ${__filename}.syncRecipient: `, e);
+    return;
+  }
+}
+
 function newDefNoti() {
   return new Notification({
     email: "",
@@ -108,5 +140,68 @@ function newDefNoti() {
 
 em.on("processDonationTx", startProcessingDonation);
 em.on("syncPendingDonation", syncPendingDonation);
+em.on("syncRecipients", syncRecipients);
 
 exports.em = em;
+
+// ---------------------------------------- Donation ----------------------------------------
+
+xdc3.eth.subscribe("newBlockHeaders", async (error, result) => {
+  try {
+    if (error) {
+      console.log(`[*] exception at ${__filename}.newBlockHeaders: `, error);
+      return;
+    }
+    const txCount = await xdc3.eth.getBlockTransactionCount(result.number);
+
+    if (txCount > 0) {
+      for (let i = 0; i < txCount; i++) {
+        const currBlockTx = await xdc3.eth.getTransactionFromBlock(
+          result.number,
+          i
+        );
+
+        const currIndex = recipients
+          .map((e) => e.address)
+          .indexOf(currBlockTx.to);
+
+        if (currIndex > -1) {
+          console.log(`got anonymous deposit`);
+          const currFundReq = await UserFundRequest.findOne({
+            fundId: recipients[currIndex].id,
+          }).lean();
+          const user = await User.findOne({ email: currFundReq.email });
+          if (user.examData.payment[currFundReq.courseId] === true) {
+            emailer.sendMailInternal(
+              "blockdegree-bot@blockdegree.org",
+              process.env.SUPP_EMAIL_ID,
+              "Invalid Anonymous Donation",
+              `Got an invalid donation for fund id ${currFundReq.fundId}`
+            );
+            continue;
+          }
+          if (currFundReq.status !== "uninitiated") {
+            emailer.sendMailInternal(
+              "blockdegree-bot@blockdegree.org",
+              process.env.SUPP_EMAIL_ID,
+              "Invalid Anonymous Donation",
+              `Got an invalid donation for fund id ${currFundReq.fundId}`
+            );
+            continue;
+          }
+          const courseId = currFundReq.courseId;
+          const course = await Course.findOne({ courseId: courseId });
+          const valUsd = await xdcToUsd(currBlockTx.value);
+          // const min = valUsd - valUsd / 10;
+          // const max = valUsd + valUsd / 10;
+          if (parseFloat(course.priceUsd)) {
+            startProcessingDonation(currFundReq.fundId, currBlockTx.hash, "");
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.log(`exception at ${__filename}.newBlockHeaders: `, e);
+    return;
+  }
+});

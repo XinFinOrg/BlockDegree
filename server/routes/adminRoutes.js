@@ -12,7 +12,7 @@ const multer = require("multer");
 let storage = multer.memoryStorage();
 let upload = multer({ storage: storage });
 
-module.exports = app => {
+module.exports = (app) => {
   app.get("/admin", requireLogin, requireAdmin, (req, res) => {
     res.sendFile("index.html", { root: adminPath });
   });
@@ -162,5 +162,6 @@ module.exports = app => {
     app.get("/api/getAllFundRequests", adminServices.getAllFundRequests);
     app.post("/api/approveFund", adminServices.approveFund);
     app.post("/api/rejectFund", adminServices.rejectFund);
+    app.post("/api/syncRecipients", adminServices.syncRecipients);
   }
 };
