@@ -14,6 +14,7 @@ let fs = require("fs");
 const expressFileUpload = require("express-fileupload");
 let pendingTx = require("./listeners/pendingTx").em;
 const adminServices = require("./services/adminServices");
+const donationListener = require("../server/listeners/donationListener");
 
 let app = express();
 require("dotenv").config();
@@ -105,8 +106,10 @@ app.use(function(err, req, res, next) {
 app.listen("3000", async () => {
   pendingTx.emit("initiatePendingTx");
   pendingTx.emit("initiatePendingBurn");
+  donationListener.em.emit("syncRecipients");
+  donationListener.em.emit("syncPendingDonation");
   await adminServices.initiateWalletConfig();
-  console.log("server started");
+  console.log("[*] server started");
 });
 
 if (!fs.existsSync("./tmp")) {

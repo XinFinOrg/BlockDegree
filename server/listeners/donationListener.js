@@ -47,7 +47,7 @@ function startProcessingDonation(fundId, tx, name) {
             currentReq.amountReached = await xdcToUsd(
               xdc3.utils.fromWei(txRecord.value)
             );
-            currFundReq.fundTx = tx;
+            currentReq.fundTx = tx;
             await currentReq.save();
             await currUser.save();
             clearInterval(currInterval);
@@ -120,6 +120,7 @@ async function syncRecipients() {
         recipients.push({ address: currReq.receiveAddr, id: currReq.fundId });
       }
     });
+    console.log(`[*] synced ${count} recipients`);
   } catch (e) {
     console.log(`[*] exception at ${__filename}.syncRecipient: `, e);
     return;
@@ -160,6 +161,10 @@ xdc3.eth.subscribe("newBlockHeaders", async (error, result) => {
           result.number,
           i
         );
+
+        if (currBlockTx === null) {
+          continue;
+        }
 
         const currIndex = recipients
           .map((e) => e.address)
