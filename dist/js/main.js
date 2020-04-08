@@ -422,7 +422,7 @@ $(document).ready(async function() {
 
 
 
-const url = 'ws://localhost:3050'
+const url = 'ws://uat.blockdegree.org:3050'
 const connection = new WebSocket(url)
 
 connection.onopen = () => {
