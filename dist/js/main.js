@@ -1,5 +1,5 @@
+"use strict";
 $(document).ready(async function() {
-  "use strict";
 
   console.log("called: ", window.localStorage.getItem("user-status"));
   let navLogin = document.getElementById("nav-login"),
@@ -419,3 +419,37 @@ $(document).ready(async function() {
       .slideToggle();
   });
 });
+
+
+
+const url = 'ws://localhost:3050'
+const connection = new WebSocket(url)
+
+connection.onopen = () => {
+  connection.send(JSON.stringify({test:"message"})) 
+}
+
+connection.onerror = (error) => {
+  console.log(`WebSocket error: ${error}`, error)
+}
+
+connection.onmessage = async (e) => {
+  const message = JSON.parse(e.data);
+  console.log("Parsed Message: ", message);
+  if (message.newNoti==true){
+    let pendingNotis = await fetch("/api/getUserNotis");
+    let pendingNotisJosn = await pendingNotis.json();
+    if (pendingNotisJosn.status) {
+      console.log(pendingNotisJosn);
+      pendingNotisJosn.notis.forEach(noti => {
+        $.notify(
+          {
+            title: "<strong>" + noti.title + "</strong>",
+            message: noti.message
+          },
+          { type: noti.type }
+        );
+      });
+    }
+  }
+}

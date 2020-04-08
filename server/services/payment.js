@@ -16,6 +16,7 @@ const eventEmitter = require("../listeners/txnConfirmation").em;
 const abiDecoder = require("abi-decoder");
 const burnEmitter = require("../listeners/burnToken").em;
 const cmcHelper = require("../helpers/cmcHelper");
+const WsServer = require("../listeners/websocketServer").em;
 
 const coinMarketCapAPI =
   "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
@@ -688,7 +689,7 @@ exports.payViaXdc = async (req, res) => {
         comPaymentToken.tokenAmt = xdcTokenAmnt;
         await comPaymentToken.save();
         await newNoti.save();
-
+        WsServer.emit("new-noti", req.user.email);
         res.json({ status: true, error: null });
         TxMinedListener = clearInterval(TxMinedListener);
         eventEmitter.emit(
@@ -1040,6 +1041,7 @@ exports.payViaXdce = async (req, res) => {
         comPaymentToken.tokenAmt = decodedMethod.params[1].value.toString();
         await comPaymentToken.save();
         await newNoti.save();
+        WsServer.emit("new-noti", req.user.email);
         // let newPaymentXdce = newPaymentToken();
         // newPaymentXdce.payment_id = uuidv4();
         // newPaymentXdce.email = req.user.email;

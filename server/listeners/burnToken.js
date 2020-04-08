@@ -10,6 +10,7 @@ const axios = require("axios");
 const CoursePrice = require("../models/coursePrice");
 const uuid = require("uuid/v4");
 const cmcHelper = require("../helpers/cmcHelper");
+const WsServer = require("../listeners/donationListener").em;
 
 const networks = {
   "51": "http://rpc.apothem.network",
@@ -163,6 +164,7 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
         newNoti.message = `We have burned some tokens for your payment of the course ${courseName[courseId]} is now  completed!, checkout your <a href="/profile?inFocus=paypalPayment">Profile</a>`;
         await newNoti.save();
         await paymentLog.save();
+        WsServer.emit("new-noti", email);
       })
       .catch(e => {
         console.error("exception at paypalBurnToken");

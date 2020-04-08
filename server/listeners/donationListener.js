@@ -5,6 +5,7 @@ const UserFundRequest = require("../models/userFundRequest");
 const User = require("../models/user");
 const Notification = require("../models/notifications");
 const Course = require("../models/coursePrice");
+const WsServer = require("../listeners/websocketServer").em;
 const emailer = require("../emailer/impl");
 const xdc3 = require("../helpers/blockchainConnectors").rinkInst;
 const xdcToUsd = require("../helpers/cmcHelper").xdcToUsd;
@@ -61,6 +62,12 @@ function startProcessingDonation(fundId, tx, name) {
             newNoti.message = `Your funding request for course ${course.courseName} is now  completed!`;
             newNoti.displayed = false;
             await newNoti.save();
+            WsServer.emit("new-noti", currentReq.email);
+            emailer.sendFMDCompleteUser(
+              currentReq.email,
+              currUser.name,
+              course.courseName
+            );
           }
         } catch (e) {
           console.log(

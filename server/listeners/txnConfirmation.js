@@ -16,6 +16,7 @@ const promoCodeService = require("../services/promoCodes");
 const emailer = require("../emailer/impl");
 const EthereumTx = require("ethereumjs-tx");
 const cmcHelper = require("../helpers/cmcHelper");
+const WsServer = require("../listeners/websocketServer").em;
 
 let eventEmitter = new EventEmitter();
 // const ethConfirmation = 3;
@@ -184,6 +185,7 @@ function listenForConfirmation(
                     await paymentLog.save();
                     await user.save();
                     await newNoti.save();
+                    WsServer.emit("new-noti", userEmail);
                     blockSubscription.unsubscribe((err, success) => {
                       if (success) {
                         console.log(
@@ -335,6 +337,7 @@ function listenForConfirmation(
                 await paymentLog.save();
                 await user.save();
                 await newNoti.save();
+                WsServer.emit("new-noti", userEmail);
                 handleBurnToken(
                   course,
                   txHash,
@@ -598,6 +601,7 @@ function listenForMined(
               try {
                 await newNoti.save();
                 await comPaymentToken.save();
+                WsServer.emit("new-noti", userEmail);
               } catch (e) {
                 console.error(
                   `Some error occured while saving the payment log: `,

@@ -53,18 +53,18 @@ app.use(
   })
 );
 // required for passport
-app.use(
-  session({
-    secret: "test",
-    resave: true,
-    rolling: true,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: true,
-      maxAge: 10800000
-    }
-  })
-); // session secret
+
+const sessionParser = session({
+  secret: "test",
+  resave: true,
+  rolling: true,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    maxAge: 10800000,
+  },
+});
+app.use(sessionParser); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
@@ -88,7 +88,7 @@ app.use("/newadmin", dynamicMiddleware);
 
 require("./listeners/postSocial");
 // catch 404 and render 404 page
-app.use("*", function(req, res) {
+app.use("*", function (req, res) {
   res.render("error");
 });
 
@@ -103,7 +103,7 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
-app.listen("3000", async () => {
+const server = app.listen("3000", async () => {
   pendingTx.emit("initiatePendingTx");
   pendingTx.emit("initiatePendingBurn");
   donationListener.em.emit("syncRecipients");
@@ -139,7 +139,7 @@ function connectToMongoDB() {
       .then(() => {
         console.log("[*] connected to mongodb");
       })
-      .catch(e => {
+      .catch((e) => {
         console.log("[*] error while connecting to mongodb: ", e);
         console.log("[*] Retrying connection to mongodb in 5 seconds...");
         setTimeout(connectToMongoDB, 5000);
@@ -154,5 +154,5 @@ function connectToMongoDB() {
     setTimeout(connectToMongoDB, 5000);
   }
 }
-
+require("./listeners/websocketServer").server(server, sessionParser);
 module.exports = app;

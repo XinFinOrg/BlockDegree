@@ -1,5 +1,6 @@
 require("dotenv").config();
 var User = require("../models/user");
+const ejs = require("ejs");
 var nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
   host: "mail001.dakghar.in",
@@ -128,5 +129,28 @@ module.exports = {
         }
       });
     });
+  },
+
+  sendFMDCompleteUser : (mail, userName, courseName) => {    
+    ejs.renderFile(__dirname+"/fundCompleteUser.ejs", {userName:userName, courseName:courseName}, (err, data) => {
+      if (err)
+      {console.log(`exception at ${__filename}.sendFMDCompleteUser: `, err);return;}
+      else{
+        const mailOptions = {
+          from: process.env.SUPP_EMAILER_ID,
+          to: mail,
+          subject: "Fund Accepted",
+          html: Buffer.from(data, "utf-8")
+        };
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+            res.send({ status: "true" });
+          }
+        });
+      }
+    })
   }
 };
