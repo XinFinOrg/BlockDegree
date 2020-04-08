@@ -102,7 +102,7 @@ function syncPendingDonation() {
       return;
     }
     allPendingDonation.forEach((currentDonation) => {
-      startProcessingDonation(currentDonation.fundId, currentDonation.tx);
+      startProcessingDonation(currentDonation.fundId, currentDonation.fundTx);
     });
   });
 }
