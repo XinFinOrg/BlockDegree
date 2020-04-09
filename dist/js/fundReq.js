@@ -1,4 +1,15 @@
 $(document).ready(() => {
+  $("#pendingFund").DataTable({
+    paging: true,
+    pagingType: "simple", // "simple" option for 'Previous' and 'Next' buttons only
+  });
+  $("#approvedFund").DataTable({
+    paging: true,
+    pagingType: "simple", // "simple" option for 'Previous' and 'Next' buttons only
+  });
+
+  // $('#pendingFund').DataTable();
+
   $.ajax({
     method: "get",
     url: "/api/getUninitiatedFund",
