@@ -31,7 +31,7 @@ const blockdegreePubAddrXDCApothm =
   "0x289da729d69ce09de5b543bc40be01e2cd9c1227";
 const xdcOwnerPubAddr = "xdc289da729d69ce09de5b543bc40be01e2cd9c1227";
 
-const xinfinApothemRPC = "http://rpc.xinfin.network";
+const xinfinApothemRPC = "https://rpc.xinfin.network";
 
 const txReceiptUrlApothem = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
 
@@ -76,7 +76,7 @@ function listenForConfirmation(
     switch (network) {
       case 1: {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
         );
         try {
           const txReceipt = await web3.eth.getTransactionReceipt(txHash);
@@ -399,7 +399,7 @@ function listenForMined(
       case 1: {
         try {
           const web3 = new Web3(
-            new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+            new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
           );
           const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
           const coursePrice = await CoursePrice.findOne({ courseId: course });
@@ -900,7 +900,7 @@ async function handleBurnToken(
     case "xdce": {
       try {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
         );
 
         let course = await CoursePrice.findOne({ courseId: courseId });

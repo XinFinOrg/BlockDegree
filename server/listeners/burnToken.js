@@ -12,9 +12,9 @@ const CoursePrice = require("../models/coursePrice");
 const uuid = require("uuid/v4");
 
 const networks = {
-  "51": "http://rpc.apothem.network",
-  "50": "http://rpc.xinfin.network",
-  "1": "wss://mainnet.infura.io/ws"
+  "51": "https://rpc.apothem.network",
+  "50": "https://rpc.xinfin.network",
+  "1": "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
 };
 
 const courseName = {
