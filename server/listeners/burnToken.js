@@ -9,6 +9,7 @@ const cmcHelper = require("../helpers/cmcHelper");
 let eventEmitter = new EventEmitter();
 const axios = require("axios");
 const CoursePrice = require("../models/coursePrice");
+const {removeExpo} = require("../helpers/common");    
 const uuid = require("uuid/v4");
 
 const networks = {
@@ -193,7 +194,7 @@ async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
     nonce: await web3.eth.getTransactionCount(account.address),
     data: encodedData,
     chainId: chainId + "",
-    value: value
+    value: removeExpo(value)
   };
   const signed = await web3.eth.accounts.signTransaction(rawTx, privKey);
   return signed;
