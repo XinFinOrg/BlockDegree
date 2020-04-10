@@ -5,15 +5,16 @@ const emailer = require("../emailer/impl");
 const Notification = require("../models/notifications");
 const keyConfig = require("../config/keyConfig");
 const Web3 = require("web3");
+const cmcHelper = require("../helpers/cmcHelper");
 let eventEmitter = new EventEmitter();
 const axios = require("axios");
 const CoursePrice = require("../models/coursePrice");
 const uuid = require("uuid/v4");
 
 const networks = {
-  "51": "http://rpc.apothem.network",
-  "50": "http://rpc.xinfin.network",
-  "1": "wss://mainnet.infura.io/ws"
+  "51": "https://rpc.apothem.network",
+  "50": "https://rpc.xinfin.network",
+  "1": "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
 };
 
 const courseName = {
@@ -200,20 +201,12 @@ async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
 
 async function getXinEquivalent(amnt) {
   try {
-    const currXinPrice = await axios.get(coinMarketCapAPI);
-    console.log("Price usd: ", currXinPrice.data[0].price_usd);
-    if (
-      currXinPrice.data[0] != undefined ||
-      currXinPrice.data[0] != undefined
-    ) {
-      console.log(
-        (parseFloat(amnt) / parseFloat(currXinPrice.data[0].price_usd)) *
-          Math.pow(10, 18)
-      );
+    const cmcData = await cmcHelper.getXdcPrice();
+    const cmcPrice = cmcData.data.data["2634"].quote.USD;
+    if (cmcData !== null) {
+      console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
       return (
-        (parseFloat(amnt) /
-          parseFloat(currXinPrice.data[0].price_usd * divisor)) *
-        Math.pow(10, 18)
+        (parseFloat(amnt) / (parseFloat(cmcPrice) * divisor)) * Math.pow(10, 18)
       );
     }
   } catch (e) {
