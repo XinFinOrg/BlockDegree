@@ -15,6 +15,7 @@ const contractConfig = require("../config/smartContractConfig");
 const eventEmitter = require("../listeners/txnConfirmation").em;
 const abiDecoder = require("abi-decoder");
 const burnEmitter = require("../listeners/burnToken").em;
+const cmcHelper = require("../helpers/cmcHelper");
 
 const coinMarketCapAPI =
   "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
@@ -1136,8 +1137,11 @@ exports.payViaXdce = async (req, res) => {
 
 exports.wrapCoinMarketCap = async (req, res) => {
   try {
-    const currXinPrice = await axios.get(coinMarketCapAPI);
-    return res.json({ data: currXinPrice.data, status: true, error: null });
+    const cmcData = await cmcHelper.getXdcPrice();
+    const cmcPrice = cmcData.data.data["2634"].quote.USD;
+    if (cmcData !== null) {
+      return res.json({ data: cmcPrice, status: true, error: null });
+    }
   } catch (e) {
     console.error("Some error occured while getting currentXinPrice: ", e);
     return res.json({ data: null, status: false, error: "Internal errro" });
@@ -1243,21 +1247,19 @@ function newPaymentToken() {
 
 async function getXinEquivalent(amnt) {
   try {
-    const currXinPrice = await axios.get(coinMarketCapAPI);
-    if (
-      currXinPrice.data[0] != undefined ||
-      currXinPrice.data[0] != undefined
-    ) {
-      const retPrice =
-        (parseFloat(amnt) /
-          (parseFloat(currXinPrice.data[0].price_usd) * divisor)) *
-        Math.pow(10, 18);
-      return retPrice;
+    const cmcData = await cmcHelper.getXdcPrice();
+    const cmcPrice = cmcData.data.data["2634"].quote.USD;
+    if (cmcData !== null) {
+      console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
+      return (
+        (parseFloat(amnt) / (parseFloat(cmcPrice) * divisor)) * Math.pow(10, 18)
+      );
     }
   } catch (e) {
     console.error(
       "Some error occurred while making or processing call from CoinMarketCap"
     );
+    console.log(e);
     return -1;
   }
 }
