@@ -16,6 +16,7 @@ const promoCodeService = require("../services/promoCodes");
 const emailer = require("../emailer/impl");
 const EthereumTx = require("ethereumjs-tx");
 const cmcHelper = require("../helpers/cmcHelper");
+const {removeExpo} = require("../helpers/common");    
 
 let eventEmitter = new EventEmitter();
 // const ethConfirmation = 3;
@@ -1133,7 +1134,7 @@ async function handleBurnToken(
           to: "0x0000000000000000000000000000000000000000",
           gas: 21000,
           gasPrice: 9000,
-          value: burnAmnt,
+          value: removeExpo(burnAmnt),
           nonce: await web3.eth.getTransactionCount(
             blockdegreePubAddrXDCApothm
           ),
