@@ -191,7 +191,7 @@ async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
     from: account.address,
     gas: 1000000,
     gasPrice: await web3.eth.getGasPrice(),
-    nonce: await web3.eth.getTransactionCount(account.address),
+    nonce: await web3.eth.getTransactionCount(account.address,"pending"),
     data: encodedData,
     chainId: chainId + "",
     value: removeExpo(value)
