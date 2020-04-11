@@ -3,7 +3,7 @@ if (typeof jQuery != "undefined") {
     $.ajax({
       method: "get",
       url: "/api/current_user",
-      success: result => {
+      success: (result) => {
         if (!result.status) {
           alert("You are not logged in, please visit after logging in");
           window.location.replace("https://uat.blockdegree.org/login");
@@ -85,19 +85,40 @@ if (typeof jQuery != "undefined") {
                   {
                     scrollTop:
                       $("#payment-via-tokens").offset().top -
-                      document.getElementById("header").scrollHeight - 20
+                      document.getElementById("header").scrollHeight -
+                      20,
                   },
                   2000
                 );
                 console.log("called in focus");
                 return;
-              }
-              else if (key === "inFocus" && value === "paypalPayment") {
+              } else if (key === "inFocus" && value === "paypalPayment") {
                 $("html, body").animate(
                   {
                     scrollTop:
                       $("#payment-via-paypal").offset().top -
-                      document.getElementById("header").scrollHeight - 20
+                      document.getElementById("header").scrollHeight -
+                      20,
+                  },
+                  2000
+                );
+                console.log("called in focus");
+                return;
+              } else if (key === "inFocus" && value === "fmd-requests") {
+                $("html, body").animate(
+                  {
+                    scrollTop:
+                      $("#fmd-requests").offset().top
+                  },
+                  2000
+                );
+                console.log("called in focus");
+                return;
+              } else if (key === "inFocus" && value === "fmd-funded") {
+                $("html, body").animate(
+                  {
+                    scrollTop:
+                      $("#fmd-funded").offset().top 
                   },
                   2000
                 );
@@ -107,7 +128,7 @@ if (typeof jQuery != "undefined") {
             }
           }
         }
-      }
+      },
     });
   });
 
@@ -116,20 +137,20 @@ if (typeof jQuery != "undefined") {
     let newNameTrim = formatName(newName);
     if (newNameTrim.length < 2) {
       $.notify("The length of name has to be atleast 2", {
-        type: "danger"
+        type: "danger",
       });
       return;
     }
     if (containsNumber(newName)) {
       $.notify("Name cannot have number", {
-        type: "danger"
+        type: "danger",
       });
       return;
     }
     $.ajax({
       method: "get",
       url: "/api/current_user",
-      success: result => {
+      success: (result) => {
         if (result.status) {
           // is logged in
           let currentUser = result.user;
@@ -141,20 +162,20 @@ if (typeof jQuery != "undefined") {
               method: "post",
               url: "/api/setName",
               data: { fullName: newNameTrim },
-              success: result => {
+              success: (result) => {
                 console.log(result);
                 if (result.updated) {
                   alert("New Name successfully set");
-                  window.location.replace("/profile")
+                  window.location.replace("/profile");
                   return;
                 } else {
                   $.notify(result.error, { type: "danger" });
                   return;
                 }
               },
-              error: err => {
+              error: (err) => {
                 $.notify("Error while updating the name", { type: "danger" });
-              }
+              },
             });
           }
         } else {
@@ -162,10 +183,10 @@ if (typeof jQuery != "undefined") {
           window.location.replace("https://uat.blockdegree.org/login");
         }
       },
-      error: err => {
+      error: (err) => {
         alert("Error while getting the current user");
         window.location.replace("https://uat.blockdegree.org/login");
-      }
+      },
     });
   }
 
@@ -179,7 +200,7 @@ if (typeof jQuery != "undefined") {
       $.ajax({
         method: "get",
         url: "/api/current_user",
-        success: result => {
+        success: (result) => {
           if (result.status) {
             // user is logged in
             let user = result.user;
@@ -193,7 +214,7 @@ if (typeof jQuery != "undefined") {
                 method: "post",
                 url: "/api/removeSocial",
                 data: { social },
-                success: result => {
+                success: (result) => {
                   if (result.status) {
                     alert(
                       "Successfully removed the social link, now pease login with new social"
@@ -220,12 +241,12 @@ if (typeof jQuery != "undefined") {
                     alert(`Cannot not remove: ${result.error}`);
                   }
                 },
-                error: err => {
+                error: (err) => {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
                   window.location.reload("https://uat.blockdegree.org");
-                }
+                },
               });
             }
           } else {
@@ -233,10 +254,10 @@ if (typeof jQuery != "undefined") {
             window.location.reload("https://uat.blockdegree.org/login");
           }
         },
-        error: err => {
+        error: (err) => {
           alert("Error while getting current user");
           window.location.reload("https://uat.blockdegree.org/login");
-        }
+        },
       });
     }
   }
@@ -246,13 +267,13 @@ if (typeof jQuery != "undefined") {
     $.ajax({
       method: "get",
       url: "/api/current_user",
-      success: result => {
+      success: (result) => {
         if (result.status) {
           // user is logged in
           let user = result.user;
           if (user.auth[social].id == undefined || user.auth[social].id == "") {
             $.notify(`Error: ${social} is not linked to this account`, {
-              type: "danger"
+              type: "danger",
             });
           } else {
             if (
@@ -264,22 +285,22 @@ if (typeof jQuery != "undefined") {
                 method: "post",
                 url: "/api/removeSocial",
                 data: { social },
-                success: result => {
+                success: (result) => {
                   if (result.status) {
                     $.notify("Successfully removed the social link", {
-                      type: "success"
+                      type: "success",
                     });
                     checkAuth();
                   } else {
                     alert(`Cannot not remove: ${result.error}`);
                   }
                 },
-                error: err => {
+                error: (err) => {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
                   window.location.reload("https://uat.blockdegree.org");
-                }
+                },
               });
             }
           }
@@ -288,16 +309,16 @@ if (typeof jQuery != "undefined") {
           window.location.reload("https://uat.blockdegree.org/login");
         }
       },
-      error: err => {
+      error: (err) => {
         alert("Error while getting current user");
         window.location.reload("https://uat.blockdegree.org/login");
-      }
+      },
     });
   }
 
   window.addEventListener(
     "message",
-    function(event) {
+    function (event) {
       console.log("Originating event: ", event.origin);
       console.log(event.origin);
       if (event.origin == "https://uat.blockdegree.org" && event.data == "ok") {
@@ -314,7 +335,7 @@ if (typeof jQuery != "undefined") {
       method: "post",
       url: "/api/getAuthStatus",
       data: {},
-      success: auths => {
+      success: (auths) => {
         // get & update view-profile links
         let googleLink = document.getElementById("googleLink"),
           facebookLink = document.getElementById("facebookLink"),
@@ -342,7 +363,7 @@ if (typeof jQuery != "undefined") {
         } else {
           linkedinLink.innerHTML = `<button class="class="btn btn-primary social-li" onclick="handleAuthLinkedin()">Link Linkedin</button>`;
         }
-      }
+      },
     });
   }
 }

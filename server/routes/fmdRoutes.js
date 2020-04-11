@@ -13,5 +13,7 @@ module.exports = (app) => {
   app.get("/api/getUserFundReq", requireLogin, fmdService.getUserFundReq);
   app.get("/api/getUninitiatedFund", requireLogin, fmdService.getUninitiatedFunds);
   app.get("/api/getAllFunds", requireLogin, fmdService.getAllFunds);
-
+  app.get("/api/getUserFMDFunded", requireLogin, fmdService.getUserFMDFunded);
+  app.post("/fmd-pay-paypal", requireLogin, fmdService.startFundPaypal);
+  app.get("/fmd-pay-paypal-suc", requireLogin, fmdService.successFundPaypal);
 };

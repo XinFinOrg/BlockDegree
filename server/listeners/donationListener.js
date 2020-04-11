@@ -6,6 +6,7 @@ const User = require("../models/user");
 const Notification = require("../models/notifications");
 const Course = require("../models/coursePrice");
 const WsServer = require("../listeners/websocketServer").em;
+const burnEmitter = require("./burnToken").em;
 const emailer = require("../emailer/impl");
 const xdc3 = require("../helpers/blockchainConnectors").rinkInst;
 const xdcToUsd = require("../helpers/cmcHelper").xdcToUsd;
@@ -65,6 +66,7 @@ function startProcessingDonation(fundId, tx, name) {
             currentReq.amountReached = await xdcToUsd(
               xdc3.utils.fromWei(txRecord.value)
             );
+            currentReq.burnStatus = "pending";
             currentReq.fundTx = tx;
             await currentReq.save();
             await currUser.save();
@@ -76,10 +78,11 @@ function startProcessingDonation(fundId, tx, name) {
             newNoti.eventName = "funding completed";
             newNoti.eventId = uuidv4();
             newNoti.title = "Funding Completed";
-            newNoti.message = `Your funding request for ${courseNames} course(s) is now  completed!`;
+            newNoti.message = `Your funding request for ${courseNames} course(s) is now  completed! Check in your <a href="/profile#fmd-requests"></a>`;
             newNoti.displayed = false;
             await newNoti.save();
-            removeRecipient(currentReq.receiveAddr);
+            removeRecipient(currentReq.receiveAddr);            
+            burnEmitter.emit("donationTokenBurn", currentReq.fundId);
             // WsServer.emit("new-noti", currentReq.email);
             emailer.sendFMDCompleteUser(
               currentReq.email,

@@ -48,11 +48,19 @@ const userFundRequest = mongoose.Schema({
   status: {
     type: String,
     default: "uninitiated",
-    enum: ["uninitiated", "pending", "completed"],
+    enum: ["uninitiated", "p  ending", "completed"],
   },
+  paypalId: { type: String },
   confirmation: { type: Number, default: 0 },
   donerEmail: { type: String },
   donerName: { type: String },
+  burnStatus: {
+    type: String,
+    enum: ["uninitiated", "pending", "completed"],
+    default: "uninitiated",
+  },
+  burnTx: { type: String },
+  burnAmnt: { type: String },
   createdAt: String,
   updatedAt: String,
 });

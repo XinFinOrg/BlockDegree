@@ -9,21 +9,22 @@ const cmcHelper = require("../helpers/cmcHelper");
 let eventEmitter = new EventEmitter();
 const axios = require("axios");
 const CoursePrice = require("../models/coursePrice");
-const {removeExpo} = require("../helpers/common");    
+const { removeExpo } = require("../helpers/common");
+const UserFundRequest = require("../models/userFundRequest");
 const uuid = require("uuid/v4");
-const cmcHelper = require("../helpers/cmcHelper");
-const WsServer = require("../listeners/donationListener").em;
+// const WsServer = require("../listeners/donationListener").em;
+const xdcInst = require("../helpers/blockchainConnectors").rinkInst;
 
 const networks = {
   "51": "https://rpc.apothem.network",
   "50": "https://rpc.xinfin.network",
-  "1": "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
+  "1": "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47",
 };
 
 const courseName = {
   course_1: "Basic",
   course_2: "Advanced",
-  course_3: "Professional"
+  course_3: "Professional",
 };
 
 const coinMarketCapAPI =
@@ -39,7 +40,7 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
       `[*] called event paypalBurnToken for payment: ${paymentId} to burn on chainId ${chainId}`
     );
     let currWallet = {};
-    Object.keys(keyConfig).forEach(key => {
+    Object.keys(keyConfig).forEach((key) => {
       let wallet = keyConfig[key];
       if (wallet.wallet_network == chainId) {
         // found the appropriate wallet
@@ -152,7 +153,7 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
     console.log("[*] Signed ", signed);
     web3.eth
       .sendSignedTransaction(signed.rawTransaction)
-      .then(async receipt => {
+      .then(async (receipt) => {
         console.log("receipt received at paypalBurnToken");
         console.log(receipt);
         paymentLog.burnTx = receipt.transactionHash;
@@ -166,9 +167,9 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
         newNoti.message = `We have burned some tokens for your payment of the course ${courseName[courseId]} is now  completed!, checkout your <a href="/profile?inFocus=paypalPayment">Profile</a>`;
         await newNoti.save();
         await paymentLog.save();
-        WsServer.emit("new-noti", email);
+        // WsServer.emit("new-noti", email);
       })
-      .catch(e => {
+      .catch((e) => {
         console.error("exception at paypalBurnToken");
         console.log(e);
       });
@@ -180,8 +181,87 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
     return;
   }
 }
+//! This function approximately burns token
+/**
+ *
+ * @param {string} fundId fundId of the the funding request
+ */
+async function donationTokenBurn(fundId) {
+  try {
+    console.log(`[*] burning token fund request for id: ${fundId}`);
+    const currFundReq = await UserFundRequest.findOne({ fundId: fundId });
+    if (currFundReq === null) {
+      console.log(`fund with id ${fundId} not found`);
+      return;
+    }
+    const coursePrice = await CoursePrice.findOne({
+      courseId: currFundReq.courseId[0],
+    });
+
+    let totalAmount = parseFloat(currFundReq.amountGoal);
+
+    const amntXdc = await getXinEquivalent(totalAmount);
+    const burnPercent = parseFloat(coursePrice.burnToken[0].burnPercent);
+    const burnAmnt = (amntXdc * burnPercent) / (100 * 1000);
+    let currWallet = {},
+      currWalletAddr = "";
+    Object.keys(keyConfig).forEach((key) => {
+      let wallet = keyConfig[key];
+      if (wallet.wallet_network == "4") {
+        // found the appropriate wallet
+        currWallet = wallet;
+        currWalletAddr = key;
+      }
+    });
+    const walletBalance = await xdcInst.eth.getBalance(currWalletAddr);
+    if (parseFloat(walletBalance < burnAmnt)) {
+      console.log(`[*] insufficient balance to burn token`);
+      await emailer.sendMailInternal(
+        "blockdegree-bot@blockdegree.org",
+        process.env.SUPP_EMAIL_ID,
+        `Insufficient tokens XDC Wallet`,
+        `Could not burn the tokens for fund ID: ${fundId} due to insufficient XDC tokens. Please deposit some XDC tokens into XDC burn address ASAP & force burn via ADMIN page.`
+      );
+      return;
+    }
+    const currPrivKey = currWallet.privateKey;
+    const signed = await makePayment(
+      "",
+      burnAddress,
+      currPrivKey,
+      "4",
+      burnAmnt,
+      xdcInst
+    );
+
+    xdcInst.eth
+      .sendSignedTransaction(signed.rawTransaction)
+      .then(async (receipt) => {
+        console.log(`got the burning receipt for fund request: `, fundId);
+        if (receipt.status == true) {
+          currFundReq.burnTx = receipt.transactionHash;
+          currFundReq.burnStatus = "completed";
+          currFundReq.burnAmnt = burnAmnt;
+          await currFundReq.save();
+          genBurnNotiFMD(currFundReq.email, "recipient");
+          if (currFundReq.donerEmail!=="" && currFundReq.donerEmail!==undefined && currFundReq.donerEmail!==null ){
+            genBurnNotiFMD(currFundReq.donerEmail, "funder");
+
+          }
+        }
+      })
+      .catch((e) => {});
+    if (currWallet == {}) {
+      console.error("[*] wallet not found...");
+      return;
+    }
+  } catch (e) {
+    console.log(`[*] exception at ${__filename}.donationTokenBurn: `, e);
+  }
+}
 
 eventEmitter.on("burnTokenPaypal", paypalBurnToken);
+eventEmitter.on("donationTokenBurn", donationTokenBurn);
 
 async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
   console.log("[*] called makePayment function");
@@ -194,10 +274,10 @@ async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
     from: account.address,
     gas: 1000000,
     gasPrice: await web3.eth.getGasPrice(),
-    nonce: await web3.eth.getTransactionCount(account.address,"pending"),
+    nonce: await web3.eth.getTransactionCount(account.address, "pending"),
     data: encodedData,
     chainId: chainId + "",
-    value: removeExpo(value)
+    value: removeExpo(value),
   };
   const signed = await web3.eth.accounts.signTransaction(rawTx, privKey);
   return signed;
@@ -222,6 +302,15 @@ async function getXinEquivalent(amnt) {
   }
 }
 
+async function genBurnNotiFMD(email, type) {
+  let newNoti = newDefNoti();
+  newNoti.email = email;
+  newNoti.type = "info";
+  newNoti.title = "Token Burned For Payment!";
+  newNoti.message = `We have burned some tokens for your Fund My Degree!, checkout your <a href="/profile#${type==='funder'?'fmd-funded':'fmd-requests'}">Profile</a>`;
+  await newNoti.save();
+}
+
 function newDefNoti() {
   return new Notification({
     email: "",
@@ -230,7 +319,7 @@ function newDefNoti() {
     type: "",
     title: "",
     message: ``,
-    displayed: false
+    displayed: false,
   });
 }
 

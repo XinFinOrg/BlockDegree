@@ -1,5 +1,6 @@
 const uuid = require("uuid/v4");
 const _ = require("lodash");
+const paypal = require("paypal-rest-sdk");
 const BitlyClient = require("bitly").BitlyClient;
 const CoursePrice = require("../models/coursePrice");
 const UserFundReq = require("../models/userFundRequest");
@@ -10,6 +11,7 @@ const emailer = require("../emailer/impl");
 const donationEm = require("../listeners/donationListener").em;
 const xdc3 = require("../helpers/blockchainConnectors.js").rinkInst;
 const cmcHelper = require("../helpers/cmcHelper");
+const burnEmitter = require("../listeners/burnToken").em;
 
 const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
 
@@ -200,6 +202,179 @@ exports.initiateDonation = async (req, res) => {
 };
 
 /**
+ * Form Submission URL
+ */
+exports.startFundPaypal = async (req, res) => {
+  try {
+    const fundId = req.body.fundId;
+    const donerEmail = req.user ? req.user.email : "rudresh@xinfin.org";
+    const doner = await User.findOne({ email: donerEmail });
+    const currFundReq = await UserFundReq.findOne({ fundId: fundId });
+    if (currFundReq === null) {
+      return res.render("displayError", {
+        error: "No such fund request exists",
+      });
+    }
+    if (currFundReq.status !== "uninitiated") {
+      return res.render("displayError", {
+        error: "Fund request has already been funded",
+      });
+    }
+    const recipientUser = await User.findOne({ email: currFundReq.email });
+    for (let i = 0; i < currFundReq.courseId.length; i++) {
+      if (recipientUser.examData.payment[currFundReq.courseId[i]] === true) {
+        return res.render("displayError", {
+          error: "Courses in this fund request have now been paid for.",
+        });
+      }
+    }
+    let courseNames = "";
+    for (let i = 0; i < currFundReq.courseId.length; i++) {
+      courseNames += getCourseName(currFundReq.courseId[i]);
+      if (i < currFundReq.courseId.length - 1) {
+        courseNames += ", ";
+      }
+    }
+    const invoice_number =
+      "TXID" + Date.now() + (Math.floor(Math.random() * 1000) + 9999);
+    const customStr = JSON.stringify({
+      fundId: fundId,
+      donerEmail: donerEmail,
+    });
+    const create_payment_json = {
+      intent: "sale",
+      payer: {
+        payment_method: "paypal",
+      },
+      redirect_urls: {
+        return_url: `${process.env.HOST}/fmd-pay-paypal-suc`,
+        cancel_url: `${process.env.HOST}/fmd-pay-paypal-err`,
+      },
+      transactions: [
+        {
+          item_list: {
+            items: [
+              {
+                name: courseNames,
+                sku: "001",
+                price: currFundReq.amountGoal,
+                currency: "USD",
+                quantity: 1,
+              },
+            ],
+          },
+          amount: {
+            currency: "USD",
+            total: currFundReq.amountGoal,
+          },
+          description: `Funding for enrolling in the course by funder ${doner.name} to the receipient ${recipientUser.name}`,
+          invoice_number: invoice_number,
+          custom: customStr,
+        },
+      ],
+    };
+
+    paypal.payment.create(create_payment_json, async function (error, payment) {
+      if (error) {
+        // throw error;
+        console.error("Some error occured while creating the payment: ", error);
+        return res.render("displayError", { error: "Internal error." });
+      } else {
+        for (let i = 0; i < payment.links.length; i++) {
+          if (payment.links[i].rel === "approval_url") {
+            console.log(`got the approval url, redirecting user to paypal`);
+            return res.redirect(payment.links[i].href);
+          }
+        }
+      }
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.completeFundPaypal: `, e);
+    return res.render("displayError", {
+      error:
+        "something went wrong, please try again or contact us at info@blockdegree.org",
+    });
+  }
+};
+
+exports.successFundPaypal = async (req, res) => {
+  try {
+    let paymentId = req.query.paymentId;
+
+    const execute_payment_json = {
+      payer_id: req.query.PayerID,
+    };
+
+    paypal.payment.execute(paymentId, execute_payment_json, async function (
+      error,
+      payment
+    ) {
+      if (error) {
+        console.log(error.response);
+        res.status(500).render("displayError", {
+          error:
+            "Some error occured while executing the payment, please contact info@blockdegree.org",
+        });
+
+        await emailer.sendMail(
+          process.env.SUPP_EMAIL_ID,
+          "Payment-error: error while executing the sale",
+          `While processing order for the user ${
+            req.user.email
+          } some error occured while executing the sale: ${error.response.toString()}. Please consider for re-imbursement.`
+        );
+        return;
+      } else {
+        console.log(JSON.stringify(payment));
+        console.log(payment.transactions[0]);
+        // res.send("Success");
+        let courseNames = payment.transactions[0].item_list.items[0].name;
+        let invoice_number = payment.transactions[0].invoice_number;
+        console.log(payment.transactions[0].custom);
+
+        let custom = JSON.parse(payment.transactions[0].custom.trim());
+        const fundId = custom.fundId;
+        const donerEmail = custom.donerEmail;
+        const doner = await User.findOne({ email: donerEmail });
+        const currFundReq = await UserFundReq.findOne({ fundId: fundId });
+        if (doner === null || currFundReq === null) {
+          res.status(500).render("displayError", {
+            error:
+              "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org",
+          });
+          await emailer.sendMail(
+            process.env.SUPP_EMAIL_ID,
+            "Payment-error: error while executing the sale",
+            `While processing order for the user ${
+              req.user.email
+            } some error occured while executing the sale: ${error.response.toString()}. Please consider for re-imbursement.`
+          );
+        }
+        currFundReq.status = "completed";
+        currFundReq.paypalId = invoice_number;
+        currFundReq.donerEmail = doner.email;
+        currFundReq.donerName = doner.name;
+        currFundReq.burnStatus = "pending";
+        await currFundReq.save();
+        res.redirect("/payment-success");
+        burnEmitter.emit("donationTokenBurn", fundId);
+        emailer.sendFMDCompleteUser(
+          currFundReq.email,
+          currFundReq.userName,
+          courseNames
+        );
+      }
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.successFundPaypal: `, e);
+    res.render("displayError", {
+      error:
+        "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org",
+    });
+  }
+};
+
+/**
  * will return uninitiated funds, yet to get a fund
  */
 exports.getUninitiatedFunds = async (req, res) => {
@@ -256,6 +431,21 @@ exports.getUserFundReq = async (req, res) => {
   }
 };
 
+exports.getUserFMDFunded = async (req, res) => {
+  try {
+    const email = req.user ? req.user.email : "rudresh@xinfin.org";
+    const userFmd = await UserFundReq.find({
+      donerEmail: email,
+    })
+      .select({ receiveAddrPrivKey: 0 })
+      .lean();
+    res.json({ status: true, data: userFmd });
+  } catch (e) {
+    console.log(`exception at ${__filename}.getUserFMDFunded`);
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
 /**
  * will return the cmc data
  */
@@ -297,5 +487,21 @@ function generateNewFund(
     fundTx: "",
     createdAt: Date.now() + "",
     updatedAt: Date.now() + "",
+    burnAmnt: "",
+    burnTx: "",
+    burnStatus: "uninitiated",
   });
+}
+
+function getCourseName(id) {
+  switch (id) {
+    case "course_1":
+      return "Blockchain Basic";
+    case "course_2":
+      return "Blockchain Advanced";
+    case "course_3":
+      return "Blockchain Professional";
+    default:
+      return "";
+  }
 }

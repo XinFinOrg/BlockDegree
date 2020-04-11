@@ -157,8 +157,8 @@ your profile"}}
           ></div>
         </div>
 
-        <h3 id="fund-my-degree-req" class="profile-subHeading mt-5">
-          Fund My Degree
+        <h3 id="fmd-requests" class="profile-subHeading mt-5">
+          Fund My Degree - Requests
         </h3>
         <div class="table-responsive">
           <table class="table table-hover" id="fmdReqList">
@@ -168,10 +168,29 @@ your profile"}}
                 <th>Receive Address</th>
                 <th>Status</th>
                 <th>Fund TX</th>
+                <th>Burn TX<th>
                 <th>Funder Name</th>
               </tr>
             </thead>
             <tbody id="fmdReq-tbody"></tbody>
+          </table>
+        </div>
+
+        <h3 id="fmd-funded" class="profile-subHeading mt-5">
+          Fund My Degree - Funded
+        </h3>
+        <div class="table-responsive">
+          <table class="table table-hover" id="fmdReqList">
+            <thead>
+              <tr>
+                <th>Course(s)</th>
+                <th>Recipient</th>
+                <th>Status</th>
+                <th>Fund TX</th>
+                <th>Burn TX<th>
+              </tr>
+            </thead>
+            <tbody id="fmdFunded-tbody"></tbody>
           </table>
         </div>
       </div>
@@ -321,6 +340,7 @@ your profile"}}
     fetchCryptoTransactions();
     fetchPaypalPayment();
     getFMDReq();
+    getFMDFunded();
     setTimeout(() => {
       fetchCryptoTransactions();
       callPendingListener();
@@ -708,7 +728,7 @@ your profile"}}
       }
       console.log("FMD response: ",resp.data);
       if (resp.data.length==0){
-        retHtml += `<tr><td>No transactions made yet</td></tr>`;
+        retHtml += `<tr><td>No transactions made yet.  <a href="/fmd">Get it Now</a></td></tr>`;
       }
       else{
         resp.data.forEach(currRow=>{
@@ -721,11 +741,45 @@ your profile"}}
             <td>${currRow.receiveAddr}</td>`;
           retHtml += `<td class="${currRow.status==="completed"?"completed":"pending"}">${currRow.status==="completed"?"completed":"pending"}</td>
             <td><a href="https://rinkeby.etherscan.io/tx/${currRow.fundTx}">${currRow.fundTx.slice(0,11)}...</a></td>
+            <td>${currRow.burnStatus==="completed"?`<a href="https://rinkeby.etherscan.io/tx/${currRow.burnTx}">${currRow.burnTx.slice(0,11)}...</a>`:`-`}</td>
             <td>${currRow.donerName}</td>
             </tr>`;
         })
       };
       document.getElementById("fmdReq-tbody").innerHTML =retHtml;
+    }
+    catch(e){
+      console.log("exception at getFMDReq: ", e);
+    }
+  }
+
+  async function getFMDFunded(){
+    try{
+      let retHtml = "";
+      const resp = await $.ajax({method:"get", url:"/api/getUserFMDFunded"});
+      if (resp.status!==true){
+        return $.notify("Some error occured.", {type:"danger"})
+      }
+      console.log("FMD response: ",resp.data);
+      if (resp.data.length==0){
+        retHtml += `<tr><td>No Degrees Funded Yet. <a href="/fmd">Fund Now</a></td></tr>`;
+      }
+      else{
+        resp.data.forEach(currRow=>{
+          retHtml += `<tr>
+            <td>`
+          currRow.courseId.forEach(currCourse =>  {
+            retHtml += `<div class="course-name">${getCourseName(currCourse)}</dvi>`
+          } )
+          retHtml += `</td>
+            <td>${currRow.userName}</td>`;
+          retHtml += `<td class="${currRow.status==="completed"?"completed":"pending"}">${currRow.status==="completed"?"completed":"pending"}</td>
+            <td><a href="https://rinkeby.etherscan.io/tx/${currRow.fundTx}">${currRow.fundTx.slice(0,11)}...</a></td>
+            <td>${currRow.burnStatus==="completed"?`<a href="https://rinkeby.etherscan.io/tx/${currRow.burnTx}">${currRow.burnTx.slice(0,11)}...</a>`:`-`}</td>
+            </tr>`;
+        })
+      };
+      document.getElementById("fmdFunded-tbody").innerHTML =retHtml;
     }
     catch(e){
       console.log("exception at getFMDReq: ", e);

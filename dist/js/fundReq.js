@@ -43,7 +43,9 @@ $(document).ready(() => {
               currData.userName
             }','${currData.requestUrlShort}','${currData.description}','${
               currData.receiveAddr
-            }','${currData.fundId}', '${currData.status}')">View Description</button></td><td>`;
+            }','${currData.fundId}', '${
+              currData.status
+            }')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataPending += `<span class="courseName">${getCourseName(
@@ -52,7 +54,7 @@ $(document).ready(() => {
             }
             retDataPending += `</td>             
             <td>${currData.amountGoal}</td>
-            <td><button type="button" onclick="submitMetamask('${currData.receiveAddr}', '${currData.fundId}')" class="btn btn-primary">Fund Now</button></td>
+            <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr}', '${currData.fundId}')" class="btn btn-primary">Fund Now</button></td>
           </tr>`;
           } else if (currData.status === "completed") {
             retDataApproved += `<tr>
@@ -66,7 +68,9 @@ $(document).ready(() => {
               currData.userName
             }','${currData.requestUrlShort}','${currData.description}','${
               currData.receiveAddr
-            }','${currData.fundId}','${currData.status}')">View Description</button></td><td>`;
+            }','${currData.fundId}','${
+              currData.status
+            }')">View Description</button></td><td>`;
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataApproved += `<span class="courseName">${getCourseName(
                 currData.courseId[z]
@@ -128,6 +132,56 @@ $(document).ready(() => {
 //     "display:inline-block;height:70px";
 //   evt.currentTarget.className += " active";
 // }
+
+function renderPaymentMethodModal(addr, fundId) {
+  const modalHtml = `
+  <div class="modal fade" id="paymentMethodModal" tabindex="-1" role="dialog"
+      aria-labelledby="paymentModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h3 class="modal-title" style="margin-left:17% ;" id="exampleModalLongTitle">Please Select Payment
+                      Method</h3>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+
+                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="submitMetamask('${addr}','${fundId}')"
+                      data-dismiss="modal"> Pay Via XDC </button>
+
+                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="payByPaypal('${fundId}')"
+                      data-dismiss="modal">
+                      Pay Via PayPal </button>
+              </div>
+
+          </div>
+      </div>
+  </div>`;
+  document.getElementById("paymentMethodModalWrapper").innerHTML = modalHtml;
+  $("#paymentMethodModal").modal("toggle");
+}
+
+/**
+ *
+ * @param {string} fundId
+ */
+function payByPaypal(fundId) {
+  console.log("called payByPaypal: ", fundId);
+  let formNew = document.createElement('form');
+  formNew.style.display="none";
+  formNew.action = "/fmd-pay-paypal";
+  formNew.method = "post";
+  formNew.style.display="none";
+  let elementFundId = document.createElement("input");
+  elementFundId.name = "fundId";
+  elementFundId.value = fundId;
+  formNew.appendChild(elementFundId);
+
+  document.body.appendChild(formNew);
+  formNew.submit();
+}
 
 function handleFundRequestSubmit() {
   console.log("called handleFundRequestSubmit");
@@ -221,7 +275,8 @@ function renderRequestModal(
         : `
         <button
           class="btn btn-primary fund-btn"
-          onclick="submitMetamask('${addr}','${fundId}')"
+          data-dismiss="modal"
+          onclick="renderPaymentMethodModal('${addr}','${fundId}')"
         >
           Fund
         </button>
