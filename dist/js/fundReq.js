@@ -43,7 +43,7 @@ $(document).ready(() => {
               currData.userName
             }','${currData.requestUrlShort}','${currData.description}','${
               currData.receiveAddr
-            }','${currData.fundId}')">View Description</button></td><td>`;
+            }','${currData.fundId}', '${currData.status}')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataPending += `<span class="courseName">${getCourseName(
@@ -66,7 +66,7 @@ $(document).ready(() => {
               currData.userName
             }','${currData.requestUrlShort}','${currData.description}','${
               currData.receiveAddr
-            }','${currData.fundId}')">View Description</button></td><td>`;
+            }','${currData.fundId}','${currData.status}')">View Description</button></td><td>`;
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataApproved += `<span class="courseName">${getCourseName(
                 currData.courseId[z]
@@ -190,7 +190,8 @@ function renderRequestModal(
   requestUrlShort,
   description,
   addr,
-  fundId
+  fundId,
+  type
 ) {
   console.log(addr, fundId);
 
@@ -213,8 +214,19 @@ function renderRequestModal(
                           <div class="modal-body" id="requestModal--body">
                               ${description}
                           </div>` +
-    `<div class="modal-footer">
-    <button class="btn btn-primary fund-btn" onclick="submitMetamask('${addr}','${fundId}')">Fund</button>
+    `<div class="modal-footer">` +
+    `${
+      type === "completed"
+        ? ""
+        : `
+        <button
+          class="btn btn-primary fund-btn"
+          onclick="submitMetamask('${addr}','${fundId}')"
+        >
+          Fund
+        </button>
+      `
+    }
                                Share On&nbsp;
                               <a target="_blank" class="modal-footter" href="https://twitter.com/intent/tweet?text=${twitterText}">
                                   <i class="fa fa-twitter"></i>
@@ -348,7 +360,8 @@ function renderRequestedModal(allData) {
           allData[i].requestUrlShort,
           allData[i].description,
           allData[i].receiveAddr,
-          allData[i].fundId
+          allData[i].fundId,
+          allData[i].status
         );
         return;
       }
