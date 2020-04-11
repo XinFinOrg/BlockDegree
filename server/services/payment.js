@@ -29,8 +29,8 @@ const xdcPrice = 10;
 const txReceiptUrl = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
 const txReceiptUrlApothem = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
 
-const xinfinApothemRPC = "http://rpc.apothem.network";
-const xinfinMainnetRPC = "http://rpc.xinfin.network";
+const xinfinApothemRPC = "https://rpc.apothem.network";
+const xinfinMainnetRPC = "https://rpc.xinfin.network";
 
 // Need to understand the complete flow and handle erros, unexpected shutdowns, inaccessible 3rd party.
 
@@ -538,10 +538,10 @@ exports.payViaXdc = async (req, res) => {
     }
     const xdcTolerance = coursePrice.xdcTolerance;
     const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://rpc.xinfin.network")
+      new Web3.providers.HttpProvider("https://rpc.xinfin.network")
     );
     const xdc3 = new XDC3(
-      new XDC3.providers.HttpProvider("http://rpc.xinfin.network")
+      new XDC3.providers.HttpProvider("https://rpc.xinfin.network")
     );
 
     // for demo: 0x19d544825bd0436efc2dcb99d415d34840fe14d8171ec1047a91323ee3c3eaed, 0x55ede32eae710eed3d21456db6fb01c5e16fcfb04292e72bc0e451fc6693ff8a
@@ -878,7 +878,7 @@ exports.payViaXdce = async (req, res) => {
     const xdceTolerance = coursePrice.xdceTolerance;
     const web3 = new Web3(
       new Web3.providers.WebsocketProvider(
-        "wss://mainnet.infura.io/ws/v3/9670d19506ee4d738e7f128634a37a49"
+        "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
       )
     );
 
@@ -1139,8 +1139,11 @@ exports.payViaXdce = async (req, res) => {
 
 exports.wrapCoinMarketCap = async (req, res) => {
   try {
-    const currXinPrice = await cmcHelper.getXdcPrice();
-    return res.json({ data: currXinPrice.data, status: true, error: null });
+    const cmcData = await cmcHelper.getXdcPrice();
+    const cmcPrice = cmcData.data.data["2634"].quote.USD.price;
+    if (cmcData !== null) {
+      return res.json({ data: cmcPrice, status: true, error: null });
+    }
   } catch (e) {
     console.error("Some error occured while getting currentXinPrice: ", e);
     return res.json({ data: null, status: false, error: "Internal errro" });
@@ -1247,7 +1250,7 @@ function newPaymentToken() {
 async function getXinEquivalent(amnt) {
   try {
     const cmcData = await cmcHelper.getXdcPrice();
-    const cmcPrice = cmcData.data.data["2634"].quote.USD;
+    const cmcPrice = cmcData.data.data["2634"].quote.USD.price;
     if (cmcData !== null) {
       console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
       return (
@@ -1258,6 +1261,7 @@ async function getXinEquivalent(amnt) {
     console.error(
       "Some error occurred while making or processing call from CoinMarketCap"
     );
+    console.log(e);
     return -1;
   }
 }

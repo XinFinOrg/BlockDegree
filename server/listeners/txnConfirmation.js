@@ -17,6 +17,7 @@ const emailer = require("../emailer/impl");
 const EthereumTx = require("ethereumjs-tx");
 const cmcHelper = require("../helpers/cmcHelper");
 const WsServer = require("../listeners/websocketServer").em;
+const {removeExpo} = require("../helpers/common");    
 
 let eventEmitter = new EventEmitter();
 // const ethConfirmation = 3;
@@ -32,7 +33,7 @@ const blockdegreePubAddrXDCApothm =
   "0x289da729d69ce09de5b543bc40be01e2cd9c1227";
 const xdcOwnerPubAddr = "xdc289da729d69ce09de5b543bc40be01e2cd9c1227";
 
-const xinfinApothemRPC = "http://rpc.xinfin.network";
+const xinfinApothemRPC = "https://rpc.xinfin.network";
 
 const txReceiptUrlApothem = "https://explorer.xinfin.network/transactionRelay"; // make a POST with {isTransfer:false,tx:'abc'}
 
@@ -77,7 +78,7 @@ function listenForConfirmation(
     switch (network) {
       case 1: {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
         );
         try {
           const txReceipt = await web3.eth.getTransactionReceipt(txHash);
@@ -137,7 +138,7 @@ function listenForConfirmation(
                   return;
                 }
               })
-              .on("data", async blockHeader => {
+              .on("data", async (blockHeader) => {
                 // new block header
                 if (blockHeader.number != null) {
                   console.log(
@@ -149,7 +150,7 @@ function listenForConfirmation(
                     paymentLog.confirmations = currConfirmations;
                     paymentLog.status = "completed";
                     let respPendingNoti = await Notification.findOne({
-                      eventId: newNotiId
+                      eventId: newNotiId,
                     });
                     if (respPendingNoti != null && !respPendingNoti.displayed) {
                       respPendingNoti.displayed = true;
@@ -244,7 +245,7 @@ function listenForConfirmation(
         try {
           const txResponseReceipt = await axios.post(txReceiptUrlApothem, {
             tx: txHash,
-            isTransfer: false
+            isTransfer: false,
           });
           const txReceipt = txResponseReceipt.data;
           const coursePrice = await CoursePrice.findOne({ courseId: course });
@@ -305,7 +306,7 @@ function listenForConfirmation(
                 paymentLog.confirmations = currConfirmations;
                 paymentLog.status = "completed";
                 let respPendingNoti = await Notification.findOne({
-                  eventId: newNotiId
+                  eventId: newNotiId,
                 });
                 if (respPendingNoti != null && !respPendingNoti.displayed) {
                   respPendingNoti.displayed = true;
@@ -402,7 +403,7 @@ function listenForMined(
       case 1: {
         try {
           const web3 = new Web3(
-            new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+            new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
           );
           const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
           const coursePrice = await CoursePrice.findOne({ courseId: course });
@@ -476,7 +477,7 @@ function listenForMined(
               console.log(`Got the tx receipt for the tx: ${txHash}`);
 
               const comPaymentToken = await PaymentToken.findOne({
-                txn_hash: txReceipt.transactionHash
+                txn_hash: txReceipt.transactionHash,
               });
               if (comPaymentToken == null) {
                 // this transaction is already recorded
@@ -708,8 +709,8 @@ function listenForMined(
               url: txReceiptUrlApothem,
               data: {
                 tx: txHash,
-                isTransfer: false
-              }
+                isTransfer: false,
+              },
             });
             console.log(txResponseReceipt);
             txReceipt = txResponseReceipt.data;
@@ -788,7 +789,7 @@ function listenForMined(
           */
 
               let comPaymentToken = await PaymentToken.findOne({
-                txn_hash: txReceipt.hash
+                txn_hash: txReceipt.hash,
               });
               if (comPaymentToken == null) {
                 TxMinedListener = clearInterval(TxMinedListener);
@@ -854,7 +855,7 @@ function newPaymentToken() {
     confirmations: "0",
     autoBurn: false,
     burn_txn_hash: "",
-    burn_token_amnt: ""
+    burn_token_amnt: "",
   });
 }
 
@@ -870,14 +871,14 @@ function newDefBurnLog(id, txHash) {
     from: "",
     to: "",
     creationDate: "",
-    burn_network: ""
+    burn_network: "",
   });
 }
 
 async function getXinEquivalent(amnt) {
   try {
     const cmcData = await cmcHelper.getXdcPrice();
-    const cmcPrice = cmcData.data.data["2634"].quote.USD;
+    const cmcPrice = cmcData.data.data["2634"].quote.USD.price;
     if (cmcData !== null) {
       console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
       return (
@@ -888,6 +889,7 @@ async function getXinEquivalent(amnt) {
     console.error(
       "Some error occurred while making or processing call from CoinMarketCap"
     );
+    console.log(e);
     return -1;
   }
 }
@@ -903,7 +905,7 @@ async function handleBurnToken(
     case "xdce": {
       try {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
+          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
         );
 
         let course = await CoursePrice.findOne({ courseId: courseId });
@@ -919,9 +921,9 @@ async function handleBurnToken(
           burnActive: {
             $elemMatch: {
               wallet_network: paymentLog.payment_network,
-              wallet_token_name: tokenName
-            }
-          }
+              wallet_token_name: tokenName,
+            },
+          },
         });
 
         let xdceOwnerPubAddr = null;
@@ -997,15 +999,15 @@ async function handleBurnToken(
           to: xdceAddrMainnet,
           gas: 60000,
           data: encodedData,
-          nonce: await web3.eth.getTransactionCount(blockdegreePubAddr)
+          nonce: await web3.eth.getTransactionCount(blockdegreePubAddr),
         };
 
         web3.eth.accounts
           .signTransaction(tx, keyConfig[xdceOwnerPubAddr].privateKey)
-          .then(signedTx => {
+          .then((signedTx) => {
             web3.eth
               .sendSignedTransaction(signedTx.rawTransaction)
-              .on("receipt", async burnReceipt => {
+              .on("receipt", async (burnReceipt) => {
                 if (burnReceipt.status) {
                   // the transaction is accepted
                   paymentLog.burn_txn_hash = burnReceipt.transactionHash;
@@ -1049,7 +1051,7 @@ async function handleBurnToken(
         let paymentLog = await PaymentToken.findOne({ payment_id: paymentId });
         let txReceiptResponse = await axios.post(txReceiptUrlApothem, {
           tx: txHash,
-          isTransfer: false
+          isTransfer: false,
         });
         let receivedXdc = txReceiptResponse.data.value;
         let burnAmnt = "";
@@ -1085,9 +1087,9 @@ async function handleBurnToken(
           burnActive: {
             $elemMatch: {
               wallet_network: paymentLog.payment_network,
-              wallet_token_name: tokenName
-            }
-          }
+              wallet_token_name: tokenName,
+            },
+          },
         });
         let blockdegreePubAddrXDCApothm = null;
         loop1: {
@@ -1136,8 +1138,10 @@ async function handleBurnToken(
           to: "0x0000000000000000000000000000000000000000",
           gas: 21000,
           gasPrice: 9000,
-          value: burnAmnt,
-          nonce: await web3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
+          value: removeExpo(burnAmnt),
+          nonce: await web3.eth.getTransactionCount(
+            blockdegreePubAddrXDCApothm
+          ),
         };
 
         const privKey = Buffer.from(
@@ -1149,7 +1153,7 @@ async function handleBurnToken(
         let serializedTx = tx.serialize();
         web3.eth.sendSignedTransaction(
           "0x" + serializedTx.toString("hex"),
-          async function(err, hash) {
+          async function (err, hash) {
             if (!err) {
               console.log("Burned XDC; txHash: ", hash);
 
@@ -1193,7 +1197,7 @@ function newDefNoti() {
     type: "",
     title: "",
     message: "",
-    displayed: false
+    displayed: false,
   });
 }
 

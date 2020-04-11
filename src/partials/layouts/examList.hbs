@@ -392,13 +392,12 @@
           url: coinMarketCapUrl,
           success: async respWhole => {
             let response = respWhole.data;
-            let resPriceUsd = response.data.data["2634"].quote.USD
-            if (!resPriceUsd) {
+            if (!response) {
               // New format? 
               $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
               return;
             }
-            const priceUsd = parseFloat(resPriceUsd);
+            const priceUsd = parseFloat(response);
             const codeName = document.getElementById(course_id.id + "codeName").value;
             const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
             const xdceRecipient = await getTokenRecipient("1", "xdce");
@@ -1118,14 +1117,12 @@
           url: coinMarketCapUrl,
           success: async respWhole => {
             let response = respWhole.data
-            let resPriceUsd = response.data.data["2634"].quote.USD
-
-            if (!resPriceUsd) {
+            if (!response) {
               // New format? 
               $.notify("Some error occured while fetching the current XDC price, please try again later.", { type: "danger" });
               return;
             }
-            const priceUsd = parseFloat(resPriceUsd);
+            const priceUsd = parseFloat(response);
             const coursePriceXdc = parseFloat(txPrice) / priceUsd
             console.log(`Original Price: ${txPrice} PriceUSD: ${priceUsd} Final Amnt: ${coursePriceXdc}`)
             await ethereum.enable();
@@ -1239,8 +1236,8 @@
       const currXinPrice = respWhole.data;
       console.log(currXinPrice);
       console.log("Response from CMC: ", currXinPrice)
-      if (currXinPrice[0] != undefined || currXinPrice[0] != undefined) {
-        const retPrice = (parseFloat(amnt) / (parseFloat(currXinPrice[0].price_usd) * divisor)) * Math.pow(10, 18);
+      if (currXinPrice != undefined || currXinPrice != undefined) {
+        const retPrice = (parseFloat(amnt) / (parseFloat(currXinPrice) * divisor)) * Math.pow(10, 18);
         console.log("ret price: ", retPrice)
         return (
           retPrice

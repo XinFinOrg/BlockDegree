@@ -5,17 +5,19 @@ const emailer = require("../emailer/impl");
 const Notification = require("../models/notifications");
 const keyConfig = require("../config/keyConfig");
 const Web3 = require("web3");
+const cmcHelper = require("../helpers/cmcHelper");
 let eventEmitter = new EventEmitter();
 const axios = require("axios");
 const CoursePrice = require("../models/coursePrice");
+const {removeExpo} = require("../helpers/common");    
 const uuid = require("uuid/v4");
 const cmcHelper = require("../helpers/cmcHelper");
 const WsServer = require("../listeners/donationListener").em;
 
 const networks = {
-  "51": "http://rpc.apothem.network",
-  "50": "http://rpc.xinfin.network",
-  "1": "wss://mainnet.infura.io/ws"
+  "51": "https://rpc.apothem.network",
+  "50": "https://rpc.xinfin.network",
+  "1": "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
 };
 
 const courseName = {
@@ -192,10 +194,10 @@ async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
     from: account.address,
     gas: 1000000,
     gasPrice: await web3.eth.getGasPrice(),
-    nonce: await web3.eth.getTransactionCount(account.address),
+    nonce: await web3.eth.getTransactionCount(account.address,"pending"),
     data: encodedData,
     chainId: chainId + "",
-    value: value
+    value: removeExpo(value)
   };
   const signed = await web3.eth.accounts.signTransaction(rawTx, privKey);
   return signed;
@@ -204,7 +206,7 @@ async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
 async function getXinEquivalent(amnt) {
   try {
     const cmcData = await cmcHelper.getXdcPrice();
-    const cmcPrice = cmcData.data.data["2634"].quote.USD;
+    const cmcPrice = cmcData.data.data["2634"].quote.USD.price;
     if (cmcData !== null) {
       console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
       return (
