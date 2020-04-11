@@ -143,7 +143,7 @@ module.exports = {
           subject: "Fund Accepted",
           html:html
         };
-        console.log("mail options: ", mailOptions);
+        // console.log("mail options: ", mailOptions);
         transporter.sendMail(mailOptions, function(error, info) {
           if (error) {
             console.log(error);
