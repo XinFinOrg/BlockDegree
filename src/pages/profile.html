@@ -152,9 +152,27 @@ your profile"}}
             <tbody id="tokenPayment-tbody"></tbody>
           </table>
           <div
-            style="background-color:lightsteelblue;"
+            style="background-color: lightsteelblue;"
             id="tokenPayment-tfooter"
           ></div>
+        </div>
+
+        <h3 id="fund-my-degree-req" class="profile-subHeading mt-5">
+          Fund My Degree
+        </h3>
+        <div class="table-responsive">
+          <table class="table table-hover" id="fmdReqList">
+            <thead>
+              <tr>
+                <th>Course(s)</th>
+                <th>Receive Address</th>
+                <th>Status</th>
+                <th>Fund TX</th>
+                <th>Funder Name</th>
+              </tr>
+            </thead>
+            <tbody id="fmdReq-tbody"></tbody>
+          </table>
         </div>
       </div>
 
@@ -247,7 +265,7 @@ your profile"}}
 <button
   type="button"
   id="btn-confirmName"
-  style="display: none"
+  style="display: none;"
   class="btn btn-primary"
   data-toggle="modal"
   data-target="#modalConfirmName"
@@ -302,6 +320,7 @@ your profile"}}
   $("document").ready(() => {
     fetchCryptoTransactions();
     fetchPaypalPayment();
+    getFMDReq();
     setTimeout(() => {
       fetchCryptoTransactions();
       callPendingListener();
@@ -412,7 +431,7 @@ your profile"}}
               <td>${
                 logs[x].burnTokenName ? logs[x].burnTokenName : "-"
               }</td>
-              
+
               <td>${logs[x].burnAmnt ? logs[x].burnAmnt : "-"}</td><td>${
                 logs[x].burnTx ? `<a target="_blank" href="${mainnetExplorer+logs[x].burnTx}">${logs[x].burnTx.slice(0,11)}...</a>` : "-"
               }</td></tr>`;
@@ -680,12 +699,56 @@ your profile"}}
     }
   }
 
+  async function getFMDReq(){
+    try{
+      let retHtml = "";
+      const resp = await $.ajax({method:"get", url:"/api/getUserFundReq"});
+      if (resp.status!==true){
+        return $.notify("Some error occured.", {type:"danger"})
+      }
+      console.log("FMD response: ",resp.data);
+      if (resp.data.length==0){
+        retHtml += `<tr><td>No transactions made yet</td></tr>`;
+      }
+      else{
+        resp.data.forEach(currRow=>{
+          retHtml += `<tr>
+            <td>`
+          currRow.courseId.forEach(currCourse =>  {
+            retHtml += `<div class="course-name">${getCourseName(currCourse)}</dvi>`
+          } )
+          retHtml += `</td>
+            <td>${currRow.receiveAddr}</td>`;
+          retHtml += `<td class="${currRow.status==="completed"?"completed":"pending"}">${currRow.status==="completed"?"completed":"pending"}</td>
+            <td><a href="https://rinkeby.etherscan.io/tx/${currRow.fundTx}">${currRow.fundTx.slice(0,11)}...</a></td>
+            <td>${currRow.donerName}</td>
+            </tr>`;
+        })
+      };
+      document.getElementById("fmdReq-tbody").innerHTML =retHtml;
+    }
+    catch(e){
+      console.log("exception at getFMDReq: ", e);
+    }
+  }
+
   function removeFromArray(arr, element) {
     let removeIndex = arr.indexOf(element);
     if (removeIndex > -1) {
       arr.splice(removeIndex, 1);
     }
     return arr;
+  }
+
+  function getCourseName(id) {
+    switch(id) {
+      case 'course_1': return "Basic" 
+      case 'course_2': return "Advanced" 
+      case 'course_3': return "Professional" 
+      default: {
+        return null
+      }
+    }
   }
 
   function getProgressBar(curr, max) {

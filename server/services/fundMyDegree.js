@@ -1,5 +1,6 @@
 const uuid = require("uuid/v4");
 const _ = require("lodash");
+const BitlyClient = require("bitly").BitlyClient;
 const CoursePrice = require("../models/coursePrice");
 const UserFundReq = require("../models/userFundRequest");
 const User = require("../models/user");
@@ -10,6 +11,8 @@ const donationEm = require("../listeners/donationListener").em;
 const xdc3 = require("../helpers/blockchainConnectors.js").rinkInst;
 const cmcHelper = require("../helpers/cmcHelper");
 
+const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
+
 const minDescChar = 10,
   maxDescChar = 150;
 
@@ -17,18 +20,12 @@ exports.requestNewFund = async (req, res) => {
   try {
     const email = req.user ? req.user.email : "rudresh@xinfin.org";
     const description = req.body.desc;
-    const courseId = req.body.courseId;
+    const courseId = JSON.parse(req.body.courseId);
+    const facebookProfile = req.body.facebookProfile;
+    const linkedinProfile = req.body.linkedinProfile;
+    const twitterProfile = req.body.twitterProfile;
     let requiresApproval = false;
-
-    if (_.isEmpty(description.trim()) || _.isEmpty(courseId.trim())) {
-      return res.json({ status: false, error: "missing paramter(s)" });
-    }
-
-    const course = await CoursePrice.findOne({ courseId: courseId });
-
-    if (course === null) {
-      return res.json({ status: false, error: "course not found" });
-    }
+    let totalAmount = 0;
 
     const user = await User.findOne({ email: email });
 
@@ -36,12 +33,34 @@ exports.requestNewFund = async (req, res) => {
       return res.json({ status: false, error: "user not found" });
     }
 
-    if (user.examData.payment[courseId] == true) {
-      return res.json({ status: false, error: "course already bought" });
+    if (_.isEmpty(description.trim()) || courseId.length === 0) {
+      return res.json({ status: false, error: "missing paramter(s)" });
     }
 
+    const courseInsts = [];
+
+    for (let i = 0; i < courseId.length; i++) {
+      const currCourse = await CoursePrice.findOne({ courseId: courseId[i] });
+      if (currCourse === null) {
+        return res.json({ status: false, error: "course not found" });
+      }
+      if (user.examData.payment[currCourse.courseId] == true) {
+        return res.json({ status: false, error: "course already bought" });
+      }
+      totalAmount += parseFloat(currCourse.priceUsd);
+      courseInsts.push(currCourse);
+    }
+
+    // if (course === null) {
+    //   return res.json({ status: false, error: "course not found" });
+    // }
+
+    // if (user.examData.payment[courseId] == true) {
+    //   return res.json({ status: false, error: "course already bought" });
+    // }
+
     if (description.length < minDescChar || description.length > maxDescChar) {
-      return res.json({ status: false, error: "invalid description" });
+      return res.json({ status: false, error: "invalid description length" });
     }
 
     // const hasProfanity = await profanityChecker.checkForProfinity(description);
@@ -49,8 +68,6 @@ exports.requestNewFund = async (req, res) => {
     // if (hasProfanity === true) {
     //   requiresApproval = true;
     // }
-
-    const amount = course.priceUsd;
 
     const pendingRequest = await UserFundReq.findOne({
       $and: [
@@ -77,14 +94,37 @@ exports.requestNewFund = async (req, res) => {
     const newFund = generateNewFund(
       email,
       description,
-      parseFloat(amount),
+      parseFloat(totalAmount),
       newAddr.address,
       newAddr.privateKey,
       courseId,
       requiresApproval
     );
+
+    const requestPath = `https://uat.blockdegree.org/fund-my-degree?fundId=${newFund.fundId}`;
+    const shortUrl = await bitly.shorten(requestPath);
+    newFund["requestUrlLong"] = requestPath;
+    newFund["requestUrlShort"] = shortUrl.url;
+    newFund["userName"] = user.name;
+
+    if (!_.isEmpty(facebookProfile)) {
+      newFund["socialProfile"]["facebook"] = facebookProfile;
+    }
+    if (!_.isEmpty(twitterProfile)) {
+      newFund["socialProfile"]["twitter"] = twitterProfile;
+    }
+    if (!_.isEmpty(linkedinProfile)) {
+      newFund["socialProfile"]["linkedin"] = linkedinProfile;
+    }
+
     await newFund.save();
-    res.json({ status: true, message: "new fund request submitted" });
+    res.json({
+      status: true,
+      message: "new fund request submitted",
+      data: { shortUrl: shortUrl.url, longUrl: shortUrl.long_url },
+    });
+
+    donationEm.emit("syncRecipients");
 
     if (requiresApproval === true) {
       await emailer.sendMailInternal(
@@ -123,9 +163,8 @@ exports.initiateDonation = async (req, res) => {
       return res.json({ status: false, error: "funding already in progress" });
     }
 
-    const course = await CoursePrice.findOne({ courseId: fund.courseId });
     const doner = await User.findOne({ email: donerEmail });
-    const priceUsd = parseFloat(course.priceUsd);
+    const priceUsd = parseFloat(fund.amountGoal);
     const existingTx = await UserFundReq.findOne({ fundTx: reqTx });
 
     if (existingTx !== null) {
@@ -143,6 +182,8 @@ exports.initiateDonation = async (req, res) => {
         // valid
         fund.fundTx = reqTx;
         fund.status = "pending";
+        fund.donerEmail = donerEmail;
+        fund.donerName = doner.name;
         await fund.save();
         donationEm.emit("processDonationTx", fundId, reqTx, doner.name);
         return res.json({ status: true, data: "listsner initiated" });
@@ -171,6 +212,28 @@ exports.getUninitiatedFunds = async (req, res) => {
     res.json({ status: true, data: uninitiatedFunds });
   } catch (e) {
     console.log(`exception at ${__filename}.getUninitiatedFunds`);
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
+/**
+ * will return all funds
+ */
+exports.getAllFunds = async (req, res) => {
+  try {
+    const uninitiatedFunds = await UserFundReq.find({
+      $and: [
+        {
+          valid: true,
+        },
+        { status: { $not: /^pending$/ } },
+      ],
+    })
+      .select({ receiveAddrPrivKey: 0 })
+      .lean();
+    res.json({ status: true, data: uninitiatedFunds });
+  } catch (e) {
+    console.log(`exception at ${__filename}.getAllFunds`, e);
     res.json({ status: false, error: "internal error" });
   }
 };

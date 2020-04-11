@@ -8,8 +8,10 @@ module.exports = (app) => {
   app.get("/fmd", requireLogin, (req, res) => {
     res.redirect("/fund-my-degree");
   });
-  app.post("/api/requestNewFund", fmdService.requestNewFund);
-  app.post("/api/initiateDonation", fmdService.initiateDonation);
-  app.get("/api/getUserFundReq", fmdService.getUserFundReq);
-  app.get("/api/getUninitiatedFund", fmdService.getUninitiatedFunds);
+  app.post("/api/requestNewFund", requireLogin, fmdService.requestNewFund);
+  app.post("/api/initiateDonation", requireLogin, fmdService.initiateDonation);
+  app.get("/api/getUserFundReq", requireLogin, fmdService.getUserFundReq);
+  app.get("/api/getUninitiatedFund", requireLogin, fmdService.getUninitiatedFunds);
+  app.get("/api/getAllFunds", requireLogin, fmdService.getAllFunds);
+
 };

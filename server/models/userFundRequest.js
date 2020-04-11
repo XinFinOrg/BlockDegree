@@ -21,8 +21,16 @@ function decrypt(text) {
 
 const userFundRequest = mongoose.Schema({
   email: { type: String, required: true },
+  userName: { type: String },
   fundId: { type: String, required: true, unique: true },
-  courseId: { type: String, required: true },
+  courseId: [{ type: String }],
+  requestUrlLong: { type: String },
+  requestUrlShort: { type: String },
+  socialProfile: {
+    facebook: { type: String },
+    twitter: { type: String },
+    linkedin: { type: String },
+  },
   amountGoal: { type: String, required: true },
   amountReached: { type: Number, required: true },
   description: { type: String, required: true },
@@ -43,6 +51,8 @@ const userFundRequest = mongoose.Schema({
     enum: ["uninitiated", "pending", "completed"],
   },
   confirmation: { type: Number, default: 0 },
+  donerEmail: { type: String },
+  donerName: { type: String },
   createdAt: String,
   updatedAt: String,
 });

@@ -26,7 +26,14 @@ function startProcessingDonation(fundId, tx, name) {
 
       const currentReq = await UserFundRequest.findOne({ fundId: fundId });
       const currUser = await User.findOne({ email: currentReq.email });
-      const course = await Course.findOne({ courseId: currentReq.courseId });
+      const courseInsts = [];
+
+      for (let i = 0; i < currentReq.courseId.length; i++) {
+        const currCourse = await Course.findOne({
+          courseId: currentReq.courseId[i],
+        });
+        courseInsts.push(currCourse);
+      }
 
       const currInterval = setInterval(async () => {
         try {
@@ -38,11 +45,21 @@ function startProcessingDonation(fundId, tx, name) {
           console.log(`tx record: `, txRecord);
 
           if (txReceipt !== null) {
-            currUser.examData.payment[currentReq.courseId] = true;
-            currUser.examData.payment[
-              `${currentReq.courseId}_payment`
-            ] = `donation:${fundId}`;
-            currUser.examData.payment[`${currentReq.courseId}_doner`] = name;
+            let courseNames = "";
+            for (let i = 0; i < currentReq.courseId.length; i++) {
+              currUser.examData.payment[currentReq.courseId[i]] = true;
+              currUser.examData.payment[
+                `${currentReq.courseId[i]}_payment`
+              ] = `donation:${fundId}`;
+              currUser.examData.payment[
+                `${currentReq.courseId[i]}_doner`
+              ] = name;
+              if (i < currentReq.courseId.length - 1) {
+                courseNames += `${courseInsts[i].courseName}, `;
+              } else {
+                courseNames += `${courseInsts[i].courseName}`;
+              }
+            }
 
             currentReq.status = "completed";
             currentReq.amountReached = await xdcToUsd(
@@ -59,14 +76,14 @@ function startProcessingDonation(fundId, tx, name) {
             newNoti.eventName = "funding completed";
             newNoti.eventId = uuidv4();
             newNoti.title = "Funding Completed";
-            newNoti.message = `Your funding request for course ${course.courseName} is now  completed!`;
+            newNoti.message = `Your funding request for ${courseNames} course(s) is now  completed!`;
             newNoti.displayed = false;
             await newNoti.save();
             WsServer.emit("new-noti", currentReq.email);
             emailer.sendFMDCompleteUser(
               currentReq.email,
               currUser.name,
-              course.courseName
+              courseNames
             );
           }
         } catch (e) {
@@ -146,25 +163,41 @@ function newDefNoti() {
   });
 }
 
+// function syncMissedBlocks() {
+//   try {
+//   } catch (e) {
+//     console.log(`exception at ${__filename}.syncMissedBlocks: `, e);
+//   }
+// }
+
 em.on("processDonationTx", startProcessingDonation);
 em.on("syncPendingDonation", syncPendingDonation);
 em.on("syncRecipients", syncRecipients);
+// em.on("syncMissedTx", syncMissedBlocks);
 
 exports.em = em;
 
 // ---------------------------------------- Donation ----------------------------------------
 
-xdc3.eth.subscribe("newBlockHeaders", async (error, result) => {
+xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
   try {
-    if (error) {
-      console.log(`[*] exception at ${__filename}.newBlockHeaders: `, error);
-      return;
+    let retryCount = 0;
+    let txCount = await xdc3.eth.getBlockTransactionCount(result.number);
+    console.log(`[*] syncing block ${result.number} TX count: `, txCount);
+
+    while (txCount === null) {
+      if (retryCount === 10) {
+        console.log(`dropping block ${result.number}`);
+        return;
+      }
+      retryCount++;
+      txCount = await xdc3.eth.getBlockTransactionCount(result.number);
+      console.log(`[*] re-syncing block ${result.number} TX count: ${txCount} try: ${retryCount}`);
     }
-    const txCount = await xdc3.eth.getBlockTransactionCount(result.number);
 
     if (txCount > 0) {
       for (let i = 0; i < txCount; i++) {
-        const currBlockTx = await xdc3.eth.getTransactionFromBlock(
+        let currBlockTx = await xdc3.eth.getTransactionFromBlock(
           result.number,
           i
         );
@@ -173,9 +206,13 @@ xdc3.eth.subscribe("newBlockHeaders", async (error, result) => {
           continue;
         }
 
-        const currIndex = recipients
-          .map((e) => e.address)
-          .indexOf(currBlockTx.to);
+        let currIndex = -1;
+
+        for (let i = 0; i < recipients.length; i++) {
+          if (recipients[i].address === currBlockTx.to) {
+            currIndex = i;
+          }
+        }
 
         if (currIndex > -1) {
           console.log(`got anonymous deposit`);
