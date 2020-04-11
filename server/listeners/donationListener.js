@@ -222,6 +222,13 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
           const currFundReq = await UserFundRequest.findOne({
             fundId: recipients[currIndex].id,
           }).lean();
+          if (
+            currFundReq.fundTx !== undefined &&
+            currFundReq.fundTx !== null &&
+            currFundReq.fundTx !== ""
+          ) {
+            continue;
+          }
           const user = await User.findOne({ email: currFundReq.email });
           if (user.examData.payment[currFundReq.courseId] === true) {
             emailer.sendMailInternal(

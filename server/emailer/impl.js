@@ -136,7 +136,7 @@ module.exports = {
       if (err)
       {console.log(`exception at ${__filename}.sendFMDCompleteUser: `, err);return;}
       else{
-        const html =  Buffer.from(data, "utf-8");        
+        const html =  data.toString();        
         const mailOptions = {
           from: process.env.SUPP_EMAILER_ID,
           to: mail,
