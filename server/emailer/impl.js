@@ -136,17 +136,19 @@ module.exports = {
       if (err)
       {console.log(`exception at ${__filename}.sendFMDCompleteUser: `, err);return;}
       else{
+        const html =  Buffer.from(data, "utf-8");        
         const mailOptions = {
           from: process.env.SUPP_EMAILER_ID,
           to: mail,
           subject: "Fund Accepted",
-          html: Buffer.from(data, "utf-8")
+          html:html
         };
+        console.log("mail options: ", mailOptions);
         transporter.sendMail(mailOptions, function(error, info) {
           if (error) {
             console.log(error);
           } else {
-            console.log("Email sent: " + info.response);
+            console.log(" sendFMDCompleteUser Email sent: " + info.response);
             res.send({ status: "true" });
           }
         });

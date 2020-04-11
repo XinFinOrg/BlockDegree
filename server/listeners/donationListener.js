@@ -79,7 +79,8 @@ function startProcessingDonation(fundId, tx, name) {
             newNoti.message = `Your funding request for ${courseNames} course(s) is now  completed!`;
             newNoti.displayed = false;
             await newNoti.save();
-            WsServer.emit("new-noti", currentReq.email);
+            removeRecipient(currentReq.receiveAddr);
+            // WsServer.emit("new-noti", currentReq.email);
             emailer.sendFMDCompleteUser(
               currentReq.email,
               currUser.name,
@@ -192,7 +193,9 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
       }
       retryCount++;
       txCount = await xdc3.eth.getBlockTransactionCount(result.number);
-      console.log(`[*] re-syncing block ${result.number} TX count: ${txCount} try: ${retryCount}`);
+      console.log(
+        `[*] re-syncing block ${result.number} TX count: ${txCount} try: ${retryCount}`
+      );
     }
 
     if (txCount > 0) {
@@ -254,3 +257,15 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
     return;
   }
 });
+
+function removeRecipient(address) {
+  let removeIndex = -1;
+  for (let i = 0; i < recipients.length; i++) {
+    if (recipients[i].address === address) {
+      removeIndex = i;
+    }
+  }
+  if (removeIndex > -1) {
+    recipients.splice(removeIndex, 1);
+  }
+}
