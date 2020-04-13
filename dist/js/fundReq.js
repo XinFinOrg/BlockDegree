@@ -34,7 +34,7 @@ $(document).ready(() => {
           if (currData.status === "uninitiated") {
             retDataPending += `<tr>
             <td>${currDate.getDate()}-${currDate.getMonth() + 1}-${
-              currDate.getFullYear() + 1
+              currDate.getFullYear()
             }</td>
             <td>${
               currData.userName
@@ -59,7 +59,7 @@ $(document).ready(() => {
           } else if (currData.status === "completed") {
             retDataApproved += `<tr>
             <td>${currDate.getDate()}-${currDate.getMonth() + 1}-${
-              currDate.getFullYear() + 1
+              currDate.getFullYear()
             }</td>
             <td>${
               currData.userName
