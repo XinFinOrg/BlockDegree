@@ -370,6 +370,12 @@ exports.successFundPaypal = async (req, res) => {
           currFundReq.userName,
           courseNames
         );
+        emailer.sendFMDCompleteFunder(
+          currFundReq.donerEmail,
+          currFundReq.userName,
+          currFundReq.donerName,
+          courseNames
+        );
       }
     });
   } catch (e) {

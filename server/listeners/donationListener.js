@@ -78,10 +78,10 @@ function startProcessingDonation(fundId, tx, name) {
             newNoti.eventName = "funding completed";
             newNoti.eventId = uuidv4();
             newNoti.title = "Funding Completed";
-            newNoti.message = `Your funding request for ${courseNames} course(s) is now  completed! Check in your <a href="/profile#fmd-requests"></a>`;
+            newNoti.message = `Your funding request for ${courseNames} course(s) is now  completed! Check in your <a href="/profile#fmd-requests">Profile</a>`;
             newNoti.displayed = false;
             await newNoti.save();
-            removeRecipient(currentReq.receiveAddr);            
+            removeRecipient(currentReq.receiveAddr);
             burnEmitter.emit("donationTokenBurn", currentReq.fundId);
             // WsServer.emit("new-noti", currentReq.email);
             emailer.sendFMDCompleteUser(
@@ -89,6 +89,19 @@ function startProcessingDonation(fundId, tx, name) {
               currUser.name,
               courseNames
             );
+
+            if (
+              currentReq.donerEmail !== "" &&
+              currentReq.donerEmail !== null &&
+              currentReq.donerEmail !== undefined
+            ) {
+              emailer.sendFMDCompleteFunder(
+                currentReq.donerEmail,
+                currentReq.userName,
+                currentReq.donerName,
+                courseNames
+              );
+            }
           }
         } catch (e) {
           console.log(

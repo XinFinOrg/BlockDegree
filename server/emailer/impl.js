@@ -154,5 +154,30 @@ module.exports = {
         });
       }
     })
+  },
+
+  sendFMDCompleteFunder : (mail, studentName, funderName, courseName) => {    
+    ejs.renderFile(__dirname+"/fundCompleteFunder.ejs", {studentName:studentName, funderName:funderName, courseName:courseName}, (err, data) => {
+      if (err)
+      {console.log(`exception at ${__filename}.sendFMDCompleteFunder: `, err);return;}
+      else{
+        const html =  data.toString();        
+        const mailOptions = {
+          from: process.env.SUPP_EMAILER_ID,
+          to: mail,
+          subject: "Funding Completed",
+          html:html
+        };
+        // console.log("mail options: ", mailOptions);
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(" sendFMDCompleteFunder Email sent: " + info.response);
+            res.send({ status: "true" });
+          }
+        });
+      }
+    })
   }
 };
