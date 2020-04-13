@@ -1,7 +1,7 @@
 .fmd-page-wrapper {
   .fmd-block-bg {
     position: relative;
-    padding: 200px 0px 150px 0px;
+    padding: 150px 0px 150px 0px;
     background: #3a7bd5;
     background: -webkit-linear-gradient(to bottom, #1488cc, #3a7bd5);
     background: linear-gradient(to bottom, #1488cc, #3a7bd5);
@@ -239,6 +239,14 @@
   }
 
   #pendingFund > thead > tr > th {
+    border-bottom: 1px solid lightgrey;
+  }
+
+  #approvedFund {
+    border-bottom: none;
+  }
+
+  #approvedFund > thead > tr > th {
     border-bottom: 1px solid lightgrey;
   }
 
