@@ -20,7 +20,7 @@ const minDescChar = 10,
 
 exports.requestNewFund = async (req, res) => {
   try {
-    const email = req.user ? req.user.email : "rudresh@xinfin.org";
+    const email = req.user.email;
     const description = req.body.desc;
     const courseId = JSON.parse(req.body.courseId);
     const facebookProfile = req.body.facebookProfile;
@@ -148,7 +148,7 @@ exports.requestNewFund = async (req, res) => {
 exports.initiateDonation = async (req, res) => {
   try {
     const reqTx = req.body.tx;
-    const donerEmail = req.user ? req.user.email : "rudresh@xinfin.org";
+    const donerEmail = req.user.email;
     const fundId = req.body.fundId;
 
     if (_.isEmpty(reqTx) || _.isEmpty(donerEmail) || _.isEmpty(fundId)) {
@@ -207,7 +207,7 @@ exports.initiateDonation = async (req, res) => {
 exports.startFundPaypal = async (req, res) => {
   try {
     const fundId = req.body.fundId;
-    const donerEmail = req.user ? req.user.email : "rudresh@xinfin.org";
+    const donerEmail = req.user.email;
     const doner = await User.findOne({ email: donerEmail });
     const currFundReq = await UserFundReq.findOne({ fundId: fundId });
     if (currFundReq === null) {
@@ -425,7 +425,7 @@ exports.getAllFunds = async (req, res) => {
  */
 exports.getUserFundReq = async (req, res) => {
   try {
-    const email = req.user ? req.user.email : "rudresh@xinfin.org";
+    const email = req.user.email;
     const userFmd = await UserFundReq.find({
       email: email,
     })
@@ -440,7 +440,7 @@ exports.getUserFundReq = async (req, res) => {
 
 exports.getUserFMDFunded = async (req, res) => {
   try {
-    const email = req.user ? req.user.email : "rudresh@xinfin.org";
+    const email = req.user.email;
     const userFmd = await UserFundReq.find({
       donerEmail: email,
     })

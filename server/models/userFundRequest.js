@@ -48,7 +48,7 @@ const userFundRequest = mongoose.Schema({
   status: {
     type: String,
     default: "uninitiated",
-    enum: ["uninitiated", "p  ending", "completed"],
+    enum: ["uninitiated", "pending", "completed"],
   },
   paypalId: { type: String },
   confirmation: { type: Number, default: 0 },
