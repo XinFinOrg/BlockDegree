@@ -350,12 +350,19 @@ exports.successFundPaypal = async (req, res) => {
             } some error occured while executing the sale: ${error.response.toString()}. Please consider for re-imbursement.`
           );
         }
+        const recipientUser = await User.findOne({ email: currFundReq.email });
+        currFundReq.courseId.forEach(courseId => {
+          recipientUser.examData.payment[courseId] = true;
+          recipientUser.examData.payment[courseId+"_payment"] = `donation:${currFundReq.fundId}`;
+          recipientUser.examData.payment[courseId+"_doner"] = doner.name;
+        });
         currFundReq.status = "completed";
         currFundReq.paypalId = invoice_number;
         currFundReq.donerEmail = doner.email;
         currFundReq.donerName = doner.name;
         currFundReq.burnStatus = "pending";
         await currFundReq.save();
+        await recipientUser.save();
         res.redirect("/payment-success");
         burnEmitter.emit("donationTokenBurn", fundId);
         emailer.sendFMDCompleteUser(
