@@ -13,7 +13,7 @@ const { removeExpo } = require("../helpers/common");
 const UserFundRequest = require("../models/userFundRequest");
 const uuid = require("uuid/v4");
 // const WsServer = require("../listeners/donationListener").em;
-const xdcInst = require("../helpers/blockchainConnectors").rinkInst;
+const xdcInst = require("../helpers/blockchainConnectors").xdcInst;
 
 const networks = {
   "51": "https://rpc.apothem.network",
@@ -32,7 +32,7 @@ const coinMarketCapAPI =
 
 const burnAddress = "0x0000000000000000000000000000000000000000";
 
-const divisor = 1; // for testing purposes 1 million'th of actual value will be used
+const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
 
 async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
   try {
@@ -207,10 +207,13 @@ async function donationTokenBurn(fundId) {
       currWalletAddr = "";
     Object.keys(keyConfig).forEach((key) => {
       let wallet = keyConfig[key];
-      if (wallet.wallet_network == "4") {
+      if (wallet.wallet_network == "50") {
         // found the appropriate wallet
         currWallet = wallet;
         currWalletAddr = key;
+      }
+      if (currWalletAddr.startsWith("0x")) {
+        currWalletAddr = "xdc" + currWalletAddr.slice(2);
       }
     });
     const walletBalance = await xdcInst.eth.getBalance(currWalletAddr);
@@ -229,7 +232,7 @@ async function donationTokenBurn(fundId) {
       "",
       burnAddress,
       currPrivKey,
-      "4",
+      "50",
       burnAmnt,
       xdcInst
     );
@@ -244,9 +247,12 @@ async function donationTokenBurn(fundId) {
           currFundReq.burnAmnt = burnAmnt;
           await currFundReq.save();
           genBurnNotiFMD(currFundReq.email, "recipient");
-          if (currFundReq.donerEmail!=="" && currFundReq.donerEmail!==undefined && currFundReq.donerEmail!==null ){
+          if (
+            currFundReq.donerEmail !== "" &&
+            currFundReq.donerEmail !== undefined &&
+            currFundReq.donerEmail !== null
+          ) {
             genBurnNotiFMD(currFundReq.donerEmail, "funder");
-
           }
         }
       })
@@ -277,7 +283,7 @@ async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
     nonce: await web3.eth.getTransactionCount(account.address, "pending"),
     data: encodedData,
     chainId: chainId + "",
-    value: removeExpo(value),
+    value: removeExpo(Math.round(parseFloat(value))),
   };
   const signed = await web3.eth.accounts.signTransaction(rawTx, privKey);
   return signed;
@@ -307,7 +313,9 @@ async function genBurnNotiFMD(email, type) {
   newNoti.email = email;
   newNoti.type = "info";
   newNoti.title = "Token Burned For Payment!";
-  newNoti.message = `We have burned some tokens for your Fund My Degree!, checkout your <a href="/profile#${type==='funder'?'fmd-funded':'fmd-requests'}">Profile</a>`;
+  newNoti.message = `We have burned some tokens for your Fund My Degree!, checkout your <a href="/profile#${
+    type === "funder" ? "fmd-funded" : "fmd-requests"
+  }">Profile</a>`;
   await newNoti.save();
 }
 

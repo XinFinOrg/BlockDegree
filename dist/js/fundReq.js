@@ -33,9 +33,9 @@ $(document).ready(() => {
           }
           if (currData.status === "uninitiated") {
             retDataPending += `<tr>
-            <td>${currDate.getHours()}:${currDate.getMinutes()},${currDate.getDate()}-${currDate.getMonth() + 1}-${
-              currDate.getFullYear()
-            }</td>
+            <td>${currDate.getHours()}:${currDate.getMinutes()},${currDate.getDate()}-${
+              currDate.getMonth() + 1
+            }-${currDate.getFullYear()}</td>
             <td>${
               currData.userName
             }</td>                                                
@@ -43,8 +43,8 @@ $(document).ready(() => {
               currData.userName
             }','${currData.requestUrlShort}','${currData.description}','${
               currData.receiveAddr
-            }','${currData.fundId}', '${
-              currData.status
+            }','${currData.fundId}', '${currData.status}','${
+              currData.amountGoal
             }')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
@@ -54,13 +54,13 @@ $(document).ready(() => {
             }
             retDataPending += `</td>             
             <td>$ ${currData.amountGoal}</td>
-            <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr}', '${currData.fundId}')" class="btn btn-primary">Fund Now</button></td>
+            <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr}', '${currData.fundId}', ${currData.amountGoal})" class="btn btn-primary">Fund Now</button></td>
           </tr>`;
           } else if (currData.status === "completed") {
             retDataApproved += `<tr>
-            <td>${currDate.getHours()}:${currDate.getMinutes()},${currDate.getDate()}-${currDate.getMonth() + 1}-${
-              currDate.getFullYear()
-            }</td>
+            <td>${currDate.getHours()}:${currDate.getMinutes()},${currDate.getDate()}-${
+              currDate.getMonth() + 1
+            }-${currDate.getFullYear()}</td>
             <td>${
               currData.userName
             }</td>                                                
@@ -68,8 +68,8 @@ $(document).ready(() => {
               currData.userName
             }','${currData.requestUrlShort}','${currData.description}','${
               currData.receiveAddr
-            }','${currData.fundId}','${
-              currData.status
+            }','${currData.fundId}','${currData.status}','${
+              currData.amountGoal
             }')">View Description</button></td><td>`;
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataApproved += `<span class="courseName">${getCourseName(
@@ -116,6 +116,17 @@ $(document).ready(() => {
     });
 });
 
+// var copyToClipboard = function (text) {
+//   console.log("called copyToClipboard: ", text)
+//   var $body = document.getElementsByTagName('body')[0];
+//   var $tempInput = document.createElement("INPUT");
+//   $body.appendChild($tempInput);
+//   $tempInput.setAttribute("value", text);
+//   $tempInput.select();
+//   document.execCommand("copy");
+//   $body.removeChild($tempInput);
+// };
+
 // function switchModalTab(evt, socialPlatform) {
 //   var i, tabcontent, tablinks;
 //   tabcontent = document.getElementsByClassName("tabcontent");
@@ -133,7 +144,7 @@ $(document).ready(() => {
 //   evt.currentTarget.className += " active";
 // }
 
-function renderPaymentMethodModal(addr, fundId) {
+function renderPaymentMethodModal(addr, fundId, amountGoal) {
   const modalHtml = `
   <div class="modal fade" id="paymentMethodModal" tabindex="-1" role="dialog"
       aria-labelledby="paymentModalTitle" aria-hidden="true">
@@ -148,7 +159,7 @@ function renderPaymentMethodModal(addr, fundId) {
               </div>
               <div class="modal-body">
 
-                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="submitMetamask('${addr}','${fundId}')"
+                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="submitMetamask('${addr}','${fundId}', '${amountGoal}')"
                       data-dismiss="modal"> Pay Via XDC </button>
 
                   <button type="button" data-dismiss="modal" class="btn-payment" onclick="payByPaypal('${fundId}')"
@@ -169,11 +180,11 @@ function renderPaymentMethodModal(addr, fundId) {
  */
 function payByPaypal(fundId) {
   console.log("called payByPaypal: ", fundId);
-  let formNew = document.createElement('form');
-  formNew.style.display="none";
+  let formNew = document.createElement("form");
+  formNew.style.display = "none";
   formNew.action = "/fmd-pay-paypal";
   formNew.method = "post";
-  formNew.style.display="none";
+  formNew.style.display = "none";
   let elementFundId = document.createElement("input");
   elementFundId.name = "fundId";
   elementFundId.value = fundId;
@@ -245,7 +256,8 @@ function renderRequestModal(
   description,
   addr,
   fundId,
-  type
+  type,
+  amountGoal
 ) {
   console.log(addr, fundId);
 
@@ -260,8 +272,8 @@ function renderRequestModal(
 
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="requestModal--title">Req. By <strong>${userName}</strong></h5>
-                              <div>Link: <a target="_blank" href="${requestUrlShort}"><div id="requestUrlShort--input" >${requestUrlShort}</div></a></div>
+                              <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
+                              <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}')" >Copy Link</button>
 
                           </div>` +
     `
@@ -276,7 +288,7 @@ function renderRequestModal(
         <button
           class="btn btn-primary fund-btn"
           data-dismiss="modal"
-          onclick="renderPaymentMethodModal('${addr}','${fundId}')"
+          onclick="renderPaymentMethodModal('${addr}','${fundId}', '${amountGoal}')"
         >
           Fund
         </button>
@@ -304,18 +316,6 @@ function renderRequestModal(
   }
 }
 
-function copyToClipboard() {
-  var copyText = document.getElementById("requestLinkInput");
-
-  /* Select the text field */
-  console.log(copyText.value);
-  copyText.select();
-
-  /* Copy the text inside the text field */
-  document.execCommand("copy");
-  $.notify("copied !", { type: "info" });
-}
-
 function getCourseName(id) {
   switch (id) {
     case "course_1":
@@ -329,22 +329,17 @@ function getCourseName(id) {
   }
 }
 
-function submitMetamask(addr, fundId) {
-  console.log(`received address ${addr} at submitMetamask`);
+function submitMetamask(addr, fundId, amountGoal) {
+  console.log(`received address ${addr} at submitMetamask ${amountGoal}`);
   if (typeof web3 == "undefined") {
     // no web3 provider is available, ask to install XinPay
 
-    if (typeof InstallTrigger !== "undefined") {
-      $.notify(
-        "Please install <strong><a target='_blank' href='https://addons.mozilla.org/en-US/firefox/addon/ether-metamask'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",
-        { delay: 5000 }
-      );
-    } else if (
+    if (
       !!window.chrome &&
       (!!window.chrome.webstore || !!window.chrome.runtime)
     ) {
       $.notify(
-        "Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>Metamask</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",
+        "Please install <strong><a target='_blank' href='https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo'>XinPay</a></strong> and login & setup your wallet to continue, if already did please <a onclick='window.location.reload()'>refresh</a>",
         { delay: 5000 }
       );
     } else {
@@ -363,14 +358,30 @@ function submitMetamask(addr, fundId) {
       return;
     }
 
+    const xdcPriceResponse = await $.get("/api/wrapCoinMarketCap");
+    const xdcPrice = xdcPriceResponse.data;
+    console.log("xdc price: ", xdcPrice);
     // 1 - Mainnet
     // 4 - Rinkeby
-    if (providerNetworkId == 4) {
-      console.log("on rinkeby");
+    // 50 - XDC mainnet
+    if (providerNetworkId == 50) {
+      console.log(
+        "on rinkeby ",
+        web3.toWei(
+          String(parseFloat(amountGoal) / parseFloat(xdcPrice)),
+          "ether"
+        )
+      );
       const tx = {
         from: web3.eth.defaultAccount,
-        to: addr,
-        value: "1000000000000000000",
+        to: addr.replace("xdc", "0x"),
+        value:
+          Math.round(
+            web3.toWei(
+              String(parseFloat(amountGoal) / (100000 * parseFloat(xdcPrice))),
+              "ether"
+            )
+          ) + "",
       };
       web3.eth.sendTransaction(tx, (err, result) => {
         console.log(err, result);
@@ -416,7 +427,8 @@ function renderRequestedModal(allData) {
           allData[i].description,
           allData[i].receiveAddr,
           allData[i].fundId,
-          allData[i].status
+          allData[i].status,
+          allData[i].amountGoal
         );
         return;
       }
@@ -437,4 +449,15 @@ function getParamValue(param) {
   }
 
   return null;
+}
+
+var copyToClipboard = function(secretInfo) {
+  console.log("called copyToClipboard")
+  var $body = document.getElementById('requestModal--title');
+  var $tempInput = document.createElement('INPUT');
+  $body.appendChild($tempInput);
+  $tempInput.setAttribute('value', secretInfo)
+  $tempInput.select();
+  document.execCommand('copy');
+  $body.removeChild($tempInput);
 }

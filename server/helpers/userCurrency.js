@@ -15,8 +15,8 @@ exports.createNewAddress = () => {
       !_.isEmpty(addr.privateKey)
     ) {
       return {
-        address: addr.address,
-        privateKey: addr.privateKey
+        address: addr.address.replace("0x", "xdc"),
+        privateKey: addr.privateKey,
       };
     } else {
       return null;
@@ -32,7 +32,7 @@ exports.createNewAddress = () => {
  * @param {string} privKey valid private key
  * @returns {string}
  */
-exports.getAccountFromPrivKey = privKey => {
+exports.getAccountFromPrivKey = (privKey) => {
   try {
     if (_.isEmpty(privKey)) {
       return null;
@@ -65,7 +65,7 @@ exports.createAndSignTx = async (to, privKey, value) => {
     }
     const tx = {
       to: to,
-      from: addr.address
+      from: addr.address,
     };
     if (!_.isEmpty(value)) {
       tx["value"] = value;

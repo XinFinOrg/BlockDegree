@@ -8,7 +8,8 @@ const Course = require("../models/coursePrice");
 const WsServer = require("../listeners/websocketServer").em;
 const burnEmitter = require("./burnToken").em;
 const emailer = require("../emailer/impl");
-const xdc3 = require("../helpers/blockchainConnectors").rinkInst;
+const xdc3 = require("../helpers/blockchainConnectors").xdcInst;
+const equateAddress = require("../helpers/common").equateAddress;
 const xdcToUsd = require("../helpers/cmcHelper").xdcToUsd;
 
 const recipients = [];
@@ -228,7 +229,7 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
         let currIndex = -1;
 
         for (let i = 0; i < recipients.length; i++) {
-          if (recipients[i].address === currBlockTx.to) {
+          if (equateAddress(recipients[i].address, currBlockTx.to)) {
             currIndex = i;
           }
         }
@@ -264,12 +265,16 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
             );
             continue;
           }
+
           const courseId = currFundReq.courseId;
           const course = await Course.findOne({ courseId: courseId });
           const valUsd = await xdcToUsd(currBlockTx.value);
-          // const min = valUsd - valUsd / 10;
-          // const max = valUsd + valUsd / 10;
-          if (parseFloat(course.priceUsd)) {
+          const min = valUsd - valUsd / 10;
+          const max = valUsd + valUsd / 10;
+          if (
+            min <= parseFloat(currFundReq.amountGoal) &&
+            parseFloat(currFundReq.amountGoal) <= max
+          ) {
             startProcessingDonation(currFundReq.fundId, currBlockTx.hash, "");
           }
         }

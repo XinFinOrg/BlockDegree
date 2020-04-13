@@ -156,8 +156,8 @@ module.exports = {
     })
   },
 
-  sendFMDCompleteFunder : (mail, studentName, funderName, courseName) => {    
-    ejs.renderFile(__dirname+"/fundCompleteFunder.ejs", {studentName:studentName, funderName:funderName, courseName:courseName}, (err, data) => {
+  sendFMDCompleteFunder : (mail, studentName, funderName, courseNames) => {    
+    ejs.renderFile(__dirname+"/fundCompleteFunder.ejs", {studentName:studentName, funderName:funderName, courseNames:courseNames}, (err, data) => {
       if (err)
       {console.log(`exception at ${__filename}.sendFMDCompleteFunder: `, err);return;}
       else{

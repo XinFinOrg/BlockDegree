@@ -20,3 +20,13 @@ exports.removeExpo = (x) => {
   while (mag--) z += "0";
   return str + z;
 };
+
+/**
+ * will return if the addresses are equal are not
+ * @param {string} addr1 first address
+ * @param {string} addr2 ssecond address
+ * @return {boolean}
+ */
+exports.equateAddress = (addr1, addr2) => {
+  return addr1.trim().toLowerCase() === addr2.trim().toLowerCase();
+};

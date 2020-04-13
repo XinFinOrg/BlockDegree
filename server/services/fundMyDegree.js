@@ -9,10 +9,10 @@ const userCurrencyHelper = require("../helpers/userCurrency");
 const profanityChecker = require("../helpers/profanityCheck");
 const emailer = require("../emailer/impl");
 const donationEm = require("../listeners/donationListener").em;
-const xdc3 = require("../helpers/blockchainConnectors.js").rinkInst;
+const xdc3 = require("../helpers/blockchainConnectors.js").xdcInst;
 const cmcHelper = require("../helpers/cmcHelper");
 const burnEmitter = require("../listeners/burnToken").em;
-
+const equateAddress = require("../helpers/common").equateAddress;
 const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
 
 const minDescChar = 10,
@@ -176,11 +176,20 @@ exports.initiateDonation = async (req, res) => {
     const tx = await xdc3.eth.getTransaction(reqTx);
     if (tx !== null) {
       const valUsd = await cmcHelper.xdcToUsd(xdc3.utils.fromWei(tx.value));
-      const min = priceUsd - (priceUsd * 10) / 10;
-      const max = priceUsd + (priceUsd * 10) / 10;
+      const min = priceUsd - (priceUsd * 10) / 100;
+      const max = priceUsd + (priceUsd * 10) / 100;
       console.log(`min ${min} max ${max} valUsd ${valUsd}`);
+      console.log(`|${tx.to}|${fund.receiveAddr}|`, tx);
+      console.log("min: ", min <= parseFloat(valUsd));
+      console.log("max: ", parseFloat(valUsd) <= max);
+      console.log("equal address: ", tx.to == fund.receiveAddr);
+      if (
+        equateAddress(tx.to, fund.receiveAddr) &&
+        min <= parseFloat(valUsd) &&
+        parseFloat(valUsd) <= max
+      ) {
+        console.log("valid fund");
 
-      if (tx.to == fund.receiveAddr && min <= valUsd <= max) {
         // valid
         fund.fundTx = reqTx;
         fund.status = "pending";
@@ -351,10 +360,12 @@ exports.successFundPaypal = async (req, res) => {
           );
         }
         const recipientUser = await User.findOne({ email: currFundReq.email });
-        currFundReq.courseId.forEach(courseId => {
+        currFundReq.courseId.forEach((courseId) => {
           recipientUser.examData.payment[courseId] = true;
-          recipientUser.examData.payment[courseId+"_payment"] = `donation:${currFundReq.fundId}`;
-          recipientUser.examData.payment[courseId+"_doner"] = doner.name;
+          recipientUser.examData.payment[
+            courseId + "_payment"
+          ] = `donation:${currFundReq.fundId}`;
+          recipientUser.examData.payment[courseId + "_doner"] = doner.name;
         });
         currFundReq.status = "completed";
         currFundReq.paypalId = invoice_number;

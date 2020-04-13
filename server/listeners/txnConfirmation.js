@@ -1138,7 +1138,7 @@ async function handleBurnToken(
           to: "0x0000000000000000000000000000000000000000",
           gas: 21000,
           gasPrice: 9000,
-          value: removeExpo(burnAmnt),
+          value: removeExpo(Math.round(parseFloat(burnAmnt))),
           nonce: await web3.eth.getTransactionCount(
             blockdegreePubAddrXDCApothm
           ),
