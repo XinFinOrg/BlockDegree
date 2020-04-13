@@ -422,34 +422,21 @@ $(document).ready(async function() {
 
 
 
-// const url = 'wss://wss.blockdegree.org'
-// const connection = new WebSocket(url)
+const url = 'wss://wss.blockdegree.org'
+const connection = new WebSocket(url)
 
-// connection.onopen = () => {
-//   connection.send(JSON.stringify({test:"message"})) 
-// }
+connection.onopen = () => {
+  connection.send(JSON.stringify({test:"message"})) 
+}
 
 // connection.onerror = (error) => {
 //   console.log(`WebSocket error: ${error}`, error)
 // }
 
-// connection.onmessage = async (e) => {
-//   const message = JSON.parse(e.data);
-//   console.log("Parsed Message: ", message);
-//   if (message.newNoti==true){
-//     let pendingNotis = await fetch("/api/getUserNotis");
-//     let pendingNotisJosn = await pendingNotis.json();
-//     if (pendingNotisJosn.status) {
-//       console.log(pendingNotisJosn);
-//       pendingNotisJosn.notis.forEach(noti => {
-//         $.notify(
-//           {
-//             title: "<strong>" + noti.title + "</strong>",
-//             message: noti.message
-//           },
-//           { type: noti.type }
-//         );
-//       });
-//     }
-//   }
-// }
+connection.onmessage = async (e) => {
+  const message = (e.data);
+  console.log("Parsed Message: ", message, "location", window.location.href);
+  if (window.location.pathname==="/fund-my-degree"){
+    getFMDAllData(true);
+  }
+}

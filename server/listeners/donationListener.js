@@ -82,6 +82,7 @@ function startProcessingDonation(fundId, tx, name) {
             newNoti.message = `Your funding request for ${courseNames} course(s) is now  completed! Check in your <a href="/profile#fmd-requests">Profile</a>`;
             newNoti.displayed = false;
             await newNoti.save();
+            WsServer.emit("fmd-trigger");
             removeRecipient(currentReq.receiveAddr);
             burnEmitter.emit("donationTokenBurn", currentReq.fundId);
             // WsServer.emit("new-noti", currentReq.email);

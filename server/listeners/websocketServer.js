@@ -22,28 +22,33 @@ exports.server = (server, sessionParser) => {
   wss.on("connection", async function (ws, request) {
     console.log("new websocket connection request");
 
-    const userId = request.session;
-    if (
-      !userId.passport ||
-      request.headers.origin !== "https://uat.blockdegree.org"
-    ) {
-      console.log(`[*] invalid access at websocket`);
-      ws.close();
-      return;
-    }
+    // const userId = request.session;
+    // if (
+    //   !userId.passport
+    //   // request.headers.origin !== "https://uat.blockdegree.org"
+    // ) {
+    //   console.log(`[*] invalid access at websocket`);
+    //   ws.close();
+    //   return;
+    // }
 
-    const user = await User.findById(userId.passport.user).lean();
+    // const user = await User.findById(userId.passport.user).lean();
 
-    if (user === null) {
-      console.log(`[*] user not found at websocket`);
-      ws.close();
-      return;
-    }
+    // if (user === null) {
+    //   console.log(`[*] user not found at websocket`);
+    //   ws.close();
+    //   return;
+    // }
 
     em.on("new-noti", (email) => {
       if (email === user.email) {
         ws.send(JSON.stringify({ newNoti: true }));
       }
+    });
+
+    // will be called whenever someone buys/gets s course enrollment
+    em.on("fmd-trigger", () => {
+      ws.send("fmd:fetch-fmd");
     });
 
     ws.on("close", function () {});

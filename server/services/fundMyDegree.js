@@ -2,18 +2,21 @@ const uuid = require("uuid/v4");
 const _ = require("lodash");
 const paypal = require("paypal-rest-sdk");
 const BitlyClient = require("bitly").BitlyClient;
+const ProfanityCheck = require("bad-words");
 const CoursePrice = require("../models/coursePrice");
 const UserFundReq = require("../models/userFundRequest");
 const User = require("../models/user");
 const userCurrencyHelper = require("../helpers/userCurrency");
-const profanityChecker = require("../helpers/profanityCheck");
 const emailer = require("../emailer/impl");
 const donationEm = require("../listeners/donationListener").em;
 const xdc3 = require("../helpers/blockchainConnectors.js").xdcInst;
 const cmcHelper = require("../helpers/cmcHelper");
 const burnEmitter = require("../listeners/burnToken").em;
 const equateAddress = require("../helpers/common").equateAddress;
+const WsServer = require("../listeners/websocketServer").em;
+
 const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
+const profanityChecker = new ProfanityCheck();
 
 const minDescChar = 10,
   maxDescChar = 150;
@@ -61,22 +64,24 @@ exports.requestNewFund = async (req, res) => {
     //   return res.json({ status: false, error: "course already bought" });
     // }
 
-    if (description.length < minDescChar || description.length > maxDescChar) {
-      return res.json({ status: false, error: "invalid description length" });
+    if (description.length < minDescChar) {
+      return res.json({ status: false, error: "description is too short" });
+    } else if (description.length > maxDescChar) {
+      return res.json({ status: false, error: "description is too long" });
     }
 
-    // const hasProfanity = await profanityChecker.checkForProfinity(description);
+    const hasProfanity = profanityChecker.isProfane(description);
 
-    // if (hasProfanity === true) {
-    //   requiresApproval = true;
-    // }
+    if (hasProfanity === true) {
+      requiresApproval = true;
+    }
 
     const pendingRequest = await UserFundReq.findOne({
       $and: [
         {
           email: email,
         },
-        { valid: true },
+        // { valid: true },
         { $or: [{ status: "uninitiated" }, { status: "pending" }] },
       ],
     });
@@ -120,14 +125,21 @@ exports.requestNewFund = async (req, res) => {
     }
 
     await newFund.save();
+    if (hasProfanity===true){
+      return res.json({
+        status: true,
+        requestPending: true,
+        // message: "new fund request submitted",
+        // data: { shortUrl: shortUrl.url, longUrl: shortUrl.long_url },
+      });
+    }
     res.json({
       status: true,
       message: "new fund request submitted",
       data: { shortUrl: shortUrl.url, longUrl: shortUrl.long_url },
     });
-
     donationEm.emit("syncRecipients");
-
+    WsServer.emit("fmd-trigger");
     if (requiresApproval === true) {
       await emailer.sendMailInternal(
         "blockdegree-bot@blockdegree.org",
@@ -374,6 +386,8 @@ exports.successFundPaypal = async (req, res) => {
         currFundReq.burnStatus = "pending";
         await currFundReq.save();
         await recipientUser.save();
+        req.session.message =
+          "You can get more details about the funding from your <a href='/profile#fmd-funded'>Profile</a>";
         res.redirect("/payment-success");
         burnEmitter.emit("donationTokenBurn", fundId);
         emailer.sendFMDCompleteUser(

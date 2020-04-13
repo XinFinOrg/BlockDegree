@@ -191,6 +191,7 @@ exports.payPaypalSuccess = (req, res) => {
         }
         console.log("course_id", course_id, email);
         await emailer.sendTokenMail(email, "", req, course_id);
+        req.session.message = "Please check your email for exam link."
         res.redirect("/payment-success");
 
         //  payment is a success, initiate the burn.
