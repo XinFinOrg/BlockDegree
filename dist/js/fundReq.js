@@ -53,7 +53,7 @@ $(document).ready(() => {
               )}</span>`;
             }
             retDataPending += `</td>             
-            <td>${currData.amountGoal}</td>
+            <td>$ ${currData.amountGoal}</td>
             <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr}', '${currData.fundId}')" class="btn btn-primary">Fund Now</button></td>
           </tr>`;
           } else if (currData.status === "completed") {
@@ -77,7 +77,7 @@ $(document).ready(() => {
               )}</span>`;
             }
             retDataApproved += `</td>    
-            <td>${currData.amountGoal}</td>
+            <td>$ ${currData.amountGoal}</td>
             <td>${donerName}</td>
           </tr>`;
           }
