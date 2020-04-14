@@ -410,7 +410,7 @@ function submitMetamask(addr, fundId, amountGoal) {
         value:
           Math.round(
             web3.toWei(
-              String(parseFloat(amountGoal) / (100000 * parseFloat(xdcPrice))),
+              String(parseFloat(amountGoal) / (parseFloat(xdcPrice))),
               "ether"
             )
           ) + "",
