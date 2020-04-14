@@ -690,7 +690,7 @@ exports.payViaXdc = async (req, res) => {
         comPaymentToken.tokenAmt = xdcTokenAmnt;
         await comPaymentToken.save();
         await newNoti.save();
-        WsServer.emit("new-noti", req.user.email);
+        // WsServer.emit("new-noti", req.user.email);
         res.json({ status: true, error: null });
         TxMinedListener = clearInterval(TxMinedListener);
         eventEmitter.emit(
@@ -1042,7 +1042,7 @@ exports.payViaXdce = async (req, res) => {
         comPaymentToken.tokenAmt = decodedMethod.params[1].value.toString();
         await comPaymentToken.save();
         await newNoti.save();
-        WsServer.emit("new-noti", req.user.email);
+        // WsServer.emit("new-noti", req.user.email);
         // let newPaymentXdce = newPaymentToken();
         // newPaymentXdce.payment_id = uuidv4();
         // newPaymentXdce.email = req.user.email;
