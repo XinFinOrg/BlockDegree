@@ -32,7 +32,7 @@ const coinMarketCapAPI =
 
 const burnAddress = "0x0000000000000000000000000000000000000000";
 
-const divisor = 1; // for testing purposes 1 million'th of actual value will be used
+// const divisor = 1; // for testing purposes 1 million'th of actual value will be used
 
 async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
   try {
@@ -202,7 +202,7 @@ async function donationTokenBurn(fundId) {
 
     const amntXdc = await getXinEquivalent(totalAmount);
     const burnPercent = parseFloat(coursePrice.burnToken[0].burnPercent);
-    const burnAmnt = (amntXdc * burnPercent) / (100);
+    const burnAmnt = (amntXdc * burnPercent) / 100;
     let currWallet = {},
       currWalletAddr = "";
     Object.keys(keyConfig).forEach((key) => {
@@ -291,13 +291,10 @@ async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
 
 async function getXinEquivalent(amnt) {
   try {
-    const cmcData = await cmcHelper.getXdcPrice();
-    const cmcPrice = cmcData.data.data["2634"].quote.USD.price;
+    const cmcPrice = await cmcHelper.getXdcPrice();
     if (cmcData !== null) {
       console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
-      return (
-        (parseFloat(amnt) / (parseFloat(cmcPrice) * divisor)) * Math.pow(10, 18)
-      );
+      return (parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18);
     }
   } catch (e) {
     console.error(

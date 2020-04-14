@@ -422,7 +422,7 @@ $(document).ready(async function() {
 
 
 
-const url = 'wss://wss.blockdegree.org'
+const url = 'wss://wss.uat.blockdegree.org'
 const connection = new WebSocket(url)
 
 connection.onopen = () => {

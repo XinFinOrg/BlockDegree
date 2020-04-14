@@ -10,7 +10,7 @@ const CLIENTS = [];
  */
 exports.server = (server, sessionParser) => {
   const wss = new WebSocket.Server({
-    port: 3050,
+    port: 3055,
     server: server,
     verifyClient: (info, done) => {
       console.log("Parsing session info from request...");
@@ -27,7 +27,7 @@ exports.server = (server, sessionParser) => {
     // const userId = request.session;
     // if (
     //   !userId.passport
-    //   // request.headers.origin !== "https://www.blockdegree.org"
+    //   // request.headers.origin !== "https://uat.blockdegree.org"
     // ) {
     //   console.log(`[*] invalid access at websocket`);
     //   ws.close();

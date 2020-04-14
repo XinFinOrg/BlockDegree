@@ -877,8 +877,7 @@ function newDefBurnLog(id, txHash) {
 
 async function getXinEquivalent(amnt) {
   try {
-    const cmcData = await cmcHelper.getXdcPrice();
-    const cmcPrice = cmcData.data.data["2634"].quote.USD.price;
+    const cmcPrice = await cmcHelper.getXdcPrice();
     if (cmcData !== null) {
       console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
       return (
