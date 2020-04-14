@@ -199,7 +199,7 @@ exports.em = em;
 // ---------------------------------------- Donation ----------------------------------------
 
 xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
-  try {
+  try {    
     let retryCount = 0;
     let txCount = await xdc3.eth.getBlockTransactionCount(result.number);
     console.log(`[*] syncing block ${result.number} TX count: `, txCount);
@@ -269,14 +269,19 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
 
           const courseId = currFundReq.courseId;
           const course = await Course.findOne({ courseId: courseId });
-          const valUsd = await xdcToUsd(currBlockTx.value);
-          const min = valUsd - valUsd / 10;
-          const max = valUsd + valUsd / 10;
+          const valUsd = await xdcToUsd(xdc3.utils.fromWei(currBlockTx.value,'ether'));
+          const totAmnt = parseFloat(currFundReq.amountGoal);
+          const min = totAmnt - totAmnt / 10;
+          const max = totAmnt + totAmnt / 10;
+          console.log(`min ${min} max ${max} valUsd ${valUsd}`)
           if (
-            min <= parseFloat(currFundReq.amountGoal) &&
-            parseFloat(currFundReq.amountGoal) <= max
+            min <= parseFloat(valUsd) &&
+            parseFloat(valUsd) <= max
           ) {
             startProcessingDonation(currFundReq.fundId, currBlockTx.hash, "");
+          }else{
+            console.log("invalid amount");
+            
           }
         }
       }
