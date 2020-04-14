@@ -275,7 +275,7 @@ function renderRequestModal(
   amountGoal
 ) {
   console.log(addr, fundId);
-  const whatsappText = `Help Fund My Degree at Blockdegree, link ${requestUrlShort}`
+  const whatsappText = `Help Fund My Degree at Blockdegree, link ${requestUrlShort}`;
   const linkedinTitle = "Help Fund My Degree at Blockdegree";
   const encodedStr = encodeURIComponent(requestUrlShort);
   const twitterText = encodeURIComponent("link: " + requestUrlShort);
@@ -321,7 +321,15 @@ function renderRequestModal(
       `
     }
                                Share On&nbsp;
-                               <a target="_blank" href="${isMobile()===true?`https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`:`https://web.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`}">
+                               <a target="_blank" href="${
+                                 isMobile() === true
+                                   ? `https://api.whatsapp.com/send?text=${encodeURIComponent(
+                                       whatsappText
+                                     )}`
+                                   : `https://web.whatsapp.com/send?text=${encodeURIComponent(
+                                       whatsappText
+                                     )}`
+                               }">
                                <i class="fa fa-whatsapp"></i>
                              </a>&nbsp;                               
                                <a target="_blank" href="${linkedinText}">
@@ -404,13 +412,19 @@ function submitMetamask(addr, fundId, amountGoal) {
           "ether"
         )
       );
+      if (web3.eth.defaultAccount == undefined) {
+        $.notify(
+          "Please login & setup your <strong>XinPay</strong> web-extension to continue, if already did please <a onclick='window.location.reload()'>refresh</a>"
+        );
+        return;
+      }
       const tx = {
         from: web3.eth.defaultAccount,
         to: addr.replace("xdc", "0x"),
         value:
           Math.round(
             web3.toWei(
-              String(parseFloat(amountGoal) / (100000 * parseFloat(xdcPrice))),
+              String(parseFloat(amountGoal) / parseFloat(xdcPrice)),
               "ether"
             )
           ) + "",
