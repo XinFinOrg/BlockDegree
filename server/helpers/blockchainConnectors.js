@@ -82,7 +82,7 @@ exports.restartConnection = ({ eth, xdc }) => {
     if (eth === true) {
       webProvider = new Web3.providers.WebsocketProvider(ethWs);
       web3 = new Web3(ethProvider);
-      exports.xdcInst = web3;
+      exports.ethInst = web3;
     }
     return "restarted";
   } catch (e) {
@@ -143,12 +143,25 @@ function rinkReconn() {
 
 function connectionHeartbeat() {
   setInterval(async () => {
-    const isActiveXdc = await xdc3.eth.net.isListening();
-    const isActiveEth = await web3.eth.net.isListening();
-    const isActiveRink = await web3Rink.eth.net.isListening();
-
-    if (!isActiveXdc) xdcReconn();
-    if (!isActiveEth) ethReconn();
-    if (!isActiveRink) rinkReconn();
+    try{
+      const isActiveXdc = await xdc3.eth.net.isListening();
+      if (!isActiveXdc) xdcReconn();
+    }catch(e){
+      xdcReconn();
+    }
+    try{
+      const isActiveEth = await web3.eth.net.isListening();
+      if (!isActiveEth) ethReconn();
+    }
+    catch(e){
+      ethReconn();
+    }
+    try{
+      const isActiveRink = await web3Rink.eth.net.isListening();
+      if (!isActiveRink) rinkReconn();
+    }
+    catch(e){
+      rinkReconn();
+    }
   }, 5000);
 }
