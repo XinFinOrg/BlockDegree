@@ -202,7 +202,7 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
   try {    
     let retryCount = 0;
     let txCount = await xdc3.eth.getBlockTransactionCount(result.number);
-    console.log(`[*] syncing block ${result.number} TX count: `, txCount);
+    // console.log(`[*] syncing block ${result.number} TX count: `, txCount);
 
     while (txCount === null) {
       if (retryCount === 10) {
