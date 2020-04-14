@@ -1,7 +1,7 @@
 const axios = require("axios");
 const cmcKeys = require("../config/cmcKeys").keys;
 
-const priceMultiplier = 100000;
+const priceMultiplier = 1;
 
 let i = 0;
 exports.getXdcPrice = async () => {

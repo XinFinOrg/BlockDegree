@@ -55,7 +55,7 @@ app.use(
 // required for passport
 
 const sessionParser = session({
-  secret: "test",
+  secret: "",
   resave: true,
   rolling: true,
   saveUninitialized: true,

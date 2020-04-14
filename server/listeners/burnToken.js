@@ -32,7 +32,7 @@ const coinMarketCapAPI =
 
 const burnAddress = "0x0000000000000000000000000000000000000000";
 
-const divisor = 1000000; // for testing purposes 1 million'th of actual value will be used
+const divisor = 1; // for testing purposes 1 million'th of actual value will be used
 
 async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
   try {
@@ -202,7 +202,7 @@ async function donationTokenBurn(fundId) {
 
     const amntXdc = await getXinEquivalent(totalAmount);
     const burnPercent = parseFloat(coursePrice.burnToken[0].burnPercent);
-    const burnAmnt = (amntXdc * burnPercent) / (100 * 1000);
+    const burnAmnt = (amntXdc * burnPercent) / (100);
     let currWallet = {},
       currWalletAddr = "";
     Object.keys(keyConfig).forEach((key) => {
