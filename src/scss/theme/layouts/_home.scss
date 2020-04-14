@@ -438,6 +438,18 @@
   }
 }
 
+.fmd-block {
+  padding: 0 45px;
+  border-left: 1px solid #d0d3da;
+}
+@media (max-width: 991.98px){
+.fmd-block {
+  border-top: 1px solid #d0d3da;
+  border-left: none!important;
+  padding-top: 45px!important;
+}
+}
+
 
 .offerModal-open .modal-backdrop {background-color:black;opacity:0.9;}
 

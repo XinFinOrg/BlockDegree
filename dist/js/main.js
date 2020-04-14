@@ -1,5 +1,5 @@
+"use strict";
 $(document).ready(async function() {
-  "use strict";
 
   console.log("called: ", window.localStorage.getItem("user-status"));
   let navLogin = document.getElementById("nav-login"),
@@ -419,3 +419,24 @@ $(document).ready(async function() {
       .slideToggle();
   });
 });
+
+
+
+const url = 'wss://wss.blockdegree.org'
+const connection = new WebSocket(url)
+
+connection.onopen = () => {
+  connection.send(JSON.stringify({test:"message"})) 
+}
+
+// connection.onerror = (error) => {
+//   console.log(`WebSocket error: ${error}`, error)
+// }
+
+connection.onmessage = async (e) => {
+  const message = (e.data);
+  console.log("Parsed Message: ", message, "location", window.location.href);
+  if (window.location.pathname==="/fund-my-degree"){
+    getFMDAllData(true);
+  }
+}

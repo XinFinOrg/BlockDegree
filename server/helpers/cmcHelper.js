@@ -1,5 +1,8 @@
 const axios = require("axios");
 const cmcKeys = require("../config/cmcKeys").keys;
+
+const priceMultiplier = 1;
+
 let i = 0;
 exports.getXdcPrice = async () => {
   try {
@@ -37,7 +40,7 @@ exports.xdcToUsd = async (xdc) => {
     });
     return (
       parseFloat(xdc) *
-      parseFloat(cmc_xdc_data.data.data["2634"].quote.USD.price)
+      parseFloat(cmc_xdc_data.data.data["2634"].quote.USD.price)*priceMultiplier
     );
   } catch (e) {
     console.log(`exception at ${__filename}.getXdcPrice: `, e);

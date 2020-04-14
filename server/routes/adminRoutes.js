@@ -12,7 +12,7 @@ const multer = require("multer");
 let storage = multer.memoryStorage();
 let upload = multer({ storage: storage });
 
-module.exports = app => {
+module.exports = (app) => {
   app.get("/admin", requireLogin, requireAdmin, (req, res) => {
     res.sendFile("index.html", { root: adminPath });
   });
@@ -159,5 +159,9 @@ module.exports = app => {
     app.post("/api/removePost",requireLogin,requireAdmin,postSocial.removePost);
     app.post("/api/cancelEvent",requireLogin,requireAdmin, postSocial.cancelScheduledPost);
     app.get("/api/fetchFacebookLastUpdate",requireLogin,requireAdmin, postSocial.fetchFacebookLastUpdate);
+    app.get("/api/getAllFundRequests", adminServices.getAllFundRequests);
+    app.post("/api/approveFund", adminServices.approveFund);
+    app.post("/api/rejectFund", adminServices.rejectFund);
+    app.post("/api/syncRecipients", adminServices.syncRecipients);
   }
 };

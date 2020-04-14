@@ -1,0 +1,168 @@
+<div class="fmd-page-wrapper">
+    <!-- start Header bg -->
+    <section class="fmd-style-wrapper fmd-block-bg">
+        <div class="container">
+            <div class="d-flex justify-content-between">
+                <div class="fmd-block-bg-content">
+                    <h2>Fund My Degree</h2>
+                    <p>Need help in getting your certification?<br>You can apply for funding on this page and get your
+                        certification sponsored.</p>
+                </div>
+                <div class="align-self-center">
+                    <button data-toggle="modal" data-target="#applyNow"
+                        class="btn btn-outline-light text-uppercase">Apply Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end Header bg -->
+
+    <!-- start FMD Details -->
+    <section class="fmd-style-wrapper" id="fmd-block" class="mb-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 mb-4 mb-lg-0">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center p-0">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-custom nav-borderless nav_tabs1" id="nav_tabs" role="tablist">
+                                <li class="nav-item"><a class="nav-link active" href="#fundingRequired" role="tab"
+                                        data-toggle="tab">Funding Required</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#alreadyFunded" role="tab"
+                                        data-toggle="tab">Already Funded</a></li>
+                            </ul>
+                            <!-- Nav tabs -->
+                        </div>
+
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="tab-pane fade active show" id="fundingRequired">
+                                    <div class="table-responsive">
+                                        <table id="pendingFund" class="table table-hover nowrap" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>DATE</th>
+                                                    <th>NAME</th>
+                                                    <th>DESCRIPTION</th>
+                                                    <th>FUNDING REQUIRED FOR</th>
+                                                    <th>AMOUNT</th>
+                                                    <th>ACTIONS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="pendingFund_tuples">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="alreadyFunded">
+                                    <div class="table-responsive">
+                                        <table id="approvedFund" class="table table-hover nowrap" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>DATE</th>
+                                                    <th>NAME</th>
+                                                    <th>DESCRIPTION</th>
+                                                    <th>FUNDING REQUIRED FOR</th>
+                                                    <th>AMOUNT</th>
+                                                    <th>Funders Name</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="approvedFund_tuples">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end FMD Details -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Funding Required</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>Wow! This is Awesome!</h4>
+                    <p>Many people are getting problem in using bootstrap modal, so here I'm with custom modal which you
+                        can use anywhere.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="applyNow" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applyNowLongTitle">Apply For Funding</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body__title">Select Course (s)</div>
+                    <div class="modal-input-wrapper">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="basic-course" value="course_1">
+                            <label class="form-check-label" for="basic-course">Basic</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="advanced-course" value="course_2">
+                            <label class="form-check-label" for="advanced-course">Advanced</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="professional-course" value="course_3">
+                            <label class="form-check-label" for="professional-course">Professional</label>
+                        </div>
+                    </div>
+                    <div class="modal-body__title">Enter Short Description</div>
+                    <div class="modal-input-wrapper">
+                        <textarea id="req-description" style="height: 150px;" class="form-control"
+                            placeholder="enter short description"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="handleFundRequestSubmit()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="requestModalWrapper">
+    </div>
+
+    {{!-- Modal For Choosing Payment Method --}}
+    <div id="paymentMethodModalWrapper">
+    </div>
+
+    <!-- Success Modal -->
+
+    <script src="/js/fundReq.js?v=1.28"></script>
+    <script>
+
+    </script>
+</div>

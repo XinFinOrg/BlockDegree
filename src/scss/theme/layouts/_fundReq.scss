@@ -1,0 +1,265 @@
+.fmd-page-wrapper {
+  .fmd-block-bg {
+    position: relative;
+    padding: 150px 0px 150px 0px;
+    background: #3a7bd5;
+    background: -webkit-linear-gradient(to bottom, #1488cc, #3a7bd5);
+    background: linear-gradient(to bottom, #1488cc, #3a7bd5);
+  }
+  .fmd-block-bg-content {
+    max-width: 80%;
+  }
+  .fmd-block-bg h2 {
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 30px;
+    padding: 0px;
+    margin: 0px 0px 15px 0px;
+  }
+  .fmd-block-bg p {
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 22px;
+    padding: 0px;
+    margin: 0px;
+  }
+  .btn.border.white {
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+  }
+  .btn.border.white:hover {
+    background: #ffffff !important;
+    color: #00324c !important;
+  }
+  #fundingRequired .table td,
+  .table th,
+  #alreadyFunded .table td,
+  .table th {
+    background-color: #ffffff;
+  }
+  @media (max-width: 768px) {
+    .fmd-block-bg .d-flex {
+      display: table !important;
+    }
+    .fmd-block-bg-content {
+      max-width: 100%;
+      margin-bottom: 25px;
+    }
+  }
+
+  #fmd-block {
+    position: relative;
+    top: -75px;
+    margin-bottom: -50px;
+  }
+
+  .table {
+    td: {
+      padding: 0.75rem;
+      vertical-align: top;
+      border-top: 1px solid #f3f3f3;
+      white-space: nowrap;
+      border-bottom: 2px solid #f3f3f3;
+      font-size: 0.9625rem;
+      font-weight: 600;
+      background-color: #fafafa;
+    }
+    th: {
+      padding: 0.75rem;
+      vertical-align: top;
+      border-top: 1px solid #f3f3f3;
+      white-space: nowrap;
+      border-bottom: 2px solid #f3f3f3;
+      font-size: 0.9625rem;
+      background-color: #fafafa;
+    }
+  }
+  .table > tbody > tr > td,
+  .table > tfoot > tr > td,
+  .table > thead > tr > td {
+    padding: 12px 12px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .courseName {
+    float: left;
+    clear: both;
+  }
+  #funder-details {
+    display: inline-block;
+  }
+  #funder-details i {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  #funder-details img {
+    display: block;
+    max-height: 45px;
+    width: inherit;
+  }
+  #funder-details .rounded-border {
+    padding: 2px;
+    border: 1px solid #cfcfcf;
+    border-radius: 4px;
+  }
+  #funder-details span {
+    font-size: 15px;
+    color: #383838;
+    font-weight: 500;
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 8px;
+  }
+
+  /*--------------- nav custom tabs starts ---------------*/
+  .nav-custom .nav-link {
+    color: #47494f;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 1.5rem 1.5rem;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    transition: 0.3s;
+    margin-bottom: -1px;
+    margin-top: -1px;
+  }
+  .nav-custom .nav-link:hover {
+    color: #3498db;
+  }
+  .nav-custom .nav-link.active {
+    border-bottom-color: #3498db;
+    color: #3498db;
+  }
+  /*--------------- nav custom tabs ends ---------------*/
+
+  /*------------------------ Add-on css rules------------------*/
+  #pendingFund_filter,
+  #approvedFund_filter {
+    input {
+      border-radius: 20px;
+      box-shadow: none;
+      border: 1px solid lightgray;
+      padding-left: 10px;
+    }
+  }
+
+  #pendingFund_length,
+  #approvedFund_length {
+    select {
+      border: 1px solid lightgrey;
+      border-radius: 5px;
+      background-color: white;
+    }
+  }
+
+  #pendingFund_next,
+  #pendingFund_previous,
+  #approvedFund_next,
+  #approvedFund_previous {
+    &:hover {
+      background-color: white !important;
+      background: white !important;
+      color: #2073d4 !important;
+      border: 1px solid #2073d4;
+    }
+  }
+
+  .modal-title {
+    font-size: larger;
+    font-weight: 400;
+  }
+
+  .modal-body__title {
+    font-size: large;
+    font-weight: 300;
+    color: darken($color: #2073d4, $amount: 10);
+  }
+
+  .modal-input-wrapper {
+    padding: 10px;
+  }
+
+  .tablinks {
+    margin: 1px;
+    background-color: #2073d4;
+    color: white;
+    &:active {
+      color: #2073d4;
+      background-color: white;
+    }
+  }
+
+  #applyNow > div > div > div.modal-body > div:nth-child(6) > ul {
+    border-bottom: none;
+  }
+
+  .tab-content {
+    overflow: hidden;
+    padding: 5px;
+    .hidden {
+      height: 0px;
+      -webkit-transition: height, 0.3s linear;
+      -moz-transition: height, 0.3s linear;
+      -ms-transition: height, 0.3s linear;
+      -o-transition: height, 0.3s linear;
+      transition: height, 0.3s linear;
+    }
+
+    .open {
+      height: 100px;
+      -webkit-transition: height, 0.3s linear;
+      -moz-transition: height, 0.3s linear;
+      -ms-transition: height, 0.3s linear;
+      -o-transition: height, 0.3s linear;
+      transition: height, 0.3s linear;
+    }
+  }
+
+  .modal-footer {
+    margin: 2px;
+    .fund-btn {
+      position: absolute;
+      left: 80px;
+    }
+
+    .fund-btn-close {
+      position: absolute;
+      left: 10px;
+    }
+  }
+
+  #requestUrlShort--input {
+    border: none;
+    background-color: transparent;
+    display: inline;
+    &:hover {
+      color: #3a7bd5;
+    }
+  }
+
+  #pendingFund {
+    border-bottom: none;
+  }
+
+  #pendingFund > thead > tr > th {
+    border-bottom: 1px solid lightgrey;
+  }
+
+  #approvedFund {
+    border-bottom: none;
+  }
+
+  #approvedFund > thead > tr > th {
+    border-bottom: 1px solid lightgrey;
+  }
+
+  #approvedFund {
+    margin-bottom: 0;
+  }
+
+  #paymentMethodModal > div > div > div.modal-body {
+    text-align: center;
+  }
+}

@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const CoursePrice = require("../models/coursePrice");
 const AllWallet = require("../models/wallet");
 const KeyConfig = require("../config/keyConfig");
@@ -7,7 +8,9 @@ const PaymentLog = require("../models/payment_logs");
 const CryptoLog = require("../models/payment_token");
 const BurnLog = require("../models/burn_logs");
 const SocialPostTemplates = require("../models/socialPostTemplates");
+const UserFundRequest = require("../models/userFundRequest");
 const pendingEmitter = require("../listeners/pendingTx").em;
+const DonationListener = require("../listeners/donationListener");
 
 exports.addCourse = async (req, res) => {
   if (
@@ -1016,6 +1019,57 @@ exports.disableRefCode = async (req, res) => {
   }
 };
 
+exports.approveFund = async (req, res) => {
+  try {
+    const fundId = req.body.fundId;
+    if (_.isEmpty(fundId)) {
+      return res.json({ status: false, error: "missing parameter" });
+    }
+    const fundReq = await UserFundRequest.findOne({ fundId: fundId });
+    if (fundReq === null) {
+      return res.json({ status: false, error: "fund not found" });
+    }
+    if (
+      fundReq.approvalRequired !== true ||
+      fundReq.valid === true ||
+      fundReq.status === "completed"
+    ) {
+      return res.json({ status: false, error: "bad request" });
+    }
+    fundReq.approvalRequired = false;
+    fundReq.valid = true;
+    await fundReq.save();
+    return res.json({ status: true, message: "fund request approved" });
+  } catch (e) {
+    console.log(`exception at ${__filename}.approveFund: `, e);
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.rejectFund = async (req, res) => {
+  try {
+    const fundId = req.body.fundId;
+    if (_.isEmpty(fundId)) {
+      return res.json({ status: false, error: "missing parameter" });
+    }
+    const fundReq = await UserFundRequest.findOne({ fundId: fundId });
+    if (fundReq === null) {
+      return res.json({ status: false, error: "fund not found" });
+    }
+    if (fundReq.valid === false || fundReq.status === "completed") {
+      return res.json({ status: false, error: "bad request" });
+    }
+    fundReq.valid = false;
+    await fundReq.save();
+    return res.json({ status: true, message: "fund request removed" });
+  } catch (e) {
+    console.log(`exception at ${__filename}.rejectFund: `, e);
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
+//--------------------------------------Getters Start----------------------------------------
+
 exports.getPromoCodeLogs = async (req, res) => {
   try {
     const promoCodeLogs = await PromoCodeLog.find({}).lean();
@@ -1093,6 +1147,33 @@ exports.forcePendingBurn = (req, res) => {
     return res.status(500).json({ status: false, error: "internal error" });
   }
 };
+
+exports.getAllFundRequests = async (req, res) => {
+  try {
+    const allFund = await UserFundRequest.find({})
+      .select({
+        receiveAddrPrivKey: 0
+      })
+      .lean();
+    res.json({ status: true, data: allFund });
+  } catch (e) {
+    console.log(`exception at $${__filename}.getAllFundRequests: `, e);
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.syncRecipients = (req,res) => {
+  try{
+    DonationListener.em.emit("syncRecipients");
+    res.json({status:true})
+  }
+  catch(e){
+    console.log(`exception at ${__filename}.syncRecipients: `, e);
+    res.json({status:false, error:"internal error"})
+  }
+}
+
+//--------------------------------------Getters Stop----------------------------------------
 
 function newDefCourse(courseId) {
   return new CoursePrice({

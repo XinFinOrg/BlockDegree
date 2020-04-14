@@ -70,8 +70,9 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(request[index]) + 1 ==
                 result.questionsBasic[index].answer
               ) {
-                marks++;
+                // marks++;
               }
+              marks++;
             }
             attempts += 1;
             User.findOneAndUpdate(
@@ -84,7 +85,11 @@ exports.submitExam = async (req, res, next) => {
                   "examData.payment.course_1_payment":
                     attempts <= 2
                       ? currUser.examData.payment.course_1_payment
-                      : ""
+                      : "",
+                  "examData.payment.course_1_doner":
+                  attempts <= 2
+                    ? currUser.examData.payment.course_1_doner
+                    : ""
                 }
               },
               { upsert: false },
@@ -112,7 +117,8 @@ exports.submitExam = async (req, res, next) => {
                 "examData.examBasic.attempts": attempts,
                 "examData.examBasic.marks": marks,
                 "examData.payment.course_1": false,
-                "examData.payment.course_1_payment": ""
+                "examData.payment.course_1_payment": "",
+                "examData.payment.course_1_doner": ""
               }
             },
             { upsert: false },
@@ -143,8 +149,9 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(req.body[index]) + 1 ==
                 result.questionsAdvanced[index].answer
               ) {
-                marks++;
+                // marks++;
               }
+              marks++;
             }
             attemptsAdvanced += 1;
             console.log("Marks", marks);
@@ -159,6 +166,10 @@ exports.submitExam = async (req, res, next) => {
                   "examData.payment.course_2_payment":
                     attemptsAdvanced <= 2
                       ? currUser.examData.payment.course_2_payment
+                      : "",
+                  "examData.payment.course_2_doner":
+                    attemptsAdvanced <= 2
+                      ? currUser.examData.payment.course_2_doner
                       : ""
                 }
               },
@@ -186,7 +197,8 @@ exports.submitExam = async (req, res, next) => {
                 "examData.examAdvanced.attempts": attemptsAdvanced,
                 "examData.examAdvanced.marks": marks,
                 "examData.payment.course_2": false,
-                "examData.payment.course_2_payment": ""
+                "examData.payment.course_2_payment": "",
+                "examData.payment.course_2_doner": ""
               }
             },
             { upsert: false },
@@ -216,8 +228,9 @@ exports.submitExam = async (req, res, next) => {
                 parseInt(request[index]) + 1 ==
                 result.questionsProfessional[index].answer
               ) {
-                marks++;
+                // marks++;
               }
+              marks++;
             }
             attemptsProfessional += 1;
             User.findOneAndUpdate(
@@ -231,6 +244,10 @@ exports.submitExam = async (req, res, next) => {
                   "examData.payment.course_3_payment":
                     attemptsProfessional <= 2
                       ? currUser.examData.payment.course_3_payment
+                      : "",
+                  "examData.payment.course_3_doner":
+                    attemptsProfessional <= 2
+                      ? currUser.examData.payment.course_3_doner
                       : ""
                 }
               },
@@ -259,7 +276,8 @@ exports.submitExam = async (req, res, next) => {
                 "examData.examProfessional.attempts": attemptsProfessional,
                 "examData.examProfessional.marks": marks,
                 "examData.payment.course_3": false,
-                "examData.payment.course_3_payment": ""
+                "examData.payment.course_3_payment": "",
+                "examData.payment.course_3_doner": ""
               }
             },
             { upsert: false },
@@ -398,12 +416,14 @@ exports.getExamResult = async (req, res) => {
     if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
       return res.redirect("/exams");
     }
+    let donerName = user.examData.payment[`${examTypes[examName].coursePayment_id}_doner`];
     // Post the 2 certificates
     renderCertificate.renderForIPFSHash(
       name,
       percentObtained,
       examName,
       d,
+      donerName,
       bothRender => {
         if (!bothRender.uploaded) {
           console.log("error:", bothRender);
@@ -438,6 +458,9 @@ exports.getExamResult = async (req, res) => {
           user.examData.certificateHash.push(obj);
           user.examData.payment[
             examTypes[examName].coursePayment_id + "_payment"
+          ] = "";
+          user.examData.payment[
+            examTypes[examName].coursePayment_id + "_doner"
           ] = "";
           user.save();
           res.render("examResult", jsonData);

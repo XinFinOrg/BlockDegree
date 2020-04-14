@@ -13,7 +13,10 @@ var userSchema = mongoose.Schema({
       course_3: Boolean,
       course_1_payment: String,
       course_2_payment: String,
-      course_3_payment: String
+      course_3_payment: String,
+      course_1_doner: String,
+      course_2_doner: String,
+      course_3_doner: String,
     },
     examBasic: {
       attempts: Number,
