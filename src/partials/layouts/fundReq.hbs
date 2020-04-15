@@ -159,11 +159,54 @@
     <div id="paymentMethodModalWrapper">
     </div>
 
-    <!-- Success Modal -->
+    <div id="payByXdcWrapper">
+        <div class="modal fade" id="xdcQRCode" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="qr-code-wrapper">
 
 
-    <script src="/js/fundReq.js?v=1.31"></script>
-    <script>
+                        <script src="/js/fundReq.js?v=1.31"></script>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="applyNowLongTitle">Pay By XDC</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="qr-text">Send Amount <strong><span class="xdc-value"
+                                        id="xdc-value-modal"></span>&nbsp;XDC coin</strong>&nbsp; to
+                                the
+                                address below using your <strong><a
+                                        href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
+                                        target="_blank">XDC Wallet</a></strong></div>
+                            <div id="xdc-qr-img" class="xdc-qr-img"></div>
 
-    </script>
+                            <input type="text" class="form-control" id="xdc-addr-value-modal" readonly="readonly"
+                                value="" class="xdc-addr-txt">
+                            <button type="button" id="xdc-modal-copy-btn" class="btn btn-outline-primary">COPY</button>
+                        </div>
+                        <div class="modal-footer">
+                            <div>
+                                <div>Don't have&nbsp;<strong>XDC&nbsp;<img
+                                            src="https://www.blockdegree.org/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
+                                    ?&nbsp;Buy from <a href="https://alphaex.net" target="_blank">AlphaEx</a> or <a
+                                        href="https://stex.com" target="_blank">Stex</a>
+                                </div>
+                            </div>
+                            <div>Download XDC Wallet&nbsp;<a
+                                    href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
+                                    target="_blank">Android</a></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Success Modal -->
+
+<script src="/js/fundReq.js?v=1.32"></script>

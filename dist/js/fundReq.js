@@ -2,6 +2,10 @@ let globalPendingDT, globalApprovedDT;
 
 $(document).ready(() => {
   getFMDAllData();
+
+  $("#xdc-modal-copy-btn").click(() => {
+    copyToClipboard($("#xdc-addr-value-modal").val(), "xdc-qr-img", "Address");
+  });
 });
 
 function getFMDAllData(update) {
@@ -49,11 +53,13 @@ function getFMDAllData(update) {
             }</td>                                                
             <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${
               currData.userName
-            }','${currData.requestUrlShort}','${currData.requestUrlLong}','${
-              currData.description.replace(/'/g,"\\'")
-            }','${currData.receiveAddr}','${currData.fundId}', '${
-              currData.status
-            }','${currData.amountGoal}')">View Description</button></td><td>`;
+            }','${currData.requestUrlShort}','${
+              currData.requestUrlLong
+            }','${currData.description.replace(/'/g, "\\'")}','${
+              currData.receiveAddr
+            }','${currData.fundId}', '${currData.status}','${
+              currData.amountGoal
+            }')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataPending += `<span class="courseName">${getCourseName(
@@ -74,11 +80,13 @@ function getFMDAllData(update) {
             }</td>                                                
             <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${
               currData.userName
-            }','${currData.requestUrlShort}','${currData.requestUrlLong}','${
-              currData.description.replace(/\'/g,"\\'")
-            }','${currData.receiveAddr}','${currData.fundId}','${
-              currData.status
-            }','${currData.amountGoal}')">View Description</button></td><td>`;
+            }','${currData.requestUrlShort}','${
+              currData.requestUrlLong
+            }','${currData.description.replace(/\'/g, "\\'")}','${
+              currData.receiveAddr
+            }','${currData.fundId}','${currData.status}','${
+              currData.amountGoal
+            }')">View Description</button></td><td>`;
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataApproved += `<span class="courseName">${getCourseName(
                 currData.courseId[z]
@@ -166,7 +174,7 @@ function renderPaymentMethodModal(addr, fundId, amountGoal) {
               </div>
               <div class="modal-body">
 
-                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="submitMetamask('${addr}','${fundId}', '${amountGoal}')"
+                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="renderQRCode('${addr}','${amountGoal}')"
                       data-dismiss="modal"> Pay Via XDC </button>
 
                   <button type="button" data-dismiss="modal" class="btn-payment" onclick="payByPaypal('${fundId}')"
@@ -278,7 +286,9 @@ function renderRequestModal(
   const whatsappText = `Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on student's certificate as a sponsor.\nLink: ${requestUrlShort}\n`;
   const linkedinTitle = "Help Fund My Degree at Blockdegree";
   const encodedStr = encodeURIComponent(requestUrlShort);
-  const twitterText = encodeURIComponent(`Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on student's certificate as a sponsor.\nLink: ${requestUrlShort}\n#onlinelearning #FundMyDegree`);
+  const twitterText = encodeURIComponent(
+    `Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on student's certificate as a sponsor.\nLink: ${requestUrlShort}\n#onlinelearning #FundMyDegree`
+  );
   const linkedinText = `http://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
     requestUrlShort
   )}&source=blockdegree.org`;
@@ -292,7 +302,7 @@ function renderRequestModal(
                       <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
-                              <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}')" >Copy Link</button>
+                              <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
 
                           </div>` +
     `
@@ -471,7 +481,7 @@ function renderRequestedModal(allData) {
           allData[i].userName,
           allData[i].requestUrlShort,
           allData[i].requestUrlLong,
-          allData[i].description.replace(/\'/g,"\\'"),
+          allData[i].description.replace(/\'/g, "\\'"),
           allData[i].receiveAddr,
           allData[i].fundId,
           allData[i].status,
@@ -498,17 +508,41 @@ function getParamValue(param) {
   return null;
 }
 
-var copyToClipboard = function (secretInfo) {
+var copyToClipboard = function (secretInfo, innerElemId, name) {
   console.log("called copyToClipboard");
-  var $body = document.getElementById("requestModal--title");
+  var $body = document.getElementById(innerElemId);
   var $tempInput = document.createElement("INPUT");
   $body.appendChild($tempInput);
   $tempInput.setAttribute("value", secretInfo);
   $tempInput.select();
   document.execCommand("copy");
   $body.removeChild($tempInput);
-  $.notify("Request link Copied!", { type: "info", z_index: 2000 });
+  $.notify(` ${name} Copied!`, { type: "info", z_index: 2000 });
 };
+
+async function renderQRCode(addr, price) {
+  try {
+    const xdcPrice = await $.ajax({
+      method: "get",
+      url: "/api/WrapCoinMarketCap",
+    });
+    console.log(xdcPrice, addr);
+
+    $("#xdc-value-modal").html(
+      String(
+        Math.round(
+          Math.pow(10, 6) * (parseFloat(price) / parseFloat(xdcPrice.data))
+        ) / Math.pow(10, 6)
+      )
+    );
+    $("#xdc-qr-img").html("");
+    $("#xdc-qr-img").qrcode({ text: addr, width: 250, height: 250 });
+    $("#xdc-addr-value-modal").val(addr);
+    $("#xdcQRCode").modal("show");
+  } catch (e) {
+    console.log(`exception at renderQRCode: `, e);
+  }
+}
 
 function isMobile() {
   let check = false;

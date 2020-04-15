@@ -6,9 +6,11 @@
     background: -webkit-linear-gradient(to bottom, #1488cc, #3a7bd5);
     background: linear-gradient(to bottom, #1488cc, #3a7bd5);
   }
+
   .fmd-block-bg-content {
     max-width: 80%;
   }
+
   .fmd-block-bg h2 {
     color: #ffffff;
     font-size: 40px;
@@ -17,6 +19,7 @@
     padding: 0px;
     margin: 0px 0px 15px 0px;
   }
+
   .fmd-block-bg p {
     color: #ffffff;
     font-size: 16px;
@@ -24,24 +27,29 @@
     padding: 0px;
     margin: 0px;
   }
+
   .btn.border.white {
     color: #ffffff !important;
     border: 2px solid #ffffff !important;
   }
+
   .btn.border.white:hover {
     background: #ffffff !important;
     color: #00324c !important;
   }
+
   #fundingRequired .table td,
   .table th,
   #alreadyFunded .table td,
   .table th {
     background-color: #ffffff;
   }
+
   @media (max-width: 768px) {
     .fmd-block-bg .d-flex {
       display: table !important;
     }
+
     .fmd-block-bg-content {
       max-width: 100%;
       margin-bottom: 25px;
@@ -65,6 +73,7 @@
       font-weight: 600;
       background-color: #fafafa;
     }
+
     th: {
       padding: 0.75rem;
       vertical-align: top;
@@ -75,9 +84,10 @@
       background-color: #fafafa;
     }
   }
-  .table > tbody > tr > td,
-  .table > tfoot > tr > td,
-  .table > thead > tr > td {
+
+  .table>tbody>tr>td,
+  .table>tfoot>tr>td,
+  .table>thead>tr>td {
     padding: 12px 12px;
     vertical-align: middle;
     white-space: nowrap;
@@ -87,23 +97,28 @@
     float: left;
     clear: both;
   }
+
   #funder-details {
     display: inline-block;
   }
+
   #funder-details i {
     display: table-cell;
     vertical-align: middle;
   }
+
   #funder-details img {
     display: block;
     max-height: 45px;
     width: inherit;
   }
+
   #funder-details .rounded-border {
     padding: 2px;
     border: 1px solid #cfcfcf;
     border-radius: 4px;
   }
+
   #funder-details span {
     font-size: 15px;
     color: #383838;
@@ -125,13 +140,16 @@
     margin-bottom: -1px;
     margin-top: -1px;
   }
+
   .nav-custom .nav-link:hover {
     color: #3498db;
   }
+
   .nav-custom .nav-link.active {
     border-bottom-color: #3498db;
     color: #3498db;
   }
+
   /*--------------- nav custom tabs ends ---------------*/
 
   /*------------------------ Add-on css rules------------------*/
@@ -185,19 +203,21 @@
     margin: 1px;
     background-color: #2073d4;
     color: white;
+
     &:active {
       color: #2073d4;
       background-color: white;
     }
   }
 
-  #applyNow > div > div > div.modal-body > div:nth-child(6) > ul {
+  #applyNow>div>div>div.modal-body>div:nth-child(6)>ul {
     border-bottom: none;
   }
 
   .tab-content {
     overflow: hidden;
     padding: 5px;
+
     .hidden {
       height: 0px;
       -webkit-transition: height, 0.3s linear;
@@ -219,6 +239,7 @@
 
   .modal-footer {
     margin: 2px;
+
     .fund-btn {
       position: absolute;
       left: 80px;
@@ -234,6 +255,7 @@
     border: none;
     background-color: transparent;
     display: inline;
+
     &:hover {
       color: #3a7bd5;
     }
@@ -243,7 +265,7 @@
     border-bottom: none;
   }
 
-  #pendingFund > thead > tr > th {
+  #pendingFund>thead>tr>th {
     border-bottom: 1px solid lightgrey;
   }
 
@@ -251,7 +273,7 @@
     border-bottom: none;
   }
 
-  #approvedFund > thead > tr > th {
+  #approvedFund>thead>tr>th {
     border-bottom: 1px solid lightgrey;
   }
 
@@ -259,7 +281,51 @@
     margin-bottom: 0;
   }
 
-  #paymentMethodModal > div > div > div.modal-body {
+  #paymentMethodModal>div>div>div.modal-body {
     text-align: center;
   }
+
+  .qr-code-wrapper {
+    text-align: center;
+
+    .qr-text {
+      img {
+        width: 17px;
+        height: 17px;
+      }
+    }
+
+    .xdc-qr-img {
+      margin: 5px;
+    }
+
+    .xdc-value {
+      color: #2073d4;
+    }
+
+    .xdc-addr-txt {
+      width: 100%;
+      overflow-x: scroll;
+      ;
+    }
+
+    #xdc-modal-copy-btn {
+      margin: 2px
+    }
+
+    #xdc-addr-value-modal {
+      margin-bottom: 5px;
+    }
+
+    .modal-footer {
+      display: inline-block;
+      justify-content: center;
+      img {
+        width: 17px;
+        height: 17px;
+      }
+    }
+  }
+
+
 }
