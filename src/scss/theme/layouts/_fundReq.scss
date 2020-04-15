@@ -320,6 +320,7 @@
     .modal-footer {
       display: inline-block;
       justify-content: center;
+
       img {
         width: 17px;
         height: 17px;
@@ -327,5 +328,53 @@
     }
   }
 
+  #requestModal {
+
+    .modal-header {
+      .funded-by {
+        position: absolute;
+        top: 35px;
+        font-weight: 200;
+        font-size: small;
+
+        .funder-name {
+          font-weight: 300;
+        }
+      }
+    }
+
+    .modal-footer {
+
+      i:hover {
+        transform: scale(1.2, 1.2);
+      }
+
+      .fa-whatsapp {
+        color: green;
+      }
+
+      .fa-twitter {
+        color: #1DA1F2;
+      }
+
+      .fa-linkedin {
+        color: #0e76a8
+      }
+
+      .fa-facebook {
+        color: #3b5998;
+      }
+
+      .funded {
+        position: absolute;
+        left: 80px;
+        font-weight: 500;
+        color: black;
+        border: 1px solid black;
+        padding: 4px;
+        border-radius: 5px;
+      }
+    }
+  }
 
 }

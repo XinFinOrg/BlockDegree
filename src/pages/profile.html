@@ -168,7 +168,7 @@ your profile"}}
                 <th>Receive Address</th>
                 <th>Status</th>
                 <th>Fund TX</th>
-                <th>Burn TX<th>
+                <th>Burn TX</th>
                 <th>Funder Name</th>
               </tr>
             </thead>
@@ -742,7 +742,7 @@ your profile"}}
           retHtml += `<td class="${currRow.status==="completed"?"completed":"pending"}">${currRow.status==="completed"?"completed":"pending"}</td>
             <td><a href="https://explorer.xinfin.network/tx/${currRow.fundTx}">${currRow.fundTx.slice(0,11)}...</a></td>
             <td>${currRow.burnStatus==="completed"?`<a href="https://explorer.xinfin.network/tx/${currRow.burnTx}">${currRow.burnTx.slice(0,11)}...</a>`:`-`}</td>
-            <td>${currRow.donerName}</td>
+            <td>${currRow.burnStatus==="completed"?currRow.donerName==undefined?'Anonymous':currRow.donerName:"-"}</td>
             </tr>`;
         })
       };

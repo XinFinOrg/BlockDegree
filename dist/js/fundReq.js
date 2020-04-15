@@ -59,7 +59,7 @@ function getFMDAllData(update) {
               currData.receiveAddr
             }','${currData.fundId}', '${currData.status}','${
               currData.amountGoal
-            }')">View Description</button></td><td>`;
+            }', '${currData.donerName}')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataPending += `<span class="courseName">${getCourseName(
@@ -85,7 +85,7 @@ function getFMDAllData(update) {
             }','${currData.description.replace(/\'/g, "\\'")}','${
               currData.receiveAddr
             }','${currData.fundId}','${currData.status}','${
-              currData.amountGoal
+              currData.amountGoal, '${currData.donerName}'
             }')">View Description</button></td><td>`;
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataApproved += `<span class="courseName">${getCourseName(
@@ -280,7 +280,8 @@ function renderRequestModal(
   addr,
   fundId,
   type,
-  amountGoal
+  amountGoal,
+  funderName
 ) {
   console.log(addr, fundId);
   const whatsappText = `Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on student's certificate as a sponsor.\nLink: ${requestUrlShort}\n`;
@@ -302,6 +303,7 @@ function renderRequestModal(
                       <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
+                              <div class="funded-by">Funded by <span class="funder-name">${funderName==undefined?'Anonymous':funderName}</span></div>
                               <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
 
                           </div>` +
@@ -312,7 +314,13 @@ function renderRequestModal(
     `<div class="modal-footer">` +
     `${
       type === "completed"
-        ? ""
+        ? `<button
+        class="btn btn-secondary fund-btn-close"
+        data-dismiss="modal"
+
+      >
+        Close
+      </button><div class='funded'>FUNDED</div>`
         : `
         <button
           class="btn btn-secondary fund-btn-close"
@@ -340,17 +348,17 @@ function renderRequestModal(
                                        whatsappText
                                      )}`
                                }">
-                               <i class="fa fa-whatsapp"></i>
+                               <i class="fa fa-whatsapp fa-lg"></i>
                              </a>&nbsp;                               
                                <a target="_blank" href="${linkedinText}">
-                                <i class="fa fa-linkedin"></i>
+                                <i class="fa fa-linkedin fa-lg"></i>
                               </a>&nbsp;
                               <a target="_blank" href="https://twitter.com/intent/tweet?text=${twitterText}">
-                                  <i class="fa fa-twitter"></i>
+                                  <i class="fa fa-twitter fa-lg"></i>
                               </a>&nbsp;
                               <div class="fb-share-button" data-href="${requestUrlShort}" data-layout="button" data-size="small"><a
   target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${encodedStr}"
-  class="fb-xfbml-parse-ignore"><i class="fa fa-facebook"></i></a></div>
+  class="fb-xfbml-parse-ignore"><i class="fa fa-facebook fa-lg"></i></a></div>
                           </div>` +
     `</div>
 </div>
@@ -485,7 +493,8 @@ function renderRequestedModal(allData) {
           allData[i].receiveAddr,
           allData[i].fundId,
           allData[i].status,
-          allData[i].amountGoal
+          allData[i].amountGoal,
+          allData[i].donerName
         );
         return;
       }
