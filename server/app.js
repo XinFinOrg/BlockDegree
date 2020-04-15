@@ -106,6 +106,7 @@ app.use(function(err, req, res, next) {
 const server = app.listen("3000", async () => {
   pendingTx.emit("initiatePendingTx");
   pendingTx.emit("initiatePendingBurn");
+  pendingTx.emit("syncPendingBurnFMD");
   donationListener.em.emit("syncRecipients");
   donationListener.em.emit("syncPendingDonation");
   await adminServices.initiateWalletConfig();

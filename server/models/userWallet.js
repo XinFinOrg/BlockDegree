@@ -28,6 +28,7 @@ const userWallet = mongoose.Schema({
     set: encrypt,
     get: decrypt,
   },
+  createdAt:String
 });
 
 module.exports = mongoose.model("UserWallet", userWallet);

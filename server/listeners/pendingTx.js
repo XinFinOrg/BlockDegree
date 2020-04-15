@@ -1,6 +1,7 @@
 const EventEmitter = require("events").EventEmitter;
 const PaymentToken = require("../models/payment_token");
 const PaymentLog = require("../models/payment_logs");
+const UserFundReq = require("../models/userFundRequest");
 const burnEmitter = require("../listeners/burnToken").em;
 const txnListener = require("../listeners/txnConfirmation");
 const emailer = require("../emailer/impl");
@@ -12,7 +13,7 @@ async function pendingTx() {
     try {
       console.log("started the pending TX listener");
       const pendingTokens = await PaymentToken.find({
-        $or: [{ status: "pending" }, { status: "not yet mined" }]
+        $or: [{ status: "pending" }, { status: "not yet mined" }],
       });
       if (pendingTokens != null) {
         console.log("We got " + pendingTokens.length + " pending txns.");
@@ -47,14 +48,15 @@ async function pendingBurn() {
   console.log("called pending burn");
   try {
     const paymentLogs = await PaymentLog.find({
-      burnStatus: "awaiting balance"
+      burnStatus: "awaiting balance",
     });
     console.log("awaiting logs");
-    if (paymentLogs==null || paymentLogs.length == 0) {
+    if (paymentLogs == null || paymentLogs.length == 0) {
       console.log("[*] no pending burn");
       return;
     }
-    paymentLogs.forEach(log => {
+    let count = 0;
+    paymentLogs.forEach((log) => {
       // is awaiting balance
       console.log(log);
       burnEmitter.emit(
@@ -63,7 +65,8 @@ async function pendingBurn() {
         log.payment_amount || 10,
         "50",
         log.course_id,
-        log.email
+        log.email,
+        count++
       );
     });
   } catch (e) {
@@ -72,7 +75,35 @@ async function pendingBurn() {
   }
 }
 
+async function syncPendingBurnFMD(all) {
+  try {
+    console.log("called syncPendingBurnFMD: ", all, all===true);
+
+    let allFMD;
+    if (all === true) {
+      allFMD = await UserFundReq.find({
+        $and: [
+          { status: "completed" },
+          { $or: [{ burnStatus: "uninitiated" }, { burnStatus: "pending" }] },
+        ],
+      });
+    } else {
+      allFMD = await UserFundReq.find({
+        $and: [{ status: "completed" }, { burnStatus: "uninitiated" }],
+      });
+    }
+
+    let count = 0;
+    allFMD.forEach((currReq) => {
+      burnEmitter.emit("donationTokenBurn", currReq.fundId, count++);
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.syncPendingBurnFMD: `, e);
+  }
+}
+
 eventEmitter.on("initiatePendingTx", pendingTx);
 eventEmitter.on("initiatePendingBurn", pendingBurn);
+eventEmitter.on("syncPendingBurnFMD", syncPendingBurnFMD);
 
 exports.em = eventEmitter;

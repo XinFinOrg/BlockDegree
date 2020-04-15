@@ -163,6 +163,7 @@ module.exports = (app) => {
     app.post("/api/approveFund",requireLogin,requireAdmin, adminServices.approveFund);
     app.post("/api/rejectFund",requireLogin,requireAdmin, adminServices.rejectFund);
     app.post("/api/syncRecipients",requireLogin,requireAdmin, adminServices.syncRecipients);
-    // app.get("/api/logFMDPk",requireLogin,requireAdmin, adminServices.logFMDPk);
+    // app.get("/api/logFMDPk", adminServices.logFMDPk); syncPendingBurnFMD
+    app.post("/api/syncPendingBurnFMD",requireLogin,requireAdmin, adminServices.syncPendingBurnFMD);
   }
 };

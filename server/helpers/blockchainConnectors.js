@@ -27,7 +27,6 @@ exports.rinkInst = web3Rink;
 
 xdcProvider.on("connect", () => {
   console.log(`[*] xdc3 instance connected at ${fileName}`);
-  connectionHeartbeat();
 });
 xdcProvider.on("end", () => {
   console.log(
@@ -38,7 +37,6 @@ xdcProvider.on("end", () => {
 
 ethProvider.on("connect", () => {
   console.log(`[*] eth instance connected at ${fileName}`);
-  connectionHeartbeat();
 });
 ethProvider.on("end", () => {
   console.log(
@@ -49,7 +47,6 @@ ethProvider.on("end", () => {
 
 rinkProvider.on("connect", () => {
   console.log(`[*] rinkeby instance connected at ${fileName}`);
-  connectionHeartbeat();
 });
 rinkProvider.on("end", () => {
   console.log(
@@ -57,6 +54,8 @@ rinkProvider.on("end", () => {
   );
   ethReconn();
 });
+
+connectionHeartbeat();
 
 //---------------------- Connector Func Exports Starts------------------------
 
@@ -158,18 +157,27 @@ function connectionHeartbeat() {
   setInterval(async () => {
     try {
       const isActiveXdc = await xdc3.eth.net.isListening();
+      console.log(
+        `connection status XDC:${isActiveXdc}`
+      );
       if (!isActiveXdc && inReconnXDC === false) xdcReconn();
     } catch (e) {
       if (inReconnXDC === false) xdcReconn();
     }
     try {
       const isActiveEth = await web3.eth.net.isListening();
+      console.log(
+        `connection status ETH:${isActiveEth}`
+      );
       if (!isActiveEth && inReconnEth === false) ethReconn();
     } catch (e) {
       if (inReconnEth === false) ethReconn();
     }
     try {
       const isActiveRink = await web3Rink.eth.net.isListening();
+      console.log(
+        `connection status RINK:${isActiveRink} `
+      );
       if (!isActiveRink && inReconnRink === false) rinkReconn();
     } catch (e) {
       if (inReconnRink === false) rinkReconn();

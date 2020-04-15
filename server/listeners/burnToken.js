@@ -34,7 +34,7 @@ const burnAddress = "0x0000000000000000000000000000000000000000";
 
 // const divisor = 1; // for testing purposes 1 million'th of actual value will be used
 
-async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
+async function paypalBurnToken(paymentId, amount, chainId, courseId, email, optionalNonce) {
   try {
     console.log(
       `[*] called event paypalBurnToken for payment: ${paymentId} to burn on chainId ${chainId}`
@@ -148,7 +148,8 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
       currPrivKey,
       chainId,
       burn_amnt,
-      web3
+      web3,
+      optionalNonce
     );
     console.log("[*] Signed ", signed);
     web3.eth
@@ -186,7 +187,7 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email) {
  *
  * @param {string} fundId fundId of the the funding request
  */
-async function donationTokenBurn(fundId) {
+async function donationTokenBurn(fundId, optionalNonce) {
   try {
     console.log(`[*] burning token fund request for id: ${fundId}`);
     const currFundReq = await UserFundRequest.findOne({ fundId: fundId });
@@ -234,7 +235,8 @@ async function donationTokenBurn(fundId) {
       currPrivKey,
       "50",
       burnAmnt,
-      xdcInst
+      xdcInst,
+      optionalNonce
     );
 
     xdcInst.eth
@@ -269,22 +271,44 @@ async function donationTokenBurn(fundId) {
 eventEmitter.on("burnTokenPaypal", paypalBurnToken);
 eventEmitter.on("donationTokenBurn", donationTokenBurn);
 
-async function makePayment(encodedData, toAddr, privKey, chainId, value, web3) {
+async function makePayment(
+  encodedData,
+  toAddr,
+  privKey,
+  chainId,
+  value,
+  web3,
+  optionalNonce
+) {
   console.log("[*] called makePayment function");
   console.log(encodedData, toAddr, privKey, chainId, value);
   // const estimateGas = await web3.eth.estimateGas({ data: encodedData }); //  this throws an error 'tx will always fail or gas will exceed allowance'
   const account = web3.eth.accounts.privateKeyToAccount(privKey);
-  console.log("Account: ", account);
+  let currNonce = await web3.eth.getTransactionCount(
+    account.address,
+    "pending"
+  );
+  if (
+    optionalNonce !== null &&
+    optionalNonce !== undefined &&
+    optionalNonce !== ""
+  ) {
+    currNonce = parseInt(currNonce) + parseInt(optionalNonce);
+  }
+  const gasPrice = await web3.eth.getGasPrice();
+
   const rawTx = {
     to: toAddr,
     from: account.address,
+    gasPrice: gasPrice,
     gas: 1000000,
-    gasPrice: await web3.eth.getGasPrice(),
-    nonce: await web3.eth.getTransactionCount(account.address, "pending"),
+    nonce: currNonce,
     data: encodedData,
     chainId: chainId + "",
     value: removeExpo(Math.round(parseFloat(value))),
   };
+  console.log("rawTX: ", rawTx);
+
   const signed = await web3.eth.accounts.signTransaction(rawTx, privKey);
   return signed;
 }

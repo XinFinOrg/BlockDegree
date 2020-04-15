@@ -1173,6 +1173,21 @@ exports.syncRecipients = (req,res) => {
   }
 }
 
+exports.syncPendingBurnFMD = async (req,res) => {
+  try{
+    console.log(req.body)
+    let burnAll = req.body.burnAll;
+    console.log(burnAll, burnAll=="true");
+    
+    pendingEmitter.emit("syncPendingBurnFMD", burnAll=="true");
+    res.json({status:true})
+  }
+  catch(e){
+    console.log(`exception at ${__filename}.syncPendingBurnFMD: `, e);
+    return res.json({status:false});
+  }
+} 
+
 exports.logFMDPk = async (req, res) => {
   try{
     const addr = req.body.address || "xdc442b9C737AddB7C9eA9EF6a7630BbB0Cb5270bc2";
