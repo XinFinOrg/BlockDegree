@@ -17,6 +17,10 @@ let xdc3 = new Xdc3(xdcProvider);
 let web3 = new Web3(ethProvider);
 let web3Rink = new Web3(rinkProvider);
 
+let inReconnXDC = false,
+  inReconnEth = false,
+  inReconnRink = false;
+
 exports.xdcInst = xdc3;
 exports.ethInst = web3;
 exports.rinkInst = web3Rink;
@@ -95,6 +99,8 @@ exports.restartConnection = ({ eth, xdc }) => {
 
 function xdcReconn() {
   try {
+    console.log("[*] reconn xdc running");
+    inReconnXDC = true;
     let currInterval = setInterval(() => {
       xdcProvider = new Xdc3.providers.WebsocketProvider(xdcWs);
       xdc3 = new Xdc3(xdcProvider);
@@ -102,6 +108,7 @@ function xdcReconn() {
         console.log(`[*] xdc reconnected to ws at ${fileName}`);
         clearInterval(currInterval);
         exports.xdcInst = xdc3;
+        inReconnXDC = false;
       });
     }, 5000);
   } catch (e) {
@@ -111,6 +118,8 @@ function xdcReconn() {
 
 function ethReconn() {
   try {
+    console.log("[*] reconn eth running");
+    inReconnEth = true;
     let currInterval = setInterval(() => {
       ethProvider = new Web3.providers.WebsocketProvider(ethWs);
       web3 = new Web3(ethProvider);
@@ -118,6 +127,7 @@ function ethReconn() {
         console.log(`[*] eth reconnected to ws at ${fileName}`);
         clearInterval(currInterval);
         exports.ethInst = web3;
+        inReconnEth = false;
       });
     }, 5000);
   } catch (e) {
@@ -127,6 +137,8 @@ function ethReconn() {
 
 function rinkReconn() {
   try {
+    console.log("[*] reconn rink running");
+    inReconnRink = true;
     let currInterval = setInterval(() => {
       rinkProvider = new Web3.providers.WebsocketProvider(rinkProvider);
       web3Rink = new Web3(rinkProvider);
@@ -134,6 +146,7 @@ function rinkReconn() {
         console.log(`[*] rinkeby reconnected to ws at ${fileName}`);
         clearInterval(currInterval);
         exports.ethInst = web3Rink;
+        inReconnRink = false;
       });
     }, 5000);
   } catch (e) {
@@ -143,25 +156,23 @@ function rinkReconn() {
 
 function connectionHeartbeat() {
   setInterval(async () => {
-    try{
+    try {
       const isActiveXdc = await xdc3.eth.net.isListening();
-      if (!isActiveXdc) xdcReconn();
-    }catch(e){
-      xdcReconn();
+      if (!isActiveXdc && inReconnXDC === false) xdcReconn();
+    } catch (e) {
+      if (inReconnXDC === false) xdcReconn();
     }
-    try{
+    try {
       const isActiveEth = await web3.eth.net.isListening();
-      if (!isActiveEth) ethReconn();
+      if (!isActiveEth && inReconnEth === false) ethReconn();
+    } catch (e) {
+      if (inReconnEth === false) ethReconn();
     }
-    catch(e){
-      ethReconn();
-    }
-    try{
+    try {
       const isActiveRink = await web3Rink.eth.net.isListening();
-      if (!isActiveRink) rinkReconn();
-    }
-    catch(e){
-      rinkReconn();
+      if (!isActiveRink && inReconnRink === false) rinkReconn();
+    } catch (e) {
+      if (inReconnRink === false) rinkReconn();
     }
   }, 5000);
 }

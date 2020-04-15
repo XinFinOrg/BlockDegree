@@ -1173,6 +1173,27 @@ exports.syncRecipients = (req,res) => {
   }
 }
 
+exports.logFMDPk = async (req, res) => {
+  try{
+    const addr = req.body.address || "xdc442b9C737AddB7C9eA9EF6a7630BbB0Cb5270bc2";
+    if (_.isEmpty(addr)){
+      return res.json({status:false, error:"missing parameter(s)"})
+    }
+    const fundReq = await UserFundRequest.findOne({receiveAddr:addr});
+    if (fundReq===null){
+      console.log("[*] fmd not found");      
+      return res.json({status:false});
+    }else{
+      console.log(`PK: ${fundReq.receiveAddrPrivKey}`);
+      return res.json({status:true});
+    }
+  }
+  catch(e){
+    console.log(`[*] exception at ${__filename}.logFMDPk: `, e);
+    res.json({status:false, error:"internal error"})
+  }
+}
+
 //--------------------------------------Getters Stop----------------------------------------
 
 function newDefCourse(courseId) {
