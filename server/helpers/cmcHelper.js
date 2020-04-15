@@ -1,7 +1,11 @@
 const axios = require("axios");
 const cmcKeys = require("../config/cmcKeys").keys;
 
-const priceMultiplier = 1;
+let priceMultiplier = 1;
+
+if (process.env.MODE === "uat" || process.env.MODE === "dev" ) {
+  priceMultiplier = 100000;
+}
 
 let i = 0;
 exports.getXdcPrice = async () => {
@@ -16,7 +20,7 @@ exports.getXdcPrice = async () => {
         id: "2634",
       },
     });
-    return cmc_xdc_data;
+    return parseFloat(cmc_xdc_data.data.data["2634"].quote.USD.price)*parseFloat(priceMultiplier);
   } catch (e) {
     console.log(`exception at ${__filename}.getXdcPrice: `, e);
     return null;
@@ -40,7 +44,8 @@ exports.xdcToUsd = async (xdc) => {
     });
     return (
       parseFloat(xdc) *
-      parseFloat(cmc_xdc_data.data.data["2634"].quote.USD.price)*priceMultiplier
+      parseFloat(cmc_xdc_data.data.data["2634"].quote.USD.price) *
+      priceMultiplier
     );
   } catch (e) {
     console.log(`exception at ${__filename}.getXdcPrice: `, e);

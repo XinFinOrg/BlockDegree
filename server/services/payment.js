@@ -1140,9 +1140,8 @@ exports.payViaXdce = async (req, res) => {
 
 exports.wrapCoinMarketCap = async (req, res) => {
   try {
-    const cmcData = await cmcHelper.getXdcPrice();
-    const cmcPrice = cmcData.data.data["2634"].quote.USD.price;
-    if (cmcData !== null) {
+    const cmcPrice = await cmcHelper.getXdcPrice();
+    if (cmcPrice !== null) {
       return res.json({ data: cmcPrice, status: true, error: null });
     }
   } catch (e) {
@@ -1250,9 +1249,8 @@ function newPaymentToken() {
 
 async function getXinEquivalent(amnt) {
   try {
-    const cmcData = await cmcHelper.getXdcPrice();
-    const cmcPrice = cmcData.data.data["2634"].quote.USD.price;
-    if (cmcData !== null) {
+    const cmcPrice = await cmcHelper.getXdcPrice();
+    if (cmcPrice !== null) {
       console.log((parseFloat(amnt) / parseFloat(cmcPrice)) * Math.pow(10, 18));
       return (
         (parseFloat(amnt) / (parseFloat(cmcPrice) * divisor)) * Math.pow(10, 18)
