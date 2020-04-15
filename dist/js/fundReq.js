@@ -297,7 +297,7 @@ function renderRequestModal(
                           </div>` +
     `
                           <div class="modal-body" id="requestModal--body">
-                              ${description.replace("")}
+                              ${description}
                           </div>` +
     `<div class="modal-footer">` +
     `${
@@ -471,7 +471,7 @@ function renderRequestedModal(allData) {
           allData[i].userName,
           allData[i].requestUrlShort,
           allData[i].requestUrlLong,
-          allData[i].description.replce(/\'/g,"\\'"),
+          allData[i].description.replace(/\'/g,"\\'"),
           allData[i].receiveAddr,
           allData[i].fundId,
           allData[i].status,
