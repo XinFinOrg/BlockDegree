@@ -50,7 +50,7 @@ function getFMDAllData(update) {
             <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${
               currData.userName
             }','${currData.requestUrlShort}','${currData.requestUrlLong}','${
-              currData.description
+              currData.description.replace(/'/g,"\\'")
             }','${currData.receiveAddr}','${currData.fundId}', '${
               currData.status
             }','${currData.amountGoal}')">View Description</button></td><td>`;
@@ -75,7 +75,7 @@ function getFMDAllData(update) {
             <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${
               currData.userName
             }','${currData.requestUrlShort}','${currData.requestUrlLong}','${
-              currData.description
+              currData.description.replace(/\'/g,"\\'")
             }','${currData.receiveAddr}','${currData.fundId}','${
               currData.status
             }','${currData.amountGoal}')">View Description</button></td><td>`;
@@ -297,7 +297,7 @@ function renderRequestModal(
                           </div>` +
     `
                           <div class="modal-body" id="requestModal--body">
-                              ${description}
+                              ${description.replace("")}
                           </div>` +
     `<div class="modal-footer">` +
     `${
@@ -471,7 +471,7 @@ function renderRequestedModal(allData) {
           allData[i].userName,
           allData[i].requestUrlShort,
           allData[i].requestUrlLong,
-          allData[i].description,
+          allData[i].description.replce(/\'/g,"\\'"),
           allData[i].receiveAddr,
           allData[i].fundId,
           allData[i].status,
