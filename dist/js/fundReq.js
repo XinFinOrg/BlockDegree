@@ -50,7 +50,7 @@ function getFMDAllData(update) {
             <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${
               currData.userName
             }','${currData.requestUrlShort}','${currData.requestUrlLong}','${
-              currData.description
+              currData.description.replace(/'/g,"\\'")
             }','${currData.receiveAddr}','${currData.fundId}', '${
               currData.status
             }','${currData.amountGoal}')">View Description</button></td><td>`;
@@ -75,7 +75,7 @@ function getFMDAllData(update) {
             <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${
               currData.userName
             }','${currData.requestUrlShort}','${currData.requestUrlLong}','${
-              currData.description
+              currData.description.replace(/\'/g,"\\'")
             }','${currData.receiveAddr}','${currData.fundId}','${
               currData.status
             }','${currData.amountGoal}')">View Description</button></td><td>`;
@@ -275,12 +275,12 @@ function renderRequestModal(
   amountGoal
 ) {
   console.log(addr, fundId);
-  const whatsappText = `Help Fund My Degree at Blockdegree, link ${requestUrlShort}`
+  const whatsappText = `Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on student's certificate as a sponsor.\nLink: ${requestUrlShort}\n`;
   const linkedinTitle = "Help Fund My Degree at Blockdegree";
   const encodedStr = encodeURIComponent(requestUrlShort);
-  const twitterText = encodeURIComponent("link: " + requestUrlShort);
+  const twitterText = encodeURIComponent(`Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on student's certificate as a sponsor.\nLink: ${requestUrlShort}\n#onlinelearning #FundMyDegree`);
   const linkedinText = `http://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-    requestUrlLong
+    requestUrlShort
   )}&source=blockdegree.org`;
   const retHtml =
     `<div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -321,7 +321,15 @@ function renderRequestModal(
       `
     }
                                Share On&nbsp;
-                               <a target="_blank" href="${isMobile()===true?`https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`:`https://web.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`}">
+                               <a target="_blank" href="${
+                                 isMobile() === true
+                                   ? `https://api.whatsapp.com/send?text=${encodeURIComponent(
+                                       whatsappText
+                                     )}`
+                                   : `https://web.whatsapp.com/send?text=${encodeURIComponent(
+                                       whatsappText
+                                     )}`
+                               }">
                                <i class="fa fa-whatsapp"></i>
                              </a>&nbsp;                               
                                <a target="_blank" href="${linkedinText}">
@@ -404,13 +412,19 @@ function submitMetamask(addr, fundId, amountGoal) {
           "ether"
         )
       );
+      if (web3.eth.defaultAccount == undefined) {
+        $.notify(
+          "Please login & setup your <strong>XinPay</strong> web-extension to continue, if already did please <a onclick='window.location.reload()'>refresh</a>"
+        );
+        return;
+      }
       const tx = {
         from: web3.eth.defaultAccount,
         to: addr.replace("xdc", "0x"),
         value:
           Math.round(
             web3.toWei(
-              String(parseFloat(amountGoal) / (parseFloat(xdcPrice))),
+              String(parseFloat(amountGoal) / parseFloat(xdcPrice)),
               "ether"
             )
           ) + "",
@@ -457,7 +471,7 @@ function renderRequestedModal(allData) {
           allData[i].userName,
           allData[i].requestUrlShort,
           allData[i].requestUrlLong,
-          allData[i].description,
+          allData[i].description.replace(/\'/g,"\\'"),
           allData[i].receiveAddr,
           allData[i].fundId,
           allData[i].status,

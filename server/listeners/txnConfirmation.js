@@ -186,7 +186,7 @@ function listenForConfirmation(
                     await paymentLog.save();
                     await user.save();
                     await newNoti.save();
-                    WsServer.emit("new-noti", userEmail);
+                    // WsServer.emit("new-noti", userEmail);
                     blockSubscription.unsubscribe((err, success) => {
                       if (success) {
                         console.log(
@@ -338,7 +338,7 @@ function listenForConfirmation(
                 await paymentLog.save();
                 await user.save();
                 await newNoti.save();
-                WsServer.emit("new-noti", userEmail);
+                // WsServer.emit("new-noti", userEmail);
                 handleBurnToken(
                   course,
                   txHash,
@@ -602,7 +602,7 @@ function listenForMined(
               try {
                 await newNoti.save();
                 await comPaymentToken.save();
-                WsServer.emit("new-noti", userEmail);
+                // WsServer.emit("new-noti", userEmail);
               } catch (e) {
                 console.error(
                   `Some error occured while saving the payment log: `,
