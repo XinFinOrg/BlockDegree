@@ -228,7 +228,10 @@ async function donationTokenBurn(fundId, optionalNonce) {
       );
       return;
     }
-    const currPrivKey = currWallet.privateKey;
+    let currPrivKey = currWallet.privateKey;
+    if (!currPrivKey.startsWith("0x")){
+      currPrivKey = '0x'+currPrivKey
+    }
     const signed = await makePayment(
       "",
       burnAddress,
