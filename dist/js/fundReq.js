@@ -323,12 +323,7 @@ function renderRequestModal(
 
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
-                              <div class="funded-by">Funded by <span class="funder-name">${
-                                funderName == undefined
-                                  ? "Anonymous"
-                                  : funderName
-                              }</span></div>
+                              <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>                              
                               <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
 
                           </div>` +
