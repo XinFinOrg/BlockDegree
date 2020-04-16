@@ -159,6 +159,9 @@
     <div id="paymentMethodModalWrapper">
     </div>
 
+    <div id="claimTxModalWrapper">        
+    </div>
+
     <div id="payByXdcWrapper">
         <div class="modal fade" id="xdcQRCode" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
             aria-hidden="true">
@@ -185,6 +188,9 @@
                             <input type="text" class="form-control" id="xdc-addr-value-modal" readonly="readonly"
                                 value="" class="xdc-addr-txt">
                             <button type="button" id="xdc-modal-copy-btn" class="btn btn-outline-primary">COPY</button>
+                            <div>
+                                After completing the TX, please <span data-dismiss="modal" id="req-claim-fund" class="claim-fund">CLAIM</span> your fund! 
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <div>
@@ -278,4 +284,4 @@
 
 <!-- Success Modal -->
 
-<script src="/js/fundReq.js?v=1.37"></script>
+<script src="/js/fundReq.js?v=1.38"></script>

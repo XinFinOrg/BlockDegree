@@ -125,7 +125,7 @@ exports.requestNewFund = async (req, res) => {
     }
 
     await newFund.save();
-    if (hasProfanity===true){
+    if (hasProfanity === true) {
       return res.json({
         status: true,
         requestPending: true,
@@ -175,6 +175,10 @@ exports.initiateDonation = async (req, res) => {
 
     if (fund.status !== "uninitiated") {
       return res.json({ status: false, error: "funding already in progress" });
+    }
+
+    if (fund.email === req.user.email) {
+      return res.json({ status: false, error: "invalid funding" });
     }
 
     const doner = await User.findOne({ email: donerEmail });
@@ -239,6 +243,11 @@ exports.startFundPaypal = async (req, res) => {
     if (currFundReq.status !== "uninitiated") {
       return res.render("displayError", {
         error: "Fund request has already been funded",
+      });
+    }
+    if (currFundReq.email == donerEmail) {
+      return res.render("displayError", {
+        error: "Cannot fund own request",
       });
     }
     const recipientUser = await User.findOne({ email: currFundReq.email });
@@ -399,7 +408,8 @@ exports.successFundPaypal = async (req, res) => {
           currFundReq.donerEmail,
           currFundReq.userName,
           currFundReq.donerName,
-          courseNames
+          courseNames,
+          currFundReq.requestUrlShort
         );
       }
     });
@@ -492,6 +502,67 @@ exports.getCmcData = async (req, res) => {
   } catch (e) {
     console.log(`exception at ${__filename}.getCmcData: `, e);
     return res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.claimFund = async (req, res) => {
+  try {
+    console.log("got the req: ", req.body);
+
+    const fundId = req.body.fundId;
+    const hash = req.body.hash;
+    if (_.isEmpty(fundId) || _.isEmpty(hash)) {
+      return res.json({ status: false });
+    }
+    const fund = await UserFundReq.findOne({ fundId: fundId });
+    const user = await User.findOne({ email: req.user.email });
+
+    if (fund === null || user === null) {
+      return res.json({ status: false });
+    }
+    const recipient = await User.findOne({ email: fund.email });
+    if (fund.status !== "completed" || recipient === null) {
+      return res.json({ status: false });
+    }
+    console.log("got users");
+
+    if (fund.email == req.user.email) {
+      return res.json({ status: false });
+    }
+
+    const fundDoner = fund.donerEmail;
+    let courseNames = "";
+    if (fundDoner === undefined || fundDoner === "" || fundDoner === null) {
+      if (fund.fundTx === hash) {
+        fund.donerEmail = user.email;
+        fund.donerName = user.name;
+        for (let i = 0; i < fund.courseId.length; i++) {
+          recipient.examData.payment[`${fund.courseId[i]}_doner`] = user.name;
+          courseNames += getCourseName(fund.courseId[i]);
+          if (i < fund.courseId.length - 1) {
+            courseNames += ", ";
+          }
+        }
+        await fund.save();
+        await recipient.save();
+        res.json({ status: true });
+        WsServer.emit("fmd-trigger");
+        emailer.sendFMDCompleteFunder(
+          user.email,
+          fund.userName,
+          user.userName,
+          courseNames,
+          fund.requestUrlShort
+        );
+      } else {
+        res.json({ status: false });
+      }
+    } else {
+      res.json({ status: false });
+    }
+  } catch (e) {
+    console.log(`exception at ${__filename}.claimFund: `, e);
+    res.json({ status: false });
   }
 };
 

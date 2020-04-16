@@ -101,7 +101,8 @@ function startProcessingDonation(fundId, tx, name) {
                 currentReq.donerEmail,
                 currentReq.userName,
                 currentReq.donerName,
-                courseNames
+                courseNames,
+                currentReq.requestUrlShort
               );
             }
           }

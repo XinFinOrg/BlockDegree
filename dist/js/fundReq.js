@@ -6,7 +6,12 @@ $(document).ready(() => {
 
   $("#xdc-modal-copy-btn").click(() => {
     copyToClipboard($("#xdc-addr-value-modal").val(), "xdc-qr-img", "Address");
+    
   });
+
+  $("#req-claim-fund").click(() => {
+    claimFund($("#xdc-addr-value-modal").val());
+  })
 
   window.addEventListener("message", function (event) {
     if (
@@ -108,8 +113,9 @@ function getFMDAllData(update) {
             }','${currData.description.trim().replace(/\'/g, "\\'")}','${
               currData.receiveAddr
             }','${currData.fundId}','${currData.status}','${
-              (currData.amountGoal, "${currData.donerName}")
-            }')">View Description</button></td><td>`;
+              currData.amountGoal
+            }', '${currData.donerName}'
+            )">View Description</button></td><td>`;
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataApproved += `<span class="courseName">${getCourseName(
                 currData.courseId[z]
@@ -323,7 +329,16 @@ function renderRequestModal(
 
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>                              
+                              <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
+                              ${
+                                type == "completed"
+                                  ? `<span class="funded-by">Funded By ${
+                                      funderName == 'undefined'
+                                        ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
+                                        : funderName
+                                    }</span>`
+                                  : ""
+                              }                              
                               <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
 
                           </div>` +
@@ -573,6 +588,32 @@ async function renderQRCode(addr, price) {
   }
 }
 
+function submitClaimFund(fundId) {
+  const hash = $("#claimTx").val();
+  if (hash.trim()=="" || !/^0x([A-Fa-f0-9]{64})$/.test(hash) ){
+    $.notify("Enter Valid Hash", { type: "warning", z_index: 2000 });
+    return;
+  }
+  $.ajax({
+    method: "post",
+    url: "/api/claimFund",
+    data: { fundId: fundId, hash: hash },
+    success: (resp) => {
+      if (resp.status == true) {
+        $.notify("Successfully completed the fund claim", {
+          type: "success",
+          z_index: 2000,
+        });
+        $("#claimTxModal").modal("hide");
+      } else {
+        $.notify("Fund claim failed", { type: "warning", z_index: 2000 });
+        $("#claimTxModal").modal("hide");
+      }
+    },
+    error: (e) => {},
+  });
+}
+
 function isMobile() {
   let check = false;
   (function (a) {
@@ -658,6 +699,33 @@ function handleAuthLinkedin() {
   );
 }
 
+function claimFund(fundId) {
+  console.log("called claim fund for ID: ", fundId);
+  document.getElementById("claimTxModalWrapper").innerHTML = `
+  <!-- Modal -->
+  <div class="modal fade" id="claimTxModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Claim Fund</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label for="claimTx">TX HASH</label>
+          <input type="text" id="claimTx" class="form-control">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" onclick="submitClaimFund('${fundId}')" class="btn btn-primary">Claim</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  $("#claimTxModal").modal("show");
+}
+
 function postTweet() {
   const msg = document.getElementById("postMSGTwitter").value;
   const postTemplate = "1";
@@ -670,7 +738,7 @@ function postTweet() {
     success: (resp) => {
       console.log(resp);
       if (resp.uploaded == true) {
-        $("#postTwittter").modal("hide");
+        $("#postTwitter").modal("hide");
         $.notify("Shared on Twitter", { type: "success" });
       } else {
         $.notify(resp.error, { type: "danger" });

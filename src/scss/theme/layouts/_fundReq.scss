@@ -328,7 +328,15 @@
     }
   }
 
+  .claim-fund {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
   #requestModal {
+
+
 
     .modal-header {
       .funded-by {
