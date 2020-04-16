@@ -17,10 +17,19 @@ module.exports = app => {
     shareServicesCached.postTwitter
   );
   app.post(
+    "/api/shareOnTwitterFMD",
+    requireLogin,
+    shareServicesCached.postTwitterFMD
+  );
+  app.post(
     "/api/shareOnLinkedin",
     requireLogin,
-    bitlyRateLimit,
     shareServicesCached.uploadImageLinkedin
+  );
+  app.post(
+    "/api/shareOnLinkedinFMD",
+    requireLogin,
+    shareServicesCached.uploadImageLinkedinFMD
   );
   app.post("/api/shareOnFacebook", requireLogin, shareServices.postFacebook);
   app.post(

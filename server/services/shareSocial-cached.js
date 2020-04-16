@@ -7,6 +7,7 @@ const axios = require("axios");
 const BitlyClient = require("bitly").BitlyClient;
 let exec = require("child_process").exec;
 const twttr = require("twitter-text");
+const UserFundReq = require("../models/userFundRequest");
 
 require("dotenv").config();
 
@@ -517,6 +518,271 @@ exports.uploadImageLinkedin = async (req, res) => {
     }
   );
 };
+
+
+
+//---------------------------------POST VIA FMD-----------------------------------
+exports.postTwitterFMD = async (req, res) => {
+console.log("Called share on twitter by : ", req.user.email);
+if (!req.user) {
+  return res.redirect("/login");
+} else {
+  let user;
+  try {
+    user = await User.findOne({ email: req.user.email });
+  } catch (e) {
+    console.error(`Exception in shareSocial.postTwitterFMD/User.findOne: `, e);
+    return res.json({
+      uploaded: false,
+      error:
+        "Some error has occured please try again after sometime or contact us"
+    });
+  }
+  if (!user) {
+    return res.redirect("/login");
+  } else if (
+    user.auth.twitter.token == "" ||
+    user.auth.twitter.token == undefined ||
+    user.auth.twitter.tokenSecret == "" ||
+    user.auth.twitter.tokenSecret == undefined
+  ) {
+    return res.redirect("/auth/twitter");
+  } else {
+    
+
+    console.log("auth ok")
+
+    let msg = req.body.msg;
+    // let fundId = req.body.fundId;
+    let templateNumber = req.body.templateNumber;
+
+    // const currFund = await UserFundReq.findOne({fundId:fundId});
+
+    // if (currFund===null){
+    //   return res.json({status:false, error:"fund not found"})
+    // }
+
+    if (!getTweetCharacterLength(msg)) {
+      console.error(
+        `Error in shareSocial.postTweet: invalid number of characters in tweet : ${msg} by ${req.user.email}`
+      );
+      return res.json({
+        error: "invalid number of characters in the post",
+        uploaded: false
+      });
+    } else {
+      console.log("msg ok");
+      
+      let currUser;
+      try {
+        currUser = await User.findOne({ email: req.user.email });
+      } catch (e) {
+        console.error(
+          `Exception in shareSocial.postTwitter/User.findOne: `,
+          e
+        );
+        return res.json({ uploaded: false, error: e });
+      }
+      var config = getTwitterConfig(
+        process.env.TWITTER_CLIENT_ID,
+        process.env.TWITTER_CLIENT_SECRET,
+        currUser.auth.twitter.token,
+        currUser.auth.twitter.tokenSecret
+      );
+      let T = new twit(config);
+      let imgHTML = "";
+      let b64content = fs.readFileSync(`server/fmd-templates/${templateNumber}.jpg`).toString("base64");;
+
+      T.post("media/upload", { media_data: b64content }, function(
+        // asynchronous
+        err,
+        data,
+        response
+      ) {
+        if (err) {
+          console.log("ERROR:");
+          console.log(err);
+          return res.json({ uploaded: false, error: err });
+        } else {
+          T.post(
+            "statuses/update",
+            {
+              status: msg, // need to check the length for the length of tweet.
+              media_ids: new Array(data.media_id_string)
+            },
+            function(err, data, response) {
+              if (err) {
+                console.log("ERROR: ", err);
+                res.json({ uploaded: false, error: err });
+              } else {
+                console.log("Posted the status!");
+                res.json({ uploaded: true, error: null });
+              }
+            }
+          ).catch(e => {
+            console.error(`Exception at T.post while Posting Tweeting: `, e);
+            return res.json({
+              error:
+                "Some error occured while posting,please try again after sometime or else contact-us",
+              uploaded: false
+            });
+          });
+        }
+      }).catch(e => {
+        console.error(
+          `Exception at T.post while uploading image for posting Tweeting: `,
+          e
+        );
+        return res.json({
+          error:
+            "Some error occured while posting,please try again after sometime or else contact-us",
+          uploaded: false
+        });
+      });
+
+    }}}
+  }
+
+
+exports.uploadImageLinkedinFMD = async (req, res) => {
+  // set the credentials from req.user;
+  let user;
+  try {
+    user = await User.findOne({ email: req.user.email });
+  } catch (e) {
+    console.error(`Error while fetching user at User.findOne: `, e);
+  }
+  if (!user) {
+    return res.redirect("/login");
+  }
+  if (
+    user.auth.linkedin.accessToken == "" ||
+    user.auth.linkedin.accessToken == undefined ||
+    user.auth.linkedin.id == "" ||
+    user.auth.linkedin.id == undefined
+  ) {
+    // set linkedin credentials and post.
+    return res.redirect("/auth/linkedin");
+  }
+  
+  let msg =
+    req.body.msg 
+
+  // register an upload : will get upload URL
+  let authToken = user.auth.linkedin.accessToken;
+  let personURN = user.auth.linkedin.id;
+  var response;
+  try {
+    response = await axios({
+      method: "post",
+      url: "https://api.linkedin.com/v2/assets?action=registerUpload",
+      headers: {
+        "X-Restli-Protocol-Version": "2.0.0",
+        Authorization: `Bearer ${authToken}`
+      },
+      data: {
+        registerUploadRequest: {
+          recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
+          owner: `urn:li:person:${personURN}`,
+          serviceRelationships: [
+            {
+              relationshipType: "OWNER",
+              identifier: "urn:li:userGeneratedContent"
+            }
+          ]
+        }
+      }
+    });
+  } catch (e) {
+    console.error(`Exception while registering upload: `, e);
+  }
+
+  console.log("Response from register: ", response.status);
+
+  // const uploadURL = response.data.value;
+  const uploadMechnism =
+    response.data.value.uploadMechanism[
+      "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
+    ];
+  const uploadURL = uploadMechnism.uploadUrl;
+  const asset = response.data.value.asset;
+
+  console.log("ASSET: ", asset);
+  console.log("UploadURL : ", uploadURL);
+  // let localPath = "";
+  const templateNumber = req.body.templateNumber;
+  let pathToFile = `server/fmd-templates/${templateNumber}.jpg`;
+  
+  var os = new os_func();
+  os.execCommand(
+    `curl -i --upload-file ${pathToFile} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
+    async function(returnValue) {
+      let resp;
+      try {
+        resp = await axios({
+          method: "post",
+          url: "https://api.linkedin.com/v2/ugcPosts",
+          headers: {
+            "X-Restli-Protocol-Version": "2.0.0",
+            Authorization: `Bearer ${authToken}`
+          },
+          data: {
+            author: `urn:li:person:${personURN}`,
+            lifecycleState: "PUBLISHED",
+            specificContent: {
+              "com.linkedin.ugc.ShareContent": {
+                shareCommentary: {
+                  text: msg
+                },
+                shareMediaCategory: "IMAGE",
+                media: [
+                  {
+                    status: "READY",
+                    description: {
+                      text: "Center stage!"
+                    },
+                    media: asset,
+                    title: {
+                      text: "LinkedIn Talent Connect 2018"
+                    }
+                  }
+                ]
+              }
+            },
+            visibility: {
+              "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+            }
+          }
+        });
+      } catch (e) {
+        console.error("Exception while making axios request: ", e);
+        return res.json({
+          uploaded: false,
+          error:
+            "something's wrong, we'll look into it. Please try again after some time or contact us"
+        });
+      }
+
+      console.log(resp.status);
+      return res.json({
+        uploaded: resp.status == 201,
+        error:
+          resp.status == 201
+            ? null
+            : "something's wrong, we'll look into it. Please try again after some time or contact us"
+      });
+    },
+    err => {
+      console.error("Error while uploading the media to the asset: ", err);
+      return res.json({
+        uploaded: false,
+        error:
+          "something's wrong, we'll look into it. Please try again after some time or contact us"
+      });
+    }
+  );
+}
+
 
 function os_func() {
   this.execCommand = function(cmd, callback, callbackError) {

@@ -1,10 +1,33 @@
 let globalPendingDT, globalApprovedDT;
-
+let loginLinkedin = false,
+  loginTwitter = false;
 $(document).ready(() => {
   getFMDAllData();
 
   $("#xdc-modal-copy-btn").click(() => {
     copyToClipboard($("#xdc-addr-value-modal").val(), "xdc-qr-img", "Address");
+  });
+
+  window.addEventListener("message", function (event) {
+    if (
+      event.origin == "https://www.blockdegree.org" ||
+      event.origin == "https://blockdegree.org"
+    ) {
+      if (event.data == "ok") {
+        console.log("message from popup.");
+        // toggle linkedin modal
+        if (loginLinkedin === true) {
+          $("#togglePostLinkedin").click();
+          loginLinkedin = false;
+        }
+
+        // toggle twitter modal
+        if (loginTwitter === true) {
+          $("#togglePostTwitter").click();
+          loginTwitter = false;
+        }
+      }
+    }
   });
 });
 
@@ -85,7 +108,7 @@ function getFMDAllData(update) {
             }','${currData.description.trim().replace(/\'/g, "\\'")}','${
               currData.receiveAddr
             }','${currData.fundId}','${currData.status}','${
-              currData.amountGoal, '${currData.donerName}'
+              (currData.amountGoal, "${currData.donerName}")
             }')">View Description</button></td><td>`;
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataApproved += `<span class="courseName">${getCourseName(
@@ -287,9 +310,7 @@ function renderRequestModal(
   const whatsappText = `Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on student's certificate as a sponsor.\nLink: ${requestUrlShort}\n`;
   const linkedinTitle = "Help Fund My Degree at Blockdegree";
   const encodedStr = encodeURIComponent(requestUrlShort);
-  const twitterText = encodeURIComponent(
-    `Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on student's certificate as a sponsor.\nLink: ${requestUrlShort}\n#onlinelearning #FundMyDegree`
-  );
+  const twitterText = `Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on student\'s certificate as a sponsor.Link: ${requestUrlShort} #onlinelearning #FundMyDegree`;
   const linkedinText = `http://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
     requestUrlShort
   )}&source=blockdegree.org`;
@@ -303,7 +324,11 @@ function renderRequestModal(
                       <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
-                              <div class="funded-by">Funded by <span class="funder-name">${funderName==undefined?'Anonymous':funderName}</span></div>
+                              <div class="funded-by">Funded by <span class="funder-name">${
+                                funderName == undefined
+                                  ? "Anonymous"
+                                  : funderName
+                              }</span></div>
                               <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
 
                           </div>` +
@@ -350,12 +375,12 @@ function renderRequestModal(
                                }">
                                <i class="fa fa-whatsapp fa-lg"></i>
                              </a>&nbsp;                               
-                               <a target="_blank" href="${linkedinText}">
+                               <div data-dismiss="modal" onclick="handleShareLinkdedin('Check the new function of #Blockdegree, where students can apply for funding to give exams for free.\\n Funders can fund any student and get their name on student\\'s certificate as a sponsor.\\n Link: ${requestUrlShort} #onlinelearning #FundMyDegree')">
                                 <i class="fa fa-linkedin fa-lg"></i>
-                              </a>&nbsp;
-                              <a target="_blank" href="https://twitter.com/intent/tweet?text=${twitterText}">
+                              </div>&nbsp;
+                              <div data-dismiss="modal" onclick="handleShareTwitter('Check the new function of #Blockdegree, where students can apply for funding to give exams for free.\\n Funders can fund any student and get their name on student\\'s certificate as a sponsor.\\n Link: ${requestUrlShort} #onlinelearning #FundMyDegree')">
                                   <i class="fa fa-twitter fa-lg"></i>
-                              </a>&nbsp;
+                              </div>&nbsp;
                               <div class="fb-share-button" data-href="${requestUrlShort}" data-layout="button" data-size="small"><a
   target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${encodedStr}"
   class="fb-xfbml-parse-ignore"><i class="fa fa-facebook fa-lg"></i></a></div>
@@ -567,4 +592,123 @@ function isMobile() {
       check = true;
   })(navigator.userAgent || navigator.vendor || window.opera);
   return check;
+}
+
+function handleShareLinkdedin(seedMsg) {
+  document.getElementById("postMSGLinkedin").innerHTML = seedMsg;
+
+  $.ajax({
+    method: "post",
+    url: "/api/getAuthStatus",
+    data: {},
+    success: (result) => {
+      let popUpWin;
+      if (!result.linkedinAuth) {
+        // has not linked its linkedin account,  first link the account and then continue.
+        popUpWin = handleAuthLinkedin();
+      } else {
+        $("#togglePostLinkedin").click();
+      }
+    },
+    error: (err) => {
+      $.notify(
+        "Oops looks like some error occurred, please try again after sometime.",
+        { type: "danger" }
+      );
+    },
+  });
+}
+
+function handleShareTwitter(seedMsg) {
+  document.getElementById("postMSGTwitter").innerHTML = seedMsg;
+
+  $.ajax({
+    method: "post",
+    url: "/api/getAuthStatus",
+    data: {},
+    success: (result) => {
+      let popUpWin;
+      if (!result.twitterAuth) {
+        // has not linked its linkedin account,  first link the account and then continue.
+        popUpWin = handleAuthTwitter();
+      } else {
+        $("#togglePostTwitter").click();
+      }
+    },
+    error: (err) => {
+      $.notify(
+        `Oops, some error has occured, please try again after sometime`,
+        { type: "danger" }
+      );
+    },
+  });
+}
+
+function handleAuthTwitter() {
+  loginTwitter = true;
+  loginLinkedin = false;
+  return window.open(
+    "https://www.blockdegree.org/auth/twitter?close=true",
+    "newwin",
+    "height=600px,width=600px"
+  );
+}
+function handleAuthLinkedin() {
+  loginTwitter = false;
+  loginLinkedin = true;
+  return window.open(
+    "https://www.blockdegree.org/auth/linkedin?close=true",
+    "newwin",
+    "height=600px,width=600px"
+  );
+}
+
+function postTweet() {
+  const msg = document.getElementById("postMSGTwitter").value;
+  const postTemplate = "1";
+  $("#postTwitter").modal("hide");
+  $.notify("The tweet in being posted, please wait...", { type: "info" });
+  $.ajax({
+    method: "post",
+    url: "/api/shareOnTwitterFMD",
+    data: { msg: msg, templateNumber: postTemplate },
+    success: (resp) => {
+      console.log(resp);
+      if (resp.uploaded == true) {
+        $("#postTwittter").modal("hide");
+        $.notify("Shared on Twitter", { type: "success" });
+      } else {
+        $.notify(resp.error, { type: "danger" });
+      }
+    },
+    error: (err) => {
+      console.log(err);
+    },
+  });
+}
+
+function postLinkedin() {
+  console.log("called postLinkedin");
+
+  const msg = document.getElementById("postMSGLinkedin").value;
+  $("#postLinkedin").modal("hide");
+  $.notify("The post in being sent, please wait...", { type: "info" });
+  const postTemplate = "1";
+  $.ajax({
+    method: "post",
+    url: "/api/shareOnLinkedinFMD",
+    data: { msg: msg, templateNumber: postTemplate },
+    success: (resp) => {
+      console.log(resp);
+      if (resp.uploaded == true) {
+        $("#postLinkedin").modal("hide");
+        $.notify("Shared on Linkedin", { type: "success" });
+      } else {
+        $.notify(resp.error, { type: "danger" });
+      }
+    },
+    error: (err) => {
+      console.log(err);
+    },
+  });
 }
