@@ -55,7 +55,7 @@ function getFMDAllData(update) {
               currData.userName
             }','${currData.requestUrlShort}','${
               currData.requestUrlLong
-            }','${currData.description.replace(/'/g, "\\'")}','${
+            }','${currData.description.trim().replace(/'/g, "\\'")}','${
               currData.receiveAddr
             }','${currData.fundId}', '${currData.status}','${
               currData.amountGoal
@@ -82,7 +82,7 @@ function getFMDAllData(update) {
               currData.userName
             }','${currData.requestUrlShort}','${
               currData.requestUrlLong
-            }','${currData.description.replace(/\'/g, "\\'")}','${
+            }','${currData.description.trim().replace(/\'/g, "\\'")}','${
               currData.receiveAddr
             }','${currData.fundId}','${currData.status}','${
               currData.amountGoal, '${currData.donerName}'
@@ -489,7 +489,7 @@ function renderRequestedModal(allData) {
           allData[i].userName,
           allData[i].requestUrlShort,
           allData[i].requestUrlLong,
-          allData[i].description.replace(/\'/g, "\\'"),
+          allData[i].description.trim().replace(/\'/g, "\\'"),
           allData[i].receiveAddr,
           allData[i].fundId,
           allData[i].status,
