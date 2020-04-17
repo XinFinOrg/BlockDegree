@@ -8,11 +8,15 @@ const Course = require("../models/coursePrice");
 const WsServer = require("../listeners/websocketServer").em;
 const burnEmitter = require("./burnToken").em;
 const emailer = require("../emailer/impl");
+const Xdc3 = require("xdc3");
 const xdc3 = require("../helpers/blockchainConnectors").xdcInst;
 const equateAddress = require("../helpers/common").equateAddress;
-const xdcToUsd = require("../helpers/cmcHelper").xdcToUsd;
+const { xdcToUsd, usdToXdc } = require("../helpers/cmcHelper");
+const xdcWs = require("../helpers/constant").WsXinfinMainnet;
 
 const recipients = [];
+
+let inReconnXDC = false;
 
 const em = new Event.EventEmitter();
 
@@ -200,7 +204,7 @@ exports.em = em;
 // ---------------------------------------- Donation ----------------------------------------
 
 xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
-  try {    
+  try {
     let retryCount = 0;
     let txCount = await xdc3.eth.getBlockTransactionCount(result.number);
     console.log(`[*] syncing block ${result.number} TX count: `, txCount);
@@ -234,7 +238,7 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
           if (equateAddress(recipients[i].address, currBlockTx.to)) {
             currIndex = i;
           }
-        }        
+        }
 
         if (currIndex > -1) {
           console.log(`got anonymous deposit`);
@@ -270,19 +274,17 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
 
           const courseId = currFundReq.courseId;
           const course = await Course.findOne({ courseId: courseId });
-          const valUsd = await xdcToUsd(xdc3.utils.fromWei(currBlockTx.value,'ether'));
+          const valUsd = await xdcToUsd(
+            xdc3.utils.fromWei(currBlockTx.value, "ether")
+          );
           const totAmnt = parseFloat(currFundReq.amountGoal);
           const min = totAmnt - totAmnt / 10;
           const max = totAmnt + totAmnt / 10;
-          console.log(`min ${min} max ${max} valUsd ${valUsd}`)
-          if (
-            min <= parseFloat(valUsd) &&
-            parseFloat(valUsd) <= max
-          ) {
+          console.log(`min ${min} max ${max} valUsd ${valUsd}`);
+          if (min <= parseFloat(valUsd) && parseFloat(valUsd) <= max) {
             startProcessingDonation(currFundReq.fundId, currBlockTx.hash, "");
-          }else{
+          } else {
             console.log("invalid amount");
-            
           }
         }
       }
@@ -292,6 +294,37 @@ xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
     return;
   }
 });
+
+async function checkPendingCompletion() {
+  try {
+    const funds = await UserFundRequest.find({
+      $or: [{ status: "uninitiated" }, { status: "pending" }],
+    });
+    console.log(funds);
+
+    funds.forEach(async (currFundReq) => {
+      const xdcBalance = await xdc3.eth.getBalance(currFundReq.receiveAddr);
+      if (xdcBalance > 0) {
+        const min = parseFloat(currFundReq.amountGoal)-parseFloat(currFundReq.amountGoal)/10;
+        const max = parseFloat(currFundReq.amountGoal)+parseFloat(currFundReq.amountGoal)/10;
+        const valUsd = await xdcToUsd(parseFloat(xdc3.utils.fromWei(xdcBalance)));
+        console.log("pending balance: ", xdcBalance, "value usd", valUsd);
+        if (parseFloat(min)<=parseFloat(valUsd) && parseFloat(valUsd)<=parseFloat(max)){
+          emailer.sendMailInternal(
+            "blockdegree-bot@blockdegree.org",
+            process.env.SUPP_EMAIL_ID,
+            "Payment Missed",
+            `Missed payment for fund ${
+              currFundReq.fundId
+            }, has an amount balance of ${xdc3.utils.fromWei(xdcBalance)}`
+          );
+        }
+      }
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.checkPendingCompletion: `, e);
+  }
+}
 
 function removeRecipient(address) {
   let removeIndex = -1;
@@ -304,3 +337,41 @@ function removeRecipient(address) {
     recipients.splice(removeIndex, 1);
   }
 }
+
+setInterval(() => {
+  checkPendingCompletion();
+}, 60 * 60 * 1000);
+
+checkPendingCompletion();
+
+function connectionHeartbeat() {
+  setInterval(async () => {
+    try {
+      const isActiveXdc = await xdc3.eth.net.isListening();
+      console.log(`connection status XDC donationListener:${isActiveXdc}`);
+      if (!isActiveXdc && inReconnXDC === false) xdcReconn();
+    } catch (e) {
+      if (inReconnXDC === false) xdcReconn();
+    }
+  }, 5000);
+}
+
+function xdcReconn() {
+  try {
+    console.log("[*] reconn xdc running");
+    inReconnXDC = true;
+    let currInterval = setInterval(() => {
+      let xdcProvider = new Xdc3.providers.WebsocketProvider(xdcWs);
+      xdc3 = new Xdc3(xdcProvider);
+      xdcProvider.on("connect", () => {
+        console.log(`[*] xdc reconnected to ws at ${fileName}`);
+        clearInterval(currInterval);
+        inReconnXDC = false;
+      });
+    }, 5000);
+  } catch (e) {
+    console.log(`exception at ${__filename}.xdcReconn: `, e);
+  }
+}
+
+connectionHeartbeat();
