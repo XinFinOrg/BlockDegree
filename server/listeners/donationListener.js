@@ -299,7 +299,7 @@ async function checkPendingCompletion() {
   try {
     const funds = await UserFundRequest.find({
       $or: [{ status: "uninitiated" }, { status: "pending" }],
-    });
+    }).select({receiveAddrPrivKey:0});
     console.log(funds);
 
     funds.forEach(async (currFundReq) => {
