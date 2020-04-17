@@ -224,7 +224,7 @@
                 <button type="button" class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
-                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="2" style="border-radius:5px;" id="postMSGTwitter"></textarea></p>
+                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6" class="form-control" style="border-radius:5px;" id="postMSGTwitter"></textarea></p>
 				
 				<select name="user[avatar]" id="images">
 					<option value="">Please Select</option>
@@ -235,7 +235,7 @@
 				
                 <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
                 <div style="text-align: center;">
-                    <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3" ck="postTweet()">Post On Twitter <i class="fa fa-twitter"></i></button>
+                    <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3" onclick="postTweet()">Post On Twitter <i class="fa fa-twitter"></i></button>
                 </div>
             </div>
 
@@ -259,8 +259,10 @@
                 <button type="button" class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
-                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="2" style="border-radius:5px;" id="postMSGLinkedin"></textarea></p>
-                
+                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6" class="form-control" style="border-radius:5px;" id="postMSGLinkedin"></textarea></p>
+                <div class="banner-title">
+                    Select a banner of your choice to post!
+                </div>
 				<select name="user[avatar]" id="images">
 					<option value="">Please Select</option>
 				    <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
@@ -283,4 +285,4 @@
 
 <!-- Success Modal -->
 
-<script src="/js/fundReq.js?v=1.38"></script>
+<script src="/js/fundReq.js?v=1.40"></script>

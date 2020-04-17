@@ -136,7 +136,15 @@ exports.requestNewFund = async (req, res) => {
     res.json({
       status: true,
       message: "new fund request submitted",
-      data: { shortUrl: shortUrl.url, longUrl: shortUrl.long_url },
+      data: {
+        shortUrl: shortUrl.url,
+        longUrl: shortUrl.long_url,
+        userName: user.name,
+        addr: newAddr.address,
+        fundId: newFund.fundId,
+        description: description,
+        amountGoal: parseFloat(totalAmount),  
+      },
     });
     donationEm.emit("syncRecipients");
     WsServer.emit("fmd-trigger");
