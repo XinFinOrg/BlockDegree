@@ -211,31 +211,31 @@
         </div>
     </div>
 </div>
-<button type="button" class="btn btn-primary social-tw" data-toggle="modal" data-target="#postTwitter"
-    style="display: none" id="togglePostTwitter">
-    <i class="fa fa-twitter social"></i> Post on Twitter
-</button>
+
+<button id="togglePostTwitter" type="button" class="btn btn-primary social-tw" data-toggle="modal" data-target="#postTwitter" style="display: none"><i class="fa fa-twitter social"></i> Post on Twitter </button>
 <!-- Modal -->
 <div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <!-- Modal content-->
+        <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Twitter Post</h3>
                 <button type="button" class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
-                <p style="text-align:center;"><textarea cols="30" rows="2" style="border-radius:5px;" id="postMSGTwitter"></textarea></p>
-                <div>
-                    <img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;"
-                        id="modalImageLinkedin" />
-                </div>
+                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="2" style="border-radius:5px;" id="postMSGTwitter"></textarea></p>
+				
+				<select name="user[avatar]" id="images">
+					<option value="">Please Select</option>
+				    <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
+				    <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
+				    <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
+				</select>
+				
+                <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
                 <div style="text-align: center;">
-                    <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3"
-                        onclick="postTweet()">
-                        <i class="fa fa-twitter"></i> Post On Twitter
-                    </button>
+                    <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3" ck="postTweet()">Post On Twitter <i class="fa fa-twitter"></i></button>
                 </div>
             </div>
 
@@ -247,36 +247,35 @@
         </div>
     </div>
 </div>
-<button id="togglePostLinkedin" type="button" class="btn btn-primary social-li" data-toggle="modal"
-    data-target="#postLinkedin" style="display: none">
-    Post Linkedin
-</button>
-<div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
+
+
+<button id="togglePostLinkedin" type="button" class="btn btn-primary social-li" data-toggle="modal" data-target="#postLinkedin" style="display: none">Post Linkedin</button>
+<div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <!-- Modal content-->
+        <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Linkedin Post</h3>
                 <button type="button" class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
-                <p style="text-align: center;"><textarea cols="30" rows="2" style="border-radius:5px;" id="postMSGLinkedin"></textarea></p>
-                <div>
-                    <img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;"
-                        id="modalImageLinkedin" />
-                </div>
+                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="2" style="border-radius:5px;" id="postMSGLinkedin"></textarea></p>
+                
+				<select name="user[avatar]" id="images">
+					<option value="">Please Select</option>
+				    <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
+				    <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
+				    <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
+				</select>
+				
+				<!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
                 <div style="text-align: center;">
-                    <button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()">
-                        <i class="fa fa-linkedin"></i> Post On Linkedin
-                    </button>
+                    <button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()">Post On Linkedin <i class="fa fa-linkedin-square"></i> </button>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">
-                    Close
-                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
