@@ -30,3 +30,17 @@ exports.removeExpo = (x) => {
 exports.equateAddress = (addr1, addr2) => {
   return addr1.trim().toLowerCase() === addr2.trim().toLowerCase();
 };
+
+/**
+ * will return a rnd string with bd- prefix
+ * @returns{String}
+ */
+exports.genRandomAlphaNum = () => {
+  const length = 10;
+  const set = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += set[Math.floor(Math.random() * set.length)];
+  }
+  return `bd-${result}`;
+};

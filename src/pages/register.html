@@ -69,6 +69,15 @@
         <div id="pwdMatchInfo"></div>
 
         <input
+          type="text"
+          id="refId"
+          class=""
+          name="refId"
+          placeholder="referral id ( optonal )"          
+        />
+        <div id="invalidRefId"></div>
+
+        <input
           id="btn-register"
           type="submit"
           class="btn btn-primary py-2 mt-3 text-white"
@@ -91,7 +100,7 @@
   </div>
 </div>
 {{/inline}}
-<script src="/js/userAuth.js?v=1.4"></script>
+<script src="/js/userAuth.js?v=1.5"></script>
 {{#*inline "scripts-block"}}
 {{/inline}}
 {{/base}}

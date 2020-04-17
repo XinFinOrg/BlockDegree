@@ -11,6 +11,8 @@ const SocialPostTemplates = require("../models/socialPostTemplates");
 const UserFundRequest = require("../models/userFundRequest");
 const pendingEmitter = require("../listeners/pendingTx").em;
 const DonationListener = require("../listeners/donationListener");
+const referralEmitter = require("../listeners/userReferral").em;
+const UserReferral = require("../models/userReferral");
 
 exports.addCourse = async (req, res) => {
   if (
@@ -1206,6 +1208,32 @@ exports.logFMDPk = async (req, res) => {
   catch(e){
     console.log(`[*] exception at ${__filename}.logFMDPk: `, e);
     res.json({status:false, error:"internal error"})
+  }
+}
+
+exports.createUserReferralAll = (req, res) => {
+  try{
+    referralEmitter.emit("createReferralAllUser");
+    res.json({status:true})
+  }
+  catch(e){
+    console.log(`exception at ${__filename}.createUserReferralAll: `, e);
+    res.json({status:false})
+  }
+}
+
+exports.getReferredByUser = async (req, res) => {
+  try{
+    const email = req.body.email;
+    const userReferral = await UserReferral.findOne({email:email});
+    if (userReferral===null){
+      return res.json({status:false});
+    }
+    res.json({status:true, data:{count:userReferral.registrations.length, users:userReferral.registrations}})
+  }
+  catch(e){
+    console.log(`exception at ${__filename}.createUserReferralAll: `, e);
+    res.json({status:false})
   }
 }
 

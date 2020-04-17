@@ -47,6 +47,14 @@ your profile"}}
                 <td>Full Name</td>
                 <td id="name"></td>
               </tr>
+              <tr>
+                <td>Referral Code</td>
+                <td ><span id="refId"></span> <button style="float: right;" class="btn btn-primary" onclick="copyToClipboard('refId')">COPY</button></td>        
+              </tr>
+              <tr>
+                <td>Referral Link</td>
+                <td ><span id="refLink"></span><button style="float: right;" class="btn btn-primary" onclick="copyToClipboard('refLink')">COPY</button></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -236,6 +244,7 @@ your profile"}}
                     type="button"
                     class="btn btn-primary btn-update"
                     onclick="handleUpdateName()"
+                    id="update-name-btn"
                   >
                     Update
                   </button>
@@ -341,6 +350,7 @@ your profile"}}
     fetchPaypalPayment();
     getFMDReq();
     getFMDFunded();
+    fetchUserRefId();
     setTimeout(() => {
       fetchCryptoTransactions();
       callPendingListener();
@@ -415,6 +425,21 @@ your profile"}}
           "https://www.blockdegree.org/closeCallback";
       }
     }, 1000);
+  }
+
+  function fetchUserRefId() {
+    $.ajax({url:"/api/getUserRefId",success: resp => {
+      console.log(resp);
+      
+      if (resp.status!==true){
+        $.notify("Error while fetching referral code", {type:"danger"})
+      }else{
+        $("#refId").html(resp.refId);
+        $("#refLink").html(resp.url);
+      }
+    }, error: err => {
+      $.notify("Error while fetching referral code", {type:"danger"})
+    }})
   }
 
   function fetchPaypalPayment() {
@@ -827,5 +852,18 @@ your profile"}}
   </div>`;
     }
   }
+
+function copyToClipboard(id) {
+        let copyText = document.getElementById(id).innerHTML;
+        let $body = document.getElementsByTagName('body')[0];
+        let $tempInput = document.createElement('INPUT');
+        $body.appendChild($tempInput);
+        $tempInput.setAttribute('value', copyText)
+        $tempInput.select();
+        document.execCommand('copy');
+        $body.removeChild($tempInput);
+
+  $.notify(` Referral ${id==='refId'?"ID":"Link" } Copied!`, { type: "info", z_index: 2000 });
+};
 </script>
 {{/inline}} {{/base}}

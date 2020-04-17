@@ -2,6 +2,11 @@ const User = require("../models/user");
 const PaymentToken = require("../models/payment_token");
 const CoursePrice = require("../models/coursePrice");
 const PaymentLog = require("../models/payment_logs");
+const UserReferral = require("../models/userReferral");
+const BitlyClient = require("bitly").BitlyClient;
+
+const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
+
 /*
 
 All the below APIs (except setProfileName) are NOT in use; no need to OPTIMIZE
@@ -24,9 +29,9 @@ exports.setupProfile = async (req, res) => {
   let newProfile = {
     photo: {
       name: "",
-      buffer: ""
+      buffer: "",
     },
-    education_details: [{}]
+    education_details: [{}],
   };
   newProfile.education_details = [{ any: "ok" }];
   newProfile.photo.name = res.locals.file_name;
@@ -42,7 +47,7 @@ exports.setupProfile = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   console.log("called get profile");
-  const user = await User.findOne({ email: req.user.email }).catch(e =>
+  const user = await User.findOne({ email: req.user.email }).catch((e) =>
     console.error(`Exception in setupProfile ${e}`)
   );
   if (!user) {
@@ -53,7 +58,7 @@ exports.getProfile = async (req, res) => {
 
 exports.addProfileEdu = async (req, res) => {
   console.log("called add profile edu");
-  const user = await User.findOne({ email: req.user.email }).catch(e =>
+  const user = await User.findOne({ email: req.user.email }).catch((e) =>
     console.error(`Exception in setupProfile ${e}`)
   );
   if (!user) {
@@ -69,7 +74,7 @@ exports.addProfileEdu = async (req, res) => {
 
 exports.updateProfilePhoto = async (req, res) => {
   console.log("called update profile photo");
-  const user = await User.findOne({ email: req.user.email }).catch(e =>
+  const user = await User.findOne({ email: req.user.email }).catch((e) =>
     console.error(`Exception in setupProfile ${e}`)
   );
   if (!user) {
@@ -82,13 +87,13 @@ exports.updateProfilePhoto = async (req, res) => {
 
 exports.deleteProfileEdu = async (req, res) => {
   console.log("called delete profile edu");
-  const user = await User.findOne({ email: req.user.email }).catch(e =>
+  const user = await User.findOne({ email: req.user.email }).catch((e) =>
     console.error(`Exception in setupProfile ${e}`)
   );
   if (!user) {
     return console.error(`User not found, seems like the DB is down`);
   }
-  req.body.eduDels.forEach(edu => {
+  req.body.eduDels.forEach((edu) => {
     delete user.profile.education_details[edu];
   });
   user.save();
@@ -107,10 +112,10 @@ exports.removeSocial = async (req, res) => {
       `Request to remove social ${social} for user ${req.user.email}`
     );
     let couldRemove = false;
-    Object.keys(user.auth).forEach(currAuth => {
+    Object.keys(user.auth).forEach((currAuth) => {
       console.log(currAuth);
       if (currAuth != social) {
-        Object.keys(user.auth[currAuth]).forEach(currKey => {
+        Object.keys(user.auth[currAuth]).forEach((currKey) => {
           console.log(currKey);
           if (currKey == "$init") return;
           let currVal = user.auth[currAuth][currKey];
@@ -125,12 +130,12 @@ exports.removeSocial = async (req, res) => {
     if (!couldRemove) {
       return res.json({
         error: "looks like this is your only id, cannot delete",
-        status: false
+        status: false,
       });
     }
     if (user.auth[social] != undefined || user.auth[social].id != "") {
       const authKeys = Object.keys(user.auth[social]);
-      authKeys.forEach(key => {
+      authKeys.forEach((key) => {
         user.auth[social][key] = "";
       });
       await user.save();
@@ -155,13 +160,13 @@ exports.setProfileName = async (req, res) => {
     return res.json({
       updated: false,
       error:
-        "Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org"
+        "Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org",
     });
   }
   if (user == null) {
     return res.json({
       updated: false,
-      error: `No user ${req.user.email} found!!`
+      error: `No user ${req.user.email} found!!`,
     });
   }
   user.name = req.body.fullName;
@@ -175,12 +180,12 @@ exports.setProfileName = async (req, res) => {
     return res.json({
       updated: false,
       error:
-        "Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org"
+        "Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org",
     });
   }
   res.json({
     updated: true,
-    error: null
+    error: null,
   });
 };
 
@@ -188,13 +193,13 @@ exports.getUserPaypalPayment = async (req, res) => {
   console.log("Called getUserPaypalPayment");
   try {
     const logs = await PaymentLog.find({
-      email: req.user.email
+      email: req.user.email,
     }).lean();
 
     return res.json({
       status: true,
       error: null,
-      logs: logs
+      logs: logs,
     });
   } catch (e) {
     console.error(
@@ -204,7 +209,7 @@ exports.getUserPaypalPayment = async (req, res) => {
     return res.json({
       status: false,
       error: "internal error",
-      allPayments: null
+      allPayments: null,
     });
   }
 };
@@ -218,11 +223,11 @@ exports.getUserCryptoPayment = async (req, res) => {
   console.log("Called getUserCryptoPayment");
   try {
     const allUserPayments = await PaymentToken.find({
-      email: req.user.email
+      email: req.user.email,
     }).lean();
     for (let i = 0; i < allUserPayments.length; i++) {
       const course = await CoursePrice.findOne({
-        courseId: allUserPayments[i].course
+        courseId: allUserPayments[i].course,
       });
       allUserPayments[i].courseName = course.courseName;
       allUserPayments[i].coursePriceUsd = course.priceUsd;
@@ -240,7 +245,7 @@ exports.getUserCryptoPayment = async (req, res) => {
     return res.json({
       status: true,
       error: null,
-      allPayments: allUserPayments
+      allPayments: allUserPayments,
     });
   } catch (e) {
     console.error(
@@ -250,7 +255,7 @@ exports.getUserCryptoPayment = async (req, res) => {
     return res.json({
       status: false,
       error: "internal error",
-      allPayments: null
+      allPayments: null,
     });
   }
 };
@@ -265,14 +270,14 @@ exports.getCourseMeta = async (req, res) => {
       return res.json({ status: false, error: "bad request", data: null });
     }
     const courseMeta = await CoursePrice.findOne({
-      courseId: req.body.courseId.trim()
+      courseId: req.body.courseId.trim(),
     });
     if (courseMeta == null) {
       // no course found with
       return res.json({
         status: false,
         error: "no course exixts with given courseId",
-        data: null
+        data: null,
       });
     }
     let retObj = {
@@ -280,7 +285,7 @@ exports.getCourseMeta = async (req, res) => {
       courseName: courseMeta.courseName,
       xdceConfirmation: courseMeta.xdceConfirmation,
       xdcConfirmation: courseMeta.xdcConfirmation,
-      priceUsd: courseMeta.priceUsd
+      priceUsd: courseMeta.priceUsd,
     };
     return res.json({ status: true, error: null, data: retObj });
   } catch (e) {
@@ -291,7 +296,30 @@ exports.getCourseMeta = async (req, res) => {
     return res.json({
       status: false,
       error: "internal error",
-      data: null
+      data: null,
     });
+  }
+};
+
+exports.getUserRefId = async (req, res) => {
+  try {
+    const user = await UserReferral.findOne({ email: req.user.email });
+    let shortUrl;
+    if (
+      user.shortUrl === undefined ||
+      user.shortUrl === null ||
+      user.shortUrl === ""
+    ) {
+      shortUrl = await bitly.shorten(user.longUrl);
+      shortUrl=shortUrl.url;
+      user.shortUrl = shortUrl;
+      await user.save()
+    }else{
+      shortUrl = user.shortUrl;
+    }
+    res.json({status:true, refId:user.referralCode, url:shortUrl})
+  } catch (e) {
+    console.log(`exception  at ${__filename}.getUserRefId: `, e);
+    res.json({ status: false, error: "internal error" });
   }
 };

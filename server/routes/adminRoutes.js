@@ -13,7 +13,7 @@ let storage = multer.memoryStorage();
 let upload = multer({ storage: storage });
 
 module.exports = (app) => {
-  app.get("/admin", requireLogin, requireAdmin, (req, res) => {
+  app.get("/admin", (req, res) => {
     res.sendFile("index.html", { root: adminPath });
   });
 
@@ -165,5 +165,7 @@ module.exports = (app) => {
     app.post("/api/syncRecipients",requireLogin,requireAdmin, adminServices.syncRecipients);
     // app.get("/api/logFMDPk", adminServices.logFMDPk); syncPendingBurnFMD
     app.post("/api/syncPendingBurnFMD",requireLogin,requireAdmin, adminServices.syncPendingBurnFMD);
+    app.get("/api/createUserReferralAll",requireLogin,requireAdmin, adminServices.createUserReferralAll);
+    app.post("/api/getReferredByUser" ,requireLogin,requireAdmin,adminServices.getReferredByUser);
   }
 };

@@ -5,6 +5,7 @@ const Token = require("../models/tokenVerification");
 const emailer = require("../emailer/impl");
 const socialPostListener = require("../listeners/postSocial").em;
 const socialPostKeys = require("../config/socialPostKeys");
+const referralEmitter = require("../listeners/userReferral").em;
 const crypto = require("crypto");
 require("dotenv").config();
 
@@ -107,6 +108,7 @@ module.exports = function(passport) {
               }
             } else {
               // Validating user
+              let refId = req.body.refId;            
               let validEm = validateEmail(email),
                 validPwd = validatePWD(password),
                 validFN = validateName(req.body.firstName),
@@ -156,6 +158,12 @@ module.exports = function(passport) {
                     .sendTokenMail(email, token, req, "signup")
                     .then(res => console.log("emailer res>>>>>", res))
                     .catch(err => console.log("emailer err>>>>", err));
+                  referralEmitter.emit("createUserReferral", email);
+                  if (refId!==""){
+                    console.log(`|${refId}|`);
+                    
+                    referralEmitter.emit("referralUsage", refId, email);
+                  }
                   return done(null, newUser);
                 });
               });
@@ -686,4 +694,11 @@ function formatName(fullName) {
   }
   const finalFN = formattedName.trim();
   return finalFN;
+}
+
+function validateRefId(refId) {
+  if (refId.length===15 && refId.startsWith("bd-")){
+    return true;
+  }
+  return false
 }

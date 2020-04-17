@@ -41,6 +41,7 @@ function submitForm(form) {
     (formData.firstName = $("input[name=firstName]").val()),
       (formData.lastName = $("input[name=lastName]").val()),
       (formData.email = $("input[name=email]").val()),
+      (formData.refId = $("input[name=refId]").val()),
       (formData.password = $("input[name=password]").val());
   } else {
     (formData.email = $("input[name=email]").val()),

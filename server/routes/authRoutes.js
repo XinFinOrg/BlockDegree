@@ -3,16 +3,19 @@ const emailer = require("../emailer/impl");
 const passport = require("passport");
 const axios = require("axios");
 const FacebookConfig = require("../models/facebookConfig");
+const userReferral = require("../listeners/userReferral");
+const referralEmitter = userReferral.em;
 const requireLogin = require("../middleware/requireLogin");
 const requireAdmin = require("../middleware/requireAdmin");
 const handleClose = require("../middleware/handleClose");
+const detectReferral = require("../middleware/detectReferral");
 const path = require("path");
 const bcrypt = require("bcrypt-nodejs");
 
-module.exports = app => {
-  app.get("/logout", function(req, res) {
+module.exports = (app) => {
+  app.get("/logout", function (req, res) {
     req.logout();
-    req.session.destroy(function(err) {
+    req.session.destroy(function (err) {
       if (err) {
         return next(err);
       }
@@ -40,7 +43,7 @@ module.exports = app => {
     passport.authenticate(
       "local-signup",
       {
-        session: true
+        session: true,
       },
       async (err, user, info) => {
         res.send({ status: user, message: info });
@@ -52,7 +55,7 @@ module.exports = app => {
     passport.authenticate(
       "local-login",
       {
-        session: true
+        session: true,
       },
       async (err, user, info) => {
         if (user == false) {
@@ -62,7 +65,7 @@ module.exports = app => {
           return res.send({ status: user, message: info });
           // console.log("user logged in", user, info);
         }
-        req.logIn(user, function(err) {
+        req.logIn(user, function (err) {
           if (err) {
             console.log("login err>>>>>>>>>>>", err);
           }
@@ -84,7 +87,7 @@ module.exports = app => {
     ) {
       res.json({
         message: "Hmm, looks like you are signed in with a social account.",
-        status: false
+        status: false,
       });
     } else {
       emailer.forgotPasswordMailer(
@@ -126,7 +129,7 @@ module.exports = app => {
       let user = await User.findOne({ "auth.local.password": token });
       if (user == null) {
         return res.render("displayError", {
-          error: "Broken reset password link"
+          error: "Broken reset password link",
         });
       }
       console.log("Found User:  ", user);
@@ -139,16 +142,18 @@ module.exports = app => {
   app.get(
     "/auth/google",
     handleClose,
+    detectReferral,
     passport.authenticate("google", {
-      scope: ["profile ", "email"]
+      scope: ["profile ", "email"],
     })
   );
 
   app.get(
     "/auth/facebook",
     handleClose,
+    detectReferral,
     passport.authenticate("facebook", {
-      scope: ["public_profile", "email"]
+      scope: ["public_profile", "email"],
     })
   );
 
@@ -157,7 +162,7 @@ module.exports = app => {
     handleClose,
     // requireLogin, requireAdmin,
     passport.authenticate("facebookAdminRefresh", {
-      scope: ["public_profile", "email"]
+      scope: ["public_profile", "email"],
     })
   );
 
@@ -168,13 +173,13 @@ module.exports = app => {
       (err, msg) => {
         console.log("Response In Callback: ", err, msg);
         if (err) {
-          return res.render("displayError",{error:err});
+          return res.render("displayError", { error: err });
         }
         const currToken = msg.token;
 
         const url = `https://graph.facebook.com/105301110986098?fields=access_token&access_token=${currToken}`;
 
-        axios.get(url).then(async resp => {
+        axios.get(url).then(async (resp) => {
           console.log("Response from Facebook");
           console.log(resp.data);
           if (resp.data && resp.data.id !== "") {
@@ -193,7 +198,7 @@ module.exports = app => {
                 console.log("same token, not updated");
                 return res.json({
                   status: false,
-                  error: "same access_tokem, no updation performed"
+                  error: "same access_tokem, no updation performed",
                 });
               } else {
                 console.log("new access_token updating...");
@@ -209,9 +214,9 @@ module.exports = app => {
     )(req, res);
   });
 
-  app.get("/auth/twitter", handleClose, passport.authenticate("twitter"));
+  app.get("/auth/twitter", handleClose, detectReferral, passport.authenticate("twitter"));
 
-  app.get("/auth/linkedin", handleClose, passport.authenticate("linkedin"));
+  app.get("/auth/linkedin", handleClose, detectReferral, passport.authenticate("linkedin"));
 
   app.get("/auth/google/callback", (req, res, next) => {
     passport.authenticate(
@@ -221,13 +226,13 @@ module.exports = app => {
         if (err != null) {
           console.log(`Error: ${err}`);
           return res.render("displayError", {
-            error: err
+            error: err,
           });
         }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
-        req.logIn(user, err => {
+        req.logIn(user, (err) => {
           if (err != null) {
             console.log(`Error while logging in ${err}`);
             return res.redirect("/login");
@@ -237,7 +242,13 @@ module.exports = app => {
             return res.redirect("/closeCallback");
           }
           if (info == "new-name") {
-            return res.redirect("/profile?confirmName=true");
+            res.redirect("/profile?confirmName=true");
+            console.log(req.session);            
+            if (req.session.refIdUsed === true) {
+              referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
+            }
+            referralEmitter.emit("createUserReferral", user.email);
+            return;
           }
           var url = req.session.redirectTo || "/";
           if (
@@ -267,13 +278,13 @@ module.exports = app => {
         if (err != null) {
           console.log(`Error: ${err}`);
           return res.render("displayError", {
-            error: err
+            error: err,
           });
         }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
-        req.logIn(user, err => {
+        req.logIn(user, (err) => {
           if (err != null) {
             console.log(`Error while logging in ${err}`);
             res.redirect("/login");
@@ -283,7 +294,12 @@ module.exports = app => {
             return res.redirect("/closeCallback");
           }
           if (info == "new-name") {
-            return res.redirect("/profile?confirmName=true");
+            res.redirect("/profile?confirmName=true");
+            if (req.session.refIdUsed === true) {
+              referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
+            }
+            referralEmitter.emit("createUserReferral", user.email);
+            return;
           }
           var url = req.session.redirectTo || "/";
           if (
@@ -309,13 +325,13 @@ module.exports = app => {
           console.log("Inside error is not null: ", err, user, info);
           console.log(`Error: ${err}`);
           return res.render("displayError", {
-            error: err
+            error: err,
           });
         }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
-        req.logIn(user, err => {
+        req.logIn(user, (err) => {
           if (err != null) {
             console.log(`Error while logging in ${err}`);
             return res.redirect("/login");
@@ -325,7 +341,12 @@ module.exports = app => {
             return res.redirect("/closeCallback");
           }
           if (info == "new-name") {
-            return res.redirect("/profile?confirmName=true");
+            res.redirect("/profile?confirmName=true");
+            if (req.session.refIdUsed === true) {
+              referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
+            }
+            referralEmitter.emit("createUserReferral", user.email);
+            return;
           }
           var url = req.session.redirectTo || "/";
           if (
@@ -350,13 +371,13 @@ module.exports = app => {
           console.log("Inside error is not null: ", err, user, info);
           console.log(`Error: ${err}`);
           return res.render("displayError", {
-            error: err
+            error: err,
           });
         }
         if (user == null) {
           return res.send({ status: user, message: info });
         }
-        req.logIn(user, err => {
+        req.logIn(user, (err) => {
           if (err != null) {
             console.log(`Error while logging in ${err}`);
             res.redirect("/login");
@@ -366,7 +387,12 @@ module.exports = app => {
             return res.redirect("/closeCallback");
           }
           if (info == "new-name") {
-            return res.redirect("/profile?confirmName=true");
+            res.redirect("/profile?confirmName=true");
+            if (req.session.refIdUsed === true) {
+              referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
+            }
+            referralEmitter.emit("createUserReferral", user.email);
+            return;
           }
           var url = req.session.redirectTo || "/";
           if (
@@ -389,7 +415,7 @@ module.exports = app => {
         twitterAuth: false,
         facebookAuth: false,
         googleAuth: false,
-        linkedinAuth: false
+        linkedinAuth: false,
       });
     }
     let user;
@@ -400,7 +426,7 @@ module.exports = app => {
       res.status(500).json({
         error: err,
         status: 500,
-        info: "error while looking up the database for the user"
+        info: "error while looking up the database for the user",
       });
     }
     res.status(200).json({
@@ -408,12 +434,12 @@ module.exports = app => {
       twitterAuth: user.auth.twitter.id != "",
       facebookAuth: user.auth.facebook.id != "",
       googleAuth: user.auth.google.id != "",
-      linkedinAuth: user.auth.linkedin.id != ""
+      linkedinAuth: user.auth.linkedin.id != "",
     });
   });
 
   app.get("/api/isNameRegistered", requireLogin, async (req, res) => {
-    const user = await User.findOne({ email: req.user.email }).catch(e =>
+    const user = await User.findOne({ email: req.user.email }).catch((e) =>
       console.error(
         `Exception while looking up the user:${req.user.email} err : ${e}`
       )
@@ -423,6 +449,16 @@ module.exports = app => {
       res.json({ isSet: user.name != undefined && user.name != "" });
     }
   });
+
+  app.post("/api/refIdExists", async (req, res) => {
+    try {
+      const exists = await userReferral.refIdExists(req.body.refId);
+      res.json({ status: true, exists: exists });
+    } catch (e) {
+      console.log(`exception at ${__filename}.refIdExists: `, e);
+      res.json({ status: false, error: "internal error" });
+    }
+  });
 };
 
 function genFacebookConfig() {
@@ -430,6 +466,6 @@ function genFacebookConfig() {
     shortTermToken: "",
     lastUpdate: "",
     expiryTime: "",
-    longgTermToken: ""
+    longgTermToken: "",
   });
 }

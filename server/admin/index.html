@@ -78,7 +78,9 @@
                             <div onclick="openPage('promoCode')">PromoCode</div>
                             <div onclick="openPage('course_payment')">Course Payments</div>
                             <div onclick="openPage('wallet_config')">Wallet Config</div>
-                            <div onclick="openPage('referral_code')">Referral Code</div>
+                            <!-- <div onclick="openPage('referral_code')">Referral Code</div> -->
+                            <div onclick="openPage('referral_code_new')">Referral Code</div>
+
                           </div>
                           <div class="main">
                                 <section class="main-section">
@@ -284,6 +286,17 @@
                                             <h4>Disable Referral Code</h4>
                                             <input class="form-control" type="text" id="disable_referralCode" placeholder="Enter the code name" />                                            
                                             <button class="btn btn-primary" style="float: right;margin: 5px;" onclick="disableReferralCode()">Disable Referral Code</button>
+                                        </div>
+
+
+                                        <div id="referral_code_new" class="tabcontent" style="display: none;">
+                                            <input type="text" id="get_ref_code_email" placeholder="enter email">
+                                            <button type="button" onclick="getReferredByUser()">Get User</button>
+                                            <div id="ref_user_count"></div>
+                                            <br>
+                                            <br>
+                                            <div id="ref_user_emails"></div>
+                                            </div>
                                         </div>
                                     </section>
                                 </div>
@@ -673,6 +686,19 @@
                 }
             })
             }
-            
+
+            function getReferredByUser() {
+                $.ajax({method:"post",url:"/api/getReferredByUser", data:{email:document.getElementById("get_ref_code_email").value}, success:resp => {
+                    if (resp.status===true){
+                        document.getElementById("ref_user_count").innerHTML=resp.data.count;
+                        let retHtml="";
+                        resp.data.users.forEach(email => {
+                            retHtml += `<div>${email}</div>`
+                        });
+                        document.getElementById("ref_user_emails").innerHTML=retHtml;
+
+                    }
+                }})
+            }            
         </script>
 </html>

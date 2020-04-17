@@ -1,6 +1,4 @@
-{{#> base pageClass="nav--sticky"}}
-{{> layouts/base}}
-{{#*inline "body-block"}}
+{{#> base pageClass="nav--sticky"}} {{> layouts/base}} {{#*inline "body-block"}}
 <div class="form-messages alert d-none" role="alert"></div>
 <div class="container__cstm">
   <div class="row justify-content-center">
@@ -94,17 +92,15 @@
     </div>
   </div>
 </div>
-{{/inline}}
-
-{{#*inline "scripts-block"}}
+{{/inline}} {{#*inline "scripts-block"}}
 <script>
-  window.onload = function() {
+  window.onload = function () {
     checkAuth();
   };
 
   window.addEventListener(
     "message",
-    function(event) {
+    function (event) {
       if (event.origin == "https://www.blockdegree.org") {
         console.log("From PopUp", event.data);
         document.cookie = event.data;
@@ -114,19 +110,47 @@
     false
   );
   function handleAuthGoogle() {
-    window.location.replace("https://www.blockdegree.org/auth/google");
+    const refId = getParam("refId");
+    if (refId === null) {
+      window.location.replace(`https://www.blockdegree.org/auth/google`);
+    } else {
+      window.location.replace(
+        `https://www.blockdegree.org/auth/google?refId=${refId}`
+      );
+    }
     // popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
   }
   function handleAuthFacebook() {
-    window.location.replace("https://www.blockdegree.org/auth/facebook");
+    const refId = getParam("refId");
+    if (refId === null) {
+      window.location.replace(`https://www.blockdegree.org/auth/facebook`);
+    } else {
+      window.location.replace(
+        `https://www.blockdegree.org/auth/facebook?refId=${refId}`
+      );
+    }
     // popupLogin({ path: "https://www.blockdegree.org/auth/facebook?close=true" });
   }
   function handleAuthTwitter() {
-    window.location.replace("https://www.blockdegree.org/auth/twitter");
+    const refId = getParam("refId");
+    if (refId === null) {
+      window.location.replace(`https://www.blockdegree.org/auth/twitter`);
+    } else {
+      window.location.replace(
+        `https://www.blockdegree.org/auth/twitter?refId=${refId}`
+      );
+    }
     // popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
   }
   function handleAuthLinkedin() {
-    window.location.replace("https://www.blockdegree.org/auth/linkedin");
+    const refId = getParam("refId");
+    if (refId === null) {
+      window.location.replace(`https://www.blockdegree.org/auth/linkedin`);
+    } else {
+      window.location.replace(
+        `https://www.blockdegree.org/auth/linkedin?refId=${refId}`
+      );
+    }
     // popupLogin({ path: "https://www.blockdegree.org/auth/linkedin?close=true" });
   }
 
@@ -136,7 +160,7 @@
       url: "/api/getAuthStatus",
       method: "post",
       data: {},
-      success: result => {
+      success: (result) => {
         //   localAuth: user.auth.local.password != "",
         // twitterAuth: user.auth.twitter.id != "",
         // facebookAuth: user.auth.facebook.id != "",
@@ -153,7 +177,7 @@
           location.replace("https://www.blockdegree.org");
         }
         // signed in with twitter, show share button
-      }
+      },
     });
   }
 
@@ -163,7 +187,7 @@
       options.windowOptions || "location=0,status=0,width=600,height=600";
     options.callback =
       options.callback ||
-      function() {
+      function () {
         window.location.reload();
       };
     var that = this;
@@ -173,7 +197,7 @@
       options.windowName,
       options.windowOptions
     );
-    that._oauthInterval = window.setInterval(function() {
+    that._oauthInterval = window.setInterval(function () {
       if (that._oauthWindow.closed) {
         window.clearInterval(that._oauthInterval);
         options.callback();
@@ -181,7 +205,7 @@
     }, 1000);
   }
 </script>
-<script src="/js/userAuth.js?v=1.4"></script>
+<script src="/js/userAuth.js?v=1.5"></script>
 <script>
   let currentUrl = location.href;
   let paramsStr = currentUrl.split("?");
@@ -194,7 +218,7 @@
     if (key == "emailConfirmed" && value == "true") {
       setTimeout(() => {
         $.notify("Your email was successfully confirmed! Please Login-in now", {
-          type: "success"
+          type: "success",
         });
       }, 1000);
     }
@@ -203,12 +227,28 @@
         $.notify(
           "Your email addess is already verified.Please continue to login.",
           {
-            type: "info"
+            type: "info",
           }
         );
       }, 1000);
     }
   }
+
+  
+function getParam(param) {
+  let currentUrl = window.location.href;
+  if (currentUrl.split("?").length > 1) {
+    let paramsString = currentUrl.split("?")[1];
+    const params = paramsString.split("&");
+    for (let i = 0; i < params.length; i++) {
+      const key = params[i].split("=")[0];
+      const value = params[i].split("=")[1];
+      if (key === param) return value;
+    }
+  }
+
+  return null;
+}
+
 </script>
-{{/inline}}
-{{/base}}
+{{/inline}} {{/base}}

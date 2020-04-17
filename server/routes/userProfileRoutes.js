@@ -26,5 +26,5 @@ module.exports = app => {
   );
   app.post("/api/getCourseMeta", requireLogin, profileService.getCourseMeta);
   app.get("/api/getUserPaypalPayment", requireLogin, profileService.getUserPaypalPayment);
-
+  app.get("/api/getUserRefId", requireLogin, profileService.getUserRefId);
 };

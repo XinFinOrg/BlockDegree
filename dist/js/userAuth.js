@@ -64,7 +64,9 @@ if (typeof jQuery != "undefined") {
         lnInfo = document.getElementById("invalidLN"),
         emInfo = document.getElementById("invalidEmail"),
         pwdMatchInfo = document.getElementById("pwdMatchInfo"),
-        cfmPw = document.getElementById("cfm-password");
+        cfmPw = document.getElementById("cfm-password"),
+        refId = document.getElementById("refId"),
+        invalidRefId = document.getElementById("invalidRefId")
       registerForm.email = document.getElementById("email");
       let validPWD = false,
         validFN = false,
@@ -75,6 +77,7 @@ if (typeof jQuery != "undefined") {
       registerForm.cfmPw = cfmPw;
       registerForm.lastName = lastName;
       registerForm.firstName = firstName;
+      registerForm.refId = refId;
       $("#btn-register").attr("disabled", true);
 
       registerForm.errMsg =
@@ -250,10 +253,31 @@ if (typeof jQuery != "undefined") {
 
       registerForm.on("submit", e => {
         e.preventDefault();
-        if (validFN && validLN && validPWD && pwdMatch) {
-          registerForm.email.value = registerForm.email.value.toLowerCase();
-          new submitForm(registerForm);
+        if (refId.value!==""){
+          $.ajax({url:"/api/refIdExists",method:"post" ,data:{refId:refId.value}, success:resp => {
+            if (resp.status===true){
+              if (resp.exists===true){
+                if (validFN && validLN && validPWD && pwdMatch) {
+                  registerForm.email.value = registerForm.email.value.toLowerCase();
+                  new submitForm(registerForm);
+                  refId.value="";
+                }
+              }else{
+                invalidRefId.innerHTML = "Referral ID not found"
+              }
+            }else{
+              $.notify("Some error occured", {type:"danger"})
+            }
+          }, error:err => {
+            $.notify("Some error occured", {type:"danger"})
+          }})
+        }else{
+          if (validFN && validLN && validPWD && pwdMatch) {
+            registerForm.email.value = registerForm.email.value.toLowerCase();
+            new submitForm(registerForm);
+          }
         }
+        
       });
     }
   });
