@@ -242,12 +242,12 @@ module.exports = (app) => {
             return res.redirect("/closeCallback");
           }
           if (info == "new-name") {
-            res.redirect("/profile?confirmName=true");
             console.log(req.session);            
             if (req.session.refIdUsed === true) {
               referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
             }
             referralEmitter.emit("createUserReferral", user.email);
+            res.redirect("/profile?confirmName=true");
             return;
           }
           var url = req.session.redirectTo || "/";
@@ -294,11 +294,11 @@ module.exports = (app) => {
             return res.redirect("/closeCallback");
           }
           if (info == "new-name") {
-            res.redirect("/profile?confirmName=true");
             if (req.session.refIdUsed === true) {
               referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
             }
             referralEmitter.emit("createUserReferral", user.email);
+            res.redirect("/profile?confirmName=true");
             return;
           }
           var url = req.session.redirectTo || "/";
@@ -341,11 +341,11 @@ module.exports = (app) => {
             return res.redirect("/closeCallback");
           }
           if (info == "new-name") {
-            res.redirect("/profile?confirmName=true");
             if (req.session.refIdUsed === true) {
               referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
             }
             referralEmitter.emit("createUserReferral", user.email);
+            res.redirect("/profile?confirmName=true");
             return;
           }
           var url = req.session.redirectTo || "/";
@@ -387,11 +387,11 @@ module.exports = (app) => {
             return res.redirect("/closeCallback");
           }
           if (info == "new-name") {
-            res.redirect("/profile?confirmName=true");
             if (req.session.refIdUsed === true) {
               referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
             }
             referralEmitter.emit("createUserReferral", user.email);
+            res.redirect("/profile?confirmName=true");
             return;
           }
           var url = req.session.redirectTo || "/";
