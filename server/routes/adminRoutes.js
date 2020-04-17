@@ -167,5 +167,7 @@ module.exports = (app) => {
     app.post("/api/syncPendingBurnFMD",requireLogin,requireAdmin, adminServices.syncPendingBurnFMD);
     app.get("/api/createUserReferralAll",requireLogin,requireAdmin, adminServices.createUserReferralAll);
     app.post("/api/getReferredByUser" ,requireLogin,requireAdmin,adminServices.getReferredByUser);
+    // syncPendingDonation
+    app.get("/api/syncPendingDonation" ,requireLogin,requireAdmin,adminServices.syncPendingDonation);
   }
 };

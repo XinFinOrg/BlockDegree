@@ -1211,6 +1211,17 @@ exports.logFMDPk = async (req, res) => {
   }
 }
 
+exports.syncPendingDonation = async (req,res) => {
+  try{
+    DonationListener.em.emit("syncPendingDonation");
+    res.json({status:true});
+  }
+  catch(e){
+    console.log(`exception at ${__filename}.syncPendingDonation: `, e);
+    return res.json({status:false, error:"internal error"})
+  }
+}
+
 exports.createUserReferralAll = (req, res) => {
   try{
     referralEmitter.emit("createReferralAllUser");
