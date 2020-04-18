@@ -737,7 +737,7 @@ function claimFund(fundId) {
 }
 
 function postTweet() {
-  const templateNumber = document.getElementById("images").value;
+  const templateNumber = document.getElementById("images-twitter").value;
   if (templateNumber === "") {
     $.notify("Please select atleast one banner", { type: "warning" });
     return;
@@ -768,7 +768,7 @@ function postTweet() {
 
 function postLinkedin() {
   console.log("called postLinkedin");
-  const templateNumber = document.getElementById("images").value;
+  const templateNumber = document.getElementById("images-linkedin").value;
   if (templateNumber === "") {
     $.notify("Please select atleast one banner", { type: "warning" });
     return;
