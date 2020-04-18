@@ -352,6 +352,8 @@ module.exports = function(passport) {
             "auth.facebook.id": profile.id
           });
           if (existingUser) {
+            existingUser.auth.facebook.accessToken = accessToken;
+            existingUser.auth.facebook.refreshToken = refreshToken || "";
             existingUser.lastActive = Date.now();
             existingUser.save();
             return done(null, existingUser);
@@ -478,6 +480,8 @@ module.exports = function(passport) {
           "auth.twitter.id": profile.id
         });
         if (existingUser) {
+          existingUser.auth.twitter.token = token;
+          existingUser.auth.twitter.tokenSecret = tokenSecret;
           existingUser.lastActive = Date.now();
           existingUser.save();
           return done(null, existingUser);
@@ -583,6 +587,9 @@ module.exports = function(passport) {
             "auth.linkedin.id": profile.id
           });
           if (existingUser) {
+            // need to refresh token
+            existingUser.auth.linkedin.accessToken = accessToken;
+            existingUser.auth.linkedin.refreshToken = refreshToken;
             existingUser.lastActive = Date.now();
             existingUser.save();
             return done(null, existingUser);

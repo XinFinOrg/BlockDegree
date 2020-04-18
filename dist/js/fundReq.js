@@ -649,12 +649,12 @@ function handleShareLinkdedin(seedMsg) {
     data: {},
     success: (result) => {
       let popUpWin;
-      if (!result.linkedinAuth) {
+      // if (!result.linkedinAuth) {
         // has not linked its linkedin account,  first link the account and then continue.
         popUpWin = handleAuthLinkedin();
-      } else {
-        $("#togglePostLinkedin").click();
-      }
+      // } else {
+      //   $("#togglePostLinkedin").click();
+      // }
     },
     error: (err) => {
       $.notify(
@@ -674,12 +674,12 @@ function handleShareTwitter(seedMsg) {
     data: {},
     success: (result) => {
       let popUpWin;
-      if (!result.twitterAuth) {
+      // if (!result.twitterAuth) {
         // has not linked its linkedin account,  first link the account and then continue.
         popUpWin = handleAuthTwitter();
-      } else {
-        $("#togglePostTwitter").click();
-      }
+      // } else {
+      //   $("#togglePostTwitter").click();
+      // }
     },
     error: (err) => {
       $.notify(
