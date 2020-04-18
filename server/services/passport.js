@@ -61,6 +61,7 @@ function newDefaultUser() {
         isVerified: false
       },
       linkedin: {
+        refreshToken:"",
         accessToken: "",
         id: ""
       }
@@ -543,6 +544,7 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {
+        console.log(accessToken, refreshToken);
         process.nextTick(async function() {
           if (req.user) {
             if (
@@ -567,6 +569,7 @@ module.exports = function(passport) {
               let user = await User.findOne({ email: req.user.email });
               user.auth.linkedin.id = profile.id;
               user.auth.linkedin.accessToken = accessToken;
+              user.auth.linkedin.refreshToken = refreshToken;
               user.lastActive = Date.now();
               user.save();
               return done(null, user);
@@ -600,6 +603,7 @@ module.exports = function(passport) {
             if (linkEmail) {
               linkEmail.auth.linkedin.id = profile.id;
               linkEmail.auth.linkedin.accessToken = accessToken;
+              linkEmail.auth.linkedin.refreshToken = refreshToken;
               linkEmail.lastActive = Date.now();
               linkEmail.save();
               return done(null, linkEmail);
@@ -613,6 +617,7 @@ module.exports = function(passport) {
             let user = await User.findOne({ email: profile.emails[0].value });
             user.auth.linkedin.id = profile.id;
             user.auth.linkedin.accessToken = accessToken;
+            user.auth.linkedin.refreshToken = refreshToken;
             user.lastActive = Date.now();
             user.save();
             return done(null, user);

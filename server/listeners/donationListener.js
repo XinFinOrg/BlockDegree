@@ -364,7 +364,7 @@ function xdcReconn() {
       let xdcProvider = new Xdc3.providers.WebsocketProvider(xdcWs);
       xdc3 = new Xdc3(xdcProvider);
       xdcProvider.on("connect", () => {
-        console.log(`[*] xdc reconnected to ws at ${__fileName}`);
+        console.log(`[*] xdc reconnected to ws at ${__filename}`);
         clearInterval(currInterval);
         inReconnXDC = false;
       });
