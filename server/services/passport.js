@@ -341,6 +341,8 @@ module.exports = function(passport) {
               return done(null, user);
             }
             let user = await User.findOne({ email: req.user.email });
+            user.auth.facebook.accessToken = accessToken;
+            user.auth.facebook.refreshToken = refreshToken;
             user.lastActive = Date.now();
             user.save();
             return done(null, req.user);
@@ -472,6 +474,8 @@ module.exports = function(passport) {
             return done(null, user);
           }
           let user = await User.findOne({ email: req.user.email });
+          user.auth.twitter.token = token;
+          user.auth.twitter.tokenSecret = tokenSecret;
           user.lastActive = Date.now();
           user.save();
           return done(null, req.user);
@@ -579,6 +583,8 @@ module.exports = function(passport) {
               return done(null, user);
             }
             let user = await User.findOne({ email: req.user.email });
+            user.auth.linkedin.accessToken = accessToken;
+            user.auth.linkedin.refreshToken = refreshToken;
             user.lastActive = Date.now();
             user.save();
             return done(null, req.user);
