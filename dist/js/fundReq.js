@@ -739,7 +739,7 @@ function claimFund(fundId) {
 function postTweet() {
   const templateNumber = document.getElementById("images-twitter").value;
   if (templateNumber === "") {
-    $.notify("Please select atleast one banner", { type: "warning" , z_index=2000 });
+    $.notify("Please select atleast one banner", { type: "warning" , z_index:2000 });
     return;
   }
   console.log(`select the image: `, templateNumber);
@@ -770,7 +770,7 @@ function postLinkedin() {
   console.log("called postLinkedin");
   const templateNumber = document.getElementById("images-linkedin").value;
   if (templateNumber === "") {
-    $.notify("Please select atleast one banner", { type: "warning",  z_index=2000 });
+    $.notify("Please select atleast one banner", { type: "warning",  z_index:2000 });
     return;
   }
   const msg = document.getElementById("postMSGLinkedin").value;
