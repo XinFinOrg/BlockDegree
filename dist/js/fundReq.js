@@ -82,7 +82,7 @@ function getFMDAllData(update) {
               currData.userName
             }','${currData.requestUrlShort}','${
               currData.requestUrlLong
-            }','${currData.description.trim().replace(/'/g, "\\'")}','${
+            }','${escape(currData.description)}','${
               currData.receiveAddr
             }','${currData.fundId}', '${currData.status}','${
               currData.amountGoal
@@ -109,7 +109,7 @@ function getFMDAllData(update) {
               currData.userName
             }','${currData.requestUrlShort}','${
               currData.requestUrlLong
-            }','${currData.description.trim().replace(/\'/g, "\\'")}','${
+            }','${escape(currData.description)}','${
               currData.receiveAddr
             }','${currData.fundId}','${currData.status}','${
               currData.amountGoal
@@ -272,7 +272,7 @@ function handleFundRequestSubmit() {
             resp.data.userName,
             resp.data.shortUrl,
             resp.data.longUrl,
-            resp.data.description,
+            escape(resp.data.description),
             resp.data.addr,
             resp.data.fundId,
             "uninitiated",
@@ -323,6 +323,7 @@ function renderRequestModal(
   funderName
 ) {
   console.log(addr, fundId);
+  description = unescape(description);
   const whatsappText = `Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on a student's certificate as a sponsor.\nLink: ${requestUrlShort}\n`;
   const linkedinTitle = "Help Fund My Degree at Blockdegree";
   const encodedStr = encodeURIComponent(requestUrlShort);
@@ -534,7 +535,7 @@ function renderRequestedModal(allData) {
           allData[i].userName,
           allData[i].requestUrlShort,
           allData[i].requestUrlLong,
-          allData[i].description.trim().replace(/\'/g, "\\'"),
+          escape(allData[i].description),
           allData[i].receiveAddr,
           allData[i].fundId,
           allData[i].status,
