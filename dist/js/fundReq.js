@@ -1,6 +1,10 @@
 let globalPendingDT, globalApprovedDT;
 let loginLinkedin = false,
-  loginTwitter = false;
+  loginTwitter = false,
+  twitterFunder = false,
+  linkedinFunder = false,
+  linkedinfundId = "",
+  twitterFundId = "";
 $(document).ready(() => {
   getFMDAllData();
 
@@ -21,13 +25,24 @@ $(document).ready(() => {
         console.log("message from popup.");
         // toggle linkedin modal
         if (loginLinkedin === true) {
-          $("#togglePostLinkedin").click();
+          if (linkedinFunder == true) {
+            postLinkedin(true);
+            linkedinFunder = false;
+          } else {
+            $("#togglePostLinkedin").click();
+          }
           loginLinkedin = false;
         }
 
         // toggle twitter modal
         if (loginTwitter === true) {
-          $("#togglePostTwitter").click();
+          if (twitterFunder == true) {
+            postTweet(true);
+            twitterFunder = false;
+          } else {
+            $("#togglePostTwitter").click();
+          }
+
           loginTwitter = false;
         }
       }
@@ -82,11 +97,11 @@ function getFMDAllData(update) {
               currData.userName
             }','${currData.requestUrlShort}','${
               currData.requestUrlLong
-            }','${escape(currData.description)}','${
-              currData.receiveAddr
-            }','${currData.fundId}', '${currData.status}','${
-              currData.amountGoal
-            }', '${currData.donerName}')">View Description</button></td><td>`;
+            }','${escape(currData.description)}','${currData.receiveAddr}','${
+              currData.fundId
+            }', '${currData.status}','${currData.amountGoal}', '${
+              currData.donerName
+            }')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataPending += `<span class="courseName">${getCourseName(
@@ -109,11 +124,11 @@ function getFMDAllData(update) {
               currData.userName
             }','${currData.requestUrlShort}','${
               currData.requestUrlLong
-            }','${escape(currData.description)}','${
-              currData.receiveAddr
-            }','${currData.fundId}','${currData.status}','${
-              currData.amountGoal
-            }', '${currData.donerName}'
+            }','${escape(currData.description)}','${currData.receiveAddr}','${
+              currData.fundId
+            }','${currData.status}','${currData.amountGoal}', '${
+              currData.donerName
+            }'
             )">View Description</button></td><td>`;
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataApproved += `<span class="courseName">${getCourseName(
@@ -267,7 +282,10 @@ function handleFundRequestSubmit() {
             { type: "warning", duration: 5000 }
           );
         } else {
-          $.notify("Successfully submitted the request, \nshare on social media now!", { type: "success", z_index:2000 });
+          $.notify(
+            "Successfully submitted the request, \nshare on social media now!",
+            { type: "success", z_index: 2000 }
+          );
           renderRequestModal(
             resp.data.userName,
             resp.data.shortUrl,
@@ -328,16 +346,80 @@ function renderRequestModal(
   const linkedinTitle = "Help Fund My Degree at Blockdegree";
   const encodedStr = encodeURIComponent(requestUrlShort);
   const twitterText = `Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on a student\'s certificate as a sponsor.Link: ${requestUrlShort} #onlinelearning #FundMyDegree`;
+  const funderTextMsg = "";
   const linkedinText = `http://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
     requestUrlShort
   )}&source=blockdegree.org`;
-  const retHtml =
-    `<div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  const funderMessage =
+    "Sponsored a student's degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation";
+  const fundeeMessage = `Thank you ${funderName} for sponsoring my degree! Appreciate it! #blockdegree #fundmydegree #onlineeducation`;
+  let retHtml = "";
+
+  if (type === "completed") {
+    // show funder's modal
+    retHtml =
+      `<div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
                   aria-hidden="true">
 
                   <div class="modal-dialog modal-dialog-centered" role="document">
 
 
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
+                              ${`<span class="funded-by">Funded By ${
+                                funderName == "undefined"
+                                  ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
+                                  : funderName
+                              }</span>`}                              
+                              <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
+
+                          </div>` +
+      `
+                          <textarea class="form-control" id="funder-certi-msg">Test</textarea>
+                          <div class="modal-body" id="requestModal--body">
+                              <img src="/img/funder-certi/${fundId}.png">
+                          </div>` +
+      `<div class="modal-footer">` +
+      `${`<button
+        class="btn btn-secondary fund-btn-close"
+        data-dismiss="modal"
+
+      >
+        Close
+      </button><div class='funded'>FUNDED</div>`}
+                               Share On&nbsp;
+                               <a target="_blank" href="${
+                                 isMobile() === true
+                                   ? `https://api.whatsapp.com/send?text=${encodeURIComponent(
+                                       funderMessage
+                                     )}`
+                                   : `https://web.whatsapp.com/send?text=${encodeURIComponent(
+                                       funderMessage
+                                     )}`
+                               }">
+                               <i class="fa fa-whatsapp fa-lg"></i>
+                             </a>&nbsp;                               
+                               <div data-dismiss="modal" onclick="handleShareLinkdedin('Sponsored a student\\'s degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation','true','${fundId}')">
+                                <i class="fa fa-linkedin fa-lg"></i>
+                              </div>&nbsp;
+                              <div data-dismiss="modal" onclick="handleShareTwitter('Sponsored a student\\'s degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation','true','${fundId}')">
+                                  <i class="fa fa-twitter fa-lg"></i>
+                              </div>&nbsp;
+                              <div class="fb-share-button" data-href="${requestUrlShort}" data-layout="button" data-size="small"><a
+  target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${encodedStr}"
+  class="fb-xfbml-parse-ignore"><i class="fa fa-facebook fa-lg"></i></a></div>
+                          </div>` +
+      `</div>
+</div>
+</div>`;
+    document.getElementById("requestModalWrapper").innerHTML = retHtml;
+    document.getElementById("funder-certi-msg").innerHTML = funderMessage;
+  } else {
+    retHtml =
+      `<div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                  aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
@@ -351,27 +433,22 @@ function renderRequestModal(
                                   : ""
                               }                              
                               <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
-
                           </div>` +
-    `
-                          <div class="modal-body" id="requestModal--body">
-                              ${description}
+      `<div class="modal-body" id="requestModal--body">                            
                           </div>` +
-    `<div class="modal-footer">` +
-    `${
-      type === "completed"
-        ? `<button
+      `<div class="modal-footer">` +
+      `${
+        type === "completed"
+          ? `<button
         class="btn btn-secondary fund-btn-close"
         data-dismiss="modal"
-
       >
         Close
       </button><div class='funded'>FUNDED</div>`
-        : `
+          : `
         <button
           class="btn btn-secondary fund-btn-close"
           data-dismiss="modal"
-
         >
           Close
         </button>
@@ -383,7 +460,7 @@ function renderRequestModal(
           Fund
         </button>
       `
-    }
+      }
                                Share On&nbsp;
                                <a target="_blank" href="${
                                  isMobile() === true
@@ -406,11 +483,13 @@ function renderRequestModal(
   target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${encodedStr}"
   class="fb-xfbml-parse-ignore"><i class="fa fa-facebook fa-lg"></i></a></div>
                           </div>` +
-    `</div>
+      `</div>
 </div>
 </div>`;
+    document.getElementById("requestModalWrapper").innerHTML = retHtml;
+    document.getElementById("requestModal--body").innerHTML = description;
+  }
 
-  document.getElementById("requestModalWrapper").innerHTML = retHtml;
   setTimeout(() => $("#requestModal").modal("toggle"), 0);
 
   if (typeof web3 != "undefined") {
@@ -641,7 +720,13 @@ function isMobile() {
   return check;
 }
 
-function handleShareLinkdedin(seedMsg) {
+function handleShareLinkdedin(seedMsg, funder, fundId) {
+  console.log(funder, fundId);
+  
+  if (funder == 'true') {
+    linkedinFunder = true;
+    linkedinfundId = fundId;
+  }
   document.getElementById("postMSGLinkedin").innerHTML = seedMsg;
 
   $.ajax({
@@ -651,8 +736,8 @@ function handleShareLinkdedin(seedMsg) {
     success: (result) => {
       let popUpWin;
       // if (!result.linkedinAuth) {
-        // has not linked its linkedin account,  first link the account and then continue.
-        popUpWin = handleAuthLinkedin();
+      // has not linked its linkedin account,  first link the account and then continue.
+      popUpWin = handleAuthLinkedin();
       // } else {
       //   $("#togglePostLinkedin").click();
       // }
@@ -666,7 +751,11 @@ function handleShareLinkdedin(seedMsg) {
   });
 }
 
-function handleShareTwitter(seedMsg) {
+function handleShareTwitter(seedMsg, funder, fundId) {
+  if (funder == "true") {
+    twitterFunder = true;
+    twitterFundId = fundId;
+  }
   document.getElementById("postMSGTwitter").innerHTML = seedMsg;
 
   $.ajax({
@@ -676,8 +765,8 @@ function handleShareTwitter(seedMsg) {
     success: (result) => {
       let popUpWin;
       // if (!result.twitterAuth) {
-        // has not linked its linkedin account,  first link the account and then continue.
-        popUpWin = handleAuthTwitter();
+      // has not linked its linkedin account,  first link the account and then continue.
+      popUpWin = handleAuthTwitter();
       // } else {
       //   $("#togglePostTwitter").click();
       // }
@@ -737,21 +826,30 @@ function claimFund(fundId) {
   $("#claimTxModal").modal("show");
 }
 
-function postTweet() {
-  const templateNumber = document.getElementById("images-twitter").value;
-  if (templateNumber === "") {
-    $.notify("Please select atleast one banner", { type: "warning" , z_index:2000 });
+function postTweet(funder) {
+  let templateNumber = null;
+  if (funder != true)
+    templateNumber = document.getElementById("images-twitter").value;
+  if (funder != true && templateNumber === "") {
+    $.notify("Please select atleast one banner", {
+      type: "warning",
+      z_index: 2000,
+    });
     return;
   }
-  console.log(`select the image: `, templateNumber);
+  console.log(`select the image: `, templateNumber, "funder: ", funder);
   const msg = document.getElementById("postMSGTwitter").value;
-  const postTemplate = templateNumber;
   $("#postTwitter").modal("hide");
   $.notify("The tweet in being posted, please wait...", { type: "info" });
+  let data = { msg: msg, templateNumber: templateNumber };
+  if (funder == true) {
+    data["funder"] = funder;
+    data["fundId"] = twitterFundId;
+  }
   $.ajax({
     method: "post",
     url: "/api/shareOnTwitterFMD",
-    data: { msg: msg, templateNumber: postTemplate },
+    data: data,
     success: (resp) => {
       console.log(resp);
       if (resp.uploaded == true) {
@@ -767,21 +865,31 @@ function postTweet() {
   });
 }
 
-function postLinkedin() {
+function postLinkedin(funder) {
   console.log("called postLinkedin");
-  const templateNumber = document.getElementById("images-linkedin").value;
-  if (templateNumber === "") {
-    $.notify("Please select atleast one banner", { type: "warning",  z_index:2000 });
+
+  let templateNumber = null;
+  if (funder != true)
+    templateNumber = document.getElementById("images-linkedin").value;
+  if (funder != true && templateNumber === "") {
+    $.notify("Please select atleast one banner", {
+      type: "warning",
+      z_index: 2000,
+    });
     return;
   }
   const msg = document.getElementById("postMSGLinkedin").value;
   $("#postLinkedin").modal("hide");
   $.notify("The post in being sent, please wait...", { type: "info" });
-  const postTemplate = templateNumber;
+  let data = { msg: msg, templateNumber: templateNumber };
+  if (funder == true) {
+    data["funder"] = funder;
+    data["fundId"] = linkedinfundId;
+  }
   $.ajax({
     method: "post",
     url: "/api/shareOnLinkedinFMD",
-    data: { msg: msg, templateNumber: postTemplate },
+    data: data,
     success: (resp) => {
       console.log(resp);
       if (resp.uploaded == true) {

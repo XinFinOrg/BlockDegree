@@ -11,13 +11,13 @@ ional.dtd">
 body {margin: 0;padding: 0;background-color: #FFFFFF;}
 .cert-frame {font-family: Arial, Helvetica, sans-serif;color: #3f586e;width: 800px;height: 600px;text-align: center;background-image: url(https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/funders/certi/certificate-frameBg.jpg);background-repeat: no-repeat;background-position: center top;}
 .cert-body {color: #565656;width:670px;height:516px;padding:59px 25px 25px 106px;}
-.cert-data {float: left;width:575px;height:468px;padding:30px 35px 20px 60px;text-align: left; position:relative;}
-.cert-header {font-family: 'Allura', cursive;font-size:45px;font-weight:400;vertical-align: top;text-align:center;line-height:50px;background:-webkit-linear-gradient(#0287ef, #3031af);-webkit-background-clip: text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
-.cert-signature {text-align:left;margin-bottom:5px;}
+.cert-data {float: left;width:575px;height:458px;padding:40px 35px 20px 60px;text-align: left; position:relative;}
+.cert-header {font-family: 'Allura', cursive;font-size:45px;font-weight:400;vertical-align: top;text-align:center;line-height:50px;background:-webkit-linear-gradient(#0287ef, #3031af);-webkit-background-clip: text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+.cert-signature {text-align:left;margin-top:10px;}
 .cert-signatureName {font-weight:600;}
-.cert-content {font-family: Arial, Helvetica, sans-serif;font-size:18px;line-height:22px;font-weight: 400;}
+.cert-content {font-family: Arial, Helvetica, sans-serif;font-size:18px;line-height:24px;font-weight: 400;}
 .cert-content p {padding-bottom: 15px;margin: 0px;}
-.cert-content p.thankYou {padding-bottom:20px;margin: 0px;}
+.cert-content p.thankYou {padding-bottom:35px;margin: 0px;}
 .cert-content p .funderName {font-weight:600;}
 .cert-content p a {color: #0287ef;text-decoration:none;}
 .cert-content p a:hover {color: #0287ef;text-decoration:underline;}
@@ -35,14 +35,12 @@ body {margin: 0;padding: 0;background-color: #FFFFFF;}
                 <div class="cert-header">Thank You!</div>
 
                 <div class="cert-content">
-                    <p>Dear <span class="funderName">Rudresh Solanki</span>,</p>
+                    <p>Dear <span class="funderName"><%= donerName %></span>,</p>
                                         <p>Thank you for your contribution using <strong>FundMyDegree</strong>. Your Donation will make a crucial difference in the career of the students who receive the scholarship.</p>
                     <p>We at Blockdegree will also truly appreciate your initiative to encourage others to empower education by providing funding support using <strong>FundMyDegree</strong>.</p>
-                    <p>TradeFinex.org is a peer to peer blockchain network for Fund Distribution powered by <strong>XinFin (XDC) Network</strong>.</p>  
                                         <p class="thankYou">Thank You.</p>
-                                        <div class="cert-signature"><img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/funders/certi/signature.png" width="189" height="40" style="outline:none;border-style:none;"></div>
-                                        <p class="cert-signatureName">Ms. Michelle Jonathan</p>
-                                        <p><a href="https://www.blockdegree.org">Blockdegree.org</a></p>
+                                        <div class="cert-signatureName">Team Blockdegree</div>
+                                        <div class="cert-signature"><img src="https://raw.githubusercontent.com/XinFinOrg/Blockchain_Tutorial-website/live/dist/img/brand/blockdegree_dark.png?v=2" width="208" height="40" style="outline:none;border-style:none;"></div>
                 </div>
 
             </div>

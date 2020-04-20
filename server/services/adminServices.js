@@ -13,6 +13,7 @@ const pendingEmitter = require("../listeners/pendingTx").em;
 const DonationListener = require("../listeners/donationListener");
 const referralEmitter = require("../listeners/userReferral").em;
 const UserReferral = require("../models/userReferral");
+const { renderFunderCerti } = require("../helpers/renderFunderCerti");
 
 exports.addCourse = async (req, res) => {
   if (
@@ -52,7 +53,7 @@ exports.addCourse = async (req, res) => {
     );
     res.json({
       status: false,
-      error: "internal error while saving the new model"
+      error: "internal error while saving the new model",
     });
     return;
   }
@@ -87,7 +88,7 @@ exports.setXdceTolerance = async (req, res) => {
       console.error("bad request, same XdceTolerance as the existing value");
       res.json({
         status: false,
-        error: "bad request, same value of the xdceTolerance"
+        error: "bad request, same value of the xdceTolerance",
       });
       return;
     }
@@ -132,7 +133,7 @@ exports.setXdcTolerance = async (req, res) => {
       console.error("bad request, same XdcTolerance as the existing value");
       res.json({
         status: false,
-        error: "bad request, same value of the xdcTolerance"
+        error: "bad request, same value of the xdcTolerance",
       });
       return;
     }
@@ -177,7 +178,7 @@ exports.setPriceUsd = async (req, res) => {
       console.error("bad request, same priceUsd as the existing value");
       res.json({
         status: false,
-        error: "bad request, same value of the priceUsd"
+        error: "bad request, same value of the priceUsd",
       });
       return;
     }
@@ -221,7 +222,7 @@ exports.setXdceConfirmation = async (req, res) => {
       );
       res.json({
         status: false,
-        error: "bad request, same value of the confirmations"
+        error: "bad request, same value of the confirmations",
       });
       return;
     }
@@ -268,7 +269,7 @@ exports.setXdcConfirmation = async (req, res) => {
       );
       res.json({
         status: false,
-        error: "bad request, same value of the confirmations"
+        error: "bad request, same value of the confirmations",
       });
       return;
     }
@@ -328,7 +329,7 @@ exports.setCourseBurnPercent = async (req, res) => {
           res.json({
             status: false,
             error:
-              "Bad request at adminServices.setCourseBurnPercent, same value"
+              "Bad request at adminServices.setCourseBurnPercent, same value",
           });
           return;
         } else {
@@ -336,7 +337,7 @@ exports.setCourseBurnPercent = async (req, res) => {
           await CoursePrice.update(
             {
               courseId: req.body.courseId,
-              "burnToken.tokenName": filteredTokenName
+              "burnToken.tokenName": filteredTokenName,
             },
             { $set: { "burnToken.$.burnPercent": burnPercent } },
             (err, course) => {
@@ -352,7 +353,7 @@ exports.setCourseBurnPercent = async (req, res) => {
       course.burnToken.push({
         tokenName: filteredTokenName,
         burnPercent: burnPercent,
-        autoBurn: false
+        autoBurn: false,
       });
     }
 
@@ -384,7 +385,7 @@ exports.enableBurning = async (req, res) => {
     // course found
 
     const courseExists = await CoursePrice.findOne({
-      courseId: req.body.courseId
+      courseId: req.body.courseId,
     });
 
     let filteredTokenName = req.body.tokenName.trim().toLowerCase();
@@ -439,7 +440,7 @@ exports.disableBurning = async (req, res) => {
 
   try {
     const courseExists = await CoursePrice.findOne({
-      courseId: req.body.courseId
+      courseId: req.body.courseId,
     });
 
     let filteredTokenName = req.body.tokenName.trim().toLowerCase();
@@ -494,7 +495,7 @@ exports.addWallet = async (req, res) => {
   ) {
     return res.json({
       status: false,
-      error: "bad request; invalid wallet address"
+      error: "bad request; invalid wallet address",
     });
   }
 
@@ -505,7 +506,7 @@ exports.addWallet = async (req, res) => {
   ) {
     return res.json({
       status: false,
-      error: "bad request; invalid wallet tokenName"
+      error: "bad request; invalid wallet tokenName",
     });
   }
 
@@ -516,7 +517,7 @@ exports.addWallet = async (req, res) => {
   ) {
     return res.json({
       status: false,
-      error: "bad request; invalid wall;et network"
+      error: "bad request; invalid wall;et network",
     });
   }
 
@@ -527,14 +528,14 @@ exports.addWallet = async (req, res) => {
   ) {
     return res.json({
       status: false,
-      error: "bad request; invalid wallet purpose"
+      error: "bad request; invalid wallet purpose",
     });
   }
 
   if (wallet_type == undefined || wallet_type == null || wallet_type == "") {
     return res.json({
       status: false,
-      error: "bad request; invalid wallet type"
+      error: "bad request; invalid wallet type",
     });
   }
 
@@ -560,7 +561,7 @@ exports.addWallet = async (req, res) => {
           // wallet exists, return bad request
           return res.json({
             status: false,
-            error: "recipient wallet already exists"
+            error: "recipient wallet already exists",
           });
         }
       }
@@ -568,7 +569,7 @@ exports.addWallet = async (req, res) => {
         wallet_address: wallet_address,
         wallet_network: wallet_network,
         wallet_purpose: wallet_purpose,
-        wallet_token_name: wallet_token_name
+        wallet_token_name: wallet_token_name,
       });
       try {
         await configWallet.save();
@@ -576,7 +577,7 @@ exports.addWallet = async (req, res) => {
         console.error("Some error occured while saving the wallet: ", e);
         return res.json({
           status: false,
-          error: "internal error"
+          error: "internal error",
         });
       }
       return res.json({ status: true, error: null });
@@ -591,7 +592,7 @@ exports.addWallet = async (req, res) => {
           // wallet exists, return bad request
           return res.json({
             status: false,
-            error: "burn wallet already exists"
+            error: "burn wallet already exists",
           });
         }
       }
@@ -599,7 +600,7 @@ exports.addWallet = async (req, res) => {
         wallet_address: wallet_address,
         wallet_network: wallet_network,
         wallet_purpose: wallet_purpose,
-        wallet_token_name: wallet_token_name
+        wallet_token_name: wallet_token_name,
       });
       try {
         await configWallet.save();
@@ -607,7 +608,7 @@ exports.addWallet = async (req, res) => {
         console.error("Some error occured while saving the wallet: ", e);
         return res.json({
           status: false,
-          error: "internal error"
+          error: "internal error",
         });
       }
       return res.json({ status: true, error: null });
@@ -638,7 +639,7 @@ exports.switchWalletTo = async (req, res) => {
   ) {
     return res.json({
       status: false,
-      error: "bad request; invalid wallet address"
+      error: "bad request; invalid wallet address",
     });
   }
 
@@ -649,7 +650,7 @@ exports.switchWalletTo = async (req, res) => {
   ) {
     return res.json({
       status: false,
-      error: "bad request; invalid wallet tokenName"
+      error: "bad request; invalid wallet tokenName",
     });
   }
 
@@ -660,14 +661,14 @@ exports.switchWalletTo = async (req, res) => {
   ) {
     return res.json({
       status: false,
-      error: "bad request; invalid wall;et network"
+      error: "bad request; invalid wall;et network",
     });
   }
 
   if (wallet_type == undefined || wallet_type == null || wallet_type == "") {
     return res.json({
       status: false,
-      error: "bad request; invalid wallet type"
+      error: "bad request; invalid wallet type",
     });
   }
 
@@ -758,7 +759,7 @@ exports.switchWalletTo = async (req, res) => {
                 wallet_address: wallet_address,
                 wallet_network: wallet_network,
                 wallet_purpose: configWallet.recipientWallets[i].wallet_purpose,
-                wallet_token_name: wallet_token_name
+                wallet_token_name: wallet_token_name,
               });
               await configWallet.save();
             } catch (e) {
@@ -852,7 +853,7 @@ exports.switchWalletTo = async (req, res) => {
                   wallet_address: wallet_address,
                   wallet_network: wallet_network,
                   wallet_purpose: configWallet.burnWallets[i].wallet_purpose,
-                  wallet_token_name: wallet_token_name
+                  wallet_token_name: wallet_token_name,
                 });
                 await configWallet.save();
               } catch (e) {
@@ -868,7 +869,7 @@ exports.switchWalletTo = async (req, res) => {
             // wallet is not setup properly
             return res.json({
               error: "please add privateKey in KeyConfig",
-              status: false
+              status: false,
             });
           }
         }
@@ -890,7 +891,7 @@ exports.initiateWalletConfig = async () => {
         recipientWallets: [],
         burnWallets: [], // corresponding private key needs to be present in the server/config/config.js file
         recipientActive: [],
-        burnActive: []
+        burnActive: [],
       });
       await newWallet.save();
       console.log("Wallet initiated, please add some data");
@@ -1105,7 +1106,7 @@ exports.getPaymentLogs = async (req, res) => {
         course_id: paymentLogs[x].course_id,
         payment_id: paymentLogs[x].payment_id,
         payment_status: paymentLogs[x].payment_status,
-        timestamp: paymentLogs[x]._id.getTimestamp()
+        timestamp: paymentLogs[x]._id.getTimestamp(),
       };
       retData.push(currData);
     }
@@ -1154,7 +1155,7 @@ exports.getAllFundRequests = async (req, res) => {
   try {
     const allFund = await UserFundRequest.find({})
       .select({
-        receiveAddrPrivKey: 0
+        receiveAddrPrivKey: 0,
       })
       .lean();
     res.json({ status: true, data: allFund });
@@ -1164,89 +1165,119 @@ exports.getAllFundRequests = async (req, res) => {
   }
 };
 
-exports.syncRecipients = (req,res) => {
-  try{
+exports.syncRecipients = (req, res) => {
+  try {
     DonationListener.em.emit("syncRecipients");
-    res.json({status:true})
-  }
-  catch(e){
+    res.json({ status: true });
+  } catch (e) {
     console.log(`exception at ${__filename}.syncRecipients: `, e);
-    res.json({status:false, error:"internal error"})
+    res.json({ status: false, error: "internal error" });
   }
-}
+};
 
-exports.syncPendingBurnFMD = async (req,res) => {
-  try{
-    console.log(req.body)
+exports.syncPendingBurnFMD = async (req, res) => {
+  try {
+    console.log(req.body);
     let burnAll = req.body.burnAll;
-    console.log(burnAll, burnAll=="true");
-    
-    pendingEmitter.emit("syncPendingBurnFMD", burnAll=="true");
-    res.json({status:true})
-  }
-  catch(e){
+    console.log(burnAll, burnAll == "true");
+
+    pendingEmitter.emit("syncPendingBurnFMD", burnAll == "true");
+    res.json({ status: true });
+  } catch (e) {
     console.log(`exception at ${__filename}.syncPendingBurnFMD: `, e);
-    return res.json({status:false});
+    return res.json({ status: false });
   }
-} 
+};
 
 exports.logFMDPk = async (req, res) => {
-  try{
-    const addr = req.body.address || "xdc442b9C737AddB7C9eA9EF6a7630BbB0Cb5270bc2";
-    if (_.isEmpty(addr)){
-      return res.json({status:false, error:"missing parameter(s)"})
+  try {
+    const addr =
+      req.body.address || "xdc442b9C737AddB7C9eA9EF6a7630BbB0Cb5270bc2";
+    if (_.isEmpty(addr)) {
+      return res.json({ status: false, error: "missing parameter(s)" });
     }
-    const fundReq = await UserFundRequest.findOne({receiveAddr:addr});
-    if (fundReq===null){
-      console.log("[*] fmd not found");      
-      return res.json({status:false});
-    }else{
+    const fundReq = await UserFundRequest.findOne({ receiveAddr: addr });
+    if (fundReq === null) {
+      console.log("[*] fmd not found");
+      return res.json({ status: false });
+    } else {
       console.log(`PK: ${fundReq.receiveAddrPrivKey}`);
-      return res.json({status:true});
+      return res.json({ status: true });
     }
-  }
-  catch(e){
+  } catch (e) {
     console.log(`[*] exception at ${__filename}.logFMDPk: `, e);
-    res.json({status:false, error:"internal error"})
+    res.json({ status: false, error: "internal error" });
   }
-}
+};
 
-exports.syncPendingDonation = async (req,res) => {
-  try{
+exports.syncPendingDonation = async (req, res) => {
+  try {
     DonationListener.em.emit("syncPendingDonation");
-    res.json({status:true});
-  }
-  catch(e){
+    res.json({ status: true });
+  } catch (e) {
     console.log(`exception at ${__filename}.syncPendingDonation: `, e);
-    return res.json({status:false, error:"internal error"})
+    return res.json({ status: false, error: "internal error" });
   }
-}
+};
 
 exports.createUserReferralAll = (req, res) => {
-  try{
+  try {
     referralEmitter.emit("createReferralAllUser");
-    res.json({status:true})
-  }
-  catch(e){
+    res.json({ status: true });
+  } catch (e) {
     console.log(`exception at ${__filename}.createUserReferralAll: `, e);
-    res.json({status:false})
+    res.json({ status: false });
   }
-}
+};
 
 exports.getReferredByUser = async (req, res) => {
-  try{
+  try {
     const email = req.body.email;
-    const userReferral = await UserReferral.findOne({email:email});
-    if (userReferral===null){
-      return res.json({status:false});
+    const userReferral = await UserReferral.findOne({ email: email });
+    if (userReferral === null) {
+      return res.json({ status: false });
     }
-    res.json({status:true, data:{count:userReferral.registrations.length, users:userReferral.registrations}})
-  }
-  catch(e){
+    res.json({
+      status: true,
+      data: {
+        count: userReferral.registrations.length,
+        users: userReferral.registrations,
+      },
+    });
+  } catch (e) {
     console.log(`exception at ${__filename}.createUserReferralAll: `, e);
-    res.json({status:false})
+    res.json({ status: false });
   }
-}
+};
+
+exports.syncFunderCerti = async (req, res) => {
+  try {
+    // const rewrite = req.body.rewrite;
+    const allFundReq = await UserFundRequest.find({
+      $and: [
+        { status: "completed" },
+        {
+          $and: [
+            { donerName: { $ne: null } },
+            { donerName: { $ne: undefined } },
+            { donerName: { $ne: "" } },
+          ],
+        },
+      ],
+    }).lean();
+    allFundReq.forEach((currFundReq) => {
+      renderFunderCerti(currFundReq.donerName, currFundReq.fundId).catch(
+        (e) => {
+          console.log(`exception at ${__filename}.syncFunderCerti: `, e);
+        }
+      );
+    });
+    res.json({ status: true });
+  } catch (e) {
+    console.log(`exception at ${__filename}.syncFunderCerti: `, e);
+    return res.json({ status: false, error: "internal error" });
+  }
+};
 
 //--------------------------------------Getters Stop----------------------------------------
 
@@ -1259,7 +1290,7 @@ function newDefCourse(courseId) {
     xdcTolerance: "",
     xdcConfirmation: "",
     priceUsd: "",
-    burnToken: []
+    burnToken: [],
   });
 }
 
@@ -1273,7 +1304,7 @@ function newDefNotification() {
     message: "",
     displayed: "",
     emails: [],
-    sendAll: false
+    sendAll: false,
   });
 }
 
@@ -1286,6 +1317,6 @@ function newReferralCode() {
     users: [],
     created: "",
     lastUsed: "",
-    referrerEmail: ""
+    referrerEmail: "",
   });
 }

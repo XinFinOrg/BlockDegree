@@ -13,7 +13,7 @@ let xdc3 = require("../helpers/blockchainConnectors").xdcInst;
 const equateAddress = require("../helpers/common").equateAddress;
 const { xdcToUsd, usdToXdc } = require("../helpers/cmcHelper");
 const xdcWs = require("../helpers/constant").WsXinfinMainnet;
-
+const {renderFunderCerti} = require("../helpers/renderFunderCerti");
 const recipients = [];
 
 let inReconnXDC = false;
@@ -101,6 +101,7 @@ function startProcessingDonation(fundId, tx, name) {
               currentReq.donerEmail !== null &&
               currentReq.donerEmail !== undefined
             ) {
+              renderFunderCerti(currentReq.donerName, currentReq.fundId);
               emailer.sendFMDCompleteFunder(
                 currentReq.donerEmail,
                 currentReq.userName,

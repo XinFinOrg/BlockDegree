@@ -555,7 +555,15 @@ if (!req.user) {
     let msg = req.body.msg;
     // let fundId = req.body.fundId;
     let templateNumber = req.body.templateNumber;
-
+    let funderCerti = req.body.funder;
+    let fundId = req.body.fundId;
+    let currFundReq=null;
+    if (funderCerti=="true"){
+      currFundReq = await UserFundReq.findOne({fundId:fundId});
+      if (currFundReq===null){
+        res.json({status:false, error:"fund not found"});
+      }
+    }
     // const currFund = await UserFundReq.findOne({fundId:fundId});
 
     // if (currFund===null){
@@ -591,7 +599,14 @@ if (!req.user) {
       );
       let T = new twit(config);
       let imgHTML = "";
-      let b64content = fs.readFileSync(`server/fmd-templates/${templateNumber}.jpg`).toString("base64");;
+
+      let b64content = "";
+      if (funderCerti=="true"){
+        b64content = fs.readFileSync(`dist/img/funder-certi/${currFundReq.fundId}.png`).toString("base64");;
+      }else{
+        b64content = fs.readFileSync(`server/fmd-templates/${templateNumber}.jpg`).toString("base64");;
+      }
+      
 
       T.post("media/upload", { media_data: b64content }, function(
         // asynchronous
@@ -711,7 +726,20 @@ exports.uploadImageLinkedinFMD = async (req, res) => {
   console.log("UploadURL : ", uploadURL);
   // let localPath = "";
   const templateNumber = req.body.templateNumber;
-  let pathToFile = `server/fmd-templates/${templateNumber}.jpg`;
+  let funder = req.body.funder;
+  let fundId = req.body.fundId;
+  let currFundReq = null;
+  let pathToFile = ""
+  if (funder=="true"){
+    currFundReq = await UserFundReq.findOne({fundId:fundId});
+    if (currFundReq==null){
+      return res.json({status:false, error:"fund not found"})
+    }
+    pathToFile = `dist/img/funder-certi/${currFundReq.fundId}.png`;
+  }else{
+    pathToFile = `server/fmd-templates/${templateNumber}.jpg`;
+  }
+  
   
   var os = new os_func();
   os.execCommand(

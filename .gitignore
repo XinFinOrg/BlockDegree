@@ -25,6 +25,8 @@ server/postTemplates/*
 server/helpers/*.ejs
 server/helpers/*.sol
 
+dist/img/funder-certi/*
+
 questions
 *.bak
 *.config.js
