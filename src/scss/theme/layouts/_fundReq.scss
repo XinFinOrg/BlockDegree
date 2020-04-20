@@ -1,7 +1,7 @@
 .fmd-page-wrapper {
   .fmd-block-bg {
     position: relative;
-    padding: 150px 0px 150px 0px;
+    padding: 175px 0px 150px 0px;
     background: #3a7bd5;
     background: -webkit-linear-gradient(to bottom, #1488cc, #3a7bd5);
     background: linear-gradient(to bottom, #1488cc, #3a7bd5);
@@ -22,10 +22,23 @@
 
   .fmd-block-bg p {
     color: #ffffff;
-    font-size: 16px;
-    line-height: 22px;
+    font-size: 17px;
+    line-height: 24px;
     padding: 0px;
     margin: 0px;
+  }
+  
+  .fmd-block-bg .btn-white {
+  	color: #FFFFFF;
+	background: transparent;
+	border: 2px solid #FFFFFF;
+	border-radius: 50px;
+	padding: 12px 20px;
+  }
+  
+  .fmd-block-bg .btn-white:hover {
+	color: #3a7bd5;
+	background: #ffffff;
   }
 
   .btn.border.white {
@@ -42,7 +55,7 @@
   .table th,
   #alreadyFunded .table td,
   .table th {
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
   }
 
   @media (max-width: 768px) {
@@ -58,8 +71,8 @@
 
   #fmd-block {
     position: relative;
-    top: -75px;
-    margin-bottom: -50px;
+    top: -78px;
+    margin-bottom: -20px;
   }
 
   .table {
@@ -165,10 +178,18 @@
 
   #pendingFund_length,
   #approvedFund_length {
+    label {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  #pendingFund_length,
+  #approvedFund_length {
     select {
       border: 1px solid lightgrey;
       border-radius: 5px;
       background-color: white;
+	  display: inline-block;
     }
   }
 
@@ -260,26 +281,70 @@
       color: #3a7bd5;
     }
   }
-
-  #pendingFund {
-    border-bottom: none;
+  
+  .table-hover tbody tr:hover, .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f8f9fb!important;
   }
 
+  #pendingFund {
+    /*border-bottom: none;*/
+	border-bottom: 1px solid #dee2e6;
+	margin-bottom: 20px!important;
+  }
+  
   #pendingFund>thead>tr>th {
-    border-bottom: 1px solid lightgrey;
+    color: #4f5258;
+	font-size: .9525rem;
+    font-weight: 500;
+    background-color: #fafafa;
+	border-bottom: 1px solid lightgrey;
   }
 
   #approvedFund {
-    border-bottom: none;
+    /*border-bottom: none;*/
+	border-bottom: 1px solid #dee2e6;
+	margin-bottom: 20px!important;
   }
 
   #approvedFund>thead>tr>th {
-    border-bottom: 1px solid lightgrey;
+    color: #4f5258;
+	font-size: .9525rem;
+    font-weight: 500;
+    background-color: #fafafa;
+	border-bottom: 1px solid lightgrey;
   }
 
   #approvedFund {
     margin-bottom: 0;
   }
+  
+  #fundingRequired table button.btn.btn-primary,
+  #alreadyFunded table button.btn.btn-primary {
+  	white-space: inherit;
+  }
+  
+  
+  #fundingRequired .dataTables_wrapper .dataTables_paginate .paginate_button,
+  #alreadyFunded .dataTables_wrapper .dataTables_paginate .paginate_button {
+  	padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+	border-radius: 4px;
+  }
+  #fundingRequired .dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+  #alreadyFunded .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #FFFFFF!important;
+    color: #2073d4 !important;
+    border: 1px solid #2073d4;
+  }
+  
+  
+  
+  
+  
 
   #paymentMethodModal>div>div>div.modal-body {
     text-align: center;

@@ -571,3 +571,139 @@
   padding: 4px;
   font-weight: 500;
 }
+
+
+
+
+/* ------------------ Welcome modal css starts ------------------------ */
+#welcomeModal {
+     .bg-white{
+        background-color:#FFFFFF!important;
+    }	 
+     .close{
+         position:absolute;
+        z-index:1;
+        right:10px!important;
+        top:10px!important;
+        height:2.5rem;
+        width:2.5rem;
+        background:rgba(93,93,93,0.8)!important;
+        border-radius:50%;
+        font-size:1.8rem;
+        padding:0;
+    }
+     .close:hover{
+        opacity:1;
+    }
+     .close:focus{
+        outline:0
+    }
+     .close span{
+        background-image:url("data:image/svg+xml;
+        charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M14.7,1.3c-0.4-0.4-1-0.4-1.4,0L8,6.6L2.7,1.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4L6.6,8l-5.3,5.3 c-0.4,0.4-0.4,1,0,1.4C1.5,14.9,1.7,15,2,15s0.5-0.1,0.7-0.3L8,9.4l5.3,5.3c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3 c0.4-0.4,0.4-1,0-1.4L9.4,8l5.3-5.3C15.1,2.3,15.1,1.7,14.7,1.3z'/%3E%3C/svg%3E");
+        background-repeat:no-repeat;
+        background-size:contain;
+        color:transparent;
+        text-shadow:none;
+        background-position:center;
+    }
+     .close.light span{
+        background-image:url("data:image/svg+xml;
+        charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M14.7,1.3c-0.4-0.4-1-0.4-1.4,0L8,6.6L2.7,1.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4L6.6,8l-5.3,5.3 c-0.4,0.4-0.4,1,0,1.4C1.5,14.9,1.7,15,2,15s0.5-0.1,0.7-0.3L8,9.4l5.3,5.3c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3 c0.4-0.4,0.4-1,0-1.4L9.4,8l5.3-5.3C15.1,2.3,15.1,1.7,14.7,1.3z'/%3E%3C/svg%3E")
+    }
+    .close.size-sm{
+        transform:scale(.5);
+        right:.5rem;
+        top:.5rem;
+    }
+    .close.close-pinned{
+        top:-19px;
+        right:-19px;
+    }
+     .carousel-item {
+         min-height: 494px;
+    }
+     #carouselExampleIndicators ol li {
+         padding-bottom: 0px;
+    }
+     .carousel-indicators li {
+         box-sizing: content-box;
+         -ms-flex: 0 1 auto;
+         flex: 0 1 auto;
+         width: 10px;
+         height: 10px;
+         margin-right: 3px;
+         margin-left: 3px;
+         text-indent: -999px;
+         cursor: pointer;
+         background-color: #f87762;
+         background-clip: padding-box;
+         border-top: 10px solid transparent;
+         border-bottom: 10px solid transparent;
+         opacity: .5;
+         transition: opacity .6s ease;
+    }
+     .carousel-indicators .active {
+         background-color: #f87762;
+         opacity: 1;
+    }
+     .carousel-inner .carousel-item h3 {
+        font-size:1.25rem;
+        color:inherit;
+        font-weight:400;
+        margin-bottom:0.5rem;
+    }
+     .carousel-inner .carousel-item p {
+        margin-bottom:1rem;
+        line-height:1.5;
+    }
+     .carousel-inner .carousel-item img {
+        max-width:250px!important;
+    }
+     .text-black-50{
+        color:rgba(0,0,0,.6)!important;
+        font-weight:400;
+    }
+     .btn-cta{
+        text-transform:uppercase;
+        letter-spacing:1px;
+        padding:15px 20px;
+        font-size:.8rem;
+        font-weight:600;
+    }
+     .btn-cstm-light{
+         background: #3CD3AD;
+         background: -webkit-linear-gradient(45deg, #3CD3AD,#4CB8C4);
+         background: linear-gradient(45deg, #3CD3AD,#4CB8C4);
+         border: 1px solid transparent;
+         border-radius: 50px;
+         color: white;
+         padding: 10px 45px;
+         white-space: normal;
+    }
+     .btn-cstm-light:hover{
+        color:#FFFFFF;
+        background: #3CD3AD;
+        background: -webkit-linear-gradient(45deg, #4CB8C4,#3CD3AD);
+        background: linear-gradient(45deg, #4CB8C4,#3CD3AD);
+    }
+     .btn-cstm-light.focus,.btn-cstm-light:focus{
+        box-shadow:0 0 0 .2rem rgba(255,255,255,.5);
+    }
+     .btn-cstm-light.disabled,.btn-cstm-light:disabled{
+        color:#FFFFFF;
+        background-color:#3CD3AD;
+        background: -webkit-linear-gradient(45deg, #4CB8C4,#3CD3AD);
+        background: linear-gradient(45deg, #4CB8C4,#3CD3AD);
+    }
+     .btn-cstm-light:not(:disabled):not(.disabled).active,.btn-cstm-light:not(:disabled):not(.disabled):active,.show>.btn-cstm-light.dropdown-toggle{
+        color:#FFFFFF;
+        background-color:#3CD3AD;
+        background: -webkit-linear-gradient(45deg, #4CB8C4,#3CD3AD);
+        background: linear-gradient(45deg, #4CB8C4,#3CD3AD);
+    }
+     .btn-cstm-light:not(:disabled):not(.disabled).active:focus,.btn-cstm-light:not(:disabled):not(.disabled):active:focus,.show>.btn-cstm-light.dropdown-toggle:focus{
+        box-shadow:0 0 0 .2rem rgba(255,255,255,.5)
+    }
+}
+/* ------------------ Welcome modal css ends ------------------------ */

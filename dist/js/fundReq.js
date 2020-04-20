@@ -339,7 +339,7 @@ function renderRequestModal(
 
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
+                              <h5 class="modal-title align-self-center" id="requestModal--title">Request By <strong>${userName}</strong></h5>
                               ${
                                 type == "completed"
                                   ? `<span class="funded-by">Funded By ${

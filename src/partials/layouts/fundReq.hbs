@@ -5,12 +5,10 @@
             <div class="d-flex justify-content-between">
                 <div class="fmd-block-bg-content">
                     <h2>Fund My Degree</h2>
-                    <p>Need help in getting your certification?<br>You can apply for funding on this page and get your
-                        certification sponsored.</p>
+                    <p>Need help in getting your certification?<br>You can apply for funding on this page and get your certification sponsored.</p>
                 </div>
                 <div class="align-self-center">
-                    <button data-toggle="modal" data-target="#applyNow"
-                        class="btn btn-outline-light text-uppercase">Request For FundMyDegree </button>
+                    <button data-toggle="modal" data-target="#applyNow" class="btn btn-white text-uppercase">Request For FundMyDegree </button>
                 </div>
             </div>
         </div>
@@ -113,7 +111,7 @@
     <!-- Modal -->
     <div class="modal fade" id="applyNow" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="applyNowLongTitle">Apply For Funding</h5>
@@ -122,7 +120,31 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="modal-body__title">Select Course (s)</div>
+                    
+					<div class="form-group">
+						<div class="form-group">
+						<div class="modal-body__title mb-1">Select Course (s)</div>							
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" id="basic-course" value="course_1">
+								<label class="form-check-label" for="basic-course">Basic</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" id="advanced-course" value="course_2">
+								<label class="form-check-label" for="advanced-course">Advanced</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" id="professional-course" value="course_3">
+								<label class="form-check-label" for="professional-course">Professional</label>
+							</div>
+						</div>                  	
+						
+						<div class="form-group">
+							<div class="modal-body__title mb-1">Enter Short Description</div>
+                    		<textarea id="req-description" style="height: 150px;" class="form-control" placeholder="enter short description"></textarea>
+						</div>
+					</div>
+					
+					<!--<div class="modal-body__title">Select Course (s)</div>
                     <div class="modal-input-wrapper">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="basic-course" value="course_1">
@@ -139,9 +161,8 @@
                     </div>
                     <div class="modal-body__title">Enter Short Description</div>
                     <div class="modal-input-wrapper">
-                        <textarea id="req-description" style="height: 150px;" class="form-control"
-                            placeholder="enter short description"></textarea>
-                    </div>
+                        <textarea id="req-description" style="height: 150px;" class="form-control" placeholder="enter short description"></textarea>
+                    </div>-->
 
                 </div>
                 <div class="modal-footer">
@@ -163,12 +184,10 @@
     </div>
 
     <div id="payByXdcWrapper">
-        <div class="modal fade" id="xdcQRCode" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade" id="xdcQRCode" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="qr-code-wrapper">
-
 
                         <div class="modal-header">
                             <h5 class="modal-title" id="applyNowLongTitle">Pay By XDC</h5>
