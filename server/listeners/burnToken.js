@@ -13,7 +13,10 @@ const { removeExpo } = require("../helpers/common");
 const UserFundRequest = require("../models/userFundRequest");
 const uuid = require("uuid/v4");
 // const WsServer = require("../listeners/donationListener").em;
-const xdcInst = require("../helpers/blockchainConnectors").xdcInst;
+let xdc3 = require("../helpers/blockchainConnectors").xdcInst;
+let Xdc3 =  require("xdc3");
+
+let inReconnXDC = false;
 
 const networks = {
   "51": "https://rpc.apothem.network",
@@ -217,7 +220,7 @@ async function donationTokenBurn(fundId, optionalNonce) {
         currWalletAddr = "xdc" + currWalletAddr.slice(2);
       }
     });
-    const walletBalance = await xdcInst.eth.getBalance(currWalletAddr);
+    const walletBalance = await xdc3.eth.getBalance(currWalletAddr);
     if (parseFloat(walletBalance < burnAmnt)) {
       console.log(`[*] insufficient balance to burn token`);
       await emailer.sendMailInternal(
@@ -238,11 +241,11 @@ async function donationTokenBurn(fundId, optionalNonce) {
       currPrivKey,
       "50",
       burnAmnt,
-      xdcInst,
+      xdc3,
       optionalNonce
     );
 
-    xdcInst.eth
+    xdc3.eth
       .sendSignedTransaction(signed.rawTransaction)
       .then(async (receipt) => {
         console.log(`got the burning receipt for fund request: `, fundId);
@@ -356,3 +359,37 @@ function newDefNoti() {
 }
 
 exports.em = eventEmitter;
+
+
+
+function connectionHeartbeat() {
+  setInterval(async () => {
+    try {
+      const isActiveXdc = await xdc3.eth.net.isListening();
+      console.log(`connection status XDC donationListener:${isActiveXdc}`);
+      if (!isActiveXdc && inReconnXDC === false) xdcReconn();
+    } catch (e) {
+      if (inReconnXDC === false) xdcReconn();
+    }
+  }, 5000);
+}
+
+function xdcReconn() {
+  try {
+    console.log("[*] reconn xdc running");
+    inReconnXDC = true;
+    let currInterval = setInterval(() => {
+      let xdcProvider = new Xdc3.providers.WebsocketProvider(xdcWs);
+      xdc3 = new Xdc3(xdcProvider);
+      xdcProvider.on("connect", () => {
+        console.log(`[*] xdc reconnected to ws at ${__filename}`);
+        clearInterval(currInterval);
+        inReconnXDC = false;
+      });
+    }, 5000);
+  } catch (e) {
+    console.log(`exception at ${__filename}.xdcReconn: `, e);
+  }
+}
+
+connectionHeartbeat();
