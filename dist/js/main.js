@@ -97,20 +97,20 @@ $(document).ready(async function() {
 
   //------- Open offer modal on pageload --------//
 
-  // $(document).ready(function() {
-  //   console.log(sessionStorage.getItem("shown_offerModal"));
-  //   if (sessionStorage.getItem("shown_offerModal") == 1) {
-  //   } else {
-  //     $("#offerModal").modal({
-  //       show: false,
-  //       backdrop: "static",
-  //       minWidth: 300
-  //     });
-  //     $("body").addClass("offerModal-open");
-  //     $("#offerModal").modal("show");
-  //     sessionStorage.setItem("shown_offerModal", 1);
-  //   }
-  // });
+  $(document).ready(function() {
+    console.log(sessionStorage.getItem("shown_featureModal"));
+    if (sessionStorage.getItem("shown_featureModal") == 1) {
+    } else {
+      $("#welcomeModal").modal({
+        show: false,
+        backdrop: "static",
+        minWidth: 300
+      });
+      $("body").addClass("featureModal-open");
+      $("#welcomeModal").modal("show");
+      sessionStorage.setItem("shown_featureModal", 1);
+    }
+  });
 
   //------- Superfist nav menu  js --------//
 
