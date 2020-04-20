@@ -169,5 +169,6 @@ module.exports = (app) => {
     app.post("/api/getReferredByUser" ,requireLogin,requireAdmin,adminServices.getReferredByUser);
     // syncPendingDonation
     app.get("/api/syncPendingDonation" ,requireLogin,requireAdmin,adminServices.syncPendingDonation);
+    app.get("/api/syncFunderCerti", requireLogin,requireAdmin, adminServices.syncFunderCerti);
   }
 };

@@ -13,7 +13,7 @@ let xdc3 = require("../helpers/blockchainConnectors").xdcInst;
 const equateAddress = require("../helpers/common").equateAddress;
 const { xdcToUsd, usdToXdc } = require("../helpers/cmcHelper");
 const xdcWs = require("../helpers/constant").WsXinfinMainnet;
-
+const {renderFunderCerti} = require("../helpers/renderFunderCerti");
 const recipients = [];
 
 let inReconnXDC = false;
@@ -101,6 +101,7 @@ function startProcessingDonation(fundId, tx, name) {
               currentReq.donerEmail !== null &&
               currentReq.donerEmail !== undefined
             ) {
+              renderFunderCerti(currentReq.donerName, currentReq.fundId);
               emailer.sendFMDCompleteFunder(
                 currentReq.donerEmail,
                 currentReq.userName,
@@ -364,7 +365,7 @@ function xdcReconn() {
       let xdcProvider = new Xdc3.providers.WebsocketProvider(xdcWs);
       xdc3 = new Xdc3(xdcProvider);
       xdcProvider.on("connect", () => {
-        console.log(`[*] xdc reconnected to ws at ${fileName}`);
+        console.log(`[*] xdc reconnected to ws at ${__filename}`);
         clearInterval(currInterval);
         inReconnXDC = false;
       });

@@ -61,6 +61,7 @@ function newDefaultUser() {
         isVerified: false
       },
       linkedin: {
+        refreshToken:"",
         accessToken: "",
         id: ""
       }
@@ -246,12 +247,12 @@ module.exports = function(passport) {
             user.auth.google.accessToken = accessToken;
             user.auth.google.refreshToken = refreshToken;
             user.lastActive = Date.now();
-            user.save();
+            await user.save();
             return done(null, user);
           }
           let user = await User.findOne({ email: req.user.email });
           user.lastActive = Date.now();
-          user.save();
+          await user.save();
           return done(null, req.user);
         }
         // find user by google id
@@ -261,7 +262,7 @@ module.exports = function(passport) {
         if (existingUser) {
           // console.log(` In passport verification ${existingUser.email}`)
           existingUser.lastActive = Date.now();
-          existingUser.save();
+          await existingUser.save();
           return done(null, existingUser);
         }
 
@@ -275,7 +276,7 @@ module.exports = function(passport) {
             linkEmail.auth.google.accessToken = accessToken;
             linkEmail.auth.google.refreshToken = refreshToken;
             linkEmail.lastActive = Date.now();
-            linkEmail.save();
+            await linkEmail.save();
             return done(null, linkEmail);
           }
         }
@@ -295,7 +296,7 @@ module.exports = function(passport) {
         newUser.auth.google.refreshToken = refreshToken;
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
-        newUser.save();
+        await newUser.save();
         socialPostListener.emit("varTriggerUpdate", "registrations");
         done(null, newUser, "new-name");
       }
@@ -336,12 +337,14 @@ module.exports = function(passport) {
               user.auth.facebook.accessToken = accessToken;
               user.auth.facebook.refreshToken = refreshToken;
               user.lastActive = Date.now();
-              user.save();
+              await user.save();
               return done(null, user);
             }
             let user = await User.findOne({ email: req.user.email });
+            user.auth.facebook.accessToken = accessToken;
+            user.auth.facebook.refreshToken = refreshToken;
             user.lastActive = Date.now();
-            user.save();
+            await user.save();
             return done(null, req.user);
           }
           if (!profile) {
@@ -351,8 +354,10 @@ module.exports = function(passport) {
             "auth.facebook.id": profile.id
           });
           if (existingUser) {
+            existingUser.auth.facebook.accessToken = accessToken;
+            existingUser.auth.facebook.refreshToken = refreshToken || "";
             existingUser.lastActive = Date.now();
-            existingUser.save();
+            await existingUser.save();
             return done(null, existingUser);
           }
 
@@ -374,7 +379,7 @@ module.exports = function(passport) {
               linkEmail.auth.facebook.accessToken = accessToken;
               linkEmail.auth.facebook.refreshToken = refreshToken || "";
               linkEmail.lastActive = Date.now();
-              linkEmail.save();
+              await linkEmail.save();
               done(null, linkEmail);
             }
           }
@@ -388,7 +393,7 @@ module.exports = function(passport) {
             user.auth.facebook.accessToken = accessToken;
             user.auth.facebook.refreshToken = refreshToken || "";
             user.lastActive = Date.now();
-            user.save();
+            await user.save();
             return done(null, user);
           }
           newUser = newDefaultUser();
@@ -399,7 +404,7 @@ module.exports = function(passport) {
           newUser.name = formatName(profile.displayName);
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
-          newUser.save();
+          await newUser.save();
           socialPostListener.emit("varTriggerUpdate", "registrations");
           done(null, newUser, "new-name");
         });
@@ -465,20 +470,24 @@ module.exports = function(passport) {
             user.auth.twitter.token = token;
             user.auth.twitter.tokenSecret = tokenSecret;
             user.lastActive = Date.now();
-            user.save();
+            await user.save();
             return done(null, user);
           }
           let user = await User.findOne({ email: req.user.email });
+          user.auth.twitter.token = token;
+          user.auth.twitter.tokenSecret = tokenSecret;
           user.lastActive = Date.now();
-          user.save();
+          await user.save();
           return done(null, req.user);
         }
         var existingUser = await User.findOne({
           "auth.twitter.id": profile.id
         });
         if (existingUser) {
+          existingUser.auth.twitter.token = token;
+          existingUser.auth.twitter.tokenSecret = tokenSecret;
           existingUser.lastActive = Date.now();
-          existingUser.save();
+          await existingUser.save();
           return done(null, existingUser);
         }
 
@@ -500,7 +509,7 @@ module.exports = function(passport) {
             linkEmail.auth.twitter.token = token;
             linkEmail.auth.twitter.tokenSecret = tokenSecret;
             linkEmail.lastActive = Date.now();
-            linkEmail.save();
+            await linkEmail.save();
             return done(null, linkEmail);
           }
         }
@@ -514,7 +523,7 @@ module.exports = function(passport) {
           user.auth.twitter.token = token;
           user.auth.twitter.tokenSecret = tokenSecret;
           user.lastActive = Date.now();
-          user.save();
+          await user.save();
           return done(null, user);
         }
         newUser = newDefaultUser();
@@ -525,7 +534,7 @@ module.exports = function(passport) {
         newUser.auth.twitter.tokenSecret = tokenSecret;
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
-        newUser.save();
+        await newUser.save();
         socialPostListener.emit("varTriggerUpdate", "registrations");
         done(null, newUser, "new-name");
       }
@@ -543,6 +552,7 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {
+        console.log(accessToken, refreshToken);
         process.nextTick(async function() {
           if (req.user) {
             if (
@@ -567,21 +577,27 @@ module.exports = function(passport) {
               let user = await User.findOne({ email: req.user.email });
               user.auth.linkedin.id = profile.id;
               user.auth.linkedin.accessToken = accessToken;
+              user.auth.linkedin.refreshToken = refreshToken;
               user.lastActive = Date.now();
-              user.save();
+              await user.save();
               return done(null, user);
             }
             let user = await User.findOne({ email: req.user.email });
+            user.auth.linkedin.accessToken = accessToken;
+            user.auth.linkedin.refreshToken = refreshToken;
             user.lastActive = Date.now();
-            user.save();
-            return done(null, req.user);
+            await user.save();
+            return done(null, user);
           }
           var existingUser = await User.findOne({
             "auth.linkedin.id": profile.id
           });
           if (existingUser) {
+            // need to refresh token
+            existingUser.auth.linkedin.accessToken = accessToken;
+            existingUser.auth.linkedin.refreshToken = refreshToken;
             existingUser.lastActive = Date.now();
-            existingUser.save();
+            await existingUser.save();
             return done(null, existingUser);
           }
 
@@ -600,8 +616,9 @@ module.exports = function(passport) {
             if (linkEmail) {
               linkEmail.auth.linkedin.id = profile.id;
               linkEmail.auth.linkedin.accessToken = accessToken;
+              linkEmail.auth.linkedin.refreshToken = refreshToken;
               linkEmail.lastActive = Date.now();
-              linkEmail.save();
+              await linkEmail.save();
               return done(null, linkEmail);
             }
           }
@@ -613,8 +630,9 @@ module.exports = function(passport) {
             let user = await User.findOne({ email: profile.emails[0].value });
             user.auth.linkedin.id = profile.id;
             user.auth.linkedin.accessToken = accessToken;
+            user.auth.linkedin.refreshToken = refreshToken;
             user.lastActive = Date.now();
-            user.save();
+            await user.save();
             return done(null, user);
           }
           newUser = newDefaultUser();
@@ -624,7 +642,7 @@ module.exports = function(passport) {
           newUser.auth.linkedin.accessToken = accessToken;
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
-          newUser.save();
+          await newUser.save();
           socialPostListener.emit("varTriggerUpdate", "registrations");
           done(null, newUser, "new-name");
         });

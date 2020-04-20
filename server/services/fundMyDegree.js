@@ -14,7 +14,7 @@ const cmcHelper = require("../helpers/cmcHelper");
 const burnEmitter = require("../listeners/burnToken").em;
 const equateAddress = require("../helpers/common").equateAddress;
 const WsServer = require("../listeners/websocketServer").em;
-
+const renderFunderCerti = require("../helpers/renderFunderCerti");
 const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
 const profanityChecker = new ProfanityCheck();
 
@@ -419,6 +419,7 @@ exports.successFundPaypal = async (req, res) => {
           courseNames,
           currFundReq.requestUrlShort
         );
+        renderFunderCerti(currFundReq.donerName, currFundReq.fundId);
       }
     });
   } catch (e) {
