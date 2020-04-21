@@ -401,7 +401,7 @@ function newBlockProcessor() {
         processorInUse = false;
         emailer.sendMailInternal(
           "blockdegree-bot@blockdegree.org",
-          "rudresh@xinfin.org",
+          process.env.SUPP_EMAIL_ID,
           "New Block sub. cleared",
           `have cleared subscriptions to new block headers at ${__filename} due to some error ${String(
             e
