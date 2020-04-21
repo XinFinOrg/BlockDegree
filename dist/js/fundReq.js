@@ -377,9 +377,8 @@ function renderRequestModal(
                           </div>` +
       `
                           <textarea class="form-control" id="funder-certi-msg">Test</textarea>
-                          <div class="modal-body" id="requestModal--body">
-                              <img src="/img/funder-certi/${fundId}.png">
-                          </div>` +
+                          ${funderName=="undefined"?'':'<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>'}
+                          ` +
       `<div class="modal-footer">` +
       `${`<button
         class="btn btn-secondary fund-btn-close"
