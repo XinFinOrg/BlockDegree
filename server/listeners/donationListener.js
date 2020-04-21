@@ -9,14 +9,17 @@ const WsServer = require("../listeners/websocketServer").em;
 const burnEmitter = require("./burnToken").em;
 const emailer = require("../emailer/impl");
 const Xdc3 = require("xdc3");
-let xdc3 = require("../helpers/blockchainConnectors").xdcInst;
+const xdcWs = require("../helpers/constant").WsXinfinMainnet;
 const equateAddress = require("../helpers/common").equateAddress;
 const { xdcToUsd, usdToXdc } = require("../helpers/cmcHelper");
-const xdcWs = require("../helpers/constant").WsXinfinMainnet;
-const {renderFunderCerti} = require("../helpers/renderFunderCerti");
+const { renderFunderCerti } = require("../helpers/renderFunderCerti");
 const recipients = [];
 
+let xdc3Provider = new Xdc3.providers.WebsocketProvider(xdcWs);
+let xdc3 = new Xdc3(xdc3Provider);
+
 let inReconnXDC = false;
+let processorInUse = false;
 
 const em = new Event.EventEmitter();
 
@@ -204,113 +207,32 @@ exports.em = em;
 
 // ---------------------------------------- Donation ----------------------------------------
 
-xdc3.eth.subscribe("newBlockHeaders").on("data", async (result) => {
-  try {
-    let retryCount = 0;
-    let txCount = await xdc3.eth.getBlockTransactionCount(result.number);
-    console.log(`[*] syncing block ${result.number} TX count: `, txCount);
-
-    while (txCount === null) {
-      if (retryCount === 10) {
-        console.log(`dropping block ${result.number}`);
-        return;
-      }
-      retryCount++;
-      txCount = await xdc3.eth.getBlockTransactionCount(result.number);
-      console.log(
-        `[*] re-syncing block ${result.number} TX count: ${txCount} try: ${retryCount}`
-      );
-    }
-
-    if (txCount > 0) {
-      for (let i = 0; i < txCount; i++) {
-        let currBlockTx = await xdc3.eth.getTransactionFromBlock(
-          result.number,
-          i
-        );
-
-        if (currBlockTx === null) {
-          continue;
-        }
-
-        let currIndex = -1;
-
-        for (let i = 0; i < recipients.length; i++) {
-          if (equateAddress(recipients[i].address, currBlockTx.to)) {
-            currIndex = i;
-          }
-        }
-
-        if (currIndex > -1) {
-          console.log(`got anonymous deposit`);
-          const currFundReq = await UserFundRequest.findOne({
-            fundId: recipients[currIndex].id,
-          }).lean();
-          if (
-            currFundReq.fundTx !== undefined &&
-            currFundReq.fundTx !== null &&
-            currFundReq.fundTx !== ""
-          ) {
-            continue;
-          }
-          const user = await User.findOne({ email: currFundReq.email });
-          if (user.examData.payment[currFundReq.courseId] === true) {
-            emailer.sendMailInternal(
-              "blockdegree-bot@blockdegree.org",
-              process.env.SUPP_EMAIL_ID,
-              "Invalid Anonymous Donation",
-              `Got an invalid donation for fund id ${currFundReq.fundId}`
-            );
-            continue;
-          }
-          if (currFundReq.status !== "uninitiated") {
-            emailer.sendMailInternal(
-              "blockdegree-bot@blockdegree.org",
-              process.env.SUPP_EMAIL_ID,
-              "Invalid Anonymous Donation",
-              `Got an invalid donation for fund id ${currFundReq.fundId}`
-            );
-            continue;
-          }
-
-          const courseId = currFundReq.courseId;
-          const course = await Course.findOne({ courseId: courseId });
-          const valUsd = await xdcToUsd(
-            xdc3.utils.fromWei(currBlockTx.value, "ether")
-          );
-          const totAmnt = parseFloat(currFundReq.amountGoal);
-          const min = totAmnt - totAmnt / 10;
-          const max = totAmnt + totAmnt / 10;
-          console.log(`min ${min} max ${max} valUsd ${valUsd}`);
-          if (min <= parseFloat(valUsd) && parseFloat(valUsd) <= max) {
-            startProcessingDonation(currFundReq.fundId, currBlockTx.hash, "");
-          } else {
-            console.log("invalid amount");
-          }
-        }
-      }
-    }
-  } catch (e) {
-    console.log(`exception at ${__filename}.newBlockHeaders: `, e);
-    return;
-  }
-});
+newBlockProcessor();
 
 async function checkPendingCompletion() {
   try {
     const funds = await UserFundRequest.find({
       $or: [{ status: "uninitiated" }, { status: "pending" }],
-    }).select({receiveAddrPrivKey:0});
+    }).select({ receiveAddrPrivKey: 0 });
     console.log(funds);
 
     funds.forEach(async (currFundReq) => {
       const xdcBalance = await xdc3.eth.getBalance(currFundReq.receiveAddr);
       if (xdcBalance > 0) {
-        const min = parseFloat(currFundReq.amountGoal)-parseFloat(currFundReq.amountGoal)/10;
-        const max = parseFloat(currFundReq.amountGoal)+parseFloat(currFundReq.amountGoal)/10;
-        const valUsd = await xdcToUsd(parseFloat(xdc3.utils.fromWei(xdcBalance)));
+        const min =
+          parseFloat(currFundReq.amountGoal) -
+          parseFloat(currFundReq.amountGoal) / 10;
+        const max =
+          parseFloat(currFundReq.amountGoal) +
+          parseFloat(currFundReq.amountGoal) / 10;
+        const valUsd = await xdcToUsd(
+          parseFloat(xdc3.utils.fromWei(xdcBalance))
+        );
         console.log("pending balance: ", xdcBalance, "value usd", valUsd);
-        if (parseFloat(min)<=parseFloat(valUsd) && parseFloat(valUsd)<=parseFloat(max)){
+        if (
+          parseFloat(min) <= parseFloat(valUsd) &&
+          parseFloat(valUsd) <= parseFloat(max)
+        ) {
           emailer.sendMailInternal(
             "blockdegree-bot@blockdegree.org",
             process.env.SUPP_EMAIL_ID,
@@ -366,6 +288,8 @@ function xdcReconn() {
       xdc3 = new Xdc3(xdcProvider);
       xdcProvider.on("connect", () => {
         console.log(`[*] xdc reconnected to ws at ${__filename}`);
+        subscriptionNewHeaders = xdc3.eth.subscribe("newBlockHeaders");
+        newBlockProcessor();
         clearInterval(currInterval);
         inReconnXDC = false;
       });
@@ -375,4 +299,122 @@ function xdcReconn() {
   }
 }
 
+setTimeout(() => {
+  xdc3.currentProvider.connection.close();
+}, 30000);
+
 connectionHeartbeat();
+
+function newBlockProcessor() {
+  if (processorInUse !== true) {
+    processorInUse = true;
+    let subscriptionNewHeaders = xdc3.eth.subscribe("newBlockHeaders");
+    subscriptionNewHeaders.on("data", async (result) => {
+      try {
+        let retryCount = 0;
+        let txCount = await xdc3.eth.getBlockTransactionCount(result.number);
+        console.log(`[*] syncing block ${result.number} TX count: `, txCount);
+
+        while (txCount === null) {
+          if (retryCount === 10) {
+            console.log(`dropping block ${result.number}`);
+            return;
+          }
+          retryCount++;
+          txCount = await xdc3.eth.getBlockTransactionCount(result.number);
+          console.log(
+            `[*] re-syncing block ${result.number} TX count: ${txCount} try: ${retryCount}`
+          );
+        }
+
+        if (txCount > 0) {
+          for (let i = 0; i < txCount; i++) {
+            let currBlockTx = await xdc3.eth.getTransactionFromBlock(
+              result.number,
+              i
+            );
+
+            if (currBlockTx === null) {
+              continue;
+            }
+
+            let currIndex = -1;
+
+            for (let i = 0; i < recipients.length; i++) {
+              if (equateAddress(recipients[i].address, currBlockTx.to)) {
+                currIndex = i;
+              }
+            }
+
+            if (currIndex > -1) {
+              console.log(`got anonymous deposit`);
+              const currFundReq = await UserFundRequest.findOne({
+                fundId: recipients[currIndex].id,
+              }).lean();
+              if (
+                currFundReq.fundTx !== undefined &&
+                currFundReq.fundTx !== null &&
+                currFundReq.fundTx !== ""
+              ) {
+                continue;
+              }
+              const user = await User.findOne({ email: currFundReq.email });
+              if (user.examData.payment[currFundReq.courseId] === true) {
+                emailer.sendMailInternal(
+                  "blockdegree-bot@blockdegree.org",
+                  process.env.SUPP_EMAIL_ID,
+                  "Invalid Anonymous Donation",
+                  `Got an invalid donation for fund id ${currFundReq.fundId}`
+                );
+                continue;
+              }
+              if (currFundReq.status !== "uninitiated") {
+                emailer.sendMailInternal(
+                  "blockdegree-bot@blockdegree.org",
+                  process.env.SUPP_EMAIL_ID,
+                  "Invalid Anonymous Donation",
+                  `Got an invalid donation for fund id ${currFundReq.fundId}`
+                );
+                continue;
+              }
+
+              const courseId = currFundReq.courseId;
+              const course = await Course.findOne({ courseId: courseId });
+              const valUsd = await xdcToUsd(
+                xdc3.utils.fromWei(currBlockTx.value, "ether")
+              );
+              const totAmnt = parseFloat(currFundReq.amountGoal);
+              const min = totAmnt - totAmnt / 10;
+              const max = totAmnt + totAmnt / 10;
+              console.log(`min ${min} max ${max} valUsd ${valUsd}`);
+              if (min <= parseFloat(valUsd) && parseFloat(valUsd) <= max) {
+                startProcessingDonation(
+                  currFundReq.fundId,
+                  currBlockTx.hash,
+                  ""
+                );
+              } else {
+                console.log("invalid amount");
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.log(`exception at ${__filename}.newBlockHeaders: `, e);
+        subscriptionNewHeaders.unsubscribe();
+        processorInUse = false;
+        emailer.sendMailInternal(
+          "blockdegree-bot@blockdegree.org",
+          "rudresh@xinfin.org",
+          "New Block sub. cleared",
+          `have cleared subscriptions to new block headers at ${__filename} due to some error ${String(
+            e
+          )}`
+        );
+        return;
+      }
+    });
+  } else {
+    console.log("[*] block processor called twice");
+  }
+}
