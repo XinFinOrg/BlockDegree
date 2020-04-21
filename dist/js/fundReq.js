@@ -368,7 +368,7 @@ function renderRequestModal(
                           <div class="modal-header">
                               <h5 class="modal-title align-self-center" id="requestModal--title">Request By <strong>${userName}</strong></h5>
                               ${`<span class="funded-by">Funded By ${
-                                funderName == "undefined"
+                                funderName == "undefined" || funderName=="" || funderName==null
                                   ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
                                   : funderName
                               }</span>`}                              
@@ -377,7 +377,7 @@ function renderRequestModal(
                           </div>` +
       `
                           <textarea class="form-control" id="funder-certi-msg">Test</textarea>
-                          ${funderName=="undefined"?'':'<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>'}
+                          ${funderName == "undefined" || funderName=="" || funderName==null?'':'<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>'}
                           ` +
       `<div class="modal-footer">` +
       `${`<button
