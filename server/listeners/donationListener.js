@@ -18,6 +18,8 @@ const recipients = [];
 let xdc3Provider = new Xdc3.providers.WebsocketProvider(xdcWs);
 let xdc3 = new Xdc3(xdc3Provider);
 
+let subscriptionNewHeaders;
+
 let inReconnXDC = false;
 let processorInUse = false;
 
@@ -214,7 +216,6 @@ async function checkPendingCompletion() {
     const funds = await UserFundRequest.find({
       $or: [{ status: "uninitiated" }, { status: "pending" }],
     }).select({ receiveAddrPrivKey: 0 });
-    console.log(funds);
 
     funds.forEach(async (currFundReq) => {
       const xdcBalance = await xdc3.eth.getBalance(currFundReq.receiveAddr);
@@ -288,10 +289,11 @@ function xdcReconn() {
       xdc3 = new Xdc3(xdcProvider);
       xdcProvider.on("connect", () => {
         console.log(`[*] xdc reconnected to ws at ${__filename}`);
-        subscriptionNewHeaders = xdc3.eth.subscribe("newBlockHeaders");
+        inReconnXDC = false;
+        subscriptionNewHeaders.unsubscribe();
+        processorInUse=false;
         newBlockProcessor();
         clearInterval(currInterval);
-        inReconnXDC = false;
       });
     }, 5000);
   } catch (e) {
@@ -299,16 +301,12 @@ function xdcReconn() {
   }
 }
 
-setTimeout(() => {
-  xdc3.currentProvider.connection.close();
-}, 30000);
-
 connectionHeartbeat();
 
 function newBlockProcessor() {
   if (processorInUse !== true) {
     processorInUse = true;
-    let subscriptionNewHeaders = xdc3.eth.subscribe("newBlockHeaders");
+    subscriptionNewHeaders = xdc3.eth.subscribe("newBlockHeaders");
     subscriptionNewHeaders.on("data", async (result) => {
       try {
         let retryCount = 0;
@@ -405,7 +403,7 @@ function newBlockProcessor() {
         processorInUse = false;
         emailer.sendMailInternal(
           "blockdegree-bot@blockdegree.org",
-          "rudresh@xinfin.org",
+          process.env.SUPP_EMAIL_ID,
           "New Block sub. cleared",
           `have cleared subscriptions to new block headers at ${__filename} due to some error ${String(
             e

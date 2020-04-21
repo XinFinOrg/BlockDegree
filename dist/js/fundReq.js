@@ -18,7 +18,7 @@ $(document).ready(() => {
 
   window.addEventListener("message", function (event) {
     if (
-      event.origin == "https://www.blockdegree.org" ||
+      event.origin == "https://uat.blockdegree.org" ||
       event.origin == "https://blockdegree.org"
     ) {
       if (event.data == "ok") {
@@ -223,6 +223,9 @@ function renderPaymentMethodModal(addr, fundId, amountGoal) {
                   <button type="button" data-dismiss="modal" class="btn-payment" onclick="payByPaypal('${fundId}')"
                       data-dismiss="modal">
                       Pay Via PayPal </button>
+
+                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="payRazorpay('${fundId}','${amountGoal}')"
+                      data-dismiss="modal"> Pay Via CARD/Net-Banking/UPI </button>
               </div>
 
           </div>
@@ -368,7 +371,9 @@ function renderRequestModal(
                           <div class="modal-header">
                               <h5 class="modal-title align-self-center" id="requestModal--title">Request By <strong>${userName}</strong></h5>
                               ${`<span class="funded-by">Funded By ${
-                                funderName == "undefined" || funderName=="" || funderName==null
+                                funderName == "undefined" ||
+                                funderName == "" ||
+                                funderName == null
                                   ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
                                   : funderName
                               }</span>`}                              
@@ -377,7 +382,13 @@ function renderRequestModal(
                           </div>` +
       `
                           <textarea class="form-control" id="funder-certi-msg">Test</textarea>
-                          ${funderName == "undefined" || funderName=="" || funderName==null?'':`<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`}
+                          ${
+                            funderName == "undefined" ||
+                            funderName == "" ||
+                            funderName == null
+                              ? ""
+                              : `<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`
+                          }
                           ` +
       `<div class="modal-footer">` +
       `${`<button
@@ -721,8 +732,8 @@ function isMobile() {
 
 function handleShareLinkdedin(seedMsg, funder, fundId) {
   console.log(funder, fundId);
-  
-  if (funder == 'true') {
+
+  if (funder == "true") {
     linkedinFunder = true;
     linkedinfundId = fundId;
   }
@@ -783,7 +794,7 @@ function handleAuthTwitter() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "https://www.blockdegree.org/auth/twitter?close=true",
+    "https://uat.blockdegree.org/auth/twitter?close=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -792,7 +803,7 @@ function handleAuthLinkedin() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "https://www.blockdegree.org/auth/linkedin?close=true",
+    "https://uat.blockdegree.org/auth/linkedin?close=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -1306,6 +1317,75 @@ var _createClass = (function () {
       );
     })());
 }.call(void 0));
+
+function payRazorpay(fundId, amount) {
+  console.log("called payRazorpay: ", fundId, amount);
+  $.ajax({
+    method: "post",
+    url: "/api/initiateRazorpay",
+    data: { amount: amount, fundId: fundId },
+    success: (resp) => {
+      if (resp.status == true) {
+        const { orderId, key, amnt, email, userName } = resp.data;
+        const newOrder = {
+          key: key, // Enter the Key ID generated from the Dashboard
+          amount: `${amnt}`, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          currency: "INR",
+          name: userName,
+          description: "Online Education",
+          image:
+            "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+          handler: function (response) {
+            const {
+              razorpay_payment_id,
+              razorpay_order_id,
+              razorpay_signature,
+            } = response;
+            $.ajax({
+              url: "/api/completeRazorpay",
+              method: "post",
+              data: {
+                paymentId: razorpay_payment_id,
+                orderId: razorpay_order_id,
+                signature: razorpay_signature,
+              },
+              success: (resp) => {
+                if (resp.status == true) {
+                  $.notify("Payment Completed Successfully!", {
+                    type: "success",
+                  });
+                } else {
+                  $.notify(resp.error, { type: "danger" });
+                }
+              },
+              error: (err) => {
+                $.notify(
+                  "Some error occured please contact <b>info@blockdegree.org</b>",
+                  { type: "danger" }
+                );
+              },
+            });
+          },
+          prefill: {
+            name: userName,
+            email: email,
+          },
+          theme: {
+            color: "#2073d4",
+          },
+        };
+        let rzp1 = new Razorpay(newOrder);
+        rzp1.open();
+      } else {
+        $.notify(resp.error, { type: "danger" });
+      }
+    },
+    error: (err) => {
+      $.notify("Failed to send request", { type: "danger" });
+    },
+  });
+}
 
 $("select").imagepicker();
 // Image selector Script ends //

@@ -21,4 +21,10 @@ module.exports = (app) => {
   app.post("/fmd-pay-paypal", requireLogin, fmdService.startFundPaypal);
   app.get("/fmd-pay-paypal-suc", requireLogin, fmdService.successFundPaypal);
   app.post("/api/claimFund", requireLogin, fmdService.claimFund);
+  app.post("/pay/razor", (req, res) => {
+    console.log(req.body);
+  });
+
+  app.post("/api/initiateRazorpay", requireLogin, fmdService.initiateRazorpay);
+  app.post("/api/completeRazorpay", requireLogin, fmdService.completeRazorpay);
 };
