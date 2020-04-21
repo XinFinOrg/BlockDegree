@@ -419,7 +419,7 @@ exports.successFundPaypal = async (req, res) => {
           courseNames,
           currFundReq.requestUrlShort
         );
-        renderFunderCerti(currFundReq.donerName, currFundReq.fundId);
+        renderFunderCerti.renderFunderCerti(currFundReq.donerName, currFundReq.fundId);
       }
     });
   } catch (e) {
