@@ -580,6 +580,7 @@
     console.log(`hash: ${hash}`);
     document.getElementById("postMSGLinkedin").innerHTML = msg;
     postLinkedinHash = hash;
+    postTwitterHash = "";  
     document.getElementById("postLinkedinHash").innerHTML = hash;
     $.ajax({
       method: "post",
@@ -608,6 +609,7 @@
     console.log(`hash: ${hash}`);
     document.getElementById("postMSGTwitter").innerHTML = msg;
     postTwitterHash = hash;
+    postLinkedinHash="";
     document.getElementById("postTwitterHash").innerHTML = hash;
     $.ajax({
       method: "post",
