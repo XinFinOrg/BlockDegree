@@ -18,6 +18,8 @@ const recipients = [];
 let xdc3Provider = new Xdc3.providers.WebsocketProvider(xdcWs);
 let xdc3 = new Xdc3(xdc3Provider);
 
+let subscriptionNewHeaders;
+
 let inReconnXDC = false;
 let processorInUse = false;
 
@@ -214,7 +216,6 @@ async function checkPendingCompletion() {
     const funds = await UserFundRequest.find({
       $or: [{ status: "uninitiated" }, { status: "pending" }],
     }).select({ receiveAddrPrivKey: 0 });
-    console.log(funds);
 
     funds.forEach(async (currFundReq) => {
       const xdcBalance = await xdc3.eth.getBalance(currFundReq.receiveAddr);
@@ -288,10 +289,11 @@ function xdcReconn() {
       xdc3 = new Xdc3(xdcProvider);
       xdcProvider.on("connect", () => {
         console.log(`[*] xdc reconnected to ws at ${__filename}`);
-        subscriptionNewHeaders = xdc3.eth.subscribe("newBlockHeaders");
+        inReconnXDC = false;
+        subscriptionNewHeaders.unsubscribe();
+        processorInUse=false;
         newBlockProcessor();
         clearInterval(currInterval);
-        inReconnXDC = false;
       });
     }, 5000);
   } catch (e) {
@@ -304,7 +306,7 @@ connectionHeartbeat();
 function newBlockProcessor() {
   if (processorInUse !== true) {
     processorInUse = true;
-    let subscriptionNewHeaders = xdc3.eth.subscribe("newBlockHeaders");
+    subscriptionNewHeaders = xdc3.eth.subscribe("newBlockHeaders");
     subscriptionNewHeaders.on("data", async (result) => {
       try {
         let retryCount = 0;
