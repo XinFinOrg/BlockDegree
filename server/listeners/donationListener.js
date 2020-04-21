@@ -299,10 +299,6 @@ function xdcReconn() {
   }
 }
 
-setTimeout(() => {
-  xdc3.currentProvider.connection.close();
-}, 30000);
-
 connectionHeartbeat();
 
 function newBlockProcessor() {
