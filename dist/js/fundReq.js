@@ -377,7 +377,7 @@ function renderRequestModal(
                           </div>` +
       `
                           <textarea class="form-control" id="funder-certi-msg">Test</textarea>
-                          ${funderName == "undefined" || funderName=="" || funderName==null?'':'<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>'}
+                          ${funderName == "undefined" || funderName=="" || funderName==null?'':`<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`}
                           ` +
       `<div class="modal-footer">` +
       `${`<button
