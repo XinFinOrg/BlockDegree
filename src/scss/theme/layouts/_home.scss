@@ -445,7 +445,7 @@
 @media (max-width: 991.98px){
 .fmd-block {
   border-bottom: 1px solid #d0d3da;
-  border-left: none!important;
+  border-right: none!important;
   padding-bottom: 45px!important;
 }
 }
@@ -705,5 +705,10 @@
      .btn-cstm-light:not(:disabled):not(.disabled).active:focus,.btn-cstm-light:not(:disabled):not(.disabled):active:focus,.show>.btn-cstm-light.dropdown-toggle:focus{
         box-shadow:0 0 0 .2rem rgba(255,255,255,.5)
     }
+	 @media screen and (max-width: 425px) {
+    	.carousel-item {
+         	min-height: 520px;
+    	}
+	}
 }
 /* ------------------ Welcome modal css ends ------------------------ */

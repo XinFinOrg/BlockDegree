@@ -366,8 +366,8 @@ function renderRequestModal(
 
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title align-self-center" id="requestModal--title">Request By <strong>${userName}</strong></h5>
-                              ${`<span class="funded-by">Funded By ${
+                              <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
+                              ${`<span class="funded-by text-success">Funded By ${
                                 funderName == "undefined"
                                   ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
                                   : funderName
@@ -376,7 +376,9 @@ function renderRequestModal(
 
                           </div>` +
       `
-                          <textarea class="form-control" id="funder-certi-msg">Test</textarea>
+                          <div class="modal-body pb-1"><textarea class="form-control" id="funder-certi-msg">Test</textarea>
+                          </div>` +
+	  `
                           <div class="modal-body" id="requestModal--body">
                               <img src="/img/funder-certi/${fundId}.png">
                           </div>` +
@@ -387,7 +389,7 @@ function renderRequestModal(
 
       >
         Close
-      </button><div class='funded'>FUNDED</div>`}
+      </button><div class='badge badge-success funded'>FUNDED <i class="fa fa-check" aria-hidden="true"></i></div>`}
                                Share On&nbsp;
                                <a target="_blank" href="${
                                  isMobile() === true
@@ -425,7 +427,7 @@ function renderRequestModal(
                               <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
                               ${
                                 type == "completed"
-                                  ? `<span class="funded-by">Funded By ${
+                                  ? `<span class="funded-by text-success">Funded By ${
                                       funderName == "undefined"
                                         ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
                                         : funderName
@@ -444,7 +446,7 @@ function renderRequestModal(
         data-dismiss="modal"
       >
         Close
-      </button><div class='funded'>FUNDED</div>`
+      </button><div class='badge badge-success funded'>FUNDED <i class="fa fa-check" aria-hidden="true"></i></div>`
           : `
         <button
           class="btn btn-secondary fund-btn-close"
@@ -784,7 +786,7 @@ function handleAuthTwitter() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "https://www.blockdegree.org/auth/twitter?close=true",
+    "http://localhost:3000/auth/twitter?close=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -793,7 +795,7 @@ function handleAuthLinkedin() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "https://www.blockdegree.org/auth/linkedin?close=true",
+    "http://localhost:3000/auth/linkedin?close=true",
     "newwin",
     "height=600px,width=600px"
   );
