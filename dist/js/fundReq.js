@@ -366,9 +366,9 @@ function renderRequestModal(
 
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
-                              ${`<span class="funded-by text-success">Funded By ${
-                                funderName == "undefined"
+                              <h5 class="modal-title align-self-center" id="requestModal--title">Request By <strong>${userName}</strong></h5>
+                              ${`<span class="funded-by">Funded By ${
+                                funderName == "undefined" || funderName=="" || funderName==null
                                   ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
                                   : funderName
                               }</span>`}                              
@@ -376,12 +376,9 @@ function renderRequestModal(
 
                           </div>` +
       `
-                          <div class="modal-body pb-1"><textarea class="form-control" id="funder-certi-msg">Test</textarea>
-                          </div>` +
-	  `
-                          <div class="modal-body" id="requestModal--body">
-                              <img src="/img/funder-certi/${fundId}.png">
-                          </div>` +
+                          <textarea class="form-control" id="funder-certi-msg">Test</textarea>
+                          ${funderName == "undefined" || funderName=="" || funderName==null?'':`<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`}
+                          ` +
       `<div class="modal-footer">` +
       `${`<button
         class="btn btn-secondary fund-btn-close"
