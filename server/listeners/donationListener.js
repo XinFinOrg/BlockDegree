@@ -291,7 +291,7 @@ function xdcReconn() {
         console.log(`[*] xdc reconnected to ws at ${__filename}`);
         inReconnXDC = false;
         subscriptionNewHeaders.unsubscribe();
-        processorInUse=false;
+        processorInUse = false;
         newBlockProcessor();
         clearInterval(currInterval);
       });
@@ -304,6 +304,7 @@ function xdcReconn() {
 connectionHeartbeat();
 
 function newBlockProcessor() {
+  console.log("[*] starting new block processor");
   if (processorInUse !== true) {
     processorInUse = true;
     subscriptionNewHeaders = xdc3.eth.subscribe("newBlockHeaders");
@@ -407,8 +408,9 @@ function newBlockProcessor() {
           "New Block sub. cleared",
           `have cleared subscriptions to new block headers at ${__filename} due to some error ${String(
             e
-          )}`
+          )}\nStarting a new block processor.`
         );
+        newBlockProcessor();
         return;
       }
     });
