@@ -132,4 +132,27 @@
 
 {{/inline}} {{#*inline "scripts-block"}}
 <script src="/js/home.js?v=1.43"></script>
+<script>
+  const paramVal = getParamValue("fundId");
+
+  if (paramVal!==null){
+    window.location.href = `https://www.blockdegree.org/fund-my-degree-apply?fundId=${paramVal}`
+  }
+  
+  
+  function getParamValue(param) {
+  let currentUrl = window.location.href;
+  if (currentUrl.split("?").length > 1) {
+    let paramsString = currentUrl.split("?")[1];
+    const params = paramsString.split("&");
+    for (let i = 0; i < params.length; i++) {
+      const key = params[i].split("=")[0];
+      const value = params[i].split("=")[1];
+      if (key === param) return value;
+    }
+  }
+
+  return null;
+}
+</script>
 {{/inline}} {{/base}}
