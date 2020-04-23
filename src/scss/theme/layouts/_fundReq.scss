@@ -709,7 +709,12 @@
     background-color: white;
     border: 1px solid lightgrey;
     border-radius: 5px;
-    width: 650px;
+    width: 50%;
+
+    @media (max-width: 768px) {
+      margin: -50px 0px 0px 20px;
+      width: 80%;
+    }
 
     .form-name {
       margin-top: 15px;
@@ -740,6 +745,10 @@
   .section-footer {
     text-align: left;
     margin-left: 120px;
+
+    @media (max-width: 768px) {
+      margin-left: 20px;
+    }
   }
 }
 
