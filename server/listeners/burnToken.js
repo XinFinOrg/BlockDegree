@@ -14,6 +14,7 @@ const UserFundRequest = require("../models/userFundRequest");
 const uuid = require("uuid/v4");
 // const WsServer = require("../listeners/donationListener").em;
 let xdc3 = require("../helpers/blockchainConnectors").xdcInst;
+const xdcWs = require("../helpers/constant").WsXinfinMainnet;
 let Xdc3 =  require("xdc3");
 
 let inReconnXDC = false;
