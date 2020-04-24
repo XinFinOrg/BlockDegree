@@ -27,18 +27,18 @@
     padding: 0px;
     margin: 0px;
   }
-  
+
   .fmd-block-bg .btn-white {
-  	color: #FFFFFF;
-	background: transparent;
-	border: 2px solid #FFFFFF;
-	border-radius: 50px;
-	padding: 12px 20px;
+    color: #FFFFFF;
+    background: transparent;
+    border: 2px solid #FFFFFF;
+    border-radius: 50px;
+    padding: 12px 20px;
   }
-  
+
   .fmd-block-bg .btn-white:hover {
-	color: #3a7bd5;
-	background: #ffffff;
+    color: #3a7bd5;
+    background: #ffffff;
   }
 
   .btn.border.white {
@@ -182,14 +182,14 @@
       margin-bottom: 1rem;
     }
   }
-  
+
   #pendingFund_length,
   #approvedFund_length {
     select {
       border: 1px solid lightgrey;
       border-radius: 5px;
       background-color: white;
-	  display: inline-block;
+      display: inline-block;
     }
   }
 
@@ -281,70 +281,72 @@
       color: #3a7bd5;
     }
   }
-  
-  .table-hover tbody tr:hover, .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f8f9fb!important;
+
+  .table-hover tbody tr:hover,
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f8f9fb !important;
   }
 
   #pendingFund {
     /*border-bottom: none;*/
-	border-bottom: 1px solid #dee2e6;
-	margin-bottom: 20px!important;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 20px !important;
   }
-  
+
   #pendingFund>thead>tr>th {
     color: #4f5258;
-	font-size: .9525rem;
+    font-size: .9525rem;
     font-weight: 500;
     background-color: #fafafa;
-	border-bottom: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
   }
 
   #approvedFund {
     /*border-bottom: none;*/
-	border-bottom: 1px solid #dee2e6;
-	margin-bottom: 20px!important;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 20px !important;
   }
 
   #approvedFund>thead>tr>th {
     color: #4f5258;
-	font-size: .9525rem;
+    font-size: .9525rem;
     font-weight: 500;
     background-color: #fafafa;
-	border-bottom: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
   }
 
   #approvedFund {
     margin-bottom: 0;
   }
-  
+
   #fundingRequired table button.btn.btn-primary,
   #alreadyFunded table button.btn.btn-primary {
-  	white-space: inherit;
+    white-space: inherit;
   }
-  
-  
+
+
   #fundingRequired .dataTables_wrapper .dataTables_paginate .paginate_button,
   #alreadyFunded .dataTables_wrapper .dataTables_paginate .paginate_button {
-  	padding: 6px 12px;
+    padding: 6px 12px;
     line-height: 1.42857143;
     color: #337ab7;
     text-decoration: none;
     background-color: #fff;
     border: 1px solid #ddd;
-	border-radius: 4px;
+    border-radius: 4px;
   }
+
   #fundingRequired .dataTables_wrapper .dataTables_paginate .paginate_button:hover,
   #alreadyFunded .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background-color: #FFFFFF!important;
+    background-color: #FFFFFF !important;
     color: #2073d4 !important;
     border: 1px solid #2073d4;
   }
-  
-  
-  
-  
-  
+
+
+
+
+
 
   #paymentMethodModal>div>div>div.modal-body {
     text-align: center;
@@ -406,9 +408,9 @@
     .modal-header {
       .funded-by {
         position: absolute;
-        top: 35px;
-        font-weight: 200;
-        font-size: small;
+        top: 42px;
+        font-weight: 400;
+        font-size: 14px;
 
         .funder-name {
           font-weight: 300;
@@ -442,10 +444,20 @@
         position: absolute;
         left: 80px;
         font-weight: 500;
-        color: black;
-        border: 1px solid black;
-        padding: 4px;
+        /*color: black;
+        border: 1px solid black;*/
+        padding: 12px;
+        font-size: 15px;
         border-radius: 5px;
+      }
+
+      .funded i {
+        font-size: 14px;
+        padding-left: 5px;
+      }
+
+      .funded i:hover {
+        transform: inherit;
       }
     }
   }
@@ -536,3 +548,199 @@
 }
 
 /*--------------- postLinkedin Modal css ends ---------------*/
+
+
+
+
+/*--------------- Fund My Degree page css starts ---------------*/
+.fmd-features {
+  padding-top: 30px;
+  padding-left: 50px;
+}
+
+.fmd-features.alt {
+  padding-left: 0px;
+  padding-right: 50px;
+}
+
+.fmd-features li {
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.fmd-features li:hover .count span {
+  background: #2073d4;
+  color: #fff;
+}
+
+.fmd-features li .count {
+  float: left;
+  width: 68px;
+  min-height: 90px;
+  background: url(../img/fmd/features-dots.png) center bottom no-repeat;
+}
+
+.fmd-features li .count span {
+  display: block;
+  width: 37px;
+  height: 37px;
+  line-height: 37px;
+  text-align: center;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
+  margin: auto;
+  border: 1px solid #2073d4;
+  font-weight: 600;
+  font-size: 16px;
+  color: #2073d4;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+.fmd-features li .text {
+  float: left;
+  width: calc(100% - 68px);
+  width: -webkit-calc(100% - 68px);
+  padding-left: 5px;
+}
+
+.fmd-features li .text .title {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: 0.5px;
+  color: #002844;
+  margin-top: 5px;
+  margin-bottom: 12px !important;
+}
+
+.fmd-features li .text p {
+  font-weight: 300;
+  font-size: 16px;
+  color: #464646;
+  letter-spacing: 0.5px;
+  line-height: 28px;
+  margin-bottom: 0px;
+}
+
+.fmd-features-btn-block {
+  margin-top: 25px;
+  padding-left: 65px;
+}
+
+.fmd-features-btn-block .btn-primary:hover {
+  background: #FFFFFF;
+  color: #007bff !important;
+}
+
+.fmd-features-btn-block .btn-primary.focus,
+.fmd-features-btn-block .btn-primary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5)
+}
+
+.fmd-features-btn-block .btn-primary.disabled,
+.fmd-features-btn-block .btn-primary:disabled {
+  color: #FFFFFF !important;
+  background-color: #005cbf;
+}
+
+.fmd-features-btn-block .btn-primary:not(:disabled):not(.disabled).active,
+.fmd-features-btn-block .btn-primary:not(:disabled):not(.disabled):active {
+  color: #FFFFFF !important;
+  background-color: #005cbf;
+}
+
+.fmd-features-btn-block .btn-primary:not(:disabled):not(.disabled).active:focus,
+.fmd-features-btn-block .btn-primary:not(:disabled):not(.disabled):active:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5)
+}
+
+.fmd-features-btn-block.alt {
+  padding-left: 15px;
+}
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+  .fmd-features {
+    padding-left: 0px;
+  }
+
+  .fmd-features.alt {
+    padding-right: 0px;
+  }
+
+  .fmd-features-btn-block {
+    padding-left: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fmd-features {
+    padding-left: 0px;
+  }
+
+  .fmd-features.alt {
+    padding-right: 0px;
+  }
+
+  .fmd-features-btn-block {
+    padding-left: 15px;
+    margin-bottom: 30px;
+  }
+
+  .fmd-features-btn-block.alt {
+    margin-bottom: 25px;
+  }
+}
+
+#funder-certi-msg {
+  margin: 10px;
+  width: auto;
+}
+
+
+.fund-apply-section {
+
+  .fund-apply-form {
+    margin: -50px 0px 10px 100px;
+    transform: translate(0, 0);
+    background-color: white;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    width: 650px;
+
+    .form-name {
+      margin-top: 15px;
+      margin-left: 10px;
+      padding: 3px 0px 3px 10px;
+      font-size: 28px;
+      font-weight: 400;
+      color: #3a98db;
+
+      .underline {
+        margin-top: 10px;
+        height: 3px;
+        width: 100px;
+        background-color: #3a98db;
+      }
+    }
+
+    .form-body {
+      padding: 25px;
+
+      .form-footer {
+        padding-right: 20px;
+        text-align: right;
+      }
+    }
+  }
+
+  .section-footer {
+    text-align: left;
+    margin-left: 120px;
+  }
+}
+
+/*--------------- Fund My Degree page css ends ---------------*/

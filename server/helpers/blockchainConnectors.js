@@ -139,7 +139,7 @@ function rinkReconn() {
     console.log("[*] reconn rink running");
     inReconnRink = true;
     let currInterval = setInterval(() => {
-      rinkProvider = new Web3.providers.WebsocketProvider(rinkWs);
+      rinkProvider = new Web3.providers.WebsocketProvider(rinkProvider);
       web3Rink = new Web3(rinkProvider);
       rinkProvider.on("connect", () => {
         console.log(`[*] rinkeby reconnected to ws at ${fileName}`);

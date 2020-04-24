@@ -1,6 +1,5 @@
 //  burn token event for paypal burn
 let EventEmitter = require("events").EventEmitter;
-let Xdc3 = require("xdc3");
 const PaymentLog = require("../models/payment_logs");
 const emailer = require("../emailer/impl");
 const Notification = require("../models/notifications");
@@ -15,7 +14,7 @@ const UserFundRequest = require("../models/userFundRequest");
 const uuid = require("uuid/v4");
 // const WsServer = require("../listeners/donationListener").em;
 let xdc3 = require("../helpers/blockchainConnectors").xdcInst;
-const xdcWs = require("../helpers/constant").WsXinfinMainnet;
+let Xdc3 =  require("xdc3");
 
 let inReconnXDC = false;
 
@@ -38,14 +37,7 @@ const burnAddress = "0x0000000000000000000000000000000000000000";
 
 // const divisor = 1; // for testing purposes 1 million'th of actual value will be used
 
-async function paypalBurnToken(
-  paymentId,
-  amount,
-  chainId,
-  courseId,
-  email,
-  optionalNonce
-) {
+async function paypalBurnToken(paymentId, amount, chainId, courseId, email, optionalNonce) {
   try {
     console.log(
       `[*] called event paypalBurnToken for payment: ${paymentId} to burn on chainId ${chainId}`
@@ -240,8 +232,8 @@ async function donationTokenBurn(fundId, optionalNonce) {
       return;
     }
     let currPrivKey = currWallet.privateKey;
-    if (!currPrivKey.startsWith("0x")) {
-      currPrivKey = "0x" + currPrivKey;
+    if (!currPrivKey.startsWith("0x")){
+      currPrivKey = '0x'+currPrivKey
     }
     const signed = await makePayment(
       "",
@@ -368,6 +360,8 @@ function newDefNoti() {
 
 exports.em = eventEmitter;
 
+
+
 function connectionHeartbeat() {
   setInterval(async () => {
     try {
@@ -385,17 +379,12 @@ function xdcReconn() {
     console.log("[*] reconn xdc running");
     inReconnXDC = true;
     let currInterval = setInterval(() => {
-      console.log(xdcWs);
-
       let xdcProvider = new Xdc3.providers.WebsocketProvider(xdcWs);
       xdc3 = new Xdc3(xdcProvider);
       xdcProvider.on("connect", () => {
         console.log(`[*] xdc reconnected to ws at ${__filename}`);
         clearInterval(currInterval);
         inReconnXDC = false;
-      });
-      xdcProvider.on("error", (err) => {
-        console.log(`error at ${__filename}.xdcReconn: `, err);
       });
     }, 5000);
   } catch (e) {

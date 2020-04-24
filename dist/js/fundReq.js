@@ -257,7 +257,7 @@ function payByPaypal(fundId) {
 
 function handleFundRequestSubmit() {
   console.log("called handleFundRequestSubmit");
-  const desc = document.getElementById("req-description").value;
+  let desc = document.getElementById("req-description").value;
   const courseIds = [];
   const basicCourse = document.getElementById("basic-course").checked;
   if (basicCourse)
@@ -269,6 +269,14 @@ function handleFundRequestSubmit() {
     .checked;
   if (professionalCourse)
     courseIds.push(document.getElementById("professional-course").value);
+  if (!basicCourse && !advancedCourse && !professionalCourse) {
+    $.notify("Please select at least one course", { type: "danger" });
+    return;
+  }
+  if (desc.trim() == "") {
+    $.notify("Enter a short description", { type: "danger" });
+    return;
+  }
   $.ajax({
     method: "post",
     url: "/api/requestNewFund",
@@ -397,7 +405,7 @@ function renderRequestModal(
 
       >
         Close
-      </button><div class='funded'>FUNDED</div>`}
+      </button><div class='badge badge-success funded'>FUNDED <i class="fa fa-check" aria-hidden="true"></i></div>`}
                                Share On&nbsp;
                                <a target="_blank" href="${
                                  isMobile() === true
@@ -435,7 +443,7 @@ function renderRequestModal(
                               <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
                               ${
                                 type == "completed"
-                                  ? `<span class="funded-by">Funded By ${
+                                  ? `<span class="funded-by text-success">Funded By ${
                                       funderName == "undefined"
                                         ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
                                         : funderName
@@ -454,7 +462,7 @@ function renderRequestModal(
         data-dismiss="modal"
       >
         Close
-      </button><div class='funded'>FUNDED</div>`
+      </button><div class='badge badge-success funded'>FUNDED <i class="fa fa-check" aria-hidden="true"></i></div>`
           : `
         <button
           class="btn btn-secondary fund-btn-close"

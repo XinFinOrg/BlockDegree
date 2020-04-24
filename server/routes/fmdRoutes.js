@@ -2,11 +2,20 @@ const fmdService = require("../services/fundMyDegree");
 const requireLogin = require("../middleware/requireLogin");
 
 module.exports = (app) => {
-  app.get("/fund-my-degree", requireLogin, (req, res) => {
-    res.render("fundReq");
-  });
   app.get("/fmd", requireLogin, (req, res) => {
     res.redirect("/fund-my-degree");
+  });
+  app.get("/fund-my-degree-fund", requireLogin, (req, res) => {
+    res.render("fundReqFund");
+  });
+  app.get("/fmd-fund", requireLogin, (req, res) => {
+    res.redirect("/fund-my-degree-fund");
+  });
+  app.get("/fund-my-degree-apply", requireLogin, (req, res) => {
+    res.render("fundReqApply");
+  });
+  app.get("/fmd-apply", requireLogin, (req, res) => {
+    res.redirect("/fund-my-degree-apply");
   });
   app.post("/api/requestNewFund", requireLogin, fmdService.requestNewFund);
   app.post("/api/initiateDonation", requireLogin, fmdService.initiateDonation);
