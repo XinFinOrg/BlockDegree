@@ -316,19 +316,6 @@ if (typeof jQuery != "undefined") {
     });
   }
 
-  window.addEventListener(
-    "message",
-    function (event) {
-      console.log("Originating event: ", event.origin);
-      console.log(event.origin);
-      if (event.origin == "https://uat.blockdegree.org" && event.data == "ok") {
-        $.notify("Social linked!", { type: "success" });
-        checkAuth();
-      }
-    },
-    false
-  );
-
   function checkAuth() {
     console.log("called check auth");
     $.ajax({

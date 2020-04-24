@@ -1,8 +1,6 @@
 {{#> base}} {{> layouts/base title="Blockchain Profile"}} {{#*inline
 "body-block"}} {{> includes/hero hero-title="Profile" hero-copy="View / Update
 your profile"}}
-<script src="/js/fundReq.js?v=1.46"></script>
-
 <div id="profile">
   <div class="tabbed-section">
     <div class="container">
@@ -491,8 +489,51 @@ aria-hidden="true">
 
 {{/inline}} {{#*inline "scripts-block"}}
 
-<script src="js/profile.js?v=1.31"></script>
+<script src="/js/fundReq.js?v=1.47"></script>
+<script src="js/profile.js?v=1.32"></script>
+
 <script>
+
+window.addEventListener(
+    "message",
+    function (event) {
+      console.log("Originating event: ", event.origin);
+      console.log(event.origin);
+      if (event.origin == "https://uat.blockdegree.org") {
+        if (event.data == "ok"){
+          $.notify("Social linked!", { type: "success" });
+          checkAuth();
+        }
+        else if (event.data == "share"){
+          console.log("message from popup.");
+        // toggle linkedin modal
+        if (loginLinkedin === true) {
+          if (linkedinFunder == true) {
+            postLinkedin(true);
+            linkedinFunder = false;
+          } else {
+            $("#togglePostLinkedin").click();
+          }
+          loginLinkedin = false;
+        }
+
+        // toggle twitter modal
+        if (loginTwitter === true) {
+          if (twitterFunder == true) {
+            postTweet(true);
+            twitterFunder = false;
+          } else {
+            $("#togglePostTwitter").click();
+          }
+
+          loginTwitter = false;
+        }          
+        }
+      }
+    },
+    false
+  );
+
   let allPendingTransaction = [];
   let pendingEventListener;
   let listeningForPending = false;

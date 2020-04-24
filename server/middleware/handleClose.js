@@ -4,6 +4,7 @@ module.exports = (req, res, next) => {
     // its a pop-up, close on completion.
     console.log("inside close is true . .");
     req.session.closeOnCallback = true;
+    req.session.shareModal = req.query.share;
   }
   next();
 };

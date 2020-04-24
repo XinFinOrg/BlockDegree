@@ -22,7 +22,7 @@ $(document).ready(() => {
       event.origin == "https://uat.blockdegree.org" ||
       event.origin == "https://blockdegree.org"
     ) {
-      if (event.data == "ok") {
+      if (event.data == "share") {
         console.log("message from popup.");
         // toggle linkedin modal
         if (loginLinkedin === true) {
@@ -758,7 +758,7 @@ function handleShareLinkdedin(seedMsg, funder, fundId) {
       let popUpWin;
       // if (!result.linkedinAuth) {
       // has not linked its linkedin account,  first link the account and then continue.
-      popUpWin = handleAuthLinkedin();
+      popUpWin = handleAuthLinkedinShare();
       // } else {
       //   $("#togglePostLinkedin").click();
       // }
@@ -787,7 +787,7 @@ function handleShareTwitter(seedMsg, funder, fundId) {
       let popUpWin;
       // if (!result.twitterAuth) {
       // has not linked its linkedin account,  first link the account and then continue.
-      popUpWin = handleAuthTwitter();
+      popUpWin = handleAuthTwitterShare();
       // } else {
       //   $("#togglePostTwitter").click();
       // }
@@ -801,20 +801,20 @@ function handleShareTwitter(seedMsg, funder, fundId) {
   });
 }
 
-function handleAuthTwitter() {
+function handleAuthTwitterShare() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "https://uat.blockdegree.org/auth/twitter?close=true",
+    "https://uat.blockdegree.org/auth/twitter?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
 }
-function handleAuthLinkedin() {
+function handleAuthLinkedinShare() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "https://uat.blockdegree.org/auth/linkedin?close=true",
+    "https://uat.blockdegree.org/auth/linkedin?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
