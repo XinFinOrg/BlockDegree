@@ -1,6 +1,5 @@
 "use strict";
-$(document).ready(async function() {
-
+$(document).ready(async function () {
   console.log("called: ", window.localStorage.getItem("user-status"));
   let navLogin = document.getElementById("nav-login"),
     loginButton = document.getElementById("login-btn"),
@@ -57,11 +56,11 @@ $(document).ready(async function() {
     let pendingNotisJosn = await pendingNotis.json();
     if (pendingNotisJosn.status) {
       console.log(pendingNotisJosn);
-      pendingNotisJosn.notis.forEach(noti => {
+      pendingNotisJosn.notis.forEach((noti) => {
         $.notify(
           {
             title: "<strong>" + noti.title + "</strong>",
-            message: noti.message
+            message: noti.message,
           },
           { type: noti.type }
         );
@@ -116,21 +115,19 @@ $(document).ready(async function() {
 
   $(".nav-menu").superfish({
     animation: {
-      opacity: "show"
+      opacity: "show",
     },
-    speed: 400
+    speed: 400,
   });
 
   //------- Mobile Nav js starts --------//
   if ($("#nav-menu-container").length) {
-    var $mobile_nav = $("#nav-menu-container")
-      .clone()
-      .prop({
-        id: "mobile-nav"
-      });
+    var $mobile_nav = $("#nav-menu-container").clone().prop({
+      id: "mobile-nav",
+    });
     $mobile_nav.find("> ul").attr({
       class: "",
-      id: ""
+      id: "",
     });
     $("body").append($mobile_nav);
     $("body").prepend(
@@ -142,24 +139,19 @@ $(document).ready(async function() {
       .prepend('<i class="lnr lnr-chevron-down"></i>');
 
     console.log($("body"));
-    $(document).on("click", ".menu-has-children i", function(e) {
-      $(this)
-        .next()
-        .toggleClass("menu-item-active");
-      $(this)
-        .nextAll("ul")
-        .eq(0)
-        .slideToggle();
+    $(document).on("click", ".menu-has-children i", function (e) {
+      $(this).next().toggleClass("menu-item-active");
+      $(this).nextAll("ul").eq(0).slideToggle();
       $(this).toggleClass("lnr-chevron-up lnr-chevron-down");
     });
 
-    $(document).on("click", "#mobile-nav-toggle", function(e) {
+    $(document).on("click", "#mobile-nav-toggle", function (e) {
       $("body").toggleClass("mobile-nav-active");
       $("#mobile-nav-toggle i").toggleClass("lnr-cross lnr-menu");
       $("#mobile-body-overly").toggle();
     });
 
-    $(document).click(function(e) {
+    $(document).click(function (e) {
       var container = $("#mobile-nav, #mobile-nav-toggle");
       if (!container.is(e.target) && container.has(e.target).length === 0) {
         if ($("body").hasClass("mobile-nav-active")) {
@@ -178,13 +170,13 @@ $(document).ready(async function() {
   if (document.getElementById("horizontalTab")) {
     $("#horizontalTab").jqTabs({
       direction: "horizontal",
-      duration: 200
+      duration: 200,
     });
   }
 
   //------- Smooth Scroll  js --------//
 
-  $(".nav-menu a, #mobile-nav a, .scrollto").on("click", function() {
+  $(".nav-menu a, #mobile-nav a, .scrollto").on("click", function () {
     if (
       location.pathname.replace(/^\//, "") ==
         this.pathname.replace(/^\//, "") &&
@@ -204,7 +196,7 @@ $(document).ready(async function() {
 
         $("html, body").animate(
           {
-            scrollTop: target.offset().top - top_space
+            scrollTop: target.offset().top - top_space,
           },
           1500,
           "easeInOutExpo"
@@ -212,9 +204,7 @@ $(document).ready(async function() {
 
         if ($(this).parents(".nav-menu").length) {
           $(".nav-menu .menu-active").removeClass("menu-active");
-          $(this)
-            .closest("li")
-            .addClass("menu-active");
+          $(this).closest("li").addClass("menu-active");
         }
 
         if ($("body").hasClass("mobile-nav-active")) {
@@ -229,18 +219,16 @@ $(document).ready(async function() {
 
   //------- Header Scroll Class js --------//
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     $("html, body").hide();
 
     if (window.location.hash) {
-      setTimeout(function() {
-        $("html, body")
-          .scrollTop(0)
-          .show();
+      setTimeout(function () {
+        $("html, body").scrollTop(0).show();
 
         $("html, body").animate(
           {
-            scrollTop: $(window.location.hash).offset().top - 108
+            scrollTop: $(window.location.hash).offset().top - 108,
           },
           1000
         );
@@ -250,7 +238,7 @@ $(document).ready(async function() {
     }
   });
 
-  $(window).scroll(function() {
+  $(window).scroll(function () {
     if ($(this).scrollTop() > 50) {
       $("#header").addClass("header-scrolled");
     } else {
@@ -259,7 +247,7 @@ $(document).ready(async function() {
   });
 
   //------- Header Scroll Mobile nav toggle i Class js --------//
-  $(window).scroll(function() {
+  $(window).scroll(function () {
     if ($(this).scrollTop() > 50) {
       $("#mobile-nav-toggle i").addClass("scrolled-mobile-nav-toggle");
     } else {
@@ -270,25 +258,23 @@ $(document).ready(async function() {
   //------- Header Scroll Class  js --------//
 
   //------- Mailchimp js --------//
-  $("#mc_embed_signup")
-    .find("form")
-    .ajaxChimp();
+  $("#mc_embed_signup").find("form").ajaxChimp();
 
   // Popup
   if ($(".dialog").length) {
     $(".dialog").dialog({
       autoOpen: false,
-      minWidth: 450
+      minWidth: 450,
     });
 
-    $("#partners .dialog-btn").on("click", e => {
+    $("#partners .dialog-btn").on("click", (e) => {
       e.preventDefault();
       $(".dialog[data-dialog-idx=" + e.target.dataset.btnIdx + "]").dialog(
         "open"
       );
     });
 
-    $("#form-dialog").on("click", e => {
+    $("#form-dialog").on("click", (e) => {
       e.preventDefault();
       $("#partner-form").dialog("open");
     });
@@ -308,7 +294,7 @@ $(document).ready(async function() {
     activeItem.siblings(".side-nav__child").addClass("show");
     $('[href="' + currentPath + '"] > :header').addClass("active");
 
-    $(".side-nav__child a").on("click", function(e) {
+    $(".side-nav__child a").on("click", function (e) {
       let section = $(this).attr("id"),
         contentToScrollTo = "#" + section,
         pos = $(".module-content " + contentToScrollTo).offset().top;
@@ -318,7 +304,7 @@ $(document).ready(async function() {
   }
 
   if ($(".course-module").length) {
-    $(".arrow").on("click", function(e) {
+    $(".arrow").on("click", function (e) {
       return (e.target.innerText = e.target.innerText == "▲" ? "▼" : "▲");
     });
   }
@@ -339,17 +325,15 @@ $(document).ready(async function() {
   //   });
   // }
 
-  $("#getCertiFromHash").click(function(e) {
+  $("#getCertiFromHash").click(function (e) {
     e.preventDefault();
     const hash = $("#txHash").val();
     window.location = `https://ipfs-gateway.xinfin.network/` + hash + ``;
   });
 
   //Login form toggle
-  $(".login-with-mail").on("click", function() {
-    $(".login-form-block")
-      .stop()
-      .slideToggle();
+  $(".login-with-mail").on("click", function () {
+    $(".login-form-block").stop().slideToggle();
   });
 
   //   //Course price code toggle
@@ -359,84 +343,59 @@ $(document).ready(async function() {
   //       .slideToggle();
   //   });
 
-  $("#course_1PromoCodeBtn").on("click", function() {
-    $("#course_1PromoCodeBlock")
-      .stop()
-      .slideToggle();
+  $("#course_1PromoCodeBtn").on("click", function () {
+    $("#course_1PromoCodeBlock").stop().slideToggle();
     if ($("#course_1ReferralCodeBlock").is(":visible"))
-      $("#course_1ReferralCodeBlock")
-        .stop()
-        .slideToggle();
+      $("#course_1ReferralCodeBlock").stop().slideToggle();
   });
 
-  $("#course_2PromoCodeBtn").on("click", function() {
-    $("#course_2PromoCodeBlock")
-      .stop()
-      .slideToggle();
+  $("#course_2PromoCodeBtn").on("click", function () {
+    $("#course_2PromoCodeBlock").stop().slideToggle();
     if ($("#course_2ReferralCodeBlock").is(":visible"))
-      $("#course_2ReferralCodeBlock")
-        .stop()
-        .slideToggle();
+      $("#course_2ReferralCodeBlock").stop().slideToggle();
   });
 
-  $("#course_3PromoCodeBtn").on("click", function() {
-    $("#course_3PromoCodeBlock")
-      .stop()
-      .slideToggle();
+  $("#course_3PromoCodeBtn").on("click", function () {
+    $("#course_3PromoCodeBlock").stop().slideToggle();
     if ($("#course_3ReferralCodeBlock").is(":visible"))
-      $("#course_3ReferralCodeBlock")
-        .stop()
-        .slideToggle();
+      $("#course_3ReferralCodeBlock").stop().slideToggle();
   });
 
-  $("#course_1ReferralCodeBtn").on("click", function() {
+  $("#course_1ReferralCodeBtn").on("click", function () {
     if ($("#course_1PromoCodeBlock").is(":visible"))
-      $("#course_1PromoCodeBlock")
-        .stop()
-        .slideToggle();
-    $("#course_1ReferralCodeBlock")
-      .stop()
-      .slideToggle();
+      $("#course_1PromoCodeBlock").stop().slideToggle();
+    $("#course_1ReferralCodeBlock").stop().slideToggle();
   });
 
-  $("#course_2ReferralCodeBtn").on("click", function() {
+  $("#course_2ReferralCodeBtn").on("click", function () {
     if ($("#course_2PromoCodeBlock").is(":visible"))
-      $("#course_2PromoCodeBlock")
-        .stop()
-        .slideToggle();
-    $("#course_2ReferralCodeBlock")
-      .stop()
-      .slideToggle();
+      $("#course_2PromoCodeBlock").stop().slideToggle();
+    $("#course_2ReferralCodeBlock").stop().slideToggle();
   });
 
-  $("#course_3ReferralCodeBtn").on("click", function() {
+  $("#course_3ReferralCodeBtn").on("click", function () {
     if ($("#course_3PromoCodeBlock").is(":visible"))
-      $("#course_3PromoCodeBlock")
-        .stop()
-        .slideToggle();
-    $("#course_3ReferralCodeBlock")
-      .stop()
-      .slideToggle();
+      $("#course_3PromoCodeBlock").stop().slideToggle();
+    $("#course_3ReferralCodeBlock").stop().slideToggle();
   });
 });
 
-
-
-const url = 'wss://wss.blockdegree.org'
-const connection = new WebSocket(url)
+const url = "wss://wssuat.blockdegree.org ";
+const connection = new WebSocket(url);
 
 connection.onopen = () => {
-  connection.send(JSON.stringify({test:"message"})) 
-}
+  console.log("main.js wss connection onopen ");
+  connection.send(JSON.stringify({ test: "message" }));
+};
 
 // connection.onerror = (error) => {
 //   console.log(`WebSocket error: ${error}`, error)
 // }
 
 connection.onmessage = async (e) => {
-  const message = (e.data);
+  const message = e.data;
   console.log("Parsed Message: ", message, "location", window.location.href);
-  if (window.location.pathname==="/fund-my-degree"){
+  if (window.location.pathname === "/fund-my-degree-fund") {
     getFMDAllData(true);
   }
-}
+};
