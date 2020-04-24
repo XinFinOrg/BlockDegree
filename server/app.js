@@ -103,7 +103,7 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
-const server = app.listen("3000", async () => {
+const server = app.listen("3005", async () => {
   pendingTx.emit("initiatePendingTx");
   pendingTx.emit("initiatePendingBurn");
   pendingTx.emit("syncPendingBurnFMD");
