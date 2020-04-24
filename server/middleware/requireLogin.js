@@ -3,6 +3,8 @@ module.exports = (req, res, next) => {
     next();
   } else {
     req.session.redirectTo = req.originalUrl;
+    console.log("origin URL: ", req.originalUrl);
+
     if (req.params.courseName) {
       res.redirect("/login?from=" + req.params.courseName);
     } else {

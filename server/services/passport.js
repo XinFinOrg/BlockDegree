@@ -341,6 +341,16 @@ module.exports = function(passport) {
               return done(null, user);
             }
             let user = await User.findOne({ email: req.user.email });
+            let otherUserSocial = await User.findOne({
+              "auth.facebook.id": profile.id
+            });
+            if (otherUserSocial!==null && otherUserSocial.email!==user.email){
+              return done(
+                "This social account is not linked to your account.",
+                null,
+                "This social account is not linked to your account."
+              );
+            }
             user.auth.facebook.accessToken = accessToken;
             user.auth.facebook.refreshToken = refreshToken;
             user.lastActive = Date.now();
@@ -350,7 +360,7 @@ module.exports = function(passport) {
           if (!profile) {
             return done("Profile not set", null);
           }
-          var existingUser = await User.findOne({
+          let existingUser = await User.findOne({
             "auth.facebook.id": profile.id
           });
           if (existingUser) {
@@ -384,10 +394,10 @@ module.exports = function(passport) {
             }
           }
 
-          existingUser = await User.findOne({
+          let existingUser2 = await User.findOne({
             email: profile.emails[0].value
           });
-          if (existingUser) {
+          if (existingUser2) {
             let user = await User.findOne({ email: profile.emails[0].value });
             user.auth.facebook.id = profile.id;
             user.auth.facebook.accessToken = accessToken;
@@ -466,6 +476,16 @@ module.exports = function(passport) {
 
             // add credentials
             let user = await User.findOne({ email: req.user.email });
+            let otherUserSocial = await User.findOne({
+              "auth.twitter.id": profile.id
+            });
+            if (otherUserSocial!==null && otherUserSocial.email!==user.email){
+              return done(
+                "This social account is not linked to your account.",
+                null,
+                "This social account is not linked to your account."
+              );
+            }
             user.auth.twitter.id = profile.id;
             user.auth.twitter.token = token;
             user.auth.twitter.tokenSecret = tokenSecret;
@@ -480,7 +500,7 @@ module.exports = function(passport) {
           await user.save();
           return done(null, req.user);
         }
-        var existingUser = await User.findOne({
+        let existingUser = await User.findOne({
           "auth.twitter.id": profile.id
         });
         if (existingUser) {
@@ -514,10 +534,10 @@ module.exports = function(passport) {
           }
         }
 
-        existingUser = await User.findOne({
+        let existingUser2 = await User.findOne({
           email: profile.emails[0].value
         });
-        if (existingUser) {
+        if (existingUser2) {
           let user = await User.findOne({ email: profile.emails[0].value });
           user.auth.twitter.id = profile.id;
           user.auth.twitter.token = token;
@@ -552,7 +572,6 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        console.log(accessToken, refreshToken);
         process.nextTick(async function() {
           if (req.user) {
             if (
@@ -583,13 +602,23 @@ module.exports = function(passport) {
               return done(null, user);
             }
             let user = await User.findOne({ email: req.user.email });
+            let otherUserSocial = await User.findOne({
+              "auth.linkedin.id": profile.id
+            });
+            if (otherUserSocial!==null&&otherUserSocial.email!==user.email){
+              return done(
+                "This social account is not linked to your account.",
+                null,
+                "This social account is not linked to your account."
+              );
+            }
             user.auth.linkedin.accessToken = accessToken;
             user.auth.linkedin.refreshToken = refreshToken;
             user.lastActive = Date.now();
             await user.save();
             return done(null, user);
           }
-          var existingUser = await User.findOne({
+          let  existingUser = await User.findOne({
             "auth.linkedin.id": profile.id
           });
           if (existingUser) {
@@ -623,10 +652,10 @@ module.exports = function(passport) {
             }
           }
 
-          existingUser = await User.findOne({
+          let existingUser2 = await User.findOne({
             email: profile.emails[0].value
           });
-          if (existingUser) {
+          if (existingUser2) {
             let user = await User.findOne({ email: profile.emails[0].value });
             user.auth.linkedin.id = profile.id;
             user.auth.linkedin.accessToken = accessToken;
