@@ -6,7 +6,8 @@ let loginLinkedin = false,
   linkedinfundId = "",
   twitterFundId = "";
 $(document).ready(() => {
-  getFMDAllData();
+  console.log(window.location.pathname);
+  if (window.location.pathname != "/profile") getFMDAllData();
 
   $("#xdc-modal-copy-btn").click(() => {
     copyToClipboard($("#xdc-addr-value-modal").val(), "xdc-qr-img", "Address");
@@ -433,6 +434,7 @@ function renderRequestModal(
 </div>`;
     document.getElementById("requestModalWrapper").innerHTML = retHtml;
     document.getElementById("funder-certi-msg").innerHTML = funderMessage;
+    console.log("rendered new modal");
   } else {
     retHtml =
       `<div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -506,6 +508,7 @@ function renderRequestModal(
 </div>`;
     document.getElementById("requestModalWrapper").innerHTML = retHtml;
     document.getElementById("requestModal--body").innerHTML = description;
+    console.log("rendered new modal");
   }
 
   setTimeout(() => $("#requestModal").modal("toggle"), 0);
@@ -1341,8 +1344,7 @@ function payRazorpay(fundId, amount) {
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image:
-            "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          image: "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {

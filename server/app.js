@@ -15,6 +15,10 @@ const expressFileUpload = require("express-fileupload");
 let pendingTx = require("./listeners/pendingTx").em;
 const adminServices = require("./services/adminServices");
 const donationListener = require("../server/listeners/donationListener");
+const redis = require("redis");
+
+let RedisStore = require("connect-redis")(session);
+let redisClient = redis.createClient();
 
 let app = express();
 require("dotenv").config();
@@ -31,7 +35,7 @@ app.engine(
     extname: "hbs",
     defaultLayout: "base",
     layoutsDir: path.join(process.cwd() + "/src/partials/layouts"),
-    partialsDir: path.join(process.cwd() + "/src/partials/")
+    partialsDir: path.join(process.cwd() + "/src/partials/"),
   })
 );
 app.set("views", path.join(process.cwd() + "/src/partials/layouts"));
@@ -49,12 +53,17 @@ app.use(
 app.use(cors());
 app.use(
   expressFileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 }
+    limits: { fileSize: 50 * 1024 * 1024 },
   })
 );
 // required for passport
 
 const sessionParser = session({
+  store: new RedisStore({
+    client: redisClient,
+    host: "localhost",
+    port: 6379,
+  }),
   secret: "test",
   resave: true,
   rolling: true,
@@ -93,7 +102,7 @@ app.use("*", function (req, res) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
