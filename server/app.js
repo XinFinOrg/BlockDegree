@@ -17,8 +17,8 @@ const adminServices = require("./services/adminServices");
 const donationListener = require("../server/listeners/donationListener");
 const redis = require("redis");
 
-let RedisStore = require("connect-redis")(session);
-let redisClient = redis.createClient();
+// let RedisStore = require("connect-redis")(session);
+// let redisClient = redis.createClient();
 
 let app = express();
 require("dotenv").config();
@@ -59,11 +59,11 @@ app.use(
 // required for passport
 
 const sessionParser = session({
-  store: new RedisStore({
-    client: redisClient,
-    host: "localhost",
-    port: 6379,
-  }),
+  // store: new RedisStore({
+  //   client: redisClient,
+  //   host: "localhost",
+  //   port: 6379,
+  // }),
   secret: "test",
   resave: true,
   rolling: true,
