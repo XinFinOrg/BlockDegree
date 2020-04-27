@@ -556,6 +556,7 @@ exports.claimFund = async (req, res) => {
         await recipient.save();
         res.json({ status: true });
         WsServer.emit("fmd-trigger");
+        renderFunderCerti(fund.donerName, fund.fundId);
         emailer.sendFMDCompleteFunder(
           user.email,
           fund.userName,
