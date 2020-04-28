@@ -449,8 +449,7 @@ function renderRequestModal(
                                     }</span>`
                                   : ""
                               }
-                              <div class="btn-block"><button type="button" class="btn btn-outline-primary" onclick=""><i class="fa fa-user-plus" aria-hidden="true"></i></i>
-</button> <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button></div>
+                              <div class="btn-block"> <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button></div>
                           </div>` +
       `<div class="modal-body" id="requestModal--body">                            
                           </div>` +
@@ -802,7 +801,7 @@ function handleAuthTwitter() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "http://localhost:3000/auth/twitter?close=true",
+    "https://www.blockdegree.org/auth/twitter?close=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -811,7 +810,7 @@ function handleAuthLinkedin() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "http://localhost:3000/auth/linkedin?close=true",
+    "https://www.blockdegree.org/auth/linkedin?close=true",
 
     "newwin",
     "height=600px,width=600px"
