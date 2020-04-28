@@ -1,8 +1,7 @@
 // import { futimesSync } from "fs";
 
 // https://bl.ocks.org/shiftyp/0e2516f91a044acfb396
-$(function() {
-
+$(function () {
   // function Quiz() {
   //   this.correctAnswers = 0;
 
@@ -50,12 +49,19 @@ $(function() {
 
   // Quiz();
 
-  function postExamData(data) {
-    alert('post exam before');
-    $('#examResult').html('<P>You failed</p>');
-    alert('post exam after');
-  }
+  $(document).ready(() => {
+    const allPercent = document.getElementsByClassName("round-off");
+    console.log(allPercent);
+    for (let i = 0; i < allPercent.length; i++) {
+      allPercent[i].innerHTML = Math.round(parseFloat(allPercent[i].innerHTML));
+    }
+  });
 
+  function postExamData(data) {
+    alert("post exam before");
+    $("#examResult").html("<P>You failed</p>");
+    alert("post exam after");
+  }
 
   // $('#exam-submit').on('click', (e) => {
   //   e.preventDefault();
@@ -69,11 +75,11 @@ $(function() {
   //       ansArray.push(ans);
   //     } else {
   //       ans = 5;
-  //       ansArray.push(ans); 
-  //     }      
+  //       ansArray.push(ans);
+  //     }
   //   }
   //   // console.log('data', JSON.stringify(ansArray));
-    
+
   //   $.ajax({
   //     type: "POST",
   //     url: '/postExam',
@@ -87,6 +93,6 @@ $(function() {
   //       console.log(err);
   //     }
   //   });
-   
-  // })  
+
+  // })
 });
