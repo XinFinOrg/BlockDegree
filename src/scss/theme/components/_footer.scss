@@ -6,7 +6,7 @@
 /*-------- start footer Area -------------*/
 
 .footer-area {
-  padding-top: 30px;
+  padding-top: 45px;
   background-color: $bg__footer;
   border-bottom: 1px solid $overlay__gradient--stop-1;
   border-top: 1px solid #ced4da;
@@ -36,7 +36,7 @@
         }
     }
     ul li {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         a {
             color: $text-color;
             @include transition();

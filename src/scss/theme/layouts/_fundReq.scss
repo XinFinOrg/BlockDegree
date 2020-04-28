@@ -258,6 +258,10 @@
     }
   }
 
+  .modal-header .btn-block {
+  	 width: inherit!important;
+  }
+  
   .modal-footer {
     margin: 2px;
 
@@ -563,6 +567,11 @@
   padding-right: 50px;
 }
 
+.fmd-features p, .fmd-features.alt p {
+  margin-bottom: 1rem;
+  line-height: 1.5rem;
+}
+
 .fmd-features li {
   overflow: hidden;
   margin-bottom: 5px;
@@ -629,6 +638,7 @@
 .fmd-features-btn-block {
   margin-top: 25px;
   padding-left: 65px;
+  text-transform: uppercase;
 }
 
 .fmd-features-btn-block .btn-primary:hover {
@@ -662,6 +672,10 @@
   padding-left: 15px;
 }
 
+.fmd-features-btn-block.alt-text {
+  padding-left: 50px;
+}
+
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
   .fmd-features {
     padding-left: 0px;
@@ -673,6 +687,10 @@
 
   .fmd-features-btn-block {
     padding-left: 15px;
+  }  
+  
+  .fmd-features-btn-block.alt-text {
+    padding-left: 0px;
   }
 }
 
@@ -692,6 +710,10 @@
 
   .fmd-features-btn-block.alt {
     margin-bottom: 25px;
+  }  
+  
+  .fmd-features-btn-block.alt-text {
+    padding-left: 0px;
   }
 }
 
@@ -756,6 +778,32 @@
 .tot-fund-amount {
   float: right;
   margin: 10px;
+}
+
+.donation-way-block {
+    background: transform;
+    -webkit-transition: all 0.4s ease 0s;
+    transition: all 0.4s ease 0s;
+    position: relative;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.06);
+    border-radius: 5px;
+	height: 100%;
+}
+.donation-way-block h3 {
+    font-weight: 600;
+    margin: 0;
+    padding-bottom: 15px;
+    -webkit-transition: all 0.2s ease 0s;
+    transition: all 0.2s ease 0s;
+}
+.donation-way-block p {
+	line-height: 1.5rem;
+	margin-bottom: 0.75rem;
+}
+.donation-way-block p:last-child {
+	margin-bottom: 0rem;
 }
 
 /*--------------- Fund My Degree page css ends ---------------*/

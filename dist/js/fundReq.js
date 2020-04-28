@@ -271,7 +271,7 @@ function payByPaypal(fundId) {
 
 function handleFundRequestSubmit() {
   console.log("called handleFundRequestSubmit");
-  let desc = document.getElementById("req-description").value;
+  const desc = document.getElementById("req-description").value;
   const courseIds = [];
   const basicCourse = document.getElementById("basic-course").checked;
   if (basicCourse)
@@ -283,14 +283,6 @@ function handleFundRequestSubmit() {
     .checked;
   if (professionalCourse)
     courseIds.push(document.getElementById("professional-course").value);
-  if (!basicCourse && !advancedCourse && !professionalCourse) {
-    $.notify("Please select at least one course", { type: "danger" });
-    return;
-  }
-  if (desc.trim() == "") {
-    $.notify("Enter a short description", { type: "danger" });
-    return;
-  }
   $.ajax({
     method: "post",
     url: "/api/requestNewFund",
@@ -393,9 +385,7 @@ function renderRequestModal(
                           <div class="modal-header">
                               <h5 class="modal-title align-self-center" id="requestModal--title">Request By <strong>${userName}</strong></h5>
                               ${`<span class="funded-by">Funded By ${
-                                funderName == "undefined" ||
-                                funderName == "" ||
-                                funderName == null
+                                funderName == "undefined" || funderName=="" || funderName==null
                                   ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
                                   : funderName
                               }</span>`}                              
@@ -403,14 +393,9 @@ function renderRequestModal(
 
                           </div>` +
       `
+      
                           <textarea class="form-control" id="funder-certi-msg">Test</textarea>
-                          ${
-                            funderName == "undefined" ||
-                            funderName == "" ||
-                            funderName == null
-                              ? ""
-                              : `<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`
-                          }
+                          ${funderName == "undefined" || funderName=="" || funderName==null?'':`<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`}
                           ` +
       `<div class="modal-footer">` +
       `${`<button
@@ -463,8 +448,9 @@ function renderRequestModal(
                                         : funderName
                                     }</span>`
                                   : ""
-                              }                              
-                              <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
+                              }
+                              <div class="btn-block"><button type="button" class="btn btn-outline-primary" onclick=""><i class="fa fa-user-plus" aria-hidden="true"></i></i>
+</button> <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button></div>
                           </div>` +
       `<div class="modal-body" id="requestModal--body">                            
                           </div>` +
@@ -754,8 +740,8 @@ function isMobile() {
 
 function handleShareLinkdedin(seedMsg, funder, fundId) {
   console.log(funder, fundId);
-
-  if (funder == "true") {
+  
+  if (funder == 'true') {
     linkedinFunder = true;
     linkedinfundId = fundId;
   }
@@ -816,7 +802,7 @@ function handleAuthTwitter() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "https://www.blockdegree.org/auth/twitter?close=true",
+    "http://localhost:3000/auth/twitter?close=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -825,7 +811,8 @@ function handleAuthLinkedin() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "https://www.blockdegree.org/auth/linkedin?close=true",
+    "http://localhost:3000/auth/linkedin?close=true",
+
     "newwin",
     "height=600px,width=600px"
   );
