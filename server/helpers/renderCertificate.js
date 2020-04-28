@@ -99,7 +99,7 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
       name: name,
       course: `Certified Blockchain ${examType.charAt(0).toUpperCase() +
         examType.slice(1)} Expert`,
-      score: percent,
+      score: Math.round(parseFloat(percent))+"",
       date: date,
       dataURL: dataURL,
       ts:ts,
