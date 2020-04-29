@@ -395,12 +395,6 @@ connection.onopen = () => {
 connection.onmessage = async (e) => {
   const message = e.data;
   console.log("Parsed Message: ", message, "location", window.location.href);
-<<<<<<< HEAD
-  if (window.location.pathname === "/fund-my-degree-fund") {
-    getFMDAllData(true);
-  }
-};
-=======
   if (window.location.pathname === "/fund-my-degree") {
     getFMDAllData(true);
   }
@@ -413,4 +407,3 @@ function addDelimitation(n) {
   // return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return n.toLocaleString("en");
 }
->>>>>>> live

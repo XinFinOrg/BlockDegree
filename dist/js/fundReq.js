@@ -816,12 +816,7 @@ function handleAuthLinkedinShare() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-<<<<<<< HEAD
     "https://uat.blockdegree.org/auth/linkedin?close=true&share=true",
-=======
-    "https://www.blockdegree.org/auth/linkedin?close=true",
-
->>>>>>> live
     "newwin",
     "height=600px,width=600px"
   );
