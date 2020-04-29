@@ -38,7 +38,6 @@ Lack of customer focus: The customer finds it very difficult to know if the prod
 
 ### Business scenario implemented using blockchain
 With the same Blockchain technology, all parties track the movement of products through the supply chain.
-  <img src="/img/courses/bc-basic/Blockchain-ledger.jpg"  style="width:100%; height: 400px; align-content: center; "/>
 
 A single shared data storage, which is tamper-evident (designed to reveal any unusual interference) and protected using cryptographic methods.
 

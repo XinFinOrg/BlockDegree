@@ -64,6 +64,7 @@ const userFundRequest = mongoose.Schema({
   burnAmnt: { type: String },
   createdAt: String,
   updatedAt: String,
+  completionDate: String,
 });
 
 module.exports = mongoose.model("UserFundRequest", userFundRequest);

@@ -13,7 +13,9 @@ const xdcWs = require("../helpers/constant").WsXinfinMainnet;
 const equateAddress = require("../helpers/common").equateAddress;
 const { xdcToUsd, usdToXdc } = require("../helpers/cmcHelper");
 const { renderFunderCerti } = require("../helpers/renderFunderCerti");
+const BulkPayment = require("../models/bulkCourseFunding");
 const recipients = [];
+const bulkPayments = [];
 
 let xdc3Provider = new Xdc3.providers.WebsocketProvider(xdcWs);
 let xdc3 = new Xdc3(xdc3Provider);
@@ -154,6 +156,25 @@ function syncPendingDonation() {
   });
 }
 
+async function syncPendingBulkCoursePayments() {
+  try {
+    console.log("called syncPendingBulkCoursePayments");
+    const allRequests = await BulkPayment.find(
+      { status: "uninitiated" },
+      "receiveAddr"
+    );
+    for (let i = 0; i < allRequests.length; i++) {
+      if (!bulkPayments.includes[allRequests[i].receiveAddr])
+        bulkPayments.push(allRequests[i].receiveAddr);
+    }
+  } catch (e) {
+    console.log(
+      `exception at ${__filename}.syncPendingBulkCoursePayments: `,
+      e
+    );
+  }
+}
+
 /**
  * will sync the addresses to lookout for deposits in new headers
  */
@@ -203,6 +224,7 @@ function newDefNoti() {
 em.on("processDonationTx", startProcessingDonation);
 em.on("syncPendingDonation", syncPendingDonation);
 em.on("syncRecipients", syncRecipients);
+em.on("syncPendingBulkCoursePayments", syncPendingBulkCoursePayments);
 // em.on("syncMissedTx", syncMissedBlocks);
 
 exports.em = em;
@@ -259,6 +281,17 @@ function removeRecipient(address) {
   }
   if (removeIndex > -1) {
     recipients.splice(removeIndex, 1);
+  }
+}
+
+function removeBulkPayment(address) {
+  for (let i = 0; i < bulkPayments.length; i++) {
+    if (bulkPayments[i] === address) {
+      removeIndex = i;
+    }
+  }
+  if (removeIndex > -1) {
+    bulkPayments.splice(removeIndex, 1);
   }
 }
 
@@ -395,6 +428,45 @@ function newBlockProcessor() {
               } else {
                 console.log("invalid amount");
               }
+            } else {
+              for (let j = 0; j < bulkPayments.length; j++) {
+                if (equateAddress(bulkPayments[j], currBlockTx.to)) {
+                  const coursePayemnt = await BulkPayment.findOne({
+                    receiveAddr: bulkPayments[j],
+                  });
+                  if (
+                    coursePayemnt.txHash !== undefined &&
+                    coursePayemnt.txHash !== "" &&
+                    coursePayemnt.txHash !== null
+                  ) {
+                    continue;
+                  }
+                  const amountGoal = await usdToXdc(coursePayemnt.amountGoal);
+                  const min = amountGoal - parseFloat(amountGoal) / 10;
+                  const max = amountGoal + parseFloat(amountGoal) / 10;
+                  const currAmnt = currBlockTx.value;
+                  if (min <= currAmnt && currAmnt <= max) {
+                    coursePayemnt.status = "completed";
+                    coursePayemnt.txHash = currBlockTx.hash;
+                    coursePayemnt.completionDate = Date.now() + "";
+                    await coursePayemnt.save();
+                    emailer.sendMailInternal(
+                      "blockdegree-bot@blockdegree.org",
+                      process.env.SUPP_EMAIL_ID,
+                      "Got Entire Course Payemnt",
+                      `Got an entire course payment by transaction in XDC to address ${currBlockTx.to} for bulk-payment id ${coursePayemnt.bulkId}. Please do the needful`
+                    );
+                    removeBulkPayment(coursePayemnt.receiveAddr);
+                  } else {
+                    emailer.sendMailInternal(
+                      "blockdegree-bot@blockdegree.org",
+                      process.env.SUPP_EMAIL_ID,
+                      "Got Partial Course Payemnt",
+                      `Got an entire course's payment <b>Partially</b> by transaction in XDC to address ${currBlockTx.to} for bulk-payment id ${coursePayemnt.bulkId}. Please do the needful`
+                    );
+                  }
+                }
+              }
             }
           }
         }
@@ -402,14 +474,14 @@ function newBlockProcessor() {
         console.log(`exception at ${__filename}.newBlockHeaders: `, e);
         subscriptionNewHeaders.unsubscribe();
         processorInUse = false;
-        emailer.sendMailInternal(
-          "blockdegree-bot@blockdegree.org",
-          process.env.SUPP_EMAIL_ID,
-          "New Block sub. cleared",
-          `have cleared subscriptions to new block headers at ${__filename} due to some error ${String(
-            e
-          )}\nStarting a new block processor.`
-        );
+        // emailer.sendMailInternal(
+        //   "blockdegree-bot@blockdegree.org",
+        //   process.env.SUPP_EMAIL_ID,
+        //   "New Block sub. cleared",
+        //   `have cleared subscriptions to new block headers at ${__filename} due to some error ${String(
+        //     e
+        //   )}\nStarting a new block processor.`
+        // );
         newBlockProcessor();
         return;
       }

@@ -82,7 +82,7 @@ module.exports = {
       mailOptions = {
         from: "info@blockdegree.org",
         to: mail,
-        subject: "Payment Successfull",
+        subject: "Payment Successful",
         //text:'Hello,\n\n' + 'Your payment is completed for ' + courseName + ' : \nhttp:\/\/' + req.headers.host + '/' + courseName + '.\n'
         text:
           "Hello,\n\n" +

@@ -709,7 +709,7 @@ exports.forceReSync = async (req, res) => {
       //   `Due to some internal issues / server went down we were not able to fire the following events ${surpassedTS.toString()}`
       // );
     }
-    console.log("[*] event sync successfull");
+    console.log("[*] event sync successful");
     if (res != undefined)
       res.json({ status: true, message: "successfully synced the events" });
   } catch (e) {

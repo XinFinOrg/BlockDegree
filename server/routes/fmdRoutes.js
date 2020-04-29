@@ -2,6 +2,8 @@ const fmdService = require("../services/fundMyDegree");
 const requireLogin = require("../middleware/requireLogin");
 
 module.exports = (app) => {
+  app.get("/fmd-corporate-paypal-suc", fmdService.fmdCorporatePaypalSuc);
+  app.get("/fmd-corporate-paypal-err", fmdService.fmdCorporatePaypalErr);
   app.get("/fmd", requireLogin, (req, res) => {
     res.redirect("/fund-my-degree");
   });
@@ -36,4 +38,12 @@ module.exports = (app) => {
 
   app.post("/api/initiateRazorpay", requireLogin, fmdService.initiateRazorpay);
   app.post("/api/completeRazorpay", requireLogin, fmdService.completeRazorpay);
+  app.post(
+    "/api/startCorporateCoursePaymentPaypal",
+    fmdService.startCorporateCoursePaymentPaypal
+  );
+  app.post(
+    "/api/startCorporateCoursePaymentXdc",
+    fmdService.startCorporateCoursePaymentXdc
+  );
 };

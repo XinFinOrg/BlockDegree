@@ -8,10 +8,10 @@
                     <h2>Fund My Degree</h2>
                     <p>Help in funding certifications for the students!</p>
                 </div>
-                <div class="align-self-center">
+                {{!-- <div class="align-self-center">
                     <button data-toggle="modal" data-target="#applyNow" class="btn btn-white text-uppercase">Request For
                         FundMyDegree </button>
-                </div>
+                </div> --}}
             </div>
         </div>
     </section>
@@ -34,9 +34,12 @@
                             <!-- Nav tabs -->
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body">                            
                             <div class="tab-content">
                                 <div class="tab-pane fade active show" id="fundingRequired">
+                                    <div class="tot-fund-amount">
+                                        Total Pending Requirement: $&nbsp;<span id="totPendFundReqUsd"></span>&nbsp;/&nbsp;<span id="totPendFundReqXdc"></span>&nbsp;XDC  
+                                    </div>
                                     <div class="table-responsive">
                                         <table id="pendingFund" class="table table-hover nowrap" style="width:100%">
                                             <thead>
@@ -57,6 +60,9 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="alreadyFunded">
+                                    <div class="tot-fund-amount">
+                                        Total Requirement Funded: $&nbsp;<span id="totApprFundReqUsd"></span>&nbsp;/&nbsp;<span id="totApprFundReqXdc"></span>&nbsp;XDC  
+                                    </div>
                                     <div class="table-responsive">
                                         <table id="approvedFund" class="table table-hover nowrap" style="width:100%">
                                             <thead>
@@ -87,7 +93,7 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+    {{!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -107,7 +113,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Modal -->
 
     <!-- Modal -->
@@ -317,4 +323,4 @@
 
 <!-- Success Modal -->
 
-<script src="/js/fundReq.js?v=1.47"></script>
+<script src="/js/fundReq.js?v=1.48"></script>

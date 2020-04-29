@@ -51,9 +51,12 @@ $(document).ready(() => {
   });
 });
 
-function getFMDAllData(update) {
+async function getFMDAllData(update) {
   let currentRequestData = [];
   // $('#pendingFund').DataTable();
+
+  const xdcPriceResponse = await $.get("/api/wrapCoinMarketCap");
+  const xdcPrice = xdcPriceResponse.data;
 
   const emptyTuple = `<tr>
   <td></td>
@@ -71,7 +74,10 @@ function getFMDAllData(update) {
       if (result.status === true) {
         const data = result.data;
         currentRequestData = result.data;
-        console.log("Current Request Data: ", currentRequestData);
+        let pendingFundsUsd = 0,
+          approvedFundsUsd = 0,
+          pendingFundsXdc = 0,
+          approvedFundsXdc = 0;
 
         let retDataApproved = "",
           retDataPending = "";
@@ -87,6 +93,7 @@ function getFMDAllData(update) {
             donerName = currData.donerName;
           }
           if (currData.status === "uninitiated") {
+            pendingFundsUsd += parseFloat(currData.amountGoal);            
             retDataPending += `<tr>
             <td>${currDate.getDate()}/${
               currDate.getMonth() + 1
@@ -114,6 +121,8 @@ function getFMDAllData(update) {
             <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr}', '${currData.fundId}', ${currData.amountGoal})" class="btn btn-primary">Fund Now</button></td>
           </tr>`;
           } else if (currData.status === "completed") {
+            approvedFundsUsd +=
+              parseFloat(currData.amountGoal);
             retDataApproved += `<tr>
             <td>${currDate.getDate()}/${
               currDate.getMonth() + 1
@@ -167,6 +176,14 @@ function getFMDAllData(update) {
             pagingType: "simple", // "simple" option for 'Previous' and 'Next' buttons only
           });
         }
+        
+          document.getElementById("totPendFundReqUsd").innerHTML = addDelimitation(Math.round(pendingFundsUsd*100)/100);
+          document.getElementById("totPendFundReqXdc").innerHTML = addDelimitation(Math.round(pendingFundsUsd*100/parseFloat(xdcPrice))/100);
+
+          // totAlreadyFundReqUsd
+          document.getElementById("totApprFundReqUsd").innerHTML = addDelimitation(Math.round(approvedFundsUsd*100)/100);
+          document.getElementById("totApprFundReqXdc").innerHTML = addDelimitation(Math.round(approvedFundsUsd*100/parseFloat(xdcPrice))/100);
+
         renderRequestedModal(data);
       }
     })
@@ -258,7 +275,7 @@ function payByPaypal(fundId) {
 
 function handleFundRequestSubmit() {
   console.log("called handleFundRequestSubmit");
-  let desc = document.getElementById("req-description").value;
+  const desc = document.getElementById("req-description").value;
   const courseIds = [];
   const basicCourse = document.getElementById("basic-course").checked;
   if (basicCourse)
@@ -270,14 +287,6 @@ function handleFundRequestSubmit() {
     .checked;
   if (professionalCourse)
     courseIds.push(document.getElementById("professional-course").value);
-  if (!basicCourse && !advancedCourse && !professionalCourse) {
-    $.notify("Please select at least one course", { type: "danger" });
-    return;
-  }
-  if (desc.trim() == "") {
-    $.notify("Enter a short description", { type: "danger" });
-    return;
-  }
   $.ajax({
     method: "post",
     url: "/api/requestNewFund",
@@ -380,9 +389,7 @@ function renderRequestModal(
                           <div class="modal-header">
                               <h5 class="modal-title align-self-center" id="requestModal--title">Request By <strong>${userName}</strong></h5>
                               ${`<span class="funded-by">Funded By ${
-                                funderName == "undefined" ||
-                                funderName == "" ||
-                                funderName == null
+                                funderName == "undefined" || funderName=="" || funderName==null
                                   ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
                                   : funderName
                               }</span>`}                              
@@ -390,14 +397,9 @@ function renderRequestModal(
 
                           </div>` +
       `
+      
                           <textarea class="form-control" id="funder-certi-msg">Test</textarea>
-                          ${
-                            funderName == "undefined" ||
-                            funderName == "" ||
-                            funderName == null
-                              ? ""
-                              : `<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`
-                          }
+                          ${funderName == "undefined" || funderName=="" || funderName==null?'':`<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`}
                           ` +
       `<div class="modal-footer">` +
       `${`<button
@@ -451,8 +453,8 @@ function renderRequestModal(
                                         : funderName
                                     }</span>`
                                   : ""
-                              }                              
-                              <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
+                              }
+                              <div class="btn-block"> <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button></div>
                           </div>` +
       `<div class="modal-body" id="requestModal--body">                            
                           </div>` +
@@ -743,8 +745,8 @@ function isMobile() {
 
 function handleShareLinkdedin(seedMsg, funder, fundId) {
   console.log(funder, fundId);
-
-  if (funder == "true") {
+  
+  if (funder == 'true') {
     linkedinFunder = true;
     linkedinfundId = fundId;
   }
@@ -814,7 +816,12 @@ function handleAuthLinkedinShare() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
+<<<<<<< HEAD
     "https://uat.blockdegree.org/auth/linkedin?close=true&share=true",
+=======
+    "https://www.blockdegree.org/auth/linkedin?close=true",
+
+>>>>>>> live
     "newwin",
     "height=600px,width=600px"
   );

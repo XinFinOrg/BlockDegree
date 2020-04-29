@@ -29,7 +29,7 @@ module.exports = function (app) {
 
   app.post("/pay", requireLogin, cors(), paymentService.payPaypal);
   app.get("/suc", paymentService.payPaypalSuccess);
-  app.get("/payment-success", requireLogin, function (req, res) {
+  app.get("/payment-success", function (req, res) {
     console.log(req.session.message);
     
     res.render("paymentSuccess", { message: req.session.message });
@@ -37,8 +37,7 @@ module.exports = function (app) {
   app.post("/api/payViaXdc", requireLogin, paymentService.payViaXdc);
   app.post("/api/payViaXdce", requireLogin, paymentService.payViaXdce);
   app.get(
-    "/api/wrapCoinMarketCap",
-    requireLogin,
+    "/api/wrapCoinMarketCap",    
     paymentService.wrapCoinMarketCap
   );
   app.get(
