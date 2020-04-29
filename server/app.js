@@ -118,6 +118,8 @@ const server = app.listen("3000", async () => {
   pendingTx.emit("syncPendingBurnFMD");
   donationListener.em.emit("syncRecipients");
   donationListener.em.emit("syncPendingDonation");
+  donationListener.em.emit("syncPendingBulkCoursePayments");
+
   await adminServices.initiateWalletConfig();
   console.log("[*] server started");
 });

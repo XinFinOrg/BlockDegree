@@ -6,6 +6,7 @@ const ProfanityCheck = require("bad-words");
 const CoursePrice = require("../models/coursePrice");
 const UserFundReq = require("../models/userFundRequest");
 const User = require("../models/user");
+const BulkPayment = require("../models/bulkCourseFunding");
 const userCurrencyHelper = require("../helpers/userCurrency");
 const emailer = require("../emailer/impl");
 const donationEm = require("../listeners/donationListener").em;
@@ -143,7 +144,7 @@ exports.requestNewFund = async (req, res) => {
         addr: newAddr.address,
         fundId: newFund.fundId,
         description: description,
-        amountGoal: parseFloat(totalAmount),  
+        amountGoal: parseFloat(totalAmount),
       },
     });
     donationEm.emit("syncRecipients");
@@ -574,6 +575,191 @@ exports.claimFund = async (req, res) => {
     console.log(`exception at ${__filename}.claimFund: `, e);
     res.json({ status: false });
   }
+};
+
+exports.startCorporateCoursePaymentXdc = async (req, res) => {
+  try {
+    const { companyEmail, companyName, courses, amountGoal } = req.body;
+    console.log(companyEmail, companyName, courses);
+    const newAddr = userCurrencyHelper.createNewAddress();
+    const companyLogo = req.files.companyLogo;
+    const priceXdc = await cmcHelper.getXdcPrice();
+    const newCourse = new BulkPayment({
+      bulkId: uuid(),
+      type: "corporate",
+      paymentMode: "xdc",
+      courses: courses,
+      amountGoal: amountGoal,
+      receiveAddr: newAddr.address,
+      receiveAddrPrivKey: newAddr.privateKey,
+      status: "uninitiated",
+      companyName: companyName,
+      companyEmail: companyEmail,
+      companyLogo: Buffer.from(companyLogo.data).toString("base64"),
+    });
+    await newCourse.save();
+    res.json({
+      status: true,
+      data: {
+        address: newAddr.address,
+        xdcAmnt:
+          Math.round(
+            (parseFloat(amountGoal) * 1000000) / parseFloat(priceXdc)
+          ) / 1000000,
+      },
+    });
+    donationEm.emit("syncPendingBulkCoursePayments");
+  } catch (e) {
+    console.log(
+      `exception at ${__filename}.startCorporateCoursePaymentXdc: `,
+      e
+    );
+    res.json({ status: false, error: "inernal error" });
+  }
+};
+
+exports.startCorporateCoursePaymentPaypal = async (req, res) => {
+  try {
+    const { companyEmail, companyName, courses, amountGoal } = req.body;
+    const companyLogo = req.files.companyLogo;
+
+    const newCourse = new BulkPayment({
+      bulkId: uuid(),
+      type: "corporate",
+      paymentMode: "paypal",
+      courses: courses,
+      amountGoal: amountGoal,
+      status: "uninitiated",
+      companyName: companyName,
+      companyEmail: companyEmail,
+      companyLogo: Buffer.from(companyLogo.data).toString("base64"),
+    });
+    await newCourse.save();
+
+    const invoice_number =
+      "TXID" + Date.now() + (Math.floor(Math.random() * 1000) + 9999);
+    const customStr = JSON.stringify({
+      bulkId: newCourse.bulkId,
+    });
+    const create_payment_json = {
+      intent: "sale",
+      payer: {
+        payment_method: "paypal",
+      },
+      redirect_urls: {
+        return_url: `${process.env.HOST}/fmd-corporate-paypal-suc`,
+        cancel_url: `${process.env.HOST}/fmd-corporate-paypal-err`,
+      },
+      transactions: [
+        {
+          item_list: {
+            items: [
+              {
+                name: courses[0],
+                sku: "001",
+                price: newCourse.amountGoal,
+                currency: "USD",
+                quantity: 1,
+              },
+            ],
+          },
+          amount: {
+            currency: "USD",
+            total: newCourse.amountGoal,
+          },
+          description: `Course Funding`,
+          invoice_number: invoice_number,
+          custom: customStr,
+        },
+      ],
+    };
+
+    paypal.payment.create(create_payment_json, async function (error, payment) {
+      if (error) {
+        // throw error;
+        console.error("Some error occured while creating the payment: ", error);
+        return res.json({ status: false, error: "internal error" });
+      } else {
+        for (let i = 0; i < payment.links.length; i++) {
+          if (payment.links[i].rel === "approval_url") {
+            console.log(`got the approval url, redirecting user to paypal`);
+            return res.json({ status: true, data: payment.links[i].href });
+          }
+        }
+      }
+    });
+  } catch (e) {
+    console.log(
+      `exception at ${__filename}.startCorporateCoursePaymentPaypal: `,
+      e
+    );
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.fmdCorporatePaypalSuc = async (req, res) => {
+  try {
+    let paymentId = req.query.paymentId;
+
+    const execute_payment_json = {
+      payer_id: req.query.PayerID,
+    };
+
+    paypal.payment.execute(paymentId, execute_payment_json, async function (
+      error,
+      payment
+    ) {
+      if (error) {
+        console.log(error.response);
+        res.status(500).render("displayError", {
+          error:
+            "Some error occured while executing the payment, please contact info@blockdegree.org",
+        });
+
+        await emailer.sendMail(
+          process.env.SUPP_EMAIL_ID,
+          "Payment-error: error while executing the sale for COURSE PAYMENT",
+          `While processing order for some user some error occured while executing the sale: ${error.response.toString()}. Please consider for re-imbursement.`
+        );
+        return;
+      } else {
+        console.log(JSON.stringify(payment));
+        console.log(payment.transactions[0]);
+
+        let invoice_number = payment.transactions[0].invoice_number;
+
+        let custom = JSON.parse(payment.transactions[0].custom.trim());
+        const bulkId = custom.bulkId;
+        const bulkPayment = await BulkPayment.findOne({
+          bulkId: bulkId,
+          status: "uninitiated",
+        });
+        if (bulkPayment === null) {
+          return res.render("displayError", { error: "Payment not found." });
+        }
+        bulkPayment.status = "completed";
+        bulkPayment.completionDate = Date.now() + "";
+        bulkPayment.paypalId = invoice_number;
+        await bulkPayment.save();
+        emailer.sendMailInternal("blockdegree-bot@blockdegree.org",process.env.SUPP_EMAIL_ID,"Got Entire Course Payment",`Got a complete course payment from Company ${bulkPayment.companyName}, contact email is ${bulkPayment.companyEmail}. Bulk Payment id: ${bulkId}`)
+        req.session.message =
+          "Payment successful. Please contact <b>info@blockdegree.org</b> to proceed with the next steps.";
+        res.redirect("/payment-success");
+      }
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.fmdCorporatePaypalSuc: `, e);
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.fmdCorporatePaypalErr = async (req, res) => {
+  try {
+    res.render("displayError", {
+      error:
+        "Some error occured while processing your payment, please try again or contact at <b>info@blockdegree.org</b>",
+    });
+  } catch (e) {}
 };
 
 /**

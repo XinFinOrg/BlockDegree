@@ -2,6 +2,8 @@ const fmdService = require("../services/fundMyDegree");
 const requireLogin = require("../middleware/requireLogin");
 
 module.exports = (app) => {
+  app.get("/fmd-corporate-paypal-suc", fmdService.fmdCorporatePaypalSuc);
+  app.get("/fmd-corporate-paypal-err", fmdService.fmdCorporatePaypalErr);
   app.get("/fmd", requireLogin, (req, res) => {
     res.redirect("/fund-my-degree");
   });
@@ -30,4 +32,12 @@ module.exports = (app) => {
   app.post("/fmd-pay-paypal", requireLogin, fmdService.startFundPaypal);
   app.get("/fmd-pay-paypal-suc", requireLogin, fmdService.successFundPaypal);
   app.post("/api/claimFund", requireLogin, fmdService.claimFund);
+  app.post(
+    "/api/startCorporateCoursePaymentPaypal",
+    fmdService.startCorporateCoursePaymentPaypal
+  );
+  app.post(
+    "/api/startCorporateCoursePaymentXdc",
+    fmdService.startCorporateCoursePaymentXdc
+  );
 };

@@ -1,0 +1,42 @@
+.qr-code-wrapper {
+  text-align: center;
+
+  .qr-text {
+    img {
+      width: 17px;
+      height: 17px;
+    }
+  }
+
+  .xdc-qr-img {
+    margin: 5px;
+  }
+
+  .xdc-value {
+    color: #2073d4;
+  }
+
+  .xdc-addr-txt {
+    width: 100%;
+    overflow-x: scroll;
+    ;
+  }
+
+  #xdc-modal-copy-btn {
+    margin: 2px
+  }
+
+  #xdc-addr-value-modal {
+    margin-bottom: 5px;
+  }
+
+  .modal-footer {
+    display: inline-block;
+    justify-content: center;
+
+    img {
+      width: 17px;
+      height: 17px;
+    }
+  }
+}
