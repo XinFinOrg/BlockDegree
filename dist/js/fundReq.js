@@ -75,8 +75,8 @@ async function getFMDAllData(update) {
         currentRequestData = result.data;
         let pendingFundsUsd = 0,
           approvedFundsUsd = 0,
-          pendingFundsXdc = 0,
-          approvedFundsXdc = 0;
+          pendingFundsCnt = 0,
+          approvedFundsCnt = 0;
 
         let retDataApproved = "",
           retDataPending = "";
@@ -92,7 +92,8 @@ async function getFMDAllData(update) {
             donerName = currData.donerName;
           }
           if (currData.status === "uninitiated") {
-            pendingFundsUsd += parseFloat(currData.amountGoal);            
+            pendingFundsCnt++;
+            pendingFundsUsd += parseFloat(currData.amountGoal);
             retDataPending += `<tr>
             <td>${currDate.getDate()}/${
               currDate.getMonth() + 1
@@ -120,8 +121,8 @@ async function getFMDAllData(update) {
             <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr}', '${currData.fundId}', ${currData.amountGoal})" class="btn btn-primary">Fund Now</button></td>
           </tr>`;
           } else if (currData.status === "completed") {
-            approvedFundsUsd +=
-              parseFloat(currData.amountGoal);
+            approvedFundsCnt++;
+            approvedFundsUsd += parseFloat(currData.amountGoal);
             retDataApproved += `<tr>
             <td>${currDate.getDate()}/${
               currDate.getMonth() + 1
@@ -175,13 +176,31 @@ async function getFMDAllData(update) {
             pagingType: "simple", // "simple" option for 'Previous' and 'Next' buttons only
           });
         }
-        
-          document.getElementById("totPendFundReqUsd").innerHTML = addDelimitation(Math.round(pendingFundsUsd*100)/100);
-          document.getElementById("totPendFundReqXdc").innerHTML = addDelimitation(Math.round(pendingFundsUsd*100/parseFloat(xdcPrice))/100);
 
-          // totAlreadyFundReqUsd
-          document.getElementById("totApprFundReqUsd").innerHTML = addDelimitation(Math.round(approvedFundsUsd*100)/100);
-          document.getElementById("totApprFundReqXdc").innerHTML = addDelimitation(Math.round(approvedFundsUsd*100/parseFloat(xdcPrice))/100);
+        document.getElementById(
+          "totPendFundReqUsd"
+        ).innerHTML = addDelimitation(Math.round(pendingFundsUsd * 100) / 100);
+        document.getElementById(
+          "totPendFundReqXdc"
+        ).innerHTML = addDelimitation(
+          Math.round((pendingFundsUsd * 100) / parseFloat(xdcPrice)) / 100
+        );
+
+        // totAlreadyFundReqUsd
+        document.getElementById(
+          "totApprFundReqUsd"
+        ).innerHTML = addDelimitation(Math.round(approvedFundsUsd * 100) / 100);
+        document.getElementById(
+          "totApprFundReqXdc"
+        ).innerHTML = addDelimitation(
+          Math.round((approvedFundsUsd * 100) / parseFloat(xdcPrice)) / 100
+        );
+        document.getElementById("totFmdCntPend").innerHTML = addDelimitation(
+          pendingFundsCnt
+        );
+        document.getElementById("totFmdCntAppr").innerHTML = addDelimitation(
+          approvedFundsCnt
+        );
 
         renderRequestedModal(data);
       }
@@ -385,7 +404,9 @@ function renderRequestModal(
                           <div class="modal-header">
                               <h5 class="modal-title align-self-center" id="requestModal--title">Request By <strong>${userName}</strong></h5>
                               ${`<span class="funded-by">Funded By ${
-                                funderName == "undefined" || funderName=="" || funderName==null
+                                funderName == "undefined" ||
+                                funderName == "" ||
+                                funderName == null
                                   ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
                                   : funderName
                               }</span>`}                              
@@ -395,7 +416,13 @@ function renderRequestModal(
       `
       
                           <textarea class="form-control" id="funder-certi-msg">Test</textarea>
-                          ${funderName == "undefined" || funderName=="" || funderName==null?'':`<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`}
+                          ${
+                            funderName == "undefined" ||
+                            funderName == "" ||
+                            funderName == null
+                              ? ""
+                              : `<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`
+                          }
                           ` +
       `<div class="modal-footer">` +
       `${`<button
@@ -739,8 +766,8 @@ function isMobile() {
 
 function handleShareLinkdedin(seedMsg, funder, fundId) {
   console.log(funder, fundId);
-  
-  if (funder == 'true') {
+
+  if (funder == "true") {
     linkedinFunder = true;
     linkedinfundId = fundId;
   }
