@@ -14,6 +14,11 @@ const DonationListener = require("../listeners/donationListener");
 const referralEmitter = require("../listeners/userReferral").em;
 const UserReferral = require("../models/userReferral");
 const { renderFunderCerti } = require("../helpers/renderFunderCerti");
+const {
+  makeValueTransferXDC,
+  getBalance,
+} = require("../helpers/blockchainHelpers");
+const emailer = require("../emailer/impl");
 
 exports.addCourse = async (req, res) => {
   if (
@@ -1276,6 +1281,96 @@ exports.syncFunderCerti = async (req, res) => {
   } catch (e) {
     console.log(`exception at ${__filename}.syncFunderCerti: `, e);
     return res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.transferFMDFundToAdmin = async (req, res) => {
+  try {
+    console.log("called transferFMDFundToAdmin: ", req.body);
+    const { fundId, all } = req.body;
+    if (fundId === undefined && all === undefined) {
+      return res.json({ status: false, error: "missing parameter" });
+    }
+    const walletKeys = Object.keys(KeyConfig);
+    let to = null;
+    for (let i = 0; i < walletKeys.length; i++) {
+      if (
+        KeyConfig[walletKeys[i]].wallet_network === "50" &&
+        KeyConfig[walletKeys[i]].wallet_type === "burn"
+      ) {
+        to = walletKeys[i];
+        break;
+      }
+    }
+    if (to === null) {
+      return res.json({ status: true, error: "burn wallet not found" });
+    }
+    if (to.startsWith("0x")) {
+      to = "xdc" + to.slice(2);
+    }
+    if (!_.isEmpty(fundId)) {
+      const fund = await UserFundRequest.findOne({ fundId: fundId });
+      if (fund === null) {
+        return res.json({ status: false, error: "fund not found" });
+      }
+      let balance = await getBalance(fund.receiveAddr);
+      balance = parseFloat(balance);
+      if (balance < 1000000000000000000) {
+        res.json({
+          status: false,
+          error: "balance less than 1 XDC, cannot transfer",
+        });
+      }
+      const transferAmnt = balance - Math.pow(10, 18);
+      res.json({
+        status: true,
+        data: "Started Processing, will main on confirmation.",
+      });
+      const receipt = await makeValueTransferXDC(
+        to,
+        transferAmnt + "",
+        fund.receiveAddrPrivKey
+      );
+      console.log("Got the receipt: ", receipt);
+      emailer.sendMailInternal(
+        "blockdegree-bot@blokcdegree.org",
+        process.env.SUPP_EMAIL_ID,
+        "Transferred FMD tokens to Wallet",
+        `Hello,\n we have transfered ${transferAmnt} tokens into the burn wallet for XDC for the fund with id ${fundId}`
+      );
+    } else if (all == true) {
+      let count = 0, totAmnt=0;
+      const allFunds = await UserFundRequest.find({ status: "completed" });
+      res.json({ status: true, data: "Started processing transaction" });
+      for (let i = 0; i < allFunds.length; i++) {
+        const fund = allFunds[i];
+        let balance = await getBalance(fund.receiveAddr);
+        balance = parseFloat(balance);
+        if (balance < 1000000000000000000) {
+          continue;
+        }
+        const transferAmnt = balance - Math.pow(10, 18);
+        const receipt = await makeValueTransferXDC(
+          to,
+          transferAmnt + "",
+          fund.receiveAddrPrivKey
+        );
+        console.log("Got the receipt: ", receipt);
+        count++;
+        totAmnt += transferAmnt;
+      }
+      emailer.sendMailInternal(
+        "blockdegree-bot@blokcdegree.org",
+        process.env.SUPP_EMAIL_ID,
+        "Transferred FMD tokens to Wallet",
+        `Hello,\n we have transfered ${count} FMDs into the burn wallet for XDC, total amount ${totAmnt} XDC.`
+      );
+    } else {
+      return res.json({ status: false, error: "bad request" });
+    }
+  } catch (e) {
+    console.log(`exception at ${__filename}.transferFMDFundToAdmin: `, e);
+    res.json({ status: false, error: "internal error" });
   }
 };
 

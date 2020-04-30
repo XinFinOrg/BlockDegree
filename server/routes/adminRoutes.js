@@ -170,5 +170,7 @@ module.exports = (app) => {
     // syncPendingDonation
     app.get("/api/syncPendingDonation" ,requireLogin,requireAdmin,adminServices.syncPendingDonation);
     app.get("/api/syncFunderCerti", requireLogin,requireAdmin, adminServices.syncFunderCerti);
+
+    app.post("/api/transferFMDFundToAdmin",requireLogin,requireAdmin, adminServices.transferFMDFundToAdmin);
   }
 };
