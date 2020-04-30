@@ -72,7 +72,7 @@
     "html-to-image": "^0.1.1",
     "http-errors": "~1.6.2",
     "ipfs-http-client": "^33.1.0",
-    "jquery": "^1.9.1",
+    "jquery": "^3.5.0",
     "lerna": "^3.16.4",
     "lodash": "^4.17.15",
     "mongoose": "^5.4.7",
