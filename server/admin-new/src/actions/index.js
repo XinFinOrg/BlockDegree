@@ -10,6 +10,7 @@ import {
   FETCH_ALL_PAYMENT_LOGS,
   FETCH_ALL_CRYPTO_LOGS,
   FETCH_ALL_FUNDS,
+  FETCH_XDC_PRICE
 } from "./types";
 
 /*
@@ -96,3 +97,9 @@ export const fetchAllFunds = () => async (dispatch) => {
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_FUNDS, payload: res.data });
 };
+
+export const fetchXdcPrice = () => async (dispatch) => {
+  const res = await axios.get("/api/wrapCoinMarketCap");
+  res.data["fetchedTS"] = Date.now();
+  dispatch({ type: FETCH_XDC_PRICE, payload: res.data });
+}

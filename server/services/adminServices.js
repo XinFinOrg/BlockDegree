@@ -1113,6 +1113,8 @@ exports.getPaymentLogs = async (req, res) => {
         payment_id: paymentLogs[x].payment_id,
         payment_status: paymentLogs[x].payment_status,
         timestamp: paymentLogs[x]._id.getTimestamp(),
+        payment_amount:paymentLogs[x].payment_amount,
+        promoCode:paymentLogs[x].promoCode,
       };
       retData.push(currData);
     }

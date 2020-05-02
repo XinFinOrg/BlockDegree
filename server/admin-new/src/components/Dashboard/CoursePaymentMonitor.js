@@ -15,12 +15,15 @@ class CoursePaymentMonitor extends Component {
   constructor(props) {
     super(props);
     this.state = { ...initialState };
+
+    this.getDiscountedPrice = this.getDiscountedPrice.bind(this);
   }
 
   componentDidMount() {
     this.props.fetchAllPaymentLog(); // load on table
     this.props.fetchAllCryptoLog();
     this.props.fetchAllFunds();
+    this.props.fetchXdcPrice();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -29,6 +32,7 @@ class CoursePaymentMonitor extends Component {
     const cryptoLogs = nextProps.cryptoLogs ? nextProps.cryptoLogs.logs : [];
     const paymentLogs = nextProps.paymentLogs ? nextProps.paymentLogs.logs : [];
     const allFunds = nextProps.allFunds ? nextProps.allFunds.data : [];
+    const xdcPrice = nextProps.xdcPrice ? nextProps.xdcPrice.data : null;
     // const allFunds = nextProps.allFunds?nextProps.allFunds.data:[];
     let courseUsd = 0,
       courseXdc = 0,
@@ -36,6 +40,8 @@ class CoursePaymentMonitor extends Component {
       fmdXdc = 0;
     for (let i = 0; i < paymentLogs.length; i++) {
       if (paymentLogs[i].payment_status === true) {
+        console.log("TRUE: ", paymentLogs[i].payment_amount);
+
         courseUsd += paymentLogs[i].payment_amount
           ? parseFloat(paymentLogs[i].payment_amount)
           : 9.99;
@@ -43,9 +49,7 @@ class CoursePaymentMonitor extends Component {
     }
     for (let i = 0; i < cryptoLogs.length; i++) {
       if (cryptoLogs[i].status === "completed") {
-        courseXdc += cryptoLogs[i].tokenAmnt
-          ? parseFloat(cryptoLogs[i].tokenAmnt)
-          : 0;
+        courseXdc += parseFloat(cryptoLogs[i].tokenAmt);
       }
     }
 
@@ -68,15 +72,46 @@ class CoursePaymentMonitor extends Component {
     console.log("FMD Usd: ", fmdUsd);
     console.log("FMD XDC: ", fmdXdc);
 
-    this.setState({
-      courseUsd:round2(courseUsd),
-      courseXdc:round6(courseXdc),
-      fmdUsd:round2(fmdUsd),
-      fmdXdc:round6(fmdXdc),
-      totalUsd: round2(courseUsd + fmdUsd),
-      totalXdc: round6(courseXdc + fmdXdc),
-    });
+    if (xdcPrice === null) {
+      //price not loaded
+      this.setState({
+        courseUsd: round2(courseUsd),
+        courseXdc: "Loading",
+        fmdUsd: round2(fmdUsd),
+        fmdXdc: round6(fmdXdc),
+        totalUsd: round2(courseUsd + fmdUsd),
+        totalXdc: "Loading",
+      });
+    } else
+      this.setState({
+        courseUsd: round2(courseUsd),
+        courseXdc: round6((courseXdc * xdcPrice) / Math.pow(10, 18)),
+        fmdUsd: round2(fmdUsd),
+        fmdXdc: round6(fmdXdc),
+        totalUsd: round2(courseUsd + fmdUsd),
+        totalXdc: round6((courseXdc * xdcPrice) / Math.pow(10, 18) + fmdXdc),
+      });
     // console.log(allFunds);
+  }
+
+  getDiscountedPrice(principal, code) {
+    console.log("called fetdiscountedprice: ", principal, code);
+
+    if (!this.props.promoCodes) {
+      return null;
+    }
+    if (code === "" || code === undefined || code === null) {
+      return principal;
+    }
+    const { codes } = this.props.promoCodes;
+    for (let i = 0; i < codes.length; i++) {
+      if (codes[i].codeName === code) {
+        const finalAmnt = parseFloat(principal) - parseFloat(codes[i].discAmnt);
+        if (finalAmnt < 0) return 0;
+        return finalAmnt;
+      }
+    }
+    return principal;
   }
 
   render() {
@@ -92,7 +127,7 @@ class CoursePaymentMonitor extends Component {
               </div>
               <div className="inner-card__body--label fmd">XDC</div>
               <div className="inner-card__body--value">
-                XDC {String(this.state.totalXdc).toLocaleString("en")}
+                $ {String(this.state.totalXdc).toLocaleString("en")}
               </div>
             </div>
           </div>
@@ -107,7 +142,7 @@ class CoursePaymentMonitor extends Component {
               </div>
               <div className="inner-card__body--label fmd">XDC</div>
               <div className="inner-card__body--value">
-                XDC {String(this.state.courseXdc).toLocaleString("en")}
+                $ {String(this.state.courseXdc).toLocaleString("en")}
               </div>
             </div>
           </div>
@@ -122,7 +157,7 @@ class CoursePaymentMonitor extends Component {
               </div>
               <div className="inner-card__body--label fmd">XDC</div>
               <div className="inner-card__body--value">
-                XDC {String(this.state.fmdXdc).toLocaleString("en")}
+                $ {String(this.state.fmdXdc).toLocaleString("en")}
               </div>
             </div>
           </div>
@@ -132,8 +167,14 @@ class CoursePaymentMonitor extends Component {
   }
 }
 
-function mapsStateToProps({ cryptoLogs, paymentLogs, allFunds }) {
-  return { cryptoLogs, paymentLogs, allFunds };
+function mapsStateToProps({
+  cryptoLogs,
+  paymentLogs,
+  allFunds,
+  xdcPrice,
+  promoCodes,
+}) {
+  return { cryptoLogs, paymentLogs, allFunds, xdcPrice, promoCodes };
 }
 
 function round2(n) {
