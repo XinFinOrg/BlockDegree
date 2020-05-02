@@ -2,31 +2,81 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions/index";
 
-const initialState = {};
+const initialState = {
+  totalUsd: "Loading",
+  totalXdc: "Loading",
+  courseUsd: "Loading",
+  courseXdc: "Loading",
+  fmdUsd: "Loading",
+  fmdXdc: "Loading",
+};
 
 class CoursePaymentMonitor extends Component {
   constructor(props) {
     super(props);
-    this.setState({ ...initialState });
+    this.state = { ...initialState };
   }
 
   componentDidMount() {
     this.props.fetchAllPaymentLog(); // load on table
     this.props.fetchAllCryptoLog();
+    this.props.fetchAllFunds();
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log("NEXT PROPS: ", nextProps);
+
     const cryptoLogs = nextProps.cryptoLogs ? nextProps.cryptoLogs.logs : [];
     const paymentLogs = nextProps.paymentLogs ? nextProps.paymentLogs.logs : [];
-    let paymentUsd = 0;
+    const allFunds = nextProps.allFunds ? nextProps.allFunds.data : [];
+    // const allFunds = nextProps.allFunds?nextProps.allFunds.data:[];
+    let courseUsd = 0,
+      courseXdc = 0,
+      fmdUsd = 0,
+      fmdXdc = 0;
     for (let i = 0; i < paymentLogs.length; i++) {
       if (paymentLogs[i].payment_status === true) {
-        paymentUsd += paymentLogs[i].payment_amount
+        courseUsd += paymentLogs[i].payment_amount
           ? parseFloat(paymentLogs[i].payment_amount)
           : 9.99;
       }
     }
-    console.log("Total Usd: ", paymentUsd);
+    for (let i = 0; i < cryptoLogs.length; i++) {
+      if (cryptoLogs[i].status === "completed") {
+        courseXdc += cryptoLogs[i].tokenAmnt
+          ? parseFloat(cryptoLogs[i].tokenAmnt)
+          : 0;
+      }
+    }
+
+    for (let i = 0; i < allFunds.length; i++) {
+      if (allFunds[i].status === "completed") {
+        if (allFunds[i].fundTx !== "") {
+          fmdXdc += parseFloat(allFunds[i].amountReached);
+        } else if (
+          allFunds[i].paypalId !== "" &&
+          allFunds[i].paypalId !== undefined
+        ) {
+          fmdUsd += parseFloat(allFunds[i].amountGoal);
+        }
+      }
+    }
+
+    console.log("Course Usd: ", courseUsd);
+    console.log("Course XDC: ", courseXdc);
+
+    console.log("FMD Usd: ", fmdUsd);
+    console.log("FMD XDC: ", fmdXdc);
+
+    this.setState({
+      courseUsd:round2(courseUsd),
+      courseXdc:round6(courseXdc),
+      fmdUsd:round2(fmdUsd),
+      fmdXdc:round6(fmdXdc),
+      totalUsd: round2(courseUsd + fmdUsd),
+      totalXdc: round6(courseXdc + fmdXdc),
+    });
+    // console.log(allFunds);
   }
 
   render() {
@@ -37,9 +87,13 @@ class CoursePaymentMonitor extends Component {
             <div className="inner-card__header">Total</div>
             <div className="inner-card__body">
               <div className="inner-card__body--label paypal">Paypal</div>
-              <div className="inner-card__body--value ">${"10"}</div>
+              <div className="inner-card__body--value ">
+                $ {String(this.state.totalUsd).toLocaleString("en")}
+              </div>
               <div className="inner-card__body--label fmd">XDC</div>
-              <div className="inner-card__body--value">${"10"}</div>
+              <div className="inner-card__body--value">
+                XDC {String(this.state.totalXdc).toLocaleString("en")}
+              </div>
             </div>
           </div>
         </div>
@@ -48,9 +102,13 @@ class CoursePaymentMonitor extends Component {
             <div className="inner-card__header">Direct</div>
             <div className="inner-card__body">
               <div className="inner-card__body--label paypal">Paypal</div>
-              <div className="inner-card__body--value ">${"10"}</div>
+              <div className="inner-card__body--value ">
+                $ {String(this.state.courseUsd).toLocaleString("en")}
+              </div>
               <div className="inner-card__body--label fmd">XDC</div>
-              <div className="inner-card__body--value">${"10"}</div>
+              <div className="inner-card__body--value">
+                XDC {String(this.state.courseXdc).toLocaleString("en")}
+              </div>
             </div>
           </div>
         </div>
@@ -59,9 +117,13 @@ class CoursePaymentMonitor extends Component {
             <div className="inner-card__header">FMD</div>
             <div className="inner-card__body">
               <div className="inner-card__body--label paypal">Paypal</div>
-              <div className="inner-card__body--value ">${"10"}</div>
+              <div className="inner-card__body--value ">
+                $ {String(this.state.fmdUsd).toLocaleString("en")}
+              </div>
               <div className="inner-card__body--label fmd">XDC</div>
-              <div className="inner-card__body--value">${"10"}</div>
+              <div className="inner-card__body--value">
+                XDC {String(this.state.fmdXdc).toLocaleString("en")}
+              </div>
             </div>
           </div>
         </div>
@@ -70,8 +132,16 @@ class CoursePaymentMonitor extends Component {
   }
 }
 
-function mapsStateToProps({ cryptoLogs, paymentLogs }) {
-  return { cryptoLogs, paymentLogs };
+function mapsStateToProps({ cryptoLogs, paymentLogs, allFunds }) {
+  return { cryptoLogs, paymentLogs, allFunds };
+}
+
+function round2(n) {
+  return String(Math.round(parseFloat(n) * Math.pow(10, 2)) / Math.pow(10, 2));
+}
+
+function round6(n) {
+  return String(Math.round(parseFloat(n) * Math.pow(10, 6)) / Math.pow(10, 6));
 }
 
 export default connect(mapsStateToProps, actions)(CoursePaymentMonitor);

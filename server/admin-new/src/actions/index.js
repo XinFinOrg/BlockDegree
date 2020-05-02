@@ -8,7 +8,8 @@ import {
   FETCH_ALL_PROMOCODE_LOGS,
   FETCH_ALL_BURN_LOGS,
   FETCH_ALL_PAYMENT_LOGS,
-  FETCH_ALL_CRYPTO_LOGS
+  FETCH_ALL_CRYPTO_LOGS,
+  FETCH_ALL_FUNDS,
 } from "./types";
 
 /*
@@ -18,7 +19,7 @@ import {
 
 */
 
-export const fetchUser = () => async dispatch => {
+export const fetchUser = () => async (dispatch) => {
   console.log("called Fetch User");
   const res = await axios.get("/api/current_user", { withCredentials: true });
   console.log("response from server", res);
@@ -26,66 +27,72 @@ export const fetchUser = () => async dispatch => {
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 
-export const fetchCourseVisits = () => async dispatch => {
+export const fetchCourseVisits = () => async (dispatch) => {
   console.log("called Fetch Course Visits");
   const res = await axios.get("/api/getCourseVisits", {
-    withCredentials: true
+    withCredentials: true,
   });
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_COURSE_VISITS, payload: res.data });
 };
 
-export const fetchAllUser = () => async dispatch => {
+export const fetchAllUser = () => async (dispatch) => {
   console.log("called fetch all user");
   const res = await axios.get("/api/getAllUser", { withCredentials: true });
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_USER, payload: res.data });
 };
 
-export const fetchAllPromoCodes = () => async dispatch => {
+export const fetchAllPromoCodes = () => async (dispatch) => {
   console.log("called fetch all promocodes");
   const res = await axios.get("/api/getAllPromoCodes", {
-    withCredentials: true
+    withCredentials: true,
   });
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_PROMOCODES, payload: res.data });
 };
 
-export const fetchAllReferralCodes = () => async dispatch => {
+export const fetchAllReferralCodes = () => async (dispatch) => {
   console.log("called fetch all referral codes");
   const res = await axios.get("/api/getAllReferralCodes", {
-    withCredentials: true
+    withCredentials: true,
   });
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_REFERRAL_CODES, payload: res.data });
 };
 
-export const fetchAllPromoCodeLog = () => async dispatch => {
+export const fetchAllPromoCodeLog = () => async (dispatch) => {
   console.log("called fetch all promocode logs");
   const res = await axios.get("/api/getPromoCodeLogs", {
-    withCredentials: true
+    withCredentials: true,
   });
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_PROMOCODE_LOGS, payload: res.data });
 };
 
-export const fetchAllBurnLog = () => async dispatch => {
+export const fetchAllBurnLog = () => async (dispatch) => {
   console.log("called fetch all burn logs");
   const res = await axios.get("/api/getBurnLogs", { withCredentials: true });
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_BURN_LOGS, payload: res.data });
 };
 
-export const fetchAllPaymentLog = () => async dispatch => {
+export const fetchAllPaymentLog = () => async (dispatch) => {
   console.log("called fetch all payment logs");
   const res = await axios.get("/api/getPaymentLogs", { withCredentials: true });
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_PAYMENT_LOGS, payload: res.data });
 };
 
-export const fetchAllCryptoLog = () => async dispatch => {
+export const fetchAllCryptoLog = () => async (dispatch) => {
   console.log("called fetch all crypto logs");
   const res = await axios.get("/api/getCryptoLogs", { withCredentials: true });
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_CRYPTO_LOGS, payload: res.data });
+};
+
+export const fetchAllFunds = () => async (dispatch) => {
+  const res = await axios.get("/api/getAllFunds");
+  res.data["fetchedTS"] = Date.now();
+  dispatch({ type: FETCH_ALL_FUNDS, payload: res.data });
 };
