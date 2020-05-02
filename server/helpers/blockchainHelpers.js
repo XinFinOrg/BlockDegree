@@ -153,6 +153,27 @@ exports.getBalance = (address) => {
   });
 };
 
+/**
+ * will return the TS in millsec of tx completion
+ * @param {String} txHash transaction hash whose timestamp we need
+ * @returns {Number}
+ */
+exports.getTransactionTimestamp = (txHash) => {
+  return new Promise((resolve, reject) => {
+    xdcInst.eth
+      .getTransaction(txHash)
+      .then((tx) => {
+        const { blockNumber } = tx;
+        xdcInst.eth
+          .getBlock(blockNumber)
+          .then(({ timestamp }) => {resolve(Number(timestamp)*1000)}).catch(e => reject(e));
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+};
+
 exports.getUserData = () => {};
 
 exports.getAttemptByHash = async (hash) => {};

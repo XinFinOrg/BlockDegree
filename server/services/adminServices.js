@@ -17,6 +17,7 @@ const { renderFunderCerti } = require("../helpers/renderFunderCerti");
 const {
   makeValueTransferXDC,
   getBalance,
+  getTransactionTimestamp,
 } = require("../helpers/blockchainHelpers");
 const emailer = require("../emailer/impl");
 
@@ -1339,7 +1340,8 @@ exports.transferFMDFundToAdmin = async (req, res) => {
         `Hello,\n we have transfered ${transferAmnt} tokens into the burn wallet for XDC for the fund with id ${fundId}`
       );
     } else if (all == true) {
-      let count = 0, totAmnt=0;
+      let count = 0,
+        totAmnt = 0;
       const allFunds = await UserFundRequest.find({ status: "completed" });
       res.json({ status: true, data: "Started processing transaction" });
       for (let i = 0; i < allFunds.length; i++) {
@@ -1371,6 +1373,68 @@ exports.transferFMDFundToAdmin = async (req, res) => {
   } catch (e) {
     console.log(`exception at ${__filename}.transferFMDFundToAdmin: `, e);
     res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.syncCompletionDateFMD = async (req, res) => {
+  try {
+    console.log("called syncCompletionDateFMD");
+
+    const { overwrite } = req.body;
+    const completedFunds = await UserFundRequest.find({ status: "completed" });
+    let count = 0;
+    if (completedFunds !== null)
+      for (let i = 0; i < completedFunds.length; i++) {
+        const fund = completedFunds[i];
+        if (overwrite === true) {
+          if (
+            fund.fundTx == undefined ||
+            fund.fundTx == "" ||
+            fund.fundTx == null
+          ) {
+            // paypal / razorpay stuff, set it same as creation date
+            completedFunds[i]["completionDate"] = fund.createdAt;
+            await completedFunds[i].save();
+            count++;
+            continue;
+          }
+        } else continue;
+        const timestamp = await getTransactionTimestamp(fund.fundTx);
+        if (overwrite === true) {
+          completedFunds[i]["completionDate"] = timestamp;
+          count++;
+        } else {
+          if (
+            fund["completionDate"] == undefined ||
+            fund["completionDate"] == "" ||
+            fund["completionDate"] == null
+          ) {
+            completedFunds[i]["completionDate"] = timestamp;
+            count++;
+          }
+        }
+        await completedFunds[i].save();
+      }
+    res.json({ status: true, data: `synced ${count} completion dates.` });
+  } catch (e) {
+    console.log(`exception at ${__filename}.syncCompletionDateFMD: `, e);
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.setFMDCompletionDateManual = async (req, res) => {
+  try {
+    const { timestamp, fundId } = req.body;
+    const fund = await UserFundRequest.findOne({ fundId: fundId });
+    if (fund === null) {
+      return res.json({ status: false, error: "fund not found" });
+    }
+    fund["completionDate"] = timestamp;
+    await fund.save();
+    res.json({ status: true, data: "CompletionDate updated" });
+  } catch (e) {
+    console.log(`exception at ${__filename}.setFMDCOmpletionDateManual: `, e);
+    return res.json({ status: false, error: "internal error" });
   }
 };
 

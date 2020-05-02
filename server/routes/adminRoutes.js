@@ -172,5 +172,7 @@ module.exports = (app) => {
     app.get("/api/syncFunderCerti", requireLogin,requireAdmin, adminServices.syncFunderCerti);
 
     app.post("/api/transferFMDFundToAdmin",requireLogin,requireAdmin, adminServices.transferFMDFundToAdmin);
+    app.post("/api/syncCompletionDateFMD",requireLogin,requireAdmin, adminServices.syncCompletionDateFMD);
+    app.post("/api/setFMDCompletionDateManual",requireLogin,requireAdmin, adminServices.setFMDCompletionDateManual);
   }
 };

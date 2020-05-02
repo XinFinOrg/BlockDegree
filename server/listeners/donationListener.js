@@ -83,6 +83,7 @@ function startProcessingDonation(fundId, tx, name) {
             currentReq.amountReached = await xdcToUsd(
               xdc3.utils.fromWei(txRecord.value)
             );
+            currentReq["completionDate"] = Date.now() + "";
             currentReq.burnStatus = "pending";
             currentReq.fundTx = tx;
             await currentReq.save();
