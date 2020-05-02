@@ -97,7 +97,7 @@ async function getFMDAllData(update) {
             retDataPending += `<tr>
             <td>${currDate.getDate()}/${
               currDate.getMonth() + 1
-            }/${currDate.getFullYear()} ${currDate.getHours()}:${currDate.getMinutes()}:${currDate.getSeconds()}</td>
+            }/${currDate.getFullYear()} ${currDate.getHours()}:${currDate.getMinutes()}</td>
             <td>${
               currData.userName
             }</td>                                                
@@ -121,12 +121,18 @@ async function getFMDAllData(update) {
             <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr}', '${currData.fundId}', ${currData.amountGoal})" class="btn btn-primary">Fund Now</button></td>
           </tr>`;
           } else if (currData.status === "completed") {
+            const completionDate = new Date(
+              parseFloat(currData.completionDate)
+            );
             approvedFundsCnt++;
             approvedFundsUsd += parseFloat(currData.amountGoal);
             retDataApproved += `<tr>
             <td>${currDate.getDate()}/${
               currDate.getMonth() + 1
-            }/${currDate.getFullYear()} ${currDate.getHours()}:${currDate.getMinutes()}:${currDate.getSeconds()}</td>
+            }/${currDate.getFullYear()} ${currDate.getHours()}:${currDate.getMinutes()}</td>
+            <td>${completionDate.getDate()}/${
+              completionDate.getMonth() + 1
+            }/${completionDate.getFullYear()} ${completionDate.getHours()}:${completionDate.getMinutes()}</td>
             <td>${
               currData.userName
             }</td>                                                
@@ -169,11 +175,11 @@ async function getFMDAllData(update) {
         if (update !== true) {
           globalPendingDT = $("#pendingFund").DataTable({
             paging: true,
-            pagingType: "simple", // "simple" option for 'Previous' and 'Next' buttons only
+            // pagingType: "simple", // "simple" option for 'Previous' and 'Next' buttons only
           });
           globalApprovedDT = $("#approvedFund").DataTable({
             paging: true,
-            pagingType: "simple", // "simple" option for 'Previous' and 'Next' buttons only
+            // pagingType: "simple", // "simple" option for 'Previous' and 'Next' buttons only
           });
         }
 
