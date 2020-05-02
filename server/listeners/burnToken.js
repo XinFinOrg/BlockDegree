@@ -288,12 +288,11 @@ async function makePayment(
   optionalNonce
 ) {
   console.log("[*] called makePayment function");
-  console.log(encodedData, toAddr, privKey, chainId, value);
+  console.log(encodedData, toAddr, chainId, value);
   // const estimateGas = await web3.eth.estimateGas({ data: encodedData }); //  this throws an error 'tx will always fail or gas will exceed allowance'
   const account = web3.eth.accounts.privateKeyToAccount(privKey);
   let currNonce = await web3.eth.getTransactionCount(
-    account.address,
-    "pending"
+    account.address
   );
   if (
     optionalNonce !== null &&

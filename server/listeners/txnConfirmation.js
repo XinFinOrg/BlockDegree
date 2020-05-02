@@ -987,7 +987,7 @@ async function handleBurnToken(
 
         console.log(
           "Pending: ",
-          await web3.eth.getTransactionCount(blockdegreePubAddr, "pending")
+          await web3.eth.getTransactionCount(blockdegreePubAddr)
         );
         console.log(
           "Confirmed: ",
@@ -1124,8 +1124,7 @@ async function handleBurnToken(
         console.log(
           "Pending: ",
           await web3.eth.getTransactionCount(
-            blockdegreePubAddrXDCApothm,
-            "pending"
+            blockdegreePubAddrXDCApothm
           )
         );
         console.log(
