@@ -124,39 +124,39 @@ function startProcessingDonation(fundId, tx, name) {
               );
             }
 
-            const walletKeys = Object.keys(KeyConfig);
-            let to = null;
-            for (let i = 0; i < walletKeys.length; i++) {
-              if (
-                KeyConfig[walletKeys[i]].wallet_network === "50" &&
-                KeyConfig[walletKeys[i]].wallet_type === "burn"
-              ) {
-                to = walletKeys[i];
-                break;
-              }
-            }
-            if (to === null) {
-              return;
-            }
-            if (to.startsWith("0x")) {
-              to = "xdc" + to.slice(2);
-            }
-            let transferAmnt =
-              getBalance(currentReq.receiveAddr) - Math.pow(10, 18);
-            const receipt = await makeValueTransferXDC(
-              to,
-              transferAmnt,
-              currentReq.receiveAddrPrivKey
-            );
+            // const walletKeys = Object.keys(KeyConfig);
+            // let to = null;
+            // for (let i = 0; i < walletKeys.length; i++) {
+            //   if (
+            //     KeyConfig[walletKeys[i]].wallet_network === "50" &&
+            //     KeyConfig[walletKeys[i]].wallet_type === "burn"
+            //   ) {
+            //     to = walletKeys[i];
+            //     break;
+            //   }
+            // }
+            // if (to === null) {
+            //   return;
+            // }
+            // if (to.startsWith("0x")) {
+            //   to = "xdc" + to.slice(2);
+            // }
+            // let transferAmnt =
+            //   getBalance(currentReq.receiveAddr) - Math.pow(10, 18);
+            // const receipt = await makeValueTransferXDC(
+            //   to,
+            //   transferAmnt,
+            //   currentReq.receiveAddrPrivKey
+            // );
 
-            emailer.sendMailInternal(
-              "blockdegree-bot@blokcdegree.org",
-              process.env.SUPP_EMAIL_ID,
-              "Transferred FMD tokens to Wallet",
-              `Hello,\n we have transfered ${transferAmnt} tokens into the burn wallet for XDC for the fund with id ${
-                currentReq.fundId
-              }.\n Receipt: ${JSON.stringify(receipt)}`
-            );
+            // emailer.sendMailInternal(
+            //   "blockdegree-bot@blokcdegree.org",
+            //   process.env.SUPP_EMAIL_ID,
+            //   "Transferred FMD tokens to Wallet",
+            //   `Hello,\n we have transfered ${transferAmnt} tokens into the burn wallet for XDC for the fund with id ${
+            //     currentReq.fundId
+            //   }.\n Receipt: ${JSON.stringify(receipt)}`
+            // );
           }
         } catch (e) {
           console.log(
