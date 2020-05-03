@@ -5,7 +5,7 @@ const _ = require("lodash");
 const uuid = require("uuid/v4");
 const path = require("path");
 const SocialPostTemplate = require("../models/socialPostTemplates");
-const sharp  = require("sharp");
+const sharp = require("sharp");
 // const gm = require("gm");
 
 const eventFolder = path.join(__dirname, "../tmp-event");
@@ -51,18 +51,23 @@ exports.generatePostImage = async (type, count, templateId) => {
     let browser;
     const imagePath = eventFolder + "/" + uuid() + ".png";
     browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"]
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
     await page.setViewport({
       width: 750,
       height: 510,
-      deviceScaleFactor: 1
+      deviceScaleFactor: 1,
     });
     await page.setContent(fileData);
     await page.screenshot({ path: imagePath });
     const postImage = fs.readFileSync(imagePath);
-    const twitterImage = await sharp(postImage).resize(750, 424, {fit:"contain"}).toFile(imagePath.split(".")[0]+"__twitter.png");
+    const twitterImage = await sharp(postImage)
+      .resize(750, 424, {
+        fit: "contain",
+        background: { r: 255, g: 255, b: 255, alpha: 0.5 },
+      })
+      .toFile(imagePath.split(".")[0] + "__twitter.png");
     // gm(imagePath).resize(750, 400, '^').write(imagePath.split(".")[0]+"__twitter.png",err => {
     //   console.log("Err: at generatePostTemplate ", err)
     // } );

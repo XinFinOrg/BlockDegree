@@ -397,6 +397,7 @@ exports.scheduleEventByState = async (req, res) => {
     // const eventType = req.body.eventType;
     const platforms = JSON.parse(req.body.platforms);
     const nearestTS = new Date(req.body.nearestTS);
+    const postAsap = req.body.postAsap;
     const stateVarName = req.body.stateVarName;
     const useCustomFile = req.body.useCustomFile;
     const isRecurring = req.body.isRecurring;
@@ -406,11 +407,18 @@ exports.scheduleEventByState = async (req, res) => {
       _.isEmpty(eventPurpose) ||
       _.isEmpty(stateVarName) ||
       _.isEmpty(useCustomFile) ||
-      _.isEmpty(isRecurring) ||
+      _.isEmpty(isRecurring) 
       // _.isEmpty(eventType) ||
-      nearestTS === null
+      // nearestTS === null
     ) {
       console.log("missing parameters");
+      return res
+        .status(400)
+        .json({ status: false, error: "missing parameters" });
+    }
+
+    if (postAsap===false && nearestTS===null){
+      console.log("missing nearestTS");
       return res
         .status(400)
         .json({ status: false, error: "missing parameters" });
@@ -546,6 +554,7 @@ exports.scheduleEventByState = async (req, res) => {
     event.eventName = eventName;
     event.eventPurpose = eventPurpose;
     event.platforms = platforms;
+    event.postAsap = postAsap;
     event.nearestTS = "" + nearestTS.getTime();
     event.conditionVar = stateVarName;
     event.nextPostPath = postImagePath;

@@ -107,7 +107,7 @@ async function postSocial(eventId) {
       try {
         await postTelegram(eventFilePath, eventStatus, eventId);
       } catch (telegram_error) {
-        console.error(`error while posting the status on facebook`);
+        console.error(`error while posting the status on telegram`);
         console.error(telegram_error);
         postedTelegram = false;
         postTelErr = true;
@@ -142,14 +142,16 @@ async function postSocial(eventId) {
         .nextInvocation()
         ._date.toDate()
         .getTime();
+
+      // need to fix this logic
       const templateImage = await generatePostTemplate.generatePostImage(
         currEvent.eventType,
-        `next test ${++postCount}`,
+        `${++postCount}`,
         currEvent.templateId
       );
       const templateStatus = await generatePostTemplate.generatePostStatus(
         currEvent.eventType,
-        `next test ${postCount}`,
+        `${postCount}`,
         currEvent.templateId
       );
       currEvent.nextPostPath = templateImage;
@@ -212,12 +214,12 @@ async function postSocial(eventId) {
 
           const templateImage = await generatePostTemplate.generatePostImage(
             currEvent.eventType,
-            `next test ${nextTrigVal}`,
+            nextTrigVal,
             currEvent.templateId
           );
           const templateStatus = await generatePostTemplate.generatePostStatus(
             currEvent.eventType,
-            `next test ${nextTrigVal}`,
+            nextTrigVal,
             currEvent.templateId
           );
           currEvent.nextPostPath = templateImage;
@@ -254,7 +256,7 @@ async function postLinkedin(fp, postStatus, eventId) {
       url: "https://api.linkedin.com/v2/assets?action=registerUpload",
       headers: {
         "X-Restli-Protocol-Version": "2.0.0",
-        Authorization: `Bearer ${authToken}`
+        Authorization: `Bearer ${authToken}`,
       },
       data: {
         registerUploadRequest: {
@@ -263,11 +265,11 @@ async function postLinkedin(fp, postStatus, eventId) {
           serviceRelationships: [
             {
               relationshipType: "OWNER",
-              identifier: "urn:li:userGeneratedContent"
-            }
-          ]
-        }
-      }
+              identifier: "urn:li:userGeneratedContent",
+            },
+          ],
+        },
+      },
     });
   } catch (e) {
     console.error(`Exception while registering upload: `, e);
@@ -292,7 +294,7 @@ async function postLinkedin(fp, postStatus, eventId) {
   let os = new os_func();
   os.execCommand(
     `curl -i --upload-file ${fp} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
-    async function(returnValue) {
+    async function (returnValue) {
       let resp;
       try {
         resp = await axios({
@@ -300,7 +302,7 @@ async function postLinkedin(fp, postStatus, eventId) {
           url: "https://api.linkedin.com/v2/ugcPosts",
           headers: {
             "X-Restli-Protocol-Version": "2.0.0",
-            Authorization: `Bearer ${authToken}`
+            Authorization: `Bearer ${authToken}`,
           },
           data: {
             author: `urn:li:person:${personURN}`,
@@ -308,27 +310,27 @@ async function postLinkedin(fp, postStatus, eventId) {
             specificContent: {
               "com.linkedin.ugc.ShareContent": {
                 shareCommentary: {
-                  text: postStatus
+                  text: postStatus,
                 },
                 shareMediaCategory: "IMAGE",
                 media: [
                   {
                     status: "READY",
                     description: {
-                      text: "Center stage!"
+                      text: "Center stage!",
                     },
                     media: asset,
                     title: {
-                      text: "LinkedIn Talent Connect 2018"
-                    }
-                  }
-                ]
-              }
+                      text: "LinkedIn Talent Connect 2018",
+                    },
+                  },
+                ],
+              },
             },
             visibility: {
-              "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-            }
-          }
+              "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC",
+            },
+          },
         });
         console.log("Post on linkedin status: ", resp.status);
         console.log("Linkedin Response Data", resp.data);
@@ -372,7 +374,7 @@ async function postLinkedin(fp, postStatus, eventId) {
         console.error("Exception while making axios request: ", e);
       }
     },
-    err => {
+    (err) => {
       console.error("Error while uploading the media to the asset: ", err);
     }
   );
@@ -393,10 +395,12 @@ async function postTwitter(fp, postStatus, eventId) {
   );
   let T = new twit(config);
 
-  let buffer = fs.readFileSync(fp.split(".")[0]+"__twitter.png").toString("base64");
+  let buffer = fs
+    .readFileSync(fp.split(".")[0] + "__twitter.png")
+    .toString("base64");
 
   // User should be able to set the status for post
-  T.post("media/upload", { media_data: buffer }, function(
+  T.post("media/upload", { media_data: buffer }, function (
     // asynchronous
     err,
     data,
@@ -411,9 +415,9 @@ async function postTwitter(fp, postStatus, eventId) {
         "statuses/update",
         {
           status: postStatus, // need to check the length for the length of tweet.
-          media_ids: new Array(data.media_id_string)
+          media_ids: new Array(data.media_id_string),
         },
-        async function(err, data, response) {
+        async function (err, data, response) {
           if (err) {
             console.log("ERROR: ", err);
           } else {
@@ -460,11 +464,11 @@ async function postTwitter(fp, postStatus, eventId) {
             return data.id_str;
           }
         }
-      ).catch(e => {
+      ).catch((e) => {
         console.error(`Exception at T.post while Posting Tweeting: `, e);
       });
     }
-  }).catch(e => {
+  }).catch((e) => {
     console.error(
       `Exception at T.post while uploading image for posting Tweeting: `,
       e
@@ -521,11 +525,11 @@ async function postFacebook(fp, postStatus, eventId) {
         processData: false,
         params: {
           access_token: currConfig.longTermToken,
-          message: postStatus
-        }
+          message: postStatus,
+        },
       }
     )
-    .then(async res => {
+    .then(async (res) => {
       if (res.status == 200) {
         console.log("successfully posted image on facebook");
         const socialPostConfig = await SocialPostConfig.findOne({});
@@ -583,7 +587,7 @@ const postTelegram = (fp, postStatus, eventId) => {
 
     axios
       .post(postUrl, newForm, { headers: newForm.getHeaders() })
-      .then(async resp => {
+      .then(async (resp) => {
         if (resp.data.ok === true) {
           const socialPostConfig = await SocialPostConfig.findOne({});
           // No need to check for AutoPost.
@@ -605,7 +609,7 @@ const postTelegram = (fp, postStatus, eventId) => {
           console.log("quiting...");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(
           "exception while generating the post at postSocials.postTelegram ",
           e
@@ -632,9 +636,9 @@ async function varTriggerUpdate(varName) {
       const pendingEvents = await Event.find({
         conditionVar: "certificates",
         status: "pending",
-        variableTrigger: true
+        variableTrigger: true,
       });
-      pendingEvents.forEach(currEvent => {
+      pendingEvents.forEach((currEvent) => {
         console.log(`task id: ${currEvent.id}`);
         if (currEvent.recurring === false) {
           console.log(`not recurring`);
@@ -666,7 +670,9 @@ async function varTriggerUpdate(varName) {
             // update currEvent.conditionPrevTrigger
             // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
             if (
-              siteStat.totCertis > parseFloat(currEvent.conditionPrevTrigger)
+              siteStat.totCertis >=
+              parseFloat(currEvent.conditionPrevTrigger) +
+                parseFloat(currEvent.conditionInterval)
             ) {
               // em.emit("postSocial", currEvent.id);
               scheduleVarTrigger(currEvent.id);
@@ -683,9 +689,9 @@ async function varTriggerUpdate(varName) {
       const pendingEvents = await Event.find({
         conditionVar: "registrations",
         status: "pending",
-        variableTrigger: true
+        variableTrigger: true,
       });
-      pendingEvents.forEach(currEvent => {
+      pendingEvents.forEach((currEvent) => {
         console.log(`task id: ${currEvent.id}`);
         if (currEvent.recurring === false) {
           console.log(`not recurring`);
@@ -730,9 +736,9 @@ async function varTriggerUpdate(varName) {
       const pendingEvents = await Event.find({
         conditionVar: "visits",
         status: "pending",
-        variableTrigger: true
+        variableTrigger: true,
       });
-      pendingEvents.forEach(currEvent => {
+      pendingEvents.forEach((currEvent) => {
         console.log(`task id: ${currEvent.id}`);
 
         if (currEvent.recurring === false) {
@@ -789,7 +795,20 @@ async function scheduleVarTrigger(eventId) {
       return;
     }
     console.log(`event found`);
-    const scheduledTime = new Date(parseFloat(currEvent.nearestTS));
+    let scheduledTime = new Date(parseFloat(currEvent.nearestTS));
+    if (currEvent.postAsap === true) {
+      const socialPostConfig = await SocialPostConfig.findOne({});
+      if (socialPostConfig === null || socialPostConfig.autoPost === false) {
+        console.log(
+          "social config not initiated / autoPost has been turned off, skipping the event ",
+          eventId
+        );
+        return;
+      }
+      // autoPostActive, postSocial
+      postSocial(eventId);
+      return;
+    }
     const hours = scheduledTime.getHours();
     const minutes = scheduledTime.getMinutes();
     let today = new Date();
@@ -821,7 +840,7 @@ async function scheduleVarTrigger(eventId) {
       triggerType: "timestamp",
       refVar: currJob,
       derivedFrom: currEvent.id,
-      nextInvocation: today.toString()
+      nextInvocation: today.toString(),
     });
     console.log("scheduled the var trigger by timestamp");
   } catch (e) {
@@ -845,7 +864,7 @@ exports.em = em;
 */
 
 function os_func() {
-  this.execCommand = function(cmd, callback, callbackError) {
+  this.execCommand = function (cmd, callback, callbackError) {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
@@ -863,7 +882,7 @@ function getTwitterConfig(consumerKey, consumerSecret, token, tokenSecret) {
     consumer_key: consumerKey,
     consumer_secret: consumerSecret,
     access_token: token,
-    access_token_secret: tokenSecret
+    access_token_secret: tokenSecret,
   };
 }
 
@@ -897,7 +916,7 @@ function newSocialPostLog(eventId, platform, postId) {
     eventId: eventId,
     platform: platform,
     postId: postId,
-    timestamp: "" + Date.now()
+    timestamp: "" + Date.now(),
   });
 }
 
@@ -939,7 +958,7 @@ async function getSiteStats(type) {
           userCnt: userCnt,
           visitCnt: visitCnt,
           totCertis: totCertis,
-          caCnt: caCnt
+          caCnt: caCnt,
         };
       }
     }

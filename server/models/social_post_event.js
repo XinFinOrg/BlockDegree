@@ -33,7 +33,9 @@ const socialPostEventSchema = mongoose.Schema({
   conditionScopeStart: String,
   conditionScopeStop: String,
   conditionPrevTrigger: String,
+  conditionNextTrigger: String,
   nearestTS: String,
+  postAsap:Boolean,
   /*
 
   Next Scheduled Post Timestamp
