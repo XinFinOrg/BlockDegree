@@ -54,13 +54,13 @@
 <section id="preloaded-banner" class="slider-section slider-section-3">
   <div class="slider-items">
     <div class="slide" id="preload-slider">
-      <div class="item">
-        <img
+      <div id="preload-banner-img" class="item">
+        <!-- <img
           src="img/slider/slider-1.jpg"
           data-thumb="img/slider/slider-1.jpg"
           alt=""
           title="#htmlcaption"
-        />
+        /> -->
         <div class="img-bg"></div>
         <div id="preload-htmlcaption" class="nivo-html-caption">
           <div class="container">
@@ -693,28 +693,9 @@
   <!-- Welcome Modal Ends -->
 
   {{/inline}} {{#*inline "scripts-block"}}
-  <script src="/js/home.js?v=1.43"></script>
+  <script src="/js/home.js?v=1.44"></script>
   <script src="/js/nivoslider/jquery.nivo.slider.js"></script>
-  <script>
-    $("#preload-slider").nivoSlider({
-      pauseTime: 10000,
-      afterLoad: () => {
-        console.log(`loaded the  nivo-slider`, Date.now());
-        // document.getElementById("preloaded-banner").style="display:none";
-        setTimeout(() => {
-          document.getElementById("preloaded-banner").style = "display:none";
-          document.getElementById("final-banner").style = "display:block";
-          $("#slider").nivoSlider({
-            pauseTime: 10000,
-            afterLoad:()=>{
-              console.log("updated slider again: ", Date.now());
-              
-            }
-          });
-        }, 5);
-      },
-    });
-  </script>
+  
   {{/inline}} {{/base}}
 </div>
 

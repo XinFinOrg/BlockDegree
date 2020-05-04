@@ -121,6 +121,25 @@ if (typeof jQuery != "undefined") {
 
     getAllSiteStats();
 
+    $("#preload-slider").nivoSlider({
+      pauseTime: 10000,
+      afterLoad: () => {
+        console.log(`loaded the  nivo-slider`, Date.now());
+        // document.getElementById("preloaded-banner").style="display:none";
+        setTimeout(() => {
+          document.getElementById("preloaded-banner").style = "display:none";
+          document.getElementById("final-banner").style = "display:block";
+          $("#slider").nivoSlider({
+            pauseTime: 10000,
+            afterLoad:()=>{
+              console.log("updated slider again: ", Date.now());
+              
+            }
+          });
+        }, 5);
+      },
+    });
+
     // setInterval(() => {
     //   getAllSiteStats();
     // }, 60000);
