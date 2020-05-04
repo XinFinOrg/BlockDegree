@@ -1,7 +1,7 @@
 {
   "courses": [
     {
-      "title": "101 - Blockchain Basic Course for Engineer",
+      "title": "Blockchain Basic Course for Engineer",
       "price" : "9.99",
       "type" : "course_1",
       "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
@@ -59,7 +59,7 @@
       ]
     },
     {
-      "title": "102 - Blockchain Advanced Course for Engineer",
+      "title": "Blockchain Advanced Course for Engineer",
       "price" : "9.99",
       "type" : "course_2",
       "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
@@ -94,7 +94,7 @@
       ]
     },
     {
-      "title": "103 - Blockchain Professional Course for Engineer",
+      "title": "Blockchain Professional Course for Engineer",
       "price" : "9.99",
       "type" : "course_3",
       "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
@@ -162,6 +162,44 @@
         {
           "topic": "Differences among various blockchains"
         }
+      ]
+    },
+    {
+      "title": "Cloud Computing",
+      "price" : "9.99",
+      "type" : "course_4",
+      "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
+      "duration": "3 days",
+      "slug": "cloud-computing",
+      "pointers": [" 50 Marks Practical & Theory","60% will be the passing percentage" ," Individual will get max of 3 Attempts"],
+
+      "sypnosis": "Cloud Computing Sypnosis",
+      "overview": "Cloud Computing Overview",
+      "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
+      "prerequisites": ["Necessary: Basic knowledge in JavaScript / HTML", "Basic knowledge in C++ / Java, data types", "Advantageous: Basic knowledge with git repositories"],
+      "curriculum": [
+        {
+          "topic": "1"
+        },
+        {
+          "topic": "2"
+        },
+        {
+          "topic": "3"
+        },
+        {
+          "topic": "4"
+        },
+        {
+          "topic": "5"
+        },
+        {
+          "topic": "6"
+        },
+        {
+          "topic": "7"
+        }
+        
       ]
     }
   ]
