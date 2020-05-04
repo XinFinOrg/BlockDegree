@@ -77,9 +77,9 @@ if (typeof jQuery != "undefined") {
       document.getElementById("final-banner").style = "display:block";
     }
   };
-  imgSlider1.src = "https://uat.blockdegree.org/img/slider/slider-1.jpg";
-  imgSlider2.src = "https://uat.blockdegree.org/img/slider/slider-2.jpg";
-  imgSlider3.src = "https://uat.blockdegree.org/img/slider/slider-3.jpg";
+  imgSlider1.src = "/img/slider/slider-1.jpg";
+  imgSlider2.src = "/img/slider/slider-2.jpg";
+  imgSlider3.src = "/img/slider/slider-3.jpg";
 
   $(document).ready(function () {
     $(".contributors__carousel").slick({
