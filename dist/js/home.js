@@ -64,6 +64,23 @@ $(".contributors_slider").slick({
 
 // slick carousel
 if (typeof jQuery != "undefined") {
+  let imageLoaded = false,
+    nivoLoaded = false;
+
+  let imgSlider1 = new Image(),
+    imgSlider2 = new Image(),
+    imgSlider3 = new Image();
+  imgSlider1.onload = function () {
+    imageLoaded = true;
+    if (nivoLoaded === true) {
+      document.getElementById("preloaded-banner").style = "display:none";
+      document.getElementById("final-banner").style = "display:block";
+    }
+  };
+  imgSlider1.src = "https://uat.blockdegree.org/img/slider/slider-1.jpg";
+  imgSlider2.src = "https://uat.blockdegree.org/img/slider/slider-2.jpg";
+  imgSlider3.src = "https://uat.blockdegree.org/img/slider/slider-3.jpg";
+
   $(document).ready(function () {
     $(".contributors__carousel").slick({
       infinite: true,
@@ -124,9 +141,11 @@ if (typeof jQuery != "undefined") {
     $("#slider").nivoSlider({
       pauseTime: 10000,
       afterLoad: () => {
-        console.log("updated slider again: ", Date.now());
-        document.getElementById("preloaded-banner").style = "display:none";
-        document.getElementById("final-banner").style = "display:block";
+        nivoLoaded=true;
+        if (imageLoaded === true) {
+          document.getElementById("preloaded-banner").style = "display:none";
+          document.getElementById("final-banner").style = "display:block";
+        }
       },
     });
 
