@@ -1,6 +1,6 @@
 (function($) {
     "use strict";
-    jQuery(document).load(function($) {
+    jQuery(document).ready(function($) {
         
         //-----------------slider-----------------//
         $('#slider').nivoSlider({
