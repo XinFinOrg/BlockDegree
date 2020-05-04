@@ -51,48 +51,10 @@
 <!-- End Offer Modal -->
 
 <!-- Preloaded content start -->
-<section id="preloaded-banner" class="slider-section slider-section-3">
-  <div class="slider-items">
-    <div class="slide" id="preload-slider">
-      <div id="preload-banner-img" class="item">
-        <!-- <img
-          src="img/slider/slider-1.jpg"
-          data-thumb="img/slider/slider-1.jpg"
-          alt=""
-          title="#htmlcaption"
-        /> -->
-        <div class="img-bg"></div>
-        <div id="preload-htmlcaption" class="nivo-html-caption">
-          <div class="container">
-            <div class="slide-content">
-              <h2
-                class="no-margin wow fadeInDown animated"
-                data-wow-duration=".9s"
-                data-wow-delay=".5s"
-              >
-                Become a Certified Professional
-              </h2>
-              <p
-                class="no-margin wow fadeInDown animated"
-                data-wow-duration=".8s"
-                data-wow-delay=".7s"
-              >
-                Online education powered by XinFin (XDC) Network.
-              </p>
-              <a
-                href="/courses/blockchain-basic"
-                class="btn btn-gradient wow fadeInDown animated"
-                data-wow-duration=".6s"
-                data-wow-delay=".7s"
-                >Get Access to Free Online Courses</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<section
+  id="preloaded-banner"
+  class="slider-section slider-section-3 banner-preloader"
+></section>
 <!-- Preloaded content stop -->
 
 <!-- Start Slider Section -->
@@ -396,23 +358,23 @@
       <div class="row course" id="courses">
         <script id="course-template" type="text/x-handlebars-template">
           {{#each courses}}
-          <div class="col-12 col-lg-4 text-white p-2 course__single">
-            <a href="/{{slug}}">
-              <div
-                class="px-3 py-4 content--rounded overlay"
-                style="background:url('img/pm6.jpg') center/cover;"
-              >
-                <div class="overlay__content">
-                  <h3 class="mb-4 mt-1">
-                    {{title}}
-                  </h3>
-                  <p class="mb-0 pt-2">
-                    {{trimmed sypnosis}}
-                  </p>
+            <div class="col-12 col-lg-4 text-white p-2 course__single">
+              <a href="/{{slug}}">
+                <div
+                  class="px-3 py-4 content--rounded overlay"
+                  style="background:url('img/pm6.jpg') center/cover;"
+                >
+                  <div class="overlay__content">
+                    <h3 class="mb-4 mt-1">
+                      {{title}}
+                    </h3>
+                    <p class="mb-0 pt-2">
+                      {{trimmed sypnosis}}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </div>
+              </a>
+            </div>
           {{/each}}
         </script>
       </div>
@@ -695,7 +657,7 @@
   {{/inline}} {{#*inline "scripts-block"}}
   <script src="/js/home.js?v=1.44"></script>
   <script src="/js/nivoslider/jquery.nivo.slider.js"></script>
-  
+
   {{/inline}} {{/base}}
 </div>
 
