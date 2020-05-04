@@ -14,6 +14,11 @@ const equateAddress = require("../helpers/common").equateAddress;
 const { xdcToUsd, usdToXdc } = require("../helpers/cmcHelper");
 const { renderFunderCerti } = require("../helpers/renderFunderCerti");
 const BulkPayment = require("../models/bulkCourseFunding");
+const {
+  makeValueTransferXDC,
+  getBalance,
+} = require("../helpers/blockchainHelpers");
+const KeyConfig = require("../config/keyConfig");
 const recipients = [];
 const bulkPayments = [];
 
@@ -78,6 +83,7 @@ function startProcessingDonation(fundId, tx, name) {
             currentReq.amountReached = await xdcToUsd(
               xdc3.utils.fromWei(txRecord.value)
             );
+            currentReq["completionDate"] = Date.now() + "";
             currentReq.burnStatus = "pending";
             currentReq.fundTx = tx;
             await currentReq.save();
@@ -117,6 +123,40 @@ function startProcessingDonation(fundId, tx, name) {
                 currentReq.requestUrlShort
               );
             }
+
+            // const walletKeys = Object.keys(KeyConfig);
+            // let to = null;
+            // for (let i = 0; i < walletKeys.length; i++) {
+            //   if (
+            //     KeyConfig[walletKeys[i]].wallet_network === "50" &&
+            //     KeyConfig[walletKeys[i]].wallet_type === "burn"
+            //   ) {
+            //     to = walletKeys[i];
+            //     break;
+            //   }
+            // }
+            // if (to === null) {
+            //   return;
+            // }
+            // if (to.startsWith("0x")) {
+            //   to = "xdc" + to.slice(2);
+            // }
+            // let transferAmnt =
+            //   getBalance(currentReq.receiveAddr) - Math.pow(10, 18);
+            // const receipt = await makeValueTransferXDC(
+            //   to,
+            //   transferAmnt,
+            //   currentReq.receiveAddrPrivKey
+            // );
+
+            // emailer.sendMailInternal(
+            //   "blockdegree-bot@blokcdegree.org",
+            //   process.env.SUPP_EMAIL_ID,
+            //   "Transferred FMD tokens to Wallet",
+            //   `Hello,\n we have transfered ${transferAmnt} tokens into the burn wallet for XDC for the fund with id ${
+            //     currentReq.fundId
+            //   }.\n Receipt: ${JSON.stringify(receipt)}`
+            // );
           }
         } catch (e) {
           console.log(

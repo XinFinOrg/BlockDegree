@@ -19,7 +19,7 @@ import "rc-time-picker/assets/index.css";
 const stateVarNameOpts = [
   { label: "Certificates", value: "certificates" },
   { label: "Registrations", value: "registrations" },
-  { label: "Course Visits", value: "visits" }
+  { label: "Course Visits", value: "visits" },
 ];
 
 const stateVarIntervalOpts = [
@@ -27,7 +27,7 @@ const stateVarIntervalOpts = [
   { label: "10", value: 10 },
   { label: "100", value: 100 },
   { label: "200", value: 200 },
-  { label: "500", value: 500 }
+  { label: "500", value: 500 },
 ];
 
 // const eventTypesOpts = [
@@ -54,7 +54,8 @@ class GenerateEventVar extends Component {
       stateVarStartValue: null,
       stateVarStopValue: null,
       postNearestTime: moment(),
-      selectedTemplate: null
+      selectedTemplate: null,
+      postAsap: "false",
     };
 
     // this.handleEventTypeChange = this.handleEventTypeChange.bind(this);
@@ -80,20 +81,25 @@ class GenerateEventVar extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.generateTemplateOpts = this.generateTemplateOpts.bind(this);
     this.handlePostTemplateChange = this.handlePostTemplateChange.bind(this);
+    this.handlePostAsapToggle = this.handlePostAsapToggle.bind(this);
   }
 
   handlePostTemplateChange(option) {
     this.setState({ selectedTemplate: option });
   }
 
+  handlePostAsapToggle(e) {
+    this.setState({ postAsap: e.target.value });
+  }
+
   generateTemplateOpts() {
     console.log("postTemplates: ", this.props.postTemplates);
     if (this.props.postTemplates !== undefined) {
       const opts = [];
-      this.props.postTemplates.forEach(template => {
+      this.props.postTemplates.forEach((template) => {
         opts.push({
           label: template.templateName,
-          value: template.id
+          value: template.id,
         });
       });
       console.log("opts: ", opts);
@@ -131,7 +137,7 @@ class GenerateEventVar extends Component {
       facebook: this.state.postOnFacebook,
       twitter: this.state.postOnTwitter,
       linkedin: this.state.postOnLinkedin,
-      telegram: this.state.postOnTelegram
+      telegram: this.state.postOnTelegram,
     };
 
     if (
@@ -190,7 +196,10 @@ class GenerateEventVar extends Component {
           "Invalid interval stop value"
         );
         return;
-      } else if (this.state.postNearestTime === null) {
+      } else if (
+        this.state.postAsap === "false" &&
+        this.state.postNearestTime === null
+      ) {
         showNotification(
           "danger",
           "Generate Event By Var",
@@ -268,6 +277,7 @@ class GenerateEventVar extends Component {
     form.append("eventPurpose", this.state.eventPurpose);
     // form.append("eventType", this.state.eventType);
     form.append("nearestTS", this.state.postNearestTime.toDate().toString());
+    form.append("postAsap", this.state.postAsap === "true");
     form.append("platforms", JSON.stringify(socialPlatform));
     form.append("stateVarName", this.state.stateVarName.value);
     form.append("useCustomFile", this.state.useCustomFile);
@@ -291,10 +301,10 @@ class GenerateEventVar extends Component {
     axios
       .post("/api/scheduleEventByState", form, {
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       })
-      .then(resp => {
+      .then((resp) => {
         console.log(resp.data);
         if (resp.data.status === true) {
           this.setState({
@@ -317,22 +327,22 @@ class GenerateEventVar extends Component {
             stateVarStartValue: null,
             stateVarStopValue: null,
             postNearestTime: moment(),
-            selectedTemplate: null
+            selectedTemplate: null,
             // eventType: null
           });
           this.handleFileReset();
         } else {
           this.setState({
             showError: true,
-            errorMsg: resp.data.error
+            errorMsg: resp.data.error,
           });
         }
       })
-      .catch(err0 => {
+      .catch((err0) => {
         console.log(err0);
         this.setState({
           showError: true,
-          errorMsg: err0
+          errorMsg: err0,
         });
       });
   }
@@ -360,7 +370,7 @@ class GenerateEventVar extends Component {
         stateVarInterval: null,
         stateVarStartValue: null,
         stateVarStopValue: null,
-        isRecurring: event.target.value
+        isRecurring: event.target.value,
       });
     } else if (event.target.value === "true") {
       this.setState({ stateVarValue: null, isRecurring: event.target.value });
@@ -442,7 +452,7 @@ class GenerateEventVar extends Component {
         postOnLinkedin: true,
         postOnTwitter: true,
         postOnTelegram: true,
-        postAll: true
+        postAll: true,
       });
     } else {
       this.setState({
@@ -450,7 +460,7 @@ class GenerateEventVar extends Component {
         postOnLinkedin: false,
         postOnTwitter: false,
         postOnTelegram: false,
-        postAll: false
+        postAll: false,
       });
     }
   }
@@ -750,24 +760,56 @@ class GenerateEventVar extends Component {
             )}
 
             <div className="form-group">
-              <label className="control-label col-md-4">
-                Nearest Post Time
-              </label>
-              <div className="col-md-8">
-                <TimePicker
-                  showSecond={false}
-                  defaultValue={moment()}
-                  value={this.state.postNearestTime}
-                  className="xxx"
-                  onChange={postNearestTime => {
-                    this.setState({ postNearestTime: postNearestTime });
-                  }}
-                  format={"h:mm a"}
-                  use12Hours
-                  inputReadOnly
-                />
+              <label className="control-label col-md-4">Post ASAP</label>
+              <div className="col-md-8 radio-group  ">
+                <div className="radio-input-group no-delay">
+                  <input
+                    id="postAsapYes"
+                    name="postAsap"
+                    value="true"
+                    checked={this.state.postAsap === "true"}
+                    onChange={this.handlePostAsapToggle}
+                    type="radio"
+                  />
+                  <label for="postAsapYes">Yes</label>
+                </div>
+                <div className="radio-input-group no-delay">
+                  <input
+                    id="postAsapNo"
+                    name="postAsap"
+                    type="radio"
+                    value="false"
+                    checked={this.state.postAsap === "false"}
+                    onChange={this.handlePostAsapToggle}
+                  />
+                  <label for="postAsapNo">No</label>
+                </div>
               </div>
             </div>
+
+            {this.state.postAsap === "false" ? (
+              <div className="form-group">
+                <label className="control-label col-md-4">
+                  Nearest Post Time
+                </label>
+                <div className="col-md-8">
+                  <TimePicker
+                    showSecond={false}
+                    defaultValue={moment()}
+                    value={this.state.postNearestTime}
+                    className="xxx"
+                    onChange={(postNearestTime) => {
+                      this.setState({ postNearestTime: postNearestTime });
+                    }}
+                    format={"h:mm a"}
+                    use12Hours
+                    inputReadOnly
+                  />
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
 
             <div className="form-group">
               <label className="col-md-3"></label>
@@ -820,8 +862,8 @@ function showNotification(type, title, message) {
     width: 200,
     dismiss: {
       duration: 3000,
-      onScreen: true
-    }
+      onScreen: true,
+    },
   });
 }
 

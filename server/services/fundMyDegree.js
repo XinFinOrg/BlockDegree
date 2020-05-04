@@ -404,6 +404,7 @@ exports.successFundPaypal = async (req, res) => {
         currFundReq.donerEmail = doner.email;
         currFundReq.donerName = doner.name;
         currFundReq.burnStatus = "pending";
+        currFundReq["completionDate"] = Date.now() + "";
         await currFundReq.save();
         await recipientUser.save();
         req.session.message =
@@ -887,7 +888,12 @@ exports.fmdCorporatePaypalSuc = async (req, res) => {
         bulkPayment.completionDate = Date.now() + "";
         bulkPayment.paypalId = invoice_number;
         await bulkPayment.save();
-        emailer.sendMailInternal("blockdegree-bot@blockdegree.org",process.env.SUPP_EMAIL_ID,"Got Entire Course Payment",`Got a complete course payment from Company ${bulkPayment.companyName}, contact email is ${bulkPayment.companyEmail}. Bulk Payment id: ${bulkId}`)
+        emailer.sendMailInternal(
+          "blockdegree-bot@blockdegree.org",
+          process.env.SUPP_EMAIL_ID,
+          "Got Entire Course Payment",
+          `Got a complete course payment from Company ${bulkPayment.companyName}, contact email is ${bulkPayment.companyEmail}. Bulk Payment id: ${bulkId}`
+        );
         req.session.message =
           "Payment successful. Please contact <b>info@blockdegree.org</b> to proceed with the next steps.";
         res.redirect("/payment-success");

@@ -11,6 +11,8 @@ import promoCodeLogs from "./promoCodeLog";
 import paymentLogs from "./paymentLog";
 import burnLogs from "./burnLog";
 import cryptoLogs from "./cryptoLog";
+import allFunds from "./allFunds";
+import xdcPrice from "./xdcPrice";
 
 export default {
   auth: Auth,
@@ -24,5 +26,7 @@ export default {
   promoCodeLogs: promoCodeLogs,
   burnLogs: burnLogs,
   paymentLogs: paymentLogs,
-  cryptoLogs: cryptoLogs
+  cryptoLogs: cryptoLogs,
+  allFunds: allFunds,
+  xdcPrice: xdcPrice
 };

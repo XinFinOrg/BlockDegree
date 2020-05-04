@@ -2,6 +2,8 @@ const Web3 = require("web3");
 const EthereumTx = require("ethereumjs-tx");
 const keythereum = require("keythereum");
 const User = require("../models/user");
+const xdcInst = require("./blockchainConnectors").xdcInst;
+const { removeExpo } = require("./common");
 
 require("dotenv").config();
 
@@ -24,16 +26,18 @@ exports.addToSC = async (examData, email) => {
     currPubKey = user.pubKey;
   }
   console.log(`Current public Key: ${currPubKey}`);
-  console.log(`User Key: ${user.pubKey}`)
+  console.log(`User Key: ${user.pubKey}`);
   const keyObj = keythereum.importFromFile(
     coinbase_acnt,
     process.env.DEF_KEY_PATH
   );
   const privateKey = keythereum.recover(process.env.DEF_ACCOUNT_PWD, keyObj);
-  const count = await web3.eth.getTransactionCount(coinbase_acnt).catch(err => {
-    console.error(err);
-    throw err;
-  });
+  const count = await web3.eth
+    .getTransactionCount(coinbase_acnt)
+    .catch((err) => {
+      console.error(err);
+      throw err;
+    });
   var rawTransaction = {
     from: coinbase_acnt,
     gasPrice: web3.utils.toHex(20 * 1e9),
@@ -53,7 +57,7 @@ exports.addToSC = async (examData, email) => {
       )
       .encodeABI(),
     nonce: web3.utils.toHex(count),
-    chainId: process.env.BLOCKCHAIN_CHAINID
+    chainId: process.env.BLOCKCHAIN_CHAINID,
   };
 
   var transaction = new EthereumTx(rawTransaction);
@@ -62,14 +66,14 @@ exports.addToSC = async (examData, email) => {
   web3.eth
     .sendSignedTransaction("0x" + transaction.serialize().toString("hex"))
     .on("transactionHash", console.log)
-    .catch(err => {
+    .catch((err) => {
       throw err;
     });
-    return
+  return;
 };
 
 async function createKeystore(emailId) {
-  const user = await User.findOne({ email: emailId }).catch(err => {
+  const user = await User.findOne({ email: emailId }).catch((err) => {
     console.error(err);
     throw err;
   });
@@ -78,7 +82,12 @@ async function createKeystore(emailId) {
     return null;
   }
   const dk = keythereum.create();
-  const keyObj = keythereum.dump(process.env.KEYSTORE_PWD, dk.privateKey, dk.salt,dk.iv);
+  const keyObj = keythereum.dump(
+    process.env.KEYSTORE_PWD,
+    dk.privateKey,
+    dk.salt,
+    dk.iv
+  );
   keythereum.exportToFile(keyObj, "./server/keystore");
   const pubKey = web3.eth.accounts.privateKeyToAccount(dk.privateKey).address;
   user.pubKey = pubKey;
@@ -86,6 +95,85 @@ async function createKeystore(emailId) {
   return pubKey;
 }
 
+/**
+ * will perform basic transfer of tokens
+ * @param {String} to valid to address xdc
+ * @param {String} value value to send in WEI
+ * @param {String} privateKey valid private key
+ */
+exports.makeValueTransferXDC = (to, value, privateKey) => {
+  return new Promise((resolve, reject) => {
+    if (!privateKey.startsWith("0x")) {
+      privateKey = "0x" + privateKey;
+    }
+    const account = xdcInst.eth.accounts.privateKeyToAccount(privateKey);
+    xdcInst.eth
+      .getTransactionCount(account.address)
+      .then((count) => {
+        xdcInst.eth.getGasPrice().then((gasPrice) => {
+          const tx = {
+            from: account.address,
+            to: to,
+            value: removeExpo(value + ""),
+            nonce: count + "",
+            gasPrice: gasPrice,
+            chainId: "50",
+          };
+          xdcInst.eth.estimateGas(tx).then((gasLimit) => {
+            tx["gas"] = gasLimit;
+            xdcInst.eth.accounts
+              .signTransaction(tx, privateKey)
+              .then((signed) => {
+                xdcInst.eth
+                  .sendSignedTransaction(signed.rawTransaction)
+                  .then((receipt) => {
+                    resolve(receipt);
+                  });
+              });
+          });
+        });
+      })
+      .catch((e) => reject(e));
+  });
+};
+
+exports.getBalance = (address) => {
+  return new Promise((resolve, reject) => {
+    if (address.startsWith("0x")) {
+      address = "xdc" + address.split(2);
+    }
+    xdcInst.eth
+      .getBalance(address)
+      .then((bal) => {
+        resolve(bal);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+};
+
+/**
+ * will return the TS in millsec of tx completion
+ * @param {String} txHash transaction hash whose timestamp we need
+ * @returns {Number}
+ */
+exports.getTransactionTimestamp = (txHash) => {
+  return new Promise((resolve, reject) => {
+    xdcInst.eth
+      .getTransaction(txHash)
+      .then((tx) => {
+        const { blockNumber } = tx;
+        xdcInst.eth
+          .getBlock(blockNumber)
+          .then(({ timestamp }) => {resolve(Number(timestamp)*1000)}).catch(e => reject(e));
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+};
+
 exports.getUserData = () => {};
 
-exports.getAttemptByHash = async hash => {};
+exports.getAttemptByHash = async (hash) => {};

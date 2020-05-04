@@ -28,6 +28,7 @@ exports.removeExpo = (x) => {
  * @return {boolean}
  */
 exports.equateAddress = (addr1, addr2) => {
+  if (addr1 === undefined || addr2 === undefined) return false;
   return addr1.trim().toLowerCase() === addr2.trim().toLowerCase();
 };
 

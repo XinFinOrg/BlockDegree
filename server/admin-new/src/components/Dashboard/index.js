@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import CertificatePie from "./CertificateChart";
 import TrafficLine from "./CourseTraffic";
 import CertificateBar from "./CertificateBar";
+import CoursePaymentMonitor from "./CoursePaymentMonitor";
 
 class DasnboardNew extends Component {
   renderContent() {
@@ -10,6 +11,9 @@ class DasnboardNew extends Component {
       <div>
         <div className="content">
           <div className="container-fluid">
+            <div className="row">
+              <CoursePaymentMonitor />
+            </div>
             <div className="row">
               <div className="col-md-5">
                 <CertificatePie />

@@ -259,9 +259,9 @@
   }
 
   .modal-header .btn-block {
-  	 width: inherit!important;
+    width: inherit !important;
   }
-  
+
   .modal-footer {
     margin: 2px;
 
@@ -333,11 +333,22 @@
   #alreadyFunded .dataTables_wrapper .dataTables_paginate .paginate_button {
     padding: 6px 12px;
     line-height: 1.42857143;
-    color: #337ab7;
     text-decoration: none;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
+
+    &.current {
+      background: #e3eef4 !important;
+      background-color: #e3eef4 !important;
+      color: #337ab7 !important;
+    }
+
+    &:hover {
+      background: #fff;
+      background-color: #fff;
+      color: #337ab7;
+    }
   }
 
   #fundingRequired .dataTables_wrapper .dataTables_paginate .paginate_button:hover,
@@ -567,7 +578,8 @@
   padding-right: 50px;
 }
 
-.fmd-features p, .fmd-features.alt p {
+.fmd-features p,
+.fmd-features.alt p {
   margin-bottom: 1rem;
   line-height: 1.5rem;
 }
@@ -687,8 +699,8 @@
 
   .fmd-features-btn-block {
     padding-left: 15px;
-  }  
-  
+  }
+
   .fmd-features-btn-block.alt-text {
     padding-left: 0px;
   }
@@ -710,8 +722,8 @@
 
   .fmd-features-btn-block.alt {
     margin-bottom: 25px;
-  }  
-  
+  }
+
   .fmd-features-btn-block.alt-text {
     padding-left: 0px;
   }
@@ -781,29 +793,32 @@
 }
 
 .donation-way-block {
-    background: transform;
-    -webkit-transition: all 0.4s ease 0s;
-    transition: all 0.4s ease 0s;
-    position: relative;
-    padding: 30px;
-    background: #fff;
-    box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.06);
-    border-radius: 5px;
-	height: 100%;
+  background: transform;
+  -webkit-transition: all 0.4s ease 0s;
+  transition: all 0.4s ease 0s;
+  position: relative;
+  padding: 30px;
+  background: #fff;
+  box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.06);
+  border-radius: 5px;
+  height: 100%;
 }
+
 .donation-way-block h3 {
-    font-weight: 600;
-    margin: 0;
-    padding-bottom: 15px;
-    -webkit-transition: all 0.2s ease 0s;
-    transition: all 0.2s ease 0s;
+  font-weight: 600;
+  margin: 0;
+  padding-bottom: 15px;
+  -webkit-transition: all 0.2s ease 0s;
+  transition: all 0.2s ease 0s;
 }
+
 .donation-way-block p {
-	line-height: 1.5rem;
-	margin-bottom: 0.75rem;
+  line-height: 1.5rem;
+  margin-bottom: 0.75rem;
 }
+
 .donation-way-block p:last-child {
-	margin-bottom: 0rem;
+  margin-bottom: 0rem;
 }
 
 /*--------------- Fund My Degree page css ends ---------------*/
@@ -811,116 +826,118 @@
 
 /*--------------- Fund My Degree FAQ css starts ---------------*/
 .fmd-faq-section {
-	background: transparent;
+  background: transparent;
 
-	.faq-title h2 {
-		position: relative;
-		margin-bottom: 45px;
-		display: inline-block;
-		font-weight: 600;
-		line-height: 1;
-	}
-	.faq-title h2::before {
-		content: "";
-		position: absolute;
-		left: 50%;
-		width: 60px;
-		height: 2px;
-		background: #e91e63;
-		bottom: -25px;
-		margin-left: -30px;
-	}
-	.faq-title p {
-		padding: 0 190px;
-		margin-bottom: 10px;
-	}
+  .faq-title h2 {
+    position: relative;
+    margin-bottom: 45px;
+    display: inline-block;
+    font-weight: 600;
+    line-height: 1;
+  }
 
-	.faq {
-		background: #ffffff;
-		border-radius: 4px;
-		margin-bottom: 30px;
-	}
+  .faq-title h2::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 60px;
+    height: 2px;
+    background: #e91e63;
+    bottom: -25px;
+    margin-left: -30px;
+  }
 
-	.faq .card {
-		border: none;
-		background: rgba(243, 245, 246, 0.5);
-		border-bottom: 1px dashed #cee1f8;
-		margin-bottom: 10px;
-	}
+  .faq-title p {
+    padding: 0 190px;
+    margin-bottom: 10px;
+  }
 
-	.faq .card .card-header {
-		padding: 0px;
-		border: none;
-		background: none;
-		-webkit-transition: all 0.3s ease 0s;
-		-moz-transition: all 0.3s ease 0s;
-		-o-transition: all 0.3s ease 0s;
-		transition: all 0.3s ease 0s;
-	}
+  .faq {
+    background: #ffffff;
+    border-radius: 4px;
+    margin-bottom: 30px;
+  }
 
-	.faq .card .card-header:hover {
-		background: #e3eef4;
-	}
-	
-	.faq .card .card-header .faq-title {
-		width: 100%;
-		text-align: left;
-		padding: 0px;
-		margin-top: 8px;
-		margin-bottom: 8px;
-		padding-left: 60px;
-		padding-right: 30px;
-		font-weight: 400;
-		font-size: 16px;
-		color: #3b566e;
-		text-decoration: none !important;
-		-webkit-transition: all 0.3s ease 0s;
-		-moz-transition: all 0.3s ease 0s;
-		-o-transition: all 0.3s ease 0s;
-		transition: all 0.3s ease 0s;
-		cursor: pointer;
-		padding-top: 20px;
-		padding-bottom: 20px;
-	}
+  .faq .card {
+    border: none;
+    background: rgba(243, 245, 246, 0.5);
+    border-bottom: 1px dashed #cee1f8;
+    margin-bottom: 10px;
+  }
 
-	.faq .card .card-header .faq-title .badge {
-		display: inline-block;
-		width: 20px;
-		height: 20px;
-		line-height: 14px;
-		float: left;
-		-webkit-border-radius: 100px;
-		-moz-border-radius: 100px;
-		border-radius: 100px;
-		border: 1px solid #2073d4;
-		text-align: center;
-		color: #2073d4;
-		font-size: 12px;
-		margin-right: 0px;
-		margin-left: -30px;
-	}
+  .faq .card .card-header {
+    padding: 0px;
+    border: none;
+    background: none;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+  }
 
-	.faq .card .card-body {
-		padding: 20px;
-    	padding-left: 35px;
-    	padding-bottom: 5px;
-    	font-size: 16px;
-    	background: #FFFFFF;
-    	line-height: 28px;
-    	border: 2px solid #f3f8ff;
-    	border-bottom: none;
-	}
+  .faq .card .card-header:hover {
+    background: #e3eef4;
+  }
 
-	.faq .card .card-body p {
-		margin-bottom: 14px;
-	}
+  .faq .card .card-header .faq-title {
+    width: 100%;
+    text-align: left;
+    padding: 0px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding-left: 60px;
+    padding-right: 30px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #3b566e;
+    text-decoration: none !important;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
 
-	@media (max-width: 991px) {
-		.faq .card .card-header .faq-title {
-			line-height: 26px;
-			margin-top: 8px;
-		}
-	}
+  .faq .card .card-header .faq-title .badge {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 14px;
+    float: left;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    border: 1px solid #2073d4;
+    text-align: center;
+    color: #2073d4;
+    font-size: 12px;
+    margin-right: 0px;
+    margin-left: -30px;
+  }
+
+  .faq .card .card-body {
+    padding: 20px;
+    padding-left: 35px;
+    padding-bottom: 5px;
+    font-size: 16px;
+    background: #FFFFFF;
+    line-height: 28px;
+    border: 2px solid #f3f8ff;
+    border-bottom: none;
+  }
+
+  .faq .card .card-body p {
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 991px) {
+    .faq .card .card-header .faq-title {
+      line-height: 26px;
+      margin-top: 8px;
+    }
+  }
 }
 
 /*--------------- Fund My Degree FAQ css ends ---------------*/

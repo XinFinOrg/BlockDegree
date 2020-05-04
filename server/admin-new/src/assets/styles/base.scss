@@ -421,5 +421,52 @@ body {
 .weekly-updated {
   color: rgb(165, 165, 165);
   margin: 10px;
+}
 
+.course-payment-wrapper {
+  margin: 20px 0 20px 0;
+}
+
+.inner-card {
+  border: 1px solid $medium-gray;
+  border-radius: 5px;
+  padding: 8px;
+
+  &__header {
+    color: $primary-color;
+    font-size: 20px;
+  }
+
+  &__body {
+    color: grey;
+    padding: 5px 0px 5px 10px;
+
+    &--label {
+      float: left;
+      width: 22%;
+      color: $new-blue;
+    }
+
+    &--value {
+      width: 100%;
+      color: $new-green;
+    }
+  }
+
+  @media screen and (min-width:767px)and (max-width:991px) {
+    margin-bottom: 10px;
+  }
+
+  @media screen and (max-width: 766px) {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+}
+
+.fmd-applied {
+  color: $new-dark-blue
+}
+
+.fmd-accepted {
+  color: $new-green;
 }

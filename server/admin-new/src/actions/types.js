@@ -7,3 +7,5 @@ export const FETCH_ALL_PROMOCODE_LOGS = "fetch_all_promocode_logs";
 export const FETCH_ALL_BURN_LOGS = "fetch_all_burn_logs";
 export const FETCH_ALL_PAYMENT_LOGS = "fetch_all_payment_logs";
 export const FETCH_ALL_CRYPTO_LOGS = "fetch_all_crypto_logs";
+export const FETCH_ALL_FUNDS = "fetch_all_funds";
+export const FETCH_XDC_PRICE = "fetch_xdc_price";

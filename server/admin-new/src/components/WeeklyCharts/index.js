@@ -1,13 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import * as actions from "../../actions/index";
 
 import Certificates from "./Certificates";
 import AccountsCreated from "./AccountCreated";
 import AccountActive from "./AccountActive";
 import PromoCodeUsed from "./PromoCodeUsed";
 import CourseTraffic from "./CourseTraffic";
+import FMD from "./FMD";
 
 class WeeklyStats extends Component {
+  componentDidMount() {
+    this.props.fetchAllFunds();
+  }
+
   renderContent() {
     return (
       <div>
@@ -33,6 +39,9 @@ class WeeklyStats extends Component {
               <div className="col-md-6">
                 <PromoCodeUsed />
               </div>
+              <div className="col-md-6">
+                <FMD />
+              </div>
             </div>
           </div>
         </div>
@@ -48,4 +57,4 @@ function mapsStateToProps({ auth, courseVisits }) {
   return { auth, courseVisits };
 }
 
-export default connect(mapsStateToProps)(WeeklyStats);
+export default connect(mapsStateToProps, actions)(WeeklyStats);
