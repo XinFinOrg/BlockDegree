@@ -28,7 +28,7 @@ exports.renderCourses = (req, res) => {
     case "cloud-computing": {
       eventEmitter.emit("visited", req, "cloud-computing");
       res.redirect(
-        "/courses/cloud-computing/1"
+        "/courses/cloud-computing/what-is-cloud-computing"
       );
     }
   }
