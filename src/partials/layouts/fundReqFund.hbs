@@ -33,11 +33,13 @@
                             <!-- Nav tabs -->
                         </div>
 
-                        <div class="card-body">                            
+                        <div class="card-body">
                             <div class="tab-content">
                                 <div class="tab-pane fade active show" id="fundingRequired">
                                     <div class="tot-fund-amount">
-                                        <span id="totFmdCntPend"></span>&nbsp;students are waiting for degree to get funded, a total of $&nbsp;<span id="totPendFundReqUsd"></span>&nbsp;/&nbsp;<span id="totPendFundReqXdc"></span>&nbsp;XDC  
+                                        <span id="totFmdCntPend"></span>&nbsp;students are waiting for degree to get
+                                        funded, a total of $&nbsp;<span id="totPendFundReqUsd"></span>&nbsp;/&nbsp;<span
+                                            id="totPendFundReqXdc"></span>&nbsp;XDC
                                     </div>
                                     <div class="table-responsive">
                                         <table id="pendingFund" class="table table-hover nowrap" style="width:100%">
@@ -60,7 +62,9 @@
 
                                 <div class="tab-pane fade" id="alreadyFunded">
                                     <div class="tot-fund-amount">
-                                        <span id="totFmdCntAppr"></span>&nbsp;students got their degree funded, a total of $&nbsp;<span id="totApprFundReqUsd"></span>&nbsp;/&nbsp;<span id="totApprFundReqXdc"></span>&nbsp;XDC  
+                                        <span id="totFmdCntAppr"></span>&nbsp;students got their degree funded, a total
+                                        of $&nbsp;<span id="totApprFundReqUsd"></span>&nbsp;/&nbsp;<span
+                                            id="totApprFundReqXdc"></span>&nbsp;XDC
                                     </div>
                                     <div class="table-responsive">
                                         <table id="approvedFund" class="table table-hover nowrap" style="width:100%">
@@ -256,7 +260,7 @@
                 <button type="button" class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
-                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
+                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="3"
                         class="form-control" style="border-radius:5px;" id="postMSGTwitter"></textarea></p>
 
                 <select name="user[avatar]" id="images-twitter">
@@ -320,6 +324,76 @@
         </div>
     </div>
 </div>
+
+
+<button id="togglePostLinkedinFunder" type="button" class="btn btn-primary social-li" data-toggle="modal"
+    data-target="#postLinkedinFunder" style="display: none">Post Linkedin</button>
+<div class="modal fade" id="postLinkedinFunder" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Linkedin Post</h3>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
+                        class="form-control" style="border-radius:5px;"
+                        id="postMSGLinkedinFunder">Sponsored a student's degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation</textarea>
+                </p>
+
+                <img id="funder-certi-link"></img>
+
+                <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
+                <div style="text-align: center;">
+                    <button type="button" class="btn btn-primary social-li mt-3" data-dismiss="modal" onclick="postLinkedin(true)">Post On
+                        Linkedin <i class="fa fa-linkedin-square"></i> </button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button id="togglePostTwitterFunder" type="button" class="btn btn-primary social-li" data-toggle="modal"
+    data-target="#postTwitterFunder" style="display: none">Post Twitter</button>
+<div class="modal fade" id="postTwitterFunder" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Twitter Post</h3>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="3"
+                        class="form-control" style="border-radius:5px;"
+                        id="postMSGTwitterFunder">Sponsored a student's degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation</textarea>
+                </p>
+
+                <img id="funder-certi-twit"></img>
+
+                <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
+                <div style="text-align: center;">
+                    <button type="button" class="btn btn-primary social-li mt-3" data-dismiss="modal" onclick="postTweet(true)">Post On
+                        Twitter <i class="fa fa-twitter-square"></i> </button>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <!-- Success Modal -->
 

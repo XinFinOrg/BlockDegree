@@ -25,24 +25,21 @@ $(document).ready(async () => {
         console.log("message from popup.");
         // toggle linkedin modal
         if (loginLinkedin === true) {
-          if (linkedinFunder == true) {
-            postLinkedin(true);
-            linkedinFunder = false;
-          } else {
-            $("#togglePostLinkedin").click();
-          }
+          $("#funder-certi-link").attr(
+            "src",
+            `/img/funder-certi/${linkedinfundId}.png`
+          );
+          $("#togglePostLinkedinFunder").click();
           loginLinkedin = false;
         }
 
         // toggle twitter modal
         if (loginTwitter === true) {
-          if (twitterFunder == true) {
-            postTweet(true);
-            twitterFunder = false;
-          } else {
-            $("#togglePostTwitter").click();
-          }
-
+          $("#funder-certi-twit").attr(
+            "src",
+            `/img/funder-certi/${twitterFundId}.png`
+          );
+          $("#togglePostTwitterFunder").click();
           loginTwitter = false;
         }
       }
@@ -394,7 +391,7 @@ function renderRequestModal(
   )}&source=blockdegree.org`;
   const funderMessage =
     "Sponsored a student's degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation";
-  const fundeeMessage = `Thank you ${funderName} for sponsoring my degree! Appreciate it! #blockdegree #fundmydegree #onlineeducation`;
+  const fundeeMessage = `Thank you <b>${funderName===undefined||funderName===null||funderName===""?"Anonymous person":funderName}</b> for sponsoring a degree! Appreciate it!<br/> <b>#blockdegree #fundmydegree #onlineeducation </b>`;
   let retHtml = "";
 
   if (type === "completed") {
@@ -421,7 +418,7 @@ function renderRequestModal(
                           </div>` +
       `
       
-                          <textarea class="form-control" id="funder-certi-msg">Test</textarea>
+                          <div class="form-control" id="funder-certi-msg">Test</div>
                           ${
                             funderName == "undefined" ||
                             funderName == "" ||
@@ -464,7 +461,7 @@ function renderRequestModal(
 </div>
 </div>`;
     document.getElementById("requestModalWrapper").innerHTML = retHtml;
-    document.getElementById("funder-certi-msg").innerHTML = funderMessage;
+    document.getElementById("funder-certi-msg").innerHTML = fundeeMessage;
   } else {
     retHtml =
       `<div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -889,7 +886,10 @@ function postTweet(funder) {
     return;
   }
   console.log(`select the image: `, templateNumber, "funder: ", funder);
-  const msg = document.getElementById("postMSGTwitter").value;
+  let msg = document.getElementById("postMSGTwitter").value;
+  if (funder===true){
+    msg = document.getElementById("postMSGTwitterFunder").value;
+  }
   $("#postTwitter").modal("hide");
   $.notify("The tweet in being posted, please wait...", { type: "info" });
   let data = { msg: msg, templateNumber: templateNumber };
@@ -929,7 +929,10 @@ function postLinkedin(funder) {
     });
     return;
   }
-  const msg = document.getElementById("postMSGLinkedin").value;
+  let msg = document.getElementById("postMSGLinkedin").value;
+  if (funder===true){
+    msg = document.getElementById("postMSGLinkedinFunder").value;
+  }
   $("#postLinkedin").modal("hide");
   $.notify("The post in being sent, please wait...", { type: "info" });
   let data = { msg: msg, templateNumber: templateNumber };
