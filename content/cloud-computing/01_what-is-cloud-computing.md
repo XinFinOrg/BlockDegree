@@ -4,7 +4,9 @@ title: What is Cloud Computing?
 template: courseContent.hbs
 courseIdx: 3
 ---
-### What is Cloud Computing ?
+  ## What is Cloud Computing ?
+
+![](https://uat.blockdegree.org/img/cloud-computing-imges/image7.jpg)
 
 ### Introduction :-
 - Credit: This course Detail has been contributed by the Cloud Hosting Company IndSoft.net 
@@ -26,9 +28,7 @@ courseIdx: 3
 -  A server refers to a dedicated computer tasked with managing network resources. In simple term, a server is an instance of a computer program that accepts and responds to the requests made by other programs in the network, otherwise known as clients. The terms �server-based computing� has been around for several years and the idea behind it was to host data and other forms of resources on a central computer known as a server and the clients such as desktop computers and laptops request the server to share its resources with the clients.
 
 
-![](https://pandao.github.io/editor.md/examples/images/4.jpg)
 
 
-
-![](https://pandao.github.io/editor.md/examples/images/8.jpg)
+     
 

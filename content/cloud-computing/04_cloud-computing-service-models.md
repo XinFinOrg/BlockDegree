@@ -11,7 +11,7 @@ courseIdx: 3
 
 - Infrastructure as a Service (IaaS), Platform as a Service (PaaS), and Software as a Service (SaaS).
 
-####image
+    ![](https://uat.blockdegree.org/img/cloud-computing-imges/cloud_computing-services-models.png)
 
 ## . IaaS:-
 
@@ -33,9 +33,13 @@ courseIdx: 3
  
 ### Popular IaaS providers include:-
 a. Amazon Web Services (AWS)
+
 b. Microsoft Azure
+
 c. Google Compute Engine (GCE)
+
 d. IBM
+
 e. Ali Cloud.
 
 ## 2. PaaS:-
@@ -60,11 +64,13 @@ e. Ali Cloud.
 #### Popular SaaS options include email and customer relationship management software.:- 
 
 a. Office365
+
 b. Gsuite
+
 c. IndSoft System Hosted Email Services
+
 d. SalesForce
 
-####IMAGE
-
+![](https://uat.blockdegree.org/img/cloud-computing-imges/cloud-control.png)
 
 
