@@ -26,9 +26,9 @@ courseIdx: 3
 
 #### Other advantages of infrastructure-as-a-service include:
 
-    -  Continuity and disaster recovery � Cloud service in different locations allows access to applications and data during a disaster or outage.
-    -  Faster scaling � Quickly scale up and down resources according to application demand in all categories of cloud computing.
-    - Core focus � IaaS allows enterprises to focus more on core business activities instead of IT infrastructure and computing resources.
+    -  Continuity and disaster recovery  Cloud service in different locations allows access to applications and data during a disaster or outage.
+    -  Faster scaling  Quickly scale up and down resources according to application demand in all categories of cloud computing.
+    - Core focus  IaaS allows enterprises to focus more on core business activities instead of IT infrastructure and computing resources.
 
  
 ### Popular IaaS providers include:-
@@ -54,12 +54,12 @@ e. Ali Cloud.
 
 - SaaS is a method of software delivery that allows data to be accessed from any device with an internet connection and a web browser. In this web-based model, software vendors host and maintain the servers, databases, and the code that makes up an application.
 
-- The cloud-based model is so common now that more than 60% of software seekers who call Software Advice only want web-based products�less than 2% specifically ask for on-premise software.
+- The cloud-based model is so common now that more than 60% of software seekers who call Software Advice only want web-based products less than 2% specifically ask for on-premise software.
 
 ### What is the history of SaaS?
-- In a 1961 speech to MIT students, John McCarthy, a renowned computer scientist that won the Turing award for his work in artificial intelligence (AI), famously said, �computation may someday be organized as a public utility.� In other words, the concept of cloud computing began as a shared resource of computing power.
+- In a 1961 speech to MIT students, John McCarthy, a renowned computer scientist that won the Turing award for his work in artificial intelligence (AI), famously said, computation may someday be organized as a public utility. In other words, the concept of cloud computing began as a shared resource of computing power.
 
-- While the idea has been around for some time, the web-based technology required to support SaaS matured in the late 1990s. That�s when companies such as Salesforce�which was founded specifically to create cloud software�began offering traditional enterprise solutions, such as customer relationship management (CRM), through a SaaS model.
+- While the idea has been around for some time, the web-based technology required to support SaaS matured in the late 1990s. That's when companies such as Salesforce which was founded specifically to create cloud software began offering traditional enterprise solutions, such as customer relationship management (CRM), through a SaaS model.
 
 #### Popular SaaS options include email and customer relationship management software.:- 
 
