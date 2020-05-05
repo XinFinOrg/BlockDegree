@@ -179,25 +179,25 @@
       "prerequisites": ["Necessary: Basic knowledge in Networking", "Basic knowledge in Server / VPN, LAN, WAN", "Advantageous: Basic knowledge Datacenter"],
       "curriculum": [
         {
-          "topic": "1. Introduction"
+          "topic": "What is Cloud Computing"
         },
         {
-          "topic": "2. Evolution of Computing & what is Cloud"
+          "topic": "Evolution of Computing"
         },
         {
-          "topic": "3.  Characteristics of cloud computing"
+          "topic": "Characteristics of Cloud Computing"
         },
         {
-          "topic": "4. Cloud Computing Service Models"
+          "topic": "Cloud Computing Service Models"
         },
         {
-          "topic": "5. Different Types of Cloud Computing Models"
+          "topic": "Different Types of Cloud Computing Models"
         },
         {
-          "topic": "6. Benefits of using the cloud for your business"
+          "topic": "Benefits of using the cloud for your business"
         },
         {
-          "topic": "7.  How to Deploy Cloud"
+          "topic": "How to Deploy Cloud"
         }
         
       ]
