@@ -141,14 +141,13 @@ if (typeof jQuery != "undefined") {
     $("#slider").nivoSlider({
       pauseTime: 10000,
       afterLoad: () => {
-        nivoLoaded=true;
+        nivoLoaded = true;
         if (imageLoaded === true) {
           document.getElementById("preloaded-banner").style = "display:none";
           document.getElementById("final-banner").style = "display:block";
         }
       },
     });
-
     // setInterval(() => {
     //   getAllSiteStats();
     // }, 60000);
@@ -194,3 +193,13 @@ function animateNumberIncrease(currVal, desiredVal, elemId) {
     document.getElementById(elemId).innerHTML = exisVal + incr;
   }, 30);
 }
+
+function init() {  
+  let imgDefer = document.getElementsByTagName("img");
+  for (let i = 0; i < imgDefer.length; i++) {
+    if (imgDefer[i].getAttribute("data-src")) {
+      imgDefer[i].setAttribute("src", imgDefer[i].getAttribute("data-src"));
+    }
+  }
+}
+window.onload = init;
