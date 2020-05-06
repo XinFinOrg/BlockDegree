@@ -1,5 +1,25 @@
 {{> includes/hero hero-title="Exams"}}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  function getParamValue(param) {
+  let currentUrl = window.location.href;
+  if (currentUrl.split("?").length > 1) {
+    let paramsString = currentUrl.split("?")[1];
+    const params = paramsString.split("&");
+    for (let i = 0; i < params.length; i++) {
+      const key = params[i].split("=")[0];
+      const value = params[i].split("=")[1];
+      if (key === param) return value;
+    }
+  }
 
+  return null;
+}
+console.log(getParamValue("paymentSuccess"))
+  if (getParamValue("paymentSuccess")=='true'){
+    $.notify("<b>Payment Successful</b>, you  can now <b>Take Exam</b>",{type:"success", duration:5000})
+  }
+</script>
 <style>
   [data-notify="container"][class*="alert-pastel-"] {
     background-color: rgb(255, 255, 238);
@@ -37,8 +57,8 @@
       <li> If you have already enrolled in one of our courses then you <strong>Take Exam</strong> for certification
         after completing
         the <strong>whole curriculum</strong> for that given course.</li>
-      <li> Inorder to get a certificate, you'll need to get aleast <strong>60%</strong>. If you have score less than
-        60%, you'll have to give the exam again. <strong>Only 3 attempts</strong> possible per single payment.</li>
+      <li> Inorder to get a certificate, you'll need to get aleast <strong>passing percentage</strong>. If you have score less than
+        passing percent, you'll have to give the exam again. <strong>Only 3 attempts</strong> possible per single payment.</li>
     </ol>
     <div><strong>Warning:</strong> Check / update your name before taking exam as the certificate will be generated
       on that name only & cannot be changed.
@@ -135,6 +155,10 @@
                     <button type="button" class="btn-payment" onclick="pay({{this.type}},{{this.price}})"
                       data-dismiss="modal">
                       Pay Via PayPal </button>
+
+                      <button type="button" class="btn-payment" onclick="payRazorpay({{this.type}},{{this.price}})"
+                      data-dismiss="modal">
+                      Pay Via Netbanking / Card / UPI </button>
                   </div>
                   {{!-- <div class="modal-footer">
                     *<a href="https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo"
@@ -262,7 +286,10 @@
               window.location = '/blockchain-advanced-exam'
             } else if (slug.id === "course_3") {
               window.location = '/blockchain-professional-exam'
-            } else {
+            } else if  (slug.id === "course_4"){
+              window.location = '/cloud-computing-exam'
+            }  
+            else {
               window.location = '/'
             }
           }
@@ -351,6 +378,82 @@
     document.body.appendChild(formNew);
     formNew.submit();
   }
+
+  function payRazorpay(course_id, price) {
+    const email = localStorage.getItem('email');
+    const codeName = document.getElementById(course_id.id + "codeName").value;
+    const referralCode = document.getElementById(course_id.id+"ReferralCode").value;
+    console.log(course_id.id + "codeName");
+    console.log(codeName);
+    $.ajax({
+      method:"post",
+      url:"/api/payRazorpay",
+      data:{
+        email:email,
+        codeName:codeName,
+        referralCode:referralCode,
+        price:price,
+        course_id:course_id.id
+      },
+      success : (resp) => {
+        if (resp.status===true) {
+            const { orderId, key, amnt, email, userName } = resp.data;
+        const newOrder = {
+          key: key, // Enter the Key ID generated from the Dashboard
+          amount: `${amnt}`, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          currency: "INR",
+          name: userName,
+          description: "Online Education",
+          image: "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+          handler: function (response) {
+            const {
+              razorpay_payment_id,
+              razorpay_order_id,
+              razorpay_signature,
+            } = response;
+            $.ajax({
+              url: "/api/completeRazorpayDirect",
+              method: "post",
+              data: {
+                paymentId: razorpay_payment_id,
+                orderId: razorpay_order_id,
+                signature: razorpay_signature,
+              },
+              success: (resp) => {
+                if (resp.status == true) {
+                  window.location.href="/exams?paymentSuccess=true"
+                } else {
+                  $.notify(resp.error, { type: "danger" });
+                }
+              },
+              error: (err) => {
+                $.notify(
+                  "Some error occured please contact <b>info@blockdegree.org</b>",
+                  { type: "danger" }
+                );
+              },
+            });
+          },
+          prefill: {
+            name: userName,
+            email: email,
+          },
+          theme: {
+            color: "#2073d4",
+          },
+        };
+        let rzp1 = new Razorpay(newOrder);
+        rzp1.open();
+        }else{
+          $.notify(resp.error,{type:"danger"})
+        }       
+      },
+      error:e => {
+
+      }
+    })
+  } 
 
   async function payViaXdc(course_id, price) {
     // check if the 
@@ -1375,5 +1478,4 @@
       }
     })
   }
-
 </script>

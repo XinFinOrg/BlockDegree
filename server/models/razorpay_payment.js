@@ -8,7 +8,8 @@ const razorpayLogSchema = mongoose.Schema(
     orderId: { type: String },
     receipt: { type: String },
     signature: { type: String },
-    amount: {type:String}
+    amount: {type:String},
+    course_id: String,
   },
   { timestamps: true }
 );

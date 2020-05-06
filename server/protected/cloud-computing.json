@@ -1,0 +1,113 @@
+{
+  "exam": [
+    {
+      "question": "What exactly is cloud?",
+      "choices": [
+        " Cloud is delivery of computing services including servers, storage, DB, Networking and other services on internet",
+        "Cloud computing is delivery of computing services over the internet from single server",
+        "Cloud is delivery of computing services on internet for multiple clients.",
+        " None of these."
+      ]
+    },
+    {
+      "question": "In cloud the billing Model",
+      "choices": [
+        "Fixed price over the billing term",
+        "Flexible as per Client usage",
+        "Client has an option to choose Fix Price as well as Flexible Price Models"
+      ]
+    },
+    {
+      "question": "Cloud computing Allows",
+      "choices": [
+        "Scaling of resources as per requirement",
+        "scaling requires ISP intervention / downtime",
+        "Scaling is not possible"
+      ]
+    },
+    {
+      "question": "Deployment/Activation of Cloud Computing",
+      "choices": [
+        "Happens instantly by clicks",
+        "Takes minimum 4 - 6 hours from time of order",
+        "Both the above is correctl"
+      ]
+    },
+    {
+      "question": " Select the characteristics of Cloud Computing",
+      "choices": [
+        " Instant Deployment, On Demand Self Servicing, Resource Pooling,  Elasticity",
+        "Shared Resources, Third Party Monitoring, AutoBackups, Predefined Billing",
+        "Non Shared Computing Resources, Error Free Activation, Single resource Pooling, No Activation"
+      ]
+    },
+    {
+      "question": "In IaaS following component are managed by Service Provider",
+      "choices": [
+        "Application, Data, Runtime, Middleware, OS",
+        " Application, Data, Runtime, Middleware, OS, Virtualization, Networking",
+        "Virtualization, Servers, Storage, Networking"
+      ]
+    },
+    {
+      "question": "In SaaS following component are managed by Service Provider",
+      "choices": [
+        "Application, Data, Runtime, Middleware, OS, Virtualization, Networking, Servers, Storage",
+        "Application, Data, Runtime, Middleware, OS, Networking",
+        "Virtualization, Servers, Storage, Networking, Networking, OS"
+      ]
+    },
+    {
+      "question": "Following are examples of Public Cloud",
+      "choices": [
+        "Amazon, Google Cloud, Microsoft Azure, AliCloud, IndSoft",
+        " Salesforce, Google Suite, SOHO, Sales Force",
+        "HubSpot, EDS, Genpact, Infosys Finacle"
+      ]
+    },
+    {
+      "question": "Hybrid Cloud is Combination of",
+      "choices": [
+        " Private + Public Cloud",
+        "Two Different Public Cloud Providers",
+        "Combination of Saas + IaaS Provider"
+      ]
+    },
+    {
+      "question": "What Pay-as-you-go cloud computing?",
+      "choices": [
+        "Pay-as-you-go cloud computing (PAYG cloud computing) is a payment method for cloud computing that charges based on usage.",
+        "Payment as soon as you start cloud service",
+        "Similar to the Prepaid billing system. "
+      ]
+    },
+    {
+      "question": "With Cloud Implementation you can achieve",
+      "choices": [
+        "Mobility, Reliability, Cost Savings, Elasticity",
+        "Cost Increase, Delay in Execution, Time Lapse",
+        " Both of the above  "
+      ]
+    },
+    {
+      "question": "What is the most popular payment method in cloud computing?",
+      "choices": ["Debit Card /Credit Card.", "Cash", "Crypto"]
+    },
+    {
+      "question": "Disadvantages of Cloud Computing",
+      "choices": [
+        "Need to Invest in Hardware ",
+        "Need to buy all Software Licenses",
+        "Both are Wrong"
+      ]
+    },
+    {
+      "question": "Benefits of Cloud Computing ?",
+      "choices": ["IndSoft.net", "Microsoft", "Alibaba"]
+    },
+    {
+      "question": "Which of the following technologies are used in LongJumps PaaS?",
+      "Choices": ["REST", "SOAP", "All of the mentioned"]
+    }
+  ]
+}

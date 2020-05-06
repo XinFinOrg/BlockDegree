@@ -312,6 +312,10 @@ function handleFundRequestSubmit() {
     .checked;
   if (professionalCourse)
     courseIds.push(document.getElementById("professional-course").value);
+  const computingCourse = document.getElementById("computing-course")
+    .checked;
+  if (computingCourse)
+    courseIds.push(document.getElementById("computing-course").value);
   $.ajax({
     method: "post",
     url: "/api/requestNewFund",
@@ -352,6 +356,7 @@ function handleFundRequestSubmit() {
       document.getElementById("basic-course").checked = false;
       document.getElementById("advanced-course").checked = false;
       document.getElementById("professional-course").checked = false;
+      document.getElementById("computing-course").checked = false;
     })
     .catch((e) => {
       console.log("exception : ", e);
@@ -361,6 +366,7 @@ function handleFundRequestSubmit() {
       document.getElementById("basic-course").checked = false;
       document.getElementById("advanced-course").checked = false;
       document.getElementById("professional-course").checked = false;
+      document.getElementById("computing-course").checked = false;
       document.getElementById("facebook-prof").value = "";
       document.getElementById("linkedin-prof").value = "";
       document.getElementById("twitter-prof").value = "";
@@ -550,7 +556,7 @@ function renderRequestModal(
 
   if (typeof web3 != "undefined") {
     web3.version.getNetwork(async (err, providerNetworkId) => {
-      await ethereum.enable();
+      // await ethereum.enable();
     });
   }
 }
@@ -563,6 +569,8 @@ function getCourseName(id) {
       return "Blockchain Advanced";
     case "course_3":
       return "Blockchain Professional";
+    case "course_4":
+      return "Cloud Computing";
     default:
       return "";
   }
@@ -590,7 +598,7 @@ function submitMetamask(addr, fundId, amountGoal) {
   }
 
   web3.version.getNetwork(async (err, providerNetworkId) => {
-    await ethereum.enable();
+    // await ethereum.enable();
 
     if (err) {
       $.notify("Oops, error occurred while getting the network ID");
@@ -1388,7 +1396,7 @@ function payRazorpay(fundId, amount) {
               razorpay_signature,
             } = response;
             $.ajax({
-              url: "/api/completeRazorpay",
+              url: "/api/completeRazorpayFMD",
               method: "post",
               data: {
                 paymentId: razorpay_payment_id,

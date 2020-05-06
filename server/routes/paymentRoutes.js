@@ -28,6 +28,8 @@ module.exports = function (app) {
   });
 
   app.post("/pay", requireLogin, cors(), paymentService.payPaypal);
+  app.post("/api/payRazorpay", requireLogin, cors(), paymentService.payRazorpay);
+  app.post("/api/completeRazorpayDirect", requireLogin, paymentService.completeRazorpay  )
   app.get("/suc", paymentService.payPaypalSuccess);
   app.get("/payment-success", function (req, res) {
     console.log(req.session.message);

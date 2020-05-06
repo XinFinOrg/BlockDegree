@@ -37,7 +37,7 @@ module.exports = (app) => {
   });
 
   app.post("/api/initiateRazorpay", requireLogin, fmdService.initiateRazorpay);
-  app.post("/api/completeRazorpay", requireLogin, fmdService.completeRazorpay);
+  app.post("/api/completeRazorpayFMD", requireLogin, fmdService.completeRazorpay);
   app.post(
     "/api/startCorporateCoursePaymentPaypal",
     fmdService.startCorporateCoursePaymentPaypal

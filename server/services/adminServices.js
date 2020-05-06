@@ -1,4 +1,6 @@
+const fs = require("fs");
 const _ = require("lodash");
+const path = require("path");
 const CoursePrice = require("../models/coursePrice");
 const AllWallet = require("../models/wallet");
 const KeyConfig = require("../config/keyConfig");
@@ -13,6 +15,7 @@ const pendingEmitter = require("../listeners/pendingTx").em;
 const DonationListener = require("../listeners/donationListener");
 const referralEmitter = require("../listeners/userReferral").em;
 const UserReferral = require("../models/userReferral");
+const Questions = require("../models/question");
 const { renderFunderCerti } = require("../helpers/renderFunderCerti");
 const {
   makeValueTransferXDC,
@@ -1113,8 +1116,8 @@ exports.getPaymentLogs = async (req, res) => {
         payment_id: paymentLogs[x].payment_id,
         payment_status: paymentLogs[x].payment_status,
         timestamp: paymentLogs[x]._id.getTimestamp(),
-        payment_amount:paymentLogs[x].payment_amount,
-        promoCode:paymentLogs[x].promoCode,
+        payment_amount: paymentLogs[x].payment_amount,
+        promoCode: paymentLogs[x].promoCode,
       };
       retData.push(currData);
     }
@@ -1437,6 +1440,35 @@ exports.setFMDCompletionDateManual = async (req, res) => {
   } catch (e) {
     console.log(`exception at ${__filename}.setFMDCOmpletionDateManual: `, e);
     return res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.addComputingQuestions = async (req, res) => {
+  try {
+    const questions = JSON.parse(
+      fs.readFileSync(
+        path.join(__dirname, "../config/computingQuestions.json"),
+        "utf8"
+      )
+    );
+    const arr = questions["questionsCloud"];
+    const question = await Questions.findOne({ exam: "firstExam" });
+    console.log(question["questionsComputing"]);
+
+    if (
+      question["questionsComputing"] !== undefined &&
+      question["questionsComputing"].length !== 0
+    ) {
+      return res.json({ status: false, error: "already added" });
+    }
+    for (let i = 0; i < arr.length; i++) {
+      question["questionsComputing"].push(arr[i]);
+    }
+    await question.save();
+    res.json({ status: true });
+  } catch (e) {
+    console.log(`computing questions: `, e);
+    res.json({ status: false, error: "internal error" });
   }
 };
 

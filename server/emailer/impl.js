@@ -69,7 +69,8 @@ module.exports = {
     } else if (
       type === "course_1" ||
       type === "course_2" ||
-      type === "course_3"
+      type === "course_3" || 
+      type === "course_4"
     ) {
       var courseName;
       if (type === "course_1") {
@@ -78,7 +79,9 @@ module.exports = {
         courseName = "blockchain-advanced-exam";
       } else if (type === "course_3") {
         courseName = "blockchain-professional-exam";
-      }
+      } else if (type==="course_4"){
+        courseName = "cloud-computing-exam";
+      } 
       mailOptions = {
         from: "info@blockdegree.org",
         to: mail,

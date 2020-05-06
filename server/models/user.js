@@ -33,7 +33,7 @@ var userSchema = mongoose.Schema({
       attempts: Number,
       marks: Number
     },
-    cloudComputing: {
+    examComputing: {
       attempts: Number,
       marks: Number
     },

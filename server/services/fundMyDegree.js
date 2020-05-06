@@ -443,7 +443,7 @@ exports.initiateRazorpay = async (req, res) => {
     if (_.isEmpty(amount) || _.isEmpty(fundId)) {
       return res.json({ status: false, error: "missing parameters" });
     }
-    const amntInt = parseInt(amount);
+    const amntFloat = parseFloat(amount);
     const fund = await UserFundReq.findOne({ fundId: fundId });
     const user = await User.findOne({ email: email });
     if (fund.email == email) {
@@ -452,7 +452,7 @@ exports.initiateRazorpay = async (req, res) => {
     if (fund === null || user === null) {
       return res.json({ status: false, error: "fund/user not found" });
     }
-    const newOrder = await razorHelper.createNewOrder(fundId, amntInt);
+    const newOrder = await razorHelper.createNewOrder(fundId, amntFloat);
     const razorpayLog = new RazorpayLog({
       status: "initiated",
       email: email,
@@ -530,7 +530,7 @@ exports.completeRazorpay = async (req, res) => {
       recipientUser.examData.payment[courseId] = true;
       recipientUser.examData.payment[
         courseId + "_payment"
-      ] = `donation:${razorpayLog.orderId}`;
+      ] = `donation:${currFundReq.fundId}`;
       recipientUser.examData.payment[courseId + "_doner"] = doner.name;
       if (i < currFundReq.courseId.length - 1) {
         courseNames += courseNames + `${getCourseName(courseId)}, `;
@@ -958,6 +958,8 @@ function getCourseName(id) {
       return "Blockchain Advanced";
     case "course_3":
       return "Blockchain Professional";
+    case "course_4":
+      return "Cloud Computing"
     default:
       return "";
   }

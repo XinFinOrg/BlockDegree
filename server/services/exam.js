@@ -21,6 +21,11 @@ const examTypes = {
     courseName: "examProfessional",
     questionName: "questionsProfessional",
     coursePayment_id: "course_3"
+  },
+  computing:{
+    courseName:"examComputing",
+    questionName:"questionsComputing",
+    coursePayment_id:"course_4"
   }
 };
 
@@ -35,6 +40,11 @@ exports.submitExam = async (req, res, next) => {
   let attempts = req.user.examData.examBasic.attempts;
   let attemptsAdvanced = req.user.examData.examAdvanced.attempts;
   let attemptsProfessional = req.user.examData.examProfessional.attempts;
+  let attemptsComputing = req.user.examData.examComputing.attempts;
+  console.log("AttemptsComputing: ",attemptsComputing);
+  if  (attemptsProfessional===undefined)
+    attemptsComputing=0;  
+  
   var query = {};
   query = { email: req.user.email };
   let currUser;
@@ -294,6 +304,117 @@ exports.submitExam = async (req, res, next) => {
               return;
             }
           );
+        }        
+        //  else if (att >= 3) {
+        //   attemptsComputing = 0;
+        //   User.findOneAndUpdate(
+        //     query,
+        //     {
+        //       $set: {
+        //         "examData.examComputing.attempts": attemptsComputing,
+        //         "examData.examComputing.marks": marks,
+        //         "examData.payment.course_4": false,
+        //         "examData.payment.course_4_payment": "",
+        //         "examData.payment.course_4_doner": ""
+        //       }
+        //     },
+        //     { upsert: false },
+        //     (err, doc) => {
+        //       if (err) {
+        //         console.error("Some error occured at exam.submitExam: ", err);
+        //         return res.json({
+        //           status: false,
+        //           error:
+        //             "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+        //         });
+        //       }
+        //       res.json({ status: true, error: null });
+        //       return;
+        //     }
+        //   );
+        // }
+      }
+      else if (examName === "computing") {
+        console.log("inside computing");
+        if (attemptsComputing != null && attemptsComputing < 3) {
+          questions.findOne({ exam: "firstExam" }).then((result, error) => {
+            console.log(result.questionsComputing);
+            
+            for (
+              let index = 0;
+              index < result.questionsComputing.length;
+              index++
+            ) {
+              if (
+                parseInt(req.body[index]) + 1 ==
+                result.questionsComputing[index].answer
+              ) {
+                // marks++;
+              }
+              marks++;
+            }
+            attemptsComputing += 1;
+            console.log("Marks", marks);
+            User.findOneAndUpdate(
+              query,
+              {
+                $set: {
+                  "examData.examComputing.attempts":
+                    attemptsComputing > 2 ? 0 : attemptsComputing,
+                  "examData.examComputing.marks": marks,
+                  "examData.payment.course_4": attemptsComputing <= 2,
+                  "examData.payment.course_4_payment":
+                    attemptsComputing <= 2
+                      ? currUser.examData.payment.course_4_payment
+                      : "",
+                  "examData.payment.course_4_doner":
+                    attemptsComputing <= 2
+                      ? currUser.examData.payment.course_4_doner
+                      : ""
+                }
+              },
+              { upsert: false },
+              (err, doc) => {
+                if (err) {
+                  console.error("Some error occured at exam.submitExam: ", err);
+                  return res.json({
+                    status: false,
+                    error:
+                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+                  });
+                }
+                res.json({ status: true, error: null });
+                return;
+              }
+            );
+          });
+        } else if (attemptsComputing >= 3) {
+          attemptsComputing = 0;
+          User.findOneAndUpdate(
+            query,
+            {
+              $set: {
+                "examData.examComputing.attempts": attemptsComputing,
+                "examData.examComputing.marks": marks,
+                "examData.payment.course_4": false,
+                "examData.payment.course_4_payment": "",
+                "examData.payment.course_4_doner": ""
+              }
+            },
+            { upsert: false },
+            (err, doc) => {
+              if (err) {
+                console.error("Some error occured at exam.submitExam: ", err);
+                return res.json({
+                  status: false,
+                  error:
+                    "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience"
+                });
+              }
+              res.json({ status: true, error: null });
+              return;
+            }
+          );
         }
       }
     }
@@ -345,6 +466,21 @@ exports.getProfessionalExam = (req, res) => {
     }
   );
 };
+
+exports.getCCExam= (req, res) => {
+  readJSONFile(
+    path.join(process.cwd(), "/server/protected/cloud-computing.json"),
+    (err, json) => {
+      if (err) {
+        return res.render("displayError", {
+          error:
+            "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org"
+        });
+      }
+      res.render("cloudComputing", { examStr: JSON.stringify(json) });
+    }
+  );
+}
 
 exports.getExamResult = async (req, res) => {
   console.log(
@@ -401,14 +537,25 @@ exports.getExamResult = async (req, res) => {
     exam: {
       examBasic: examName == "basic",
       examAdvanced: examName == "advanced",
-      examProfessional: examName == "professional"
+      examProfessional: examName == "professional",
+      examComputing:examName== "computing"
     },
     data: user,
     obtainedMarks: marksObtained,
     percent: percentObtained,
     total: totalQuestions
   };
-  if (percentObtained >= 60) {
+  let passingPercent = 60;
+  if (examName=="basic"||examName=="computing"){
+    passingPercent = 40
+  }
+  else if (examName=="advanced"){
+    passingPercent = 50
+  } 
+  else{
+    passingPercent = 60
+  }
+  if (percentObtained >= passingPercent) {
     // Yeah!
     examStatus = true;
     let d = new Date();
@@ -501,7 +648,8 @@ exports.getExamStatus = async (req, res) => {
           data: {
             course_1: user.examData.payment.course_1,
             course_2: user.examData.payment.course_2,
-            course_3: user.examData.payment.course_3
+            course_3: user.examData.payment.course_3,
+            course_4: user.examData.payment.course_4
           },
           json: json
         };

@@ -92,13 +92,16 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
   const dataURL = await qrcode.toDataURL(
     `https://ipfs-gateway.xinfin.network/${hash}`
   ); // or the domain of where its hosted
+  const degreeDetails = getDegreeContentDetails(examType);
   ejs.renderFile(
     __dirname + "/certificateWithQR.ejs",
     {
       rndDgt: crypto.randomBytes(32).toString("hex"),
       name: name,
-      course: `Certified Blockchain ${examType.charAt(0).toUpperCase() +
-        examType.slice(1)} Expert`,
+      course: degreeDetails.course,
+      courseSub:degreeDetails.courseSub,
+      topic:degreeDetails.topic,
+      subTopic:degreeDetails.subTopic,
       score: Math.round(parseFloat(percent))+"",
       date: date,
       dataURL: dataURL,
@@ -186,3 +189,28 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
     }
   );
 };
+
+function getDegreeContentDetails(examType){
+  console.log("examType: ", examType);
+  
+  switch(examType){
+    case "basic":{}
+    case "advanced":{}
+    case "professional":{
+      return {
+        topic:"Blockchain",
+        subTopic:"Basic Course For Engineers",
+        course:`Certified Blockchain ${examType.charAt(0).toUpperCase() + examType.slice(1)} Expert`,
+        courseSub:`Blockchain Certificate`
+      }
+    }
+    case "computing":{
+      return {
+        topic:"Cloud Computing",
+        subTopic:"Basic Cloud Computing Course",
+        course:`Cloud Computing Specialist`,
+        courseSub:`Cloud Computing`
+      }
+    }
+  }
+}
