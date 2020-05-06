@@ -1,13 +1,5 @@
 {{#> base}} {{> layouts/baseIndex}} {{#*inline "body-block"}}
 <!-- Start banner Area -->
-<div id="fb-root"></div>
-<script
-  async
-  defer
-  crossorigin="anonymous"
-  src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.3"
-></script>
-
 <meta
   http-equiv="cache-control"
   content="no-cache, must-revalidate, post-check=0, pre-check=0"
@@ -357,25 +349,19 @@
       <h2 class="text-center mb-3">Online Courses</h2>
       <div class="row course" id="courses">
         <script id="course-template" type="text/x-handlebars-template">
-          {{#each courses}}
+          \{{#each courses}}
             <div class="col-12 col-lg-4 text-white p-2 course__single">
               <a href="/{{slug}}">
-                <div
-                  class="px-3 py-4 content--rounded overlay"
-                  style="background:url('img/pm6.jpg') center/cover;"
-                >
+                <div class="px-3 py-4 content--rounded overlay" style="background:url('img/pm6.jpg') center/cover;">
                   <div class="overlay__content">
-                    <h3 class="mb-4 mt-1">
-                      {{title}}
-                    </h3>
-                    <p class="mb-0 pt-2">
-                      {{trimmed sypnosis}}
-                    </p>
+
+                    <h3 class="mb-4 mt-1">\{{title}}</h3>
+                    <p class="mb-0 pt-2">\{{trimmed sypnosis}}</p>
                   </div>
                 </div>
               </a>
             </div>
-          {{/each}}
+          \{{/each}}
         </script>
       </div>
     </div>
@@ -530,7 +516,14 @@
   <!-- End Become a contributor Area -->
 
   <!-- Welcome Modal Starts -->
-<div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModal" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="welcomeModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="welcomeModal"
+    aria-hidden="true"
+  >
     <!-- <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <button type="button" class="close light" data-dismiss="modal" aria-label="Close">
@@ -608,9 +601,8 @@
           <div></div>
         </div>
     </div> -->
-</div>
-<!-- Welcome Modal Ends -->
-
+  </div>
+  <!-- Welcome Modal Ends -->
 
   {{/inline}} {{#*inline "scripts-block"}}
   <script src="/js/home.js?v=1.45"></script>
