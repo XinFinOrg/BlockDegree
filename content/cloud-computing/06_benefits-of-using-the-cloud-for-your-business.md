@@ -1,6 +1,5 @@
 ---
 parent: Cloud Computing
-title: Benefits of using the cloud for your business?
 template: courseContent.hbs
 courseIdx: 3
 ---
@@ -10,9 +9,9 @@ courseIdx: 3
 
 #### 1. Cost Savings:-
 
-- Although the initial price tag for migrating to the cloud can give some businesses sticker shock, there are attractive opportunities for ROI. Operating on the cloud typically means adopting a pay-as-you-go model, which means you no longer have to pay for IT you�re not using (whether that�s storage, bandwidth, etc.).
+- Although the initial price tag for migrating to the cloud can give some businesses sticker shock, there are attractive opportunities for ROI. Operating on the cloud typically means adopting a pay-as-you-go model, which means you no longer have to pay for IT you're not using (whether that's storage, bandwidth, etc.).
 
-- Plus, cloud solutions are particularly affordable for smaller businesses who don�t have the capital to build out and manage their own IT infrastructures. Greater efficiencies and economies of scale mean more money in your pocket in the long run.
+- Plus, cloud solutions are particularly affordable for smaller businesses who don't have the capital to build out and manage their own IT infrastructures. Greater efficiencies and economies of scale mean more money in your pocket in the long run.
 
 #### 2. Reliability:-
 

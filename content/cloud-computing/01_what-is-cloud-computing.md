@@ -1,6 +1,5 @@
 ---
 parent: Cloud Computing
-title: What is Cloud Computing?
 template: courseContent.hbs
 courseIdx: 3
 ---

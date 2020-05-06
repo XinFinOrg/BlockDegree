@@ -1,6 +1,5 @@
 ---
 parent: Cloud Computing
-title: How to Deploy Cloud?
 template: courseContent.hbs
 courseIdx: 3
 ---

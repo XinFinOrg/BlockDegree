@@ -1,6 +1,5 @@
 ---
 parent: Cloud Computing
-title: Cloud Computing Service Models?
 template: courseContent.hbs
 courseIdx: 3
 ---

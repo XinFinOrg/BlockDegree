@@ -1,6 +1,5 @@
 ---
 parent: Cloud Computing
-title: Characteristics of cloud computing?
 template: courseContent.hbs
 courseIdx: 3
 ---
@@ -12,7 +11,7 @@ courseIdx: 3
 - Users can access computing services via the cloud when they need to without interaction from the service provider. The computing services should be fully on-demand so that users have control and agility to meet their evolving needs
 
 #### 2. Broad network access:-
- - Cloud computing services are widely available via the network through users� preferred tools 
+ - Cloud computing services are widely available via the network through users preferred tools 
 (e.g., laptops, desktops, smartphones, etc.).
 
 #### 3. Resource pooling:-

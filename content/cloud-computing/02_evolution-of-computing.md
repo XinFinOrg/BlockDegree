@@ -1,6 +1,5 @@
 ---
 parent: Cloud Computing
-title: Evolution of Computing?
 template: courseContent.hbs
 courseIdx: 3
 ---

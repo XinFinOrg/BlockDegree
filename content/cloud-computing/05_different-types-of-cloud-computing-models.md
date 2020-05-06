@@ -1,6 +1,5 @@
 ---
 parent: Cloud Computing
-title: Different Types of Cloud Computing Models?
 template: courseContent.hbs
 courseIdx: 3
 ---
