@@ -25,21 +25,33 @@ $(document).ready(async () => {
         console.log("message from popup.");
         // toggle linkedin modal
         if (loginLinkedin === true) {
-          $("#funder-certi-link").attr(
-            "src",
-            `/img/funder-certi/${linkedinfundId}.png`
-          );
-          $("#togglePostLinkedinFunder").click();
+          if (linkedinFunder===true){
+            $("#funder-certi-link").attr(
+              "src",
+              `/img/funder-certi/${linkedinfundId}.png`
+            );
+            $("#togglePostLinkedinFunder").click();
+            linkedinFunder=false;
+          }
+            else{
+              $("#togglePostLinkedin").click();
+            }
           loginLinkedin = false;
         }
 
         // toggle twitter modal
         if (loginTwitter === true) {
-          $("#funder-certi-twit").attr(
-            "src",
-            `/img/funder-certi/${twitterFundId}.png`
-          );
-          $("#togglePostTwitterFunder").click();
+          if (twitterFunder){
+            $("#funder-certi-twit").attr(
+              "src",
+              `/img/funder-certi/${twitterFundId}.png`
+            );
+            $("#togglePostTwitterFunder").click();
+            twitterFunder=false;
+          }else{
+            $("#togglePostTwitter").click();
+          }
+
           loginTwitter = false;
         }
       }
