@@ -107,7 +107,7 @@
     },
     {
       "question": "Which of the following technologies are used in LongJumps PaaS?",
-      "Choices": ["REST", "SOAP", "All of the mentioned"]
+      "choices": ["REST", "SOAP", "All of the mentioned"]
     }
   ]
 }
