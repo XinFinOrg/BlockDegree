@@ -42,7 +42,7 @@ exports.submitExam = async (req, res, next) => {
   let attemptsProfessional = req.user.examData.examProfessional.attempts;
   let attemptsComputing = req.user.examData.examComputing.attempts;
   console.log("AttemptsComputing: ",attemptsComputing);
-  if  (attemptsProfessional===undefined)
+  if  (attemptsComputing===undefined)
     attemptsComputing=0;  
   
   var query = {};
