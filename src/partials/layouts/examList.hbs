@@ -17,7 +17,7 @@
 }
 console.log(getParamValue("paymentSuccess"))
   if (getParamValue("paymentSuccess")=='true'){
-    $.notify("<b>Payment Successful</b>, you  can now <b>Take Exam</b>",{type:"success", duration:5000})
+    setTimeout(() => {$.notify("<b>Payment Successful</b>, you  can now <b>Take Exam</b>",{type:"success", duration:5000})}, 2000);
   }
 </script>
 <style>
