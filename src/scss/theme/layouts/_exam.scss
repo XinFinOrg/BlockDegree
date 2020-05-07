@@ -349,11 +349,28 @@
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     width: 100%;
+	padding: 25px 10px;
+	margin-bottom: 0px;
+	min-height: 100px;
+	display: table;
+    vertical-align: middle;
+	
+	h3 {
+	  color: #FFFFFF;
+	  display: table-cell;
+      vertical-align: middle;
+	}
 
-    @media (min-width: 1200px) {}
+    @media (min-width: 992px) and (max-width: 1301px) {
+	  min-height: 150px;
+	}
 
     @media (min-width: 992px) and (max-width: 1199.98px) {
       font-size: 16px;
+    }
+	
+	@media (max-width: 991.98px) {
+      min-height: 100px;
     }
 
     @media (min-width: 768px) and (max-width: 991.98px) {
@@ -407,6 +424,11 @@
   .single-exam__course:nth-child(3n + 3) .card-title,
   .single-exam__course:nth-child(3n + 3) .card-price {
     background: #fe6c6c;
+  }
+  
+  .single-exam__course:nth-child(3n + 4) .card-title,
+  .single-exam__course:nth-child(3n + 4) .card-price {
+    background: #00D2FF;
   }
 
   .promoCode-block {
@@ -560,4 +582,88 @@
   &:hover {
     font-weight: 500;
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.exams-points {
+	.exams-points-note {
+	  padding-top: 15px;
+	  padding-left: 0px;
+	}
+	
+	.exams-points-note p {
+	  margin-bottom: 1rem;
+	  line-height: 1.5rem;
+	}
+	
+	.exams-points-note li {
+	  overflow: hidden;
+	  margin-bottom: 10px;
+	}
+	
+	.exams-points-note li:hover .count span {
+	  background: #2073d4;
+	  color: #fff;
+	}
+	
+	.exams-points-note li .count {
+	  float: left;
+	  width: 40px;
+	}
+	
+	.exams-points-note li .count span {
+	  display: block;
+	  width: 26px;
+	  height: 26px;
+	  line-height: 26px;
+	  text-align: center;
+	  -webkit-border-radius: 100px;
+	  -moz-border-radius: 100px;
+	  border-radius: 100px;
+	  margin: auto;
+	  border: 1px solid #2073d4;
+	  font-weight: 600;
+	  font-size: 14px;
+	  color: #2073d4;
+	  -webkit-transition: all 0.3s ease 0s;
+	  -moz-transition: all 0.3s ease 0s;
+	  -o-transition: all 0.3s ease 0s;
+	  transition: all 0.3s ease 0s;
+	}
+	
+	.exams-points-note li .text {
+	  float: left;
+	  width: calc(100% - 68px);
+	  width: -webkit-calc(100% - 68px);
+	  padding-left: 5px;
+	}
+	
+	.exams-points-note li .text p {
+	  font-weight: 300;
+	  font-size: 15px;
+	  color: #464646;
+	  letter-spacing: 0.5px;
+	  line-height: 20px;
+	  margin-bottom: 0px;
+	}
+	.alert.alert-warning {
+		margin: 30px 0px 50px 0px;
+	}
+	.alert.alert-warning.alert-outline {
+		background-color: rgba(255, 238, 186, 0.2);
+		color: #212529;
+	}
 }

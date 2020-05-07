@@ -342,7 +342,7 @@
 </div> -->
 <!-- End of Site Stats -->
 
-<!-- Start online class Area -->
+<!-- Start online class Area 
 <div class="bg-muted py-5">
   <div class="container">
     <div class="py-2">
@@ -360,6 +360,35 @@
                   </div>
                 </div>
               </a>
+            </div>
+          \{{/each}}
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End online class Area -->
+
+
+<!-- Start online class Area -->
+<div class="bg-muted py-5">
+  <div class="container">
+    <div class="py-2">
+      <h2 class="text-center mb-4">Online Courses</h2>
+      <div class="row course" id="courses">
+        <script id="course-template" type="text/x-handlebars-template">
+          \{{#each courses}}
+            <div class="col-12 col-lg-3 col-md-6 col-sm-12 p-2 course__single res-m-bttm">
+              <!--<a href="/\{{slug}}">-->
+                <div class="content--rounded text-black text-center overlay" style="">
+                  <div class="overlay__content">
+                    <!--<h3 class="mb-2 mt-1">\{{title}}</h3>-->
+					<h3 class="">\{{title}}</h3>
+                    <p class="mb-0 pt-2">\{{trimmed sypnosis}}</p>
+                  </div>
+                </div>
+				<a href="/\{{slug}}" class="course-sg-action"><i class="fa fa-arrow-right"></i></a>
+              <!--</a>-->
             </div>
           \{{/each}}
         </script>
@@ -415,11 +444,47 @@
 </div>
 <!-- End Technological Partners Area-->
 
+<!-- Start Video
+<div class="bg-muted pt-5">
+  <div class="container position-relative py-4">
+    <div class="contributors-block bg-white border content--rounded py-5">
+      <h2 class="text-center mb-4">Our Videos</h2>
+      <div class="slider video_slider">
+        <div>
+          <div class="video">
+            <iframe src="https://www.youtube.com/embed/_A_BhSVSA6g"> </iframe>
+          </div>
+          <div class="text-center mt-10">Introduction To Blockdegree</div>
+        </div>
+      </div>
+    </div>
+</div>
+<!-- End Video -->
+
+<!-- Start Video -->
+<div class="bg-muted pt-5">
+  <div class="container">
+  <div class="row">
+  <div class="col-lg-6 offset-lg-3">
+      <h2 class="text-center mb-4">Our Videos</h2>
+      <div class="video hm">
+           <div class="embed-responsive embed-responsive-16by9">
+			  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/_A_BhSVSA6g?rel=0" allowfullscreen></iframe>
+		  </div>
+      </div>
+	  <div class="text-center mt-10">Introduction To Blockdegree</div>
+</div>
+</div>
+</div>
+</div>
+<!-- End Video -->
+
+
 <!-- Start Contributors Area = inline code -->
 <div class="bg-muted pt-5">
   <div class="container position-relative py-4">
     <div class="contributors-block bg-white border content--rounded py-5">
-      <h2 class="text-center mb-4">Meet our Contributors</h2>
+      <h2 class="text-center mb-5">Meet our Contributors</h2>
       <div class="slider contributors_slider">
         <div>
           <div class="image">
@@ -456,20 +521,8 @@
   </div>
 </div>
 <!-- End Contributors Area = inline code -->
-<div class="bg-muted pt-5">
-  <div class="container position-relative py-4">
-    <div class="contributors-block bg-white border content--rounded py-5">
-      <h2 class="text-center mb-4">Our Videos</h2>
-      <div class="slider video_slider">
-        <div>
-          <div class="video">
-            <iframe src="https://www.youtube.com/embed/_A_BhSVSA6g"> </iframe>
-          </div>
-          <div class="text-center mt-10">Introduction To Blockdegree</div>
-        </div>
-      </div>
-    </div>
-  </div>
+
+
 
   <!-- Start contributors Area 
   <div class="bg-muted">
