@@ -49,9 +49,9 @@ console.log(getParamValue("paymentSuccess"))
 
 <div class="container__cstm">
   {{!-- This is exam list --}}
-  <div>
-    <h3>Points to Note</h3><br>
-    <ol>
+  <div class="exams-points">
+    <h3>Points to Note</h3>
+    <!--<ol>
       <li>Below are the current courses available on our platform. Please <strong>ENROLL</strong> in the course of your
         choice.</li>
       <li> If you have already enrolled in one of our courses then you <strong>Take Exam</strong> for certification
@@ -59,20 +59,43 @@ console.log(getParamValue("paymentSuccess"))
         the <strong>whole curriculum</strong> for that given course.</li>
       <li> Inorder to get a certificate, you'll need to get aleast <strong>passing percentage</strong>. If you have score less than
         passing percent, you'll have to give the exam again. <strong>Only 3 attempts</strong> possible per single payment.</li>
-    </ol>
-    <div><strong>Warning:</strong> Check / update your name before taking exam as the certificate will be generated
-      on that name only & cannot be changed.
-    </div>
-    <br>
+    </ol>-->
+	
+	<ul class="exams-points-note">
+          <li>
+            <div class="count"><span>1</span></div>
+            <div class="text">
+              <p>Below are the current courses available on our platform. Please <strong>ENROLL</strong> in the course of your choice.</p>
+            </div>
+          </li>
+          <li>
+            <div class="count"><span>2</span></div>
+            <div class="text">
+              <p>If you have already enrolled in one of our courses then you <strong>Take Exam</strong> for certification after completing the <strong>whole curriculum</strong> for that given course.</p>
+            </div>
+          </li>
+          <li>
+            <div class="count"><span>3</span></div>
+            <div class="text">
+              <p>Inorder to get a certificate, you'll need to get aleast <strong>passing percentage</strong>. If you have score less than passing percent, you'll have to give the exam again. <strong>Only 3 attempts</strong> possible per single payment.</p>
+            </div>
+          </li>
+    </ul>
+	
+	<div class="alert alert-warning alert-outline">
+		<strong>Warning:</strong> Check / update your name before taking exam as the certificate will be generated on that name only & cannot be changed.
+	</div>
   </div>
 
   <div class="row" id="exams__list">
     {{#each json.courses as |course index|}}
-    <div class="col-lg-4 col-md-4 single-exam__course mb-4">
+    <div class="col-lg-3 col-md-6 single-exam__course mb-4">
       <div class="card height--full">
         <div class="card-body row mx-0 p-0">
-          <h3 class="card-title p-4 text-center mb-0">{{this.title}}</h3>
-          <div class="card-text p-4 px-sm-4 py-5 width--full">
+          <div class="card-title">
+		  	<h3 class="text-center mb-0">{{this.title}}</h3>
+		  </div>
+          <div class="card-text p-4 px-sm-4 py-4 width--full">
             {{#each pointers as |point| }}
             &#10004; {{ point }}<br>
             {{/each}}
@@ -404,7 +427,7 @@ console.log(getParamValue("paymentSuccess"))
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image: "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          image: "http://localhost:3000/img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {
