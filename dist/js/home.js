@@ -106,36 +106,6 @@ if (typeof jQuery != "undefined") {
       ],
     });
 
-    $.ajax({
-      method: "post",
-      url: "/api/getAuthStatus",
-      data: {},
-      success: (auths) => {
-        if (
-          auths.localAuth ||
-          auths.twitterAuth ||
-          auths.facebookAuth ||
-          auths.googleAuth ||
-          auths.linkedinAuth
-        ) {
-          //logged in
-          $.ajax({
-            method: "get",
-            url: "/api/isNameRegistered",
-            success: (result) => {
-              console.log(result);
-              if (!result.isSet) {
-                alert("Name is not set, please set your name!");
-                document.location.href = `/verify-certification`;
-              }
-            },
-          });
-        } else {
-          return;
-        }
-      },
-    });
-
     getAllSiteStats();
 
     $("#slider").nivoSlider({
@@ -148,9 +118,6 @@ if (typeof jQuery != "undefined") {
         }
       },
     });
-    // setInterval(() => {
-    //   getAllSiteStats();
-    // }, 60000);
   });
 }
 
@@ -194,7 +161,8 @@ function animateNumberIncrease(currVal, desiredVal, elemId) {
   }, 30);
 }
 
-function init() {  
+function init() {
+  console.log("called init");
   let imgDefer = document.getElementsByTagName("img");
   for (let i = 0; i < imgDefer.length; i++) {
     if (imgDefer[i].getAttribute("data-src")) {

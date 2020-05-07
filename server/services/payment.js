@@ -511,11 +511,7 @@ exports.payRazorpay = async (req, res) => {
     console.log("Called payment 'payRazorpay'");
 
     if (payment_status != true) {
-      let customReceipt = usedRefCode
-        ? `email:${req.user.email.toString()};codeName:${
-            req.body.codeName
-          };referralcode:${referralCode}`
-        : `email:${req.user.email.toString()};codeName:${req.body.codeName}`;
+      let customReceipt = newOrder.id;
 
       const newOrder = await razorHelper.createNewOrder(customReceipt, price);
       const razorpayLog = new RazorpayLog({
@@ -527,6 +523,8 @@ exports.payRazorpay = async (req, res) => {
         receipt: customReceipt,
         signature: "",
         course_id: course_id,
+        promoCode: req.body.codeName,
+        referralCode: referralCode,
       });
       await razorpayLog.save();
       res.json({
@@ -585,15 +583,11 @@ exports.completeRazorpay = async (req, res) => {
       return res.json({ status: false, error: "user not found" });
     }
 
-    let custom = razorpayLog.receipt;
-    console.log(custom);
     const course_id = razorpayLog.course_id;
-    const email = custom.split(";")[0].split(":")[1];
-    const codeName = custom.split(";")[1].split(":")[1];
-    const referralCode =
-    custom.split(";").length > 2 ? custom.split(";")[2].split(":")[1] : null;
+    const email = razorpayLog.email;
+    const codeName = razorpayLog.promoCode;
+    const referralCode = razorpayLog.referralCode;
     console.log("Referral Code: ", referralCode);
-    console.log(custom.split(";"));
     console.log("Payment received from user ", email);
 
     user.examData.payment[course_id] = true;

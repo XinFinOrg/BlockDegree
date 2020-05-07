@@ -784,6 +784,25 @@ async function varTriggerUpdate(varName) {
       break;
     }
   }
+  // Update redis cache
+  updateRedisCache(varName);
+}
+
+async function updateRedisCache(stateName) {[]
+  try {
+    RedisClient.get("siteStats", (err, res) => {
+      if (err) {
+        console.log(`error at ${__filename}.RedisClient.getItem: `, err);
+        return;
+      }
+      const resJson = JSON.parse(res);
+      resJson[stateName]++;
+      RedisClient.set("siteStats", JSON.stringify(resJson));
+      console.log("[*] updated redis state");      
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.updadteRedisCache: `, e);
+  }
 }
 
 async function scheduleVarTrigger(eventId) {

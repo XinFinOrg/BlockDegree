@@ -1,11 +1,22 @@
 "use strict";
-$(document).ready(async function () {
-  console.log("called: ", window.localStorage.getItem("user-status"));
-  let navLogin = document.getElementById("nav-login"),
-    loginButton = document.getElementById("login-btn"),
-    profileBtn = document.getElementById("profile-btn");
-  console.log(`current location: ${window.location.pathname}`);
 
+const loginRequired = [
+  "/profile",
+  "/fmd-fund",
+  "/fund-my-degree-fund",
+  "/fmd-apply",
+  "/fund-my-degree-apply",
+  "/exams",
+];
+
+let $mobile_nav = null;
+
+$(document).ready(async function () {
+  // let navLogin = document.getElementById("nav-login"),
+  //   loginButton = document.getElementById("login-btn"),
+  //   profileBtn = document.getElementById("profile-btn");
+
+  renderNavbar();
   let allParams = window.location.href.split("?");
   console.log(allParams);
   for (let i = 0; i < allParams.length; i++) {
@@ -42,37 +53,37 @@ $(document).ready(async function () {
   //     );
   //   }, 1000);
   // }
-  let resp = await fetch("/api/current_user");
-  let respJSON = await resp.json();
-  if (respJSON.status) {
-    //is logged in
-    navLogin.innerHTML = "Logout";
-    navLogin.style = "display:block";
-    navLogin.setAttribute("href", "/logout");
-    loginButton.style = "display:block";
-    profileBtn.style = "display:block";
+  // let resp = await fetch("/api/current_user");
+  // let respJSON = await resp.json();
+  // if (respJSON.status) {
+  //   //is logged in
+  //   navLogin.innerHTML = "Logout";
+  //   navLogin.style = "display:block";
+  //   navLogin.setAttribute("href", "/logout");
+  //   loginButton.style = "display:block";
+  //   profileBtn.style = "display:block";
 
-    let pendingNotis = await fetch("/api/getUserNotis");
-    let pendingNotisJosn = await pendingNotis.json();
-    if (pendingNotisJosn.status) {
-      console.log(pendingNotisJosn);
-      pendingNotisJosn.notis.forEach((noti) => {
-        $.notify(
-          {
-            title: "<strong>" + noti.title + "</strong>",
-            message: noti.message,
-          },
-          { type: noti.type }
-        );
-      });
-    }
-  } else {
-    navLogin.innerHTML = "Login";
-    navLogin.setAttribute("href", "/login");
-    loginButton.style = "display:block";
-    navLogin.style = "display:block";
-    profileBtn.style = "display:none";
-  }
+  //   let pendingNotis = await fetch("/api/getUserNotis");
+  //   let pendingNotisJosn = await pendingNotis.json();
+  //   if (pendingNotisJosn.status) {
+  //     console.log(pendingNotisJosn);
+  //     pendingNotisJosn.notis.forEach((noti) => {
+  //       $.notify(
+  //         {
+  //           title: "<strong>" + noti.title + "</strong>",
+  //           message: noti.message,
+  //         },
+  //         { type: noti.type }
+  //       );
+  //     });
+  //   }
+  // } else {
+  //   navLogin.innerHTML = "Login";
+  //   navLogin.setAttribute("href", "/login");
+  //   loginButton.style = "display:block";
+  //   navLogin.style = "display:block";
+  //   profileBtn.style = "display:none";
+  // }
   var window_width = $(window).width(),
     window_height = window.innerHeight,
     header_height = $(".default-header").height(),
@@ -138,7 +149,7 @@ $(document).ready(async function () {
       .find(".menu-has-children")
       .prepend('<i class="lnr lnr-chevron-down"></i>');
 
-    console.log($("body"));
+    //   console.log($("body"));
     $(document).on("click", ".menu-has-children i", function (e) {
       $(this).next().toggleClass("menu-item-active");
       $(this).nextAll("ul").eq(0).slideToggle();
@@ -219,24 +230,22 @@ $(document).ready(async function () {
 
   //------- Header Scroll Class js --------//
 
-  $(document).ready(function () {
-    $("html, body").hide();
+  $("html, body").hide();
 
-    if (window.location.hash) {
-      setTimeout(function () {
-        $("html, body").scrollTop(0).show();
+  if (window.location.hash) {
+    setTimeout(function () {
+      $("html, body").scrollTop(0).show();
 
-        $("html, body").animate(
-          {
-            scrollTop: $(window.location.hash).offset().top - 108,
-          },
-          1000
-        );
-      }, 0);
-    } else {
-      $("html, body").show();
-    }
-  });
+      $("html, body").animate(
+        {
+          scrollTop: $(window.location.hash).offset().top - 108,
+        },
+        1000
+      );
+    }, 0);
+  } else {
+    $("html, body").show();
+  }
 
   $(window).scroll(function () {
     if ($(this).scrollTop() > 50) {
@@ -380,6 +389,57 @@ $(document).ready(async function () {
   });
 });
 
+$(window).on("load", function () {
+  console.log("loaded the jquery");
+  $.ajax({
+    method: "post",
+    url: "/api/getAuthStatus",
+    data: {},
+    success: (auths) => {
+      if (
+        auths.localAuth ||
+        auths.twitterAuth ||
+        auths.facebookAuth ||
+        auths.googleAuth ||
+        auths.linkedinAuth
+      ) {
+        localStorage.setItem("loginStatus", "true");
+        renderNavbar();
+        $.ajax({
+          method: "get",
+          url: "/api/isNameRegistered",
+          success: (result) => {
+            console.log(result);
+            if (!result.isSet) {
+              alert("Name is not set, please set your name!");
+              document.location.href = `/verify-certification`;
+            }
+          },
+        });
+      } else {
+        localStorage.setItem("loginStatus", "false");
+        renderNavbar();
+      }
+
+      let currLoginStatus = localStorage.getItem("loginStatus");
+
+      if (
+        currLoginStatus == "false" ||
+        currLoginStatus === undefined ||
+        currLoginStatus === null
+      ) {
+        if (
+          loginRequired.includes(window.location.pathname) ||
+          window.location.pathname.startsWith("/courses")
+        ) {
+          window.location.href = "/login";
+          return;
+        }
+      }
+    },
+  });
+});
+
 const url = "wss://wssuat.blockdegree.org ";
 const connection = new WebSocket(url);
 
@@ -406,4 +466,69 @@ connection.onmessage = async (e) => {
 function addDelimitation(n) {
   // return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return n.toLocaleString("en");
+}
+
+async function renderNavbar() {
+  let status = localStorage.getItem("loginStatus") == "true";
+  if (status == true) {
+    //is logged in
+    let navLogin = document.getElementById("nav-login"),
+      loginButton = document.getElementById("login-btn"),
+      profileBtn = document.getElementById("profile-btn");
+
+    navLogin.innerHTML = "Logout";
+    navLogin.style = "display:block";
+    navLogin.setAttribute("href", "/logout");
+    loginButton.style = "display:block";
+    profileBtn.style = "display:block";
+
+    let pendingNotis = await fetch("/api/getUserNotis");
+    let pendingNotisJosn = await pendingNotis.json();
+    if (pendingNotisJosn.status) {
+      console.log(pendingNotisJosn);
+      pendingNotisJosn.notis.forEach((noti) => {
+        $.notify(
+          {
+            title: "<strong>" + noti.title + "</strong>",
+            message: noti.message,
+          },
+          { type: noti.type }
+        );
+      });
+    }
+  } else {
+    let navLogin = document.getElementById("nav-login"),
+      loginButton = document.getElementById("login-btn"),
+      profileBtn = document.getElementById("profile-btn");
+    console.log("insidestatus false");
+
+    navLogin.innerHTML = "Login";
+    navLogin.setAttribute("href", "/login");
+    loginButton.style = "display:block";
+    navLogin.style = "display:block";
+    profileBtn.style = "display:none";
+  }
+
+  if ($("#nav-menu-container").length) {
+    if ($mobile_nav != null) {
+      $("#mobile-nav").remove();
+    }
+    $mobile_nav = $("#nav-menu-container").clone().prop({
+      id: "mobile-nav",
+    });
+    $mobile_nav.find("> ul").attr({
+      class: "",
+      id: "",
+    });
+    $("body").append($mobile_nav);
+    $("body").prepend(
+      '<button type="button" id="mobile-nav-toggle"><i class="lnr lnr-menu"></i></button>'
+    );
+    $("body").append('<div id="mobile-body-overly"></div>');
+    $("#mobile-nav")
+      .find(".menu-has-children")
+      .prepend('<i class="lnr lnr-chevron-down"></i>');
+  } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
+    $("#mobile-nav, #mobile-nav-toggle").hide();
+  }
 }

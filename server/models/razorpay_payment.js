@@ -10,6 +10,8 @@ const razorpayLogSchema = mongoose.Schema(
     signature: { type: String },
     amount: {type:String},
     course_id: String,
+    promoCode: String,
+    referralCode: String,
   },
   { timestamps: true }
 );

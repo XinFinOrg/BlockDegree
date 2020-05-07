@@ -3,6 +3,7 @@ const PromoCode = require("../models/promo_code");
 const ReferralCode = require("../models/referral_code");
 const Visited = require("../models/visited");
 const PaymentLogs = require("../models/payment_logs");
+const updateSiteStats = require("../listeners/updateSiteStats").em;
 const GeoIP = require("geoip-lite");
 const axios = require("axios");
 
@@ -40,7 +41,11 @@ exports.getXinFinStats = async (req, res) => {
       "https://explorer.xinfin.network/getXinFinStats"
     );
     // console.log("Response from services.userStats: ", siteStatData);
-    res.json({ status: true, netData: siteStatData.data, siteData: {userCnt, visitCnt, caCnt, totCertis} });
+    res.json({
+      status: true,
+      netData: siteStatData.data,
+      siteData: { userCnt, visitCnt, caCnt, totCertis },
+    });
   } catch (e) {
     console.log("exception at services.userStats: ", e);
     res.json({ error: "internal error", status: false });
@@ -51,7 +56,7 @@ exports.getAllUserTimestamp = async (req, res) => {
   const users = await User.find({});
   console.log(users);
   let retTimestamp = {};
-  users.forEach(user => {
+  users.forEach((user) => {
     const email = getEmail(user);
     retTimestamp[email] = user._id.getTimestamp();
     console.log(user._id.getTimestamp());
@@ -67,7 +72,7 @@ exports.getUsersLastNDays = async (req, res) => {
   const timeWindow = req.body.days * (1000 * 3600 * 24);
   today.setHours(0, 0, 0, 0);
   let retTimestamp = [];
-  users.forEach(async user => {
+  users.forEach(async (user) => {
     const email = getEmail(user);
     const userDate = user._id.getTimestamp();
     if (userDate.getTime() > today.getTime()) {
@@ -90,7 +95,7 @@ exports.getUserLastQuater = async (req, res) => {
   const users = await User.find({});
   let today = new Date();
   let currMonth = today.getMonth();
-  users.forEach(user => {
+  users.forEach((user) => {
     const email = getEmail(user);
     const userDate = user._id.getTimestamp();
     if (currMonth - new Date(userDate).getMonth() <= 3) {
@@ -111,7 +116,7 @@ exports.getByLastActiveDay = async (req, res) => {
   const timeWindow = req.body.days * (1000 * 3600 * 24);
   today.setHours(0, 0, 0, 0);
   let retTimestamp = [];
-  users.forEach(async user => {
+  users.forEach(async (user) => {
     const email = getEmail(user);
     if (user.lastActive != "") {
       const userDate = parseFloat(user.lastActive);
@@ -138,7 +143,7 @@ exports.getUserListUsingCode = async (req, res) => {
       res.json({
         error: `No promocode ${promoCode} found`,
         users: null,
-        status: false
+        status: false,
       });
     }
     if (!promoCode.restricted) {
@@ -147,7 +152,7 @@ exports.getUserListUsingCode = async (req, res) => {
         error: null,
         users: promoCode.users,
         status: true,
-        restricted: false
+        restricted: false,
       });
     } else {
       // retrieve from allowed user
@@ -155,7 +160,7 @@ exports.getUserListUsingCode = async (req, res) => {
         error: null,
         users: promoCode.allowedUsers,
         status: true,
-        restricted: true
+        restricted: true,
       });
     }
   } else {
@@ -163,7 +168,7 @@ exports.getUserListUsingCode = async (req, res) => {
       error: "Bad request",
       status: false,
       users: null,
-      restricted: null
+      restricted: null,
     });
   }
 };
@@ -177,7 +182,7 @@ exports.getVisits = async (req, res) => {
   if (allVisits == null) {
     res.json({
       status: false,
-      error: `No Such content (${req.body.content}) is registered`
+      error: `No Such content (${req.body.content}) is registered`,
     });
   } else {
     res.json({ status: true, error: null, visits: allVisits });
@@ -254,7 +259,7 @@ exports.getAllUserPaymentList = async (req, res) => {
     let currentEmail = payPalSucList_keys[i];
     let newObj = {
       email: currentEmail,
-      payment: payPalSucList[currentEmail]
+      payment: payPalSucList[currentEmail],
     };
     overAllList.push(newObj);
   }
@@ -284,8 +289,8 @@ exports.getAllUserPaymentList = async (req, res) => {
 
 exports.getAllUserCertificates = async (req, res) => {
   const allUsers = await User.find({
-    "examData.certificateHash.1": { $exists: true }
-  }).catch(e => res.json({ status: false, users: null, error: e }));
+    "examData.certificateHash.1": { $exists: true },
+  }).catch((e) => res.json({ status: false, users: null, error: e }));
   if (allUsers == null) {
     res.json({ status: false, users: null, error: "No users found" });
   }
@@ -300,7 +305,7 @@ exports.setCoordsFromIP = async (req, res) => {
     console.log("Some error occured: ", e);
     return res.json({
       error: "something went wrong while fetching all the visits",
-      status: false
+      status: false,
     });
   }
   for (let i = 0; i < visits.length; i++) {
@@ -322,7 +327,7 @@ exports.setCoordsFromIP = async (req, res) => {
           );
           return res.json({
             status: false,
-            error: "error occired while saving the updated schema"
+            error: "error occired while saving the updated schema",
           });
         }
       }
@@ -345,7 +350,7 @@ exports.currVisitCount = async (req, res) => {
   if (allVisits == null) {
     res.json({
       status: false,
-      error: `no visits found`
+      error: `no visits found`,
     });
   } else {
     res.json({ status: true, error: null, count: allVisits.length });
@@ -355,8 +360,8 @@ exports.currVisitCount = async (req, res) => {
 exports.currCertificateCount = async (req, res) => {
   let totCertis = 0;
   const allUsers = await User.find({
-    "examData.certificateHash.1": { $exists: true }
-  }).catch(e => res.json({ status: false, users: null, error: e }));
+    "examData.certificateHash.1": { $exists: true },
+  }).catch((e) => res.json({ status: false, users: null, error: e }));
   if (allUsers == null) {
     res.json({ status: false, count: null, error: "No users found" });
   }
@@ -373,36 +378,58 @@ exports.currCACount = async (req, res) => {
   return res.json({ status: true, error: null, count: 20 });
 };
 
-exports.getSiteStats = async (req, res) => {
-  console.log("called");
-  let allUsers = await User.find({});
-  let allVisits = await Visited.find({});
+exports.getSiteStats = (req, res) => {
+  try {
+    RedisClient.get("siteStats", async (err, result) => {
+      if (err) {
+        console.log(`exception at ${__filename}.getSiteStats: `, err);
+        return res.json({ status: false, error: "internal  error" });
+      }
+      if (result !== null) {
+        console.log("[*] serving siteStats from cache");
+        const resJson = JSON.parse(result);
+        return res.json({
+          status: true,
+          userCnt: resJson.registrations,
+          visitCnt: resJson.visits,
+          totCertis: resJson.certificates,
+          caCnt: resJson.ca,
+        });
+      } else {
+        let allUsers = await User.find({});
+        let allVisits = await Visited.find({});
 
-  let userCnt = 0,
-    visitCnt = 0,
-    caCnt = 20,
-    totCertis = 0;
-  if (allUsers != null) {
-    userCnt = allUsers.length;
+        let userCnt = 0,
+          visitCnt = 0,
+          totCertis = 0;
+        if (allUsers != null) {
+          userCnt = allUsers.length;
+        }
+
+        if (allVisits != null) {
+          visitCnt = allVisits.length;
+        }
+
+        for (let y = 0; y < allUsers.length; y++) {
+          if (allUsers[y].examData.certificateHash.length > 1) {
+            totCertis += allUsers[y].examData.certificateHash.length - 1;
+          }
+        }
+
+        res.json({
+          status: true,
+          userCnt: userCnt,
+          visitCnt: visits,
+          totCertis: totCertis,
+          caCnt: 50,
+        });
+        updateSiteStats.emit("setSiteStats");
+      }
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.getSiteStats: `, e);
+    res.json({ status: false, error: "internal error" });
   }
-
-  if (allVisits != null) {
-    visitCnt = allVisits.length;
-  }
-
-  for (let y = 0; y < allUsers.length; y++) {
-    if (allUsers[y].examData.certificateHash.length > 1) {
-      totCertis += allUsers[y].examData.certificateHash.length - 1;
-    }
-  }
-
-  return res.json({
-    status: true,
-    userCnt: userCnt,
-    visitCnt: visitCnt,
-    totCertis: totCertis,
-    caCnt: caCnt
-  });
 };
 
 exports.getCourseVisits = async (req, res) => {
