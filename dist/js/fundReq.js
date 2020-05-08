@@ -553,7 +553,7 @@ function renderRequestModal(
 
   if (typeof web3 != "undefined") {
     web3.version.getNetwork(async (err, providerNetworkId) => {
-      await ethereum.enable();
+      // await ethereum.enable();
     });
   }
 }
@@ -593,7 +593,7 @@ function submitMetamask(addr, fundId, amountGoal) {
   }
 
   web3.version.getNetwork(async (err, providerNetworkId) => {
-    await ethereum.enable();
+    // await ethereum.enable();
 
     if (err) {
       $.notify("Oops, error occurred while getting the network ID");
