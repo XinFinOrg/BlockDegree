@@ -163,7 +163,7 @@ function listenForConfirmation(
                     newNoti.eventName = "payment is completed";
                     newNoti.eventId = uuidv4();
                     newNoti.title = "Payment Completed";
-                    newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+                    newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
                     newNoti.displayed = false;
 
                     user.examData.payment[paymentLog.course] = true;
@@ -318,7 +318,7 @@ function listenForConfirmation(
                 newNoti.eventName = "payment is completed";
                 newNoti.eventId = uuidv4();
                 newNoti.title = "Payment Completed";
-                newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+                newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
                 newNoti.displayed = false;
 
                 user.examData.payment[paymentLog.course] = true;
@@ -596,7 +596,7 @@ function listenForMined(
               newNoti.eventName = "payment in pending";
               newNoti.eventId = newNotiId;
               newNoti.title = "Payment Mined";
-              newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+              newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
               newNoti.displayed = false;
 
               try {

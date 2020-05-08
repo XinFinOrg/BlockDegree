@@ -419,7 +419,7 @@ exports.payRazorpay = async (req, res) => {
       if (refRet.error != "bad request") {
         // not ok
         console.log(refRet);
-        return res.render("displayError", { error: refRet.error });
+        return res.json({status:false, error: refRet.error });
       }
     } else {
       usedRefCode = true;
@@ -427,9 +427,7 @@ exports.payRazorpay = async (req, res) => {
 
     if (course === null) {
       // invalid course ID
-      return res.render("displayError", {
-        error: "Payment for a non-existing course.",
-      });
+      return res.json({status:false, error: "Payment for a non-existing course"});
     }
     console.log(req.body);
     console.log(discObj);
@@ -437,9 +435,7 @@ exports.payRazorpay = async (req, res) => {
     console.log(`Price Before : ${price}`);
     console.log(`Discount Price : ${discObj.discAmt}`);
     if (price != course.priceUsd) {
-      return res.render("displayError", {
-        error: "Invalid Course Price",
-      });
+      return res.json({status:false, error: "Invalid course price"});
     }
     if (discObj.error == null) {
       // all good, can avail promo-code discount
@@ -451,10 +447,7 @@ exports.payRazorpay = async (req, res) => {
       );
 
       if (discObj.error != "bad request") {
-        res.render("displayError", {
-          error: discObj.error,
-        });
-        return;
+        return res.json({status:false, error: discObj.error});
       }
     }
     console.log(`Price After : ${price}`);
@@ -463,11 +456,7 @@ exports.payRazorpay = async (req, res) => {
     const user = await User.findOne({ email: email }, function (err) {
       if (err != null) {
         console.error(`Can't find user | access db; Err : ${err}`);
-        res.send({
-          status: "500",
-          message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`,
-        });
-        return;
+        return res.json({status:false, error: "Internal  error"});
       }
     });
     // if (course_id == "course_1") {
@@ -500,11 +489,9 @@ exports.payRazorpay = async (req, res) => {
             `Some error occured while updating the profile for user ${res.user.email}: `,
             err
           );
-          res.render("displayError", {
-            error: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`,
-          });
+          return res.json({status:false, error: "Internal  error"});
         }
-        return res.redirect(process.env.HOST + "/exams?courseFree=true");
+        return res.json({status:true, redirect: "/exams?courseFree=true"});
       }
     }
 
@@ -908,7 +895,7 @@ exports.payViaXdc = async (req, res) => {
         newNoti.eventName = "payment in pending";
         newNoti.eventId = newNotiId;
         newNoti.title = "Payment Mined";
-        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
         newNoti.displayed = false;
 
         comPaymentToken.status = "pending";
@@ -1260,7 +1247,7 @@ exports.payViaXdce = async (req, res) => {
         newNoti.eventName = "payment in pending";
         newNoti.eventId = newNotiId;
         newNoti.title = "Payment Mined";
-        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
         newNoti.displayed = false;
 
         comPaymentToken.status = "pending";

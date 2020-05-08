@@ -169,7 +169,7 @@ async function paypalBurnToken(paymentId, amount, chainId, courseId, email, opti
         newNoti.email = email;
         newNoti.type = "info";
         newNoti.title = "Token Burned For Payment!";
-        newNoti.message = `We have burned some tokens for your payment of the course ${courseName[courseId]} is now  completed!, checkout your <a href="/profile?inFocus=paypalPayment">Profile</a>`;
+        newNoti.message = `We have burned some tokens for your payment of the course ${courseName[courseId]} is now  completed! checkout your <a href="/profile?inFocus=paypalPayment">Profile</a>`;
         await newNoti.save();
         await paymentLog.save();
         // WsServer.emit("new-noti", email);
@@ -340,7 +340,7 @@ async function genBurnNotiFMD(email, type) {
   newNoti.email = email;
   newNoti.type = "info";
   newNoti.title = "Token Burned For Payment!";
-  newNoti.message = `We have burned some tokens for your Fund My Degree!, checkout your <a href="/profile#${
+  newNoti.message = `We have burned some tokens for your Fund My Degree! checkout your <a href="/profile#${
     type === "funder" ? "fmd-funded" : "fmd-requests"
   }">Profile</a>`;
   await newNoti.save();
