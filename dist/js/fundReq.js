@@ -26,30 +26,29 @@ $(document).ready(() => {
         console.log("message from popup.");
         // toggle linkedin modal
         if (loginLinkedin === true) {
-          if (linkedinFunder===true){
+          if (linkedinFunder === true) {
             $("#funder-certi-link").attr(
               "src",
               `/img/funder-certi/${linkedinfundId}.png`
             );
             $("#togglePostLinkedinFunder").click();
-            linkedinFunder=false;
+            linkedinFunder = false;
+          } else {
+            $("#togglePostLinkedin").click();
           }
-            else{
-              $("#togglePostLinkedin").click();
-            }
           loginLinkedin = false;
         }
 
         // toggle twitter modal
         if (loginTwitter === true) {
-          if (twitterFunder){
+          if (twitterFunder) {
             $("#funder-certi-twit").attr(
               "src",
               `/img/funder-certi/${twitterFundId}.png`
             );
             $("#togglePostTwitterFunder").click();
-            twitterFunder=false;
-          }else{
+            twitterFunder = false;
+          } else {
             $("#togglePostTwitter").click();
           }
 
@@ -321,8 +320,7 @@ function handleFundRequestSubmit() {
     .checked;
   if (professionalCourse)
     courseIds.push(document.getElementById("professional-course").value);
-  const computingCourse = document.getElementById("computing-course")
-    .checked;
+  const computingCourse = document.getElementById("computing-course").checked;
   if (computingCourse)
     courseIds.push(document.getElementById("computing-course").value);
   $.ajax({
@@ -413,7 +411,11 @@ function renderRequestModal(
   )}&source=blockdegree.org`;
   const funderMessage =
     "Sponsored a student's degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation";
-  const fundeeMessage = `Thank you <b>${funderName===undefined||funderName===null||funderName===""?"Anonymous person":funderName}</b> for sponsoring a degree! Appreciate it!<br/> <b>#blockdegree #fundmydegree #onlineeducation </b>`;
+  const fundeeMessage = `Thank you <b>${
+    funderName === undefined || funderName === null || funderName === ""
+      ? "Anonymous person"
+      : funderName
+  }</b> for sponsoring a degree! Appreciate it!<br/> <b>#blockdegree #fundmydegree #onlineeducation </b>`;
   let retHtml = "";
 
   if (type === "completed") {
@@ -911,7 +913,7 @@ function postTweet(funder) {
   }
   console.log(`select the image: `, templateNumber, "funder: ", funder);
   let msg = document.getElementById("postMSGTwitter").value;
-  if (funder===true){
+  if (funder === true) {
     msg = document.getElementById("postMSGTwitterFunder").value;
   }
   $("#postTwitter").modal("hide");
@@ -954,7 +956,7 @@ function postLinkedin(funder) {
     return;
   }
   let msg = document.getElementById("postMSGLinkedin").value;
-  if (funder===true){
+  if (funder === true) {
     msg = document.getElementById("postMSGLinkedinFunder").value;
   }
   $("#postLinkedin").modal("hide");
@@ -1401,7 +1403,8 @@ function payRazorpay(fundId, amount) {
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image: "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          image:
+            "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {
