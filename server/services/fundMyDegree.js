@@ -423,7 +423,10 @@ exports.successFundPaypal = async (req, res) => {
           courseNames,
           currFundReq.requestUrlShort
         );
-        renderFunderCerti.renderFunderCerti(currFundReq.donerName, currFundReq.fundId);
+        renderFunderCerti.renderFunderCerti(
+          currFundReq.donerName,
+          currFundReq.fundId
+        );
       }
     });
   } catch (e) {
@@ -447,7 +450,7 @@ exports.initiateRazorpay = async (req, res) => {
     const fund = await UserFundReq.findOne({ fundId: fundId });
     const user = await User.findOne({ email: email });
     if (fund.email == email) {
-      return res.json({status:false, error:"Cannot fund own request"})
+      return res.json({ status: false, error: "Cannot fund own request" });
     }
     if (fund === null || user === null) {
       return res.json({ status: false, error: "fund/user not found" });
@@ -564,7 +567,10 @@ exports.completeRazorpay = async (req, res) => {
       courseNames,
       currFundReq.requestUrlShort
     );
-    renderFunderCerti.renderFunderCerti(currFundReq.donerName, currFundReq.fundId);
+    renderFunderCerti.renderFunderCerti(
+      currFundReq.donerName,
+      currFundReq.fundId
+    );
   } catch (e) {
     console.log(`exception at ${__filename}.completeRazorpay: `, e);
     res.json({ status: false, error: "internal error" });
@@ -611,7 +617,11 @@ exports.getAllFunds = async (req, res) => {
     })
       .select({ receiveAddrPrivKey: 0 })
       .lean();
-    res.json({ status: true, data: uninitiatedFunds });
+    res.json({
+      status: true,
+      data: uninitiatedFunds,
+      country: req.session.country,
+    });
   } catch (e) {
     console.log(`exception at ${__filename}.getAllFunds`, e);
     res.json({ status: false, error: "internal error" });
@@ -959,7 +969,7 @@ function getCourseName(id) {
     case "course_3":
       return "Blockchain Professional";
     case "course_4":
-      return "Cloud Computing"
+      return "Cloud Computing";
     default:
       return "";
   }

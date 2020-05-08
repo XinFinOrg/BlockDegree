@@ -5,6 +5,10 @@ let loginLinkedin = false,
   linkedinFunder = false,
   linkedinfundId = "",
   twitterFundId = "";
+
+let showRazorpay = false;
+let validCountry = ["IND"];
+
 $(document).ready(() => {
   console.log(window.location.pathname);
   if (window.location.pathname != "/profile") getFMDAllData();
@@ -14,7 +18,7 @@ $(document).ready(() => {
   });
 
   $("#req-claim-fund").click(() => {
-    claimFund($("#xdc-addr-value-modal").val());
+    claimFund($("#xdc-addr-claim-fund-id").val());
   });
 
   window.addEventListener("message", function (event) {
@@ -80,6 +84,12 @@ async function getFMDAllData(update) {
   })
     .then((result) => {
       if (result.status === true) {
+        let country = result.country;
+        if (validCountry.includes(country)) {
+          showRazorpay = true;
+        }
+        console.log("showrazorpay inside getAllFunds ", showRazorpay);
+
         const data = result.data;
         currentRequestData = result.data;
         let pendingFundsUsd = 0,
@@ -268,15 +278,19 @@ function renderPaymentMethodModal(addr, fundId, amountGoal) {
               </div>
               <div class="modal-body">
 
-                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="renderQRCode('${addr}','${amountGoal}')"
+                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="renderQRCode('${addr}','${amountGoal}', '${fundId}')"
                       data-dismiss="modal"> Pay Via XDC </button>
 
                   <button type="button" data-dismiss="modal" class="btn-payment" onclick="payByPaypal('${fundId}')"
                       data-dismiss="modal">
                       Pay Via PayPal </button>
 
-                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="payRazorpay('${fundId}','${amountGoal}')"
-                      data-dismiss="modal"> Pay Via CARD/Net-Banking/UPI </button>
+                  ${
+                    showRazorpay == true
+                      ? `<button type="button" data-dismiss="modal" class="btn-payment" onclick="payRazorpay('${fundId}','${amountGoal}')"
+                      data-dismiss="modal"> Pay Via CARD/NetBanking/UPI </button>`
+                      : ""
+                  }
               </div>
 
           </div>
@@ -728,7 +742,7 @@ var copyToClipboard = function (secretInfo, innerElemId, name) {
   $.notify(` ${name} Copied!`, { type: "info", z_index: 2000 });
 };
 
-async function renderQRCode(addr, price) {
+async function renderQRCode(addr, price, fundId) {
   try {
     const xdcPrice = await $.ajax({
       method: "get",
@@ -746,6 +760,7 @@ async function renderQRCode(addr, price) {
     $("#xdc-qr-img").html("");
     $("#xdc-qr-img").qrcode({ text: addr, width: 250, height: 250 });
     $("#xdc-addr-value-modal").val(addr);
+    $("#xdc-addr-claim-fund-id").val(fundId);
     $("#xdcQRCode").modal("show");
   } catch (e) {
     console.log(`exception at renderQRCode: `, e);
@@ -1403,8 +1418,7 @@ function payRazorpay(fundId, amount) {
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image:
-            "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          image: "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {

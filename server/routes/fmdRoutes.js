@@ -1,4 +1,6 @@
 const fmdService = require("../services/fundMyDegree");
+const countryRestrictedApi = require("../middleware/countryRestrictedApi");
+const getCountryCode = require("../middleware/getCountryCode");
 const requireLogin = require("../middleware/requireLogin");
 
 module.exports = (app) => {
@@ -7,8 +9,8 @@ module.exports = (app) => {
   app.get("/fmd", requireLogin, (req, res) => {
     res.redirect("/fund-my-degree");
   });
-  app.get("/fund-my-degree-fund", requireLogin, (req, res) => {
-    res.render("fundReqFund");
+  app.get("/fund-my-degree-fund", requireLogin, getCountryCode, (req, res) => {
+    res.render("fundReqFund", { country: req.session.country });
   });
   app.get("/fmd-fund", requireLogin, (req, res) => {
     res.redirect("/fund-my-degree-fund");
@@ -27,7 +29,7 @@ module.exports = (app) => {
     requireLogin,
     fmdService.getUninitiatedFunds
   );
-  app.get("/api/getAllFunds", requireLogin, fmdService.getAllFunds);
+  app.get("/api/getAllFunds", requireLogin,getCountryCode, fmdService.getAllFunds);
   app.get("/api/getUserFMDFunded", requireLogin, fmdService.getUserFMDFunded);
   app.post("/fmd-pay-paypal", requireLogin, fmdService.startFundPaypal);
   app.get("/fmd-pay-paypal-suc", requireLogin, fmdService.successFundPaypal);
@@ -36,8 +38,18 @@ module.exports = (app) => {
     console.log(req.body);
   });
 
-  app.post("/api/initiateRazorpay", requireLogin, fmdService.initiateRazorpay);
-  app.post("/api/completeRazorpayFMD", requireLogin, fmdService.completeRazorpay);
+  app.post(
+    "/api/initiateRazorpay",
+    requireLogin,
+    countryRestrictedApi,
+    fmdService.initiateRazorpay
+  );
+  app.post(
+    "/api/completeRazorpayFMD",
+    requireLogin,
+    countryRestrictedApi,
+    fmdService.completeRazorpay
+  );
   app.post(
     "/api/startCorporateCoursePaymentPaypal",
     fmdService.startCorporateCoursePaymentPaypal

@@ -1,4 +1,5 @@
 var paypal = require("paypal-rest-sdk");
+const countryRestricketApi = require("../middleware/countryRestrictedApi");
 var cors = require("cors");
 
 require("dotenv").config();
@@ -28,20 +29,28 @@ module.exports = function (app) {
   });
 
   app.post("/pay", requireLogin, cors(), paymentService.payPaypal);
-  app.post("/api/payRazorpay", requireLogin, cors(), paymentService.payRazorpay);
-  app.post("/api/completeRazorpayDirect", requireLogin, paymentService.completeRazorpay  )
+  app.post(
+    "/api/payRazorpay",
+    requireLogin,
+    cors(),
+    countryRestricketApi,
+    paymentService.payRazorpay
+  );
+  app.post(
+    "/api/completeRazorpayDirect",
+    requireLogin,
+    countryRestricketApi,
+    paymentService.completeRazorpay
+  );
   app.get("/suc", paymentService.payPaypalSuccess);
   app.get("/payment-success", function (req, res) {
     console.log(req.session.message);
-    
+
     res.render("paymentSuccess", { message: req.session.message });
   });
   app.post("/api/payViaXdc", requireLogin, paymentService.payViaXdc);
   app.post("/api/payViaXdce", requireLogin, paymentService.payViaXdce);
-  app.get(
-    "/api/wrapCoinMarketCap",    
-    paymentService.wrapCoinMarketCap
-  );
+  app.get("/api/wrapCoinMarketCap", paymentService.wrapCoinMarketCap);
   app.get(
     "/api/getUserNotis",
     requireLogin,

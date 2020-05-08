@@ -178,8 +178,7 @@ console.log(getParamValue("paymentSuccess"))
                     <button type="button" class="btn-payment" onclick="pay({{this.type}},{{this.price}})"
                       data-dismiss="modal">
                       Pay Via PayPal </button>
-
-                      <button type="button" class="btn-payment" onclick="payRazorpay({{this.type}},{{this.price}})"
+                      <button type="button" id="pay-razorpay-btn"  style="display: none;" class="btn-payment" onclick="payRazorpay({{this.type}},{{this.price}})"
                       data-dismiss="modal">
                       Pay Via Netbanking / Card / UPI </button>
                   </div>
@@ -287,7 +286,12 @@ console.log(getParamValue("paymentSuccess"))
 </div>
 
 <script type="text/javascript">
-
+  let  originCountry= "{{country}}"
+    let showRazorpay= originCountry==="IND";
+  console.log(`origin country: `, originCountry, "show razorpay: ", showRazorpay );
+  if (showRazorpay===true){
+    document.getElementById("pay-razorpay-btn").style="display:block;"
+  }
   let allModals = [];
   const divisor = 1; // for testing purposes 1 million'th of actual value will be used
   const coinMarketCapUrl = "/api/wrapCoinMarketCap";
@@ -427,7 +431,7 @@ console.log(getParamValue("paymentSuccess"))
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image: "http://localhost:3000/img/brand/blockdegree_dark.png?v=2",
+          image: "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {
