@@ -161,8 +161,7 @@ function animateNumberIncrease(currVal, desiredVal, elemId) {
   }, 30);
 }
 
-function init() {
-  console.log("called init");
+function init() {  
   let imgDefer = document.getElementsByTagName("img");
   for (let i = 0; i < imgDefer.length; i++) {
     if (imgDefer[i].getAttribute("data-src")) {

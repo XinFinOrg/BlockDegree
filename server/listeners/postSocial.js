@@ -720,7 +720,11 @@ async function varTriggerUpdate(varName) {
             // if curr certi count > currEvent.conditionPrevTrigger then emit 'postSocial'
             // update currEvent.conditionPrevTrigger
             // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
-            if (siteStat.userCnt > parseFloat(currEvent.conditionPrevTrigger)) {
+            if (
+              siteStat.userCnt >=
+              parseFloat(currEvent.conditionPrevTrigger) +
+                parseFloat(currEvent.conditionInterval)
+            ) {
               // em.emit("postSocial", currEvent.id);
               scheduleVarTrigger(currEvent.id);
             } else {
@@ -771,7 +775,9 @@ async function varTriggerUpdate(varName) {
             // update currEvent.conditionPrevTrigger
             // if currEvent.conditionPrevTrigger > currEvent.conditionScopeStop
             if (
-              siteStat.visitCnt > parseFloat(currEvent.conditionPrevTrigger)
+              siteStat.visitCnt >=
+              parseFloat(currEvent.conditionPrevTrigger) +
+                parseFloat(currEvent.conditionInterval)
             ) {
               // em.emit("postSocial", currEvent.id);
               scheduleVarTrigger(currEvent.id);
@@ -788,7 +794,8 @@ async function varTriggerUpdate(varName) {
   updateRedisCache(varName);
 }
 
-async function updateRedisCache(stateName) {[]
+async function updateRedisCache(stateName) {
+  [];
   try {
     RedisClient.get("siteStats", (err, res) => {
       if (err) {
@@ -798,7 +805,7 @@ async function updateRedisCache(stateName) {[]
       const resJson = JSON.parse(res);
       resJson[stateName]++;
       RedisClient.set("siteStats", JSON.stringify(resJson));
-      console.log("[*] updated redis state");      
+      console.log("[*] updated redis state");
     });
   } catch (e) {
     console.log(`exception at ${__filename}.updadteRedisCache: `, e);
@@ -814,6 +821,10 @@ async function scheduleVarTrigger(eventId) {
       return;
     }
     console.log(`event found`);
+    if (derivedJobExists(eventId) === true) {
+      console.log(`[*] derived job exists for event-id ${eventId}`);
+      return;
+    }
     let scheduledTime = new Date(parseFloat(currEvent.nearestTS));
     if (currEvent.postAsap === true) {
       const socialPostConfig = await SocialPostConfig.findOne({});
@@ -912,6 +923,15 @@ function findActiveJob(eventId) {
     }
   }
   return null;
+}
+
+function derivedJobExists(eventId) {
+  for (let i = 0; i < ActiveJobs.length; i++) {
+    if (ActiveJobs[i].derivedFrom === eventId) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function removeEvent(eventId, derivedFrom) {
