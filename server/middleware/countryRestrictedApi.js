@@ -1,6 +1,6 @@
 const GeoIP = require("geoip-lite");
 
-let allowedCountryCode = ["IND"];
+let allowedCountryCode = ["IN"];
 
 module.exports = (req, res, next) => {
   const fromIP = req.headers["x-forwarded-for"] || req.ip;

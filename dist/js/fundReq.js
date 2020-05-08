@@ -7,7 +7,7 @@ let loginLinkedin = false,
   twitterFundId = "";
 
 let showRazorpay = false;
-let validCountry = ["IND"];
+let validCountry = ["IN"];
 
 $(document).ready(() => {
   console.log(window.location.pathname);
