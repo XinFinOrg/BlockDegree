@@ -19,6 +19,7 @@ const cmcHelper = require("../helpers/cmcHelper");
 const WsServer = require("../listeners/websocketServer").em;
 const { removeExpo } = require("../helpers/common");
 const { WsXinfinMainnet } = require("../helpers/constant");
+const { makeValueTransferXDC } = require("../helpers/blockchainHelpers");
 
 const XinMainProvider = new XDC3.providers.WebsocketProvider(WsXinfinMainnet);
 const xdc3 = new XDC3(XinMainProvider);
@@ -1181,15 +1182,15 @@ async function handleBurnToken(
         let nonce = String(
           await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
         );
-        const rawTx = {
-          from: blockdegreePubAddrXDCApothm,
-          to: "xdc0000000000000000000000000000000000000000",
-          gas: "2100",
-          gasPrice: "9000",
-          value: removeExpo(Math.round(parseFloat(burnAmnt))),
-          nonce: nonce,
-          chainId:"50"
-        };
+        // const rawTx = {
+        //   from: blockdegreePubAddrXDCApothm,
+        //   to: "xdc0000000000000000000000000000000000000000",
+        //   gas: "2100",
+        //   gasPrice: "9000",
+        //   value: removeExpo(Math.round(parseFloat(burnAmnt))),
+        //   nonce: nonce,
+        //   chainId:"50"
+        // };
 
         let privKey = "";
         Object.keys(keyConfig).forEach((currKey) => {
@@ -1204,37 +1205,39 @@ async function handleBurnToken(
         if (!privKey.startsWith("0x")) {
           privKey = "0x" + privKey;
         }
-        const signed = xdc3.eth.accounts.signTransaction(rawTx, privKey);
-        xdc3.eth.sendSignedTransaction(signed.rawTransaction, async function (
-          err,
-          hash
-        ) {
-          if (!err) {
-            console.log("Burned XDC; txHash: ", hash);
+        const burnReceipt = await makeValueTransferXDC("xdc0000000000000000000000000000000000000000", burnAmnt, privKey)
+        const hash =  burnReceipt.transactionHash;
+        // const signed = xdc3.eth.accounts.signTransaction(rawTx, privKey);
+        // xdc3.eth.sendSignedTransaction(signed.rawTransaction, async function (
+        //   err,
+        //   hash
+        // ) {
+        //   if (!err) {
+        console.log("Burned XDC; txHash: ", hash);
 
-            paymentLog.burn_txn_hash = hash;
-            paymentLog.burn_token_amnt = burnAmnt;
+        paymentLog.burn_txn_hash = hash;
+        paymentLog.burn_token_amnt = burnAmnt;
 
-            let principalFrom = txReceiptResponse.from;
+        let principalFrom = txReceiptResponse.from;
 
-            let newBurnLog = newDefBurnLog(uuidv4(), txHash);
-            newBurnLog.principal_userEmail = userEmail;
-            newBurnLog.course = courseId;
-            newBurnLog.principal_from = principalFrom;
-            newBurnLog.tokenName = tokenName;
-            newBurnLog.tokenAmt = burnAmnt;
-            newBurnLog.creationDate = Date.now().toString();
-            newBurnLog.to = burnAddress;
-            newBurnLog.from = "xdc" + blockdegreePubAddrXDCApothm.slice(2);
-            newBurnLog.burn_network = paymentLog.payment_network;
-            await newBurnLog.save();
-            await paymentLog.save();
-            console.log(
-              "Successfully burned token for payment by user: ",
-              userEmail
-            );
-          } else console.error(err);
-        });
+        let newBurnLog = newDefBurnLog(uuidv4(), txHash);
+        newBurnLog.principal_userEmail = userEmail;
+        newBurnLog.course = courseId;
+        newBurnLog.principal_from = principalFrom;
+        newBurnLog.tokenName = tokenName;
+        newBurnLog.tokenAmt = burnAmnt;
+        newBurnLog.creationDate = Date.now().toString();
+        newBurnLog.to = burnAddress;
+        newBurnLog.from = "xdc" + blockdegreePubAddrXDCApothm.slice(2);
+        newBurnLog.burn_network = paymentLog.payment_network;
+        await newBurnLog.save();
+        await paymentLog.save();
+        console.log(
+          "Successfully burned token for payment by user: ",
+          userEmail
+        );
+        // } else console.error(err);
+        // });
       } catch (e) {
         console.error(e);
       }
