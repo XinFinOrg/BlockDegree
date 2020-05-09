@@ -15,7 +15,7 @@ const uuid = require("uuid/v4");
 // const WsServer = require("../listeners/donationListener").em;
 let xdc3 = require("../helpers/blockchainConnectors").xdcInst;
 const xdcWs = require("../helpers/constant").WsXinfinMainnet;
-let Xdc3 =  require("xdc3");
+let Xdc3 = require("xdc3");
 
 let inReconnXDC = false;
 
@@ -38,7 +38,14 @@ const burnAddress = "0x0000000000000000000000000000000000000000";
 
 // const divisor = 1; // for testing purposes 1 million'th of actual value will be used
 
-async function paypalBurnToken(paymentId, amount, chainId, courseId, email, optionalNonce) {
+async function paypalBurnToken(
+  paymentId,
+  amount,
+  chainId,
+  courseId,
+  email,
+  optionalNonce
+) {
   try {
     console.log(
       `[*] called event paypalBurnToken for payment: ${paymentId} to burn on chainId ${chainId}`
@@ -210,7 +217,20 @@ async function donationTokenBurn(fundId, optionalNonce) {
     const burnAmnt = (amntXdc * burnPercent) / 100;
     let currWallet = {},
       currWalletAddr = "";
-    Object.keys(keyConfig).forEach((key) => {
+    // Object.keys(keyConfig).forEach((key) => {
+    //   let wallet = keyConfig[key];
+    //   if (wallet.wallet_network == "50") {
+    //     // found the appropriate wallet
+    //     currWallet = wallet;
+    //     currWalletAddr = key;
+    //     if (currWalletAddr.startsWith("0x")) {
+    //       currWalletAddr = "xdc" + currWalletAddr.slice(2);
+    //     }
+    //   }
+    // });
+    const keyConfigKeys = Object.keys(keyConfig);
+    for (let j = 0; j < keyConfigKeys.length; j++) {
+      let key = keyConfigKeys[j];
       let wallet = keyConfig[key];
       if (wallet.wallet_network == "50") {
         // found the appropriate wallet
@@ -219,8 +239,11 @@ async function donationTokenBurn(fundId, optionalNonce) {
         if (currWalletAddr.startsWith("0x")) {
           currWalletAddr = "xdc" + currWalletAddr.slice(2);
         }
+        break;
       }
-    });
+    }
+    console.log("current wallet address: ", currWalletAddr);
+
     const walletBalance = await xdc3.eth.getBalance(currWalletAddr);
     if (parseFloat(walletBalance < burnAmnt)) {
       console.log(`[*] insufficient balance to burn token`);
@@ -233,8 +256,8 @@ async function donationTokenBurn(fundId, optionalNonce) {
       return;
     }
     let currPrivKey = currWallet.privateKey;
-    if (!currPrivKey.startsWith("0x")){
-      currPrivKey = '0x'+currPrivKey
+    if (!currPrivKey.startsWith("0x")) {
+      currPrivKey = "0x" + currPrivKey;
     }
     const signed = await makePayment(
       "",
@@ -291,9 +314,7 @@ async function makePayment(
   console.log(encodedData, toAddr, chainId, value);
   // const estimateGas = await web3.eth.estimateGas({ data: encodedData }); //  this throws an error 'tx will always fail or gas will exceed allowance'
   const account = web3.eth.accounts.privateKeyToAccount(privKey);
-  let currNonce = await web3.eth.getTransactionCount(
-    account.address
-  );
+  let currNonce = await web3.eth.getTransactionCount(account.address);
   if (
     optionalNonce !== null &&
     optionalNonce !== undefined &&
@@ -359,8 +380,6 @@ function newDefNoti() {
 }
 
 exports.em = eventEmitter;
-
-
 
 function connectionHeartbeat() {
   setInterval(async () => {
