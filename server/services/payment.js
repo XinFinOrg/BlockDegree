@@ -498,9 +498,8 @@ exports.payRazorpay = async (req, res) => {
     console.log("Called payment 'payRazorpay'");
 
     if (payment_status != true) {
-
+      let customReceipt = uuidv4();
       const newOrder = await razorHelper.createNewOrder(customReceipt, price);
-      let customReceipt = newOrder.id;
       const razorpayLog = new RazorpayLog({
         status: "initiated",
         email: email,
