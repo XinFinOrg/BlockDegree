@@ -1178,15 +1178,17 @@ async function handleBurnToken(
           "Confirmed: ",
           await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
         );
+        let nonce = String(
+          await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
+        );
         const rawTx = {
           from: blockdegreePubAddrXDCApothm,
           to: "xdc0000000000000000000000000000000000000000",
-          gas: 21000 + "",
-          gasPrice: 9000 + "",
+          gas: "2100",
+          gasPrice: "9000",
           value: removeExpo(Math.round(parseFloat(burnAmnt))),
-          nonce:
-            (await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)) +
-            "",
+          nonce: nonce,
+          chainId:"50"
         };
 
         let privKey = "";
