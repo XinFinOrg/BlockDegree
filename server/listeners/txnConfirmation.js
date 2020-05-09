@@ -116,7 +116,7 @@ function listenForConfirmation(
     console.log(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
     );
-    network=parseInt(network);
+    network = parseInt(network);
     switch (network) {
       case 1: {
         const web3 = new Web3(
@@ -284,7 +284,7 @@ function listenForConfirmation(
       }
       case 50: {
         try {
-          console.log("inside case 50");          
+          console.log("inside case 50");
           const txResponseReceipt = await xdc3.eth.getTransactionReceipt(
             txHash
           );
@@ -1161,10 +1161,14 @@ async function handleBurnToken(
           return;
         }
 
-        blockdegreePubAddrXDCApothm =
-          "0x" + blockdegreePubAddrXDCApothm.slice(3);
+        if (blockdegreePubAddrXDCApothm.startsWith("xdc"))
+          blockdegreePubAddrXDCApothm =
+            "0x" + blockdegreePubAddrXDCApothm.slice(3);
 
-        console.log("blockdegreePubAddrXDCApothm: ", blockdegreePubAddrXDCApothm);        
+        console.log(
+          "blockdegreePubAddrXDCApothm: ",
+          blockdegreePubAddrXDCApothm
+        );
 
         console.log(
           "Pending: ",
