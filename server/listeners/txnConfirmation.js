@@ -1202,7 +1202,7 @@ async function handleBurnToken(
         if (!privKey.startsWith("0x")) {
           privKey = "0x" + privKey;
         }
-        const signed = xdc3.accounts.signTransaction(rawTx, privKey);
+        const signed = xdc3.eth.accounts.signTransaction(rawTx, privKey);
         xdc3.eth.sendSignedTransaction(signed.rawTransaction, async function (
           err,
           hash
