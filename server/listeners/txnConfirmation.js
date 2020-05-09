@@ -17,7 +17,49 @@ const emailer = require("../emailer/impl");
 const EthereumTx = require("ethereumjs-tx");
 const cmcHelper = require("../helpers/cmcHelper");
 const WsServer = require("../listeners/websocketServer").em;
-const {removeExpo} = require("../helpers/common");    
+const { removeExpo } = require("../helpers/common");
+const { WsXinfinMainnet } = require("../helpers/constant");
+
+const XinMainProvider = new XDC3.providers.WebsocketProvider(WsXinfinMainnet);
+const xdc3 = new XDC3(XinMainProvider);
+let inReconnXDC = false;
+
+XinMainProvider.on(
+  "connect",
+  console.log("[*] connected to XDC mainnet at txnConfirmation")
+);
+
+connectionHeartbeat();
+
+function connectionHeartbeat() {
+  setInterval(async () => {
+    try {
+      const isActiveXdc = await xdc3.eth.net.isListening();
+      console.log(`connection status XDC txnConfirmation: ${isActiveXdc}`);
+      if (!isActiveXdc && inReconnXDC === false) xdcReconn();
+    } catch (e) {
+      if (inReconnXDC === false) xdcReconn();
+    }
+  }, 5000);
+}
+
+function xdcReconn() {
+  try {
+    console.log("[*] reconn xdc running");
+    inReconnXDC = true;
+    let currInterval = setInterval(() => {
+      let xdcProvider = new Xdc3.providers.WebsocketProvider(WsXinfinMainnet);
+      xdc3 = new Xdc3(xdcProvider);
+      xdcProvider.on("connect", () => {
+        console.log(`[*] xdc reconnected to ws at ${__filename}`);
+        inReconnXDC = false;
+        clearInterval(currInterval);
+      });
+    }, 5000);
+  } catch (e) {
+    console.log(`exception at ${__filename}.xdcReconn: `, e);
+  }
+}
 
 let eventEmitter = new EventEmitter();
 // const ethConfirmation = 3;
@@ -78,7 +120,9 @@ function listenForConfirmation(
     switch (network) {
       case 1: {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
+          new Web3.providers.WebsocketProvider(
+            "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
+          )
         );
         try {
           const txReceipt = await web3.eth.getTransactionReceipt(txHash);
@@ -239,14 +283,10 @@ function listenForConfirmation(
         break;
       }
       case 50: {
-        const xdc3 = new XDC3(
-          new XDC3.providers.HttpProvider(xinfinApothemRPC)
-        );
         try {
-          const txResponseReceipt = await axios.post(txReceiptUrlApothem, {
-            tx: txHash,
-            isTransfer: false,
-          });
+          const txResponseReceipt = await xdc3.eth.getTransactionReceipt(
+            txHash
+          );
           const txReceipt = txResponseReceipt.data;
           const coursePrice = await CoursePrice.findOne({ courseId: course });
           const xinConfirmation = coursePrice.xdcConfirmation;
@@ -297,7 +337,7 @@ function listenForConfirmation(
           if (paymentLog.status === "pending") {
             const ClearInterval = setInterval(async () => {
               // Proper State.
-              let latestBlockNo = xdc3.eth.blockNumber;
+              let latestBlockNo = await xdc3.eth.getBlockNumner();
               console.log(latestBlockNo);
               let currConfirmations = latestBlockNo - txBlockNumber;
               console.log(currConfirmations);
@@ -403,7 +443,9 @@ function listenForMined(
       case 1: {
         try {
           const web3 = new Web3(
-            new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
+            new Web3.providers.WebsocketProvider(
+              "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
+            )
           );
           const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
           const coursePrice = await CoursePrice.findOne({ courseId: course });
@@ -904,7 +946,9 @@ async function handleBurnToken(
     case "xdce": {
       try {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
+          new Web3.providers.WebsocketProvider(
+            "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
+          )
         );
 
         let course = await CoursePrice.findOne({ courseId: courseId });
@@ -1123,9 +1167,7 @@ async function handleBurnToken(
 
         console.log(
           "Pending: ",
-          await web3.eth.getTransactionCount(
-            blockdegreePubAddrXDCApothm
-          )
+          await web3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
         );
         console.log(
           "Confirmed: ",
