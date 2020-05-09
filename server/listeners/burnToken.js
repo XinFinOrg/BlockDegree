@@ -216,9 +216,9 @@ async function donationTokenBurn(fundId, optionalNonce) {
         // found the appropriate wallet
         currWallet = wallet;
         currWalletAddr = key;
-      }
-      if (currWalletAddr.startsWith("0x")) {
-        currWalletAddr = "xdc" + currWalletAddr.slice(2);
+        if (currWalletAddr.startsWith("0x")) {
+          currWalletAddr = "xdc" + currWalletAddr.slice(2);
+        }
       }
     });
     const walletBalance = await xdc3.eth.getBalance(currWalletAddr);
