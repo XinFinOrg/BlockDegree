@@ -9,8 +9,10 @@ module.exports = (req, res, next) => {
     let country = geo.country;
     if (allowedCountryCode.includes(country)) {
       next();
+    } else {
+      return res.json({ staus: false, error: "not allowed" });
     }
+  } else {
     return res.json({ staus: false, error: "not allowed" });
   }
-  return res.json({ staus: false, error: "not allowed" });
 };
