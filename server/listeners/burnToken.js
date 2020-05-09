@@ -229,11 +229,9 @@ async function donationTokenBurn(fundId, optionalNonce) {
     //   }
     // });
     const keyConfigKeys = Object.keys(keyConfig);
-    console.log("KeyConfig: ", keyConfigKeys);
     for (let j = 0; j < keyConfigKeys.length; j++) {
       let key = keyConfigKeys[j];
       let wallet = keyConfig[key];
-      console.log("[*] J value: ", j, "Key: ", key, "wallet: ", wallet);
 
       if (wallet.wallet_network == "50") {
         // found the appropriate wallet
@@ -242,7 +240,6 @@ async function donationTokenBurn(fundId, optionalNonce) {
         if (currWalletAddr.startsWith("0x")) {
           currWalletAddr = "xdc" + currWalletAddr.slice(2);
         }
-        console.log(`KEY: ${key}, currWalletAddr: ${currWalletAddr}`);
         break;
       }
     }
