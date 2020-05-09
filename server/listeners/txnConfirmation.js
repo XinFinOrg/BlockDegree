@@ -24,10 +24,9 @@ const XinMainProvider = new XDC3.providers.WebsocketProvider(WsXinfinMainnet);
 const xdc3 = new XDC3(XinMainProvider);
 let inReconnXDC = false;
 
-XinMainProvider.on(
-  "connect",
-  console.log("[*] connected to XDC mainnet at txnConfirmation")
-);
+XinMainProvider.on("connect", () => {
+  console.log("[*] connected to XDC mainnet at txnConfirmation");
+});
 
 connectionHeartbeat();
 
