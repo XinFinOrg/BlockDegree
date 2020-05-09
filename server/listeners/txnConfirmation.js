@@ -1164,6 +1164,8 @@ async function handleBurnToken(
         blockdegreePubAddrXDCApothm =
           "0x" + blockdegreePubAddrXDCApothm.slice(3);
 
+        console.log("blockdegreePubAddrXDCApothm: ", blockdegreePubAddrXDCApothm);        
+
         console.log(
           "Pending: ",
           await web3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
