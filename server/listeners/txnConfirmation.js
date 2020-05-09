@@ -339,7 +339,7 @@ function listenForConfirmation(
           if (paymentLog.status === "pending") {
             const ClearInterval = setInterval(async () => {
               // Proper State.
-              let latestBlockNo = await xdc3.eth.getBlockNumner();
+              let latestBlockNo = await xdc3.eth.getBlockNumber();
               console.log(latestBlockNo);
               let currConfirmations = latestBlockNo - txBlockNumber;
               console.log(currConfirmations);
