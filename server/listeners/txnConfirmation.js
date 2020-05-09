@@ -283,9 +283,11 @@ function listenForConfirmation(
       }
       case 50: {
         try {
+          console.log("inside case 50");          
           const txResponseReceipt = await xdc3.eth.getTransactionReceipt(
             txHash
           );
+          console.log("[*] txResponseReceipt: ", txResponseReceipt);
           const txReceipt = txResponseReceipt.data;
           const coursePrice = await CoursePrice.findOne({ courseId: course });
           const xinConfirmation = coursePrice.xdcConfirmation;
