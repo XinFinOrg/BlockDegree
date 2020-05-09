@@ -289,7 +289,7 @@ function listenForConfirmation(
             txHash
           );
           console.log("[*] txResponseReceipt: ", txResponseReceipt);
-          const txReceipt = txResponseReceipt.data;
+          const txReceipt = txResponseReceipt;
           const coursePrice = await CoursePrice.findOne({ courseId: course });
           const xinConfirmation = coursePrice.xdcConfirmation;
           console.log(txReceipt);
@@ -748,16 +748,16 @@ function listenForMined(
               `Interval for TxMined for tx ${txHash} at network ${network} for user ${userEmail}`
             );
 
-            let txResponseReceipt = await axios({
-              method: "post",
-              url: txReceiptUrlApothem,
-              data: {
-                tx: txHash,
-                isTransfer: false,
-              },
-            });
-            console.log(txResponseReceipt);
-            txReceipt = txResponseReceipt.data;
+            // let txResponseReceipt = await axios({
+            //   method: "post",
+            //   url: txReceiptUrlApothem,
+            //   data: {
+            //     tx: txHash,
+            //     isTransfer: false,
+            //   },
+            // });
+            // console.log(txResponseReceipt);
+            txReceipt = await xdc3.eth.getTransactionReceipt(txHash);
             console.log(txReceipt);
             if (
               txReceipt.blockNumber != undefined &&
@@ -1094,11 +1094,8 @@ async function handleBurnToken(
 
         let course = await CoursePrice.findOne({ courseId: courseId });
         let paymentLog = await PaymentToken.findOne({ payment_id: paymentId });
-        let txReceiptResponse = await axios.post(txReceiptUrlApothem, {
-          tx: txHash,
-          isTransfer: false,
-        });
-        let receivedXdc = txReceiptResponse.data.value;
+        let txReceiptResponse = await xdc3.eth.getTransaction(txHash);
+        let receivedXdc = txReceiptResponse.value;
         let burnAmnt = "";
 
         if (!paymentLog.autoBurn) {
@@ -1202,7 +1199,7 @@ async function handleBurnToken(
               paymentLog.burn_txn_hash = hash;
               paymentLog.burn_token_amnt = burnAmnt;
 
-              let principalFrom = txReceiptResponse.data.from;
+              let principalFrom = txReceiptResponse.from;
 
               let newBurnLog = newDefBurnLog(uuidv4(), txHash);
               newBurnLog.principal_userEmail = userEmail;
