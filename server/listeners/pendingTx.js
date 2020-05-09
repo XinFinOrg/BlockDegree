@@ -48,7 +48,7 @@ async function pendingBurn() {
   console.log("called pending burn");
   try {
     const paymentLogs = await PaymentLog.find({
-      burnStatus: "awaiting balance",
+      $and: [{ status: "completed" }, { burn_txn_hash: "" }],
     });
     console.log("awaiting logs");
     if (paymentLogs == null || paymentLogs.length == 0) {
@@ -77,7 +77,7 @@ async function pendingBurn() {
 
 async function syncPendingBurnFMD(all) {
   try {
-    console.log("called syncPendingBurnFMD: ", all, all===true);
+    console.log("called syncPendingBurnFMD: ", all, all === true);
 
     let allFMD;
     if (all === true) {
