@@ -1181,12 +1181,12 @@ async function handleBurnToken(
         const rawTx = {
           from: blockdegreePubAddrXDCApothm,
           to: "0x0000000000000000000000000000000000000000",
-          gas: 21000,
-          gasPrice: 9000,
+          gas: 21000+"",
+          gasPrice: 9000+"",
           value: removeExpo(Math.round(parseFloat(burnAmnt))),
           nonce: await web3.eth.getTransactionCount(
             blockdegreePubAddrXDCApothm
-          ),
+          )+"",
         };
 
         const privKey = Buffer.from(
