@@ -287,7 +287,8 @@ console.log(getParamValue("paymentSuccess"))
 
 <script type="text/javascript">
   let  originCountry= "{{country}}"
-    let showRazorpay= originCountry==="IN";
+  let showRazorpay= false;
+
   console.log(`origin country: `, originCountry, "show razorpay: ", showRazorpay );
   if (showRazorpay===true){
     document.getElementById("pay-razorpay-btn").style="display:inline-block;"
@@ -431,7 +432,7 @@ console.log(getParamValue("paymentSuccess"))
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image: "https://uat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          image: "https://www.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {

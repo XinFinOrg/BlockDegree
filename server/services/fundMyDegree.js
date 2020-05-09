@@ -111,7 +111,7 @@ exports.requestNewFund = async (req, res) => {
       requiresApproval
     );
 
-    const requestPath = `https://uat.blockdegree.org/fund-my-degree?fundId=${newFund.fundId}`;
+    const requestPath = `https://www.blockdegree.org/fund-my-degree?fundId=${newFund.fundId}`;
     const shortUrl = await bitly.shorten(requestPath);
     newFund["requestUrlLong"] = requestPath;
     newFund["requestUrlShort"] = shortUrl.url;
