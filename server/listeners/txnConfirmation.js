@@ -1181,49 +1181,58 @@ async function handleBurnToken(
         const rawTx = {
           from: blockdegreePubAddrXDCApothm,
           to: "xdc0000000000000000000000000000000000000000",
-          gas: 21000+"",
-          gasPrice: 9000+"",
+          gas: 21000 + "",
+          gasPrice: 9000 + "",
           value: removeExpo(Math.round(parseFloat(burnAmnt))),
-          nonce: await xdc3.eth.getTransactionCount(
-            blockdegreePubAddrXDCApothm
-          )+"",
+          nonce:
+            (await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)) +
+            "",
         };
 
-        let privKey = keyConfig[blockdegreePubAddrXDCApothm].privateKey;
-        if (!privKey.startsWith("0x")){
-          privKey="0x"+privKey;
-        }
-        const signed = xdc3.accounts.signTransaction(rawTx, privKey)
-        xdc3.eth.sendSignedTransaction(
-          signed.rawTransaction,
-          async function (err, hash) {
-            if (!err) {
-              console.log("Burned XDC; txHash: ", hash);
-
-              paymentLog.burn_txn_hash = hash;
-              paymentLog.burn_token_amnt = burnAmnt;
-
-              let principalFrom = txReceiptResponse.from;
-
-              let newBurnLog = newDefBurnLog(uuidv4(), txHash);
-              newBurnLog.principal_userEmail = userEmail;
-              newBurnLog.course = courseId;
-              newBurnLog.principal_from = principalFrom;
-              newBurnLog.tokenName = tokenName;
-              newBurnLog.tokenAmt = burnAmnt;
-              newBurnLog.creationDate = Date.now().toString();
-              newBurnLog.to = burnAddress;
-              newBurnLog.from = "xdc" + blockdegreePubAddrXDCApothm.slice(2);
-              newBurnLog.burn_network = paymentLog.payment_network;
-              await newBurnLog.save();
-              await paymentLog.save();
-              console.log(
-                "Successfully burned token for payment by user: ",
-                userEmail
-              );
-            } else console.error(err);
+        let privKey = "";
+        Object.keys(keyConfig).forEach((currKey) => {
+          if (
+            currKey === blockdegreePubAddrXDCApothm ||
+            currKey === "0x" + blockdegreePubAddrXDCApothm.slice(2)
+          ) {
+            privKey = keyConfig[currKeys].privateKey;
           }
-        );
+        });
+
+        if (!privKey.startsWith("0x")) {
+          privKey = "0x" + privKey;
+        }
+        const signed = xdc3.accounts.signTransaction(rawTx, privKey);
+        xdc3.eth.sendSignedTransaction(signed.rawTransaction, async function (
+          err,
+          hash
+        ) {
+          if (!err) {
+            console.log("Burned XDC; txHash: ", hash);
+
+            paymentLog.burn_txn_hash = hash;
+            paymentLog.burn_token_amnt = burnAmnt;
+
+            let principalFrom = txReceiptResponse.from;
+
+            let newBurnLog = newDefBurnLog(uuidv4(), txHash);
+            newBurnLog.principal_userEmail = userEmail;
+            newBurnLog.course = courseId;
+            newBurnLog.principal_from = principalFrom;
+            newBurnLog.tokenName = tokenName;
+            newBurnLog.tokenAmt = burnAmnt;
+            newBurnLog.creationDate = Date.now().toString();
+            newBurnLog.to = burnAddress;
+            newBurnLog.from = "xdc" + blockdegreePubAddrXDCApothm.slice(2);
+            newBurnLog.burn_network = paymentLog.payment_network;
+            await newBurnLog.save();
+            await paymentLog.save();
+            console.log(
+              "Successfully burned token for payment by user: ",
+              userEmail
+            );
+          } else console.error(err);
+        });
       } catch (e) {
         console.error(e);
       }
