@@ -116,6 +116,7 @@ function listenForConfirmation(
     console.log(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
     );
+    network=parseInt(network);
     switch (network) {
       case 1: {
         const web3 = new Web3(
