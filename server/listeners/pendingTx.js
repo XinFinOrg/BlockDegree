@@ -47,7 +47,7 @@ async function pendingTx() {
 async function pendingBurn() {
   console.log("called pending burn");
   try {
-    const paymentLogs = await PaymentLog.find({
+    const paymentLogs = await PaymentToken.find({
       $and: [{ status: "completed" }, { burn_txn_hash: "" }],
     });
     console.log("awaiting logs");
