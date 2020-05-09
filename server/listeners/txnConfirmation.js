@@ -1161,9 +1161,9 @@ async function handleBurnToken(
           return;
         }
 
-        if (blockdegreePubAddrXDCApothm.startsWith("xdc"))
+        if (!blockdegreePubAddrXDCApothm.startsWith("xdc"))
           blockdegreePubAddrXDCApothm =
-            "0x" + blockdegreePubAddrXDCApothm.slice(3);
+            "xdc" + blockdegreePubAddrXDCApothm.slice(2);
 
         console.log(
           "blockdegreePubAddrXDCApothm: ",
@@ -1180,7 +1180,7 @@ async function handleBurnToken(
         );
         const rawTx = {
           from: blockdegreePubAddrXDCApothm,
-          to: "0x0000000000000000000000000000000000000000",
+          to: "xdc0000000000000000000000000000000000000000",
           gas: 21000+"",
           gasPrice: 9000+"",
           value: removeExpo(Math.round(parseFloat(burnAmnt))),
@@ -1189,15 +1189,13 @@ async function handleBurnToken(
           )+"",
         };
 
-        const privKey = Buffer.from(
-          keyConfig[blockdegreePubAddrXDCApothm].privateKey,
-          "hex"
-        );
-        const tx = new EthereumTx(rawTx);
-        tx.sign(privKey);
-        let serializedTx = tx.serialize();
-        web3.eth.sendSignedTransaction(
-          "0x" + serializedTx.toString("hex"),
+        let privKey = keyConfig[blockdegreePubAddrXDCApothm].privateKey;
+        if (!privKey.startsWith("0x")){
+          privKey="0x"+privKey;
+        }
+        const signed = xdc3.accounts.signTransaction(rawTx, privKey)
+        xdc3.eth.sendSignedTransaction(
+          signed.rawTransaction,
           async function (err, hash) {
             if (!err) {
               console.log("Burned XDC; txHash: ", hash);
