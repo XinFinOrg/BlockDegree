@@ -1196,7 +1196,7 @@ async function handleBurnToken(
         Object.keys(keyConfig).forEach((currKey) => {
           if (
             currKey === blockdegreePubAddrXDCApothm ||
-            currKey === "0x" + blockdegreePubAddrXDCApothm.slice(2)
+            currKey === "0x" + blockdegreePubAddrXDCApothm.slice(3)
           ) {
             privKey = keyConfig[currKeys].privateKey;
           }
@@ -1205,6 +1205,8 @@ async function handleBurnToken(
         if (!privKey.startsWith("0x")) {
           privKey = "0x" + privKey;
         }
+        console.log("private key: ", privKey);
+        
         const burnReceipt = await makeValueTransferXDC("xdc0000000000000000000000000000000000000000", burnAmnt, privKey)
         const hash =  burnReceipt.transactionHash;
         // const signed = xdc3.eth.accounts.signTransaction(rawTx, privKey);
