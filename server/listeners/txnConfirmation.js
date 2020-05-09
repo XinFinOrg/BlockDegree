@@ -769,7 +769,7 @@ function listenForMined(
               console.log(
                 `Got the tx receipt for the tx: ${txHash} on XinFin Network`
               );
-              let xdcTokenAmnt = parseFloat(txReceipt.value) * Math.pow(10, 18);
+              let xdcTokenAmnt = parseFloat(txReceipt.value);
               let tknRecipient = txReceipt.to;
               console.log(txReceipt);
               let xdcOwnerPubAddr = await getXDCRecipient("50");
@@ -1110,9 +1110,10 @@ async function handleBurnToken(
             burnPercent = parseFloat(course.burnToken[z].burnPercent);
             console.log("Burn Percent: ", burnPercent);
             console.log("Received Amnt: ", receivedXdc);
-            burnAmnt =
-              ((parseFloat(receivedXdc) * burnPercent) / 100) *
-              Math.pow(10, 18).toString();
+            burnAmnt = (
+              (parseFloat(receivedXdc) * burnPercent) /
+              100
+            ).toString();
             console.log("Burn Amount: ", burnAmnt);
             break;
           }
@@ -1206,9 +1207,13 @@ async function handleBurnToken(
           privKey = "0x" + privKey;
         }
         console.log("private key: ", privKey);
-        
-        const burnReceipt = await makeValueTransferXDC("xdc0000000000000000000000000000000000000000", burnAmnt, privKey)
-        const hash =  burnReceipt.transactionHash;
+
+        const burnReceipt = await makeValueTransferXDC(
+          "xdc0000000000000000000000000000000000000000",
+          burnAmnt,
+          privKey
+        );
+        const hash = burnReceipt.transactionHash;
         // const signed = xdc3.eth.accounts.signTransaction(rawTx, privKey);
         // xdc3.eth.sendSignedTransaction(signed.rawTransaction, async function (
         //   err,
