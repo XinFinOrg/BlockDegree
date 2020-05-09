@@ -1198,7 +1198,7 @@ async function handleBurnToken(
             currKey === blockdegreePubAddrXDCApothm ||
             currKey === "0x" + blockdegreePubAddrXDCApothm.slice(3)
           ) {
-            privKey = keyConfig[currKeys].privateKey;
+            privKey = keyConfig[currKey].privateKey;
           }
         });
 
