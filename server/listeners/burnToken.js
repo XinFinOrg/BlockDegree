@@ -239,6 +239,7 @@ async function donationTokenBurn(fundId, optionalNonce) {
         if (currWalletAddr.startsWith("0x")) {
           currWalletAddr = "xdc" + currWalletAddr.slice(2);
         }
+        console.log(`KEY: ${key}, currWalletAddr: ${currWalletAddr}`);        
         break;
       }
     }
