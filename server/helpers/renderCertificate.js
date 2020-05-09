@@ -37,7 +37,7 @@ exports.renderForIPFSHash = (name, percent, examType, d, donerName, callback) =>
     {
       rndDgt: crypto.randomBytes(32).toString("hex"),
       name: name,
-      course: `Certified Blockchain ${examType} Expert`,
+      course: getDegreeContentDetails(examType).course,
       score: percent,
       date: date,
       ts:ts,
