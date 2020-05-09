@@ -69,7 +69,7 @@ class ActivateAddr extends Component {
         wallet_address: this.state.walletAddr,
         wallet_token_name: this.state.tokenName,
         wallet_network: this.state.network,
-        wallet_type: this.status.walletType
+        wallet_type: this.state.walletType
       })
       .then(resp => {
         console.log(resp.data);
@@ -78,7 +78,7 @@ class ActivateAddr extends Component {
           // show success image, on confirm empty state.
           this.setState({
             showSuccess: true,
-            successMsg: "Added new wallet!",
+            successMsg: "Activated wallet!",
             wallet_address: "",
             wallet_token_name: "",
             wallet_network: "",
@@ -106,7 +106,7 @@ class ActivateAddr extends Component {
     return (
       <div className="card">
         <div className="header">
-          <h4>Add New Wallet</h4>
+          <h4>Activate Wallet</h4>
         </div>
         <div className="content">
           <form className="form-horizontal soft-input">
