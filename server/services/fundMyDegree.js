@@ -621,6 +621,7 @@ exports.getAllFunds = async (req, res) => {
       status: true,
       data: uninitiatedFunds,
       country: req.session.country,
+      userEmail: req.user.email,
     });
   } catch (e) {
     console.log(`exception at ${__filename}.getAllFunds`, e);

@@ -85,6 +85,7 @@ async function getFMDAllData(update) {
     .then((result) => {
       if (result.status === true) {
         let country = result.country;
+        let userEmail = result.userEmail;
         if (validCountry.includes(country)) {
           showRazorpay = true;
         }
@@ -128,7 +129,7 @@ async function getFMDAllData(update) {
               currData.fundId
             }', '${currData.status}','${currData.amountGoal}', '${
               currData.donerName
-            }')">View Description</button></td><td>`;
+            }','${userEmail===currData.email}')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataPending += `<span class="courseName">${getCourseName(
@@ -137,7 +138,11 @@ async function getFMDAllData(update) {
             }
             retDataPending += `</td>             
             <td>$ ${currData.amountGoal}</td>
-            <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr}', '${currData.fundId}', ${currData.amountGoal})" class="btn btn-primary">Fund Now</button></td>
+            <td><button type="button" onclick="renderPaymentMethodModal('${
+              currData.receiveAddr
+            }', '${currData.fundId}', ${currData.amountGoal})" ${
+              userEmail === currData.email ? "disabled" : ""
+            } class="btn btn-primary">Fund Now</button></td>
           </tr>`;
           } else if (currData.status === "completed") {
             const completionDate = new Date(
@@ -227,7 +232,7 @@ async function getFMDAllData(update) {
           approvedFundsCnt
         );
 
-        renderRequestedModal(data);
+        renderRequestedModal(data, userEmail);
       }
     })
     .catch((e) => {
@@ -280,6 +285,9 @@ function renderPaymentMethodModal(addr, fundId, amountGoal) {
 
                   <button type="button" data-dismiss="modal" class="btn-payment" onclick="renderQRCode('${addr}','${amountGoal}', '${fundId}')"
                       data-dismiss="modal"> Pay Via XDC </button>
+
+                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="submitMetamask('${addr}', '${fundId}','${amountGoal}')"
+                      data-dismiss="modal"> Pay Via XinPay </button>
 
                   <button type="button" data-dismiss="modal" class="btn-payment" onclick="payByPaypal('${fundId}')"
                       data-dismiss="modal">
@@ -366,7 +374,8 @@ function handleFundRequestSubmit() {
             resp.data.fundId,
             "uninitiated",
             resp.data.amountGoal,
-            ""
+            "",
+            'true'
           );
         }
       } else {
@@ -411,7 +420,8 @@ function renderRequestModal(
   fundId,
   type,
   amountGoal,
-  funderName
+  funderName,
+  fundDisabled
 ) {
   console.log(addr, fundId);
   description = unescape(description);
@@ -426,7 +436,10 @@ function renderRequestModal(
   const funderMessage =
     "Sponsored a student's degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation";
   const fundeeMessage = `Thank you <b>${
-    funderName === undefined || funderName === null || funderName === ""
+    funderName == undefined ||
+    funderName == "undefined" ||
+    funderName === null ||
+    funderName === ""
       ? "Anonymous person"
       : funderName
   }</b> for sponsoring a degree! Appreciate it!<br/> <b>#blockdegree #fundmydegree #onlineeducation </b>`;
@@ -541,6 +554,7 @@ function renderRequestModal(
           class="btn btn-primary fund-btn"
           data-dismiss="modal"
           onclick="renderPaymentMethodModal('${addr}','${fundId}', '${amountGoal}')"
+          ${fundDisabled==="true"?"disabled":""}
         >
           Fund
         </button>
@@ -600,7 +614,8 @@ function getCourseName(id) {
   }
 }
 
-function submitMetamask(addr, fundId, amountGoal) {
+async function submitMetamask(addr, fundId, amountGoal) {
+  await ethereum.enable();
   console.log(`received address ${addr} at submitMetamask ${amountGoal}`);
   if (typeof web3 == "undefined") {
     // no web3 provider is available, ask to install XinPay
@@ -622,8 +637,6 @@ function submitMetamask(addr, fundId, amountGoal) {
   }
 
   web3.version.getNetwork(async (err, providerNetworkId) => {
-    // await ethereum.enable();
-
     if (err) {
       $.notify("Oops, error occurred while getting the network ID");
       return;
@@ -690,7 +703,7 @@ function submitMetamask(addr, fundId, amountGoal) {
   });
 }
 
-function renderRequestedModal(allData) {
+function renderRequestedModal(allData, userEmail) {
   const fundId = getParamValue("fundId");
   console.log("FundId: ", fundId);
 
@@ -707,7 +720,8 @@ function renderRequestedModal(allData) {
           allData[i].fundId,
           allData[i].status,
           allData[i].amountGoal,
-          allData[i].donerName
+          allData[i].donerName,
+          String(allData[i].email===userEmail)
         );
         return;
       }
