@@ -1172,11 +1172,11 @@ async function handleBurnToken(
 
         console.log(
           "Pending: ",
-          await web3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
+          await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
         );
         console.log(
           "Confirmed: ",
-          await web3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
+          await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
         );
         const rawTx = {
           from: blockdegreePubAddrXDCApothm,
@@ -1184,7 +1184,7 @@ async function handleBurnToken(
           gas: 21000+"",
           gasPrice: 9000+"",
           value: removeExpo(Math.round(parseFloat(burnAmnt))),
-          nonce: await web3.eth.getTransactionCount(
+          nonce: await xdc3.eth.getTransactionCount(
             blockdegreePubAddrXDCApothm
           )+"",
         };
