@@ -1,3 +1,9 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <div class="fmd-page-wrapper">
     <!-- start Header bg -->
     <section class="fmd-style-wrapper fmd-block-bg">
@@ -218,7 +224,7 @@
                                         href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
                                         target="_blank">XDC Wallet</a></strong></div>
                             <div id="xdc-qr-img" class="xdc-qr-img"></div>
-
+                            <input type="text" class="form-control" id="xdc-addr-claim-fund-id" style="display: none;">
                             <input type="text" class="form-control" id="xdc-addr-value-modal" readonly="readonly"
                                 value="" class="xdc-addr-txt">
                             <button type="button" id="xdc-modal-copy-btn" class="btn btn-outline-primary">COPY</button>
@@ -347,7 +353,8 @@
 
                 <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
                 <div style="text-align: center;">
-                    <button type="button" class="btn btn-primary social-li mt-3" data-dismiss="modal" onclick="postLinkedin(true)">Post On
+                    <button type="button" class="btn btn-primary social-li mt-3" data-dismiss="modal"
+                        onclick="postLinkedin(true)">Post On
                         Linkedin <i class="fa fa-linkedin-square"></i> </button>
                 </div>
             </div>
@@ -381,7 +388,8 @@
 
                 <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
                 <div style="text-align: center;">
-                    <button type="button" class="btn btn-primary social-li mt-3" data-dismiss="modal" onclick="postTweet(true)">Post On
+                    <button type="button" class="btn btn-primary social-li mt-3" data-dismiss="modal"
+                        onclick="postTweet(true)">Post On
                         Twitter <i class="fa fa-twitter-square"></i> </button>
                 </div>
 
@@ -396,5 +404,4 @@
 
 
 <!-- Success Modal -->
-
-<script src="/js/fundReq.js?v=1.53"></script>
+<script src="/js/fundReq.js?v=1.54"></script>

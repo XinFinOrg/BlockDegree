@@ -1,41 +1,66 @@
 {
   "courses": [
     {
-      "title": "101 - Blockchain Basic Course for Engineer",
-      "price" : "9.99",
-      "type" : "course_1",
+      "title": "Blockchain Basic Course for Engineer",
+      "price": "9.99",
+      "type": "course_1",
       "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
       "duration": "3 days",
       "slug": "blockchain-basic",
-      
-        "pointers": ["50 Marks Practical & Theory","60% will be the passing percentage" ," Individual will get max of 3 Attempts"],
-     
+
+      "pointers": [
+        "50 Marks Practical & Theory",
+        "40% will be the passing percentage",
+        " Individual will get max of 3 Attempts"
+      ],
+
       "sypnosis": "Blockchain, the foundation of Bitcoin, has received extensive attentions recently. Blockchain serves as an immutable ledger which allows transactions take place in a decentralized manner.",
       "overview": "Blockchain, the foundation of Bitcoin, has received extensive attentions recently. Blockchain serves as an immutable ledger which allows transactions take place in a decentralized manner. Blockchain-based applications are springing up, covering numerous fields including financial services, reputation system and Internet of Things (IoT), and so on. However, there are still many challenges of blockchain technology such as scalability and security problems waiting to be overcome. This paper presents a comprehensive overview on blockchain technology.",
       "skills": "Unlimited access to course content. Get Blockchain Technology Certificate. Ability to stop, pause rewind and move through all chapters. Prepare for exam with Digital Course Material: View from anywhere and any device.",
-      "prerequisites": ["Necessary: Basic knowledge Networking", "Basic knowledge in Server"],
+      "prerequisites": [
+        "Necessary: Basic knowledge Networking",
+        "Basic knowledge in Server"
+      ],
       "curriculum": [
         {
           "topic": "History of blockchain"
         },
         {
           "topic": "The Evolution of Blockchain",
-          "sub-topic": ["First Generation Blockchain Technology", "Second Generation Blockchain", "Third Generation Blockchain Technology"]
+          "sub-topic": [
+            "First Generation Blockchain Technology",
+            "Second Generation Blockchain",
+            "Third Generation Blockchain Technology"
+          ]
         },
         {
           "topic": "What is blockchain?"
         },
         {
           "topic": "Why do we need blockchain technology?",
-          "sub-topic": ["Business Scenario Implemented Using the Database", "Business Scenario Implemented Using Blockchain"]
+          "sub-topic": [
+            "Business Scenario Implemented Using the Database",
+            "Business Scenario Implemented Using Blockchain"
+          ]
         },
         {
           "topic": "Features Of Blockchain",
-          "sub-topic": ["Decentralised", "Mining", "Safe and secure system", "Increased capacity"]
+          "sub-topic": [
+            "Decentralised",
+            "Mining",
+            "Safe and secure system",
+            "Increased capacity"
+          ]
         },
         {
           "topic": "What are the benefits of blockchain?",
-          "sub-topic": ["Transparency", "Reduced transaction costs", "Faster transaction settlements", "Decentralization", "User controlled network"]
+          "sub-topic": [
+            "Transparency",
+            "Reduced transaction costs",
+            "Faster transaction settlements",
+            "Decentralization",
+            "User controlled network"
+          ]
         },
         {
           "topic": "What is the difference between blockchain and database?"
@@ -46,31 +71,67 @@
         },
         {
           "topic": "How does blockchain work?",
-          "sub-topic": ["Hash function", "Nonce", "Nodes", "Block", "Wallets, digital signatures, protocols", "What is a wallet?", "Digital signature", "What are cryptographic keys?", "Protocols", "What is mining?"]
+          "sub-topic": [
+            "Hash function",
+            "Nonce",
+            "Nodes",
+            "Block",
+            "Wallets, digital signatures, protocols",
+            "What is a wallet?",
+            "Digital signature",
+            "What are cryptographic keys?",
+            "Protocols",
+            "What is mining?"
+          ]
         },
         {
           "topic": "Problems solved by blockchain technology",
-          "sub-topic": ["Currency and transaction support", "Suppy chain and item histories", "Voting", "Government operations", "Intellectual property", "Cloud storage", "Real estate"]
+          "sub-topic": [
+            "Currency and transaction support",
+            "Suppy chain and item histories",
+            "Voting",
+            "Government operations",
+            "Intellectual property",
+            "Cloud storage",
+            "Real estate"
+          ]
         },
         {
           "topic": "What is the future of blockchain technology?",
-          "sub-topic": ["Widespread Distributed Data Models", "DLT-based system", "Standardization And Collaboration", "A Growing Need For Credible Crypto Backing", "A Potential Ecosystem Of Specialized Chains", "Blockchain based security measures", "Crypto currency Is Just Going Through Normal Product Cycle", "Change of Blockchain towards Maturity"]
+          "sub-topic": [
+            "Widespread Distributed Data Models",
+            "DLT-based system",
+            "Standardization And Collaboration",
+            "A Growing Need For Credible Crypto Backing",
+            "A Potential Ecosystem Of Specialized Chains",
+            "Blockchain based security measures",
+            "Crypto currency Is Just Going Through Normal Product Cycle",
+            "Change of Blockchain towards Maturity"
+          ]
         }
       ]
     },
     {
-      "title": "102 - Blockchain Advanced Course for Engineer",
-      "price" : "9.99",
-      "type" : "course_2",
+      "title": "Blockchain Advanced Course for Engineer",
+      "price": "9.99",
+      "type": "course_2",
       "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
       "duration": "3 days",
       "slug": "blockchain-advanced",
-      "pointers": [" 50 Marks Practical & Theory","60% will be the passing percentage" ," Individual will get max of 3 Attempts"],
+      "pointers": [
+        " 50 Marks Practical & Theory",
+        "50% will be the passing percentage",
+        " Individual will get max of 3 Attempts"
+      ],
 
       "sypnosis": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). ",
       "overview": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). Each validator independently checks the payment and block data being passed around. There are rules in place to make the network operate as intended.",
       "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
-      "prerequisites": ["Necessary: Basic knowledge in JavaScript / HTML", "Basic knowledge in C++ / Java, data types", "Advantageous: Basic knowledge with git repositories"],
+      "prerequisites": [
+        "Necessary: Basic knowledge in JavaScript / HTML",
+        "Basic knowledge in C++ / Java, data types",
+        "Advantageous: Basic knowledge with git repositories"
+      ],
       "curriculum": [
         {
           "topic": "What is blockchain and Bitcoin?",
@@ -86,7 +147,10 @@
         },
         {
           "topic": "What is Proof Of Work",
-          "sub-topic": ["Mathematical puzzle in blockchain", "Implementation of proof of work"]
+          "sub-topic": [
+            "Mathematical puzzle in blockchain",
+            "Implementation of proof of work"
+          ]
         },
         {
           "topic": "Running Bitcoin blockchain node"
@@ -94,18 +158,25 @@
       ]
     },
     {
-      "title": "103 - Blockchain Professional Course for Engineer",
-      "price" : "9.99",
-      "type" : "course_3",
+      "title": "Blockchain Professional Course for Engineer",
+      "price": "9.99",
+      "type": "course_3",
       "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
       "duration": "3 days",
       "slug": "blockchain-professional",
-      "pointers": [" 50 Marks Practical & Theory","60% will be the passing percentage" ," Individual will get max of 3 Attempts"],
+      "pointers": [
+        " 50 Marks Practical & Theory",
+        "60% will be the passing percentage",
+        " Individual will get max of 3 Attempts"
+      ],
 
       "sypnosis": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. ",
       "overview": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. Students will participate in approximately 50% programming lab time providing practical experience, enhancing their knowledge and existing skill set. Due to the technical programming lab content covered in this course, it is not recommended for those without programming knowledge and experience.",
       "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device.",
-      "prerequisites": ["Necessary: Basic knowledge Networking", "Basic knowledge in Server"],
+      "prerequisites": [
+        "Necessary: Basic knowledge Networking",
+        "Basic knowledge in Server"
+      ],
       "curriculum": [
         {
           "topic": "What is Ethereum blockchain?"
@@ -118,11 +189,24 @@
         },
         {
           "topic": "What is smart contract?",
-          "sub-topic": ["Definition of blockchain", "Features of blockchain", "Advantages of smart contracts", "Disadvantages of smart contracts"]
+          "sub-topic": [
+            "Definition of blockchain",
+            "Features of blockchain",
+            "Advantages of smart contracts",
+            "Disadvantages of smart contracts"
+          ]
         },
         {
           "topic": "Popular features of ICO smart contracts",
-          "sub-topic": ["Capped contracts", "Mintable tokens", "Finalizable contracts", "Upgradable contracts", "Refundable contracts", "Time vault contracts", "Burnable tokens/ Freezable tokens"]
+          "sub-topic": [
+            "Capped contracts",
+            "Mintable tokens",
+            "Finalizable contracts",
+            "Upgradable contracts",
+            "Refundable contracts",
+            "Time vault contracts",
+            "Burnable tokens/ Freezable tokens"
+          ]
         },
         {
           "topic": "Deploying smart contract and tokens on Ethereum"
@@ -132,7 +216,12 @@
         },
         {
           "topic": "Dependencies for developing on Ethereum",
-          "sub-topic": ["Node Package Manager (NPM)", "Truffle framework", "Ganache", "Metamask"]
+          "sub-topic": [
+            "Node Package Manager (NPM)",
+            "Truffle framework",
+            "Ganache",
+            "Metamask"
+          ]
         },
         {
           "topic": "Deploying smart contracts with Truffle"
@@ -157,10 +246,59 @@
         },
         {
           "topic": "Difference between Proof of Work and Proof of Stake",
-          "sub-topic": ["Proof of Work", "Proof of Stake", "Why are coins moving over to PoS?"]
+          "sub-topic": [
+            "Proof of Work",
+            "Proof of Stake",
+            "Why are coins moving over to PoS?"
+          ]
         },
         {
           "topic": "Differences among various blockchains"
+        }
+      ]
+    },
+    {
+      "title": "Cloud Computing",
+      "price": "9.99",
+      "type": "course_4",
+      "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
+      "duration": "3 days",
+      "slug": "cloud-computing",
+      "pointers": [
+        " 30 Marks Practical & Theory",
+        "40% will be the passing percentage",
+        " Individual will get max of 3 Attempts"
+      ],
+
+      "sypnosis": " One of the most critical issues in cloud computing is security. With the development of the Internet and Web technology and frequent cross-cultural communication, it is necessary for people to be able to access and manage information in many different languages.",
+      "overview": "The prevalent slant in today's innovation driven world is ‘Cloud Computing’. Cloud computing can be alluded to as the putting away and getting to of information over the web instead of your computer's difficult drive. This implies you do not get to the information from either your computer's difficult drive or over a committed computer arrange (domestic or office arrange). Cloud computing implies information is put away at a farther put and is synchronized with other web data.",
+      "skills": "30 Days of unlimited access to course content. Certified Cloud Computing  Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
+      "prerequisites": [
+        "Necessary: Basic knowledge in Networking",
+        "Basic knowledge in Server / VPN, LAN, WAN",
+        "Advantageous: Basic knowledge Datacenter"
+      ],
+      "curriculum": [
+        {
+          "topic": "What is Cloud Computing"
+        },
+        {
+          "topic": "Evolution of Computing"
+        },
+        {
+          "topic": "Characteristics of Cloud Computing"
+        },
+        {
+          "topic": "Cloud Computing Service Models"
+        },
+        {
+          "topic": "Different Types of Cloud Computing Models"
+        },
+        {
+          "topic": "Benefits of using the cloud for your business"
+        },
+        {
+          "topic": "How to Deploy Cloud"
         }
       ]
     }

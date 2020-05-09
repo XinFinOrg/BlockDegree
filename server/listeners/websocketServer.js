@@ -53,6 +53,10 @@ exports.server = (server, sessionParser) => {
     //   ws.send("fmd:fetch-fmd");
     // });
 
+    ws.on("message", (msg) => {
+      console.log("got message: ", msg);
+    });
+    ws.send("PONG");
     ws.on("close", function () {
       console.log(`[*] ws closed ${currId}`);
       removeFromClient(currId);
@@ -61,8 +65,8 @@ exports.server = (server, sessionParser) => {
 };
 
 function broadcastToAll(eventName) {
-  CLIENTS.forEach(({ ws }) => {
-    ws.send(eventName);
+  CLIENTS.forEach((obj) => {
+    obj.ws.send(`${eventName}`)
   });
 }
 

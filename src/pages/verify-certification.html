@@ -297,6 +297,9 @@
     clientHash,
     headlessHash
   ) {
+    if  (examName==="computing"){
+      examName="cloud computing";
+    }
     return (
       '<div class="col-lg-6 mb-5">' +
       '            		<div class="card">' +
@@ -304,7 +307,7 @@
       '							<ul class="list-group list-group-flush">' +
       '								<li class="list-group-item"><span>Exam Name : ' +
       "</span>" +
-      examName +
+      examName+
       " </li>" +
       '								<li class="list-group-item"><span>Marks Obtained : ' +
       "</span>" +

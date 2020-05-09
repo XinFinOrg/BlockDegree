@@ -51,6 +51,7 @@ const userFundRequest = mongoose.Schema({
     enum: ["uninitiated", "pending", "completed"],
   },
   paypalId: { type: String },
+  razorpayId: { type: String },
   confirmation: { type: Number, default: 0 },
   donerEmail: { type: String },
   donerName: { type: String },

@@ -15,11 +15,12 @@ const expressFileUpload = require("express-fileupload");
 let pendingTx = require("./listeners/pendingTx").em;
 const adminServices = require("./services/adminServices");
 const donationListener = require("../server/listeners/donationListener");
+const updateSiteStats  = require("./listeners/updateSiteStats");
 const redis = require("redis");
 
 let RedisStore = require("connect-redis")(session);
-let redisClient = redis.createClient();
-
+let redisClient = redis.createClient({prefix:"blockdegree"});
+global.RedisClient = redisClient;
 let app = express();
 require("dotenv").config();
 mongoose.set("useCreateIndex", true);
@@ -102,7 +103,7 @@ app.use("*", function (req, res) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
@@ -119,6 +120,7 @@ const server = app.listen("3000", async () => {
   donationListener.em.emit("syncRecipients");
   donationListener.em.emit("syncPendingDonation");
   donationListener.em.emit("syncPendingBulkCoursePayments");
+  updateSiteStats.em.emit("setSiteStats");
 
   await adminServices.initiateWalletConfig();
   console.log("[*] server started");

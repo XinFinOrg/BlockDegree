@@ -24,6 +24,13 @@ exports.renderCourses = (req, res) => {
         "/courses/blockchain-professional/what-is-ethereum-blockchain"
       );
     }
+
+    case "cloud-computing": {
+      eventEmitter.emit("visited", req, "cloud-computing");
+      res.redirect(
+        "/courses/cloud-computing/what-is-cloud-computing"
+      );
+    }
   }
 };
 

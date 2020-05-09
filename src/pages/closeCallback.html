@@ -4,8 +4,28 @@
       console.log("in window opener !");
       // let sessionCookies = "";
       // sessionCookies = document.cookie.split(";");
-      window.opener.postMessage("ok", "*");
-      open(location, "_self").close();
+      if (getParamValue("share") == "true") {
+        window.opener.postMessage("share", "*");
+        open(location, "_self").close();
+      } else {
+        window.opener.postMessage("ok", "*");
+        open(location, "_self").close();
+      }
+    }
+
+    function getParamValue(param) {
+      let currentUrl = window.location.href;
+      if (currentUrl.split("?").length > 1) {
+        let paramsString = currentUrl.split("?")[1];
+        const params = paramsString.split("&");
+        for (let i = 0; i < params.length; i++) {
+          const key = params[i].split("=")[0];
+          const value = params[i].split("=")[1];
+          if (key === param) return value;
+        }
+      }
+
+      return null;
     }
   </script>
 </html>

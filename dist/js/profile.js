@@ -25,7 +25,9 @@ if (typeof jQuery != "undefined") {
             advancedAttempts = document.getElementById("advancedAttempt"),
             professionalAttempts = document.getElementById(
               "professionalAttempt"
-            );
+            ),
+            computingStatus = document.getElementById("computingStatus"),
+            computingAttempt = document.getElementById("computingAttempt");
           emailID.innerHTML = userProfile.email;
           name.innerHTML = userProfile.name;
           googleLink.innerHTML =
@@ -53,11 +55,18 @@ if (typeof jQuery != "undefined") {
           professionalStatus.innerHTML = userProfile.examData.payment.course_3
             ? "Enrolled"
             : "Not Paid";
+          computingStatus.innerHTML =
+            userProfile.examData.payment.course_4 == true
+              ? "Enrolled"
+              : "Not Paid";
           basicAttempts.innerHTML = userProfile.examData.examBasic.attempts;
           advancedAttempts.innerHTML =
             userProfile.examData.examAdvanced.attempts;
           professionalAttempts.innerHTML =
             userProfile.examData.examProfessional.attempts;
+          computingAttempt.innerHTML = userProfile.examData.examComputing
+            ? userProfile.examData.examComputing.attempts
+            : "0";
           viewProfile.click();
 
           // getting elements in the edit-page
@@ -107,8 +116,7 @@ if (typeof jQuery != "undefined") {
               } else if (key === "inFocus" && value === "fmd-requests") {
                 $("html, body").animate(
                   {
-                    scrollTop:
-                      $("#fmd-requests").offset().top
+                    scrollTop: $("#fmd-requests").offset().top,
                   },
                   2000
                 );
@@ -117,8 +125,7 @@ if (typeof jQuery != "undefined") {
               } else if (key === "inFocus" && value === "fmd-funded") {
                 $("html, body").animate(
                   {
-                    scrollTop:
-                      $("#fmd-funded").offset().top 
+                    scrollTop: $("#fmd-funded").offset().top,
                   },
                   2000
                 );
@@ -315,19 +322,6 @@ if (typeof jQuery != "undefined") {
       },
     });
   }
-
-  window.addEventListener(
-    "message",
-    function (event) {
-      console.log("Originating event: ", event.origin);
-      console.log(event.origin);
-      if (event.origin == "https://www.blockdegree.org" && event.data == "ok") {
-        $.notify("Social linked!", { type: "success" });
-        checkAuth();
-      }
-    },
-    false
-  );
 
   function checkAuth() {
     console.log("called check auth");

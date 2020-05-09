@@ -239,7 +239,7 @@ module.exports = (app) => {
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
-            return res.redirect("/closeCallback");
+            return res.redirect(`/closeCallback?share=${req.session.shareModal}`);
           }
           if (info == "new-name") {
             console.log(req.session);            
@@ -287,11 +287,11 @@ module.exports = (app) => {
         req.logIn(user, (err) => {
           if (err != null) {
             console.log(`Error while logging in ${err}`);
-            res.redirect("/login");
+            return res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
-            return res.redirect("/closeCallback");
+            return res.redirect(`/closeCallback?share=${req.session.shareModal}`);
           }
           if (info == "new-name") {
             if (req.session.refIdUsed === true) {
@@ -338,7 +338,7 @@ module.exports = (app) => {
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
-            return res.redirect("/closeCallback");
+            return res.redirect(`/closeCallback?share=${req.session.shareModal}`);
           }
           if (info == "new-name") {
             if (req.session.refIdUsed === true) {
@@ -380,11 +380,11 @@ module.exports = (app) => {
         req.logIn(user, (err) => {
           if (err != null) {
             console.log(`Error while logging in ${err}`);
-            res.redirect("/login");
+            return res.redirect("/login");
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
-            return res.redirect("/closeCallback");
+            return res.redirect(`/closeCallback?share=${req.session.shareModal}`);
           }
           if (info == "new-name") {
             if (req.session.refIdUsed === true) {

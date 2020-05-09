@@ -80,7 +80,7 @@ class AddAddr extends Component {
         wallet_token_name: this.state.tokenName,
         wallet_network: this.state.network,
         wallet_purpose: this.state.purpose,
-        wallet_type: this.status.walletType
+        wallet_type: this.state.walletType
       })
       .then(resp => {
         console.log(resp.data);

@@ -17,7 +17,49 @@ const emailer = require("../emailer/impl");
 const EthereumTx = require("ethereumjs-tx");
 const cmcHelper = require("../helpers/cmcHelper");
 const WsServer = require("../listeners/websocketServer").em;
-const {removeExpo} = require("../helpers/common");    
+const { removeExpo } = require("../helpers/common");
+const { WsXinfinMainnet } = require("../helpers/constant");
+const { makeValueTransferXDC } = require("../helpers/blockchainHelpers");
+
+const XinMainProvider = new XDC3.providers.WebsocketProvider(WsXinfinMainnet);
+const xdc3 = new XDC3(XinMainProvider);
+let inReconnXDC = false;
+
+XinMainProvider.on("connect", () => {
+  console.log("[*] connected to XDC mainnet at txnConfirmation");
+});
+
+connectionHeartbeat();
+
+function connectionHeartbeat() {
+  setInterval(async () => {
+    try {
+      const isActiveXdc = await xdc3.eth.net.isListening();
+      console.log(`connection status XDC txnConfirmation: ${isActiveXdc}`);
+      if (!isActiveXdc && inReconnXDC === false) xdcReconn();
+    } catch (e) {
+      if (inReconnXDC === false) xdcReconn();
+    }
+  }, 5000);
+}
+
+function xdcReconn() {
+  try {
+    console.log("[*] reconn xdc running");
+    inReconnXDC = true;
+    let currInterval = setInterval(() => {
+      let xdcProvider = new Xdc3.providers.WebsocketProvider(WsXinfinMainnet);
+      xdc3 = new Xdc3(xdcProvider);
+      xdcProvider.on("connect", () => {
+        console.log(`[*] xdc reconnected to ws at ${__filename}`);
+        inReconnXDC = false;
+        clearInterval(currInterval);
+      });
+    }, 5000);
+  } catch (e) {
+    console.log(`exception at ${__filename}.xdcReconn: `, e);
+  }
+}
 
 let eventEmitter = new EventEmitter();
 // const ethConfirmation = 3;
@@ -75,10 +117,13 @@ function listenForConfirmation(
     console.log(
       `Listening for the confirmation for the hash: ${txHash} on the network-id: ${network}`
     );
+    network = parseInt(network);
     switch (network) {
       case 1: {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
+          new Web3.providers.WebsocketProvider(
+            "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
+          )
         );
         try {
           const txReceipt = await web3.eth.getTransactionReceipt(txHash);
@@ -163,7 +208,7 @@ function listenForConfirmation(
                     newNoti.eventName = "payment is completed";
                     newNoti.eventId = uuidv4();
                     newNoti.title = "Payment Completed";
-                    newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+                    newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
                     newNoti.displayed = false;
 
                     user.examData.payment[paymentLog.course] = true;
@@ -239,15 +284,13 @@ function listenForConfirmation(
         break;
       }
       case 50: {
-        const xdc3 = new XDC3(
-          new XDC3.providers.HttpProvider(xinfinApothemRPC)
-        );
         try {
-          const txResponseReceipt = await axios.post(txReceiptUrlApothem, {
-            tx: txHash,
-            isTransfer: false,
-          });
-          const txReceipt = txResponseReceipt.data;
+          console.log("inside case 50");
+          const txResponseReceipt = await xdc3.eth.getTransactionReceipt(
+            txHash
+          );
+          console.log("[*] txResponseReceipt: ", txResponseReceipt);
+          const txReceipt = txResponseReceipt;
           const coursePrice = await CoursePrice.findOne({ courseId: course });
           const xinConfirmation = coursePrice.xdcConfirmation;
           console.log(txReceipt);
@@ -297,7 +340,7 @@ function listenForConfirmation(
           if (paymentLog.status === "pending") {
             const ClearInterval = setInterval(async () => {
               // Proper State.
-              let latestBlockNo = xdc3.eth.blockNumber;
+              let latestBlockNo = await xdc3.eth.getBlockNumber();
               console.log(latestBlockNo);
               let currConfirmations = latestBlockNo - txBlockNumber;
               console.log(currConfirmations);
@@ -318,7 +361,7 @@ function listenForConfirmation(
                 newNoti.eventName = "payment is completed";
                 newNoti.eventId = uuidv4();
                 newNoti.title = "Payment Completed";
-                newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+                newNoti.message = `Your payment for course ${coursePrice.courseName} is now  completed! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
                 newNoti.displayed = false;
 
                 user.examData.payment[paymentLog.course] = true;
@@ -403,7 +446,9 @@ function listenForMined(
       case 1: {
         try {
           const web3 = new Web3(
-            new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
+            new Web3.providers.WebsocketProvider(
+              "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
+            )
           );
           const contractInst = new web3.eth.Contract(xdceABI, xdceAddrMainnet);
           const coursePrice = await CoursePrice.findOne({ courseId: course });
@@ -596,7 +641,7 @@ function listenForMined(
               newNoti.eventName = "payment in pending";
               newNoti.eventId = newNotiId;
               newNoti.title = "Payment Mined";
-              newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+              newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
               newNoti.displayed = false;
 
               try {
@@ -704,16 +749,16 @@ function listenForMined(
               `Interval for TxMined for tx ${txHash} at network ${network} for user ${userEmail}`
             );
 
-            let txResponseReceipt = await axios({
-              method: "post",
-              url: txReceiptUrlApothem,
-              data: {
-                tx: txHash,
-                isTransfer: false,
-              },
-            });
-            console.log(txResponseReceipt);
-            txReceipt = txResponseReceipt.data;
+            // let txResponseReceipt = await axios({
+            //   method: "post",
+            //   url: txReceiptUrlApothem,
+            //   data: {
+            //     tx: txHash,
+            //     isTransfer: false,
+            //   },
+            // });
+            // console.log(txResponseReceipt);
+            txReceipt = await xdc3.eth.getTransactionReceipt(txHash);
             console.log(txReceipt);
             if (
               txReceipt.blockNumber != undefined &&
@@ -724,7 +769,7 @@ function listenForMined(
               console.log(
                 `Got the tx receipt for the tx: ${txHash} on XinFin Network`
               );
-              let xdcTokenAmnt = parseFloat(txReceipt.value) * Math.pow(10, 18);
+              let xdcTokenAmnt = parseFloat(txReceipt.value);
               let tknRecipient = txReceipt.to;
               console.log(txReceipt);
               let xdcOwnerPubAddr = await getXDCRecipient("50");
@@ -904,7 +949,9 @@ async function handleBurnToken(
     case "xdce": {
       try {
         const web3 = new Web3(
-          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47")
+          new Web3.providers.WebsocketProvider(
+            "wss://mainnet.infura.io/ws/v3/e2ff4d049ebd4a4481bfeb6bc0857b47"
+          )
         );
 
         let course = await CoursePrice.findOne({ courseId: courseId });
@@ -1048,11 +1095,8 @@ async function handleBurnToken(
 
         let course = await CoursePrice.findOne({ courseId: courseId });
         let paymentLog = await PaymentToken.findOne({ payment_id: paymentId });
-        let txReceiptResponse = await axios.post(txReceiptUrlApothem, {
-          tx: txHash,
-          isTransfer: false,
-        });
-        let receivedXdc = txReceiptResponse.data.value;
+        let txReceiptResponse = await xdc3.eth.getTransaction(txHash);
+        let receivedXdc = txReceiptResponse.value;
         let burnAmnt = "";
 
         if (!paymentLog.autoBurn) {
@@ -1066,9 +1110,10 @@ async function handleBurnToken(
             burnPercent = parseFloat(course.burnToken[z].burnPercent);
             console.log("Burn Percent: ", burnPercent);
             console.log("Received Amnt: ", receivedXdc);
-            burnAmnt =
-              ((parseFloat(receivedXdc) * burnPercent) / 100) *
-              Math.pow(10, 18).toString();
+            burnAmnt = (
+              (parseFloat(receivedXdc) * burnPercent) /
+              100
+            ).toString();
             console.log("Burn Amount: ", burnAmnt);
             break;
           }
@@ -1118,67 +1163,88 @@ async function handleBurnToken(
           return;
         }
 
-        blockdegreePubAddrXDCApothm =
-          "0x" + blockdegreePubAddrXDCApothm.slice(3);
+        if (!blockdegreePubAddrXDCApothm.startsWith("xdc"))
+          blockdegreePubAddrXDCApothm =
+            "xdc" + blockdegreePubAddrXDCApothm.slice(2);
+
+        console.log(
+          "blockdegreePubAddrXDCApothm: ",
+          blockdegreePubAddrXDCApothm
+        );
 
         console.log(
           "Pending: ",
-          await web3.eth.getTransactionCount(
-            blockdegreePubAddrXDCApothm
-          )
+          await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
         );
         console.log(
           "Confirmed: ",
-          await web3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
+          await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
         );
-        const rawTx = {
-          from: blockdegreePubAddrXDCApothm,
-          to: "0x0000000000000000000000000000000000000000",
-          gas: 21000,
-          gasPrice: 9000,
-          value: removeExpo(Math.round(parseFloat(burnAmnt))),
-          nonce: await web3.eth.getTransactionCount(
-            blockdegreePubAddrXDCApothm
-          ),
-        };
-
-        const privKey = Buffer.from(
-          keyConfig[blockdegreePubAddrXDCApothm].privateKey,
-          "hex"
+        let nonce = String(
+          await xdc3.eth.getTransactionCount(blockdegreePubAddrXDCApothm)
         );
-        const tx = new EthereumTx(rawTx);
-        tx.sign(privKey);
-        let serializedTx = tx.serialize();
-        web3.eth.sendSignedTransaction(
-          "0x" + serializedTx.toString("hex"),
-          async function (err, hash) {
-            if (!err) {
-              console.log("Burned XDC; txHash: ", hash);
+        // const rawTx = {
+        //   from: blockdegreePubAddrXDCApothm,
+        //   to: "xdc0000000000000000000000000000000000000000",
+        //   gas: "2100",
+        //   gasPrice: "9000",
+        //   value: removeExpo(Math.round(parseFloat(burnAmnt))),
+        //   nonce: nonce,
+        //   chainId:"50"
+        // };
 
-              paymentLog.burn_txn_hash = hash;
-              paymentLog.burn_token_amnt = burnAmnt;
-
-              let principalFrom = txReceiptResponse.data.from;
-
-              let newBurnLog = newDefBurnLog(uuidv4(), txHash);
-              newBurnLog.principal_userEmail = userEmail;
-              newBurnLog.course = courseId;
-              newBurnLog.principal_from = principalFrom;
-              newBurnLog.tokenName = tokenName;
-              newBurnLog.tokenAmt = burnAmnt;
-              newBurnLog.creationDate = Date.now().toString();
-              newBurnLog.to = burnAddress;
-              newBurnLog.from = "xdc" + blockdegreePubAddrXDCApothm.slice(2);
-              newBurnLog.burn_network = paymentLog.payment_network;
-              await newBurnLog.save();
-              await paymentLog.save();
-              console.log(
-                "Successfully burned token for payment by user: ",
-                userEmail
-              );
-            } else console.error(err);
+        let privKey = "";
+        Object.keys(keyConfig).forEach((currKey) => {
+          if (
+            currKey === blockdegreePubAddrXDCApothm ||
+            currKey === "0x" + blockdegreePubAddrXDCApothm.slice(3)
+          ) {
+            privKey = keyConfig[currKey].privateKey;
           }
+        });
+
+        if (!privKey.startsWith("0x")) {
+          privKey = "0x" + privKey;
+        }
+        console.log("private key: ", privKey);
+
+        const burnReceipt = await makeValueTransferXDC(
+          "xdc0000000000000000000000000000000000000000",
+          burnAmnt,
+          privKey
         );
+        const hash = burnReceipt.transactionHash;
+        // const signed = xdc3.eth.accounts.signTransaction(rawTx, privKey);
+        // xdc3.eth.sendSignedTransaction(signed.rawTransaction, async function (
+        //   err,
+        //   hash
+        // ) {
+        //   if (!err) {
+        console.log("Burned XDC; txHash: ", hash);
+
+        paymentLog.burn_txn_hash = hash;
+        paymentLog.burn_token_amnt = burnAmnt;
+
+        let principalFrom = txReceiptResponse.from;
+
+        let newBurnLog = newDefBurnLog(uuidv4(), txHash);
+        newBurnLog.principal_userEmail = userEmail;
+        newBurnLog.course = courseId;
+        newBurnLog.principal_from = principalFrom;
+        newBurnLog.tokenName = tokenName;
+        newBurnLog.tokenAmt = burnAmnt;
+        newBurnLog.creationDate = Date.now().toString();
+        newBurnLog.to = burnAddress;
+        newBurnLog.from = "xdc" + blockdegreePubAddrXDCApothm.slice(2);
+        newBurnLog.burn_network = paymentLog.payment_network;
+        await newBurnLog.save();
+        await paymentLog.save();
+        console.log(
+          "Successfully burned token for payment by user: ",
+          userEmail
+        );
+        // } else console.error(err);
+        // });
       } catch (e) {
         console.error(e);
       }

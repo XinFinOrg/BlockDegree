@@ -1,13 +1,5 @@
 {{#> base}} {{> layouts/baseIndex}} {{#*inline "body-block"}}
 <!-- Start banner Area -->
-<div id="fb-root"></div>
-<script
-  async
-  defer
-  crossorigin="anonymous"
-  src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.3"
-></script>
-
 <meta
   http-equiv="cache-control"
   content="no-cache, must-revalidate, post-check=0, pre-check=0"
@@ -183,7 +175,6 @@
 </section>
 <!-- End Slider Section -->
 
-
 <!-- Start banner Area 
 <div class="banner-area relative" id="home">
   <div class="container">
@@ -250,7 +241,6 @@
   </div>
 </div>
 <!-- end abovefold area -->
-
 
 <!-- Stats Counter Starts -->
 <div class="stats-counter">
@@ -322,7 +312,6 @@
 </div>
 <!-- Stats Counter Ends -->
 
-
 <!-- Start of Site Stats -->
 <!-- <div class="bg-muted py-5">
   <div class="container">
@@ -353,7 +342,7 @@
 </div> -->
 <!-- End of Site Stats -->
 
-<!-- Start online class Area -->
+<!-- Start online class Area 
 <div class="bg-muted py-5">
   <div class="container">
     <div class="py-2">
@@ -380,40 +369,122 @@
 </div>
 <!-- End online class Area -->
 
+
+<!-- Start online class Area -->
+<div class="bg-muted py-5">
+  <div class="container">
+    <div class="py-2">
+      <h2 class="text-center mb-4">Online Courses</h2>
+      <div class="row course" id="courses">
+        <script id="course-template" type="text/x-handlebars-template">
+          \{{#each courses}}
+            <div class="col-12 col-lg-3 col-md-6 col-sm-12 p-2 course__single res-m-bttm">
+              <!--<a href="/\{{slug}}">-->
+                <div class="content--rounded text-black text-center overlay" style="">
+                  <div class="overlay__content">
+                    <!--<h3 class="mb-2 mt-1">\{{title}}</h3>-->
+					<h3 class="">\{{title}}</h3>
+                    <p class="mb-0 pt-2">\{{trimmed sypnosis}}</p>
+                  </div>
+                </div>
+				<a href="/\{{slug}}" class="course-sg-action"><i class="fa fa-arrow-right"></i></a>
+              <!--</a>-->
+            </div>
+          \{{/each}}
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End online class Area -->
+
 <!-- Start Technological Partners Area -->
 <div class="container py-5">
   <div class="row">
     <div class="col-lg-6 pt-25 pb-25 text-center">
-    	<div class="fmd-block">
-    		<div class="title mb-3">
-        		<h2>Fund My Degree</h2>
-      		</div>
-    		<div class="text-content-big text-center mt-20">
-        		<p>Seek help to get funding from any funders around the world to fund your certification.</p>
-    		</div>
-    		<div class="text-center mt-15">
-    			<a href="/fund-my-degree" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Get Funding</a>
-    		</div>
-		</div>
+      <div class="fmd-block">
+        <div class="title mb-3">
+          <h2>Fund My Degree</h2>
+        </div>
+        <div class="text-content-big text-center mt-20">
+          <p>
+            Seek help to get funding from any funders around the world to fund
+            your certification.
+          </p>
+        </div>
+        <div class="text-center mt-15">
+          <a
+            href="/fund-my-degree"
+            class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"
+            >Get Funding</a
+          >
+        </div>
+      </div>
     </div>
-	
-	<div class="col-lg-6 pt-25 pb-25 text-center">
-    	<div class="title mb-3">
-        	<h2>Built on <a href="https://xinfin.network/" target="_blank">XinFin Network</a></h2>
-      	</div>
-      	<a href="https://coinmarketcap.com/currencies/xinfin-network/" target="_blank">
-        	<img data-src="img/partners/xdc_logo.png" class="img-fluid" style="height: 150px;width:150px">
-      	</a>
-    </div>    
+
+    <div class="col-lg-6 pt-25 pb-25 text-center">
+      <div class="title mb-3">
+        <h2>
+          Built on
+          <a href="https://xinfin.network/" target="_blank">XinFin Network</a>
+        </h2>
+      </div>
+      <a
+        href="https://coinmarketcap.com/currencies/xinfin-network/"
+        target="_blank"
+      >
+        <img
+          data-src="img/partners/xdc_logo.png"
+          class="img-fluid"
+          style="height: 150px; width: 150px;"
+        />
+      </a>
+    </div> 
   </div>
 </div>
 <!-- End Technological Partners Area-->
+
+<!-- Start Video
+<div class="bg-muted pt-5">
+  <div class="container position-relative py-4">
+    <div class="contributors-block bg-white border content--rounded py-5">
+      <h2 class="text-center mb-4">Our Videos</h2>
+      <div class="slider video_slider">
+        <div>
+          <div class="video">
+            <iframe src="https://www.youtube.com/embed/_A_BhSVSA6g"> </iframe>
+          </div>
+          <div class="text-center mt-10">Introduction To Blockdegree</div>
+        </div>
+      </div>
+    </div>
+</div>
+<!-- End Video -->
+
+<!-- Start Video -->
+<div class="bg-muted pt-5">
+  <div class="container">
+  <div class="row">
+  <div class="col-lg-6 offset-lg-3">
+      <h2 class="text-center mb-4">Our Videos</h2>
+      <div class="video hm">
+           <div class="embed-responsive embed-responsive-16by9">
+			  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/_A_BhSVSA6g?rel=0" allowfullscreen></iframe>
+		  </div>
+      </div>
+	  <div class="text-center mt-10">Introduction To Blockdegree</div>
+</div>
+</div>
+</div>
+</div>
+<!-- End Video -->
+
 
 <!-- Start Contributors Area = inline code -->
 <div class="bg-muted pt-5">
   <div class="container position-relative py-4">
     <div class="contributors-block bg-white border content--rounded py-5">
-      <h2 class="text-center mb-4">Meet our Contributors</h2>
+      <h2 class="text-center mb-5">Meet our Contributors</h2>
       <div class="slider contributors_slider">
         <div>
           <div class="image">
@@ -450,20 +521,8 @@
   </div>
 </div>
 <!-- End Contributors Area = inline code -->
-<div class="bg-muted pt-5">
-  <div class="container position-relative py-4">
-    <div class="contributors-block bg-white border content--rounded py-5">
-      <h2 class="text-center mb-4">Our Videos</h2>
-      <div class="slider video_slider">
-        <div>
-          <div class="video">
-            <iframe src="https://www.youtube.com/embed/_A_BhSVSA6g"> </iframe>
-          </div>
-          <div class="text-center mt-10">Introduction To Blockdegree</div>
-        </div>
-      </div>
-    </div>
-  </div>
+
+
 
   <!-- Start contributors Area 
   <div class="bg-muted">
@@ -495,19 +554,29 @@
           <div class="col-12 overlay__content text-white">
             <h2 class="text-white">Become a Contributor</h2>
             <p>Be part of the Blockchain Movement</p>
-            <a href="https://github.com/XinFinOrg/Blockchain_Tutorial-website" target="_blank"><button type="button" class="btn btn-outline-light px-5">Start Teaching</button></a>
+            <a
+              href="https://github.com/XinFinOrg/Blockchain_Tutorial-website"
+              target="_blank"
+              ><button type="button" class="btn btn-outline-light px-5">
+                Start Teaching
+              </button></a
+            >
           </div>
         </div>
       </div>
     </div>
   </div>
   <!-- End Become a contributor Area -->
-  
-  
-  
-  
+
   <!-- Welcome Modal Starts -->
-<div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModal" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="welcomeModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="welcomeModal"
+    aria-hidden="true"
+  >
     <!-- <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <button type="button" class="close light" data-dismiss="modal" aria-label="Close">
@@ -555,14 +624,38 @@
                         </div>
                     </div>
                 </div>
-                <div>
+              </div>
+              <div class="carousel-item">
+                <div class="px-3 text-center py-5">
+                  <div>
+                    <img
+                      src="img/welcome-popup/3.png"
+                      width="250"
+                      class=""
+                      alt=""
+                    />
+                  </div>
+
+                  <h3 class="pt-2">For Funder</h3>
+                  <p class="text-black-50">
+                    Funder can fund a student's request and get their Name/Logo
+                    on the Certificate of User and become a proud certified
+                    funder for Blockdegree.
+                  </p>
+                  <p>
+                    <a href="/fmd-fund" class="btn btn-primary btn-cstm-rounded"
+                      >Read More</a
+                    >
+                  </p>
                 </div>
+              </div>
             </div>
+          </div>
+          <div></div>
         </div>
     </div> -->
-</div>
-<!-- Welcome Modal Ends -->
-
+  </div>
+  <!-- Welcome Modal Ends -->
 
   {{/inline}} {{#*inline "scripts-block"}}
   <script src="/js/home.js?v=1.46"></script>

@@ -6,6 +6,7 @@ const ProfanityCheck = require("bad-words");
 const CoursePrice = require("../models/coursePrice");
 const UserFundReq = require("../models/userFundRequest");
 const User = require("../models/user");
+const RazorpayLog = require("../models/razorpay_payment");
 const BulkPayment = require("../models/bulkCourseFunding");
 const userCurrencyHelper = require("../helpers/userCurrency");
 const emailer = require("../emailer/impl");
@@ -16,9 +17,10 @@ const burnEmitter = require("../listeners/burnToken").em;
 const equateAddress = require("../helpers/common").equateAddress;
 const WsServer = require("../listeners/websocketServer").em;
 const renderFunderCerti = require("../helpers/renderFunderCerti");
+const razorHelper = require("../helpers/razorHelper");
 const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
 const profanityChecker = new ProfanityCheck();
-
+const razorKeyId = require("../config/razorPayKeys").keyId;
 const minDescChar = 10,
   maxDescChar = 150;
 
@@ -421,7 +423,10 @@ exports.successFundPaypal = async (req, res) => {
           courseNames,
           currFundReq.requestUrlShort
         );
-        renderFunderCerti(currFundReq.donerName, currFundReq.fundId);
+        renderFunderCerti.renderFunderCerti(
+          currFundReq.donerName,
+          currFundReq.fundId
+        );
       }
     });
   } catch (e) {
@@ -430,6 +435,153 @@ exports.successFundPaypal = async (req, res) => {
       error:
         "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org",
     });
+  }
+};
+
+exports.initiateRazorpay = async (req, res) => {
+  try {
+    const email = req.user.email;
+    const amount = req.body.amount;
+    const fundId = req.body.fundId;
+    if (_.isEmpty(amount) || _.isEmpty(fundId)) {
+      return res.json({ status: false, error: "missing parameters" });
+    }
+    const amntFloat = parseFloat(amount);
+    const fund = await UserFundReq.findOne({ fundId: fundId });
+    const user = await User.findOne({ email: email });
+    if (fund.email == email) {
+      return res.json({ status: false, error: "Cannot fund own request" });
+    }
+    if (fund === null || user === null) {
+      return res.json({ status: false, error: "fund/user not found" });
+    }
+    const newOrder = await razorHelper.createNewOrder(fundId, amntFloat);
+    const razorpayLog = new RazorpayLog({
+      status: "initiated",
+      email: email,
+      paymentId: "",
+      orderId: newOrder.id,
+      amount: `${newOrder.amount}`,
+      receipt: fundId,
+      signature: "",
+    });
+    await razorpayLog.save();
+    res.json({
+      status: true,
+      data: {
+        key: razorKeyId,
+        orderId: newOrder.id,
+        amnt: newOrder.amount,
+        email: user.email,
+        userName: user.name,
+      },
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.initiateRazorpay: `, e);
+    return res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.completeRazorpay = async (req, res) => {
+  try {
+    const donerEmail = req.user.email;
+    const paymentId = req.body.paymentId;
+    const orderId = req.body.orderId;
+    const signature = req.body.signature;
+
+    const razorpayLog = await RazorpayLog.findOne({
+      $and: [{ orderId: orderId }, { status: "initiated" }],
+    });
+    if (razorpayLog === null) {
+      return res.json({ status: false, error: "fund not found" });
+    }
+    // do double validation
+    razorpayLog.status = "completed";
+    razorpayLog.paymentId = paymentId;
+    razorpayLog.orderId = orderId;
+    await razorpayLog.save();
+
+    const fundId = razorpayLog.receipt;
+    const currFundReq = await UserFundReq.findOne({ fundId: fundId });
+    const doner = await User.findOne({ email: donerEmail });
+
+    if (currFundReq === null || doner === null) {
+      res.json({ status: false, error: "Fund not found" });
+      emailer.sendMailInternal(
+        "blockdegree-bot@blockdegree.org",
+        process.env.SUPP_EMAIL_ID,
+        "FMD: ERROR in Razorpay",
+        `Some error occured while processing payment for user ${req.user.email} FundID: ${fundId} Fund not found. please consider re-embursement`
+      );
+      return;
+    }
+    const recipientUser = await User.findOne({ email: currFundReq.email });
+    if (recipientUser === null) {
+      res.json({ status: false, error: "Fund not found" });
+      emailer.sendMailInternal(
+        "blockdegree-bot@blockdegree.org",
+        process.env.SUPP_EMAIL_ID,
+        "FMD: ERROR in Razorpay",
+        `Some error occured while processing payment for user ${req.user.email} FundID: ${fundId} Recipient User not found. please consider re-embursement`
+      );
+      return;
+    }
+
+    let courseNames = "";
+    for (let i = 0; i < currFundReq.courseId.length; i++) {
+      let courseId = currFundReq.courseId[i];
+      recipientUser.examData.payment[courseId] = true;
+      recipientUser.examData.payment[
+        courseId + "_payment"
+      ] = `donation:${currFundReq.fundId}`;
+      recipientUser.examData.payment[courseId + "_doner"] = doner.name;
+      if (i < currFundReq.courseId.length - 1) {
+        courseNames += courseNames + `${getCourseName(courseId)}, `;
+      } else {
+        courseNames += courseNames + `${getCourseName(courseId)}`;
+      }
+    }
+
+    currFundReq.status = "completed";
+    currFundReq.razorpayId = razorpayLog.orderId;
+    currFundReq.donerEmail = doner.email;
+    currFundReq.donerName = doner.name;
+    currFundReq.burnStatus = "pending";
+    await currFundReq.save();
+    await recipientUser.save();
+
+    res.json({
+      status: true,
+    });
+
+    burnEmitter.emit("donationTokenBurn", fundId);
+    emailer.sendFMDCompleteUser(
+      currFundReq.email,
+      currFundReq.userName,
+      courseNames
+    );
+    emailer.sendFMDCompleteFunder(
+      currFundReq.donerEmail,
+      currFundReq.userName,
+      currFundReq.donerName,
+      courseNames,
+      currFundReq.requestUrlShort
+    );
+    renderFunderCerti.renderFunderCerti(
+      currFundReq.donerName,
+      currFundReq.fundId
+    );
+  } catch (e) {
+    console.log(`exception at ${__filename}.completeRazorpay: `, e);
+    res.json({ status: false, error: "internal error" });
+    emailer.sendMailInternal(
+      "blockdegree-bot@blockdegree.org",
+      process.env.SUPP_EMAIL_ID,
+      "ERROR in Razorpay",
+      `Some error occured while processing payment for user ${
+        req.user.email
+      } error: ${String(e)}. please consider re-embursement`
+    );
   }
 };
 
@@ -465,7 +617,12 @@ exports.getAllFunds = async (req, res) => {
     })
       .select({ receiveAddrPrivKey: 0 })
       .lean();
-    res.json({ status: true, data: uninitiatedFunds });
+    res.json({
+      status: true,
+      data: uninitiatedFunds,
+      country: req.session.country,
+      userEmail: req.user.email,
+    });
   } catch (e) {
     console.log(`exception at ${__filename}.getAllFunds`, e);
     res.json({ status: false, error: "internal error" });
@@ -812,6 +969,8 @@ function getCourseName(id) {
       return "Blockchain Advanced";
     case "course_3":
       return "Blockchain Professional";
+    case "course_4":
+      return "Cloud Computing";
     default:
       return "";
   }

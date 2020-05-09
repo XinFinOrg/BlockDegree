@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 /**
  * removeExpo will remove exponentials from the number
  * @param {Number | String} x the number which needs to converted into string
@@ -44,4 +46,27 @@ exports.genRandomAlphaNum = () => {
     result += set[Math.floor(Math.random() * set.length)];
   }
   return `bd-${result}`;
+};
+
+/**
+ * Will convert amount in USd to amount in INR
+ * @param {String|Number} amntUsd amount in USD
+ */
+exports.usdToInr = (amntUsd) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get("https://api.exchangeratesapi.io/latest?base=USD")
+      .then((result) => {
+        const inrRate = result.data.rates.INR;
+        resolve(parseFloat(amntUsd) * parseFloat(inrRate));
+      })
+      .catch((e) => {
+        console.log(`exception at ${__filename}.usdToInr: `, e);
+        reject(e);
+      });
+  });
+};
+
+exports.roundDgt = (amount, dgt) => {
+  return Math.round(parseFloat(amount * Math.pow(10, dgt))) / Math.pow(10, dgt);
 };

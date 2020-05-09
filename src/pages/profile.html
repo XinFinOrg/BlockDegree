@@ -1,7 +1,7 @@
 {{#> base}} {{> layouts/base title="Blockchain Profile"}} {{#*inline
 "body-block"}} {{> includes/hero hero-title="Profile" hero-copy="View / Update
 your profile"}}
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 <div id="profile">
   <div class="tabbed-section">
     <div class="container">
@@ -49,11 +49,29 @@ your profile"}}
               </tr>
               <tr>
                 <td>Referral Code</td>
-                <td ><span id="refId"></span> <button style="float: right;" class="btn btn-primary" onclick="copyToClipboard('refId')">COPY</button></td>        
+                <td>
+                  <span id="refId"></span>
+                  <button
+                    style="float: right;"
+                    class="btn btn-primary"
+                    onclick="copyToClipboard('refId')"
+                  >
+                    COPY
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td>Referral Link</td>
-                <td ><span id="refLink"></span><button style="float: right;" class="btn btn-primary" onclick="copyToClipboard('refLink')">COPY</button></td>
+                <td>
+                  <span id="refLink"></span
+                  ><button
+                    style="float: right;"
+                    class="btn btn-primary"
+                    onclick="copyToClipboard('refLink')"
+                  >
+                    COPY
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -115,6 +133,11 @@ your profile"}}
                 <td id="professionalStatus"></td>
                 <td id="professionalAttempt"></td>
               </tr>
+              <tr>
+                <td>Cloud Computing</td>
+                <td id="computingStatus"></td>
+                <td id="computingAttempt"></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -123,7 +146,7 @@ your profile"}}
           Payment Via Paypal
         </h3>
         <div class="table-responsive">
-          <table class="table table-hover" id="cryptoTokenList">
+          <table class="table table-hover" >
             <thead>
               <tr>
                 <th>Course Name</th>
@@ -146,7 +169,7 @@ your profile"}}
           Payment Via Tokens
         </h3>
         <div class="table-responsive">
-          <table class="table table-hover" id="cryptoTokenList">
+          <table class="table table-hover">
             <thead>
               <tr>
                 <th>Course Name</th>
@@ -175,6 +198,7 @@ your profile"}}
                 <th>Course(s)</th>
                 <th>Receive Address</th>
                 <th>Status</th>
+                <th>Share / View</th>
                 <th>Fund TX</th>
                 <th>Burn TX</th>
                 <th>Funder Name</th>
@@ -194,8 +218,9 @@ your profile"}}
                 <th>Course(s)</th>
                 <th>Recipient</th>
                 <th>Status</th>
+                <th>Share / View</th>
                 <th>Fund TX</th>
-                <th>Burn TX<th>
+                <th>Burn TX</th>
               </tr>
             </thead>
             <tbody id="fmdFunded-tbody"></tbody>
@@ -327,14 +352,194 @@ your profile"}}
           Close
         </button>
       </div>
+
     </div>
   </div>
 </div>
 
+<div class="fmd-page-wrapper" id="requestModalWrapper"></div>
+
+<div class="fmd-page-wrapper" id="paymentMethodModalWrapper">
+</div>
+
+<div class="fmd-page-wrapper" id="claimTxModalWrapper">
+</div>
+
+<div class="fmd-page-wrapper" id="payByXdcWrapper">
+    <div class="modal fade" id="xdcQRCode" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="qr-code-wrapper">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="applyNowLongTitle">Pay By XDC</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="qr-text">Send Amount <strong><span class="xdc-value"
+                                    id="xdc-value-modal"></span>&nbsp;XDC coin</strong>&nbsp; to
+                            the
+                            address below using your <strong><a
+                                    href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
+                                    target="_blank">XDC Wallet</a></strong></div>
+                        <div id="xdc-qr-img" class="xdc-qr-img"></div>
+
+                        <input type="text" class="form-control" id="xdc-addr-value-modal" readonly="readonly"
+                            value="" class="xdc-addr-txt">
+                        <button type="button" id="xdc-modal-copy-btn" class="btn btn-outline-primary">COPY</button>
+                        <div>
+                            After completing the TX, please <span data-dismiss="modal" id="req-claim-fund"
+                                class="claim-fund">CLAIM</span> your fund!
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div>
+                            <div>Don't have&nbsp;<strong>XDC&nbsp;<img
+                                        src="https://www.blockdegree.org/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
+                                ?&nbsp;Buy from <a href="https://alphaex.net" target="_blank">AlphaEx</a> or <a
+                                    href="https://stex.com" target="_blank">Stex</a>
+                            </div>
+                        </div>
+                        <div>Download XDC Wallet&nbsp;<a
+                                href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
+                                target="_blank">Android</a></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<button id="togglePostTwitter" type="button" class="btn btn-primary social-tw" data-toggle="modal"
+data-target="#postTwitter" style="display: none"><i class="fa fa-twitter social"></i> Post on Twitter </button>
+<!-- Modal -->
+<div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Twitter Post</h3>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <div class="modal-body">
+            <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
+                    class="form-control" style="border-radius:5px;" id="postMSGTwitter"></textarea></p>
+
+            <select name="user[avatar]" id="images-twitter">
+                <option value="">Please Select</option>
+                <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
+                <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
+                <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
+            </select>
+
+            <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
+            <div style="text-align: center;">
+                <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3"
+                    onclick="postTweet()">Post On Twitter <i class="fa fa-twitter"></i></button>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<button id="togglePostLinkedin" type="button" class="btn btn-primary social-li" data-toggle="modal"
+data-target="#postLinkedin" style="display: none">Post Linkedin</button>
+<div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Linkedin Post</h3>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <div class="modal-body">
+            <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
+                    class="form-control" style="border-radius:5px;" id="postMSGLinkedin"></textarea></p>
+            <div class="banner-title">
+                Select a banner of your choice to post!
+            </div>
+            <select name="user[avatar]" id="images-linkedin">
+                <option value="">Please Select</option>
+                <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
+                <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
+                <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
+            </select>
+
+            <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
+            <div style="text-align: center;">
+                <button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()">Post On
+                    Linkedin <i class="fa fa-linkedin-square"></i> </button>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+</div>
+
 {{/inline}} {{#*inline "scripts-block"}}
 
-<script src="js/profile.js?v=1.31"></script>
+<script src="/js/fundReq.js?v=1.54"></script>
+<script src="js/profile.js?v=1.33"></script>
+
 <script>
+
+window.addEventListener(
+    "message",
+    function (event) {
+      console.log("Originating event: ", event.origin);
+      console.log(event.origin);
+      if (event.origin == "https://www.blockdegree.org") {
+        if (event.data == "ok"){
+          $.notify("Social linked!", { type: "success" });
+          checkAuth();
+        }
+        else if (event.data == "share"){
+          console.log("message from popup.");
+        // toggle linkedin modal
+        if (loginLinkedin === true) {
+          if (linkedinFunder == true) {
+            postLinkedin(true);
+            linkedinFunder = false;
+          } else {
+            $("#togglePostLinkedin").click();
+          }
+          loginLinkedin = false;
+        }
+
+        // toggle twitter modal
+        if (loginTwitter === true) {
+          if (twitterFunder == true) {
+            postTweet(true);
+            twitterFunder = false;
+          } else {
+            $("#togglePostTwitter").click();
+          }
+
+          loginTwitter = false;
+        }          
+        }
+      }
+    },
+    false
+  );
+
   let allPendingTransaction = [];
   let pendingEventListener;
   let listeningForPending = false;
@@ -342,7 +547,8 @@ your profile"}}
   const courseName = {
     course_1: "Basic",
     course_2: "Advanced",
-    course_3: "Professional"
+    course_3: "Professional",
+    course_4: "Cloud Computing"
   };
 
   $("document").ready(() => {
@@ -357,7 +563,7 @@ your profile"}}
     }, 3000);
   });
 
-  $("#modalConfirmName").on("hidden.bs.modal", function() {
+  $("#modalConfirmName").on("hidden.bs.modal", function () {
     document.getElementById("edit-profile-btn").click();
     document.getElementById("edit_name").focus();
   });
@@ -378,28 +584,28 @@ your profile"}}
   function handleAuthGoogle() {
     // window.location.replace("https://www.blockdegree.org/auth/google")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/google?close=true"
+      path: "https://www.blockdegree.org/auth/google?close=true",
     });
   }
 
   function handleAuthFacebook() {
     // window.location.replace("https://www.blockdegree.org/auth/facebook")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/facebook?close=true"
+      path: "https://www.blockdegree.org/auth/facebook?close=true",
     });
   }
 
   function handleAuthTwitter() {
     // window.location.replace("https://www.blockdegree.org/auth/twitter")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/twitter?close=true"
+      path: "https://www.blockdegree.org/auth/twitter?close=true",
     });
   }
 
   function handleAuthLinkedin() {
     // window.location.replace("https://www.blockdegree.org/auth/linkedin")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/linkedin?close=true"
+      path: "https://www.blockdegree.org/auth/linkedin?close=true",
     });
   }
 
@@ -409,7 +615,7 @@ your profile"}}
       options.windowOptions || "location=0,status=0,width=600,height=600";
     options.callback =
       options.callback ||
-      function() {
+      function () {
         window.location.reload();
       };
     var that = this;
@@ -419,7 +625,7 @@ your profile"}}
       options.windowName,
       options.windowOptions
     );
-    that._oauthInterval = window.setInterval(function() {
+    that._oauthInterval = window.setInterval(function () {
       if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
         that._oauthWindow.location.href ==
           "https://www.blockdegree.org/closeCallback";
@@ -428,18 +634,22 @@ your profile"}}
   }
 
   function fetchUserRefId() {
-    $.ajax({url:"/api/getUserRefId",success: resp => {
-      console.log(resp);
-      
-      if (resp.status!==true){
-        $.notify("Error while fetching referral code", {type:"danger"})
-      }else{
-        $("#refId").html(resp.refId);
-        $("#refLink").html(resp.url);
-      }
-    }, error: err => {
-      $.notify("Error while fetching referral code", {type:"danger"})
-    }})
+    $.ajax({
+      url: "/api/getUserRefId",
+      success: (resp) => {
+        console.log(resp);
+
+        if (resp.status !== true) {
+          $.notify("Error while fetching referral code", { type: "danger" });
+        } else {
+          $("#refId").html(resp.refId);
+          $("#refLink").html(resp.url);
+        }
+      },
+      error: (err) => {
+        $.notify("Error while fetching referral code", { type: "danger" });
+      },
+    });
   }
 
   function fetchPaypalPayment() {
@@ -452,7 +662,7 @@ your profile"}}
     $.ajax({
       method: "get",
       url: "/api/getUserPaypalPayment",
-      success: result => {
+      success: (result) => {
         if (result.status == true) {
           // ok
           let logs = result.logs;
@@ -462,7 +672,7 @@ your profile"}}
             retHtml += `<tr><td>No payment done yet</td></tr>`;
           } else {
             // push paypal tx
-            for (let x = logs.length - 1; x >= logs.length - 5 && x>= 0; x--) {
+            for (let x = logs.length - 1; x >= logs.length - 5 && x >= 0; x--) {
               // log filed
               retHtml += `<tr><td>${courseName[logs[x].course_id]}</td><td>${
                 logs[x].payment_id
@@ -473,12 +683,14 @@ your profile"}}
                     : logs[x].burnStatus
                   : "-"
               }</td>
-              <td>${
-                logs[x].burnTokenName ? logs[x].burnTokenName : "-"
-              }</td>
+              <td>${logs[x].burnTokenName ? logs[x].burnTokenName : "-"}</td>
 
               <td>${logs[x].burnAmnt ? logs[x].burnAmnt : "-"}</td><td>${
-                logs[x].burnTx ? `<a target="_blank" href="${mainnetExplorer+logs[x].burnTx}">${logs[x].burnTx.slice(0,11)}...</a>` : "-"
+                logs[x].burnTx
+                  ? `<a target="_blank" href="${
+                      mainnetExplorer + logs[x].burnTx
+                    }">${logs[x].burnTx.slice(0, 11)}...</a>`
+                  : "-"
               }</td></tr>`;
             }
           }
@@ -492,12 +704,12 @@ your profile"}}
           return;
         }
       },
-      error: xhr => {
+      error: (xhr) => {
         $.notify("Some error occured while fetching payment logs", {
-          type: "danger"
+          type: "danger",
         });
         return;
-      }
+      },
     });
   }
 
@@ -511,7 +723,7 @@ your profile"}}
     $.ajax({
       method: "get",
       url: "/api/getUserCryptoPayment",
-      success: result => {
+      success: (result) => {
         if (!result.status) {
           console.error("Error in /api/getUserCryptoPayment: ", result);
           $.notify(
@@ -553,8 +765,9 @@ your profile"}}
                   );
                 }
 
-                pay_hash_link = `<a href="${etherScanIo +
-                  payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+                pay_hash_link = `<a href="${
+                  etherScanIo + payments[z].txn_hash
+                }" target="_blank">${payment_txHash}</a>`;
 
                 if (payments[z].autoBurn) {
                   // will burn
@@ -585,9 +798,9 @@ your profile"}}
 
                     burn_txHash =
                       payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
-                    burn_hash_link = `<a href="${etherScanIo +
-                      payments[z]
-                        .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                    burn_hash_link = `<a href="${
+                      etherScanIo + payments[z].burn_txn_hash
+                    }" target="_blank">${burn_txHash}</a>`;
                     burnAmnt = payments[z].burn_token_amnt;
                   }
                 } else {
@@ -605,8 +818,9 @@ your profile"}}
                   );
                 }
 
-                pay_hash_link = `<a href="${apothemExplorer +
-                  payments[z].txn_hash}" target="_blank">${payment_txHash}</a>`;
+                pay_hash_link = `<a href="${
+                  apothemExplorer + payments[z].txn_hash
+                }" target="_blank">${payment_txHash}</a>`;
 
                 if (payments[z].autoBurn) {
                   // will burn
@@ -637,9 +851,9 @@ your profile"}}
 
                     burn_txHash =
                       payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
-                    burn_hash_link = `<a href="${apothemExplorer +
-                      payments[z]
-                        .burn_txn_hash}" target="_blank">${burn_txHash}</a>`;
+                    burn_hash_link = `<a href="${
+                      apothemExplorer + payments[z].burn_txn_hash
+                    }" target="_blank">${burn_txHash}</a>`;
                     burnAmnt = payments[z].burn_token_amnt;
                   }
                 } else {
@@ -680,8 +894,10 @@ your profile"}}
               burn_hash_link = burn_txHash;
             }
 
-            retHtml += `<tr><td>${payments[z].courseName[0].toUpperCase() +
-              payments[z].courseName.slice(1)}</td><td>${payments[
+            retHtml += `<tr><td>${
+              payments[z].courseName[0].toUpperCase() +
+              payments[z].courseName.slice(1)
+            }</td><td>${payments[
               z
             ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${
               payments[z].status != "not yet mined"
@@ -713,7 +929,7 @@ your profile"}}
           }
         }
       },
-      error: xhr => {
+      error: (xhr) => {
         console.error(
           "Error occured while making a get request to /api/getUserCryptoPayment"
         );
@@ -722,7 +938,7 @@ your profile"}}
           { type: "danger" }
         );
         return;
-      }
+      },
     });
 
     // setInterval for pending transactions
@@ -744,69 +960,119 @@ your profile"}}
     }
   }
 
-  async function getFMDReq(){
-    try{
+  async function getFMDReq() {
+    try {
       let retHtml = "";
-      const resp = await $.ajax({method:"get", url:"/api/getUserFundReq"});
-      if (resp.status!==true){
-        return $.notify("Some error occured.", {type:"danger"})
+      const resp = await $.ajax({ method: "get", url: "/api/getUserFundReq" });
+      if (resp.status !== true) {
+        return $.notify("Some error occured.", { type: "danger" });
       }
-      console.log("FMD response: ",resp.data);
-      if (resp.data.length==0){
+      console.log("FMD response: ", resp.data);
+      if (resp.data.length == 0) {
         retHtml += `<tr><td>No transactions made yet.  <a href="/fmd">Get it Now</a></td></tr>`;
-      }
-      else{
-        resp.data.forEach(currRow=>{
+      } else {
+        resp.data.forEach((currRow) => {
           retHtml += `<tr>
-            <td>`
-          currRow.courseId.forEach(currCourse =>  {
-            retHtml += `<div class="course-name">${getCourseName(currCourse)}</dvi>`
-          } )
+            <td>`;
+          currRow.courseId.forEach((currCourse) => {
+            retHtml += `<div class="course-name">${getCourseName(
+              currCourse
+            )}</dvi>`;
+          });
           retHtml += `</td>
             <td>${currRow.receiveAddr}</td>`;
-          retHtml += `<td class="${currRow.status==="completed"?"completed":"pending"}">${currRow.status==="completed"?"completed":"pending"}</td>
-            <td><a href="https://explorer.xinfin.network/tx/${currRow.fundTx}">${currRow.fundTx.slice(0,11)}...</a></td>
-            <td>${currRow.burnStatus==="completed"?`<a href="https://explorer.xinfin.network/tx/${currRow.burnTx}">${currRow.burnTx.slice(0,11)}...</a>`:`-`}</td>
-            <td>${currRow.burnStatus==="completed"?currRow.donerName==undefined?'Anonymous':currRow.donerName:"-"}</td>
+          retHtml += `<td class="${
+            currRow.status === "completed" ? "completed" : "pending"
+          }">${currRow.status === "completed" ? "completed" : "pending"}</td>
+            <td><button class="btn btn-outline-primary" onclick="renderRequestModal(
+          '${currRow.userName}',
+          '${currRow.requestUrlShort}',
+          '${currRow.requestUrlLong}',
+          '${escape(currRow.description)}',
+          '${currRow.receiveAddr}',
+          '${currRow.fundId}',
+          '${currRow.status}',
+          '${currRow.amountGoal}',
+          '${currRow.donerName}',
+          'true')">View</button></td>
+            <td><a href="https://explorer.xinfin.network/tx/${
+              currRow.fundTx
+            }">${currRow.fundTx.slice(0, 11)}...</a></td>
+            <td>${
+              currRow.burnStatus === "completed"
+                ? `<a href="https://explorer.xinfin.network/tx/${
+                    currRow.burnTx
+                  }">${currRow.burnTx.slice(0, 11)}...</a>`
+                : `-`
+            }</td>
+            <td>${
+              currRow.burnStatus === "completed"
+                ? currRow.donerName == undefined
+                  ? "Anonymous"
+                  : currRow.donerName
+                : "-"
+            }</td>
             </tr>`;
-        })
-      };
-      document.getElementById("fmdReq-tbody").innerHTML =retHtml;
-    }
-    catch(e){
+        });
+      }
+      document.getElementById("fmdReq-tbody").innerHTML = retHtml;
+    } catch (e) {
       console.log("exception at getFMDReq: ", e);
     }
   }
 
-  async function getFMDFunded(){
-    try{
+  async function getFMDFunded() {
+    try {
       let retHtml = "";
-      const resp = await $.ajax({method:"get", url:"/api/getUserFMDFunded"});
-      if (resp.status!==true){
-        return $.notify("Some error occured.", {type:"danger"})
+      const resp = await $.ajax({
+        method: "get",
+        url: "/api/getUserFMDFunded",
+      });
+      if (resp.status !== true) {
+        return $.notify("Some error occured.", { type: "danger" });
       }
-      console.log("FMD response: ",resp.data);
-      if (resp.data.length==0){
+      console.log("FMD response: ", resp.data);
+      if (resp.data.length == 0) {
         retHtml += `<tr><td>No Degrees Funded Yet. <a href="/fmd">Fund Now</a></td></tr>`;
-      }
-      else{
-        resp.data.forEach(currRow=>{
+      } else {
+        resp.data.forEach((currRow) => {
           retHtml += `<tr>
-            <td>`
-          currRow.courseId.forEach(currCourse =>  {
-            retHtml += `<div class="course-name">${getCourseName(currCourse)}</dvi>`
-          } )
+            <td>`;
+          currRow.courseId.forEach((currCourse) => {
+            retHtml += `<div class="course-name">${getCourseName(
+              currCourse
+            )}</dvi>`;
+          });
           retHtml += `</td>
             <td>${currRow.userName}</td>`;
-          retHtml += `<td class="${currRow.status==="completed"?"completed":"pending"}">${currRow.status==="completed"?"completed":"pending"}</td>
-            <td><a href="https://explorer.xinfin.network/tx/${currRow.fundTx}">${currRow.fundTx.slice(0,11)}...</a></td>
-            <td>${currRow.burnStatus==="completed"?`<a href="https://explorer.xinfin.network/tx/${currRow.burnTx}">${currRow.burnTx.slice(0,11)}...</a>`:`-`}</td>
+          retHtml += `<td class="${
+            currRow.status === "completed" ? "completed" : "pending"
+          }">${currRow.status === "completed" ? "completed" : "pending"}</td>
+          <td><button class="btn btn-outline-primary" onclick="renderRequestModal(
+          '${currRow.userName}',
+          '${currRow.requestUrlShort}',
+          '${currRow.requestUrlLong}',
+          '${escape(currRow.description)}',
+          '${currRow.receiveAddr}',
+          '${currRow.fundId}',
+          '${currRow.status}',
+          '${currRow.amountGoal}',
+          '${currRow.donerName}')">View</button></td>
+            <td><a href="https://explorer.xinfin.network/tx/${
+              currRow.fundTx
+            }">${currRow.fundTx.slice(0, 11)}...</a></td>
+            <td>${
+              currRow.burnStatus === "completed"
+                ? `<a href="https://explorer.xinfin.network/tx/${
+                    currRow.burnTx
+                  }">${currRow.burnTx.slice(0, 11)}...</a>`
+                : `-`
+            }</td>
             </tr>`;
-        })
-      };
-      document.getElementById("fmdFunded-tbody").innerHTML =retHtml;
-    }
-    catch(e){
+        });
+      }
+      document.getElementById("fmdFunded-tbody").innerHTML = retHtml;
+    } catch (e) {
       console.log("exception at getFMDReq: ", e);
     }
   }
@@ -820,12 +1086,17 @@ your profile"}}
   }
 
   function getCourseName(id) {
-    switch(id) {
-      case 'course_1': return "Basic" 
-      case 'course_2': return "Advanced" 
-      case 'course_3': return "Professional" 
+    switch (id) {
+      case "course_1":
+        return "Basic";
+      case "course_2":
+        return "Advanced";
+      case "course_3":
+        return "Professional";
+      case "course_4":
+        return "Cloud Computing"
       default: {
-        return null
+        return null;
       }
     }
   }
@@ -853,17 +1124,20 @@ your profile"}}
     }
   }
 
-function copyToClipboard(id) {
-        let copyText = document.getElementById(id).innerHTML;
-        let $body = document.getElementsByTagName('body')[0];
-        let $tempInput = document.createElement('INPUT');
-        $body.appendChild($tempInput);
-        $tempInput.setAttribute('value', copyText)
-        $tempInput.select();
-        document.execCommand('copy');
-        $body.removeChild($tempInput);
+  function copyToClipboard(id) {
+    let copyText = document.getElementById(id).innerHTML;
+    let $body = document.getElementsByTagName("body")[0];
+    let $tempInput = document.createElement("INPUT");
+    $body.appendChild($tempInput);
+    $tempInput.setAttribute("value", copyText);
+    $tempInput.select();
+    document.execCommand("copy");
+    $body.removeChild($tempInput);
 
-  $.notify(` Referral ${id==='refId'?"ID":"Link" } Copied!`, { type: "info", z_index: 2000 });
-};
+    $.notify(` Referral ${id === "refId" ? "ID" : "Link"} Copied!`, {
+      type: "info",
+      z_index: 2000,
+    });
+  }
 </script>
 {{/inline}} {{/base}}

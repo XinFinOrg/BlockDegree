@@ -5,15 +5,21 @@ let loginLinkedin = false,
   linkedinFunder = false,
   linkedinfundId = "",
   twitterFundId = "";
-$(document).ready(async () => {
-  getFMDAllData();
+
+let showRazorpay = false;
+// let validCountry = ["IN"];
+let validCountry = [""];
+
+$(document).ready(() => {
+  console.log(window.location.pathname);
+  if (window.location.pathname != "/profile") getFMDAllData();
 
   $("#xdc-modal-copy-btn").click(() => {
     copyToClipboard($("#xdc-addr-value-modal").val(), "xdc-qr-img", "Address");
   });
 
   $("#req-claim-fund").click(() => {
-    claimFund($("#xdc-addr-value-modal").val());
+    claimFund($("#xdc-addr-claim-fund-id").val());
   });
 
   window.addEventListener("message", function (event) {
@@ -21,34 +27,33 @@ $(document).ready(async () => {
       event.origin == "https://www.blockdegree.org" ||
       event.origin == "https://blockdegree.org"
     ) {
-      if (event.data == "ok") {
+      if (event.data == "share") {
         console.log("message from popup.");
         // toggle linkedin modal
         if (loginLinkedin === true) {
-          if (linkedinFunder===true){
+          if (linkedinFunder === true) {
             $("#funder-certi-link").attr(
               "src",
               `/img/funder-certi/${linkedinfundId}.png`
             );
             $("#togglePostLinkedinFunder").click();
-            linkedinFunder=false;
+            linkedinFunder = false;
+          } else {
+            $("#togglePostLinkedin").click();
           }
-            else{
-              $("#togglePostLinkedin").click();
-            }
           loginLinkedin = false;
         }
 
         // toggle twitter modal
         if (loginTwitter === true) {
-          if (twitterFunder){
+          if (twitterFunder) {
             $("#funder-certi-twit").attr(
               "src",
               `/img/funder-certi/${twitterFundId}.png`
             );
             $("#togglePostTwitterFunder").click();
-            twitterFunder=false;
-          }else{
+            twitterFunder = false;
+          } else {
             $("#togglePostTwitter").click();
           }
 
@@ -80,6 +85,13 @@ async function getFMDAllData(update) {
   })
     .then((result) => {
       if (result.status === true) {
+        let country = result.country;
+        let userEmail = result.userEmail;
+        if (validCountry.includes(country)) {
+          showRazorpay = true;
+        }
+        console.log("showrazorpay inside getAllFunds ", showRazorpay);
+
         const data = result.data;
         currentRequestData = result.data;
         let pendingFundsUsd = 0,
@@ -118,7 +130,7 @@ async function getFMDAllData(update) {
               currData.fundId
             }', '${currData.status}','${currData.amountGoal}', '${
               currData.donerName
-            }')">View Description</button></td><td>`;
+            }','${userEmail===currData.email}')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataPending += `<span class="courseName">${getCourseName(
@@ -127,7 +139,11 @@ async function getFMDAllData(update) {
             }
             retDataPending += `</td>             
             <td>$ ${currData.amountGoal}</td>
-            <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr}', '${currData.fundId}', ${currData.amountGoal})" class="btn btn-primary">Fund Now</button></td>
+            <td><button type="button" onclick="renderPaymentMethodModal('${
+              currData.receiveAddr
+            }', '${currData.fundId}', ${currData.amountGoal})" ${
+              userEmail === currData.email ? "disabled" : ""
+            } class="btn btn-primary">Fund Now</button></td>
           </tr>`;
           } else if (currData.status === "completed") {
             const completionDate = new Date(
@@ -217,7 +233,7 @@ async function getFMDAllData(update) {
           approvedFundsCnt
         );
 
-        renderRequestedModal(data);
+        renderRequestedModal(data, userEmail);
       }
     })
     .catch((e) => {
@@ -268,12 +284,22 @@ function renderPaymentMethodModal(addr, fundId, amountGoal) {
               </div>
               <div class="modal-body">
 
-                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="renderQRCode('${addr}','${amountGoal}')"
+                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="renderQRCode('${addr}','${amountGoal}', '${fundId}')"
                       data-dismiss="modal"> Pay Via XDC </button>
+
+                  <button type="button" data-dismiss="modal" class="btn-payment" onclick="submitMetamask('${addr}', '${fundId}','${amountGoal}')"
+                      data-dismiss="modal"> Pay Via XinPay </button>
 
                   <button type="button" data-dismiss="modal" class="btn-payment" onclick="payByPaypal('${fundId}')"
                       data-dismiss="modal">
                       Pay Via PayPal </button>
+
+                  ${
+                    showRazorpay == true
+                      ? `<button type="button" data-dismiss="modal" class="btn-payment" onclick="payRazorpay('${fundId}','${amountGoal}')"
+                      data-dismiss="modal"> Pay Via CARD/NetBanking/UPI </button>`
+                      : ""
+                  }
               </div>
 
           </div>
@@ -317,6 +343,9 @@ function handleFundRequestSubmit() {
     .checked;
   if (professionalCourse)
     courseIds.push(document.getElementById("professional-course").value);
+  const computingCourse = document.getElementById("computing-course").checked;
+  if (computingCourse)
+    courseIds.push(document.getElementById("computing-course").value);
   $.ajax({
     method: "post",
     url: "/api/requestNewFund",
@@ -346,7 +375,8 @@ function handleFundRequestSubmit() {
             resp.data.fundId,
             "uninitiated",
             resp.data.amountGoal,
-            ""
+            "",
+            'true'
           );
         }
       } else {
@@ -357,6 +387,7 @@ function handleFundRequestSubmit() {
       document.getElementById("basic-course").checked = false;
       document.getElementById("advanced-course").checked = false;
       document.getElementById("professional-course").checked = false;
+      document.getElementById("computing-course").checked = false;
     })
     .catch((e) => {
       console.log("exception : ", e);
@@ -366,6 +397,7 @@ function handleFundRequestSubmit() {
       document.getElementById("basic-course").checked = false;
       document.getElementById("advanced-course").checked = false;
       document.getElementById("professional-course").checked = false;
+      document.getElementById("computing-course").checked = false;
       document.getElementById("facebook-prof").value = "";
       document.getElementById("linkedin-prof").value = "";
       document.getElementById("twitter-prof").value = "";
@@ -389,7 +421,8 @@ function renderRequestModal(
   fundId,
   type,
   amountGoal,
-  funderName
+  funderName,
+  fundDisabled
 ) {
   console.log(addr, fundId);
   description = unescape(description);
@@ -403,7 +436,14 @@ function renderRequestModal(
   )}&source=blockdegree.org`;
   const funderMessage =
     "Sponsored a student's degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation";
-  const fundeeMessage = `Thank you <b>${funderName===undefined||funderName===null||funderName===""?"Anonymous person":funderName}</b> for sponsoring a degree! Appreciate it!<br/> <b>#blockdegree #fundmydegree #onlineeducation </b>`;
+  const fundeeMessage = `Thank you <b>${
+    funderName == undefined ||
+    funderName == "undefined" ||
+    funderName === null ||
+    funderName === ""
+      ? "Anonymous person"
+      : funderName
+  }</b> for sponsoring a degree! Appreciate it!<br/> <b>#blockdegree #fundmydegree #onlineeducation </b>`;
   let retHtml = "";
 
   if (type === "completed") {
@@ -515,6 +555,7 @@ function renderRequestModal(
           class="btn btn-primary fund-btn"
           data-dismiss="modal"
           onclick="renderPaymentMethodModal('${addr}','${fundId}', '${amountGoal}')"
+          ${fundDisabled==="true"?"disabled":""}
         >
           Fund
         </button>
@@ -547,6 +588,7 @@ function renderRequestModal(
 </div>`;
     document.getElementById("requestModalWrapper").innerHTML = retHtml;
     document.getElementById("requestModal--body").innerHTML = description;
+    console.log("rendered new modal");
   }
 
   setTimeout(() => $("#requestModal").modal("toggle"), 0);
@@ -566,12 +608,15 @@ function getCourseName(id) {
       return "Blockchain Advanced";
     case "course_3":
       return "Blockchain Professional";
+    case "course_4":
+      return "Cloud Computing";
     default:
       return "";
   }
 }
 
-function submitMetamask(addr, fundId, amountGoal) {
+async function submitMetamask(addr, fundId, amountGoal) {
+  await ethereum.enable();
   console.log(`received address ${addr} at submitMetamask ${amountGoal}`);
   if (typeof web3 == "undefined") {
     // no web3 provider is available, ask to install XinPay
@@ -593,8 +638,6 @@ function submitMetamask(addr, fundId, amountGoal) {
   }
 
   web3.version.getNetwork(async (err, providerNetworkId) => {
-    // await ethereum.enable();
-
     if (err) {
       $.notify("Oops, error occurred while getting the network ID");
       return;
@@ -661,7 +704,7 @@ function submitMetamask(addr, fundId, amountGoal) {
   });
 }
 
-function renderRequestedModal(allData) {
+function renderRequestedModal(allData, userEmail) {
   const fundId = getParamValue("fundId");
   console.log("FundId: ", fundId);
 
@@ -678,7 +721,8 @@ function renderRequestedModal(allData) {
           allData[i].fundId,
           allData[i].status,
           allData[i].amountGoal,
-          allData[i].donerName
+          allData[i].donerName,
+          String(allData[i].email===userEmail)
         );
         return;
       }
@@ -713,7 +757,7 @@ var copyToClipboard = function (secretInfo, innerElemId, name) {
   $.notify(` ${name} Copied!`, { type: "info", z_index: 2000 });
 };
 
-async function renderQRCode(addr, price) {
+async function renderQRCode(addr, price, fundId) {
   try {
     const xdcPrice = await $.ajax({
       method: "get",
@@ -731,6 +775,7 @@ async function renderQRCode(addr, price) {
     $("#xdc-qr-img").html("");
     $("#xdc-qr-img").qrcode({ text: addr, width: 250, height: 250 });
     $("#xdc-addr-value-modal").val(addr);
+    $("#xdc-addr-claim-fund-id").val(fundId);
     $("#xdcQRCode").modal("show");
   } catch (e) {
     console.log(`exception at renderQRCode: `, e);
@@ -796,7 +841,7 @@ function handleShareLinkdedin(seedMsg, funder, fundId) {
       let popUpWin;
       // if (!result.linkedinAuth) {
       // has not linked its linkedin account,  first link the account and then continue.
-      popUpWin = handleAuthLinkedin();
+      popUpWin = handleAuthLinkedinShare();
       // } else {
       //   $("#togglePostLinkedin").click();
       // }
@@ -825,7 +870,7 @@ function handleShareTwitter(seedMsg, funder, fundId) {
       let popUpWin;
       // if (!result.twitterAuth) {
       // has not linked its linkedin account,  first link the account and then continue.
-      popUpWin = handleAuthTwitter();
+      popUpWin = handleAuthTwitterShare();
       // } else {
       //   $("#togglePostTwitter").click();
       // }
@@ -839,21 +884,20 @@ function handleShareTwitter(seedMsg, funder, fundId) {
   });
 }
 
-function handleAuthTwitter() {
+function handleAuthTwitterShare() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "https://www.blockdegree.org/auth/twitter?close=true",
+    "https://www.blockdegree.org/auth/twitter?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
 }
-function handleAuthLinkedin() {
+function handleAuthLinkedinShare() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "https://www.blockdegree.org/auth/linkedin?close=true",
-
+    "https://www.blockdegree.org/auth/linkedin?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -899,7 +943,7 @@ function postTweet(funder) {
   }
   console.log(`select the image: `, templateNumber, "funder: ", funder);
   let msg = document.getElementById("postMSGTwitter").value;
-  if (funder===true){
+  if (funder === true) {
     msg = document.getElementById("postMSGTwitterFunder").value;
   }
   $("#postTwitter").modal("hide");
@@ -942,7 +986,7 @@ function postLinkedin(funder) {
     return;
   }
   let msg = document.getElementById("postMSGLinkedin").value;
-  if (funder===true){
+  if (funder === true) {
     msg = document.getElementById("postMSGLinkedinFunder").value;
   }
   $("#postLinkedin").modal("hide");
@@ -1373,6 +1417,74 @@ var _createClass = (function () {
       );
     })());
 }.call(void 0));
+
+function payRazorpay(fundId, amount) {
+  console.log("called payRazorpay: ", fundId, amount);
+  $.ajax({
+    method: "post",
+    url: "/api/initiateRazorpay",
+    data: { amount: amount, fundId: fundId },
+    success: (resp) => {
+      if (resp.status == true) {
+        const { orderId, key, amnt, email, userName } = resp.data;
+        const newOrder = {
+          key: key, // Enter the Key ID generated from the Dashboard
+          amount: `${amnt}`, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          currency: "INR",
+          name: userName,
+          description: "Online Education",
+          image: "https://www.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+          handler: function (response) {
+            const {
+              razorpay_payment_id,
+              razorpay_order_id,
+              razorpay_signature,
+            } = response;
+            $.ajax({
+              url: "/api/completeRazorpayFMD",
+              method: "post",
+              data: {
+                paymentId: razorpay_payment_id,
+                orderId: razorpay_order_id,
+                signature: razorpay_signature,
+              },
+              success: (resp) => {
+                if (resp.status == true) {
+                  $.notify("Payment Completed Successfully!", {
+                    type: "success",
+                  });
+                } else {
+                  $.notify(resp.error, { type: "danger" });
+                }
+              },
+              error: (err) => {
+                $.notify(
+                  "Some error occured please contact <b>info@blockdegree.org</b>",
+                  { type: "danger" }
+                );
+              },
+            });
+          },
+          prefill: {
+            name: userName,
+            email: email,
+          },
+          theme: {
+            color: "#2073d4",
+          },
+        };
+        let rzp1 = new Razorpay(newOrder);
+        rzp1.open();
+      } else {
+        $.notify(resp.error, { type: "danger" });
+      }
+    },
+    error: (err) => {
+      $.notify("Failed to send request", { type: "danger" });
+    },
+  });
+}
 
 $("select").imagepicker();
 // Image selector Script ends //

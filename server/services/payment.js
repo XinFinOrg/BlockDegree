@@ -1,6 +1,9 @@
 const paypal = require("paypal-rest-sdk");
 const User = require("../models/user");
+const razorHelper = require("../helpers/razorHelper");
+const razorKeyId = require("../config/razorPayKeys").keyId;
 const PaymentLogs = require("../models/payment_logs");
+const RazorpayLog = require("../models/razorpay_payment");
 const emailer = require("../emailer/impl");
 const promoCodeService = require("../services/promoCodes");
 const PaymentToken = require("../models/payment_token");
@@ -54,10 +57,10 @@ exports.payPaypalSuccess = (req, res) => {
   let paymentId = req.query.paymentId;
 
   const execute_payment_json = {
-    payer_id: req.query.PayerID
+    payer_id: req.query.PayerID,
   };
 
-  paypal.payment.execute(paymentId, execute_payment_json, async function(
+  paypal.payment.execute(paymentId, execute_payment_json, async function (
     error,
     payment
   ) {
@@ -65,7 +68,7 @@ exports.payPaypalSuccess = (req, res) => {
       console.log(error.response);
       res.status(500).render("displayError", {
         error:
-          "Some error occured while executing the payment, please contact info@blockdegree.org"
+          "Some error occured while executing the payment, please contact info@blockdegree.org",
       });
 
       await emailer.sendMail(
@@ -94,13 +97,13 @@ exports.payPaypalSuccess = (req, res) => {
       console.log(custom.split(";"));
       console.log("Payment received from user ", email);
 
-      User.findOne({ email: email }, async function(err, user) {
+      User.findOne({ email: email }, async function (err, user) {
         if (err != null) {
           // CRITICAL: payment lost
           console.error(`Error: user not found || ${err}`);
           res.status(500).render("displayError", {
             error:
-              "Some error occurred while processing your payment, your service ticket has been generated, please contact info@blockdegree.org"
+              "Some error occurred while processing your payment, your service ticket has been generated, please contact info@blockdegree.org",
           });
           await emailer.sendMail(
             process.env.SUPP_EMAIL_ID,
@@ -109,22 +112,26 @@ exports.payPaypalSuccess = (req, res) => {
           );
           return;
         }
-        if (course_id == "course_1") {
-          user.examData.payment.course_1 = true;
-          user.examData.payment.course_1_payment = referralCode
-            ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
-            : `paypal:${invoice_number};promocode:${codeName}`;
-        } else if (course_id == "course_2") {
-          user.examData.payment.course_2 = true;
-          user.examData.payment.course_2_payment = referralCode
-            ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
-            : `paypal:${invoice_number};promocode:${codeName}`;
-        } else if (course_id == "course_3") {
-          user.examData.payment.course_3 = true;
-          user.examData.payment.course_3_payment = referralCode
-            ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
-            : `paypal:${invoice_number};promocode:${codeName}`;
-        }
+        user.examData.payment[course_id] = true;
+        user.examData.payment[`${course_id}_payment`] = referralCode
+          ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
+          : `paypal:${invoice_number};promocode:${codeName}`;
+        // if (course_id == "course_1") {
+        //   user.examData.payment.course_1 = true;
+        //   user.examData.payment.course_1_payment = referralCode
+        //     ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
+        //     : `paypal:${invoice_number};promocode:${codeName}`;
+        // } else if (course_id == "course_2") {
+        //   user.examData.payment.course_2 = true;
+        //   user.examData.payment.course_2_payment = referralCode
+        //     ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
+        //     : `paypal:${invoice_number};promocode:${codeName}`;
+        // } else if (course_id == "course_3") {
+        //   user.examData.payment.course_3 = true;
+        //   user.examData.payment.course_3_payment = referralCode
+        //     ? `paypal:${invoice_number};promocode:${codeName};referralcode:${referralCode}`
+        //     : `paypal:${invoice_number};promocode:${codeName}`;
+        // }
         try {
           await user.save();
         } catch (err) {
@@ -135,7 +142,7 @@ exports.payPaypalSuccess = (req, res) => {
           );
           res.status(500).render("displayError", {
             error:
-              "Some error occured while fetching / updating your profile, please contact info@blockdegree.org"
+              "Some error occured while fetching / updating your profile, please contact info@blockdegree.org",
           });
           await emailer.sendMail(
             process.env.SUPP_EMAIL_ID,
@@ -149,7 +156,7 @@ exports.payPaypalSuccess = (req, res) => {
         try {
           payment_log = await PaymentLogs.findOne({
             payment_id: invoice_number,
-            email: email
+            email: email,
           });
         } catch (e) {
           // Not Critical: just the log is lost
@@ -159,7 +166,7 @@ exports.payPaypalSuccess = (req, res) => {
           );
           res.status(500).render("displayError", {
             error:
-              "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org"
+              "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org",
           });
           await emailer.sendMail(
             process.env.SUPP_EMAIL_ID,
@@ -180,7 +187,7 @@ exports.payPaypalSuccess = (req, res) => {
           );
           res.status(500).render("displayError", {
             error:
-              "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org"
+              "Your payment is complete but some error occured while fetching / updating your logs, please contact info@blockdegree.org",
           });
           await emailer.sendMail(
             process.env.SUPP_EMAIL_ID,
@@ -191,11 +198,11 @@ exports.payPaypalSuccess = (req, res) => {
         }
         console.log("course_id", course_id, email);
         await emailer.sendTokenMail(email, "", req, course_id);
-        req.session.message = "Please check your email for exam link."
+        req.session.message = "Please check your email for exam link.";
         res.redirect("/payment-success");
 
         //  payment is a success, initiate the burn.
-        burnEmitter.emit("burnTokenPaypal",invoice_number,payment.transactions[0].amount.total,"50",course_id, email);
+        // burnEmitter.emit("burnTokenPaypal",invoice_number,payment.transactions[0].amount.total,"50",course_id, email);
       });
     }
   });
@@ -226,7 +233,7 @@ exports.payPaypal = async (req, res) => {
     if (course === null) {
       // invalid course ID
       return res.render("displayError", {
-        error: "Payment for a non-existing course."
+        error: "Payment for a non-existing course.",
       });
     }
     console.log(req.body);
@@ -236,7 +243,7 @@ exports.payPaypal = async (req, res) => {
     console.log(`Discount Price : ${discObj.discAmt}`);
     if (price != course.priceUsd) {
       return res.render("displayError", {
-        error: "Invalid Course Price"
+        error: "Invalid Course Price",
       });
     }
     if (discObj.error == null) {
@@ -250,7 +257,7 @@ exports.payPaypal = async (req, res) => {
 
       if (discObj.error != "bad request") {
         res.render("displayError", {
-          error: discObj.error
+          error: discObj.error,
         });
         return;
       }
@@ -258,22 +265,30 @@ exports.payPaypal = async (req, res) => {
     console.log(`Price After : ${price}`);
     price = Math.round(parseFloat(price) * 100) / 100;
     console.log(`Price : ${price}`);
-    const user = await User.findOne({ email: email }, function(err) {
+    const user = await User.findOne({ email: email }, function (err) {
       if (err != null) {
         console.error(`Can't find user | access db; Err : ${err}`);
         res.send({
           status: "500",
-          message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
+          message: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`,
         });
         return;
       }
     });
-    if (course_id == "course_1") {
-      payment_status = user.examData.payment.course_1;
-    } else if (course_id == "course_2") {
-      payment_status = user.examData.payment.course_2;
-    } else if (course_id == "course_3") {
-      payment_status = user.examData.payment.course_3;
+    // if (course_id == "course_1") {
+    //   payment_status = user.examData.payment.course_1;
+    // } else if (course_id == "course_2") {
+    //   payment_status = user.examData.payment.course_2;
+    // } else if (course_id == "course_3") {
+    //   payment_status = user.examData.payment.course_3;
+    // }
+    payment_status = user.examData.payment[course_id];
+    if (
+      payment_status === undefined ||
+      payment_status === null ||
+      payment_status === ""
+    ) {
+      payment_status = false;
     }
     if (price <= 0) {
       // free course !!
@@ -291,7 +306,7 @@ exports.payPaypal = async (req, res) => {
             err
           );
           res.render("displayError", {
-            error: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`
+            error: `Its not you, its us. Please try again after sometime or contact-us at info@blockdegree.org`,
           });
         }
         return res.redirect(process.env.HOST + "/exams?courseFree=true");
@@ -309,11 +324,11 @@ exports.payPaypal = async (req, res) => {
       const create_payment_json = {
         intent: "sale",
         payer: {
-          payment_method: "paypal"
+          payment_method: "paypal",
         },
         redirect_urls: {
           return_url: `${process.env.HOST}/suc`,
-          cancel_url: `${process.env.HOST}/err`
+          cancel_url: `${process.env.HOST}/err`,
         },
         transactions: [
           {
@@ -324,13 +339,13 @@ exports.payPaypal = async (req, res) => {
                   sku: "001",
                   price: price.toString(),
                   currency: "USD",
-                  quantity: 1
-                }
-              ]
+                  quantity: 1,
+                },
+              ],
             },
             amount: {
               currency: "USD",
-              total: price.toString()
+              total: price.toString(),
             },
             description: `Payment for enrolling in the course by user ${req.user.email}`,
             invoice_number: invoice_number,
@@ -340,12 +355,12 @@ exports.payPaypal = async (req, res) => {
                 };referralcode:${referralCode}`
               : `email:${req.user.email.toString()};codeName:${
                   req.body.codeName
-                }`
-          }
-        ]
+                }`,
+          },
+        ],
       };
 
-      paypal.payment.create(create_payment_json, async function(
+      paypal.payment.create(create_payment_json, async function (
         error,
         payment
       ) {
@@ -376,7 +391,7 @@ exports.payPaypal = async (req, res) => {
       });
     } else {
       return res.render("displayError", {
-        error: "Payment already completed."
+        error: "Payment already completed.",
       });
     }
   } catch (outerErr) {
@@ -385,6 +400,202 @@ exports.payPaypal = async (req, res) => {
       outerErr
     );
     return res.render("displayError", { error: "internal error" });
+  }
+};
+
+exports.payRazorpay = async (req, res) => {
+  try {
+    let price = req.body.price;
+    let email = req.user.email;
+    let course_id = req.body.course_id;
+    let payment_status;
+    const discObj = await promoCodeService.usePromoCode(req);
+    const course = await CoursePrice.findOne({ courseId: course_id });
+    const refRet = await promoCodeService.useReferralCode(req);
+    let usedRefCode = false;
+    const referralCode = req.body.referralCode;
+    console.log(referralCode);
+    if (refRet.error != null) {
+      if (refRet.error != "bad request") {
+        // not ok
+        console.log(refRet);
+        return res.json({status:false, error: refRet.error });
+      }
+    } else {
+      usedRefCode = true;
+    }
+
+    if (course === null) {
+      // invalid course ID
+      return res.json({status:false, error: "Payment for a non-existing course"});
+    }
+    console.log(req.body);
+    console.log(discObj);
+    console.log(typeof price);
+    console.log(`Price Before : ${price}`);
+    console.log(`Discount Price : ${discObj.discAmt}`);
+    if (price != course.priceUsd) {
+      return res.json({status:false, error: "Invalid course price"});
+    }
+    if (discObj.error == null) {
+      // all good, can avail promo-code discount
+      price = price - discObj.discAmt;
+    } else {
+      console.error(
+        `Error while using promocode ${req.body.codeName}: `,
+        discObj.error
+      );
+
+      if (discObj.error != "bad request") {
+        return res.json({status:false, error: discObj.error});
+      }
+    }
+    console.log(`Price After : ${price}`);
+    price = Math.round(parseFloat(price) * 100) / 100;
+    console.log(`Price : ${price}`);
+    const user = await User.findOne({ email: email }, function (err) {
+      if (err != null) {
+        console.error(`Can't find user | access db; Err : ${err}`);
+        return res.json({status:false, error: "Internal  error"});
+      }
+    });
+    // if (course_id == "course_1") {
+    //   payment_status = user.examData.payment.course_1;
+    // } else if (course_id == "course_2") {
+    //   payment_status = user.examData.payment.course_2;
+    // } else if (course_id == "course_3") {
+    //   payment_status = user.examData.payment.course_3;
+    // }
+    payment_status = user.examData.payment[course_id];
+    if (
+      payment_status === undefined ||
+      payment_status === null ||
+      payment_status === ""
+    ) {
+      payment_status = false;
+    }
+    if (price <= 0) {
+      // free course !!
+      if (!payment_status) {
+        // if already not paid
+        user.examData.payment[course_id] = true;
+        user.examData.payment[course_id + "_payment"] = usedRefCode
+          ? `promocode:${req.body.codeName};referralcode:${referralCode}`
+          : `promocode:${req.body.codeName}`;
+        try {
+          await user.save();
+        } catch (err) {
+          console.error(
+            `Some error occured while updating the profile for user ${res.user.email}: `,
+            err
+          );
+          return res.json({status:false, error: "Internal  error"});
+        }
+        return res.json({status:true, redirect: "/exams?courseFree=true"});
+      }
+    }
+
+    console.log("Called payment 'payRazorpay'");
+
+    if (payment_status != true) {
+      let customReceipt = uuidv4();
+      const newOrder = await razorHelper.createNewOrder(customReceipt, price);
+      const razorpayLog = new RazorpayLog({
+        status: "initiated",
+        email: email,
+        paymentId: "",
+        orderId: newOrder.id,
+        amount: `${newOrder.amount}`,
+        receipt: customReceipt,
+        signature: "",
+        course_id: course_id,
+        promoCode: req.body.codeName,
+        referralCode: referralCode,
+      });
+      await razorpayLog.save();
+      res.json({
+        status: true,
+        data: {
+          key: razorKeyId,
+          orderId: newOrder.id,
+          amnt: newOrder.amount,
+          email: user.email,
+          userName: user.name,
+        },
+      });
+    } else {
+      return res.render("displayError", {
+        error: "Payment already completed.",
+      });
+    }
+  } catch (e) {
+    console.log(`exception at ${__filename}.payRazorpay: `, e);
+    return res.render("displayError", { error: "internal error" });
+  }
+};
+
+exports.completeRazorpay = async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+    const paymentId = req.body.paymentId;
+    const orderId = req.body.orderId;
+    const signature = req.body.signature;
+
+    const razorpayLog = await RazorpayLog.findOne({
+      $and: [{ orderId: orderId }, { status: "initiated" }],
+    });
+    if (razorpayLog === null) {
+      await emailer.sendMail(
+        process.env.SUPP_EMAIL_ID,
+        "Re-embursement: razorpay payment lost",
+        `The payment for the user ${userEmail} was processed but some error occured and user's state was not updated. Please consider for re-embursement`
+      );
+      return res.json({ status: false, error: "log not found" });
+    }
+    // do double validation
+    razorpayLog.status = "completed";
+    razorpayLog.paymentId = paymentId;
+    razorpayLog.orderId = orderId;
+    await razorpayLog.save();
+
+    const user = await User.findOne({ email: userEmail });
+
+    if (user == null) {
+      await emailer.sendMail(
+        process.env.SUPP_EMAIL_ID,
+        "Re-embursement: razorpay payment lost",
+        `The payment for the user ${userEmail} was processed but some error occured and user's state was not updated. Please consider for re-embursement`
+      );
+      return res.json({ status: false, error: "user not found" });
+    }
+
+    const course_id = razorpayLog.course_id;
+    const email = razorpayLog.email;
+    const codeName = razorpayLog.promoCode;
+    const referralCode = razorpayLog.referralCode;
+    console.log("Referral Code: ", referralCode);
+    console.log("Payment received from user ", email);
+
+    user.examData.payment[course_id] = true;
+    user.examData.payment[`${course_id}_payment`] = referralCode
+      ? `razorpay:${paymentId};promocode:${codeName};referralcode:${referralCode}`
+      : `razorpay:${paymentId};promocode:${codeName}`;
+
+    await user.save();
+    await emailer.sendTokenMail(email, "", req, course_id);
+
+    res.json({
+      status: true,
+      message: "payment successful",
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.completeRazorpay: `, e);
+    res.json({ status: false, error: "internal error" });
+    await emailer.sendMail(
+      process.env.SUPP_EMAIL_ID,
+      "Re-embursement: razorpay payment lost",
+      `The payment for the user ${userEmail} was processed but some error occured and user's state was not updated. Please consider for re-embursement`
+    );
   }
 };
 
@@ -440,7 +651,7 @@ exports.payViaXdc = async (req, res) => {
         if (discObj.error != "bad request") {
           res.json({
             status: false,
-            error: discObj.error
+            error: discObj.error,
           });
           await emailer.sendMail(
             process.env.SUPP_EMAIL_ID,
@@ -482,7 +693,7 @@ exports.payViaXdc = async (req, res) => {
           );
           return res.json({
             status: false,
-            error: "Course is already paid for."
+            error: "Course is already paid for.",
           });
         }
       } else {
@@ -502,7 +713,7 @@ exports.payViaXdc = async (req, res) => {
     }
 
     const duplicateTx = await PaymentToken.findOne({
-      txn_hash: txn_hash
+      txn_hash: txn_hash,
     });
     if (duplicateTx != null) {
       // this transaction is already recorded
@@ -567,7 +778,7 @@ exports.payViaXdc = async (req, res) => {
       );
       res.json({
         error: "internal error",
-        status: false
+        status: false,
       });
       await emailer.sendMail(
         process.env.SUPP_EMAIL_ID,
@@ -583,7 +794,7 @@ exports.payViaXdc = async (req, res) => {
         res.json({
           status: false,
           error:
-            "Looks like its taking more time than usual to for the transaction to be mined on the XinFin network. We'll update you when its done in your <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong>"
+            "Looks like its taking more time than usual to for the transaction to be mined on the XinFin network. We'll update you when its done in your <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong>",
         });
         eventEmitter.emit(
           "listenTxMined",
@@ -603,8 +814,8 @@ exports.payViaXdc = async (req, res) => {
         url: txReceiptUrlApothem,
         data: {
           tx: txn_hash,
-          isTransfer: false
-        }
+          isTransfer: false,
+        },
       });
       txReceipt = txResponseReceipt.data;
       if (
@@ -663,7 +874,7 @@ exports.payViaXdc = async (req, res) => {
     */
 
         let comPaymentToken = await PaymentToken.findOne({
-          txn_hash: txReceipt.hash
+          txn_hash: txReceipt.hash,
         });
         if (comPaymentToken == null) {
           TxMinedListener = clearInterval(TxMinedListener);
@@ -683,7 +894,7 @@ exports.payViaXdc = async (req, res) => {
         newNoti.eventName = "payment in pending";
         newNoti.eventId = newNotiId;
         newNoti.title = "Payment Mined";
-        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
         newNoti.displayed = false;
 
         comPaymentToken.status = "pending";
@@ -779,7 +990,7 @@ exports.payViaXdce = async (req, res) => {
         if (discObj.error != "bad request") {
           res.json({
             status: false,
-            error: discObj.error
+            error: discObj.error,
           });
           await emailer.sendMail(
             process.env.SUPP_EMAIL_ID,
@@ -821,7 +1032,7 @@ exports.payViaXdce = async (req, res) => {
           );
           return res.json({
             status: false,
-            error: "Course is already paid for."
+            error: "Course is already paid for.",
           });
         }
       } else {
@@ -841,7 +1052,7 @@ exports.payViaXdce = async (req, res) => {
     }
 
     const duplicateTx = await PaymentToken.findOne({
-      txn_hash: txn_hash
+      txn_hash: txn_hash,
     });
     if (duplicateTx != null) {
       // this transaction is already recorded
@@ -896,7 +1107,7 @@ exports.payViaXdce = async (req, res) => {
         res.json({
           status: false,
           error:
-            "Looks like its taking more time than usual to for the transaction to be mined on the ethereum network. We'll update you when its done in your <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong>"
+            "Looks like its taking more time than usual to for the transaction to be mined on the ethereum network. We'll update you when its done in your <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong>",
         });
         eventEmitter.emit(
           "listenTxMined",
@@ -1016,7 +1227,7 @@ exports.payViaXdce = async (req, res) => {
       */
 
         let comPaymentToken = await PaymentToken.findOne({
-          txn_hash: txReceipt.transactionHash
+          txn_hash: txReceipt.transactionHash,
         });
         if (comPaymentToken == null) {
           res.json({ error: "Internal error", status: false });
@@ -1035,7 +1246,7 @@ exports.payViaXdce = async (req, res) => {
         newNoti.eventName = "payment in pending";
         newNoti.eventId = newNotiId;
         newNoti.title = "Payment Mined";
-        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined!, checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
+        newNoti.message = `Your payment for course ${coursePrice.courseName} has been mined! checkout your <a href="/profile?inFocus=cryptoPayment">Profile</a>`;
         newNoti.displayed = false;
 
         comPaymentToken.status = "pending";
@@ -1154,7 +1365,7 @@ exports.getUserPendingTx = async (req, res) => {
   try {
     const getAllPending = await PaymentToken.find({
       email: req.user.email,
-      status: { $ne: "completed" }
+      status: { $ne: "completed" },
     });
     return res.json({ error: null, status: true, data: getAllPending });
   } catch (e) {
@@ -1170,7 +1381,7 @@ exports.getPaymentsToNotify = async (req, res) => {
   try {
     let pendingNotification = await Notification.find({
       email: req.user.email,
-      displayed: false
+      displayed: false,
     });
     for (let i = 0; i < pendingNotification.length; i++) {
       pendingNotification[i].displayed = true;
@@ -1200,9 +1411,9 @@ exports.getTokenRecipient = async (req, res) => {
       recipientActive: {
         $elemMatch: {
           wallet_network: network,
-          wallet_token_name: token_name
-        }
-      }
+          wallet_token_name: token_name,
+        },
+      },
     });
     if (retWallet === null) {
       return res.json({ error: "not found", status: false, data: null });
@@ -1215,7 +1426,7 @@ exports.getTokenRecipient = async (req, res) => {
         return res.json({
           error: null,
           status: true,
-          data: retWallet.recipientActive[c]
+          data: retWallet.recipientActive[c],
         });
       }
     }
@@ -1243,7 +1454,7 @@ function newPaymentToken() {
     autoBurn: false,
     burn_txn_hash: "",
     burn_token_amnt: "",
-    payment_network: ""
+    payment_network: "",
   });
 }
 
@@ -1273,7 +1484,7 @@ function newDefNoti() {
     type: "",
     title: "",
     message: "",
-    displayed: false
+    displayed: false,
   });
 }
 

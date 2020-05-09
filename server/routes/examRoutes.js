@@ -24,4 +24,10 @@ module.exports = app => {
     hasSubscribed,
     examServices.getAdvancedExam
   );
+  app.get(
+    "/cloud-computing-exam",
+    requireLogin,
+    hasSubscribed,
+    examServices.getCCExam
+  );
 };

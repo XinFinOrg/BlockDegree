@@ -106,52 +106,18 @@ if (typeof jQuery != "undefined") {
       ],
     });
 
-    $.ajax({
-      method: "post",
-      url: "/api/getAuthStatus",
-      data: {},
-      success: (auths) => {
-        if (
-          auths.localAuth ||
-          auths.twitterAuth ||
-          auths.facebookAuth ||
-          auths.googleAuth ||
-          auths.linkedinAuth
-        ) {
-          //logged in
-          $.ajax({
-            method: "get",
-            url: "/api/isNameRegistered",
-            success: (result) => {
-              console.log(result);
-              if (!result.isSet) {
-                alert("Name is not set, please set your name!");
-                document.location.href = `/verify-certification`;
-              }
-            },
-          });
-        } else {
-          return;
-        }
-      },
-    });
-
     getAllSiteStats();
 
     $("#slider").nivoSlider({
       pauseTime: 10000,
       afterLoad: () => {
-        nivoLoaded=true;
+        nivoLoaded = true;
         if (imageLoaded === true) {
           document.getElementById("preloaded-banner").style = "display:none";
           document.getElementById("final-banner").style = "display:block";
         }
       },
     });
-
-    // setInterval(() => {
-    //   getAllSiteStats();
-    // }, 60000);
   });
 }
 

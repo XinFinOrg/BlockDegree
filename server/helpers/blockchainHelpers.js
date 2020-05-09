@@ -114,7 +114,7 @@ exports.makeValueTransferXDC = (to, value, privateKey) => {
           const tx = {
             from: account.address,
             to: to,
-            value: removeExpo(value + ""),
+            value: Math.round(removeExpo(value + "")).toString(),
             nonce: count + "",
             gasPrice: gasPrice,
             chainId: "50",
