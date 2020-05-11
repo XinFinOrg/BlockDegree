@@ -15,11 +15,12 @@ const expressFileUpload = require("express-fileupload");
 let pendingTx = require("./listeners/pendingTx").em;
 const adminServices = require("./services/adminServices");
 const donationListener = require("../server/listeners/donationListener");
-const updateSiteStats  = require("./listeners/updateSiteStats");
+const updateSiteStats = require("./listeners/updateSiteStats");
+const { forceReSync } = require("./services/postSocials");
 const redis = require("redis");
 
 let RedisStore = require("connect-redis")(session);
-let redisClient = redis.createClient({prefix:"blockdegree"});
+let redisClient = redis.createClient({ prefix: "blockdegree" });
 global.RedisClient = redisClient;
 let app = express();
 require("dotenv").config();
@@ -121,6 +122,7 @@ const server = app.listen("3000", async () => {
   donationListener.em.emit("syncPendingDonation");
   donationListener.em.emit("syncPendingBulkCoursePayments");
   updateSiteStats.em.emit("setSiteStats");
+  forceReSync();
 
   await adminServices.initiateWalletConfig();
   console.log("[*] server started");
