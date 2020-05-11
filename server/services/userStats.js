@@ -385,8 +385,6 @@ exports.getSiteStats = (req, res) => {
         console.log(`exception at ${__filename}.getSiteStats: `, err);
         return res.json({ status: false, error: "internal  error" });
       }
-      console.log("result in siteStats: ",result);
-      
       if (result !== null) {
         console.log("[*] serving siteStats from cache");
         const resJson = JSON.parse(result);
@@ -398,8 +396,6 @@ exports.getSiteStats = (req, res) => {
           caCnt: resJson.ca,
         });
       } else {
-        console.log("[*] NOT serving siteStats from cache");
-
         let allUsers = await User.find({});
         let allVisits = await Visited.find({});
 
