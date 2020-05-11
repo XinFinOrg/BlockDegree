@@ -17,26 +17,26 @@ const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 exports.getXinFinStats = async (req, res) => {
   try {
     console.log("called getSiteStats");
-    let allUsers = await User.find({});
-    let allVisits = await Visited.find({});
+    // let allUsers = await User.find({});
+    // let allVisits = await Visited.find({});
 
-    let userCnt = 0,
-      visitCnt = 0,
-      caCnt = 20,
-      totCertis = 0;
-    if (allUsers != null) {
-      userCnt = allUsers.length;
-    }
+    // let userCnt = 0,
+    //   visitCnt = 0,
+    //   caCnt = 20,
+    //   totCertis = 0;
+    // if (allUsers != null) {
+    //   userCnt = allUsers.length;
+    // }
 
-    if (allVisits != null) {
-      visitCnt = allVisits.length;
-    }
+    // if (allVisits != null) {
+    //   visitCnt = allVisits.length;
+    // }
 
-    for (let y = 0; y < allUsers.length; y++) {
-      if (allUsers[y].examData.certificateHash.length > 1) {
-        totCertis += allUsers[y].examData.certificateHash.length - 1;
-      }
-    }
+    // for (let y = 0; y < allUsers.length; y++) {
+    //   if (allUsers[y].examData.certificateHash.length > 1) {
+    //     totCertis += allUsers[y].examData.certificateHash.length - 1;
+    //   }
+    // }
     const siteStatData = await axios.post(
       "https://explorer.xinfin.network/getXinFinStats"
     );
@@ -44,7 +44,7 @@ exports.getXinFinStats = async (req, res) => {
     res.json({
       status: true,
       netData: siteStatData.data,
-      siteData: { userCnt, visitCnt, caCnt, totCertis },
+      // siteData: { userCnt, visitCnt, caCnt, totCertis },
     });
   } catch (e) {
     console.log("exception at services.userStats: ", e);
