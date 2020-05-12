@@ -738,25 +738,29 @@
 .fund-apply-section {
 
   .fund-apply-form {
-    margin: -50px 0px 10px 100px;
+    /*margin: -50px 0px 10px 100px;*/
+	margin: -62px 0px 0px 0px;
     transform: translate(0, 0);
     background-color: white;
     border: 1px solid lightgrey;
     border-radius: 5px;
-    width: 50%;
+    /*width: 50%;*/
 
     @media (max-width: 768px) {
-      margin: -50px 0px 0px 20px;
-      width: 80%;
+      /*margin: -50px 0px 0px 20px;
+      width: 80%;*/
+	  margin: -62px 0px 0px 0px;
     }
 
     .form-name {
-      margin-top: 15px;
+      /*margin-top: 15px;
       margin-left: 10px;
-      padding: 3px 0px 3px 10px;
-      font-size: 28px;
+      padding: 3px 0px 3px 10px;*/
+	  padding: 17px 6px 16px 21px;
+      font-size: 24px;
       font-weight: 400;
-      color: #3a98db;
+      /*color: #3a98db;*/
+	  background: #e3eef4;
 
       .underline {
         margin-top: 10px;
@@ -770,7 +774,7 @@
       padding: 25px;
 
       .form-footer {
-        padding-right: 20px;
+        /*padding-right: 20px;*/
         text-align: right;
       }
     }
@@ -778,10 +782,11 @@
 
   .section-footer {
     text-align: left;
-    margin-left: 120px;
+    margin: 30px 0px 45px 0px;
+	/*margin-left: 120px;*/
 
     @media (max-width: 768px) {
-      margin-left: 20px;
+      /*margin-left: 20px;*/
     }
   }
 
