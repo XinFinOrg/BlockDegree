@@ -1,7 +1,7 @@
 gulp build
-if [[ -d /var/www/blockdegree.org/ ]]; then
-  rm -r /var/www/blockdegree.org/*
+if [[ -d /var/www/uat.blockdegree.org/ ]]; then
+  rm -r /var/www/uat.blockdegree.org/*
 else
-  mkdir /var/www/blockdegree.org/
+  mkdir /var/www/uat.blockdegree.org/
 fi
-cp -r ./dist/* /var/www/blockdegree.org/
+cp -r ./dist/* /var/www/uat.blockdegree.org/
