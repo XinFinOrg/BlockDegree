@@ -440,7 +440,7 @@ $(window).on("load", function () {
   });
 });
 
-const url = "wss://wss.blockdegree.org ";
+const url = "wss://wssuat.blockdegree.org ";
 const connection = new WebSocket(url);
 
 connection.onopen = () => {

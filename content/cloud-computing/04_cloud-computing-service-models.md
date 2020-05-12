@@ -10,7 +10,7 @@ courseIdx: 3
 
 - Infrastructure as a Service (IaaS), Platform as a Service (PaaS), and Software as a Service (SaaS).
 
-    ![](https://www.blockdegree.org/img/cloud-computing-imges/cloud_computing-services-models.png)
+    ![](https://uat.blockdegree.org/img/cloud-computing-imges/cloud_computing-services-models.png)
 
 ## . IaaS:-
 
@@ -70,6 +70,6 @@ c. IndSoft System Hosted Email Services
 
 d. SalesForce
 
-![](https://www.blockdegree.org/img/cloud-computing-imges/cloud-control.png)
+![](https://uat.blockdegree.org/img/cloud-computing-imges/cloud-control.png)
 
 
