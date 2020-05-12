@@ -95,7 +95,12 @@ class Nav extends Component {
                 <li className={this.isPathActive('/functionalities/fmd') ? 'active' : null}>
                   <Link to="/functionalities/fmd">Fund My Degree</Link>
                 </li>                
-              </ul>             
+              </ul>
+              <ul className="nav">
+                <li className={this.isPathActive('/functionalities/site-statistics') ? 'active' : null}>
+                  <Link to="/functionalities/site-statistics">Site Statistics</Link>
+                </li>                
+              </ul>              
             </div>
           </Collapse>
         </li>
