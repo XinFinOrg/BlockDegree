@@ -236,8 +236,7 @@
   width: 100%;
   position: absolute;
   top: -10vh;
-  background: url("../img/home/collaborators-blockchain-professional.jpg")
-    top/cover;
+  /*background: url("../img/home/collaborators-blockchain-professional.jpg") top/cover;*/
   @include media-breakpoint-up(md) {
     height: 80vh;
   }
@@ -531,7 +530,7 @@
 }
 
 .stats-counter {
-  background-image: url(../img/community.jpg);
+  /*background-image: url(../img/community.jpg);*/
   padding-top: 30px;
   padding-bottom: 30px;
   background-repeat: no-repeat;
