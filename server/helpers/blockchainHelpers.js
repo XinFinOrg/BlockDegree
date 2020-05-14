@@ -114,7 +114,7 @@ exports.makeValueTransferXDC = (to, value, privateKey) => {
           const tx = {
             from: account.address,
             to: to,
-            value: Math.round(removeExpo(value + "")).toString(),
+            value: removeExpo(Math.round(value + "").toString()),
             nonce: count + "",
             gasPrice: gasPrice,
             chainId: "50",
@@ -166,7 +166,10 @@ exports.getTransactionTimestamp = (txHash) => {
         const { blockNumber } = tx;
         xdcInst.eth
           .getBlock(blockNumber)
-          .then(({ timestamp }) => {resolve(Number(timestamp)*1000)}).catch(e => reject(e));
+          .then(({ timestamp }) => {
+            resolve(Number(timestamp) * 1000);
+          })
+          .catch((e) => reject(e));
       })
       .catch((e) => {
         reject(e);
