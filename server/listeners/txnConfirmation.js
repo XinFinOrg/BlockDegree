@@ -48,8 +48,8 @@ function xdcReconn() {
     console.log("[*] reconn xdc running");
     inReconnXDC = true;
     let currInterval = setInterval(() => {
-      let xdcProvider = new Xdc3.providers.WebsocketProvider(WsXinfinMainnet);
-      xdc3 = new Xdc3(xdcProvider);
+      let xdcProvider = new XDC3.providers.WebsocketProvider(WsXinfinMainnet);
+      xdc3 = new XDC3(xdcProvider);
       xdcProvider.on("connect", () => {
         console.log(`[*] xdc reconnected to ws at ${__filename}`);
         inReconnXDC = false;
