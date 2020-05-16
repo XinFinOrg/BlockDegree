@@ -16,7 +16,56 @@ $(document).ready(async function () {
   //   loginButton = document.getElementById("login-btn"),
   //   profileBtn = document.getElementById("profile-btn");
 
-  renderNavbar();
+  //------- Mobile Nav js starts --------//
+  if ($("#nav-menu-container").length) {
+    $mobile_nav = $("#nav-menu-container").clone().prop({
+      id: "mobile-nav",
+    });
+    $mobile_nav.find("> ul").attr({
+      class: "",
+      id: "",
+    });
+    $("body").append($mobile_nav);
+    $("body").prepend(
+      '<button type="button" id="mobile-nav-toggle"><i class="lnr lnr-menu"></i></button>'
+    );
+    $("body").append('<div id="mobile-body-overly"></div>');
+    $("#mobile-nav")
+      .find(".menu-has-children")
+      .prepend('<i class="lnr lnr-chevron-down"></i>');
+
+    //   console.log($("body"));
+    $(document).on("click", ".menu-has-children i", function (e) {
+      console.log("clicked .menu-has-children");
+      $(this).next().toggleClass("menu-item-active");
+      $(this).nextAll("ul").eq(0).slideToggle();
+      $(this).toggleClass("lnr-chevron-up lnr-chevron-down");
+    });
+
+    $(document).on("click", "#mobile-nav-toggle", function (e) {
+      console.log("clicked mobile-nav-toggle");
+      $("body").toggleClass("mobile-nav-active");
+      $("#mobile-nav-toggle i").toggleClass("lnr-cross lnr-menu");
+      $("#mobile-body-overly").toggle();
+    });
+
+    $(document).click(function (e) {
+      var container = $("#mobile-nav, #mobile-nav-toggle");
+      if (!container.is(e.target) && container.has(e.target).length === 0) {
+        if ($("body").hasClass("mobile-nav-active")) {
+          $("body").removeClass("mobile-nav-active");
+          $("#mobile-nav-toggle i").toggleClass("lnr-cross lnr-menu");
+          $("#mobile-body-overly").fadeOut();
+        }
+      }
+    });
+    renderNavbar();
+  } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
+    $("#mobile-nav, #mobile-nav-toggle").hide();
+    renderNavbar();
+  }
+  //------- Mobile Nav js ends --------//
+
   let allParams = window.location.href.split("?");
   console.log(allParams);
   for (let i = 0; i < allParams.length; i++) {
@@ -130,52 +179,6 @@ $(document).ready(async function () {
     },
     speed: 400,
   });
-
-  //------- Mobile Nav js starts --------//
-  if ($("#nav-menu-container").length) {
-    var $mobile_nav = $("#nav-menu-container").clone().prop({
-      id: "mobile-nav",
-    });
-    $mobile_nav.find("> ul").attr({
-      class: "",
-      id: "",
-    });
-    $("body").append($mobile_nav);
-    $("body").prepend(
-      '<button type="button" id="mobile-nav-toggle"><i class="lnr lnr-menu"></i></button>'
-    );
-    $("body").append('<div id="mobile-body-overly"></div>');
-    $("#mobile-nav")
-      .find(".menu-has-children")
-      .prepend('<i class="lnr lnr-chevron-down"></i>');
-
-    //   console.log($("body"));
-    $(document).on("click", ".menu-has-children i", function (e) {
-      $(this).next().toggleClass("menu-item-active");
-      $(this).nextAll("ul").eq(0).slideToggle();
-      $(this).toggleClass("lnr-chevron-up lnr-chevron-down");
-    });
-
-    $(document).on("click", "#mobile-nav-toggle", function (e) {
-      $("body").toggleClass("mobile-nav-active");
-      $("#mobile-nav-toggle i").toggleClass("lnr-cross lnr-menu");
-      $("#mobile-body-overly").toggle();
-    });
-
-    $(document).click(function (e) {
-      var container = $("#mobile-nav, #mobile-nav-toggle");
-      if (!container.is(e.target) && container.has(e.target).length === 0) {
-        if ($("body").hasClass("mobile-nav-active")) {
-          $("body").removeClass("mobile-nav-active");
-          $("#mobile-nav-toggle i").toggleClass("lnr-cross lnr-menu");
-          $("#mobile-body-overly").fadeOut();
-        }
-      }
-    });
-  } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
-    $("#mobile-nav, #mobile-nav-toggle").hide();
-  }
-  //------- Mobile Nav js ends --------//
 
   //------- Tabs Js --------//
   if (document.getElementById("horizontalTab")) {
@@ -496,6 +499,15 @@ async function renderNavbar() {
         );
       });
     }
+
+    if ($("#nav-menu-container").length) {
+      $("#mobile-nav").contents().find("#nav-login").html("Logout");
+      $("#mobile-nav")
+        .contents()
+        .find("#profile-btn")
+        .attr("style", "display:block");
+      $("#mobile-nav").contents().find("#nav-login").attr("href", "/logout");
+    }
   } else {
     let navLogin = document.getElementById("nav-login"),
       loginButton = document.getElementById("login-btn"),
@@ -507,28 +519,14 @@ async function renderNavbar() {
     loginButton.style = "display:block";
     navLogin.style = "display:block";
     profileBtn.style = "display:none";
-  }
 
-  if ($("#nav-menu-container").length) {
-    if ($mobile_nav != null) {
-      $("#mobile-nav").remove();
+    if ($("#nav-menu-container").length) {
+      $("#mobile-nav").contents().find("#nav-login").html("Login");
+      $("#mobile-nav")
+        .contents()
+        .find("#profile-btn")
+        .attr("style", "display:none");
+      $("#mobile-nav").contents().find("#nav-login").attr("href", "/login");
     }
-    $mobile_nav = $("#nav-menu-container").clone().prop({
-      id: "mobile-nav",
-    });
-    $mobile_nav.find("> ul").attr({
-      class: "",
-      id: "",
-    });
-    $("body").append($mobile_nav);
-    $("body").prepend(
-      '<button type="button" id="mobile-nav-toggle"><i class="lnr lnr-menu"></i></button>'
-    );
-    $("body").append('<div id="mobile-body-overly"></div>');
-    $("#mobile-nav")
-      .find(".menu-has-children")
-      .prepend('<i class="lnr lnr-chevron-down"></i>');
-  } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
-    $("#mobile-nav, #mobile-nav-toggle").hide();
   }
 }

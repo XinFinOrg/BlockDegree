@@ -1,14 +1,22 @@
 $("document").ready(() => {
+  $.ajax({
+    method: "get",
+    url: "/api/getSiteStats",
+    success: (resp) => {
+      if (resp.status === true) {
+        animateNumberIncrease(0, resp.userCnt, "stat-userRegistrations");
+        animateNumberIncrease(0, resp.visitCnt, "stat-courseVisits");
+        animateNumberIncrease(0, resp.caCnt, "stat-campAmbas");
+        animateNumberIncrease(0, resp.totCertis, "stat-certiIssued");
+      }
+    },
+  });
   console.log("on ready called statistics");
   $.ajax({
     url: "/api/getXinFinStats",
     method: "GET",
     success: (res) => {
       console.log("Response: ", res);
-      animateNumberIncrease(0, res.siteData.userCnt, "stat-userRegistrations");
-      animateNumberIncrease(0, res.siteData.visitCnt, "stat-courseVisits");
-      animateNumberIncrease(0, res.siteData.caCnt, "stat-campAmbas");
-      animateNumberIncrease(0, res.siteData.totCertis, "stat-certiIssued");
       // burnTokenAmnt
       animateNumberIncrease(
         0,
@@ -84,7 +92,7 @@ function animateNumberIncrease(currVal, desiredVal, elemId, skipDelim) {
       let exisVal = parseInt(
         document.getElementById(elemId).innerHTML.replace(/,/g, "")
       );
-      console.log(exisVal);      
+      console.log(exisVal);
       if (exisVal != NaN)
         if (exisVal >= desiredVal) {
           document.getElementById(elemId).innerHTML = addDelimitation(

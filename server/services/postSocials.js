@@ -637,7 +637,7 @@ exports.forceReSync = async (req, res) => {
     }
     // if AutoPost is true, has pending events, schedule them
     const socialPostConfig = await SocialPostConfig.findOne({});
-    if (socialPostConfig !== null || socialPostConfig.autoPost === true) {
+    if (socialPostConfig !== null && socialPostConfig.autoPost === true) {
       console.log("config file found & auto post is true");
       pendingEvents.forEach(evnt => {
         // only schedule events which are in future.

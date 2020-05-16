@@ -7,6 +7,7 @@ import WalletConfig from "./WalletConfig/index";
 import CoursePayment from "./CoursePayment/index";
 import Events from "./Events/index";
 import FMD from "./FundMyDegree/index";
+import SiteStatistics from "./SiteStatistics";
 
 class Functionalities extends React.Component {
   render() {
@@ -19,6 +20,8 @@ class Functionalities extends React.Component {
         <Route path={`${this.props.match.url}/course-payment`} component={CoursePayment} />
         <Route path={`${this.props.match.url}/events`} component={Events} />
         <Route path={`${this.props.match.url}/fmd`} component={FMD} />
+        <Route path={`${this.props.match.url}/site-statistics`} component={SiteStatistics} />
+
       </div>
     );
   }
