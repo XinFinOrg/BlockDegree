@@ -23,9 +23,9 @@ module.exports = (app) => {
     });
   });
 
-  app.get("/api/logout", (req, res) => {
+  app.get("/api/logout-corp", (req, res) => {
     req.logout();
-    res.redirect("/");
+    res.json({ status: true });
   });
 
   app.get("/api/current_user", (req, res) => {
@@ -51,6 +51,19 @@ module.exports = (app) => {
     )(req, res, next);
   });
 
+  app.post("/api/signup-corp", (req, res, next) => {
+    passport.authenticate(
+      "local-signup-corp",
+      {
+        session: true,
+      },
+      async (err, user, info) => {
+        console.log((err, user, info));
+        res.json({ status: user, message: info });
+      }
+    )(req, res, next);
+  });
+
   app.post("/login", (req, res, next) => {
     passport.authenticate(
       "local-login",
@@ -71,6 +84,31 @@ module.exports = (app) => {
           }
           res.send({ status: user, message: info });
           console.log("user logged in", user, info);
+        });
+      }
+    )(req, res, next);
+  });
+
+  app.post("/api/login-corp", (req, res, next) => {
+    passport.authenticate(
+      "local-login-corp",
+      {
+        session: true,
+      },
+      async (err, user, info) => {
+        if (user == false) {
+          // login not done
+          // return info
+          console.log(info);
+          return res.json({ status: false, error: info });
+          // console.log("user logged in", user, info);
+        }
+        req.logIn(user, function (err) {
+          if (err) {
+            console.log("login err>>>>>>>>>>>", err);
+          }
+          console.log("user logged in", user.companyEmail, info);
+          res.json({ status: true, user: user, message: info });
         });
       }
     )(req, res, next);
@@ -214,9 +252,19 @@ module.exports = (app) => {
     )(req, res);
   });
 
-  app.get("/auth/twitter", handleClose, detectReferral, passport.authenticate("twitter"));
+  app.get(
+    "/auth/twitter",
+    handleClose,
+    detectReferral,
+    passport.authenticate("twitter")
+  );
 
-  app.get("/auth/linkedin", handleClose, detectReferral, passport.authenticate("linkedin"));
+  app.get(
+    "/auth/linkedin",
+    handleClose,
+    detectReferral,
+    passport.authenticate("linkedin")
+  );
 
   app.get("/auth/google/callback", (req, res, next) => {
     passport.authenticate(
@@ -239,12 +287,18 @@ module.exports = (app) => {
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
-            return res.redirect(`/closeCallback?share=${req.session.shareModal}`);
+            return res.redirect(
+              `/closeCallback?share=${req.session.shareModal}`
+            );
           }
           if (info == "new-name") {
-            console.log(req.session);            
+            console.log(req.session);
             if (req.session.refIdUsed === true) {
-              referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
+              referralEmitter.emit(
+                "referralUsage",
+                req.session.refIdValue,
+                user.email
+              );
             }
             referralEmitter.emit("createUserReferral", user.email);
             res.redirect("/profile?confirmName=true");
@@ -291,11 +345,17 @@ module.exports = (app) => {
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
-            return res.redirect(`/closeCallback?share=${req.session.shareModal}`);
+            return res.redirect(
+              `/closeCallback?share=${req.session.shareModal}`
+            );
           }
           if (info == "new-name") {
             if (req.session.refIdUsed === true) {
-              referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
+              referralEmitter.emit(
+                "referralUsage",
+                req.session.refIdValue,
+                user.email
+              );
             }
             referralEmitter.emit("createUserReferral", user.email);
             res.redirect("/profile?confirmName=true");
@@ -338,11 +398,17 @@ module.exports = (app) => {
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
-            return res.redirect(`/closeCallback?share=${req.session.shareModal}`);
+            return res.redirect(
+              `/closeCallback?share=${req.session.shareModal}`
+            );
           }
           if (info == "new-name") {
             if (req.session.refIdUsed === true) {
-              referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
+              referralEmitter.emit(
+                "referralUsage",
+                req.session.refIdValue,
+                user.email
+              );
             }
             referralEmitter.emit("createUserReferral", user.email);
             res.redirect("/profile?confirmName=true");
@@ -384,11 +450,17 @@ module.exports = (app) => {
           }
           console.log(`User ${user.email} logged in.`);
           if (req.session.closeOnCallback) {
-            return res.redirect(`/closeCallback?share=${req.session.shareModal}`);
+            return res.redirect(
+              `/closeCallback?share=${req.session.shareModal}`
+            );
           }
           if (info == "new-name") {
             if (req.session.refIdUsed === true) {
-              referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
+              referralEmitter.emit(
+                "referralUsage",
+                req.session.refIdValue,
+                user.email
+              );
             }
             referralEmitter.emit("createUserReferral", user.email);
             res.redirect("/profile?confirmName=true");
@@ -436,6 +508,20 @@ module.exports = (app) => {
       googleAuth: user.auth.google.id != "",
       linkedinAuth: user.auth.linkedin.id != "",
     });
+  });
+
+  app.get("/api/getCorporateUser", async (req, res) => {
+    console.log("[*] getCorporateUser: ", req.user, req.session.passport);
+    if (req.user && req.user.companyEmail) {
+      res.json({
+        status: true,
+        auth: true,
+        user: req.user,
+        expiryTime: parseFloat(req.user.lastActive) + 10800000,
+      });
+    } else {
+      res.json({ status: true, auth: false, user: null });
+    }
   });
 
   app.get("/api/isNameRegistered", requireLogin, async (req, res) => {

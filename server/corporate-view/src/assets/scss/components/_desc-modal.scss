@@ -1,0 +1,98 @@
+.blockdegree-modal {
+  max-width: $modal-width;
+
+  .modal-content {
+    max-width: $modal-width;
+    height: $modal-height;
+    border-radius: 0.5rem;
+  }
+
+  @media only screen and (max-width: 580px) {
+    .blockdegree-modal {
+      left: 50%;
+    }
+
+    .blockdegree-modal {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.description-modal {
+  &__header {
+    padding: $modal-padding !important;
+    background-color: $color-primary;
+    color: $color-white;
+    &--title {
+      font-size: $modal-font-primary;
+    }
+
+    .close {
+      color: $color-white;
+    }
+  }
+
+  &__body {
+    padding: $modal-padding;
+    font-size: $modal-font-secondary;
+    background-color: $color-light-grey;
+    color: $color-primary;
+    border-radius: 0.5rem;
+  }
+}
+
+.qr-modal {
+  max-width: $modal-width;
+  &__header {
+    padding: $modal-padding !important;
+    background-color: $color-primary;
+    color: $color-white;
+    &--title {
+      font-size: $modal-font-primary;
+    }
+
+    .close {
+      color: $color-white;
+    }
+  }
+
+  &__body {
+    padding: $modal-padding;
+    font-size: $modal-font-secondary;
+    background-color: $color-light-grey;
+    color: $color-primary;
+    border-radius: 0.5rem;
+    text-align: center;
+
+    &--img {
+      canvas {
+        height: 20rem !important;
+        width: 20rem !important;
+        padding: 0.5rem;
+      }
+    }
+
+    &--wrap {
+      margin-top: 2rem;
+      padding: 2rem;
+      border-radius: 1rem;
+      background-color: $color-white;
+      text-align: center;
+      input {
+        width: 100%;
+      }
+
+      .address {
+        padding: 0.5rem;
+        overflow: hidden;
+        background-color: $color-light-grey;
+        border-radius: 0.5rem;
+      }
+
+      .copy-btn {
+        margin: 0.5rem;
+        font-size: $modal-font-secondary;
+      }
+    }
+  }
+}

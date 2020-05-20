@@ -1,0 +1,28 @@
+$color-primary: #343a40;
+$color-primary-light: lighten($color-primary, 50%);
+
+$color-header: #343a40;
+$color-header-light: lighten($color-header, 10%);
+$color-header-lighter: lighten($color-header, 20%);
+$color-header-dark: darken($color-header, 10%);
+
+$color-light-grey: lightgrey;
+$color-grey-light-1: #f7f7f7;
+$color-grey-dark: #777;
+$color-white: #ffffff;
+$color-black: #000;
+
+$typo-scale-ratio: 8/9;
+
+$overall-font-primary: 2rem;
+$overall-font-secondary: #{$overall-font-primary * $typo-scale-ratio};
+
+$table-one-font-primary: 2rem;
+$table-one-font-secondary: #{$table-one-font-primary * $typo-scale-ratio};
+
+$modal-font-primary: 2rem;
+$modal-font-secondary: #{$modal-font-primary * $typo-scale-ratio};
+$modal-padding: 2rem;
+$modal-width: 50rem;
+$modal-height: 20rem;
+$modal-margin: 1rem;

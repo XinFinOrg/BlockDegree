@@ -65,6 +65,8 @@ const userFundRequest = mongoose.Schema({
   createdAt: String,
   updatedAt: String,
   completionDate: String,
+  bulkId: { type: String },
+  type: { type: String, enum: ["direct", "bulk"] },
 });
 
 module.exports = mongoose.model("UserFundRequest", userFundRequest);

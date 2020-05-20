@@ -29,7 +29,7 @@ XinMainProvider.on("connect", () => {
   console.log("[*] connected to XDC mainnet at txnConfirmation");
 });
 
-connectionHeartbeat();
+// connectionHeartbeat();
 
 function connectionHeartbeat() {
   setInterval(async () => {

@@ -1,5 +1,6 @@
 const LocalStrategy = require("passport-local").Strategy;
 const googleStrategy = require("passport-google-oauth20").Strategy;
+const CorporateUser = require("../models/corporateUser");
 const User = require("../models/user");
 const Token = require("../models/tokenVerification");
 const emailer = require("../emailer/impl");
@@ -7,6 +8,7 @@ const socialPostListener = require("../listeners/postSocial").em;
 const socialPostKeys = require("../config/socialPostKeys");
 const referralEmitter = require("../listeners/userReferral").em;
 const crypto = require("crypto");
+const uuid = require("uuid/v4");
 require("dotenv").config();
 
 const facebookStrategy = require("passport-facebook").Strategy;
@@ -25,59 +27,64 @@ function newDefaultUser() {
         course_1: false,
         course_2: false,
         course_3: false,
-        course_4:false
+        course_4: false,
       },
       examBasic: {
         attempts: 0,
-        marks: 0
+        marks: 0,
       },
       examAdvanced: {
         attempts: 0,
-        marks: 0
+        marks: 0,
       },
       examProfessional: {
         attempts: 0,
-        marks: 0
+        marks: 0,
       },
-      certificateHash: [{}]
+      certificateHash: [{}],
     },
     auth: {
       facebook: {
         id: "",
         accessToken: "",
-        refreshToken: ""
+        refreshToken: "",
       },
       twitter: {
         id: "",
         token: "",
-        tokenSecret: ""
+        tokenSecret: "",
       },
       google: {
         id: "",
         accessToken: "",
-        refreshToken: ""
+        refreshToken: "",
       },
       local: {
         password: "",
-        isVerified: false
+        isVerified: false,
       },
       linkedin: {
-        refreshToken:"",
+        refreshToken: "",
         accessToken: "",
-        id: ""
-      }
-    }
+        id: "",
+      },
+    },
   });
 }
 
-module.exports = function(passport) {
-  passport.serializeUser(function(user, done) {
+module.exports = function (passport) {
+  passport.serializeUser(function (user, done) {
     done(null, user.id);
   });
-  passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
-      done(err, user);
-    });
+  passport.deserializeUser(async function (id, done) {
+    const user = await User.findById(id);
+    if (user !== null) {
+      return done(null, user);
+    } else {
+      const corporateUser = await CorporateUser.findById(id);
+      if (corporateUser !== null) return done(null, corporateUser);
+    }
+    done(null, null);
   });
   passport.use(
     "local-signup",
@@ -85,12 +92,12 @@ module.exports = function(passport) {
       {
         usernameField: "email",
         passwordField: "password",
-        passReqToCallback: true
+        passReqToCallback: true,
       },
-      function(req, email, password, done) {
+      function (req, email, password, done) {
         console.log(req.body, email, password);
-        process.nextTick(function() {
-          User.findOne({ email: email }, function(err, user) {
+        process.nextTick(function () {
+          User.findOne({ email: email }, function (err, user) {
             if (err) {
               console.log("some error", err);
               return done(err);
@@ -110,7 +117,7 @@ module.exports = function(passport) {
               }
             } else {
               // Validating user
-              let refId = req.body.refId;            
+              let refId = req.body.refId;
               let validEm = validateEmail(email),
                 validPwd = validatePWD(password),
                 validFN = validateName(req.body.firstName),
@@ -138,7 +145,7 @@ module.exports = function(passport) {
               newUser.auth.local.password = newUser.generateHash(password);
               newUser.created = Date.now();
               newUser.lastActive = Date.now();
-              newUser.save(function(err) {
+              newUser.save(function (err) {
                 if (err) {
                   console.log("Error:", err);
                   throw err;
@@ -148,9 +155,9 @@ module.exports = function(passport) {
 
                 var token = new Token({
                   email: email,
-                  token: crypto.randomBytes(16).toString("hex")
+                  token: crypto.randomBytes(16).toString("hex"),
                 });
-                token.save(function(err) {
+                token.save(function (err) {
                   if (err) {
                     console.log(err);
                     return done(null, false, "token errror");
@@ -158,12 +165,12 @@ module.exports = function(passport) {
                   console.log(email, token);
                   emailer
                     .sendTokenMail(email, token, req, "signup")
-                    .then(res => console.log("emailer res>>>>>", res))
-                    .catch(err => console.log("emailer err>>>>", err));
+                    .then((res) => console.log("emailer res>>>>>", res))
+                    .catch((err) => console.log("emailer err>>>>", err));
                   referralEmitter.emit("createUserReferral", email);
-                  if (refId!==""){
+                  if (refId !== "") {
                     console.log(`|${refId}|`);
-                    
+
                     referralEmitter.emit("referralUsage", refId, email);
                   }
                   return done(null, newUser);
@@ -181,15 +188,15 @@ module.exports = function(passport) {
       {
         usernameField: "email",
         passwordField: "password",
-        passReqToCallback: true
+        passReqToCallback: true,
       },
-      function(req, email, password, done) {
+      function (req, email, password, done) {
         let validEm = validateEmail(email);
         if (!validEm.valid) {
           return done(null, false, "Invalid email");
         }
 
-        User.findOne({ email: email }, async function(err, user) {
+        User.findOne({ email: email }, async function (err, user) {
           if (err) return done(err);
           if (!user) return done(null, false, "No user found.");
           if (user.auth.local.password == "") {
@@ -216,6 +223,135 @@ module.exports = function(passport) {
     )
   );
 
+  // --------------------------------------------------------------------------
+  // ------------------------------CORPORATE AUTH------------------------------
+  // --------------------------------------------------------------------------
+
+  passport.use(
+    "local-signup-corp",
+    new LocalStrategy(
+      {
+        usernameField: "companyEmail",
+        passwordField: "password",
+        passReqToCallback: true,
+      },
+      async function (req, email, password, done) {
+        try {
+          console.log("local-signup-corp");
+          console.log("req.body: ", req.body);
+          let companyLogo = req.files.companyLogo;
+          companyLogoBuffer = Buffer.from(companyLogo.data).toString("base64");
+          const existingUser = await CorporateUser.findOne({
+            companyEmail: email,
+          });
+          if (existingUser !== null) {
+            console.log("user exists");
+            return done(null, false, "email already taken");
+          }
+          let validEm = validateEmail(email),
+            validPwd = validatePWD(password);
+          if (!validEm.valid) {
+            return done(null, false, "Invalid Email");
+          }
+          if (!validPwd.valid) {
+            return done(null, false, validPwd.msg);
+          }
+          const newCorpUser = new CorporateUser({
+            uniqueId: uuid(),
+            companyEmail: email,
+            lastActive: Date.now(),
+            fundedCount: 0,
+            certifiedCount: 0,
+            companyLogo: companyLogoBuffer,
+            companyName: req.body.companyName,
+            auth: {
+              facebook: {
+                id: "",
+                accessToken: "",
+                refreshToken: "",
+              },
+              twitter: {
+                id: "",
+                token: "",
+                tokenSecret: "",
+              },
+              google: {
+                id: "",
+                accessToken: "",
+                refreshToken: "",
+              },
+              local: {
+                isVerified: false,
+              },
+              linkedin: {
+                accessToken: "",
+                id: "",
+              },
+            },
+          });
+          newCorpUser.auth.local.password = newCorpUser.generateHash(password);
+          await newCorpUser.save();
+          var token = new Token({
+            email: email,
+            token: crypto.randomBytes(16).toString("hex"),
+          });
+          await token.save();
+          await emailer.sendTokenMail(email, token, req, "signup");
+
+          return done(null, newCorpUser);
+        } catch (e) {
+          console.log(`exception at ${__filename}.local-signup-corp: `, e);
+          done(null, false, "internal error");
+        }
+      }
+    )
+  );
+  passport.use(
+    "local-login-corp",
+    new LocalStrategy(
+      {
+        usernameField: "companyEmail",
+        passwordField: "password",
+        passReqToCallback: true,
+      },
+      function (req, email, password, done) {
+        let validEm = validateEmail(email);
+        if (!validEm.valid) {
+          return done(null, false, "Invalid email");
+        }
+
+        CorporateUser.findOne({ companyEmail: email }, async function (
+          err,
+          user
+        ) {
+          try {
+            if (err) return done(err);
+            if (!user) return done(null, false, "No user found.");
+            if (!user.validPassword(password))
+              return done(null, false, "Oops! Wrong password.");
+            if (!user.auth.local.isVerified)
+              return done(
+                null,
+                false,
+                "User is not verified, Please check your email"
+              );
+            user.lastActive = Date.now();
+            await user.save();
+            console.log("user logged in: ", user.companyEmail);
+            return done(null, user);
+          } catch (e) {
+            console.log(`exception at ${__filename}.local-login-corp: `, e);
+            done(null, false, "internal error");
+          }
+        });
+      }
+    )
+  );
+
+  //  -----------------------------------------------------------------------------
+  //  ----------------------------------CORPORATE AUTH END-------------------------
+  //  -----------------------------------------------------------------------------
+
   // Google with Google
   passport.use(
     new googleStrategy(
@@ -223,17 +359,17 @@ module.exports = function(passport) {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: "https://uat.blockdegree.org/auth/google/callback",
-        passReqToCallback: true
+        passReqToCallback: true,
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        if (req.user) {
+        if (req.user && req.user.email) {
           if (
             req.user.auth.google.id == "" ||
             req.user.auth.google.id == undefined
           ) {
             // check if the credentials are associated with any other user.
             let otherUser = await User.findOne({
-              "auth.google.id": profile.id
+              "auth.google.id": profile.id,
             });
             if (otherUser != null) {
               // this set of credentials are associated with another account, show error
@@ -258,7 +394,7 @@ module.exports = function(passport) {
         }
         // find user by google id
         const existingUser = await User.findOne({
-          "auth.google.id": profile.id
+          "auth.google.id": profile.id,
         });
         if (existingUser) {
           // console.log(` In passport verification ${existingUser.email}`)
@@ -270,7 +406,7 @@ module.exports = function(passport) {
         // email registered
         if (profile.emails.length > 0) {
           const linkEmail = await User.findOne({
-            email: profile.emails[0].value
+            email: profile.emails[0].value,
           });
           if (linkEmail) {
             linkEmail.auth.google.id = profile.id;
@@ -312,18 +448,18 @@ module.exports = function(passport) {
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         callbackURL: "https://uat.blockdegree.org/auth/facebook/callback",
         passReqToCallback: true,
-        profileFields: ["id", "emails", "name", "displayName"]
+        profileFields: ["id", "emails", "name", "displayName"],
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        process.nextTick(async function() {
-          if (req.user) {
+        process.nextTick(async function () {
+          if (req.user && req.user.email) {
             if (
               req.user.auth.facebook.id == "" ||
               req.user.auth.facebook.id == undefined
             ) {
               // check if the credentials are associated with any other user.
               let otherUser = await User.findOne({
-                "auth.facebook.id": profile.id
+                "auth.facebook.id": profile.id,
               });
               if (otherUser != null) {
                 // this set of credentials are associated with another account, show error
@@ -343,9 +479,12 @@ module.exports = function(passport) {
             }
             let user = await User.findOne({ email: req.user.email });
             let otherUserSocial = await User.findOne({
-              "auth.facebook.id": profile.id
+              "auth.facebook.id": profile.id,
             });
-            if (otherUserSocial!==null && otherUserSocial.email!==user.email){
+            if (
+              otherUserSocial !== null &&
+              otherUserSocial.email !== user.email
+            ) {
               return done(
                 "This social account is not linked to your account.",
                 null,
@@ -362,7 +501,7 @@ module.exports = function(passport) {
             return done("Profile not set", null);
           }
           let existingUser = await User.findOne({
-            "auth.facebook.id": profile.id
+            "auth.facebook.id": profile.id,
           });
           if (existingUser) {
             existingUser.auth.facebook.accessToken = accessToken;
@@ -383,7 +522,7 @@ module.exports = function(passport) {
           // email registered
           if (profile.emails.length > 0) {
             const linkEmail = await User.findOne({
-              email: profile.emails[0].value
+              email: profile.emails[0].value,
             });
             if (linkEmail) {
               linkEmail.auth.facebook.id = profile.id;
@@ -396,7 +535,7 @@ module.exports = function(passport) {
           }
 
           let existingUser2 = await User.findOne({
-            email: profile.emails[0].value
+            email: profile.emails[0].value,
           });
           if (existingUser2) {
             let user = await User.findOne({ email: profile.emails[0].value });
@@ -429,18 +568,19 @@ module.exports = function(passport) {
       {
         clientID: socialPostKeys.facebook.app_id,
         clientSecret: socialPostKeys.facebook.app_secret,
-        callbackURL: "https://uat.blockdegree.org/admin/facebookRefresh/callback"
+        callbackURL: "https://uat.blockdegree.org/admin/facebookRefresh/callback",
       },
       async (token, tokenSecret, profile, done) => {
-        if (profile.emails[0].value === socialPostKeys.facebook.email){
+        if (profile.emails[0].value === socialPostKeys.facebook.email) {
           console.log(`Token: ${token} TokenSecret: ${tokenSecret}`);
           console.log(`Profile: ${profile}`);
           done(null, { token: token, tokenSecret: tokenSecret });
-        }
-        else{
-          console.log(`Admin tried to referesh token with different account ${profile.emails[0].value}, actual: ${socialPostKeys.facebook.email}.`);
+        } else {
+          console.log(
+            `Admin tried to referesh token with different account ${profile.emails[0].value}, actual: ${socialPostKeys.facebook.email}.`
+          );
           done("invalid facaebook account", null);
-        }        
+        }
       }
     )
   );
@@ -453,18 +593,18 @@ module.exports = function(passport) {
         consumerSecret: process.env.TWITTER_CLIENT_SECRET,
         callbackURL: "https://uat.blockdegree.org/auth/twitter/callback",
         includeEmail: true,
-        passReqToCallback: true
+        passReqToCallback: true,
       },
       async (req, token, tokenSecret, profile, done) => {
         console.log("called twitter auth");
-        if (req.user) {
+        if (req.user && req.user.email) {
           if (
             req.user.auth.twitter.id == "" ||
             req.user.auth.twitter.id == undefined
           ) {
             // check if the credentials are associated with any other user.
             let otherUser = await User.findOne({
-              "auth.twitter.id": profile.id
+              "auth.twitter.id": profile.id,
             });
             if (otherUser != null) {
               // this set of credentials are associated with another account, show error
@@ -478,9 +618,12 @@ module.exports = function(passport) {
             // add credentials
             let user = await User.findOne({ email: req.user.email });
             let otherUserSocial = await User.findOne({
-              "auth.twitter.id": profile.id
+              "auth.twitter.id": profile.id,
             });
-            if (otherUserSocial!==null && otherUserSocial.email!==user.email){
+            if (
+              otherUserSocial !== null &&
+              otherUserSocial.email !== user.email
+            ) {
               return done(
                 "This social account is not linked to your account.",
                 null,
@@ -502,7 +645,7 @@ module.exports = function(passport) {
           return done(null, req.user);
         }
         let existingUser = await User.findOne({
-          "auth.twitter.id": profile.id
+          "auth.twitter.id": profile.id,
         });
         if (existingUser) {
           existingUser.auth.twitter.token = token;
@@ -523,7 +666,7 @@ module.exports = function(passport) {
         // Link auths via email
         if (profile.emails.length > 0) {
           const linkEmail = await User.findOne({
-            email: profile.emails[0].value
+            email: profile.emails[0].value,
           });
           if (linkEmail) {
             linkEmail.auth.twitter.id = profile.id;
@@ -536,7 +679,7 @@ module.exports = function(passport) {
         }
 
         let existingUser2 = await User.findOne({
-          email: profile.emails[0].value
+          email: profile.emails[0].value,
         });
         if (existingUser2) {
           let user = await User.findOne({ email: profile.emails[0].value });
@@ -570,18 +713,18 @@ module.exports = function(passport) {
         clientSecret: process.env.LINKEDIN_SECRET,
         callbackURL: "https://uat.blockdegree.org/auth/linkedin/callback",
         scope: ["r_liteprofile", "r_emailaddress", "w_member_social"],
-        passReqToCallback: true
+        passReqToCallback: true,
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        process.nextTick(async function() {
-          if (req.user) {
+        process.nextTick(async function () {
+          if (req.user && req.user.email) {
             if (
               req.user.auth.linkedin.id == "" ||
               req.user.auth.linkedin.id == undefined
             ) {
               // check if the credentials are associated with any other user.
               let otherUser = await User.findOne({
-                "auth.linkedin.id": profile.id
+                "auth.linkedin.id": profile.id,
               });
               if (otherUser != null) {
                 // this set of credentials are associated with another account, show error
@@ -604,9 +747,12 @@ module.exports = function(passport) {
             }
             let user = await User.findOne({ email: req.user.email });
             let otherUserSocial = await User.findOne({
-              "auth.linkedin.id": profile.id
+              "auth.linkedin.id": profile.id,
             });
-            if (otherUserSocial!==null&&otherUserSocial.email!==user.email){
+            if (
+              otherUserSocial !== null &&
+              otherUserSocial.email !== user.email
+            ) {
               return done(
                 "This social account is not linked to your account.",
                 null,
@@ -619,8 +765,8 @@ module.exports = function(passport) {
             await user.save();
             return done(null, user);
           }
-          let  existingUser = await User.findOne({
-            "auth.linkedin.id": profile.id
+          let existingUser = await User.findOne({
+            "auth.linkedin.id": profile.id,
           });
           if (existingUser) {
             // need to refresh token
@@ -641,7 +787,7 @@ module.exports = function(passport) {
 
           if (profile.emails.length > 0) {
             const linkEmail = await User.findOne({
-              email: profile.emails[0].value
+              email: profile.emails[0].value,
             });
             if (linkEmail) {
               linkEmail.auth.linkedin.id = profile.id;
@@ -654,7 +800,7 @@ module.exports = function(passport) {
           }
 
           let existingUser2 = await User.findOne({
-            email: profile.emails[0].value
+            email: profile.emails[0].value,
           });
           if (existingUser2) {
             let user = await User.findOne({ email: profile.emails[0].value });
@@ -745,8 +891,8 @@ function formatName(fullName) {
 }
 
 function validateRefId(refId) {
-  if (refId.length===15 && refId.startsWith("bd-")){
+  if (refId.length === 15 && refId.startsWith("bd-")) {
     return true;
   }
-  return false
+  return false;
 }

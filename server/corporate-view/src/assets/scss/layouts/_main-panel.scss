@@ -1,0 +1,38 @@
+.main-panel {
+  padding: 1rem;
+  width: 100%;
+  background-color: $color-light-grey;
+  min-height: 60rem;
+
+  .banner-wrapper {
+    .container {
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
+
+      .banner-left,
+      .banner-right {
+        background-color: $color-white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        min-height: 56rem;
+      }
+
+      .banner-right {
+        &__tuple {
+          margin: 0.5rem;
+          &--title {
+            font-size: 2.5rem;
+            font-weight: 500;
+          }
+
+          &--content {
+            margin: 0.5rem;
+            font-size: 1.8rem;
+          }
+        }
+      }
+    }
+  }
+}

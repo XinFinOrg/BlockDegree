@@ -629,6 +629,29 @@ exports.getAllFunds = async (req, res) => {
   }
 };
 
+exports.getAllFundsCorp = async (req, res) => {
+  try {
+    const uninitiatedFunds = await UserFundReq.find({
+      $and: [
+        {
+          valid: true,
+        },
+        { status: { $not: /^pending$/ } },
+      ],
+    })
+      .select({ receiveAddrPrivKey: 0 })
+      .lean();
+    res.json({
+      status: true,
+      data: uninitiatedFunds,
+      country: req.session.country,
+    });
+  } catch (e) {
+    console.log(`exception at ${__filename}.getAllFunds`, e);
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
 /**
  *
  */

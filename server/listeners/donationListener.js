@@ -12,14 +12,19 @@ const Xdc3 = require("xdc3");
 const xdcWs = require("../helpers/constant").WsXinfinMainnet;
 const equateAddress = require("../helpers/common").equateAddress;
 const { xdcToUsd, usdToXdc } = require("../helpers/cmcHelper");
-const { renderFunderCerti } = require("../helpers/renderFunderCerti");
+const {
+  renderFunderCerti,
+  renderBulkCerti,
+} = require("../helpers/renderFunderCerti");
 const BulkPayment = require("../models/bulkCourseFunding");
+const CorporateUser = require("../models/corporateUser");
 const {
   makeValueTransferXDC,
   getBalance,
 } = require("../helpers/blockchainHelpers");
 const KeyConfig = require("../config/keyConfig");
 const recipients = [];
+const bulkRecipients = [];
 const bulkPayments = [];
 
 let xdc3Provider = new Xdc3.providers.WebsocketProvider(xdcWs);
@@ -242,6 +247,29 @@ async function syncRecipients() {
   }
 }
 
+async function syncBulkRecipients() {
+  try {
+    let count = 0;
+    const uninitiatedRecipient = await BulkPayment.find({
+      status: "uninitiated",
+    }).lean();
+    uninitiatedRecipient.forEach((currReq) => {
+      if (!bulkRecipients.includes(currReq.receiveAddr)) {
+        count++;
+        bulkRecipients.push({
+          address: currReq.receiveAddr,
+          id: currReq.bulkId,
+        });
+      }
+    });
+    console.log(`[*] synced ${count} bulk recipients`);
+    console.log("[*] Current recipients", bulkRecipients);
+  } catch (e) {
+    console.log(`[*] exception at ${__filename}.syncBulkRecipients: `, e);
+    return;
+  }
+}
+
 function newDefNoti() {
   return new Notification({
     email: "",
@@ -264,6 +292,7 @@ function newDefNoti() {
 em.on("processDonationTx", startProcessingDonation);
 em.on("syncPendingDonation", syncPendingDonation);
 em.on("syncRecipients", syncRecipients);
+em.on("bulkRecipients", syncBulkRecipients);
 em.on("syncPendingBulkCoursePayments", syncPendingBulkCoursePayments);
 // em.on("syncMissedTx", syncMissedBlocks);
 
@@ -325,6 +354,7 @@ function removeRecipient(address) {
 }
 
 function removeBulkPayment(address) {
+  let removeIndex = -1;
   for (let i = 0; i < bulkPayments.length; i++) {
     if (bulkPayments[i] === address) {
       removeIndex = i;
@@ -332,6 +362,18 @@ function removeBulkPayment(address) {
   }
   if (removeIndex > -1) {
     bulkPayments.splice(removeIndex, 1);
+  }
+}
+
+function removeBulkRecipient(address) {
+  let removeIndex = -1;
+  for (let i = 0; i < bulkRecipients.length; i++) {
+    if (bulkRecipients[i] === address) {
+      removeIndex = i;
+    }
+  }
+  if (removeIndex > -1) {
+    bulkRecipients.splice(removeIndex, 1);
   }
 }
 
@@ -375,6 +417,128 @@ function xdcReconn() {
 }
 
 connectionHeartbeat();
+
+async function processChildFMD(bulkId) {
+  try {
+    const bulkPayment = await BulkPayment.findOne({ bulkId: bulkId });
+    if (bulkPayment === null) {
+      console.log(`[*] bulk payment not found`);
+      return;
+    }
+    const fundIds = bulkPayment.fundIds;
+    if (fundIds === undefined || fundIds === null || fundIds.length === 0) {
+      console.log(`exception at ${__filename}.donationListener: `, e);
+      emailer.sendMailInternal(
+        "",
+        "",
+        "ERROR: BulkPayment",
+        `no child fundIds found for bulkPayment: ${bulkId}`
+      );
+      return;
+    }
+    for (let i = 0; i < fundIds.length; i++) {
+      const fundId = fundIds[i];
+      markFMDComplete(
+        fundId.fundId,
+        {
+          type: bulkPayment.type,
+          donerEmail: bulkPayment.donerEmail,
+          corporateEmail: bulkPayment.companyEmail,
+        },
+        bulkId
+      );
+    }
+  } catch (e) {
+    console.log(`exception at ${__filename}.processChildFMD: `, e);
+  }
+}
+
+async function markFMDComplete(
+  fundId,
+  { type, donerEmail, corporateEmail },
+  bulkId
+) {
+  console.log(fundId, type, donerEmail, corporateEmail);
+
+  try {
+    const fund = await UserFundRequest.findOne({ fundId: fundId });
+    const recipient = await User.findOne({ email: fund.email });
+    const bulkPayments = await BulkPayment.findOne({ bulkId });
+    if (fund === null) {
+      console.log(
+        `[*] fundid ${fundId} not found at ${__filename}.markFMDComplete`
+      );
+      sendMailInternal(
+        "",
+        "",
+        "ERROR: BulkPayment",
+        `fundid ${fundId} not found`
+      );
+      return;
+    }
+    if (type === "bulk") {
+      const user = await User.findOne({ email: donerEmail });
+      let courseNames = "";
+      fund.donerEmail = user.email;
+      fund.donerName = user.name;
+      fund.bulkId = bulkId;
+      fund.type = "bulk";
+      fund.completionDate = Date.now();
+      for (let i = 0; i < fund.courseId.length; i++) {
+        recipient.examData.payment[fund.courseId[i]] = true;
+        recipient.examData.payment[
+          `${fund.courseId[i]}_payment`
+        ] = `donation-bulk:${bulkId}`;
+        recipient.examData.payment[`${fund.courseId[i]}_doner`] = user.name;
+        courseNames += getCourseName(fund.courseId[i]);
+        if (i < fund.courseId.length - 1) {
+          courseNames += ", ";
+        }
+      }
+      await fund.save();
+      await recipient.save();
+      WsServer.emit("fmd-trigger");
+      emailer.sendFMDCompleteFunderBulk(
+        user.email,
+        bulkPayments.fundIds.length
+      );
+    } else if (type === "corporate") {
+      const user = await CorporateUser.findOne({
+        companyEmail: corporateEmail,
+      });
+      let courseNames = "";
+      fund.donerEmail = user.companyEmail;
+      fund.donerName = user.companyName;
+      fund.bulkId = bulkId;
+      fund.type = "bulk";
+      fund.completionDate = Date.now();
+      for (let i = 0; i < fund.courseId.length; i++) {
+        recipient.examData.payment[fund.courseId[i]] = true;
+        recipient.examData.payment[
+          `${fund.courseId[i]}_payment`
+        ] = `donation-corp:${bulkId}`;
+        recipient.examData.payment[`${fund.courseId[i]}_doner`] =
+          user.companyName;
+        courseNames += getCourseName(fund.courseId[i]);
+        if (i < fund.courseId.length - 1) {
+          courseNames += ", ";
+        }
+      }
+      user.fundedCount = user.fundedCount + bulkPayments.fundIds.length;
+      await user.save();
+      await fund.save();
+      await recipient.save();
+      WsServer.emit("fmd-trigger");
+      emailer.sendFMDCompleteFunderBulk(
+        user.companyEmail,
+        bulkPayments.fundIds.length
+      );
+      // burnEmitter.emit("donationTokenBurn", fund.fundId);
+    }
+  } catch (e) {
+    console.log(`exception at ${__filename}.markFMDComplete: `, e);
+  }
+}
 
 function newBlockProcessor() {
   console.log("[*] starting new block processor");
@@ -469,10 +633,10 @@ function newBlockProcessor() {
                 console.log("invalid amount");
               }
             } else {
-              for (let j = 0; j < bulkPayments.length; j++) {
-                if (equateAddress(bulkPayments[j], currBlockTx.to)) {
+              for (let h = 0; h < bulkRecipients.length; h++) {
+                if (equateAddress(bulkRecipients[h].address, currBlockTx.to)) {
                   const coursePayemnt = await BulkPayment.findOne({
-                    receiveAddr: bulkPayments[j],
+                    receiveAddr: bulkRecipients[h].address,
                   });
                   if (
                     coursePayemnt.txHash !== undefined &&
@@ -481,11 +645,17 @@ function newBlockProcessor() {
                   ) {
                     continue;
                   }
-                  const amountGoal = await usdToXdc(coursePayemnt.amountGoal);
+                  const amountGoal =
+                    (await usdToXdc(coursePayemnt.amountGoal)) *
+                    Math.pow(10, 18);
                   const min = amountGoal - parseFloat(amountGoal) / 10;
                   const max = amountGoal + parseFloat(amountGoal) / 10;
                   const currAmnt = currBlockTx.value;
+                  console.log(min, max, currAmnt);
+
                   if (min <= currAmnt && currAmnt <= max) {
+                    console.log("calid value");
+
                     coursePayemnt.status = "completed";
                     coursePayemnt.txHash = currBlockTx.hash;
                     coursePayemnt.completionDate = Date.now() + "";
@@ -496,7 +666,13 @@ function newBlockProcessor() {
                       "Got Entire Course Payemnt",
                       `Got an entire course payment by transaction in XDC to address ${currBlockTx.to} for bulk-payment id ${coursePayemnt.bulkId}. Please do the needful`
                     );
-                    removeBulkPayment(coursePayemnt.receiveAddr);
+                    console.log("update done");
+
+                    removeBulkRecipient(coursePayemnt.receiveAddr);
+                    renderBulkCerti(coursePayemnt.bulkId);
+                    console.log("processing fmd");
+
+                    processChildFMD(coursePayemnt.bulkId);
                   } else {
                     emailer.sendMailInternal(
                       "blockdegree-bot@blockdegree.org",
@@ -528,5 +704,20 @@ function newBlockProcessor() {
     });
   } else {
     console.log("[*] block processor called twice");
+  }
+}
+
+function getCourseName(id) {
+  switch (id) {
+    case "course_1":
+      return "Blockchain Basic";
+    case "course_2":
+      return "Blockchain Advanced";
+    case "course_3":
+      return "Blockchain Professional";
+    case "course_4":
+      return "Cloud Computing";
+    default:
+      return "";
   }
 }

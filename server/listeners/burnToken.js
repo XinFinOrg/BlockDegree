@@ -412,4 +412,4 @@ function xdcReconn() {
   }
 }
 
-connectionHeartbeat();
+// connectionHeartbeat();

@@ -1,0 +1,29 @@
+.center-form {
+  margin-top: 2rem;
+  border: 1px solid $color-primary-light;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: $color-white;
+
+  .custom-file-label {
+    font-size: 1.5rem;
+  }
+
+  .form-control {
+    font-size: 1.5rem;
+  }
+
+  .btn {
+    font-size: 1.5rem;
+  }
+
+  &__title {
+    text-align: center;
+    font-size: 3rem;
+  }
+
+  &__content {
+    padding: 1rem;
+    font-size: 1.8rem;
+  }
+}

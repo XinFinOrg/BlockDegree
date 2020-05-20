@@ -1,0 +1,51 @@
+.table-one {
+  margin: 1rem;
+  padding: 1rem;
+  justify-content: center;
+  overflow-x: scroll;
+
+  &__loader {
+    padding: 1rem;
+    text-align: center;
+    &--text {
+      padding: 0.5rem;
+    }
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 0 1px;
+    border: solid $color-light-grey 1px;
+    border-radius: 6px;
+  }
+  thead {
+    background-color: $color-primary;
+    color: $color-white;
+    font-size: $table-one-font-primary;
+    th {
+      border-bottom: none;
+    }
+  }
+
+  tbody {
+    background-color: $color-white;
+    color: $color-primary;
+    font-size: $table-one-font-secondary;
+  }
+
+  tr,
+  td,
+  th {
+    padding: 1.2rem;
+    border: none;
+    width: 10rem;
+
+    button {
+      font-size: $table-one-font-secondary;
+    }
+  }
+
+  tr {
+    border-bottom: 1px solid $color-light-grey;
+  }
+}

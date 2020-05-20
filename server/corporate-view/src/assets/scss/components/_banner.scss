@@ -1,0 +1,19 @@
+.banner {
+  &__title {
+    text-align: center;
+    color: $color-primary;
+  }
+
+  &__hero {
+    text-align: center;
+    img {
+      width: 65%;
+    }
+  }
+
+  &__content{
+    padding: 0.5rem;
+    text-align: center;
+    color: $color-primary;
+  }
+}

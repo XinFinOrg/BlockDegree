@@ -20,7 +20,7 @@ const { forceReSync } = require("./services/postSocials");
 const redis = require("redis");
 
 let RedisStore = require("connect-redis")(session);
-let redisClient = redis.createClient({prefix:"uat.blockdegree"});
+let redisClient = redis.createClient({ prefix: "uat.blockdegree" });
 global.RedisClient = redisClient;
 let app = express();
 require("dotenv").config();
@@ -93,6 +93,7 @@ require("./routes/promoCodeRoutes")(app);
 require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
 require("./routes/fmdRoutes")(app);
+require("./routes/corporateFundingRoutes")(app);
 
 // remove the comment to serve from build
 app.use("/newadmin", dynamicMiddleware);
@@ -114,17 +115,18 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-const server = app.listen("3005", async () => {
-  pendingTx.emit("initiatePendingTx");
-  pendingTx.emit("initiatePendingBurn");
-  pendingTx.emit("syncPendingBurnFMD");
-  donationListener.em.emit("syncRecipients");
-  donationListener.em.emit("syncPendingDonation");
-  donationListener.em.emit("syncPendingBulkCoursePayments");
-  updateSiteStats.em.emit("setSiteStats");
-  forceReSync();
+const server = app.listen("3000", async () => {
+  // pendingTx.emit("initiatePendingTx");
+  // pendingTx.emit("initiatePendingBurn");
+  // pendingTx.emit("syncPendingBurnFMD");
+  // donationListener.em.emit("syncRecipients");
+    donationListener.em.emit("bulkRecipients");
+  // donationListener.em.emit("syncPendingDonation");
+  // donationListener.em.emit("syncPendingBulkCoursePayments");
+  // updateSiteStats.em.emit("setSiteStats");
+  // forceReSync();
 
-  await adminServices.initiateWalletConfig();
+  // await adminServices.initiateWalletConfig();
   console.log("[*] server started");
 });
 

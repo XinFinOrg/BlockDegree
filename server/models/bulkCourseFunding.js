@@ -38,12 +38,19 @@ const bulkSchema = mongoose.Schema(
     burnStatus: { type: String, enum: ["uninitiated", "pending", "completed"] },
     paypalId: { type: String },
     razorPayId: { type: String },
-    email: String,
+    donerEmail: String,
     donerName: String,
     companyEmail: String,
     companyName: String,
     companyLogo: String,
     completionDate: String,
+    fundIds: [
+      {
+        fundId: { type: String },
+        amountGoal: { type: String },
+        userEmail: { type: String },
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -36,8 +36,8 @@ module.exports = {
   sendMailInternal: (from, mail, subject, msg) => {
     return new Promise(function (resolve, reject) {
       var mailOptions = {
-        from: from,
-        to: mail,
+        from: "blockdegree-bot@blockdegree.org",
+        to: "info@blockdegree.org",
         subject: subject,
         html: `<div>${msg}</div>`,
       };
@@ -69,7 +69,7 @@ module.exports = {
     } else if (
       type === "course_1" ||
       type === "course_2" ||
-      type === "course_3" || 
+      type === "course_3" ||
       type === "course_4"
     ) {
       var courseName;
@@ -79,9 +79,9 @@ module.exports = {
         courseName = "blockchain-advanced-exam";
       } else if (type === "course_3") {
         courseName = "blockchain-professional-exam";
-      } else if (type==="course_4"){
+      } else if (type === "course_4") {
         courseName = "cloud-computing-exam";
-      } 
+      }
       mailOptions = {
         from: "info@blockdegree.org",
         to: mail,
@@ -201,6 +201,44 @@ module.exports = {
             } else {
               console.log(
                 " sendFMDCompleteFunder Email sent: " + info.response
+              );
+              res.send({ status: "true" });
+            }
+          });
+        }
+      }
+    );
+  },
+
+  sendFMDCompleteFunderBulk: (mail, studentCount, funderName) => {
+    ejs.renderFile(
+      __dirname + "/fundCompleteFunderBulk.ejs",
+      {
+        studentCount: studentCount,
+        funderName: funderName,
+      },
+      (err, data) => {
+        if (err) {
+          console.log(
+            `exception at ${__filename}.sendFMDCompleteFunderBulk: `,
+            err
+          );
+          return;
+        } else {
+          const html = data.toString();
+          const mailOptions = {
+            from: "info@blockdegree.org",
+            to: mail,
+            subject: "Funding Completed",
+            html: html,
+          };
+          // console.log("mail options: ", mailOptions);
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log(
+                " sendFMDCompleteFunderBulk Email sent: " + info.response
               );
               res.send({ status: "true" });
             }

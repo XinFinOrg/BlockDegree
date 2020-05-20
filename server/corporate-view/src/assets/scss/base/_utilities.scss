@@ -1,0 +1,25 @@
+.u-center-text {
+  text-align: center;
+}
+
+.u-right {
+  text-align: right;
+}
+
+.u-pad-right-1 {
+  padding-right: 1rem;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.u-margin-bottom-8 {
+  margin-bottom: 8rem;
+}
+
+.lg-hori-1 {
+  @media screen and (max-width: 992px) {
+    padding-bottom: 1rem;
+  }
+}

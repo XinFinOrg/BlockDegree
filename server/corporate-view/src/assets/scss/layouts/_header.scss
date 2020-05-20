@@ -1,0 +1,67 @@
+.navbar {
+  a {
+    outline: 0;
+  }
+
+  .navbar-brand {
+    vertical-align: bottom;
+    padding: 0.5rem;
+  }
+
+  line-height: 1;
+  min-height: 5rem;
+  &-brand {
+    font-size: 2.5rem;
+  }
+  &__links {
+    margin: 1rem;
+    a {
+      outline: 0;
+      box-sizing: content-box;
+      color: $color-light-grey;
+      display: inline-block;
+      margin: 0.25rem;
+      padding: 0.75rem;
+      font-size: 1.6rem;
+      font-weight: 400;
+      &:hover {
+        transform: none;
+        color: $color-white;
+      }
+    }
+  }
+
+  &__dropdown {
+    margin: 1rem;
+    font-size: 1.6rem;
+    font-weight: 400;
+
+    #basic-nav-dropdown {
+      color: $color-white;
+    }
+
+    .dropdown-menu {
+      background-color: $color-header-light;
+      padding: 1rem;
+      margin: 0;
+      a {
+        outline: 0;
+        font-size: 1.4rem;
+        font-weight: 400;
+        color: $color-light-grey;
+        padding: 1rem;
+        border-radius: 0.5rem;
+
+        &:hover {
+          background-color: $color-header-lighter;
+          color: $color-white;
+        }
+      }
+
+      .active {
+        background-color: $color-header-lighter;
+        color: $color-white;
+      }
+    }
+  }
+}
