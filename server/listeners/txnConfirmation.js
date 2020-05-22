@@ -22,7 +22,7 @@ const { WsXinfinMainnet } = require("../helpers/constant");
 const { makeValueTransferXDC } = require("../helpers/blockchainHelpers");
 
 const XinMainProvider = new XDC3.providers.WebsocketProvider(WsXinfinMainnet);
-const xdc3 = new XDC3(XinMainProvider);
+let xdc3 = new XDC3(XinMainProvider);
 let inReconnXDC = false;
 
 XinMainProvider.on("connect", () => {
