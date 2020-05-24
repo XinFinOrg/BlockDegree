@@ -3,6 +3,20 @@
   padding: 1rem;
   justify-content: center;
   overflow-x: scroll;
+  height: fit-content;
+
+  #search-bar-0 {
+    font-size: $overall-font-secondary;
+  }
+
+  .react-bootstrap-table-page-btns-ul {
+    font-size: $overall-font-secondary;
+  }
+
+  .react-bootstrap-table-pagination {
+    margin-right: 0;
+    margin-left: 0;
+  }
 
   &__loader {
     padding: 1rem;

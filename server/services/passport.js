@@ -11,6 +11,11 @@ const crypto = require("crypto");
 const uuid = require("uuid/v4");
 require("dotenv").config();
 
+const {
+  SaveCorporateLogo,
+  RenderCorporateDummy,
+} = require("../helpers/saveCorporateProfile");
+
 const facebookStrategy = require("passport-facebook").Strategy;
 const twitterStrategy = require("passport-twitter").Strategy;
 const linkedinStrategy = require("passport-linkedin-oauth2").Strategy;
@@ -238,7 +243,7 @@ module.exports = function (passport) {
       async function (req, email, password, done) {
         try {
           console.log("local-signup-corp");
-          console.log("req.body: ", req.body);
+          console.log("req.body: ", req.body, email );
           let companyLogo = req.files.companyLogo;
           companyLogoBuffer = Buffer.from(companyLogo.data).toString("base64");
           const existingUser = await CorporateUser.findOne({
@@ -264,6 +269,7 @@ module.exports = function (passport) {
             certifiedCount: 0,
             companyLogo: companyLogoBuffer,
             companyName: req.body.companyName,
+            companyLogoName: req.body.companyLogoName,
             auth: {
               facebook: {
                 id: "",
@@ -289,6 +295,20 @@ module.exports = function (passport) {
               },
             },
           });
+          let newLogoSaved = await SaveCorporateLogo(
+            newCorpUser.uniqueId,
+            newCorpUser.companyLogo
+          );
+          if (newLogoSaved !== true) {
+            return done(null, false, "internal error");
+          }
+          const dummySaved = await RenderCorporateDummy(
+            newCorpUser.companyName,
+            newCorpUser.uniqueId
+          );
+          if (dummySaved !== true) {
+            return done(null, false, "internal error");
+          }
           newCorpUser.auth.local.password = newCorpUser.generateHash(password);
           await newCorpUser.save();
           var token = new Token({

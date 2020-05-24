@@ -59,7 +59,7 @@ module.exports = (app) => {
       },
       async (err, user, info) => {
         console.log((err, user, info));
-        res.json({ status: user, message: info });
+        res.json({ status: true, message: info });
       }
     )(req, res, next);
   });
@@ -511,7 +511,6 @@ module.exports = (app) => {
   });
 
   app.get("/api/getCorporateUser", async (req, res) => {
-    console.log("[*] getCorporateUser: ", req.user, req.session.passport);
     if (req.user && req.user.companyEmail) {
       res.json({
         status: true,

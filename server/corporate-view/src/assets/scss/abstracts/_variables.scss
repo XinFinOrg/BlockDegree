@@ -1,5 +1,6 @@
 $color-primary: #343a40;
-$color-primary-light: lighten($color-primary, 50%);
+$color-primary-light: lighten($color-primary, 10%);
+$color-primary-lighter: lighten($color-primary, 50%);
 
 $color-header: #343a40;
 $color-header-light: lighten($color-header, 10%);
@@ -11,6 +12,8 @@ $color-grey-light-1: #f7f7f7;
 $color-grey-dark: #777;
 $color-white: #ffffff;
 $color-black: #000;
+
+$color-new-blue: #177bff;
 
 $typo-scale-ratio: 8/9;
 
@@ -26,3 +29,7 @@ $modal-padding: 2rem;
 $modal-width: 50rem;
 $modal-height: 20rem;
 $modal-margin: 1rem;
+
+$footer-primary: 2.2rem;
+$footer-links: 1.6rem;
+$footer-secondary: 1.4rem;

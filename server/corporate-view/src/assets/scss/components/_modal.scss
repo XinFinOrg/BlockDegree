@@ -96,3 +96,37 @@
     }
   }
 }
+
+.payment-modal {
+  &__header {
+    padding: $modal-padding !important;
+    background-color: $color-primary;
+    color: $color-white;
+    &--title {
+      font-size: $modal-font-primary;
+    }
+
+    .close {
+      color: $color-white;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: $modal-padding;
+    font-size: $modal-font-secondary;
+    background-color: $color-light-grey;
+    color: $color-primary;
+    border-radius: 0.5rem;
+    vertical-align: middle;
+
+    text-align: center;
+
+    button {
+      width: 100%;
+      font-size: $modal-font-secondary;
+    }
+  }
+}

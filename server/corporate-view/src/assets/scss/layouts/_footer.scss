@@ -1,0 +1,47 @@
+.footer {
+  background-color: $color-primary;
+  color: $color-light-grey;
+  min-height: 15rem;
+
+  .container {
+    margin: 0;
+  }
+  .row {
+    padding: 0.5rem;
+    .one,
+    .two,
+    .three,
+    .four {
+      height: 10rem;
+    }
+
+    .one {
+      .icon-wrap {
+        padding: 0.5rem;
+        display: inline-block;
+        .icon {
+          width: 5rem;
+          height: 3.5rem;
+        }
+      }
+
+      .title {
+        padding: 0.5rem;
+        display: inline-block;
+        font-size: $footer-primary;
+        vertical-align: bottom;
+      }
+
+      .desc {
+        margin-left: 6.5rem;
+        font-size: $footer-secondary;
+      }
+    }
+
+    .two,
+    .three,
+    .four {
+      font-size: $footer-links;
+    }
+  }
+}

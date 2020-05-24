@@ -1,5 +1,7 @@
 const path = require("path");
 var User = require("../models/user");
+const BulkPayments = require("../models/bulkCourseFunding");
+const CorporateUSer = require("../models/corporateUser");
 const questions = require("../models/question");
 const utils = require("../utils.js");
 const renderCertificate = require("../helpers/renderCertificate");
@@ -556,8 +558,30 @@ exports.getExamResult = async (req, res) => {
     if (user.examData.payment[examTypes[examName].coursePayment_id] != true) {
       return res.redirect("/exams");
     }
-    let donerName =
-      user.examData.payment[`${examTypes[examName].coursePayment_id}_doner`];
+    let paymentMode =
+      user.examData.payment[`${examTypes[examName].coursePayment_id}_payment`];
+    let donerName ="";
+    let type = "",
+    corpId = "";
+    if (paymentMode.startsWith("donation-corp")) {
+      // is a corp donation, get logo
+      let bulkId = paymentMode.split(":")[1];
+      let bulkFund = await BulkPayments.findOne({ bulkId });
+
+      if (bulkFund !== null) {
+        const corporateUser = await CorporateUSer.findOne({
+          companyEmail: bulkFund.companyEmail,
+        });
+        if (bulkFund !== null) {
+          type = "corporate";
+          corpId = corporateUser.uniqueId;
+        }
+      }
+    } else {
+      donerName =
+        user.examData.payment[`${examTypes[examName].coursePayment_id}_doner`];
+    }
+
     // Post the 2 certificates
     renderCertificate.renderForIPFSHash(
       name,
@@ -565,6 +589,8 @@ exports.getExamResult = async (req, res) => {
       examName,
       d,
       donerName,
+      type,
+      corpId, 
       (bothRender) => {
         if (!bothRender.uploaded) {
           console.log("error:", bothRender);
@@ -648,7 +674,7 @@ exports.getExamStatus = async (req, res) => {
             course_4: user.examData.payment.course_4,
           },
           json: json,
-          country: geo?geo.country:"unknown",
+          country: geo ? geo.country : "unknown",
         };
         res.render("examList", examListData);
       }

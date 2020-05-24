@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
   faPowerOff,
-  faCertificate,
+  faDesktop,
 } from "@fortawesome/free-solid-svg-icons";
 import RouteButton from "../hooks/RouteButton";
 
@@ -37,8 +37,8 @@ class Header extends Component {
     return (
       <div className="navbar__links">
         <Nav>
-          <RouteButton to={"/login"} value={<Nav.Link>Log In</Nav.Link>} />
-          <RouteButton to={"/signup"} value={<Nav.Link>Sign Up</Nav.Link>} />
+          <RouteButton className="u-back-light" to={"/login"} value={<Nav.Link>Log In</Nav.Link>} />
+          <RouteButton className="u-back-light" to={"/signup"} value={<Nav.Link>Sign Up</Nav.Link>} />
         </Nav>
       </div>
     );
@@ -52,39 +52,39 @@ class Header extends Component {
             title={
               <span>
                 <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-                &nbsp;Account
+                &nbsp;&nbsp;Account&nbsp;&nbsp;
               </span>
             }
             alignRight
             id="basic-nav-dropdown"
           >
             <RouteButton
+              to={"/"}
+              value={
+                <NavDropdown.Item>
+                  <>
+                    <FontAwesomeIcon icon={faDesktop}></FontAwesomeIcon>
+                    &nbsp;&nbsp;Dashboard
+                  </>
+                </NavDropdown.Item>
+              }
+            />     
+            <RouteButton
               to={"/profile"}
               value={
                 <NavDropdown.Item>
                   <>
                     <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-                    &nbsp;Profile
+                    &nbsp;&nbsp;Profile
                   </>
                 </NavDropdown.Item>
               }
-            />
-            <RouteButton
-              to={"/my-funds"}
-              value={
-                <NavDropdown.Item>
-                  <>
-                    <FontAwesomeIcon icon={faCertificate}></FontAwesomeIcon>
-                    &nbsp;My Funds
-                  </>
-                </NavDropdown.Item>
-              }
-            />
+            />        
 
             <NavDropdown.Item onClick={this.handleLogout}>
               <>
                 <FontAwesomeIcon icon={faPowerOff}></FontAwesomeIcon>
-                &nbsp;Logout
+                &nbsp;&nbsp;Logout
               </>
             </NavDropdown.Item>
           </NavDropdown>
@@ -98,6 +98,7 @@ class Header extends Component {
       <div>
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
           <RouteButton
+            className="navbar__brand"
             to={"/"}
             value={
               <>

@@ -2,9 +2,13 @@ const ejs = require("ejs");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
+const qrcode = require("qrcode");
+const crypto = require("crypto");
+
 const User = require("../models/user");
 const BulkPayment = require("../models/bulkCourseFunding");
 const CorporateUser = require("../models/corporateUser");
+
 
 const rootPath = path.join(__dirname, "../../dist/img/funder-certi/");
 
@@ -174,9 +178,72 @@ let renderBulkCerti = (bulkId) => {
   });
 };
 
+// async function renderCorporateDummy(companyEmail) {
+//   try{
+//     const corporateUser = await CorporateUser.findOne({companyEmail});
+//     let newDate = new Date();
+//     let ts = newDate.getTime();
+//     let date = newDate.toLocaleDateString("en-GB", {
+//       day: "numeric",
+//       month: "long",
+//       year: "numeric"
+//     });
+//     const dataURL = await qrcode.toDataURL(
+//       corporateUser.companyName
+//     );
+//     ejs.renderFile(
+//       __dirname + "/certificateWithQR.ejs",
+//       {
+//         rndDgt: crypto.randomBytes(32).toString("hex"),
+//         name: "John Doe",
+//         course: "Certified Blockchain Professional Expert",
+//         courseSub:"Blockchain Certificate",
+//         topic:"Blockchain",
+//         subTopic:"Basic Course For Engineers",
+//         score: Math.round(parseFloat("80"))+"",
+//         date: date,
+//         dataURL: dataURL,
+//         ts:ts,
+//         examType: "professional",
+//         donerName: '',
+//         type:"corporate",
+//         corpId:corporateUser.uniqueId
+//       },
+//       async (err, imgHTML) => {
+//         if (err != null) {
+//           console.log(`exception at ${__filename}.renderCorporateDummy ejs-render: `, err);
+//           return
+//         }
+//         let localPath= `dist/img/funders/corporate/dummy-certi/`+corporateUser.uniqueId+`.png`;
+//         let browser;
+//         try {
+//           browser = await puppeteer.launch({
+//             args: ["--no-sandbox", "--disable-setuid-sandbox"]
+//           });
+//           const page = await browser.newPage();
+//           await page.setViewport({
+//             width: 800,
+//             height: 600,
+//             deviceScaleFactor: 1
+//           });
+//           await page.setContent(imgHTML);
+//           await page.screenshot({ path: localPath });
+//         } catch (browserException) {
+//           console.error(
+//             `exception at ${__filename}.renderCorporateDummy:  `,
+//             browserException
+//           );
+//         }
+//       });
+//   }
+//   catch(e){
+//     console.log(`exception at ${__filename}.renderCorporateDummy: `, e);
+//   }
+// } 
+
 exports.renderFunderCerti = renderFunderCerti;
 exports.renderBulkCerti = renderBulkCerti;
-
+// exports.renderCorporateDummy = renderCorporateDummy;
 // renderBulkCerti("7511412c-6783-44cb-b4dc-7e2b57aef959")
 //   .then(console.log)
 //   .catch(console.log);

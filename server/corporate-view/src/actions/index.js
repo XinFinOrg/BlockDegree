@@ -15,20 +15,14 @@ export const fetchCorporateUser = () => async (dispatch) => {
       "corp-auth-status",
       res.auth === true ? "true" : "false"
     );
-    localStorage.setItem(
-      "corp-auth-ts",
-      Date.now()+""
-    );
+    localStorage.setItem("corp-auth-ts", Date.now() + "");
     dispatch({
       type: types.FETCH_CORPORATE_USER,
       payload: res,
     });
   } else {
     localStorage.setItem("corp-auth-status", "false");
-    localStorage.setItem(
-      "corp-auth-ts",
-      Date.now()+""
-    );
+    localStorage.setItem("corp-auth-ts", Date.now() + "");
     //handle error pipeline for dispatch
   }
 };
@@ -49,5 +43,17 @@ export const fetchAllFunds = () => async (dispatch) => {
     });
   } else {
     //handle error pipeline for dispatch
+  }
+};
+
+export const fetchCorporateFunding = () => async (dispatch) => {
+  let res = await axios.get("/api/getCorpFunding");
+  res = res.data;
+  console.log("fetchCorporateFunding: ", res);
+  if (res.status === true) {
+    res["fetchedTS"] = Date.now();
+    dispatch({ type: types.FETCH_CORPORATE_FUNDING, payload: res });
+  } else {
+    // handle  error
   }
 };

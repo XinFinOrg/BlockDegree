@@ -1,0 +1,17 @@
+.dashboard {
+  .note-text {
+    background-color: $color-white;
+    margin: 2rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    font-size: $overall-font-secondary;
+    color: $color-primary;
+    a {
+      outline: none;
+    }
+
+    &__link {
+      color: $color-new-blue;
+    }
+  }
+}

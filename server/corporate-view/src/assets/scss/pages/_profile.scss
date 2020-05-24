@@ -1,0 +1,85 @@
+.profile-page {
+
+  button, a {
+    outline: none;
+  }
+
+  &__title {
+    color: $color-primary;
+    padding: 2rem 0 0 2rem;
+    font-size: 3rem;
+    font-weight: 600;
+  }
+
+  &__content {
+    font-size: $overall-font-secondary;
+
+    &--note {
+      background-color: $color-white;
+      margin: 1rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      font-size: $overall-font-secondary;
+      color: $color-primary;
+
+      a {
+        outline: none;
+      }
+    }
+
+    .card-left,
+    .card-right {
+      .title {
+        font-size: $overall-font-primary;
+        padding: 0.5rem;
+        padding-bottom: 1rem;
+        font-weight: 600;
+      }
+      background-color: $color-white;
+      margin: 1rem;
+      padding: 1rem;
+      border-radius: 2rem;
+    }
+
+    .card-left {
+      .row {
+        padding: 0;
+        margin: 0.5rem;
+        input {
+          border-radius: 0.5rem;
+          border: 1px solid $color-light-grey;
+          padding: 0.5rem;
+          margin: 0.5rem 0 0.5rem 0;
+          width: 100%;
+        }
+
+        .logo-wrapper {
+          .logo {
+            width: 13rem;
+            height: 13rem;
+          }
+        }
+      }
+      .field-key {
+        font-weight: 600;
+        padding-top: 1rem;
+      }
+    }
+
+    .card-right {
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  @media screen and (max-width: 580px) {
+    padding: 0rem;
+
+    .col,
+    .col-lg-6 {
+      padding: 0rem;
+    }
+  }
+}

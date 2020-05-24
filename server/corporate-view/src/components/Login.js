@@ -17,6 +17,7 @@ const initialState = {
   confirmPassword: "",
   companyLogo: null,
   redirect: false,
+  redirectTo:"/"
 };
 
 class SignUp extends Component {
@@ -37,7 +38,7 @@ class SignUp extends Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to="/" />;
+      return <Redirect to={this.state.redirectTo} />;
     }
   };
 
@@ -61,7 +62,19 @@ class SignUp extends Component {
             "corp-auth-ts",
             Date.now()+""
           );
-          AddNoti("Welcome", "Login Successful!");
+          const {
+            companyEmail,
+            companyName,
+            companyLogo,
+            companyLogoName,
+            uniqueId,
+          } = resp.user;
+          localStorage.setItem("companyEmail", companyEmail);
+          localStorage.setItem("companyName", companyName);
+          localStorage.setItem("companyLogo", companyLogo);
+          localStorage.setItem("companyLogoName", companyLogoName);
+          localStorage.setItem("uniqueId", uniqueId);
+          AddNoti("Welcome", "Login Successful!",{type:"success"});
           let givenRedirect = GetParamValue("from");
           if (givenRedirect === null) givenRedirect = "/";
           else givenRedirect = "/" + givenRedirect;
@@ -71,10 +84,11 @@ class SignUp extends Component {
             redirectTo: givenRedirect,
           });
         } else {
-          AddNoti("Error", resp.error);
+          AddNoti("Error", resp.error,{type:"error"});
         }
       })
-      .catch((e) => {});
+      .catch((e) => {console.log(e);
+      });
   }
 
   render() {

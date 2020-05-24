@@ -1,0 +1,25 @@
+.highlighted-note {
+  width: 100%;
+  background: #354c60;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding: 15px;
+  color: white;
+  font-weight: 400;
+  border: 1px solid #82baf6;
+
+  &--body {
+    .highlighted-note--body {
+      margin-top: 10px;
+    }
+
+    a {
+      color: #04cdfc;
+      text-decoration: none;
+    }
+  }
+  &--header {
+    font-size: large;
+    z-index: 2;
+  }
+}

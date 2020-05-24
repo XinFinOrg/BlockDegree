@@ -294,6 +294,7 @@ em.on("syncPendingDonation", syncPendingDonation);
 em.on("syncRecipients", syncRecipients);
 em.on("bulkRecipients", syncBulkRecipients);
 em.on("syncPendingBulkCoursePayments", syncPendingBulkCoursePayments);
+em.on("processChildFMD", processChildFMD);
 // em.on("syncMissedTx", syncMissedBlocks);
 
 exports.em = em;
@@ -483,6 +484,7 @@ async function markFMDComplete(
       fund.donerName = user.name;
       fund.bulkId = bulkId;
       fund.type = "bulk";
+      fund.status="completed";
       fund.completionDate = Date.now();
       for (let i = 0; i < fund.courseId.length; i++) {
         recipient.examData.payment[fund.courseId[i]] = true;
@@ -533,7 +535,9 @@ async function markFMDComplete(
         user.companyEmail,
         bulkPayments.fundIds.length
       );
-      // burnEmitter.emit("donationTokenBurn", fund.fundId);
+      emailer.sendFMDCompleteUser(currentReq.email, currUser.name, courseNames);
+      renderFunderCerti(user.companyEmail, fund.fundId);
+      burnEmitter.emit("donationTokenBurn", fund.fundId);
     }
   } catch (e) {
     console.log(`exception at ${__filename}.markFMDComplete: `, e);

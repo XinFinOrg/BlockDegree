@@ -10,6 +10,7 @@ const corporateFunding = mongoose.Schema(
     fundedCount: { type: Number },
     certifiedCount: { type: Number },
     companyLogo: { type: String, required: true },
+    companyLogoName: { type: String, required: true },
     companyName: { type: String, required: true },
     auth: {
       facebook: {

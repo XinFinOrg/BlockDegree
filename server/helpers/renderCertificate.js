@@ -18,9 +18,13 @@ if (process.env.IPFS_NETWORK == "local") {
   });
 }
 
-exports.renderForIPFSHash = (name, percent, examType, d, donerName, callback) => {
+exports.renderForIPFSHash = (name, percent, examType, d, donerName,type, corpId, callback) => {
   if (donerName==undefined || donerName==null ){
     donerName=""
+  }
+  if (type==="corporate" && corpId===""){
+    // bad request, reset
+    type=""
   }
   console.log("Called RENDER IPFS");
   let date = d.toLocaleDateString("en-GB", {
@@ -41,7 +45,7 @@ exports.renderForIPFSHash = (name, percent, examType, d, donerName, callback) =>
       score: percent,
       date: date,
       ts:ts,
-      examType: examType
+      examType: examType,
     },
     (err, data) => {
       if (err != null) {
@@ -63,7 +67,7 @@ exports.renderForIPFSHash = (name, percent, examType, d, donerName, callback) =>
           });
         }
         console.log("Uploaded");
-        renderWithQR(name, percent, examType, d, ipfsHash[0].hash, donerName, obj => {
+        renderWithQR(name, percent, examType, d, ipfsHash[0].hash, donerName,type, corpId, obj => {
           callback({
             uploaded: obj.uploaded,
             info: obj.info,
@@ -76,7 +80,7 @@ exports.renderForIPFSHash = (name, percent, examType, d, donerName, callback) =>
   );
 };
 
-var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) => {
+var renderWithQR = async (name, percent, examType, d, hash,donerName,type, corpId, callback) => {
   let date = d.toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
@@ -107,7 +111,9 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
       dataURL: dataURL,
       ts:ts,
       examType: examType,
-      donerName:donerName
+      donerName:donerName,
+      type:type,
+      corpId:corpId
     },
     (err, data) => {
       if (err != null) {

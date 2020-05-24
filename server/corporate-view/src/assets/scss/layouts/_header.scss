@@ -1,24 +1,23 @@
 .navbar {
+
+  padding: 0px;
   a {
     outline: 0;
   }
 
-  .navbar-brand {
+  &__brand {
     vertical-align: bottom;
-    padding: 0.5rem;
+    padding-top: 0.5rem;
   }
 
-  line-height: 1;
-  min-height: 5rem;
   &-brand {
     font-size: 2.5rem;
   }
   &__links {
-    margin: 1rem;
     a {
       outline: 0;
       box-sizing: content-box;
-      color: $color-light-grey;
+      color: $color-white !important;
       display: inline-block;
       margin: 0.25rem;
       padding: 0.75rem;
@@ -26,7 +25,12 @@
       font-weight: 400;
       &:hover {
         transform: none;
-        color: $color-white;
+      }
+    }
+
+    .nav-link{
+      &:active, &:focus{
+        color: $color-white !important;
       }
     }
   }

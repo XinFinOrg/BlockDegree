@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import Formdata from "form-data";
+import { Redirect } from "react-router-dom";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import RequireLogout from "../middleware/RequireLogout";
 import axios from "axios";
+
+import { AddNoti } from "../helpers/Notification";
+import { GetParamValue } from "../helpers/constant";
+import { BytesToMB } from "../helpers/constant";
 
 const initialState = {
   companyName: "",
@@ -11,6 +16,9 @@ const initialState = {
   password: "",
   confirmPassword: "",
   companyLogo: null,
+  companyLogoName: "Please Select File",
+  redirect: false,
+  redirectTo: "/",
 };
 
 class SignUp extends Component {
@@ -20,6 +28,7 @@ class SignUp extends Component {
     this.companyLogoInput = React.createRef();
 
     this.handleSignUpPost = this.handleSignUpPost.bind(this);
+    this.renderRedirect = this.renderRedirect.bind(this);
   }
 
   handleSignUpPost() {
@@ -27,23 +36,51 @@ class SignUp extends Component {
     const companyEmail = this.state.companyEmail;
     const companyLogo = this.companyLogoInput.current.files[0];
     const password = this.state.password;
+    const companyLogoName = this.state.companyLogoName;
 
     const newForm = new Formdata();
     newForm.append("companyEmail", companyEmail);
     newForm.append("password", password);
     newForm.append("companyLogo", companyLogo);
+    newForm.append("companyLogoName", companyLogoName);
     newForm.append("companyName", companyName);
 
     axios
       .post("/api/signup-corp", newForm)
-      .then(console.log)
+      .then((resp) => {
+        resp = resp.data;
+        if (resp.status === true) {
+          AddNoti("Sign-up successful", "Please login to continue!", {
+            type: "success",
+          });
+          let givenRedirect = GetParamValue("from");
+          this.setState({
+            ...initialState,
+            redirect: true,
+            redirectTo: "/login",
+          });
+          } else {
+          console.log(resp);
+
+          AddNoti("Error in sign-up", resp.error || resp.message, {
+            type: "error",
+          });
+        }
+      })
       .catch(console.log);
   }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirectTo} />;
+    }
+  };
 
   render() {
     return (
       <div>
         <RequireLogout />
+        {this.renderRedirect()}
         <div className="sign-up">
           <Container>
             <Row>
@@ -109,9 +146,23 @@ class SignUp extends Component {
                         <Form.Label>Company Logo</Form.Label>
                         <Form.File
                           id="custom-file"
-                          label="Custom file input"
+                          label={this.state.companyLogoName}
                           custom
                           ref={this.companyLogoInput}
+                          accept="image/png"
+                          onChange={() => {
+                            console.log(
+                              "Size: ",
+                              BytesToMB(
+                                this.companyLogoInput.current.files[0].size
+                              )
+                            );
+                            let newImg = new Image();
+                            this.setState({
+                              companyLogoName: this.companyLogoInput.current
+                                .files[0].name,
+                            });
+                          }}
                         />
                         <Form.Text className="text-muted">
                           Max size is 5MB

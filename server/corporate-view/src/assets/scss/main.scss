@@ -11,12 +11,17 @@
 
 @import "pages/home";
 @import "pages/signup";
+@import "pages/profile";
+@import "pages/dashboard.scss";
 
-@import "components/desc-modal";
+@import "components/modal";
 @import "components/button";
 @import "components/banner";
 @import "components/center-form";
 @import "components/table";
+@import "components/highlighted";
+@import "components/toast";
 
 @import "layouts/header";
 @import "layouts/main-panel";
+@import "layouts/footer";
