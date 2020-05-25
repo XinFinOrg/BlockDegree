@@ -7,7 +7,7 @@ function Footer() {
     <div className="footer">
       <Container>
         <Row>
-          <Col className="one" lg="6">
+          <Col className="one" lg="3">
             <div className="icon-wrap">
               <img className="icon" src={blockdegree_icon}></img>
             </div>

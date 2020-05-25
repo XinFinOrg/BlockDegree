@@ -1,0 +1,42 @@
+.message-page {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+
+  .message {
+    background-color: $color-white;
+    width: 60%;
+    padding: 2rem;
+    margin-top: 3rem;
+    border-radius: 1rem;
+
+    &__icon {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+
+      display: flex;
+      justify-content: center;
+      &.success {
+        color: $color-new-green;
+      }
+      &.error {
+        color: $color-new-red;
+      }
+    }
+
+    &__body {
+      color: $color-primary;
+      &--title {
+        font-size: $overall-font-primary;
+        font-weight: 600;
+      }
+      &--content {
+        font-size: $overall-font-secondary;
+      }
+    }
+
+    @media screen and (max-width: 580px) {
+      width: 100%;
+    }
+  }
+}

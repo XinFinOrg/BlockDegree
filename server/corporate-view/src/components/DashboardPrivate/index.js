@@ -113,6 +113,13 @@ class DasboardPrivate extends Component {
   }
 
   handlePaymentPaypal = (allData) => {
+    AddNoti("", "Redirecting To Paypal...", {
+      type: "info",
+      duration: false,
+      hideProgressBar: true,
+      closeButton: false,
+      closeOnClick:false
+    });
     let selectedRows = this.state.selectedRows;
     let allSelected = this.state.allSelected;
 
@@ -140,7 +147,7 @@ class DasboardPrivate extends Component {
         resp = resp.data;
         if (resp.status === true) {
           console.log("Response: ", resp);
-          document.location.replace(resp.link); 
+          document.location.replace(resp.link);
         } else {
           AddNoti("Error", resp.error, { type: "error" });
         }

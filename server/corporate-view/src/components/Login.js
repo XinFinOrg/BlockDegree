@@ -74,7 +74,7 @@ class SignUp extends Component {
           localStorage.setItem("companyLogo", companyLogo);
           localStorage.setItem("companyLogoName", companyLogoName);
           localStorage.setItem("uniqueId", uniqueId);
-          AddNoti("Welcome", "Login Successful!",{type:"success"});
+          AddNoti("", "Welcome!",{type:"success"});
           let givenRedirect = GetParamValue("from");
           if (givenRedirect === null) givenRedirect = "/";
           else givenRedirect = "/" + givenRedirect;

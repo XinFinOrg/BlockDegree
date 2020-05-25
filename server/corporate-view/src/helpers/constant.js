@@ -1,12 +1,14 @@
 import React from "react";
 
 export const GetParamValue = (key) => {
-  const pathName = document.location.pathname;
+  const pathName = document.URL;
+  console.log(pathName);
+
   let allParam = pathName.split("?");
   if (allParam.length > 1) {
-    allParam = pathName.split("&");
+    allParam = allParam[1].split("&");
     for (let i = 0; i < allParam.length; i++) {
-      const [currKey, currVal] = allParam.split("=");
+      const [currKey, currVal] = allParam[i].split("=");
       if (currKey === key) return currVal;
     }
   }
@@ -78,4 +80,11 @@ export const PaginationOption = {
       value: 20,
     },
   ], // A numeric array is also available. the purpose of above example is custom the text
+};
+
+export const RoundDgt = (number, n) => {
+  return (
+    Math.round(parseFloat(number) * Math.pow(10, parseInt(n))) /
+    Math.pow(10, parseInt(n))
+  );
 };

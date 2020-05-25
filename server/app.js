@@ -115,18 +115,18 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-const server = app.listen("3000", async () => {
-  // pendingTx.emit("initiatePendingTx");
-  // pendingTx.emit("initiatePendingBurn");
-  // pendingTx.emit("syncPendingBurnFMD");
-  // donationListener.em.emit("syncRecipients");
+const server = app.listen("3005", async () => {
+  pendingTx.emit("initiatePendingTx");
+  pendingTx.emit("initiatePendingBurn");
+  pendingTx.emit("syncPendingBurnFMD");
+  donationListener.em.emit("syncRecipients");
     donationListener.em.emit("bulkRecipients");
-  // donationListener.em.emit("syncPendingDonation");
-  // donationListener.em.emit("syncPendingBulkCoursePayments");
-  // updateSiteStats.em.emit("setSiteStats");
-  // forceReSync();
+  donationListener.em.emit("syncPendingDonation");
+  donationListener.em.emit("syncPendingBulkCoursePayments");
+  updateSiteStats.em.emit("setSiteStats");
+  forceReSync();
 
-  // await adminServices.initiateWalletConfig();
+  await adminServices.initiateWalletConfig();
   console.log("[*] server started");
 });
 

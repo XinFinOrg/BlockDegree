@@ -15,6 +15,12 @@ const {
   SaveCorporateLogo,
   RenderCorporateDummy,
 } = require("../helpers/saveCorporateProfile");
+
+/**
+ * to be updated
+ */
+const corporateRootPath = "http://localhost:3001";
+
 exports.generateBulkAddress = async (req, res) => {
   try {
     const { fundIds, type } = req.body;
@@ -304,7 +310,7 @@ exports.paymentPaypalSuccess = async (req, res) => {
     ) {
       if (error) {
         console.log(error.response);
-        res.redirect("/payment-error");
+        res.redirect(`${corporateRootPath}/payment-error?message=paypal-error`);
 
         await emailer.sendMail(
           process.env.SUPP_EMAIL_ID,
@@ -323,7 +329,9 @@ exports.paymentPaypalSuccess = async (req, res) => {
         });
 
         if (bulkPayment === null) {
-          res.redirect("/payment-error");
+          res.redirect(
+            `${corporateRootPath}/payment-error?invoice_number=${invoice_number}`
+          );
 
           await emailer.sendMail(
             process.env.SUPP_EMAIL_ID,
@@ -344,13 +352,15 @@ exports.paymentPaypalSuccess = async (req, res) => {
         await bulkPayment.save();
         await paypalLog.save();
 
-        res.redirect("http://localhost:3001/payment-complete");
+        res.redirect(
+          `${corporateRootPath}/payment-success?invoice_number=${invoice_number}`
+        );
         donationEm.emit("processChildFMD", bulkId);
       }
     });
   } catch (e) {
     console.log(`exception at ${__filename}: `, e);
-    res.redirect("/payment-error");
+    res.redirect(`${corporateRootPath}/payment-error?message=internal-error`);
     await emailer.sendMail(
       process.env.SUPP_EMAIL_ID,
       "Payment-error: error while executing the sale for Corporate Funding",
@@ -360,7 +370,9 @@ exports.paymentPaypalSuccess = async (req, res) => {
 };
 
 exports.paymentPaypalError = async (req, res) => {
-  res.redirect("/payment-error");
+  res.writeHead(301, {
+    Location: `${corporateRootPath}/payment-error?message=paypal-error`,
+  });
   await emailer.sendMail(
     process.env.SUPP_EMAIL_ID,
     "Payment-error: error while executing the sale for Corporate Funding",

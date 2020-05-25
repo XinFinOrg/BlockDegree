@@ -263,7 +263,7 @@ async function syncBulkRecipients() {
       }
     });
     console.log(`[*] synced ${count} bulk recipients`);
-    console.log("[*] Current recipients", bulkRecipients);
+    // console.log("[*] Current recipients", bulkRecipients);
   } catch (e) {
     console.log(`[*] exception at ${__filename}.syncBulkRecipients: `, e);
     return;
@@ -484,7 +484,7 @@ async function markFMDComplete(
       fund.donerName = user.name;
       fund.bulkId = bulkId;
       fund.type = "bulk";
-      fund.status="completed";
+      fund.status = "completed";
       fund.completionDate = Date.now();
       for (let i = 0; i < fund.courseId.length; i++) {
         recipient.examData.payment[fund.courseId[i]] = true;
@@ -513,6 +513,7 @@ async function markFMDComplete(
       fund.donerName = user.companyName;
       fund.bulkId = bulkId;
       fund.type = "bulk";
+      fund.status = "completed";
       fund.completionDate = Date.now();
       for (let i = 0; i < fund.courseId.length; i++) {
         recipient.examData.payment[fund.courseId[i]] = true;
@@ -535,7 +536,7 @@ async function markFMDComplete(
         user.companyEmail,
         bulkPayments.fundIds.length
       );
-      emailer.sendFMDCompleteUser(currentReq.email, currUser.name, courseNames);
+      emailer.sendFMDCompleteUser(fund.email, user.companyName, courseNames);
       renderFunderCerti(user.companyEmail, fund.fundId);
       burnEmitter.emit("donationTokenBurn", fund.fundId);
     }

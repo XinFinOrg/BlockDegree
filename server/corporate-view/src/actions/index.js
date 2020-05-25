@@ -57,3 +57,13 @@ export const fetchCorporateFunding = () => async (dispatch) => {
     // handle  error
   }
 };
+
+export const fetchSiteStats = () => async (dispatch) => {
+  let res = await axios.get("/api/getSiteStats");
+  res = res.data;
+  console.log("getSiteStats: ", res);
+  if (res.status === true) {
+    res["fetchedTS"] = Date.now();
+    dispatch({ type: types.FETCH_SITE_STATS, payload: res });
+  }
+};

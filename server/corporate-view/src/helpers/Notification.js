@@ -8,13 +8,19 @@ export const AddNoti = (
     type = "info",
     position = "top-right",
     duration = 2000,
+    hideProgressBar = false,
+    closeOnClick = true,
+    closeButton=true
   }
 ) => {
   return toast(msg, {
-    type:type,
+    type: type,
     position,
     autoClose: duration,
-    className:"custom-toast"
+    className: "custom-toast",
+    hideProgressBar,
+    closeOnClick,
+    closeButton
   });
 
   // store.addNotification({

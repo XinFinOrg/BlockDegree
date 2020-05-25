@@ -15,6 +15,7 @@ class DashboardContainer extends Component {
 
   componentWillMount() {
     this.props.fetchCorporateUser();
+    this.props.fetchSiteStats();
   }
 
   renderAccordingToLatest() {
@@ -27,11 +28,11 @@ class DashboardContainer extends Component {
         return this.props.auth.auth === true ? (
           <DashboardPrivate />
         ) : (
-          <DashboardPublic />
+          <DashboardPublic stats={this.props.siteStats} />
         );
       }
     }
-    return initialAuth == "true" ? <DashboardPrivate /> : <DashboardPublic />;
+    return initialAuth == "true" ? <DashboardPrivate /> : <DashboardPublic stats={this.props.siteStats} />;
   }
 
   render() {
@@ -39,8 +40,8 @@ class DashboardContainer extends Component {
   }
 }
 
-function mapStateToProps({ auth }) {
-  return { auth };
+function mapStateToProps({ auth, siteStats }) {
+  return { auth, siteStats };
 }
 
 export default connect(mapStateToProps, actions)(DashboardContainer);

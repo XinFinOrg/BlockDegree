@@ -4,8 +4,10 @@ const ReferralCode = require("../models/referral_code");
 const Visited = require("../models/visited");
 const PaymentLogs = require("../models/payment_logs");
 const updateSiteStats = require("../listeners/updateSiteStats").em;
+const UserFundReq = require("../models/userFundRequest");
 const GeoIP = require("geoip-lite");
 const axios = require("axios");
+const { usdToXdc } = require("../helpers/cmcHelper");
 
 const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 
@@ -388,20 +390,42 @@ exports.getSiteStats = (req, res) => {
       if (result !== null) {
         console.log("[*] serving siteStats from cache");
         const resJson = JSON.parse(result);
+        console.log("resp: ", resJson);
+
         return res.json({
           status: true,
           userCnt: resJson.registrations,
           visitCnt: resJson.visits,
           totCertis: resJson.certificates,
           caCnt: resJson.ca,
+          fmdFundedCnt: resJson.fmdFundedCnt,
+          fmdFundedAmnt: resJson.fmdFundedAmnt,
+          fmdFundedAmntXdc: resJson.fmdFundedAmntXdc,
+          fmdReqCnt: resJson.fmdReqCnt,
+          fmdReqAmnt: resJson.fmdReqAmnt,
+          fmdReqAmntXdc: resJson.fmdReqAmntXdc,
         });
       } else {
         let allUsers = await User.find({});
         let allVisits = await Visited.find({});
+        const allFunds = await UserFundReq.find({
+          $and: [
+            {
+              valid: true,
+            },
+            { status: { $not: /^pending$/ } },
+          ],
+        })
+          .select({ receiveAddrPrivKey: 0 })
+          .lean();
 
         let userCnt = 0,
           visitCnt = 0,
-          totCertis = 0;
+          totCertis = 0,
+          fmdReqAmnt = 0,
+          fmdReqCnt = 0,
+          fmdFundedAmnt = 0,
+          fmdFundedCnt = 0;
         if (allUsers != null) {
           userCnt = allUsers.length;
         }
@@ -416,12 +440,31 @@ exports.getSiteStats = (req, res) => {
           }
         }
 
+        for (let i = 0; i < allFunds.length; i++) {
+          if (allFunds[i].status === "completed") {
+            fmdFundedCnt++;
+            fmdFundedAmnt += allFunds[i].amountGoal;
+          } else if (allFunds[i].status === "uninitiated") {
+            fmdReqCnt++;
+            fmdReqAmnt += allFunds[i].amountGoal;
+          }
+        }
+
+        const fmdFundedAmntXdc = String(await usdToXdc(fmdFundedAmnt));
+        const fmdReqAmntXdc = String(await usdToXdc(fmdReqAmnt));
+
         res.json({
           status: true,
           userCnt: userCnt,
-          visitCnt: visits,
+          visitCnt: visitCnt,
           totCertis: totCertis,
           caCnt: 50,
+          fmdFundedCnt,
+          fmdFundedAmnt,
+          fmdFundedAmntXdc,
+          fmdReqCnt,
+          fmdReqAmnt,
+          fmdReqAmntXdc,
         });
         updateSiteStats.emit("setSiteStats");
       }
