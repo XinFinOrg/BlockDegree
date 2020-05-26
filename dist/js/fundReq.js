@@ -24,7 +24,7 @@ $(document).ready(() => {
 
   window.addEventListener("message", function (event) {
     if (
-      event.origin == "https://www.blockdegree.org" ||
+      event.origin == "http://localhost:3000" ||
       event.origin == "https://blockdegree.org"
     ) {
       if (event.data == "share") {
@@ -888,7 +888,7 @@ function handleAuthTwitterShare() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "https://www.blockdegree.org/auth/twitter?close=true&share=true",
+    "http://localhost:3000/auth/twitter?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -897,7 +897,7 @@ function handleAuthLinkedinShare() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "https://www.blockdegree.org/auth/linkedin?close=true&share=true",
+    "http://localhost:3000/auth/linkedin?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -1433,7 +1433,7 @@ function payRazorpay(fundId, amount) {
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image: "https://www.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          image: "http://localhost:3000/img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {
@@ -1488,3 +1488,76 @@ function payRazorpay(fundId, amount) {
 
 $("select").imagepicker();
 // Image selector Script ends //
+
+
+
+// Stepped form script starts //
+$(document).ready(function(){
+
+var current_fs, next_fs, previous_fs; //fieldsets
+var opacity;
+
+$(".next").click(function(){
+
+current_fs = $(this).parent();
+next_fs = $(this).parent().next();
+
+//Add Class Active
+$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+//show the next fieldset
+next_fs.show();
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+next_fs.css({'opacity': opacity});
+},
+duration: 600
+});
+});
+
+$(".previous").click(function(){
+
+current_fs = $(this).parent();
+previous_fs = $(this).parent().prev();
+
+//Remove class active
+$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+//show the previous fieldset
+previous_fs.show();
+
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+previous_fs.css({'opacity': opacity});
+},
+duration: 600
+});
+});
+
+$('.radio-group .radio').click(function(){
+$(this).parent().find('.radio').removeClass('selected');
+$(this).addClass('selected');
+});
+
+$(".submit").click(function(){
+return false;
+})
+
+});
+// Stepped form script ends //
