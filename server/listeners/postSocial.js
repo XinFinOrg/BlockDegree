@@ -961,46 +961,75 @@ function newSocialPostLog(eventId, platform, postId) {
 
 async function getSiteStats(type) {
   try {
-    let allUsers = await User.find({});
-    let allVisits = await Visited.find({});
+    RedisClient.get("siteStats", async (err, result) => {
+      if (err) {
+        console.log(`exception at ${__filename}.getSiteStats: `, err);
+      }
+      if (result !== null) {
+        console.log("[*] serving siteStats from cache");
+        const resJson = JSON.parse(result);
+        switch (type) {
+          case "certificates": {
+            return resJson.certificates;
+          }
+          case "registrations": {
+            return resJson.registrations;
+          }
+          case "visits": {
+            return resJson.visits;
+          }
+          default: {
+            return {
+              userCnt: resJson.registrations,
+              visitCnt: resJson.visits,
+              totCertis: resJson.certificates,
+              caCnt: resJson.ca,
+            };
+          }
+        }
+      } else {
+        let allUsers = await User.find({});
+        let allVisits = await Visited.find({});
 
-    let userCnt = 0,
-      visitCnt = 0,
-      caCnt = 20,
-      totCertis = 0;
-    if (allUsers != null) {
-      userCnt = allUsers.length;
-    }
+        let userCnt = 0,
+          visitCnt = 0,
+          caCnt = 20,
+          totCertis = 0;
+        if (allUsers != null) {
+          userCnt = allUsers.length;
+        }
 
-    if (allVisits != null) {
-      visitCnt = allVisits.length;
-    }
+        if (allVisits != null) {
+          visitCnt = allVisits.length;
+        }
 
-    for (let y = 0; y < allUsers.length; y++) {
-      if (allUsers[y].examData.certificateHash.length > 1) {
-        totCertis += allUsers[y].examData.certificateHash.length - 1;
-      }
-    }
+        for (let y = 0; y < allUsers.length; y++) {
+          if (allUsers[y].examData.certificateHash.length > 1) {
+            totCertis += allUsers[y].examData.certificateHash.length - 1;
+          }
+        }
 
-    switch (type) {
-      case "certificates": {
-        return totCertis;
+        switch (type) {
+          case "certificates": {
+            return totCertis;
+          }
+          case "registrations": {
+            return userCnt;
+          }
+          case "visits": {
+            return visitCnt;
+          }
+          default: {
+            return {
+              userCnt: userCnt,
+              visitCnt: visitCnt,
+              totCertis: totCertis,
+              caCnt: caCnt,
+            };
+          }
+        }
       }
-      case "registrations": {
-        return userCnt;
-      }
-      case "visits": {
-        return visitCnt;
-      }
-      default: {
-        return {
-          userCnt: userCnt,
-          visitCnt: visitCnt,
-          totCertis: totCertis,
-          caCnt: caCnt,
-        };
-      }
-    }
+    });
   } catch (e) {
     console.log(`exception at getUserStat: `, e);
     return null;
