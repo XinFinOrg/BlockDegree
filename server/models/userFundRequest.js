@@ -65,6 +65,8 @@ const userFundRequest = mongoose.Schema({
   createdAt: String,
   updatedAt: String,
   completionDate: String,
+  shared: { type: Boolean, default: false },
+  shareId: { type: String },
 });
 
 module.exports = mongoose.model("UserFundRequest", userFundRequest);

@@ -1,5 +1,6 @@
 const uuid = require("uuid/v4");
 const _ = require("lodash");
+const fs = require("fs");
 const paypal = require("paypal-rest-sdk");
 const BitlyClient = require("bitly").BitlyClient;
 const ProfanityCheck = require("bad-words");
@@ -21,8 +22,12 @@ const razorHelper = require("../helpers/razorHelper");
 const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
 const profanityChecker = new ProfanityCheck();
 const razorKeyId = require("../config/razorPayKeys").keyId;
+const {
+  PostSocialTwitter,
+  PostSocialLinkedin,
+} = require("../helpers/postSocial");
 const minDescChar = 10,
-  maxDescChar = 150;
+  maxDescChar = 250;
 
 exports.requestNewFund = async (req, res) => {
   try {
@@ -32,6 +37,10 @@ exports.requestNewFund = async (req, res) => {
     const facebookProfile = req.body.facebookProfile;
     const linkedinProfile = req.body.linkedinProfile;
     const twitterProfile = req.body.twitterProfile;
+    let templateNumber = req.body.templateNumber;
+    let socialPostPlatform = req.body.socialPostPlatform;
+    let msg = req.body.message;
+
     let requiresApproval = false;
     let totalAmount = 0;
 
@@ -41,10 +50,23 @@ exports.requestNewFund = async (req, res) => {
       return res.json({ status: false, error: "user not found" });
     }
 
-    if (_.isEmpty(description.trim()) || courseId.length === 0) {
+    if (
+      _.isEmpty(description.trim()) ||
+      courseId.length === 0 ||
+      !templateNumber
+    ) {
       return res.json({ status: false, error: "missing paramter(s)" });
     }
 
+    if (
+      _.isEmpty(user.auth.twitter.id) &&
+      _.isEmpty(user.auth.linkedin.id)
+    ) {
+      return res.json({
+        status: false,
+        error: "please link any  one social account",
+      });
+    }
     const courseInsts = [];
 
     for (let i = 0; i < courseId.length; i++) {
@@ -126,6 +148,29 @@ exports.requestNewFund = async (req, res) => {
     if (!_.isEmpty(linkedinProfile)) {
       newFund["socialProfile"]["linkedin"] = linkedinProfile;
     }
+    let shareId;
+    if (socialPostPlatform === "twitter") {
+      let b64content = fs
+        .readFileSync(`server/fmd-templates/${templateNumber}.jpg`)
+        .toString("base64");
+        shareId = await PostSocialTwitter(
+        req.user.email,
+        msg+`Link:${shortUrl.url}`,
+        b64content,
+        `funding-request:${newFund.fundId}`
+      );
+    } else {
+      let path = `server/fmd-templates/${templateNumber}.jpg`;
+      shareId = await PostSocialLinkedin(
+        req.user.email,
+        msg+`Link:${shortUrl.url}`,
+        path,
+        `funding-request:${newFund.fundId}`
+      );
+    }
+
+    newFund["shared"]=true;
+    newFund["shareId"]=shareId;
 
     await newFund.save();
     if (hasProfanity === true) {

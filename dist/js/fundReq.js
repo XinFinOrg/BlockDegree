@@ -11,6 +11,68 @@ let showRazorpay = false;
 let validCountry = [""];
 
 $(document).ready(() => {
+  /**
+   * Validations for 2-step apply
+   */
+  $("#fs-select-course input").change((e) => {
+    // check if atleast one selected
+    console.log(`FS_SELECT_COURSE_CHANGE: `, e.target.id);
+    const courseIds = [];
+    const basicCourse = document.getElementById("basic-course").checked;
+    if (basicCourse)
+      courseIds.push(document.getElementById("basic-course").value);
+    const advancedCourse = document.getElementById("advanced-course").checked;
+    if (advancedCourse)
+      courseIds.push(document.getElementById("advanced-course").value);
+    const professionalCourse = document.getElementById("professional-course")
+      .checked;
+    if (professionalCourse)
+      courseIds.push(document.getElementById("professional-course").value);
+    const computingCourse = document.getElementById("computing-course").checked;
+    if (computingCourse)
+      courseIds.push(document.getElementById("computing-course").value);
+
+    if (courseIds.length > 0) {
+      $("#fs-select-course .next").removeAttr("disabled");
+      $("#fs-select-course .next").removeClass("disabled");
+    } else {
+      $("#fs-select-course .next").attr("disabled", "true");
+      $("#fs-select-course .next").addClass("disabled");
+    }
+  });
+  $("#fs-add-desc textarea").on('keyup',(e) => {
+    // check text limit
+    const desc = document.getElementById("req-description").value;
+    
+    if (desc && desc.trim()!=="" && desc.trim().length > 10 && desc.trim().length < 250 ){
+      $("#fs-add-desc .err").html("&nbsp;");
+      $("#fs-add-desc .next").removeAttr("disabled");
+      $("#fs-add-desc .next").removeClass("disabled");
+    }else{
+      if (desc.trim().length < 10 ){
+        $("#fs-add-desc .err").html("description too short");
+      } else if (desc.trim().length > 250) {
+        $("#fs-add-desc .err").html("description too long");
+      }
+      $("#fs-add-desc .next").attr("disabled", "true");
+      $("#fs-add-desc .next").addClass("disabled");
+    }
+  });
+
+  $("#images-apply").change((e) => {
+    // atleast one banner active
+    const templateNo = document.getElementById("images-apply").value;
+    console.log("template no: ", templateNo);
+    
+    if (templateNo && ["1","2","3"].includes(templateNo)){
+      $("#fs-select-banner .next").removeAttr("disabled");
+      $("#fs-select-banner .next").removeClass("disabled");
+    }else{
+      $("#fs-select-banner .next").attr("disabled", "true");
+      $("#fs-select-banner .next").addClass("disabled");
+    }
+  });
+
   console.log(window.location.pathname);
   if (window.location.pathname != "/profile") getFMDAllData();
 
@@ -130,7 +192,9 @@ async function getFMDAllData(update) {
               currData.fundId
             }', '${currData.status}','${currData.amountGoal}', '${
               currData.donerName
-            }','${userEmail===currData.email}')">View Description</button></td><td>`;
+            }','${
+              userEmail === currData.email
+            }')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataPending += `<span class="courseName">${getCourseName(
@@ -346,12 +410,18 @@ function handleFundRequestSubmit() {
   const computingCourse = document.getElementById("computing-course").checked;
   if (computingCourse)
     courseIds.push(document.getElementById("computing-course").value);
+  const templateNumber = document.getElementById("images-apply").value;
+  const message = document.getElementById("apply-msg").value;
+  const socialPostPlatform = twitterAuthStatus===true?"twitter":"linkedin";
+
   $.ajax({
     method: "post",
     url: "/api/requestNewFund",
     data: {
       desc: desc,
       courseId: JSON.stringify(courseIds),
+      message, socialPostPlatform,
+      templateNumber
     },
   })
     .then((resp) => {
@@ -363,7 +433,7 @@ function handleFundRequestSubmit() {
           );
         } else {
           $.notify(
-            "Successfully submitted the request, \nshare on social media now!",
+            "Successfully submitted the request and posted on social media !!",
             { type: "success", z_index: 2000 }
           );
           renderRequestModal(
@@ -376,7 +446,7 @@ function handleFundRequestSubmit() {
             "uninitiated",
             resp.data.amountGoal,
             "",
-            'true'
+            "true"
           );
         }
       } else {
@@ -555,7 +625,7 @@ function renderRequestModal(
           class="btn btn-primary fund-btn"
           data-dismiss="modal"
           onclick="renderPaymentMethodModal('${addr}','${fundId}', '${amountGoal}')"
-          ${fundDisabled==="true"?"disabled":""}
+          ${fundDisabled === "true" ? "disabled" : ""}
         >
           Fund
         </button>
@@ -722,7 +792,7 @@ function renderRequestedModal(allData, userEmail) {
           allData[i].status,
           allData[i].amountGoal,
           allData[i].donerName,
-          String(allData[i].email===userEmail)
+          String(allData[i].email === userEmail)
         );
         return;
       }
@@ -1488,3 +1558,78 @@ function payRazorpay(fundId, amount) {
 
 $("select").imagepicker();
 // Image selector Script ends //
+
+// Stepped form script starts //
+$(document).ready(function () {
+  var current_fs, next_fs, previous_fs; //fieldsets
+  var opacity;
+
+  $(".next").click(function () {
+    current_fs = $(this).parent();
+    next_fs = $(this).parent().next();
+
+    //Add Class Active
+    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+    //show the next fieldset
+    next_fs.show();
+    //hide the current fieldset with style
+    current_fs.animate(
+      { opacity: 0 },
+      {
+        step: function (now) {
+          // for making fielset appear animation
+          opacity = 1 - now;
+
+          current_fs.css({
+            display: "none",
+            position: "relative",
+          });
+          next_fs.css({ opacity: opacity });
+        },
+        duration: 600,
+      }
+    );
+  });
+
+  $(".previous").click(function () {
+    current_fs = $(this).parent();
+    previous_fs = $(this).parent().prev();
+
+    //Remove class active
+    $("#progressbar li")
+      .eq($("fieldset").index(current_fs))
+      .removeClass("active");
+
+    //show the previous fieldset
+    previous_fs.show();
+
+    //hide the current fieldset with style
+    current_fs.animate(
+      { opacity: 0 },
+      {
+        step: function (now) {
+          // for making fielset appear animation
+          opacity = 1 - now;
+
+          current_fs.css({
+            display: "none",
+            position: "relative",
+          });
+          previous_fs.css({ opacity: opacity });
+        },
+        duration: 600,
+      }
+    );
+  });
+
+  $(".radio-group .radio").click(function () {
+    $(this).parent().find(".radio").removeClass("selected");
+    $(this).addClass("selected");
+  });
+
+  $(".submit").click(function () {
+    return false;
+  });
+});
+// Stepped form script ends //
