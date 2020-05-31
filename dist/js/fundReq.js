@@ -413,6 +413,12 @@ function handleFundRequestSubmit() {
   const templateNumber = document.getElementById("images-apply").value;
   const message = document.getElementById("apply-msg").value;
   const socialPostPlatform = twitterAuthStatus===true?"twitter":"linkedin";
+  $.notify("Submitting the <strong>Funding Request</strong> . . .", {
+    type: "info", allow_dismiss: false, delay: Date.now(), placement: {
+      from: 'bottom',
+      align: 'right'
+    }
+  });
 
   $.ajax({
     method: "post",
@@ -452,6 +458,7 @@ function handleFundRequestSubmit() {
       } else {
         $.notify(resp.error, { type: "danger" });
       }
+      $.notifyClose("bottom-right");
       $("#applyNow").modal("hide");
       document.getElementById("req-description").value = "";
       document.getElementById("basic-course").checked = false;
