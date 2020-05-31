@@ -6,19 +6,19 @@ const requireLogin = require("../middleware/requireLogin");
 module.exports = (app) => {
   app.get("/fmd-corporate-paypal-suc", fmdService.fmdCorporatePaypalSuc);
   app.get("/fmd-corporate-paypal-err", fmdService.fmdCorporatePaypalErr);
-  app.get("/fmd", requireLogin, (req, res) => {
+  app.get("/fmd", (req, res) => {
     res.redirect("/fund-my-degree");
   });
   app.get("/fund-my-degree-fund", requireLogin, getCountryCode, (req, res) => {
     res.render("fundReqFund", { country: req.session.country });
   });
-  app.get("/fmd-fund", requireLogin, (req, res) => {
+  app.get("/fmd-fund", (req, res) => {
     res.redirect("/fund-my-degree-fund");
   });
   app.get("/fund-my-degree-apply", requireLogin, (req, res) => {
     res.render("fundReqApply");
   });
-  app.get("/fmd-apply", requireLogin, (req, res) => {
+  app.get("/fmd-apply", (req, res) => {
     res.redirect("/fund-my-degree-apply");
   });
   app.post("/api/requestNewFund", requireLogin, fmdService.requestNewFund);
