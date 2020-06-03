@@ -5,7 +5,7 @@ courseIdx: 3
 ---
   ## What is Cloud Computing ?
 
-![](https://uat.blockdegree.org/img/cloud-computing-imges/image7.jpg)
+![](https://newuat.blockdegree.org/img/cloud-computing-imges/image7.jpg)
 
 ### Introduction :-
 - Credit: This course Detail has been contributed by the Cloud Hosting Company IndSoft.net 

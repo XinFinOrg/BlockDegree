@@ -212,7 +212,7 @@ class Profile extends Component {
             <div className="logo-wrapper">
               <img
                 className="logo"
-                src={`https://uat.blockdegree.org/img/funders/corporate/logos/${uniqueId}.png?v=${this.state.imgVersion}`}
+                src={`https://newuat.blockdegree.org/img/funders/corporate/logos/${uniqueId}.png?v=${this.state.imgVersion}`}
               />
             </div>
           </Col>
@@ -333,7 +333,7 @@ class Profile extends Component {
                     <hr />
                     <div>
                       <img
-                        src={`https://uat.blockdegree.org/img/funders/corporate/dummy-certi/${uniqueId}.png?v=${this.state.imgVersion}`}
+                        src={`https://newuat.blockdegree.org/img/funders/corporate/dummy-certi/${uniqueId}.png?v=${this.state.imgVersion}`}
                       />
                     </div>
                   </div>

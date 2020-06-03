@@ -75,5 +75,5 @@ provision should be made to allow the authorized and authenticated people only t
 -  Cloud computing provides the services to the organizations so they can run their applications and install them on the cloud. Virtualization is used to deploy the cloud computing models as it provides a hidden layer between the user and the physical layer of the system. The cloud services are measured in terms of use. Pay as much as you use that can be on the basis of hours or months or years. Cloud services allow users to pay for only what they use and according to the demand the charges or the prices gets increased.
 
 
-   ![](https://uat.blockdegree.org/img/cloud-computing-imges/cloud-companies.png)
+   ![](https://newuat.blockdegree.org/img/cloud-computing-imges/cloud-companies.png)
 

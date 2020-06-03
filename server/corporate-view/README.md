@@ -7,7 +7,7 @@ In the project directory, you can run:
 ### `npm start`
 
 Runs the app in the development mode.<br />
-Open [https://uat.blockdegree.org](https://uat.blockdegree.org) to view it in the browser.
+Open [https://newuat.blockdegree.org](https://newuat.blockdegree.org) to view it in the browser.
 
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.

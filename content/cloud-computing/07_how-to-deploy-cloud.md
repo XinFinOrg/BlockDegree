@@ -12,4 +12,4 @@ courseIdx: 3
 
 - Based on our studies conducted for multiple providers, We selected IndSoft Systems to start our Cloud journey. We were able to engage with IndSoft's Technical team right from the start and choose the right solutions for deployment. They not only customized solutions as per our requirements, but were helped us out as our extended technical team. Within 3 month of our deployment, We were able to achieve performance parameters which we had set before we started our cloud journey. They can be reached at http://cloud.indsoft.net 
 
-    ![](https://uat.blockdegree.org/img/cloud-computing-imges/indsoft.png)
+    ![](https://newuat.blockdegree.org/img/cloud-computing-imges/indsoft.png)
