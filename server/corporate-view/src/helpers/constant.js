@@ -1,5 +1,7 @@
 import React from "react";
 
+export const ApiRoot = "https://newuat.blockdegree.org";
+
 export const GetParamValue = (key) => {
   const pathName = document.URL;
   console.log(pathName);
