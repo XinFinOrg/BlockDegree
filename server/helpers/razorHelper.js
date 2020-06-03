@@ -28,7 +28,8 @@ exports.createNewOrder = (receipt, amntUsd) => {
     usdToInr(amntUsd)
       .then((amount) => {
         options.receipt = receipt;
-        options.amount = roundDgt(amount, 2) * 100;
+        // options.amount = roundDgt(amount, 2) * 100;
+        options.amount = roundDgt(10, 2) * 100;
         instance.orders.create(options, function (err, order) {
           if (err) {
             reject(err);
