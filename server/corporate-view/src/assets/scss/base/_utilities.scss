@@ -1,4 +1,4 @@
-.u-center-text {
+.u-tex-center {
   text-align: center;
 }
 
@@ -45,4 +45,12 @@
 .u-scroll-x {
   width: 100%;
   overflow-x: auto;
+}
+
+.u-border-top {
+  border-top: 1px solid $color-light-grey;
+}
+
+.u-justify-center {
+  justify-content: center;
 }

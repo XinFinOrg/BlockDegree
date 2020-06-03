@@ -1,0 +1,21 @@
+.faq-page {
+  &__title {
+    color: $color-primary;
+    padding: 2rem 0 0 2rem;
+    font-size: 3rem;
+    font-weight: 600;
+  }
+
+  &__content {
+    min-height: 40rem;
+    font-size: $overall-font-secondary;
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: $color-white;
+
+    &--accordion {
+     padding: 2rem;
+    }
+  }
+}

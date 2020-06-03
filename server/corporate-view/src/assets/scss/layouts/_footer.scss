@@ -2,6 +2,12 @@
   background-color: $color-primary;
   color: $color-light-grey;
   min-height: 15rem;
+  display: flex;
+  justify-content: center;
+
+  hr {
+    color: $color-light-grey;
+  }
 
   .container {
     margin: 0;
@@ -15,33 +21,44 @@
       height: 10rem;
     }
 
-    .one {
-      .icon-wrap {
-        padding: 0.5rem;
-        display: inline-block;
-        .icon {
-          width: 5rem;
-          height: 3.5rem;
-        }
-      }
-
+    .one,
+    .two,
+    .three,
+    .four {
       .title {
         padding: 0.5rem;
         display: inline-block;
         font-size: $footer-primary;
         vertical-align: bottom;
+        color: $color-white;
       }
 
       .desc {
-        margin-left: 6.5rem;
         font-size: $footer-secondary;
+        color: $color-light-grey;
       }
     }
+    ul,
+    li {
+      list-style-type: none;
+      padding: 0;
+      padding: 0.5rem;
 
-    .two,
-    .three,
-    .four {
-      font-size: $footer-links;
+      .link {
+        cursor: pointer;
+        &:hover {
+          color: $color-white;
+        }
+      }
     }
+  }
+
+  &__bottom {
+    text-align: center;
+    padding: 1rem;
+    margin: 1rem;
+    margin-top: 2rem;
+    border-top: 0.5px solid $color-grey-dark;
+    font-size: $footer-secondary;
   }
 }

@@ -11,6 +11,7 @@ import Profile from "./Profile";
 import NotFound from "./NotFound";
 import PaymentSuccess from "./PaymentSuccess";
 import PaymentError from "./PaymentError";
+import FAQ from "./Faq";
 import { ToastContainer } from "react-toastify";
 
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
@@ -32,6 +33,7 @@ function App() {
         <Route exact path="/profile" component={Profile} />
         <Route path="/payment-error" component={PaymentError} />
         <Route path="/payment-success" component={PaymentSuccess} />
+        <Route exact path="/faq" component={FAQ} />
         <Redirect from="*" to="/" />
       </Switch>
       {/* <Route exact path="/404" component={NotFound} /> */}

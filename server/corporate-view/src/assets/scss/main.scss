@@ -14,6 +14,7 @@
 @import "pages/profile";
 @import "pages/dashboard.scss";
 @import "pages/message-page";
+@import "pages/faq.scss";
 
 @import "components/modal";
 @import "components/button";
@@ -22,6 +23,8 @@
 @import "components/table";
 @import "components/highlighted";
 @import "components/toast";
+@import "components/accordion";
+@import "components/custom-card";
 
 @import "layouts/header";
 @import "layouts/main-panel";

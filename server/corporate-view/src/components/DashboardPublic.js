@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container, Card } from "react-bootstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs } from "@fortawesome/free-solid-svg-icons";
@@ -119,6 +119,47 @@ class Dashboard extends Component {
                 <hr />
                 <br />
                 {bannerRightContent}
+              </div>
+            </Col>
+          </Row>
+          <br />
+          <Row className="u-justify-center">
+            <Col sm="12" md="5" lg="5">
+              <div className="custom-card">
+                <div className="custom-card__title">
+                  Built on <b>XDC Network</b>
+                </div>
+                <div className="custom-card__content">
+                  <img
+                    src="https://blockdegree.org/img/partners/xdc_logo.png"
+                    alt="xdc logo"
+                  />
+                </div>
+              </div>
+            </Col>
+            <Col sm="12" md="5" lg="5">
+              <div className="custom-card">
+                {" "}
+                <div className="custom-card__title">Entire Course Payment</div>
+                <div className="custom-card__content">
+                  <div className="custom-card__content--text">
+                    <br />
+                    We provide several options for you to donate.
+                    <br /> Apart from <b>Paypal</b>, you also have the option to
+                    pay through <b>XDC Coin</b> or <b>Mobile Payments</b>.
+                    <br />
+                    If you are looking at Entire Course sponsoring then{" "}
+                    <a
+                      href="https://www.blockdegree.org/contact"
+                      target="_blank"
+                    >
+                      Please&nbsp;Contact&nbsp;Us
+                    </a>
+                    <br />
+                    You can also mail at <b>info@blockdegree.org</b>
+                    <br />
+                  </div>
+                </div>
               </div>
             </Col>
           </Row>

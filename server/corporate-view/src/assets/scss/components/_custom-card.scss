@@ -1,0 +1,33 @@
+.custom-card {
+  background-color: $color-white;
+  padding: 1rem;
+  border-radius: 1rem;
+  color: $color-primary;
+  height: 286px;
+
+  &__title {
+    font-size: 3rem;
+    b {
+      color: $color-new-blue;
+    }
+    text-align: center;
+    border-bottom: 1px solid $color-light-grey;
+  }
+
+  &__content {
+    text-align: center;
+    font-size: 1.8rem;
+    img {
+      width: 20rem;
+      height: 20rem;
+    }
+
+    &--text {
+      padding: 1rem;
+    }
+  }
+
+  @media screen and (max-width:762px) {
+    margin-bottom: 2rem;
+  }
+}
