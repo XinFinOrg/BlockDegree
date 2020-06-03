@@ -4,4 +4,4 @@ else
   mkdir /var/www/corporate.blockdegree.org/
 fi
 cd ./server/corporate-view && npm i && npm run build
-cp -r ./build /var/www/newuat.blockdegree.org/
+cp -r ./build /var/www/corporate.blockdegree.org/
