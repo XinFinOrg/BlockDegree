@@ -67,6 +67,8 @@ const userFundRequest = mongoose.Schema({
   completionDate: String,
   bulkId: { type: String },
   type: { type: String, enum: ["direct", "bulk"] },
+  shared: { type: Boolean, default: false },
+  shareId: { type: String },
 });
 
 module.exports = mongoose.model("UserFundRequest", userFundRequest);

@@ -23,6 +23,7 @@ exports.renderCourses = (req, res) => {
       res.redirect(
         "/courses/blockchain-professional/what-is-ethereum-blockchain"
       );
+      break;
     }
 
     case "cloud-computing": {
@@ -30,6 +31,7 @@ exports.renderCourses = (req, res) => {
       res.redirect(
         "/courses/cloud-computing/what-is-cloud-computing"
       );
+      break;
     }
   }
 };

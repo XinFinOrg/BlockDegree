@@ -1,277 +1,374 @@
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css" />
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 
 <div class="fmd-page-wrapper">
-    <!-- start Header bg -->
-    <section class="fmd-style-wrapper fmd-block-bg">
-        <div class="container">
-            
-			<div class="col-md-10 offset-md-1">
-			
-				<div class="d-flex justify-content-between">
-					<div class="fmd-block-bg-content">
-						<h2>Fund My Degree</h2>
-						<p>Need help in getting your certification?<br>You can apply for funding on this page and get your
-							certification sponsored.</p>
-					</div>
-					{{!-- <div class="align-self-center">
-						<button data-toggle="modal" data-target="#applyNow" class="btn btn-white text-uppercase">Request For
-							FundMyDegree </button>
-					</div> --}}
-				</div>
-			
-			</div>
-			
-        </div>
-    </section>
-
-    <section class="fund-apply-section">
-        
+	<!-- start Header bg -->
+	<section class="fmd-style-wrapper fmd-block-bg">
 		<div class="container">
-            
-			<div class="col-md-10 offset-md-1">
-			
-		
-		<div class="fund-apply-form">
-            <div class="form-name">Apply For FundMyDegree
-                <!--<div class="underline"></div>-->
-            </div>
-
-            <div class="form-body">
-                <div class="form-group">
-                    <div class="form-group">
-                        <div class="modal-body__title mb-1">Select Course (s)</div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="basic-course" value="course_1">
-                            <label class="form-check-label" for="basic-course">Basic</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="advanced-course" value="course_2">
-                            <label class="form-check-label" for="advanced-course">Advanced</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="professional-course" value="course_3">
-                            <label class="form-check-label" for="professional-course">Professional</label>
-                        </div>
-                                                <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="computing-course" value="course_4">
-                            <label class="form-check-label" for="computing-course">Cloud Computing</label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="modal-body__title mb-1">Enter Short Description</div>
-                        <textarea id="req-description" style="height: 150px;" class="form-control"
-                            placeholder="enter short description"></textarea>
-                    </div>
-
-                    <div class="form-footer">
-                        <button type="button" class="btn btn-primary" onclick="handleFundRequestSubmit()">
-                            Submit
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="section-footer">
-            You can check the status of your request and other requests from <a href="/fmd-fund">Here</a>.
-        </div>
-		
-		</div></div>
-		
-    </section>
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2">
+					<div class="d-flex justify-content-between">
+						<div class="fmd-block-bg-content">
+							<h2>Fund My Degree</h2>
+							<p>Need help in getting your certification?
+								<br>You can apply for funding on this page and get your certification sponsored.</p>
+						</div> {{!--
+						<div class="align-self-center">
+							<button data-toggle="modal" data-target="#applyNow" class="btn btn-white text-uppercase">Request For FundMyDegree </button>
+						</div> --}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
 
-    <!-- Modal -->
-    {{!-- <div class="modal fade" id="applyNow" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="applyNowLongTitle">Apply For Funding</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+	{{!-- This is the HTML Form --}}
+	<section class="fund-apply-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2">
+					<div class="fund-apply-form">
+						<div class="form-name">Apply For FundMyDegree</div>
+						<!-- MultiStep Form -->
+						<div id="step-block">
+							<div class="card">
+								<p>Fill all form field to go to next step</p>
+								<div class="row">
+									<div class="col-md-12 mx-0">
+										<form class="step-form">
+											<!-- progressbar -->
+											<ul id="progressbar">
+												<li class="active" id="course"><strong>Select Course</strong></li>
+												<li id="description"><strong>Description</strong></li>
+												<li id="socialmedia"><strong>Link Socialmedia</strong></li>
+												<li id="banner"><strong>Select Banner</strong></li>
+											</ul>
+											<!-- fieldsets -->
+											<fieldset id="fs-select-course">
+												<div class="form-card">
+													<h2 class="fs-title">Select Course/Courses</h2>
+													<div class="form-row">
+														<div class="col-md-6 col-sm-12">
+															<div class="form-check">
+																<input class="form-check-input" type="checkbox" id="basic-course" value="course_1">
+																<label class="form-check-label" for="basic-course">Basic</label>
+															</div>
+														</div>
+														<div class="col-md-6 col-sm-12">
+															<div class="form-check">
+																<input class="form-check-input" type="checkbox" id="advanced-course" value="course_2">
+																<label class="form-check-label" for="advanced-course">Advanced</label>
+															</div>
+														</div>
+														<div class="col-md-6 col-sm-12">
+															<div class="form-check">
+																<input class="form-check-input" type="checkbox" id="professional-course"
+																	value="course_3">
+																<label class="form-check-label" for="professional-course">Professional</label>
+															</div>
+														</div>
+														<div class="col-md-6 col-sm-12">
+															<div class="form-check">
+																<input class="form-check-input" type="checkbox" id="computing-course" value="course_4">
+																<label class="form-check-label" for="computing-course">Cloud Computing</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												<input type="button" name="next" disabled="true" class="next action-button disabled"
+													value="Next" />
+											</fieldset>
+											<fieldset id="fs-add-desc">
+												<div class="form-card">
+													<h2 class="fs-title">Short Description</h2>
+													<textarea id="req-description" style="height: 125px;" class="form-control"
+														placeholder="enter short description"></textarea>
+													<div class="err">&nbsp; 
+													</div>
+												</div>
+												<input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+												<input type="button" name="next" disabled="true" class="next action-button disabled"
+													value="Next" />
+											</fieldset>
+											<fieldset id="fs-link-social">
+												<div class="form-card text-center">
+													<h2 class="fs-title">Link Social Media</h2>
+													<button type="button" onclick="handleAuthTwitter()" class="button twitter"><i
+															class="fa fa-twitter"></i> Twitter</button>
+													<button type="button" onclick="handleAuthLinkedin()" class="button linkedin"><i
+															class="fa fa-linkedin"></i> LinkedIn</button>
+												</div>
+												<input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+												<input type="button" name="next" class="next action-button disabled" disabled="true"
+													value="Next" />
+											</fieldset>
+											<fieldset id="fs-select-banner">
+												<div class="form-card">
+													<h2 class="fs-title">Select Banner and Submit</h2>
+													<textarea type="text" style="height: 80px;" class="form-control"
+														placeholder="enter post message"
+														id="apply-msg">Check the new function of #Blockdegree, where students can apply for funding to give exams for free. Funders can fund any student and get their name on a student's certificate as a sponsor.&#13;&#10;#blockdegree #fundmydegree&#13;&#10;</textarea>
+													<br />
+													<div id="postTwitter">
+														<select name="user[avatar]" id="images-apply">
+															<option value="">Please Select</option>
+															<option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
+															<option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
+															<option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
+														</select>
+													</div>
 
-                    <div class="form-group">
-                        <div class="form-group">
-                            <div class="modal-body__title mb-1">Select Course (s)</div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="basic-course" value="course_1">
-                                <label class="form-check-label" for="basic-course">Basic</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="advanced-course" value="course_2">
-                                <label class="form-check-label" for="advanced-course">Advanced</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="professional-course"
-                                    value="course_3">
-                                <label class="form-check-label" for="professional-course">Professional</label>
-                            </div>
-                        </div>
+												</div>
+												<input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+												<button type="button" class="disabled next action-button" onclick="handleFundRequestSubmit()">
+													Submit </button>
 
-                        <div class="form-group">
-                            <div class="modal-body__title mb-1">Enter Short Description</div>
-                            <textarea id="req-description" style="height: 150px;" class="form-control"
-                                placeholder="enter short description"></textarea>
-                        </div>
-                    </div>
+											</fieldset>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="section-footer"> You can check the status of your request and other requests from <a
+							href="/fmd-fund">Here</a>. </div>
+				</div>
+			</div>
+		</div>
+</section>
 
 
+<!-- Modal -->
+{{!--<div class="modal fade" id="applyNow" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="applyNowLongTitle">Apply For Funding</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<div class="form-group">
+							<div class="modal-body__title mb-1">Select Course (s)</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" id="basic-course" value="course_1">
+								<label class="form-check-label" for="basic-course">Basic</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" id="advanced-course" value="course_2">
+								<label class="form-check-label" for="advanced-course">Advanced</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" id="professional-course" value="course_3">
+								<label class="form-check-label" for="professional-course">Professional</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="modal-body__title mb-1">Enter Short Description</div>
+							<textarea id="req-description" style="height: 150px;" class="form-control" placeholder="enter short description"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" onclick="handleFundRequestSubmit()">Submit</button>
+				</div>
+			</div>
+		</div>
+	</div> --}}
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="handleFundRequestSubmit()">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
+<div id="requestModalWrapper"> </div>
 
-    <div id="requestModalWrapper">
-    </div>
+{{!-- Modal For Choosing Payment Method --}}
+<div id="paymentMethodModalWrapper"> </div>
+<div id="claimTxModalWrapper"> </div>
+<div id="payByXdcWrapper">
+	<div class="modal fade" id="xdcQRCode" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="qr-code-wrapper">
+					<div class="modal-header">
+						<h5 class="modal-title" id="applyNowLongTitle">Pay By XDC</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+								aria-hidden="true">&times;</span> </button>
+					</div>
+					<div class="modal-body">
+						<div class="qr-text">Send Amount <strong><span class="xdc-value" id="xdc-value-modal"></span>&nbsp;XDC
+								coin</strong>&nbsp; to the address below using your <strong><a
+									href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN" target="_blank">XDC
+									Wallet</a></strong></div>
+						<div id="xdc-qr-img" class="xdc-qr-img"></div>
 
-    {{!-- Modal For Choosing Payment Method --}}
-    <div id="paymentMethodModalWrapper">
-    </div>
+						<input type="text" class="form-control" id="xdc-addr-value-modal" readonly="readonly" value=""
+							class="xdc-addr-txt">
+						<button type="button" id="xdc-modal-copy-btn" class="btn btn-outline-primary">COPY</button>
+						<div>
+							After completing the TX, please <span data-dismiss="modal" id="req-claim-fund"
+								class="claim-fund">CLAIM</span> your fund!
+						</div>
+					</div>
+					<div class="modal-footer">
+						<div>
+							<div>Don't have&nbsp;<strong>XDC&nbsp;<img
+										src="https://www.blockdegree.org/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
+								?&nbsp;Buy from <a href="https://alphaex.net" target="_blank">AlphaEx</a> or <a href="https://stex.com"
+									target="_blank">Stex</a>
+							</div>
+						</div>
+						<div>Download XDC Wallet&nbsp;<a href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
+								target="_blank">Android</a></div>
 
-    <div id="claimTxModalWrapper">
-    </div>
-
-    <div id="payByXdcWrapper">
-        <div class="modal fade" id="xdcQRCode" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="qr-code-wrapper">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="applyNowLongTitle">Pay By XDC</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="qr-text">Send Amount <strong><span class="xdc-value"
-                                        id="xdc-value-modal"></span>&nbsp;XDC coin</strong>&nbsp; to
-                                the
-                                address below using your <strong><a
-                                        href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
-                                        target="_blank">XDC Wallet</a></strong></div>
-                            <div id="xdc-qr-img" class="xdc-qr-img"></div>
-
-                            <input type="text" class="form-control" id="xdc-addr-value-modal" readonly="readonly"
-                                value="" class="xdc-addr-txt">
-                            <button type="button" id="xdc-modal-copy-btn" class="btn btn-outline-primary">COPY</button>
-                            <div>
-                                After completing the TX, please <span data-dismiss="modal" id="req-claim-fund"
-                                    class="claim-fund">CLAIM</span> your fund!
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <div>
-                                <div>Don't have&nbsp;<strong>XDC&nbsp;<img
-                                            src="https://uat.blockdegree.org/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
-                                    ?&nbsp;Buy from <a href="https://alphaex.net" target="_blank">AlphaEx</a> or <a
-                                        href="https://stex.com" target="_blank">Stex</a>
-                                </div>
-                            </div>
-                            <div>Download XDC Wallet&nbsp;<a
-                                    href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
-                                    target="_blank">Android</a></div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <button id="togglePostTwitter" type="button" class="btn btn-primary social-tw" data-toggle="modal"
-    data-target="#postTwitter" style="display: none"><i class="fa fa-twitter social"></i> Post on Twitter </button>
+	data-target="#postTwitter" style="display: none"><i class="fa fa-twitter social"></i> Post on Twitter </button>
+
 <!-- Modal -->
 <div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Twitter Post</h3>
-                <button type="button" class="close" data-dismiss="modal">×</button>
-            </div>
-            <div class="modal-body">
-                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
-                        class="form-control" style="border-radius:5px;" id="postMSGTwitter"></textarea></p>
-
-                <select name="user[avatar]" id="images-twitter">
-                    <option value="">Please Select</option>
-                    <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
-                    <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
-                    <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
-                </select>
-
-                <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
-                <div style="text-align: center;">
-                    <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3"
-                        onclick="postTweet()">Post On Twitter <i class="fa fa-twitter"></i></button>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Twitter Post</h3>
+				<button type="button" class="close" data-dismiss="modal">×</button>
+			</div>
+			<div class="modal-body">
+				<p style="text-align: center;margin-bottom: 0.75rem!important;">
+					<textarea cols="30" rows="6" class="form-control" style="border-radius:5px;" id="postMSGTwitter"></textarea>
+				</p>
+				<select name="user[avatar]" id="images-twitter">
+					<option value="">Please Select</option>
+					<option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
+					<option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
+					<option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
+				</select>
+				<!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
+				<div style="text-align: center;">
+					<button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3" onclick="postTweet()">Post On
+						Twitter <i class="fa fa-twitter"></i></button>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal"> Close </button>
+			</div>
+		</div>
+	</div>
 </div>
 
-
 <button id="togglePostLinkedin" type="button" class="btn btn-primary social-li" data-toggle="modal"
-    data-target="#postLinkedin" style="display: none">Post Linkedin</button>
+	data-target="#postLinkedin" style="display: none">Post Linkedin</button>
+
 <div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Linkedin Post</h3>
-                <button type="button" class="close" data-dismiss="modal">×</button>
-            </div>
-            <div class="modal-body">
-                <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
-                        class="form-control" style="border-radius:5px;" id="postMSGLinkedin"></textarea></p>
-                <div class="banner-title">
-                    Select a banner of your choice to post!
-                </div>
-                <select name="user[avatar]" id="images-linkedin">
-                    <option value="">Please Select</option>
-                    <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
-                    <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
-                    <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
-                </select>
-
-                <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
-                <div style="text-align: center;">
-                    <button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()">Post On
-                        Linkedin <i class="fa fa-linkedin-square"></i> </button>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Linkedin Post</h3>
+				<button type="button" class="close" data-dismiss="modal">×</button>
+			</div>
+			<div class="modal-body">
+				<p style="text-align: center;margin-bottom: 0.75rem!important;">
+					<textarea cols="30" rows="6" class="form-control" style="border-radius:5px;" id="postMSGLinkedin"></textarea>
+				</p>
+				<div class="banner-title"> Select a banner of your choice to post! </div>
+				<select name="user[avatar]" id="images-linkedin">
+					<option value="">Please Select</option>
+					<option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
+					<option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
+					<option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
+				</select>
+				<!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
+				<div style="text-align: center;">
+					<button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()">Post On Linkedin <i
+							class="fa fa-linkedin-square"></i> </button>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
 </div>
 
 <!-- Success Modal -->
 
-<script src="/js/fundReq.js?v=1.54"></script>
+<script src="/js/fundReq.js?v=1.56"></script>
+<script>
+
+	let twitterAuthStatus = false, linkedinAuthStatus = false, selectedPlatform = null;
+
+	window.addEventListener(
+		"message",
+		function (event) {
+			console.log("Originating event: ", event.origin);
+			console.log(event.origin);
+			if (event.origin == "https://www.blockdegree.org") {
+				if (event.data == "ok") {
+					$.notify("Social linked!", { type: "success" });
+					if (selectedPlatform === "twitter") {
+						twitterAuthStatus = true;
+					} else if (selectedPlatform === "linkedin") {
+						linkedinAuthStatus = true;
+					}
+					$("#fs-link-social .next").removeClass('disabled');
+					$("#fs-link-social .next").removeAttr('disabled');
+				}
+			}
+		},
+		false
+	);
+
+	function handleAuthTwitter() {
+		// window.location.replace("https://www.blockdegree.org/auth/twitter")
+		selectedPlatform = "twitter"
+		popupLogin({
+			path: "https://www.blockdegree.org/auth/twitter?close=true",
+		});
+	}
+
+	function handleAuthLinkedin() {
+		// window.location.replace("https://www.blockdegree.org/auth/linkedin")
+		selectedPlatform = "linkedin"
+		popupLogin({
+			path: "https://www.blockdegree.org/auth/linkedin?close=true",
+		});
+	}
+
+	function popupLogin(options) {
+		options.windowName = options.windowName || "ConnectWithOAuth"; // should not include space for IE
+		options.windowOptions =
+			options.windowOptions || "location=0,status=0,width=600,height=600";
+		options.callback =
+			options.callback ||
+			function () {
+				window.location.reload();
+			};
+		var that = this;
+		console.log(options.path);
+		that._oauthWindow = window.open(
+			options.path,
+			options.windowName,
+			options.windowOptions
+		);
+		that._oauthInterval = window.setInterval(function () {
+			if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
+				that._oauthWindow.location.href ==
+					"https://www.blockdegree.org/closeCallback";
+			}
+		}, 1000);
+	}
+
+</script>

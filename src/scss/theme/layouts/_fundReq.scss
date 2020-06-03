@@ -1,14 +1,14 @@
 .fmd-page-wrapper {
   .fmd-block-bg {
     position: relative;
-    padding: 175px 0px 150px 0px;
+    padding: 175px 0px 125px 0px;
     background: #3a7bd5;
     background: -webkit-linear-gradient(to bottom, #1488cc, #3a7bd5);
     background: linear-gradient(to bottom, #1488cc, #3a7bd5);
   }
 
   .fmd-block-bg-content {
-    max-width: 80%;
+    /*max-width: 80%;*/
   }
 
   .fmd-block-bg h2 {
@@ -736,10 +736,13 @@
 
 
 .fund-apply-section {
+	margin-bottom: 60px;	
+	/*max-width: 50%;
+    margin: 0 auto;*/
 
   .fund-apply-form {
     /*margin: -50px 0px 10px 100px;*/
-	margin: -62px 0px 0px 0px;
+	margin: -60px 0px 20px 0px;
     transform: translate(0, 0);
     background-color: white;
     border: 1px solid lightgrey;
@@ -747,20 +750,17 @@
     /*width: 50%;*/
 
     @media (max-width: 768px) {
-      /*margin: -50px 0px 0px 20px;
-      width: 80%;*/
-	  margin: -62px 0px 0px 0px;
+      margin: -60px 0px 20px 0px;
     }
 
     .form-name {
       /*margin-top: 15px;
-      margin-left: 10px;
-      padding: 3px 0px 3px 10px;*/
-	  padding: 17px 6px 16px 21px;
+      margin-left: 10px;*/
+      padding: 16px 12px 16px 20px;
       font-size: 24px;
       font-weight: 400;
-      /*color: #3a98db;*/
-	  background: #e3eef4;
+      /*color: #2073d4;*/
+	  background-color: #edf5ff;
 
       .underline {
         margin-top: 10px;
@@ -782,11 +782,10 @@
 
   .section-footer {
     text-align: left;
-    margin: 30px 0px 45px 0px;
-	/*margin-left: 120px;*/
+    margin-left: 0px;
 
     @media (max-width: 768px) {
-      /*margin-left: 20px;*/
+      margin-left: 0px;
     }
   }
 
@@ -946,3 +945,308 @@
 }
 
 /*--------------- Fund My Degree FAQ css ends ---------------*/
+
+
+
+
+
+
+
+
+
+#step-block {
+    padding: 30px 30px 20px 30px;
+  background: #ffffff;
+  
+  .err {
+    color: red;
+  }
+	
+	p {
+    	margin-bottom: .75rem;
+	}
+
+	.step-form {
+		text-align: center;
+		position: relative;
+		margin-top: 20px;
+	}
+	
+	.step-form fieldset .form-card {
+		background: rgba(0,0,0,0.04);
+		border: 0 none;
+		border-radius: 0px;
+		padding: 30px;
+		border-radius: .25rem;
+		box-sizing: border-box;
+		position: relative;
+	}
+	
+	.step-form fieldset {
+		background: white;
+		border: 0 none;
+		border-radius: 0.5rem;
+		box-sizing: border-box;
+		width: 100%;
+		margin: 0;
+		position: relative;
+	}
+	
+	.step-form fieldset:not(:first-of-type) {
+		display: none;
+	}
+	
+	.step-form fieldset .form-card {
+		text-align: left;
+	}
+	
+	.form-check {
+		margin-bottom: 5px;
+	
+		.form-check-input {
+			margin-top: .3rem;
+			width: 16px;
+			height: 16px;
+		}		
+		.form-check-label {
+			margin-left: 5px;
+		}
+	}
+	
+	.step-form input:focus,
+	.step-form textarea:focus {
+		-moz-box-shadow: none !important;
+		-webkit-box-shadow: none !important;
+		box-shadow: none !important;
+		font-weight: bold;
+		border: 1px solid skyblue;
+		outline-width: 0;
+	}
+	
+	.step-form .action-button {
+		width: 100px;
+		background: #2073D4;
+		font-weight: 400;
+		color: white;
+		border: 0 none;
+		border-radius: .25rem;
+		cursor: pointer;
+		padding: .375rem .75rem;
+		margin: 10px 5px;
+    margin-top: 25px;
+    
+  }
+  
+  .disabled{
+    background-color: lighten(#2073D4, 25%) !important;
+    cursor: default !important;
+  }
+	
+	.step-form .action-button:hover,
+	.step-form .action-button:focus {
+		font-weight: 400;
+		background: #2196f3;
+		border: 0 none;
+	}
+	
+	.step-form .action-button-previous {
+		width: 100px;
+		background: #929292;
+		font-weight: 400;
+		color: white;
+		border: 0 none;
+		border-radius: .25rem;
+		cursor: pointer;
+		padding: .375rem .75rem;
+		margin: 10px 5px;
+		margin-top: 25px;
+	}
+	
+	.step-form .action-button-previous:hover,
+	.step-form .action-button-previous:focus {
+		font-weight: 400;
+		background: #616161;
+		border: 0 none;
+	}
+	
+	.form-footer {
+		margin-top: 10px;
+	}
+	
+	select.list-dt {
+		border: none;
+		outline: 0;
+		border-bottom: 1px solid #ccc;
+		padding: 2px 5px 3px 5px;
+		margin: 2px;
+	}
+	
+	select.list-dt:focus {
+		border-bottom: 2px solid skyblue;
+	}
+	
+	.card {
+		z-index: 0;
+		border: none;
+		border-radius: 0.5rem;
+		position: relative;
+	}
+	
+	.fs-title {
+		font-size: 20px;
+		margin-bottom: 10px;
+		font-weight: 400;
+		text-align: left;
+		margin-bottom: 20px;
+	}
+	
+	#progressbar {
+		margin-bottom: 30px;
+		margin-left: -30px;
+    	margin-right: -30px;
+		overflow: hidden;
+		color: lightgrey;
+	}
+	
+	#progressbar .active {
+		color: #fca450;
+	}
+	
+	#progressbar li {
+		list-style-type: none;
+		font-size: 12px;
+		line-height: 16px;
+		width: 25%;
+		float: left;
+		position: relative;
+	}
+	
+	#progressbar #course:before {
+		font-family: FontAwesome;
+		content: "\f02d";
+	}
+	
+	#progressbar #description:before {
+		font-family: FontAwesome;
+		content: "\f0f6"
+	}
+	
+	#progressbar #socialmedia:before {
+		font-family: FontAwesome;
+		content: "\f1e0";
+	}
+	
+	#progressbar #banner:before {
+		font-family: FontAwesome;
+		content: "\f00c";
+	}
+	
+	#progressbar li:before {
+		width: 50px;
+		height: 50px;
+		line-height: 45px;
+		display: block;
+		font-size: 18px;
+		color: #ffffff;
+		background: lightgray;
+		border-radius: 50%;
+		margin: 0 auto 10px auto;
+		padding: 2px;
+	}
+	
+	#progressbar li:after {
+		content: '';
+		width: 100%;
+		height: 2px;
+		background: lightgray;
+		position: absolute;
+		left: 0;
+		top: 25px;
+		z-index: -1;
+	}
+	
+	#progressbar li.active:before,
+	#progressbar li.active:after {
+		background: #fca450;
+	}
+	
+	.fit-image {
+		width: 100%;
+		object-fit: cover;
+	}
+	
+	
+	
+	.button{
+
+    outline: none;
+    border: none;
+	  &,
+	  &:visited{
+		display: inline-block;
+		font-size: 18px;
+		padding: .75rem 1.5rem;
+		margin-right: 5px;
+		border-radius: .25rem;
+		color: white;
+		box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
+		transition: all 250ms;
+	  }
+	  
+	  i {
+		margin-right: 5px;
+	  }
+	
+	  $socialList:
+		twitter #09f,
+		facebook #469,
+		github #222,
+		google-plus #d43,
+		linkedin #07d,
+		pinterest #c22;
+	  
+	  @each $item in $socialList{
+		$className: nth($item, 1);
+	
+		&.#{$className}{
+		  $bg-color: nth($item, 2);
+		  background-color: $bg-color;
+	  
+		  &:hover,
+		  &:hover{
+			background-color: lighten($bg-color, 15%);
+			color: white;
+			box-shadow: none;
+		  }
+	  
+		  &:active{
+			background-color: lighten($bg-color, 25%);
+			color: white;
+			box-shadow: none;
+      }      
+	  }
+	}
+	  &:focus,
+	  &:hover{
+		cursor: pointer;
+    }
+    
+
+	}	
+}
+
+@media only screen and (max-width: 600px) {
+    #step-block {
+      padding: 20px;
+    }
+	#step-block .step-form fieldset .form-card {
+		padding: 25px;
+	}
+	#step-block #progressbar {
+		margin-left: -20px;
+    	margin-right: -20px;
+	}
+	#step-block .button {
+		padding: .5rem 1rem;
+	}
+}

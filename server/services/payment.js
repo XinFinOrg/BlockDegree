@@ -202,7 +202,7 @@ exports.payPaypalSuccess = (req, res) => {
         res.redirect("/payment-success");
 
         //  payment is a success, initiate the burn.
-        // burnEmitter.emit("burnTokenPaypal",invoice_number,payment.transactions[0].amount.total,"50",course_id, email);
+        burnEmitter.emit("burnTokenPaypal",invoice_number,payment.transactions[0].amount.total,"50",course_id, email);
       });
     }
   });
