@@ -6,6 +6,7 @@ import RequireLogout from "../middleware/RequireLogout";
 import axios from "axios";
 
 import { AddNoti } from "../helpers/Notification";
+import ScrollToTop from "../hooks/ScrollToTop";
 import { GetParamValue } from "../helpers/constant";
 import { BytesToMB } from "../helpers/constant";
 
@@ -79,6 +80,7 @@ class SignUp extends Component {
   render() {
     return (
       <div>
+      <ScrollToTop />
         <RequireLogout />
         {this.renderRedirect()}
         <div className="sign-up">

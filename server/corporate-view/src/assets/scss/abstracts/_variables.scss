@@ -2,13 +2,16 @@ $color-primary: #343a40;
 $color-primary-light: lighten($color-primary, 10%);
 $color-primary-lighter: lighten($color-primary, 50%);
 
+$color-background-primary: #ebebeb;
+$color-primary-border: #c0c0c0;
+
 $color-header: #343a40;
 $color-header-light: lighten($color-header, 10%);
 $color-header-lighter: lighten($color-header, 20%);
 $color-header-dark: darken($color-header, 10%);
 
 $color-light-grey: lightgrey;
-$color-light-grey-light: #CDCDCD;
+$color-light-grey-light: #cdcdcd;
 $color-grey-light-1: #f7f7f7;
 $color-grey-dark: #777;
 $color-white: #ffffff;
@@ -36,3 +39,7 @@ $modal-margin: 1rem;
 $footer-primary: 2.2rem;
 $footer-links: 1.6rem;
 $footer-secondary: 1.4rem;
+
+$lg-width:992px;
+$md-width:762px;
+$sm-width:580px;

@@ -54,3 +54,31 @@
 .u-justify-center {
   justify-content: center;
 }
+
+.u-text-left {
+  text-align: left !important;
+}
+
+.u-no-pad-r {
+  padding-right: 0 !important;
+}
+
+.u-no-pad-l {
+  padding-left: 0 !important;
+}
+
+.u-no-pad-r--lg {
+  @media screen and (min-width: $lg-width) {
+    padding-right: 0 !important;
+  }
+}
+
+.u-no-pad-l--lg {
+  @media screen and (min-width: $lg-width) {
+    padding-left: 0 !important;
+  }
+}
+
+.u-no-list {
+  list-style-type: none;
+}

@@ -4,9 +4,11 @@ import { Row, Col, Container, Card } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs } from "@fortawesome/free-solid-svg-icons";
 
+import RouteButton from "../hooks/RouteButton";
 import { RoundDgt } from "../helpers/constant";
 
 import funders from "../assets/img/funders.png";
+import dummyCerti from "../assets/img/dummy-certi.png";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -92,26 +94,66 @@ class Dashboard extends Component {
             <Col className="lg-hori-1" lg={8}>
               <div className="banner banner-left">
                 <div className="banner__title">
-                  <div className="primary-text">Corporate Funding</div>
-                </div>
-                <hr />
-                <div className="banner__hero">
-                  <img
-                    className="banner-left__hero"
-                    src={funders}
-                    alt="funders image"
-                  />
-                </div>
-                <div className="banner__content">
-                  <div className="secondary-text">
-                    Silent sir say desire fat him letter. Whatever settling
-                    goodness too and honoured she building answered her.
-                    Strongly thoughts remember mr to do consider debating.{" "}
+                  <div className="primary-text">
+                    Blockdegree Corporate Funding
                   </div>
                 </div>
+                <hr />
+                <Row>
+                  <Col className="lg-hori-1 u-no-pad-r" lg={6} md={6}>
+                    <div className="banner__hero">
+                      <img
+                        className="banner-left__hero"
+                        src={funders}
+                        alt="funders image"
+                      />
+                    </div>
+                  </Col>
+                  <Col className="lg-hori-1 u-no-pad-" lg={6} md={6}>
+                    <div className="banner__content u-text-left">
+                      <div className="secondary-text">
+                        <ul className="u-no-list">
+                          <li>
+                            Blockdegree Provides Free Course access to all the
+                            students and if students wish to go for examination
+                            & certification then blockdegree charges USD 9.99
+                            fees.
+                          </li>
+                          <hr />
+                          <li>
+                            This fee is to cover infrastructure and storage
+                            costs for the certificates
+                          </li>
+                          <hr />
+                        </ul>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col
+                    className="banner__footer secondary-text"
+                    lg={12}
+                    md={12}
+                  >
+                    Blockdegree has Students from many underdeveloped countries.
+                    These students like to go for exam & certification but are
+                    unable to pay the fees.
+                    <br />
+                    <a href="https://www.blockdegree.org/fmd" target="_blank">
+                      FundMyDegree
+                    </a>
+                    &nbsp;provides them the option to request for the funding
+                    for their certification.{" "}
+                    <RouteButton
+                      className="btn-sign-up"
+                      to="/signup"
+                      value="Sign Up"
+                    />{" "}
+                    to start funding!
+                  </Col>
+                </Row>
               </div>
             </Col>
-            <Col className="lg-hori-1" lg={4}>
+            <Col className="lg-hori-1 u-no-pad-l--lg" lg={4}>
               <div className="banner banner-right">
                 <div className="banner__title">
                   <div className="primary-text">Funding Statistics</div>
@@ -123,8 +165,34 @@ class Dashboard extends Component {
             </Col>
           </Row>
           <br />
-          <Row className="u-justify-center">
-            <Col sm="12" md="5" lg="5">
+          <Row>
+            <Col className="funding-benefits">
+              <div className="funding-benefits__title">
+                Benefits Of Funding
+                <hr />
+              </div>
+
+              <Row className="funding-benefits__content">
+                <Col className="funding-benefits__content--card" lg={4} md={6} sm={12}>
+                  When you sponsor a Student's fees and certification Your
+                  Personal name or Corporate Logo will be displayed on each
+                  certificate sponsored by you.
+                  <br />
+                  You will get Thank You Certificate from Blockdegree which you
+                  can Share on your Social Media.
+                </Col>
+                <Col className="funding-benefits__content--card" lg={4} md={6} sm={12}>
+                  Corporate, NGO's and government bodies have the option to
+                  sponsor bulk numbers of students. All the sponsored
+                  certificates will have the name and logo of the sponsor. I
+                  wish to sponsor __ Certificate
+                </Col>
+                <Col className="funding-benefits__content--img" lg={3} md={6} sm={12}>
+                  <img src={dummyCerti} />
+                </Col>
+              </Row>
+            </Col>
+            {/* <Col sm="12" md="5" lg="5">
               <div className="custom-card">
                 <div className="custom-card__title">
                   Built on <b>XDC Network</b>
@@ -161,7 +229,7 @@ class Dashboard extends Component {
                   </div>
                 </div>
               </div>
-            </Col>
+            </Col> */}
           </Row>
         </Container>
       </div>

@@ -7,13 +7,24 @@
   &__hero {
     text-align: center;
     img {
-      width: 65%;
+      width: 100%;
     }
   }
 
-  &__content{
+  &__content {
     padding: 0.5rem;
     text-align: center;
+    color: $color-primary;
+
+    ul {
+      li {
+        margin: 1rem 0 1rem 0;
+      }
+    }
+  }
+  
+  &__footer {
+    padding: 2rem;
     color: $color-primary;
   }
 }
