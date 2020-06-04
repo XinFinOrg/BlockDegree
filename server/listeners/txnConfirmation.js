@@ -943,7 +943,8 @@ async function handleBurnToken(
   txHash,
   paymentId,
   userEmail,
-  tokenName
+  tokenName,
+  optNonce
 ) {
   switch (tokenName) {
     case "xdce": {
@@ -1040,12 +1041,13 @@ async function handleBurnToken(
           "Confirmed: ",
           await web3.eth.getTransactionCount(blockdegreePubAddr)
         );
+        let newNonce = nonce || 0;
         const tx = {
           from: blockdegreePubAddr,
           to: xdceAddrMainnet,
           gas: 60000,
           data: encodedData,
-          nonce: await web3.eth.getTransactionCount(blockdegreePubAddr),
+          nonce: await web3.eth.getTransactionCount(blockdegreePubAddr)+nonce,
         };
 
         web3.eth.accounts
@@ -1087,7 +1089,7 @@ async function handleBurnToken(
       break;
     }
     case "xdc": {
-      console.log("Called burning XDC");
+      console.log("Called burning XDC: ", txHash);
       try {
         const web3 = new Web3(
           new Web3.providers.HttpProvider(xinfinApothemRPC)
@@ -1206,7 +1208,7 @@ async function handleBurnToken(
         if (!privKey.startsWith("0x")) {
           privKey = "0x" + privKey;
         }
-        console.log("private key: ", privKey);
+        // console.log("private key: ", privKey);
 
         const burnReceipt = await makeValueTransferXDC(
           "xdc0000000000000000000000000000000000000000",
@@ -1300,5 +1302,6 @@ async function getXDCRecipient(network) {
 
 eventEmitter.on("listenTxConfirm", listenForConfirmation);
 eventEmitter.on("listenTxMined", listenForMined);
+eventEmitter.on("handleBurnToken", handleBurnToken)
 
 exports.em = eventEmitter;

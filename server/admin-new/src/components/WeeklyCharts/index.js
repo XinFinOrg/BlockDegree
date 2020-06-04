@@ -7,11 +7,13 @@ import AccountsCreated from "./AccountCreated";
 import AccountActive from "./AccountActive";
 import PromoCodeUsed from "./PromoCodeUsed";
 import CourseTraffic from "./CourseTraffic";
+import SocialShares from "./SocialShare";
 import FMD from "./FMD";
 
 class WeeklyStats extends Component {
   componentDidMount() {
     this.props.fetchAllFunds();
+    this.props.fetchSocialShares();
   }
 
   renderContent() {
@@ -41,6 +43,11 @@ class WeeklyStats extends Component {
               </div>
               <div className="col-md-6">
                 <FMD />
+              </div>
+            </div>
+            <div className="row">
+            <div className="col-md-6">
+                <SocialShares />
               </div>
             </div>
           </div>

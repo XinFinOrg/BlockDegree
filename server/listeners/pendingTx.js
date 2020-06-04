@@ -52,8 +52,7 @@ async function pendingBurn() {
     });
     console.log("awaiting logs");
     if (paymentLogs == null || paymentLogs.length == 0) {
-      console.log("[*] no pending burn");
-      return;
+      console.log("[*] no pending burn for paypal");
     }
     let count = 0;
     paymentLogs.forEach((log) => {
@@ -69,6 +68,25 @@ async function pendingBurn() {
         count++
       );
     });
+
+    let newCount = 0;
+    const pendingBurnToken = await PaymentToken.find({
+      $and: [{ status: "completed", burn_txn_hash: "" }],
+    });
+    if (pendingBurnToken !== null) {
+      pendingBurnToken.forEach((currPayment) => {
+        txnListener.em.emit(
+          "handleBurnToken",
+          currPayment.course,
+          currPayment.txn_hash,
+          currPayment.payment_id,
+          currPayment.email,
+          "xdc",
+          newCount++
+        );
+      });
+      console.log(`[*] initiated burn for ${newCount} payments`);      
+    }
   } catch (e) {
     console.error("exception at pendingTx:");
     console.error(e);
@@ -77,7 +95,7 @@ async function pendingBurn() {
 
 async function syncPendingBurnFMD(all) {
   try {
-    console.log("called syncPendingBurnFMD: ", all, all===true);
+    console.log("called syncPendingBurnFMD: ", all, all === true);
 
     let allFMD;
     if (all === true) {

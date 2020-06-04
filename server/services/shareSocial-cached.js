@@ -8,7 +8,7 @@ const BitlyClient = require("bitly").BitlyClient;
 let exec = require("child_process").exec;
 const twttr = require("twitter-text");
 const UserFundReq = require("../models/userFundRequest");
-
+const {PostSocialTwitter, PostSocialLinkedin} = require("../helpers/postSocial");
 require("dotenv").config();
 
 // Rate  Limited 1000 calls per hour i.e. {windowMs,max} -> only max requests allowed over windowMs
@@ -161,53 +161,57 @@ exports.postTwitter = async (req, res) => {
           });
         }
 
+        await PostSocialTwitter(user.email, msg, b64content, `certificate:${hash}`);
+        res.json({ uploaded: true, error: null });
+
+        // OLD SYSTEM
         // User should be able to set the status for post
-        T.post("media/upload", { media_data: b64content }, function(
-          // asynchronous
-          err,
-          data,
-          response
-        ) {
-          if (err) {
-            console.log("ERROR:");
-            console.log(err);
-            return res.json({ uploaded: false, error: err });
-          } else {
-            T.post(
-              "statuses/update",
-              {
-                status: msg, // need to check the length for the length of tweet.
-                media_ids: new Array(data.media_id_string)
-              },
-              function(err, data, response) {
-                if (err) {
-                  console.log("ERROR: ", err);
-                  res.json({ uploaded: false, error: err });
-                } else {
-                  console.log("Posted the status!");
-                  res.json({ uploaded: true, error: null });
-                }
-              }
-            ).catch(e => {
-              console.error(`Exception at T.post while Posting Tweeting: `, e);
-              return res.json({
-                error:
-                  "Some error occured while posting,please try again after sometime or else contact-us",
-                uploaded: false
-              });
-            });
-          }
-        }).catch(e => {
-          console.error(
-            `Exception at T.post while uploading image for posting Tweeting: `,
-            e
-          );
-          return res.json({
-            error:
-              "Some error occured while posting,please try again after sometime or else contact-us",
-            uploaded: false
-          });
-        });
+        // T.post("media/upload", { media_data: b64content }, function(
+        //   // asynchronous
+        //   err,
+        //   data,
+        //   response
+        // ) {
+        //   if (err) {
+        //     console.log("ERROR:");
+        //     console.log(err);
+        //     return res.json({ uploaded: false, error: err });
+        //   } else {
+        //     T.post(
+        //       "statuses/update",
+        //       {
+        //         status: msg, // need to check the length for the length of tweet.
+        //         media_ids: new Array(data.media_id_string)
+        //       },
+        //       function(err, data, response) {
+        //         if (err) {
+        //           console.log("ERROR: ", err);
+        //           res.json({ uploaded: false, error: err });
+        //         } else {
+        //           console.log("Posted the status!");
+        //           res.json({ uploaded: true, error: null });
+        //         }
+        //       }
+        //     ).catch(e => {
+        //       console.error(`Exception at T.post while Posting Tweeting: `, e);
+        //       return res.json({
+        //         error:
+        //           "Some error occured while posting,please try again after sometime or else contact-us",
+        //         uploaded: false
+        //       });
+        //     });
+        //   }
+        // }).catch(e => {
+        //   console.error(
+        //     `Exception at T.post while uploading image for posting Tweeting: `,
+        //     e
+        //   );
+        //   return res.json({
+        //     error:
+        //       "Some error occured while posting,please try again after sometime or else contact-us",
+        //     uploaded: false
+        //   });
+        // });
       }
     }
   }
@@ -363,47 +367,51 @@ exports.uploadImageLinkedin = async (req, res) => {
     msg += `\n Link : ${shortURL} `;
   }
 
+
+
+
+  // OLD SYSTEM
   // register an upload : will get upload URL
-  let authToken = user.auth.linkedin.accessToken;
-  let personURN = user.auth.linkedin.id;
-  var response;
-  try {
-    response = await axios({
-      method: "post",
-      url: "https://api.linkedin.com/v2/assets?action=registerUpload",
-      headers: {
-        "X-Restli-Protocol-Version": "2.0.0",
-        Authorization: `Bearer ${authToken}`
-      },
-      data: {
-        registerUploadRequest: {
-          recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
-          owner: `urn:li:person:${personURN}`,
-          serviceRelationships: [
-            {
-              relationshipType: "OWNER",
-              identifier: "urn:li:userGeneratedContent"
-            }
-          ]
-        }
-      }
-    });
-  } catch (e) {
-    console.error(`Exception while registering upload: `, e);
-  }
+  // let authToken = user.auth.linkedin.accessToken;
+  // let personURN = user.auth.linkedin.id;
+  // var response;
+  // try {
+  //   response = await axios({
+  //     method: "post",
+  //     url: "https://api.linkedin.com/v2/assets?action=registerUpload",
+  //     headers: {
+  //       "X-Restli-Protocol-Version": "2.0.0",
+  //       Authorization: `Bearer ${authToken}`
+  //     },
+  //     data: {
+  //       registerUploadRequest: {
+  //         recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
+  //         owner: `urn:li:person:${personURN}`,
+  //         serviceRelationships: [
+  //           {
+  //             relationshipType: "OWNER",
+  //             identifier: "urn:li:userGeneratedContent"
+  //           }
+  //         ]
+  //       }
+  //     }
+  //   });
+  // } catch (e) {
+  //   console.error(`Exception while registering upload: `, e);
+  // }
 
-  console.log("Response from register: ", response.status);
+  // console.log("Response from register: ", response.status);
 
-  // const uploadURL = response.data.value;
-  const uploadMechnism =
-    response.data.value.uploadMechanism[
-      "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
-    ];
-  const uploadURL = uploadMechnism.uploadUrl;
-  const asset = response.data.value.asset;
+  // // const uploadURL = response.data.value;
+  // const uploadMechnism =
+  //   response.data.value.uploadMechanism[
+  //     "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
+  //   ];
+  // const uploadURL = uploadMechnism.uploadUrl;
+  // const asset = response.data.value.asset;
 
-  console.log("ASSET: ", asset);
-  console.log("UploadURL : ", uploadURL);
+  // console.log("ASSET: ", asset);
+  // console.log("UploadURL : ", uploadURL);
   // let localPath = "";
   let pathToFile = "";
   if (checkCached(hash)) {
@@ -449,74 +457,80 @@ exports.uploadImageLinkedin = async (req, res) => {
       });
     });
   }
-  var os = new os_func();
-  os.execCommand(
-    `curl -i --upload-file ${pathToFile} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
-    async function(returnValue) {
-      let resp;
-      try {
-        resp = await axios({
-          method: "post",
-          url: "https://api.linkedin.com/v2/ugcPosts",
-          headers: {
-            "X-Restli-Protocol-Version": "2.0.0",
-            Authorization: `Bearer ${authToken}`
-          },
-          data: {
-            author: `urn:li:person:${personURN}`,
-            lifecycleState: "PUBLISHED",
-            specificContent: {
-              "com.linkedin.ugc.ShareContent": {
-                shareCommentary: {
-                  text: msg
-                },
-                shareMediaCategory: "IMAGE",
-                media: [
-                  {
-                    status: "READY",
-                    description: {
-                      text: "Center stage!"
-                    },
-                    media: asset,
-                    title: {
-                      text: "LinkedIn Talent Connect 2018"
-                    }
-                  }
-                ]
-              }
-            },
-            visibility: {
-              "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-            }
-          }
-        });
-      } catch (e) {
-        console.error("Exception while making axios request: ", e);
-        return res.json({
-          uploaded: false,
-          error:
-            "something's wrong, we'll look into it. Please try again after some time or contact us"
-        });
-      }
+  
 
-      console.log(resp.status);
-      return res.json({
-        uploaded: resp.status == 201,
-        error:
-          resp.status == 201
-            ? null
-            : "something's wrong, we'll look into it. Please try again after some time or contact us"
-      });
-    },
-    err => {
-      console.error("Error while uploading the media to the asset: ", err);
-      return res.json({
-        uploaded: false,
-        error:
-          "something's wrong, we'll look into it. Please try again after some time or contact us"
-      });
-    }
-  );
+  await PostSocialLinkedin(user.email, msg, pathToFile, `certificate:${hash}`);
+  res.json({ uploaded: true, error: null });
+
+  // OLD SYSTEM
+  // var os = new os_func();
+  // os.execCommand(
+  //   `curl -i --upload-file ${pathToFile} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
+  //   async function(returnValue) {
+  //     let resp;
+  //     try {
+  //       resp = await axios({
+  //         method: "post",
+  //         url: "https://api.linkedin.com/v2/ugcPosts",
+  //         headers: {
+  //           "X-Restli-Protocol-Version": "2.0.0",
+  //           Authorization: `Bearer ${authToken}`
+  //         },
+  //         data: {
+  //           author: `urn:li:person:${personURN}`,
+  //           lifecycleState: "PUBLISHED",
+  //           specificContent: {
+  //             "com.linkedin.ugc.ShareContent": {
+  //               shareCommentary: {
+  //                 text: msg
+  //               },
+  //               shareMediaCategory: "IMAGE",
+  //               media: [
+  //                 {
+  //                   status: "READY",
+  //                   description: {
+  //                     text: "Center stage!"
+  //                   },
+  //                   media: asset,
+  //                   title: {
+  //                     text: "LinkedIn Talent Connect 2018"
+  //                   }
+  //                 }
+  //               ]
+  //             }
+  //           },
+  //           visibility: {
+  //             "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+  //           }
+  //         }
+  //       });
+  //     } catch (e) {
+  //       console.error("Exception while making axios request: ", e);
+  //       return res.json({
+  //         uploaded: false,
+  //         error:
+  //           "something's wrong, we'll look into it. Please try again after some time or contact us"
+  //       });
+  //     }
+
+  //     console.log(resp.status);
+  //     return res.json({
+  //       uploaded: resp.status == 201,
+  //       error:
+  //         resp.status == 201
+  //           ? null
+  //           : "something's wrong, we'll look into it. Please try again after some time or contact us"
+  //     });
+  //   },
+  //   err => {
+  //     console.error("Error while uploading the media to the asset: ", err);
+  //     return res.json({
+  //       uploaded: false,
+  //       error:
+  //         "something's wrong, we'll look into it. Please try again after some time or contact us"
+  //     });
+  //   }
+  // );
 };
 
 
@@ -600,60 +614,65 @@ if (!req.user) {
       let T = new twit(config);
       let imgHTML = "";
 
+      console.log(currFundReq);
+      
+
       let b64content = "";
       if (funderCerti=="true"){
         b64content = fs.readFileSync(`dist/img/funder-certi/${currFundReq.fundId}.png`).toString("base64");;
       }else{
         b64content = fs.readFileSync(`server/fmd-templates/${templateNumber}.jpg`).toString("base64");;
       }
-      
 
-      T.post("media/upload", { media_data: b64content }, function(
-        // asynchronous
-        err,
-        data,
-        response
-      ) {
-        if (err) {
-          console.log("ERROR:");
-          console.log(err);
-          return res.json({ uploaded: false, error: err });
-        } else {
-          T.post(
-            "statuses/update",
-            {
-              status: msg, // need to check the length for the length of tweet.
-              media_ids: new Array(data.media_id_string)
-            },
-            function(err, data, response) {
-              if (err) {
-                console.log("ERROR: ", err);
-                res.json({ uploaded: false, error: err });
-              } else {
-                console.log("Posted the status!");
-                res.json({ uploaded: true, error: null });
-              }
-            }
-          ).catch(e => {
-            console.error(`Exception at T.post while Posting Tweeting: `, e);
-            return res.json({
-              error:
-                "Some error occured while posting,please try again after sometime or else contact-us",
-              uploaded: false
-            });
-          });
-        }
-      }).catch(e => {
-        console.error(
-          `Exception at T.post while uploading image for posting Tweeting: `,
-          e
-        );
-        return res.json({
-          error:
-            "Some error occured while posting,please try again after sometime or else contact-us",
-          uploaded: false
-        });
-      });
+      await PostSocialTwitter(user.email, msg, b64content, `fmd-share:${fundId}`);
+      res.json({ uploaded: true, error: null });
+
+      // T.post("media/upload", { media_data: b64content }, function(
+      //   // asynchronous
+      //   err,
+      //   data,
+      //   response
+      // ) {
+      //   if (err) {
+      //     console.log("ERROR:");
+      //     console.log(err);
+      //     return res.json({ uploaded: false, error: err });
+      //   } else {
+      //     T.post(
+      //       "statuses/update",
+      //       {
+      //         status: msg, // need to check the length for the length of tweet.
+      //         media_ids: new Array(data.media_id_string)
+      //       },
+      //       function(err, data, response) {
+      //         if (err) {
+      //           console.log("ERROR: ", err);
+      //           res.json({ uploaded: false, error: err });
+      //         } else {
+      //           console.log("Posted the status!");
+      //           res.json({ uploaded: true, error: null });
+      //         }
+      //       }
+      //     ).catch(e => {
+      //       console.error(`Exception at T.post while Posting Tweeting: `, e);
+      //       return res.json({
+      //         error:
+      //           "Some error occured while posting,please try again after sometime or else contact-us",
+      //         uploaded: false
+      //       });
+      //     });
+      //   }
+      // }).catch(e => {
+      //   console.error(
+      //     `Exception at T.post while uploading image for posting Tweeting: `,
+      //     e
+      //   );
+      //   return res.json({
+      //     error:
+      //       "Some error occured while posting,please try again after sometime or else contact-us",
+      //     uploaded: false
+      //   });
+      // });
 
     }}}
   }
@@ -683,47 +702,48 @@ exports.uploadImageLinkedinFMD = async (req, res) => {
   let msg =
     req.body.msg 
 
+    // OLD SYSTEM
   // register an upload : will get upload URL
-  let authToken = user.auth.linkedin.accessToken;
-  let personURN = user.auth.linkedin.id;
-  var response;
-  try {
-    response = await axios({
-      method: "post",
-      url: "https://api.linkedin.com/v2/assets?action=registerUpload",
-      headers: {
-        "X-Restli-Protocol-Version": "2.0.0",
-        Authorization: `Bearer ${authToken}`
-      },
-      data: {
-        registerUploadRequest: {
-          recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
-          owner: `urn:li:person:${personURN}`,
-          serviceRelationships: [
-            {
-              relationshipType: "OWNER",
-              identifier: "urn:li:userGeneratedContent"
-            }
-          ]
-        }
-      }
-    });
-  } catch (e) {
-    console.error(`Exception while registering upload: `, e);
-  }
+  // let authToken = user.auth.linkedin.accessToken;
+  // let personURN = user.auth.linkedin.id;
+  // var response;
+  // try {
+  //   response = await axios({
+  //     method: "post",
+  //     url: "https://api.linkedin.com/v2/assets?action=registerUpload",
+  //     headers: {
+  //       "X-Restli-Protocol-Version": "2.0.0",
+  //       Authorization: `Bearer ${authToken}`
+  //     },
+  //     data: {
+  //       registerUploadRequest: {
+  //         recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
+  //         owner: `urn:li:person:${personURN}`,
+  //         serviceRelationships: [
+  //           {
+  //             relationshipType: "OWNER",
+  //             identifier: "urn:li:userGeneratedContent"
+  //           }
+  //         ]
+  //       }
+  //     }
+  //   });
+  // } catch (e) {
+  //   console.error(`Exception while registering upload: `, e);
+  // }
 
-  console.log("Response from register: ", response.status);
+  // console.log("Response from register: ", response.status);
 
-  // const uploadURL = response.data.value;
-  const uploadMechnism =
-    response.data.value.uploadMechanism[
-      "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
-    ];
-  const uploadURL = uploadMechnism.uploadUrl;
-  const asset = response.data.value.asset;
+  // // const uploadURL = response.data.value;
+  // const uploadMechnism =
+  //   response.data.value.uploadMechanism[
+  //     "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
+  //   ];
+  // const uploadURL = uploadMechnism.uploadUrl;
+  // const asset = response.data.value.asset;
 
-  console.log("ASSET: ", asset);
-  console.log("UploadURL : ", uploadURL);
+  // console.log("ASSET: ", asset);
+  // console.log("UploadURL : ", uploadURL);
   // let localPath = "";
   const templateNumber = req.body.templateNumber;
   let funder = req.body.funder;
@@ -739,76 +759,79 @@ exports.uploadImageLinkedinFMD = async (req, res) => {
   }else{
     pathToFile = `server/fmd-templates/${templateNumber}.jpg`;
   }
-  
-  
-  var os = new os_func();
-  os.execCommand(
-    `curl -i --upload-file ${pathToFile} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
-    async function(returnValue) {
-      let resp;
-      try {
-        resp = await axios({
-          method: "post",
-          url: "https://api.linkedin.com/v2/ugcPosts",
-          headers: {
-            "X-Restli-Protocol-Version": "2.0.0",
-            Authorization: `Bearer ${authToken}`
-          },
-          data: {
-            author: `urn:li:person:${personURN}`,
-            lifecycleState: "PUBLISHED",
-            specificContent: {
-              "com.linkedin.ugc.ShareContent": {
-                shareCommentary: {
-                  text: msg
-                },
-                shareMediaCategory: "IMAGE",
-                media: [
-                  {
-                    status: "READY",
-                    description: {
-                      text: "Center stage!"
-                    },
-                    media: asset,
-                    title: {
-                      text: "LinkedIn Talent Connect 2018"
-                    }
-                  }
-                ]
-              }
-            },
-            visibility: {
-              "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-            }
-          }
-        });
-      } catch (e) {
-        console.error("Exception while making axios request: ", e);
-        return res.json({
-          uploaded: false,
-          error:
-            "something's wrong, we'll look into it. Please try again after some time or contact us"
-        });
-      }
 
-      console.log(resp.status);
-      return res.json({
-        uploaded: resp.status == 201,
-        error:
-          resp.status == 201
-            ? null
-            : "something's wrong, we'll look into it. Please try again after some time or contact us"
-      });
-    },
-    err => {
-      console.error("Error while uploading the media to the asset: ", err);
-      return res.json({
-        uploaded: false,
-        error:
-          "something's wrong, we'll look into it. Please try again after some time or contact us"
-      });
-    }
-  );
+  await PostSocialLinkedin(user.email, msg, pathToFile, `fmd-share:${fundId}`);
+  res.json({ uploaded: true, error: null });
+  
+  // OLD SYSTEM
+  // var os = new os_func();
+  // os.execCommand(
+  //   `curl -i --upload-file ${pathToFile} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
+  //   async function(returnValue) {
+  //     let resp;
+  //     try {
+  //       resp = await axios({
+  //         method: "post",
+  //         url: "https://api.linkedin.com/v2/ugcPosts",
+  //         headers: {
+  //           "X-Restli-Protocol-Version": "2.0.0",
+  //           Authorization: `Bearer ${authToken}`
+  //         },
+  //         data: {
+  //           author: `urn:li:person:${personURN}`,
+  //           lifecycleState: "PUBLISHED",
+  //           specificContent: {
+  //             "com.linkedin.ugc.ShareContent": {
+  //               shareCommentary: {
+  //                 text: msg
+  //               },
+  //               shareMediaCategory: "IMAGE",
+  //               media: [
+  //                 {
+  //                   status: "READY",
+  //                   description: {
+  //                     text: "Center stage!"
+  //                   },
+  //                   media: asset,
+  //                   title: {
+  //                     text: "LinkedIn Talent Connect 2018"
+  //                   }
+  //                 }
+  //               ]
+  //             }
+  //           },
+  //           visibility: {
+  //             "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+  //           }
+  //         }
+  //       });
+  //     } catch (e) {
+  //       console.error("Exception while making axios request: ", e);
+  //       return res.json({
+  //         uploaded: false,
+  //         error:
+  //           "something's wrong, we'll look into it. Please try again after some time or contact us"
+  //       });
+  //     }
+
+  //     console.log(resp.status);
+  //     return res.json({
+  //       uploaded: resp.status == 201,
+  //       error:
+  //         resp.status == 201
+  //           ? null
+  //           : "something's wrong, we'll look into it. Please try again after some time or contact us"
+  //     });
+  //   },
+  //   err => {
+  //     console.error("Error while uploading the media to the asset: ", err);
+  //     return res.json({
+  //       uploaded: false,
+  //       error:
+  //         "something's wrong, we'll look into it. Please try again after some time or contact us"
+  //     });
+  //   }
+  // );
 }
 
 

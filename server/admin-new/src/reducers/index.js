@@ -12,7 +12,8 @@ import paymentLogs from "./paymentLog";
 import burnLogs from "./burnLog";
 import cryptoLogs from "./cryptoLog";
 import allFunds from "./allFunds";
-import xdcPrice from "./xdcPrice";
+import xdcPrice from "./xdcPrice"; 
+import socialShares from "./socialShares"; 
 
 export default {
   auth: Auth,
@@ -28,5 +29,6 @@ export default {
   paymentLogs: paymentLogs,
   cryptoLogs: cryptoLogs,
   allFunds: allFunds,
-  xdcPrice: xdcPrice
+  xdcPrice: xdcPrice,
+  socialShares
 };

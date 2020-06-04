@@ -1,8 +1,10 @@
 const Web3 = require("web3");
+const Xdc3 = require("xdc3");
 const EthereumTx = require("ethereumjs-tx");
 const keythereum = require("keythereum");
 const User = require("../models/user");
-const xdcInst = require("./blockchainConnectors").xdcInst;
+let xdcInst = require("./blockchainConnectors").xdcInst;
+const { WsXinfinMainnet } = require("../helpers/constant");
 const { removeExpo } = require("./common");
 
 require("dotenv").config();
@@ -180,3 +182,39 @@ exports.getTransactionTimestamp = (txHash) => {
 exports.getUserData = () => {};
 
 exports.getAttemptByHash = async (hash) => {};
+
+//------------------------------- HEARTBEAT LOGIC----------------------------------
+let inReconnXDC=false;
+
+function connectionHeartbeat() {
+  setInterval(async () => {
+    try {
+      const isActiveXdc = await xdcInst.eth.net.isListening();
+      console.log(`connection status XDC blockchain helper: ${isActiveXdc}`);
+      if (!isActiveXdc && inReconnXDC === false) xdcReconn();
+    } catch (e) {
+      if (inReconnXDC === false) xdcReconn();
+    }
+  }, 5000);
+}
+
+
+function xdcReconn() {
+  try {
+    console.log("[*] reconn xdc running");
+    inReconnXDC = true;
+    let currInterval = setInterval(() => {
+      let xdcProvider = new Xdc3.providers.WebsocketProvider(WsXinfinMainnet);
+      xdcInst = new Xdc3(xdcProvider);
+      xdcProvider.on("connect", () => {
+        console.log(`[*] xdc reconnected to ws at ${__filename}`);
+        inReconnXDC = false;
+        clearInterval(currInterval);
+      });
+    }, 5000);
+  } catch (e) {
+    console.log(`exception at ${__filename}.xdcReconn: `, e);
+  }
+}
+
+connectionHeartbeat();
