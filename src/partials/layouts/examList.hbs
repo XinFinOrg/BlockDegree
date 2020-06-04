@@ -289,8 +289,9 @@ console.log(getParamValue("paymentSuccess"))
   let  originCountry= "{{country}}"
   let showRazorpay= false;
 
-  console.log(`origin country: `, originCountry, "show razorpay: ", showRazorpay );
+  console.log(`origin country: |${originCountry}|`, "show razorpay: ", showRazorpay );
   if (originCountry=='IN'){
+      console.log(`origin country: `, originCountry, "show razorpay: ", showRazorpay );
     document.getElementById("pay-razorpay-btn").style="display:inline-block;"
   }
   let allModals = [];
