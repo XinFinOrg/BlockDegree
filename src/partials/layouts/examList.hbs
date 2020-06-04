@@ -175,12 +175,16 @@ console.log(getParamValue("paymentSuccess"))
                     <button type="button" class="btn-payment" onclick="payViaXdc({{this.type}},{{this.price}})"
                       data-dismiss="modal"> Pay Via XDC </button>
 
+                    
+
                     <button type="button" class="btn-payment" onclick="pay({{this.type}},{{this.price}})"
                       data-dismiss="modal">
                       Pay Via PayPal </button>
-                      <button type="button" id="pay-razorpay-btn"  style="display: none;" class="btn-payment" onclick="payRazorpay({{this.type}},{{this.price}})"
+                      <button type="button" class="btn-payment razorpay-btn" style="display: none;" onclick="payRazorpay({{this.type}},{{this.price}})"
                       data-dismiss="modal">
                       Pay Via Netbanking / Card / UPI </button>
+
+
                   </div>
                   {{!-- <div class="modal-footer">
                     *<a href="https://chrome.google.com/webstore/detail/xinpay/bocpokimicclpaiekenaeelehdjllofo"
@@ -290,10 +294,11 @@ console.log(getParamValue("paymentSuccess"))
   let showRazorpay= false;
 
   console.log(`origin country: |${originCountry}|`, "show razorpay: ", showRazorpay );
-  if (originCountry=='IN'){
-      console.log(`origin country: `, originCountry, "show razorpay: ", showRazorpay );
-    document.getElementById("pay-razorpay-btn").style="display:inline-block;"
+  
+  if (originCountry==='IN'){
+    $(".razorpay-btn").attr ("style", "display:inline-block");
   }
+
   let allModals = [];
   const divisor = 1; // for testing purposes 1 million'th of actual value will be used
   const coinMarketCapUrl = "/api/wrapCoinMarketCap";
