@@ -1089,7 +1089,7 @@ async function handleBurnToken(
       break;
     }
     case "xdc": {
-      console.log("Called burning XDC");
+      console.log("Called burning XDC: ", txHash);
       try {
         const web3 = new Web3(
           new Web3.providers.HttpProvider(xinfinApothemRPC)

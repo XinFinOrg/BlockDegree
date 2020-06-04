@@ -11,6 +11,7 @@ const uuid = require("uuid");
  * @param {String} email email-id of the user
  * @param {String} msg tweet text content
  * @param {String} b64 base64 string format of the image
+ * @returns {Promise<String>}
  */
 const PostSocialTwitter = (email, msg, b64, purpose) => {
   return new Promise((resolve, reject) => {
@@ -30,7 +31,7 @@ const PostSocialTwitter = (email, msg, b64, purpose) => {
               status: msg, // need to check the length for the length of tweet.
               media_ids: new Array(data.media_id_string),
             }).then(({ data, response }) => {
-              console.log("response in twitterPost: ", data, response);
+              // console.log("response in twitterPost: ", data, response);
               const newShare = new SocialShare({
                 uniqueId: uuid(),
                 email,
@@ -136,7 +137,7 @@ const PostSocialLinkedin = async (email, msg, pathToFile, purpose) => {
               //       ? null
               //       : "something's wrong, we'll look into it. Please try again after some time or contact us",
               // });
-              console.log("response in linkedinPost: ", resp);
+              // console.log("response in linkedinPost: ", resp);
               const newShare = new SocialShare({
                 uniqueId: uuid(),
                 email,
