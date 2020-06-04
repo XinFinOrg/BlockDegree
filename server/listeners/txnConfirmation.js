@@ -1208,7 +1208,7 @@ async function handleBurnToken(
         if (!privKey.startsWith("0x")) {
           privKey = "0x" + privKey;
         }
-        console.log("private key: ", privKey);
+        // console.log("private key: ", privKey);
 
         const burnReceipt = await makeValueTransferXDC(
           "xdc0000000000000000000000000000000000000000",
