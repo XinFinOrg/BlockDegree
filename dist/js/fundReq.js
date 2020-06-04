@@ -7,8 +7,8 @@ let loginLinkedin = false,
   twitterFundId = "";
 
 let showRazorpay = false;
-// let validCountry = ["IN"];
-let validCountry = [""];
+let validCountry = ["IN"];
+// let validCountry = [""];
 
 $(document).ready(() => {
   /**
