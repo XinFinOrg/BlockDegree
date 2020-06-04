@@ -52,8 +52,7 @@ async function pendingBurn() {
     });
     console.log("awaiting logs");
     if (paymentLogs == null || paymentLogs.length == 0) {
-      console.log("[*] no pending burn");
-      return;
+      console.log("[*] no pending burn for paypal");
     }
     let count = 0;
     paymentLogs.forEach((log) => {
