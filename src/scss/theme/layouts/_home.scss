@@ -441,15 +441,33 @@
   }
 }
 
-.fmd-block {
-  padding: 0 45px;
+.fmd-block-top {
+  padding: 0 25px;
   border-right: 1px solid #d0d3da;
 }
+.fmd-block-top p {
+  margin-bottom: 1.2rem;
+  line-height: 22px;
+}
+.fmd-block-bottom {
+  padding: 0 25px;
+  border-left: 1px solid #d0d3da;
+}
+.fmd-block-bottom p.small {
+  margin-top: 1rem;
+  margin-bottom: 0px;
+  line-height: 18px;
+}
 @media (max-width: 991.98px) {
-  .fmd-block {
-    border-bottom: 1px solid #d0d3da;
-    border-right: none !important;
-    padding-bottom: 45px !important;
+  .fmd-block-top {
+	border-bottom: 1px solid #d0d3da;
+	border-right: none !important;
+    padding: 40px 0px !important;
+  }
+  .fmd-block-bottom {
+	border-top: 1px solid #d0d3da;
+    border-left: none !important;
+    padding: 40px 0px !important;
   }
 }
 
