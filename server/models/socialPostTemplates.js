@@ -10,7 +10,8 @@ const socialPostTemplate = mongoose.Schema({
   templateName: { type: String, required: true, unique: true },
   templatePurpose: String,
   templateStatus: String,
-  templateFilePath: String
+  templateFilePath: String,
+  vars: [String],
 });
 
 module.exports = mongoose.model("Social_Post_Template", socialPostTemplate);

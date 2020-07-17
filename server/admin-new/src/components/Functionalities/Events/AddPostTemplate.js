@@ -16,7 +16,8 @@ const eventTypesOpts = [
   { label: "Certificates", value: "certificates" },
   { label: "Registrations", value: "registrations" },
   { label: "Course Visits", value: "visits" },
-  { label: "One Time", value: "one-time" }
+  { label: "One Time", value: "one-time" },
+  { label: "Multi", value: "multi" }
 ];
 
 class AddPostTemplate extends Component {
@@ -28,7 +29,8 @@ class AddPostTemplate extends Component {
       inputFile: "",
       inputFileName: "",
       templateName: "",
-      templatePurpose: ""
+      templatePurpose: "",
+      templateVars:"",
     };
 
     this.handleTemplateNameChange = this.handleTemplateNameChange.bind(this);
@@ -110,6 +112,7 @@ class AddPostTemplate extends Component {
     form.append("file", this.state.inputFile);
     form.append("templateName", this.state.templateName);
     form.append("templatePurpose", this.state.templatePurpose);
+    form.append("templateVars",this.state.templateVars.split(","))
     axios
       .post("/api/addPostTemplate", form, {
         headers: {
@@ -203,6 +206,19 @@ class AddPostTemplate extends Component {
                   value={this.state.templateStatus}
                   placeholder="Template Status ( __count__ is the placeholder )"
                   onChange={this.handleTemplateStatusChange}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-md-4 control-label">Template Variables</label>
+              <div className="col-md-8">
+                <textarea
+                  width="100%"
+                  type="text"
+                  value={this.state.templateVars}
+                  placeholder="Template Vars ( one,two )"
+                  onChange={(e) => {this.setState({templateVars:e.target.value})}}
                 />
               </div>
             </div>

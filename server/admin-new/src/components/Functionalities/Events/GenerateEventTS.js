@@ -21,14 +21,16 @@ import "rc-time-picker/assets/index.css";
 const options = [
   { value: "annually", label: "Annually" },
   { value: "monthly", label: "Monthly" },
-  { value: "weekly", label: "Weekly" }
+  { value: "weekly", label: "Weekly" },
+  { value: "daily", label: "Daily" }
 ];
 
 const eventTypesOpts = [
   { label: "Certificates", value: "certificates" },
   { label: "Registrations", value: "registrations" },
   { label: "Course Visits", value: "visits" },
-  { label: "One Time", value: "one-time" }
+  { label: "One Time", value: "one-time" },
+  { label: "Multi", value: "multi" }
 ];
 
 const monthlyDay = [
@@ -98,6 +100,7 @@ class GenerateEventTS extends Component {
       recurrCycleWeekly: null,
       recurrEventTimeWeekly: moment(),
       recurrEventTimeMonthly: moment(),
+      recurrEventTimeDaily: moment(),
       templatesOpts: [],
       selectedTemplate: null
     };
@@ -276,6 +279,30 @@ class GenerateEventTS extends Component {
             </div>
           </div>
         );
+      }
+      case "daily" : {
+        return (          
+        
+          <div className="form-group recur-weekly">
+            <div className="row">
+                <div className="col-md-1"></div>
+                <div className="col-md-11">
+                  <TimePicker
+                    showSecond={false}
+                    defaultValue={moment()}
+                    value={this.state.recurrEventTimeDaily}
+                    className="xxx"
+                    onChange={recurrEventTimeDaily => {
+                      this.setState({ recurrEventTimeDaily });
+                    }}
+                    format={"h:mm a"}
+                    use12Hours
+                    inputReadOnly
+                  />
+                </div>
+              </div>
+          </div>
+        )
       }
       default: {
         return;
@@ -537,6 +564,19 @@ class GenerateEventTS extends Component {
           }
           break;
         }
+
+        case "daily":{
+          if (this.state.recurrEventTimeDaily === null) {
+            console.error("daily recurring cycle period time is null");
+            return showNotification(
+              "danger",
+              "Generate Event By Timestamp",
+              "Please select recurring cycle period time!"
+            );
+          }
+          break;
+
+        }
         default: {
           return;
         }
@@ -575,6 +615,7 @@ class GenerateEventTS extends Component {
       JSON.stringify(this.state.recurrCycleWeekly)
     );
     form.append("recurrEventTimeWeekly", this.state.recurrEventTimeWeekly);
+    form.append("recurrEventTimeDaily", this.state.recurrEventTimeDaily);
 
     // return;
     // data is valid

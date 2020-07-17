@@ -6,7 +6,10 @@ const uuid = require("uuid/v4");
 const path = require("path");
 const SocialPostTemplate = require("../models/socialPostTemplates");
 const sharp = require("sharp");
+const usdToXdc = require("../helpers/cmcHelper").usdToXdc;
 // const gm = require("gm");
+
+const UserFundReq = require("../models/userFundRequest");
 
 const eventFolder = path.join(__dirname, "../tmp-event");
 const postTemplatePath = path.join(__dirname, "../postTemplates");
@@ -85,6 +88,51 @@ exports.generatePostImage = async (type, count, templateId) => {
 };
 
 /**
+ *
+ * @param {String} templateId the ID of the template to choose
+ */
+exports.generatePostImage_Multi = async (templateId) => {
+  try {
+    const vars = {};
+    const template = await SocialPostTemplate.findOne({ id: templateId });
+    let templatePath = currTemplate.templateFilePath;
+    for (let i = 0; i < template.vars.length; i++) {
+      let currVar = template.vars[i];
+      vars[currVar] = await calculateVariableValue(currVar);
+    }
+
+    const fileData = await ejs.renderFile(templatePath, { ...vars });
+    let browser;
+    const imagePath = eventFolder + "/" + uuid() + ".png";
+    browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    const page = await browser.newPage();
+    await page.setViewport({
+      width: 750,
+      height: 510,
+      deviceScaleFactor: 1,
+    });
+    await page.setContent(fileData);
+    await page.screenshot({ path: imagePath });
+    const postImage = fs.readFileSync(imagePath);
+    const twitterImage = await sharp(postImage)
+      .resize(750, 424, {
+        fit: "contain",
+        background: { r: 255, g: 255, b: 255, alpha: 0.5 },
+      })
+      .toFile(imagePath.split(".")[0] + "__twitter.png");
+    console.log(
+      `[*] successfully ceated the new post from template: ${templateId}`
+    );
+    return imagePath;
+  } catch (e) {
+    console.log(`excepiotn at ${__filename}.generatePostImage_Multi:`, e);
+    return null;
+  }
+};
+
+/**
  * GeneratePostStatus will generate the status for post based on the tmeplate.
  * @param {string} type event type {"certificates", "accounts","visits"}
  * @param {number} count count variable for the post
@@ -120,3 +168,227 @@ exports.generatePostStatus = async (type, count, templateId) => {
   console.log("updated template status: ", templateStatus);
   return templateStatus;
 };
+
+/**
+ * improvized version of the old func. allows deducing of value from placeholder
+ * eg: (\_\_count\_\_) name
+ * @param {String} templateId id of the template on which event is based
+ */
+const generatePostStatus_Multi = async (templateId) => {
+  try {
+    if (_.isEmpty(templateId)) return null;
+    const currTemplate = await SocialPostTemplate.findOne({ id: templateId });
+    if (currTemplate === null) {
+      console.error("[*] template not found, returning");
+      return new Error(`Template with ID ${templateId} doers not exists`);
+    }
+    let templateStatus = currTemplate.templateStatus;
+    let finalStatus = templateStatus;
+
+    const allWords = templateStatus.split(" ");
+    const vars = [],
+      values = {};
+    allWords.forEach((word) => {
+      if (word.startsWith("__") && word.endsWith("__")) {
+        vars.push(word);
+      }
+    });
+    for (let i = 0; i < vars.length; i++) {
+      const varValue = await calculateVariableValue(vars[i].replace("__", ""));
+      values[vars[i]] = varValue;
+    }
+
+    Object.keys(values).forEach((val) => {
+      finalStatus.replace(val, values[val]);
+    });
+    return finalStatus;
+  } catch (e) {
+    console.log(`exception at ${__filename}.generatePostStatus_Multi:`, e);
+    return null;
+  }
+};
+
+/**
+ * will parse the string & identify variables & calculate its value
+ * @param {String} status template status
+ */
+async function renderStatusMulti(status) {
+  try {
+    let finalStatus = status;
+
+    const allWords = status.split(" ");
+    const vars = [],
+      values = {};
+    allWords.forEach((word) => {
+      if (word.startsWith("__") && word.endsWith("__")) {
+        vars.push(word);
+      }
+    });
+    for (let i = 0; i < vars.length; i++) {
+      let currVar = vars[i].replace(/__/g, "");
+      const varValue = await calculateVariableValue(currVar);
+      values[vars[i]] = varValue;
+    }
+
+    Object.keys(values).forEach((val) => {
+      finalStatus = finalStatus.replace(
+        new RegExp(`${val}`, "gi"),
+        `${values[val].toFixed(2)}`
+      );
+    });
+    return finalStatus;
+  } catch (e) {
+    console.log(`exception at ${__filename}.renderStatusMulti:`, e);
+    return null;
+  }
+}
+
+/**
+ * @param {String} varName variable name
+ */
+async function calculateVariableValue(varName) {
+  try {
+    switch (varName) {
+      /**
+       * FMD variables
+       */
+      case "fmdApplicationsAll": {
+        return (
+          await UserFundReq.find({
+            $and: [
+              {
+                valid: true,
+              },
+              { status: { $not: /^pending$/ } },
+            ],
+          })
+            .select({ receiveAddrPrivKey: 0 })
+            .lean()
+        ).length();
+      }
+      case "fmdApplicationsPending": {
+        await UserFundReq.find({
+          $and: [
+            {
+              valid: true,
+            },
+            { status: "uninitiated" },
+          ],
+        })
+          .select({ receiveAddrPrivKey: 0 })
+          .lean()
+          .length();
+      }
+      case "fmdApplicationsFunded": {
+        return (
+          await UserFundReq.find({
+            $and: [
+              {
+                valid: true,
+              },
+              { status: "completed" },
+            ],
+          })
+            .select({ receiveAddrPrivKey: 0 })
+            .lean()
+        ).length();
+      }
+      case "fmdAmountAll": {
+        const allFunds = await UserFundReq.find({
+          $and: [
+            {
+              valid: true,
+            },
+            { status: { $not: /^pending$/ } },
+          ],
+        })
+          .select({ receiveAddrPrivKey: 0 })
+          .lean();
+
+        let tot = 0;
+
+        for (let i = 0; i < allFunds.length; i++) {
+          tot += parseFloat(allFunds[i].amountGoal);
+        }
+
+        return tot;
+      }
+      case "fmdAmountPending": {
+        const allFunds = await UserFundReq.find({
+          $and: [
+            {
+              valid: true,
+            },
+            { status: "uninitiated" },
+          ],
+        })
+          .select({ receiveAddrPrivKey: 0 })
+          .lean();
+
+        let tot = 0;
+
+        for (let i = 0; i < allFunds.length; i++) {
+          tot += parseFloat(allFunds[i].amountGoal);
+        }
+
+        return tot;
+      }
+      case "fmdAmountFunded": {
+        const allFunds = await UserFundReq.find({
+          $and: [
+            {
+              valid: true,
+            },
+            { status: "completed" },
+          ],
+        })
+          .select({ receiveAddrPrivKey: 0 })
+          .lean();
+
+        let tot = 0;
+
+        for (let i = 0; i < allFunds.length; i++) {
+          tot += parseFloat(allFunds[i].amountGoal);
+        }
+
+        return tot;
+      }
+
+      case 'fmdAmountPendingXdc' : {
+
+        const allFunds = await UserFundReq.find({
+          $and: [
+            {
+              valid: true,
+            },
+            { status: "uninitiated" },
+          ],
+        })
+          .select({ receiveAddrPrivKey: 0 })
+          .lean();
+
+        let tot = 0;
+
+        for (let i = 0; i < allFunds.length; i++) {
+          tot += parseFloat(allFunds[i].amountGoal);
+        }
+
+        const totXdc = await usdToXdc(tot);
+
+        return totXdc;
+      }
+
+      /**
+       * Exam Variables
+       */
+    }
+  } catch (e) {
+    console.log(`exception at ${__filename}.calculateVariableValue:`, e);
+    return null;
+  }
+}
+
+exports.generatePostStatus_Multi = generatePostStatus_Multi;
+
+
+// renderStatusMulti("this is a __fmd-amount-all__  __fmd-amount-all__ nice test!!").then(console.log);

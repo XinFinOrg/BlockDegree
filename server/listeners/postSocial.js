@@ -144,21 +144,21 @@ async function postSocial(eventId) {
         .getTime();
 
       // need to fix this logic
-      const templateImage = await generatePostTemplate.generatePostImage(
-        currEvent.eventType,
-        `${++postCount}`,
-        currEvent.templateId
-      );
-      const templateStatus = await generatePostTemplate.generatePostStatus(
-        currEvent.eventType,
-        `${postCount}`,
-        currEvent.templateId
-      );
-      currEvent.nextPostPath = templateImage;
-      currEvent.nextPostStatus = templateStatus;
+      // const templateImage = await generatePostTemplate.generatePostImage(
+      //   currEvent.eventType,
+      //   `${++postCount}`,
+      //   currEvent.templateId
+      // );
+      // const templateStatus = await generatePostTemplate.generatePostStatus(
+      //   currEvent.eventType,
+      //   `${postCount}`,
+      //   currEvent.templateId
+      // );
+      // currEvent.nextPostPath = templateImage;
+      // currEvent.nextPostStatus = templateStatus;
 
-      console.log("updated the nextPostPath: ", templateImage);
-      console.log("updated the nextPostStatus: ", templateStatus);
+      // console.log("updated the nextPostPath: ", templateImage);
+      // console.log("updated the nextPostStatus: ", templateStatus);
 
       /*
           1. Generate the post's image & save to the event document

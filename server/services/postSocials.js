@@ -113,6 +113,8 @@ exports.scheduleEventByTime = async (req, res) => {
     const recurrEventTimeMonthly = req.body.recurrEventTimeMonthly;
     const recurrCycleWeekly = JSON.parse(req.body.recurrCycleWeekly);
     const recurrEventTimeWeekly = req.body.recurrEventTimeWeekly;
+    const recurrEventTimeDaily = req.body.recurrEventTimeDaily;
+    const templateVars = JSON.parse(req.body.templateVars);
     console.log(
       "Is Recurring: ",
       isRecurring,
@@ -195,6 +197,10 @@ exports.scheduleEventByTime = async (req, res) => {
       fs.writeFileSync(currentFilePath, file.data);
       postImagePath = currentFilePath;
     } else {
+
+
+      //! To be removed, broken logic
+
       // generate the file dynamically from the template.
       /*
 
@@ -203,35 +209,35 @@ exports.scheduleEventByTime = async (req, res) => {
         3. Generate the status from the text-template.
 
       */
-      console.log(
-        "Typeof templateId: ",
-        typeof templateId,
-        "Template ID: ",
-        templateId
-      );
-      const currTemplate = await SocialPostTemplate.findOne({ id: templateId });
-      if (currTemplate === null) {
-        console.error(`template with id ${templateId} does not exists.`);
-        return res
-          .status(400)
-          .json({ status: false, error: "bad request, template not found" });
-      }
-      const templateImagePath = await generatePostTemplate.generatePostImage(
-        eventType,
-        "test",
-        templateId
-      );
-      const templateStatus = await generatePostTemplate.generatePostStatus(
-        eventType,
-        "test",
-        templateId
-      );
+      // console.log(
+      //   "Typeof templateId: ",
+      //   typeof templateId,
+      //   "Template ID: ",
+      //   templateId
+      // );
+      // const currTemplate = await SocialPostTemplate.findOne({ id: templateId });
+      // if (currTemplate === null) {
+      //   console.error(`template with id ${templateId} does not exists.`);
+      //   return res
+      //     .status(400)
+      //     .json({ status: false, error: "bad request, template not found" });
+      // }
+      // const templateImagePath = await generatePostTemplate.generatePostImage(
+      //   eventType,
+      //   "test",
+      //   templateId
+      // );
+      // const templateStatus = await generatePostTemplate.generatePostStatus(
+      //   eventType,
+      //   "test",
+      //   templateId
+      // );
 
-      console.log(
-        `Generated templateImagepath: ${templateImagePath} \n templateStatus: ${templateStatus}`
-      );
-      postStatus = templateStatus;
-      postImagePath = templateImagePath;
+      // console.log(
+      //   `Generated templateImagepath: ${templateImagePath} \n templateStatus: ${templateStatus}`
+      // );
+      // postStatus = templateStatus;
+      // postImagePath = templateImagePath;
     }
 
     // common validations complete.
@@ -319,7 +325,8 @@ exports.scheduleEventByTime = async (req, res) => {
         recurrCycleMonthly === null ? null : parseInt(recurrCycleMonthly.value),
         new Date(recurrEventTimeMonthly),
         recurrCycleWeekly === null ? null : recurrCycleWeekly.value,
-        new Date(recurrEventTimeWeekly)
+        new Date(recurrEventTimeWeekly),
+        new Date(recurrEventTimeDaily)
       );
       console.log(
         "RecurringRule: ",
@@ -353,6 +360,16 @@ exports.scheduleEventByTime = async (req, res) => {
             );
             return;
           }
+
+          /**
+           * Get the latest data & gen. a fresh banner
+           */
+
+          const newPostStatus = await generatePostTemplate.generatePostStatus_Multi(event.templateId);
+          const newPostPath = await generatePostTemplate.generatePostImage_Multi(event.templateId);
+          event.nextPostPath = newPostPath;
+          event.nextPostStatus = newPostStatus;
+          await event.save();
           emitPostSocial.emit("postSocial", currEvntId);
         } catch (err2) {
           console.log(
@@ -847,11 +864,12 @@ exports.addPostTemplate = (req, res) => {
     postTemplate.templateName = templateName;
     postTemplate.templatePurpose = templatePurpose;
     postTemplate.eventType = eventType;
-    postTemplate.createdBy = req.user || "rudresh@xinfin.org";
+    postTemplate.createdBy = req.user.email || "rudresh@xinfin.org";
     postTemplate.isActive = false;
     postTemplate.createdAt = Date.now();
     postTemplate.lastUsed = "";
     postTemplate.templateStatus = templateStatus;
+    postTemplate.vars = req.body.vars;
     const eventFolder = path.join(postTemplatesPath, eventType);
     if (!fs.existsSync(eventFolder)) {
       console.log(`[*] folder at ${eventFolder} does not exists, creating...`);
@@ -1038,7 +1056,8 @@ function newPostTemplate() {
     isActive: false,
     created: "",
     lastUsed: "",
-    createdBy: ""
+    createdBy: "",
+    vars:[]
   });
 }
 
@@ -1109,7 +1128,8 @@ function generateRecurringPattern(
   recurrCycleMonthly,
   recurrEventTimeMonthly,
   recurrCycleWeekly,
-  recurrEventTimeWeekly
+  recurrEventTimeWeekly,
+  recurrEventTimeDaily
 ) {
   console.log("RecurrCyclePeriodd: ", recurrCyclePeriod);
   try {
@@ -1139,6 +1159,14 @@ function generateRecurringPattern(
         rule.dayOfWeek = weekdayToInt[recurrCycleWeekly];
         rule.hour = recurrEventTimeWeekly.getHours();
         rule.minute = recurrEventTimeWeekly.getMinutes();
+        return rule;
+      }
+
+      case "daily" : {
+        console.log("generateRecurringPattern inside daily")
+        let rule = new schedule.RecurrenceRule();
+        rule.hour = recurrEventTimeDaily.getHours();
+        rule.minute = recurrEventTimeDaily.getMinutes();
         return rule;
       }
       default: {
