@@ -114,7 +114,7 @@ exports.scheduleEventByTime = async (req, res) => {
     const recurrCycleWeekly = JSON.parse(req.body.recurrCycleWeekly);
     const recurrEventTimeWeekly = req.body.recurrEventTimeWeekly;
     const recurrEventTimeDaily = req.body.recurrEventTimeDaily;
-    const templateVars = JSON.parse(req.body.templateVars);
+    // const templateVars = JSON.parse(req.body.templateVars);
     console.log(
       "Is Recurring: ",
       isRecurring,
@@ -164,7 +164,7 @@ exports.scheduleEventByTime = async (req, res) => {
     }
 
     if (
-      !["registrations", "certificates", "visits", "one-time"].includes(
+      !["registrations", "certificates", "visits", "one-time","multi"].includes(
         eventType
       )
     ) {
@@ -344,7 +344,7 @@ exports.scheduleEventByTime = async (req, res) => {
       }
 
       event.recurringRule = recurringRule;
-      await event.save();
+      
       const currEvntId = event.id;
       console.log("saved the new event");
       let currJob = schedule.scheduleJob(recurringRule, async () => {
@@ -380,6 +380,9 @@ exports.scheduleEventByTime = async (req, res) => {
           return;
         }
       });
+
+      event.nextPostScheduleTS = new Date(currJob.nextInvocation()).getTime()
+      await event.save();
 
       // Don't remove recurring events
       // removeEvent(currEvntId);
@@ -718,6 +721,11 @@ exports.forceReSync = async (req, res) => {
               stateVarName: evnt.conditionVar
             });
             emitPostSocial.emit("varTriggerUpdate", evnt.conditionVar);
+          }else if (evnt.variableTrigger===false && evnt.recurring===true) {
+            /**
+             * Multi Events
+             */
+
           }
         } else {
           surpassedTS.push(evnt.id);
@@ -869,7 +877,7 @@ exports.addPostTemplate = (req, res) => {
     postTemplate.createdAt = Date.now();
     postTemplate.lastUsed = "";
     postTemplate.templateStatus = templateStatus;
-    postTemplate.vars = req.body.vars;
+    postTemplate.templateVars = req.body.templateVars.split(",");
     const eventFolder = path.join(postTemplatesPath, eventType);
     if (!fs.existsSync(eventFolder)) {
       console.log(`[*] folder at ${eventFolder} does not exists, creating...`);
@@ -880,7 +888,7 @@ exports.addPostTemplate = (req, res) => {
     console.log(`saved the file at the path ${templateFilePath}`);
     postTemplate.templateFilePath = templateFilePath;
     postTemplate.save();
-    console.log(`saved the template`);
+    console.log(`saved the template`,postTemplate);
     res.json({ status: true, message: "added new template" });
   } catch (e) {
     console.error("internal error: ", e);
@@ -1057,7 +1065,7 @@ function newPostTemplate() {
     created: "",
     lastUsed: "",
     createdBy: "",
-    vars:[]
+    templateVars:""
   });
 }
 

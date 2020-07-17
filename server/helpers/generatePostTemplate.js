@@ -95,9 +95,10 @@ exports.generatePostImage_Multi = async (templateId) => {
   try {
     const vars = {};
     const template = await SocialPostTemplate.findOne({ id: templateId });
-    let templatePath = currTemplate.templateFilePath;
-    for (let i = 0; i < template.vars.length; i++) {
-      let currVar = template.vars[i];
+    let templatePath = template.templateFilePath;
+    const templateVars = template.templateVars.split(",");
+    for (let i = 0; i < templateVars.length; i++) {
+      let currVar = templateVars[i];
       vars[currVar] = await calculateVariableValue(currVar);
     }
 
@@ -185,22 +186,7 @@ const generatePostStatus_Multi = async (templateId) => {
     let templateStatus = currTemplate.templateStatus;
     let finalStatus = templateStatus;
 
-    const allWords = templateStatus.split(" ");
-    const vars = [],
-      values = {};
-    allWords.forEach((word) => {
-      if (word.startsWith("__") && word.endsWith("__")) {
-        vars.push(word);
-      }
-    });
-    for (let i = 0; i < vars.length; i++) {
-      const varValue = await calculateVariableValue(vars[i].replace("__", ""));
-      values[vars[i]] = varValue;
-    }
-
-    Object.keys(values).forEach((val) => {
-      finalStatus.replace(val, values[val]);
-    });
+    finalStatus = renderStatusMulti(finalStatus);
     return finalStatus;
   } catch (e) {
     console.log(`exception at ${__filename}.generatePostStatus_Multi:`, e);
@@ -264,7 +250,7 @@ async function calculateVariableValue(varName) {
           })
             .select({ receiveAddrPrivKey: 0 })
             .lean()
-        ).length();
+        ).length;
       }
       case "fmdApplicationsPending": {
         await UserFundReq.find({
@@ -277,7 +263,7 @@ async function calculateVariableValue(varName) {
         })
           .select({ receiveAddrPrivKey: 0 })
           .lean()
-          .length();
+          .length;
       }
       case "fmdApplicationsFunded": {
         return (
@@ -291,7 +277,7 @@ async function calculateVariableValue(varName) {
           })
             .select({ receiveAddrPrivKey: 0 })
             .lean()
-        ).length();
+        ).length;
       }
       case "fmdAmountAll": {
         const allFunds = await UserFundReq.find({
@@ -354,8 +340,7 @@ async function calculateVariableValue(varName) {
         return tot;
       }
 
-      case 'fmdAmountPendingXdc' : {
-
+      case "fmdAmountPendingXdc": {
         const allFunds = await UserFundReq.find({
           $and: [
             {
@@ -389,6 +374,5 @@ async function calculateVariableValue(varName) {
 }
 
 exports.generatePostStatus_Multi = generatePostStatus_Multi;
-
 
 // renderStatusMulti("this is a __fmd-amount-all__  __fmd-amount-all__ nice test!!").then(console.log);
