@@ -376,4 +376,4 @@ async function calculateVariableValue(varName) {
 exports.generatePostStatus_Multi = generatePostStatus_Multi;
 
 // renderStatusMulti("this is a __fmd-amount-all__  __fmd-amount-all__ nice test!!").then(console.log);
-// calculateVariableValue("fmdApplicationsPending").then(console.log);
+calculateVariableValue("fmdApplicationsPending").then(console.log);
