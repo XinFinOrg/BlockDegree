@@ -250,7 +250,7 @@ async function calculateVariableValue(varName) {
           .select({ receiveAddrPrivKey: 0 })
           .lean();
 
-        return parseInt(applications.length);
+        return parseInt(applications.length).toLocaleString('en');
       }
       case "fmdApplicationsPending": {
         const applications = await UserFundReq.find({
@@ -264,7 +264,7 @@ async function calculateVariableValue(varName) {
           .select({ receiveAddrPrivKey: 0 })
           .lean();
 
-        return parseInt(applications.length);
+        return parseInt(applications.length).toLocaleString('en');
       }
       case "fmdApplicationsFunded": {
         const applications = await UserFundReq.find({
@@ -277,7 +277,7 @@ async function calculateVariableValue(varName) {
         })
           .select({ receiveAddrPrivKey: 0 })
           .lean();
-        return parseInt(applications.length);
+        return parseInt(applications.length).toLocaleString('en');
       }
       case "fmdAmountAll": {
         const allFunds = await UserFundReq.find({
@@ -297,7 +297,7 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        return parseInt(tot);
+        return parseInt(tot).toLocaleString('en');
       }
       case "fmdAmountPending": {
         const allFunds = await UserFundReq.find({
@@ -317,7 +317,7 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        return parseInt(tot);
+        return parseInt(tot).toLocaleString('en');
       }
       case "fmdAmountFunded": {
         const allFunds = await UserFundReq.find({
@@ -337,7 +337,7 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        return parseInt(tot);
+        return parseInt(tot).toLocaleString('en');
       }
 
       case "fmdAmountPendingXdc": {
@@ -360,7 +360,7 @@ async function calculateVariableValue(varName) {
 
         const totXdc = await usdToXdc(tot);
 
-        return parseInt(totXdc);
+        return parseInt(totXdc).toLocaleString('en');
       }
 
       /**
