@@ -239,7 +239,7 @@ async function calculateVariableValue(varName) {
        * FMD variables
        */
       case "fmdApplicationsAll": {
-        return (
+        return parseInt(
           await UserFundReq.find({
             $and: [
               {
@@ -249,24 +249,25 @@ async function calculateVariableValue(varName) {
             ],
           })
             .select({ receiveAddrPrivKey: 0 })
-            .lean()
-        ).length;
+            .lean().length
+        );
       }
       case "fmdApplicationsPending": {
-        await UserFundReq.find({
-          $and: [
-            {
-              valid: true,
-            },
-            { status: "uninitiated" },
-          ],
-        })
-          .select({ receiveAddrPrivKey: 0 })
-          .lean()
-          .length;
+        return parseInt(
+          await UserFundReq.find({
+            $and: [
+              {
+                valid: true,
+              },
+              { status: "uninitiated" },
+            ],
+          })
+            .select({ receiveAddrPrivKey: 0 })
+            .lean().length
+        );
       }
       case "fmdApplicationsFunded": {
-        return (
+        return parseInt(
           await UserFundReq.find({
             $and: [
               {
@@ -276,8 +277,8 @@ async function calculateVariableValue(varName) {
             ],
           })
             .select({ receiveAddrPrivKey: 0 })
-            .lean()
-        ).length;
+            .lean().length
+        );
       }
       case "fmdAmountAll": {
         const allFunds = await UserFundReq.find({
@@ -297,7 +298,7 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        return tot;
+        return parseInt(tot);
       }
       case "fmdAmountPending": {
         const allFunds = await UserFundReq.find({
@@ -317,7 +318,7 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        return tot;
+        return parseInt(tot);
       }
       case "fmdAmountFunded": {
         const allFunds = await UserFundReq.find({
@@ -337,7 +338,7 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        return tot;
+        return parseInt(tot);
       }
 
       case "fmdAmountPendingXdc": {
@@ -360,7 +361,7 @@ async function calculateVariableValue(varName) {
 
         const totXdc = await usdToXdc(tot);
 
-        return totXdc;
+        return parseInt(totXdc);
       }
 
       /**
