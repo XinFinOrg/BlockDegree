@@ -239,46 +239,45 @@ async function calculateVariableValue(varName) {
        * FMD variables
        */
       case "fmdApplicationsAll": {
-        return parseInt(
-          await UserFundReq.find({
-            $and: [
-              {
-                valid: true,
-              },
-              { status: { $not: /^pending$/ } },
-            ],
-          })
-            .select({ receiveAddrPrivKey: 0 })
-            .lean().length
-        );
+        const applications = await UserFundReq.find({
+          $and: [
+            {
+              valid: true,
+            },
+            { status: { $not: /^pending$/ } },
+          ],
+        })
+          .select({ receiveAddrPrivKey: 0 })
+          .lean();
+
+        return parseInt(applications.length);
       }
       case "fmdApplicationsPending": {
-        return parseInt(
-          await UserFundReq.find({
-            $and: [
-              {
-                valid: true,
-              },
-              { status: "uninitiated" },
-            ],
-          })
-            .select({ receiveAddrPrivKey: 0 })
-            .lean().length
-        );
+        const applications = await UserFundReq.find({
+          $and: [
+            {
+              valid: true,
+            },
+            { status: "uninitiated" },
+          ],
+        })
+          .select({ receiveAddrPrivKey: 0 })
+          .lean();
+
+        return parseInt(applications.length);
       }
       case "fmdApplicationsFunded": {
-        return parseInt(
-          await UserFundReq.find({
-            $and: [
-              {
-                valid: true,
-              },
-              { status: "completed" },
-            ],
-          })
-            .select({ receiveAddrPrivKey: 0 })
-            .lean().length
-        );
+        const applications = await UserFundReq.find({
+          $and: [
+            {
+              valid: true,
+            },
+            { status: "completed" },
+          ],
+        })
+          .select({ receiveAddrPrivKey: 0 })
+          .lean();
+        return parseInt(applications.length);
       }
       case "fmdAmountAll": {
         const allFunds = await UserFundReq.find({
@@ -377,3 +376,4 @@ async function calculateVariableValue(varName) {
 exports.generatePostStatus_Multi = generatePostStatus_Multi;
 
 // renderStatusMulti("this is a __fmd-amount-all__  __fmd-amount-all__ nice test!!").then(console.log);
+// calculateVariableValue("fmdApplicationsPending").then(console.log);
