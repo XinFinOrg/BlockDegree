@@ -592,6 +592,7 @@ exports.completeRazorpay = async (req, res) => {
     currFundReq.donerEmail = doner.email;
     currFundReq.donerName = doner.name;
     currFundReq.burnStatus = "pending";
+    currFundReq.completionDate = `${Date.now()}`
     await currFundReq.save();
     await recipientUser.save();
 
