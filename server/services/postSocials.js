@@ -1279,3 +1279,7 @@ async function getSiteStats() {
     return null;
   }
 }
+
+generatePostTemplate.generatePostImage_Multi('ff805668-4a03-4352-8935-6ad65bda458f').then((path) => {
+  console.log("PATH:::::::::", path);
+})
