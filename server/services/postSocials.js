@@ -1280,6 +1280,6 @@ async function getSiteStats() {
   }
 }
 
-generatePostTemplate.generatePostImage_Multi('ff805668-4a03-4352-8935-6ad65bda458f').then((path) => {
+generatePostTemplate.generatePostImage_Multi('b2e86340-8f12-43ea-a876-56ad9ba55f03').then((path) => {
   console.log("PATH:::::::::", path);
 })
