@@ -39,6 +39,16 @@ async function postSocial(eventId) {
   console.log("called function post social");
   try {
     const currEvent = await Event.findOne({ id: eventId });
+
+    if (currEvent.recurring === true && currEvent.variableTrigger === false) {
+      currEvent.nextPostPath = await generatePostTemplate.generatePostImage_Multi(
+        currEvent.templateId
+      );
+      currEvent.nextPostStatus = await generatePostTemplate.generatePostStatus_Multi(
+        currEvent.templateId
+      );
+    }
+
     let postedTwitter = currEvent.platform.twitter,
       postedLinkedIn = currEvent.platform.linkedin,
       postedFacebook = currEvent.platform.facebook,
