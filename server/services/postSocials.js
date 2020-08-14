@@ -367,10 +367,18 @@ exports.scheduleEventByTime = async (req, res) => {
 
           const newPostStatus = await generatePostTemplate.generatePostStatus_Multi(event.templateId);
           const newPostPath = await generatePostTemplate.generatePostImage_Multi(event.templateId);
-          event.nextPostPath = newPostPath;
-          event.nextPostStatus = newPostStatus;
-          await event.save();
-          emitPostSocial.emit("postSocial", currEvntId);
+          if (newPostPath && newPostStatus) {
+            event.nextPostPath = newPostPath;
+            event.nextPostStatus = newPostStatus;
+            await event.save();
+            emitPostSocial.emit("postSocial", currEvntId);
+          }else{
+            /**
+             * mail the admin about the issues
+             */
+            Emailer.sendMailInternal("blockdegree-bot@blockdegree.org",process.env.SUPP_EMAIL_ID,"AutoPost: error",`While getting post status / image for event: ${currEvntId} `)
+          }
+
         } catch (err2) {
           console.log(
             "exception at services.postSocials.scheduleEventByTime: ",
@@ -869,6 +877,8 @@ exports.addPostTemplate = (req, res) => {
   // all data is valid
   try {
     const postTemplate = newPostTemplate();
+    const dimensions = JSON.parse(req.body.dimensions);
+    console.log(dimensions);
     postTemplate.templateName = templateName;
     postTemplate.templatePurpose = templatePurpose;
     postTemplate.eventType = eventType;
@@ -878,6 +888,8 @@ exports.addPostTemplate = (req, res) => {
     postTemplate.lastUsed = "";
     postTemplate.templateStatus = templateStatus;
     postTemplate.templateVars = req.body.templateVars.split(",");
+    postTemplate.imageHeight = dimensions.height;
+    postTemplate.imageWidth = dimensions.width;
     const eventFolder = path.join(postTemplatesPath, eventType);
     if (!fs.existsSync(eventFolder)) {
       console.log(`[*] folder at ${eventFolder} does not exists, creating...`);

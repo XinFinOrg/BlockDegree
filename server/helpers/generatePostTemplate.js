@@ -5,8 +5,10 @@ const _ = require("lodash");
 const uuid = require("uuid/v4");
 const path = require("path");
 const SocialPostTemplate = require("../models/socialPostTemplates");
+const User = require("../models/user");
 const sharp = require("sharp");
 const usdToXdc = require("../helpers/cmcHelper").usdToXdc;
+const { GetMonthDays, MonthNoToWord } = require("../helpers/common");
 // const gm = require("gm");
 
 const UserFundReq = require("../models/userFundRequest");
@@ -102,6 +104,23 @@ exports.generatePostImage_Multi = async (templateId) => {
       vars[currVar] = await calculateVariableValue(currVar);
     }
 
+    let imageHeight = template.imageHeight,
+      imageWidth = template.imageWidth;
+
+    if (!imageHeight) {
+      imageHeight = {
+        standard: 510,
+        twitter: 424,
+      };
+    }
+
+    if (!imageWidth) {
+      imageWidth = {
+        standard: 750,
+        twitter: 750,
+      };
+    }
+
     const fileData = await ejs.renderFile(templatePath, { ...vars });
     let browser;
     const imagePath = eventFolder + "/" + uuid() + ".png";
@@ -110,15 +129,15 @@ exports.generatePostImage_Multi = async (templateId) => {
     });
     const page = await browser.newPage();
     await page.setViewport({
-      width: 750,
-      height: 510,
+      width: imageWidth.standard,
+      height: imageHeight.standard,
       deviceScaleFactor: 1,
     });
     await page.setContent(fileData);
     await page.screenshot({ path: imagePath });
     const postImage = fs.readFileSync(imagePath);
     const twitterImage = await sharp(postImage)
-      .resize(750, 424, {
+      .resize(imageWidth.twitter, imageHeight.twitter, {
         fit: "contain",
         background: { r: 255, g: 255, b: 255, alpha: 0.5 },
       })
@@ -250,7 +269,7 @@ async function calculateVariableValue(varName) {
           .select({ receiveAddrPrivKey: 0 })
           .lean();
 
-        return parseInt(applications.length).toLocaleString('en');
+        return parseInt(applications.length).toLocaleString("en");
       }
       case "fmdApplicationsPending": {
         const applications = await UserFundReq.find({
@@ -264,7 +283,7 @@ async function calculateVariableValue(varName) {
           .select({ receiveAddrPrivKey: 0 })
           .lean();
 
-        return parseInt(applications.length).toLocaleString('en');
+        return parseInt(applications.length).toLocaleString("en");
       }
       case "fmdApplicationsFunded": {
         const applications = await UserFundReq.find({
@@ -277,7 +296,7 @@ async function calculateVariableValue(varName) {
         })
           .select({ receiveAddrPrivKey: 0 })
           .lean();
-        return parseInt(applications.length).toLocaleString('en');
+        return parseInt(applications.length).toLocaleString("en");
       }
       case "fmdAmountAll": {
         const allFunds = await UserFundReq.find({
@@ -297,7 +316,7 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        return parseInt(tot).toLocaleString('en');
+        return parseInt(tot).toLocaleString("en");
       }
       case "fmdAmountPending": {
         const allFunds = await UserFundReq.find({
@@ -317,7 +336,7 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        return parseInt(tot).toLocaleString('en');
+        return parseInt(tot).toLocaleString("en");
       }
       case "fmdAmountFunded": {
         const allFunds = await UserFundReq.find({
@@ -337,7 +356,7 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        return parseInt(tot).toLocaleString('en');
+        return parseInt(tot).toLocaleString("en");
       }
 
       case "fmdAmountPendingXdc": {
@@ -360,12 +379,96 @@ async function calculateVariableValue(varName) {
 
         const totXdc = await usdToXdc(tot);
 
-        return parseInt(totXdc).toLocaleString('en');
+        return parseInt(totXdc).toLocaleString("en");
       }
 
       /**
        * Exam Variables
        */
+      case "month_toppers": {
+        const currDate = new Date();
+        let month = currDate.getMonth();
+        let year = currDate.getFullYear();
+        if (month === 0) {
+          month = 11;
+          year--;
+        } else {
+          month--;
+        }
+        const lastMonthDays = GetMonthDays(month, year);
+        let startTime = new Date(),
+          endTime = new Date();
+        startTime.setDate(1);
+        startTime.setHours(0, 0, 0, 0);
+        startTime.setMonth(month);
+
+        endTime.setDate(lastMonthDays);
+        endTime.setHours(23, 59, 59, 999);
+        endTime.setMonth(month);
+
+        let allCertiHolder = await User.find({
+          "examData.certificateHash.1": { $exists: true },
+        });
+
+        let x = allCertiHolder.reduce((arr, curr) => {
+          curr.examData.certificateHash.forEach((e) => {
+            arr.push({
+              email: curr.email,
+              name: curr.name,
+              ts: parseFloat(e.timestamp),
+              marks: e.marks,
+              total: e.total,
+            });
+          });
+          return arr;
+        }, []);
+
+        x = x.filter((e) => {
+          return e.ts >= startTime.getTime() && e.ts <= endTime.getTime();
+        });
+
+        x.sort((a, b) => {
+          return b.marks / b.total - a.marks / a.total;
+        });
+
+        if (x.length < 3) return null;
+
+        const topper = x.slice(0, 3).map((e) => {
+          return {
+            name: e.name,
+            percent: Math.floor((e.marks * 100) / e.total),
+          };
+        });
+
+        return topper;
+      }
+
+      case "last_month": {
+        const currDate = new Date();
+        let month = currDate.getMonth();
+        let year = currDate.getFullYear();
+        if (month === 0) {
+          month = 11;
+          year--;
+        } else {
+          month--;
+        }
+        const monthWord = MonthNoToWord(month);
+        return monthWord[0].toUpperCase() + monthWord.slice(1);
+      }
+
+      case "last_year": {
+        const currDate = new Date();
+        let month = currDate.getMonth();
+        let year = currDate.getFullYear();
+        if (month === 0) {
+          month = 11;
+          year--;
+        } else {
+          month--;
+        }
+        return year;
+      }
     }
   } catch (e) {
     console.log(`exception at ${__filename}.calculateVariableValue:`, e);
@@ -380,3 +483,4 @@ calculateVariableValue("fmdApplicationsPending").then(console.log);
 calculateVariableValue("fmdAmountPending").then(console.log);
 calculateVariableValue("fmdAmountPendingXdc").then(console.log);
 
+calculateVariableValue("monthlyTop3").then(console.log);

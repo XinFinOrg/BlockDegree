@@ -602,10 +602,10 @@ const postTelegram = (fp, postStatus, eventId) => {
           const socialPostConfig = await SocialPostConfig.findOne({});
           // No need to check for AutoPost.
           if (socialPostConfig !== null) {
-            socialPostConfig.platforms.facebook.postCount++;
-            socialPostConfig.platforms.facebook.lastPost = "" + Date.now();
-            if (socialPostConfig.platforms.facebook.firstPost === "") {
-              socialPostConfig.platforms.facebook.firstPost = "" + Date.now();
+            socialPostConfig.platforms.telegram.postCount++;
+            socialPostConfig.platforms.telegram.lastPost = "" + Date.now();
+            if (socialPostConfig.platforms.telegram.firstPost === "") {
+              socialPostConfig.platforms.telegram.firstPost = "" + Date.now();
             }
           }
           await newSocialPostLog(

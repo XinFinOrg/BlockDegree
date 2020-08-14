@@ -12,6 +12,14 @@ const socialPostTemplate = mongoose.Schema({
   templateStatus: String,
   templateFilePath: String,
   templateVars: String,
+  imageHeight: {
+    standard: Number,
+    twitter: Number,
+  },
+  imageWidth: {
+    standard: Number,
+    twitter: Number,
+  },
 });
 
 module.exports = mongoose.model("Social_Post_Template", socialPostTemplate);

@@ -17,7 +17,7 @@ const eventTypesOpts = [
   { label: "Registrations", value: "registrations" },
   { label: "Course Visits", value: "visits" },
   { label: "One Time", value: "one-time" },
-  { label: "Multi", value: "multi" }
+  { label: "Multi", value: "multi" },
 ];
 
 class AddPostTemplate extends Component {
@@ -30,7 +30,9 @@ class AddPostTemplate extends Component {
       inputFileName: "",
       templateName: "",
       templatePurpose: "",
-      templateVars:"",
+      templateVars: "",
+      height: { standard: 510, twitter: 424 },
+      width: { standard: 750, twitter: 750 },
     };
 
     this.handleTemplateNameChange = this.handleTemplateNameChange.bind(this);
@@ -65,7 +67,7 @@ class AddPostTemplate extends Component {
     console.log(event.target.files[0]);
     this.setState({
       inputFile: event.target.files[0],
-      inputFileName: event.target.value
+      inputFileName: event.target.value,
     });
   }
 
@@ -112,14 +114,21 @@ class AddPostTemplate extends Component {
     form.append("file", this.state.inputFile);
     form.append("templateName", this.state.templateName);
     form.append("templatePurpose", this.state.templatePurpose);
-    form.append("templateVars",this.state.templateVars.split(","))
+    form.append("templateVars", this.state.templateVars.split(","));
+    form.append(
+      "dimensions",
+      JSON.stringify({
+        height: this.state.height,
+        width: this.state.width,
+      })
+    );
     axios
       .post("/api/addPostTemplate", form, {
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       })
-      .then(resp => {
+      .then((resp) => {
         console.log(resp.data);
         if (resp.data.status === true) {
           this.setState({
@@ -130,21 +139,21 @@ class AddPostTemplate extends Component {
             inputFile: "",
             inputFileName: "",
             templateName: "",
-            templatePurpose: ""
+            templatePurpose: "",
           });
           this.props.fetchSocialPostTemplates();
         } else {
           this.setState({
             showError: true,
-            errorMsg: resp.data.error
+            errorMsg: resp.data.error,
           });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("error: ", err);
         this.setState({
           showError: true,
-          errorMsg: err
+          errorMsg: err,
         });
       });
   }
@@ -211,14 +220,18 @@ class AddPostTemplate extends Component {
             </div>
 
             <div className="form-group">
-              <label className="col-md-4 control-label">Template Variables</label>
+              <label className="col-md-4 control-label">
+                Template Variables
+              </label>
               <div className="col-md-8">
                 <textarea
                   width="100%"
                   type="text"
                   value={this.state.templateVars}
                   placeholder="Template Vars ( one,two )"
-                  onChange={(e) => {this.setState({templateVars:e.target.value})}}
+                  onChange={(e) => {
+                    this.setState({ templateVars: e.target.value });
+                  }}
                 />
               </div>
             </div>
@@ -240,6 +253,95 @@ class AddPostTemplate extends Component {
                 className="file-reset-btn"
               >
                 <i class="fa fa-times" aria-hidden="true"></i>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-md-4 control-label">
+                Template Dimensions
+              </label>
+              <div className="col-md-8">
+                <div className="col-lg-12 col-md-12">
+                  <label className="control-label col-md-4">
+                    Standard Width
+                  </label>
+                  <div className="control-label col-md-4">
+                    <input
+                      type="number"
+                      value={this.state.width.standard}
+                      onChange={(e) => {
+                        this.setState({
+                          width: {
+                            ...this.state.width,
+
+                            standard: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-lg-12 col-md-12">
+                  <label className="control-label col-md-4">
+                    Standard Height
+                  </label>
+                  <div className="control-label col-md-4">
+                    <input
+                      type="number"
+                      width="60px"
+                      value={this.state.height.standard}
+                      onChange={(e) => {
+                        console.log(e.target.value, this.state.height);
+                        this.setState({
+                          height: {
+                            ...this.state.height,
+                            standard: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+                <hr />
+                <div className="col-lg-12 col-md-12">
+                  <label className="control-label col-md-4">
+                    Twitter Width
+                  </label>
+                  <div className="control-label col-md-4">
+                    <input
+                      type="number"
+                      value={this.state.width.twitter}
+                      onChange={(e) => {
+                        this.setState({
+                          width: {
+                            ...this.state.width,
+                            twitter: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-lg-12 col-md-12">
+                  <label className="control-label col-md-4">
+                    Twitter Height
+                  </label>
+                  <div className="control-label col-md-4">
+                    <input
+                      type="number"
+                      value={this.state.height.twitter}
+                      onChange={(e) => {
+                        this.setState({
+                          height: {
+                            ...this.state.height,
+
+                            twitter: e.target.value,
+                          },
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -293,8 +395,8 @@ function showNotification(type, title, message) {
     width: 200,
     dismiss: {
       duration: 3000,
-      onScreen: true
-    }
+      onScreen: true,
+    },
   });
 }
 

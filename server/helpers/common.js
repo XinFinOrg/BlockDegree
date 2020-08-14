@@ -70,3 +70,106 @@ exports.usdToInr = (amntUsd) => {
 exports.roundDgt = (amount, dgt) => {
   return Math.round(parseFloat(amount * Math.pow(10, dgt))) / Math.pow(10, dgt);
 };
+
+exports.GetMonthDays = GetMonthDays;
+
+exports.isLeapYear = isLeapYear;
+
+exports.MonthNoToWord = MonthNoToWord;
+
+/**
+ *
+ * @param {String} month - month number -starting from 0
+ * @param {String} year - year in YYYY
+ */
+function GetMonthDays(month, year) {
+  switch (`${month}`) {
+    case `0`: {
+    }
+    case `2`: {
+    }
+    case `4`: {
+    }
+    case `6`: {
+    }
+    case `7`: {
+    }
+    case `9`: {
+    }
+    case `11`: {
+      return 31;
+    }
+    case `1`: {
+      if (isLeapYear(parseInt(year)) === true) return 29;
+      return 28;
+    }
+
+    case `3`: {
+    }
+    case `5`: {
+    }
+    case `8`: {
+    }
+    case `10`: {
+      return 30;
+    }
+  }
+}
+
+/**
+ *
+ * @param {String} yr - year in YYYY
+ */
+function isLeapYear(yr) {
+  if (yr % 100 === 0) {
+    return yr % 400 === 0;
+  } else {
+    return yr % 4 === 0;
+  }
+}
+
+/**
+ *
+ * @param {Number|String} month month number  - starting from 0
+ */
+function MonthNoToWord(month) {
+  switch (`${month}`) {
+    case `0`: {
+      return "january";
+    }
+    case `2`: {
+      return "march";
+    }
+    case `4`: {
+      return "may";
+    }
+    case `6`: {
+      return "july";
+    }
+    case `7`: {
+      return "august";
+    }
+    case `9`: {
+      return "october";
+    }
+    case `11`: {
+      return "december";
+    }
+    case `1`: {
+      return "febuary";
+    }
+
+    case `3`: {
+      return "april";
+    }
+    case `5`: {
+      return "june";
+    }
+    case `8`: {
+      return "september";
+    }
+    case `10`: {
+      return "november";
+    }
+  }
+}
