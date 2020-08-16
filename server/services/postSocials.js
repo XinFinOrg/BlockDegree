@@ -367,6 +367,10 @@ exports.scheduleEventByTime = async (req, res) => {
 
           const newPostStatus = await generatePostTemplate.generatePostStatus_Multi(event.templateId);
           const newPostPath = await generatePostTemplate.generatePostImage_Multi(event.templateId);
+
+          console.log("newPostStatus:", newPostStatus);
+          console.log("newPostPath:", newPostPath);
+
           if (newPostPath && newPostStatus) {
             event.nextPostPath = newPostPath;
             event.nextPostStatus = newPostStatus;

@@ -165,7 +165,7 @@ exports.generatePostImage_Multi = async (templateId) => {
     );
     return imagePath;
   } catch (e) {
-    console.log(`excepiotn at ${__filename}.generatePostImage_Multi:`, e);
+    console.error(`excepiotn at ${__filename}.generatePostImage_Multi:`, e);
     return null;
   }
 };
