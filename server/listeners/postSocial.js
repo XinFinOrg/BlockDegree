@@ -66,7 +66,7 @@ async function postSocial(eventId) {
     const eventFilePath = currEvent.nextPostPath;
     const eventStatus = currEvent.nextPostStatus;
 
-    console.log(
+    console.error(
       "Post Social EventFilePath: %s, EventStatus: %s\n",
       eventFilePath,
       eventStatus

@@ -137,7 +137,7 @@ exports.generatePostImage_Multi = async (templateId) => {
       };
     }
 
-    console.log(imageHeight, imageWidth);
+    console.error(imageHeight, imageWidth);
 
     const fileData = await ejs.renderFile(templatePath, { ...vars });
     let browser;
