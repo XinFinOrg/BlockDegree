@@ -107,19 +107,37 @@ exports.generatePostImage_Multi = async (templateId) => {
     let imageHeight = template.imageHeight,
       imageWidth = template.imageWidth;
 
-    if (!imageHeight) {
+
+
+      /**
+       * 
+       * @note Since the object is not exactly JSON, we cannot run checks for objects on mongodb doc.
+       * 
+       */
+    // console.log(
+    //   imageHeight,
+    //   imageWidth,
+    //   imageHeight === {},
+    //   imageWidth === {},
+    //   _.isEmpty(imageWidth),
+    //   _.isEmpty(imageHeight)
+    // );
+
+    if (!imageHeight.standard) {
       imageHeight = {
         standard: 510,
         twitter: 424,
       };
     }
 
-    if (!imageWidth) {
+    if (!imageWidth.standard) {
       imageWidth = {
         standard: 750,
         twitter: 750,
       };
     }
+
+    console.log(imageHeight, imageWidth);
 
     const fileData = await ejs.renderFile(templatePath, { ...vars });
     let browser;
