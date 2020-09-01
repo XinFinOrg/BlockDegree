@@ -421,14 +421,18 @@ async function calculateVariableValue(varName) {
         startTime.setDate(1);
         startTime.setHours(0, 0, 0, 0);
         startTime.setMonth(month);
+        startTime.setFullYear(year);
 
         endTime.setDate(lastMonthDays);
         endTime.setHours(23, 59, 59, 999);
         endTime.setMonth(month);
+        endTime.setFullYear(year);
 
         let allCertiHolder = await User.find({
           "examData.certificateHash.1": { $exists: true },
         });
+
+        console.log(startTime, endTime);
 
         let x = allCertiHolder.reduce((arr, curr) => {
           curr.examData.certificateHash.forEach((e) => {
