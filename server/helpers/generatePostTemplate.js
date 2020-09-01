@@ -104,6 +104,8 @@ exports.generatePostImage_Multi = async (templateId) => {
       vars[currVar] = await calculateVariableValue(currVar);
     }
 
+    console.log("month toppers:", vars);
+
     let imageHeight = template.imageHeight,
       imageWidth = template.imageWidth;
 
@@ -449,6 +451,8 @@ async function calculateVariableValue(varName) {
           return b.marks / b.total - a.marks / a.total;
         });
 
+        console.log("month toppers: x:", x);
+
         if (x.length < 3) return null;
 
         const topper = x.slice(0, 3).map((e) => {
@@ -457,6 +461,8 @@ async function calculateVariableValue(varName) {
             percent: Math.floor((e.marks * 100) / e.total),
           };
         });
+
+        console.log("month toppers: topper:", topper);
 
         return topper;
       }
