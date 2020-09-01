@@ -418,15 +418,15 @@ async function calculateVariableValue(varName) {
         const lastMonthDays = GetMonthDays(month, year);
         let startTime = new Date(),
           endTime = new Date();
-        startTime.setDate(1);
+        // startTime.setDate(1);
+        // startTime.setMonth(month);
+        startTime.setFullYear(year, month, 1);
         startTime.setHours(0, 0, 0, 0);
-        startTime.setMonth(month);
-        startTime.setFullYear(year);
 
-        endTime.setDate(lastMonthDays);
+        // endTime.setDate(lastMonthDays);
+        // endTime.setMonth(month);
+        endTime.setFullYear(year, month, lastMonthDays);
         endTime.setHours(23, 59, 59, 999);
-        endTime.setMonth(month);
-        endTime.setFullYear(year);
 
         let allCertiHolder = await User.find({
           "examData.certificateHash.1": { $exists: true },
