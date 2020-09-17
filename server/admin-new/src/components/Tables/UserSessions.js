@@ -134,7 +134,7 @@ class UsersSessions extends Component {
         email: user.email,
         platform: user.platform,
         startTime: new Date(parseFloat(user.startTime)).toString(),
-        endTime: new Date(parseFloat(user.endTime)).toString(),
+        endTime: user.endTime==="" ? new Date(parseFloat(user.endTime)).toString():"Not Terminated",
         sessionID: user.sessionId,
       });
     });
