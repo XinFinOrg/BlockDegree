@@ -17,6 +17,7 @@ const referralEmitter = require("../listeners/userReferral").em;
 const UserReferral = require("../models/userReferral");
 const Questions = require("../models/question");
 const SocialShare = require("../models/socialShare");
+const UserSessions = require("../models/userSessions");
 const { renderFunderCerti } = require("../helpers/renderFunderCerti");
 const {
   makeValueTransferXDC,
@@ -1479,6 +1480,16 @@ exports.getSocialShares = async (req, res) => {
     res.json({ status: true, data: allShares });
   } catch (e) {
     console.log(`exeption at ${__filename}.getSocialShares: `, e);
+    res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.getUserSessions = async (req, res) => {
+  try {
+    const userSessions = await UserSessions.find({}).lean();
+    res.json({ status: true, data: userSessions });
+  } catch (e) {
+    console.log(e);
     res.json({ status: false, error: "internal error" });
   }
 };

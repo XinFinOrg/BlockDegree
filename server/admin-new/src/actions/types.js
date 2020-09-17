@@ -10,3 +10,4 @@ export const FETCH_ALL_CRYPTO_LOGS = "fetch_all_crypto_logs";
 export const FETCH_ALL_FUNDS = "fetch_all_funds";
 export const FETCH_XDC_PRICE = "fetch_xdc_price";
 export const FETCH_SOCIAL_SHARE = "fetch_social_shares";
+export const FETCH_ALL_USER_SESSIONS = "FETCH_ALL_USER_SESSIONS";

@@ -53,6 +53,11 @@ class Nav extends Component {
                   <Link to="/tables/referrer-codes">Referral Codes Table</Link>
                 </li>                
               </ul>
+              <ul className="nav">
+                <li className={this.isPathActive('/tables/user-sessions') ? 'active' : null}>
+                  <Link to="/tables/user-sessions">User Sessions Table</Link>
+                </li>                
+              </ul>
             </div>
           </Collapse>
         </li>

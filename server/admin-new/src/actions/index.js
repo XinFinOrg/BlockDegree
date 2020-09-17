@@ -12,6 +12,7 @@ import {
   FETCH_ALL_FUNDS,
   FETCH_XDC_PRICE,
   FETCH_SOCIAL_SHARE,
+  FETCH_ALL_USER_SESSIONS
 } from "./types";
 
 /*
@@ -53,6 +54,16 @@ export const fetchAllPromoCodes = () => async (dispatch) => {
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_PROMOCODES, payload: res.data });
 };
+
+export const fetchAllUserSessions = () => async (dispatch) => {
+  console.log("called fetch all promocodes");
+  const res = await axios.get("/api/getUserSessions", {
+    withCredentials: true,
+  });
+  res.data["fetchedTS"] = Date.now();
+  dispatch({ type: FETCH_ALL_USER_SESSIONS, payload: res.data });
+};
+
 
 export const fetchAllReferralCodes = () => async (dispatch) => {
   console.log("called fetch all referral codes");

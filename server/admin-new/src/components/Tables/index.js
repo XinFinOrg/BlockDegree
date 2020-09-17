@@ -5,6 +5,7 @@ import Users from "./Users";
 import Promocodes from "./PromoCodes";
 import RefererCodes from "./ReferralCodes";
 import Certificates from "./Certificates";
+import UserSessions from "./UserSessions";
 
 const Tables = ({ match }) => (
   <div className="content">
@@ -12,6 +13,7 @@ const Tables = ({ match }) => (
     <Route path={`${match.url}/promocodes`} component={Promocodes} />
     <Route path={`${match.url}/certificates`} component={Certificates} />
     <Route path={`${match.url}/referrer-codes`} component={RefererCodes} />
+    <Route path={`${match.url}/user-sessions`} component={UserSessions} />
   </div>
 );
 
