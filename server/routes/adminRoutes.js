@@ -176,7 +176,7 @@ module.exports = (app) => {
     app.post("/api/setFMDCompletionDateManual",requireLogin,requireAdmin, adminServices.setFMDCompletionDateManual);
     app.get("/api/addComputingQuestions",requireLogin,requireAdmin, adminServices.addComputingQuestions);
     app.get("/api/getSocialShares", requireLogin, requireAdmin, adminServices.getSocialShares);
-    app.get("/api/getUserSessions",requireLogin, requireAdmin,, adminServices.getUserSessions);
+    app.get("/api/getUserSessions",requireLogin, requireAdmin, adminServices.getUserSessions);
 
   }
 };
