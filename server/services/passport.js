@@ -1,12 +1,14 @@
 const LocalStrategy = require("passport-local").Strategy;
 const googleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../models/user");
+const UserSession = require("../models/userSessions");
 const Token = require("../models/tokenVerification");
 const emailer = require("../emailer/impl");
 const socialPostListener = require("../listeners/postSocial").em;
 const socialPostKeys = require("../config/socialPostKeys");
 const referralEmitter = require("../listeners/userReferral").em;
 const crypto = require("crypto");
+const uuid = require("uuid/v4")
 require("dotenv").config();
 
 const facebookStrategy = require("passport-facebook").Strategy;
@@ -19,6 +21,7 @@ function newDefaultUser() {
     name: "",
     created: "",
     lastActive: "",
+    userSession:"",
     profile: {},
     examData: {
       payment: {
@@ -209,6 +212,17 @@ module.exports = function(passport) {
               "User is not verified, Please check your email"
             );
           user.lastActive = Date.now();
+
+          let sessionId = uuid();
+          user.userSession = sessionId;
+
+          let newSession = genSession(sessionId);
+          newSession.email = user.email;
+          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+          newSession.startTime = Date.now();
+          newSession.platform = "local";
+          await newSession.save();
+
           await user.save();
           return done(null, user);
         });
@@ -248,11 +262,35 @@ module.exports = function(passport) {
             user.auth.google.accessToken = accessToken;
             user.auth.google.refreshToken = refreshToken;
             user.lastActive = Date.now();
+
+            let sessionId = uuid();
+            user.userSession = sessionId;
+
+            let newSession = genSession(sessionId);
+            newSession.email = user.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "google";
+            await newSession.save();
+
             await user.save();
             return done(null, user);
           }
           let user = await User.findOne({ email: req.user.email });
           user.lastActive = Date.now();
+
+
+          let sessionId = uuid();
+          user.userSession = sessionId;
+
+          let newSession = genSession(sessionId);
+          newSession.email = user.email;
+          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+          newSession.startTime = Date.now();
+          newSession.platform = "google";
+          await newSession.save();
+
+
           await user.save();
           return done(null, req.user);
         }
@@ -263,6 +301,19 @@ module.exports = function(passport) {
         if (existingUser) {
           // console.log(` In passport verification ${existingUser.email}`)
           existingUser.lastActive = Date.now();
+
+
+          let sessionId = uuid();
+          existingUser.userSession = sessionId;
+
+          let newSession = genSession(sessionId);
+          newSession.email = existingUser.email;
+          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+          newSession.startTime = Date.now();
+          newSession.platform = "google";
+          await newSession.save();
+
+
           await existingUser.save();
           return done(null, existingUser);
         }
@@ -277,6 +328,19 @@ module.exports = function(passport) {
             linkEmail.auth.google.accessToken = accessToken;
             linkEmail.auth.google.refreshToken = refreshToken;
             linkEmail.lastActive = Date.now();
+
+
+            let sessionId = uuid();
+            linkEmail.userSession = sessionId;
+
+            let newSession = genSession(sessionId);
+            newSession.email = linkEmail.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "google";
+            await newSession.save();
+
+
             await linkEmail.save();
             return done(null, linkEmail);
           }
@@ -297,6 +361,17 @@ module.exports = function(passport) {
         newUser.auth.google.refreshToken = refreshToken;
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
+        
+        let sessionId = uuid();
+        newUser.userSession = sessionId;
+
+        let newSession = genSession(sessionId);
+        newSession.email = newUser.email;
+        newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+        newSession.startTime = Date.now();
+        newSession.platform = "google";
+        await newSession.save();        
+
         await newUser.save();
         socialPostListener.emit("varTriggerUpdate", "registrations");
         done(null, newUser, "new-name");
@@ -338,6 +413,18 @@ module.exports = function(passport) {
               user.auth.facebook.accessToken = accessToken;
               user.auth.facebook.refreshToken = refreshToken;
               user.lastActive = Date.now();
+
+
+            let sessionId = uuid();
+            user.userSession = sessionId;
+
+            let newSession = genSession(sessionId);
+            newSession.email = user.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "facebook";
+            await newSession.save();
+
               await user.save();
               return done(null, user);
             }
@@ -355,6 +442,17 @@ module.exports = function(passport) {
             user.auth.facebook.accessToken = accessToken;
             user.auth.facebook.refreshToken = refreshToken;
             user.lastActive = Date.now();
+
+            let sessionId = uuid();
+            user.userSession = sessionId;
+  
+            let newSession = genSession(sessionId);
+            newSession.email = user.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "facebook";
+            await newSession.save();
+
             await user.save();
             return done(null, req.user);
           }
@@ -368,6 +466,17 @@ module.exports = function(passport) {
             existingUser.auth.facebook.accessToken = accessToken;
             existingUser.auth.facebook.refreshToken = refreshToken || "";
             existingUser.lastActive = Date.now();
+
+            let sessionId = uuid();
+            existingUser.userSession = sessionId;
+  
+            let newSession = genSession(sessionId);
+            newSession.email = existingUser.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "facebook";
+            await newSession.save();
+
             await existingUser.save();
             return done(null, existingUser);
           }
@@ -390,6 +499,18 @@ module.exports = function(passport) {
               linkEmail.auth.facebook.accessToken = accessToken;
               linkEmail.auth.facebook.refreshToken = refreshToken || "";
               linkEmail.lastActive = Date.now();
+
+
+            let sessionId = uuid();
+            linkEmail.userSession = sessionId;
+
+            let newSession = genSession(sessionId);
+            newSession.email = linkEmail.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "facebook";
+            await newSession.save();
+
               await linkEmail.save();
               done(null, linkEmail);
             }
@@ -404,6 +525,17 @@ module.exports = function(passport) {
             user.auth.facebook.accessToken = accessToken;
             user.auth.facebook.refreshToken = refreshToken || "";
             user.lastActive = Date.now();
+
+            let sessionId = uuid();
+            user.userSession = sessionId;
+
+            let newSession = genSession(sessionId);
+            newSession.email = user.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "facebook";
+            await newSession.save();
+            
             await user.save();
             return done(null, user);
           }
@@ -415,6 +547,17 @@ module.exports = function(passport) {
           newUser.name = formatName(profile.displayName);
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
+
+          let sessionId = uuid();
+          newUser.userSession = sessionId;
+  
+          let newSession = genSession(sessionId);
+          newSession.email = newUser.email;
+          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+          newSession.startTime = Date.now();
+          newSession.platform = "facebook";
+          await newSession.save();     
+
           await newUser.save();
           socialPostListener.emit("varTriggerUpdate", "registrations");
           done(null, newUser, "new-name");
@@ -491,6 +634,18 @@ module.exports = function(passport) {
             user.auth.twitter.token = token;
             user.auth.twitter.tokenSecret = tokenSecret;
             user.lastActive = Date.now();
+
+            let sessionId = uuid();
+            user.userSession = sessionId;
+
+            let newSession = genSession(sessionId);
+            newSession.email = user.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "twitter";
+            await newSession.save();
+
+
             await user.save();
             return done(null, user);
           }
@@ -498,6 +653,18 @@ module.exports = function(passport) {
           user.auth.twitter.token = token;
           user.auth.twitter.tokenSecret = tokenSecret;
           user.lastActive = Date.now();
+
+          let sessionId = uuid();
+          user.userSession = sessionId;
+
+          let newSession = genSession(sessionId);
+          newSession.email = user.email;
+          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+          newSession.startTime = Date.now();
+          newSession.platform = "twitter";
+          await newSession.save();
+
+
           await user.save();
           return done(null, req.user);
         }
@@ -508,6 +675,17 @@ module.exports = function(passport) {
           existingUser.auth.twitter.token = token;
           existingUser.auth.twitter.tokenSecret = tokenSecret;
           existingUser.lastActive = Date.now();
+
+          let sessionId = uuid();
+          existingUser.userSession = sessionId;
+
+          let newSession = genSession(sessionId);
+          newSession.email = existingUser.email;
+          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+          newSession.startTime = Date.now();
+          newSession.platform = "twitter";
+          await newSession.save();
+
           await existingUser.save();
           return done(null, existingUser);
         }
@@ -530,6 +708,18 @@ module.exports = function(passport) {
             linkEmail.auth.twitter.token = token;
             linkEmail.auth.twitter.tokenSecret = tokenSecret;
             linkEmail.lastActive = Date.now();
+
+            let sessionId = uuid();
+            linkEmail.userSession = sessionId;
+
+            let newSession = genSession(sessionId);
+            newSession.email = linkEmail.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "twitter";
+            await newSession.save();
+
+
             await linkEmail.save();
             return done(null, linkEmail);
           }
@@ -544,6 +734,17 @@ module.exports = function(passport) {
           user.auth.twitter.token = token;
           user.auth.twitter.tokenSecret = tokenSecret;
           user.lastActive = Date.now();
+
+          let sessionId = uuid();
+          user.userSession = sessionId;
+
+          let newSession = genSession(sessionId);
+          newSession.email = user.email;
+          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+          newSession.startTime = Date.now();
+          newSession.platform = "twitter";
+          await newSession.save();
+
           await user.save();
           return done(null, user);
         }
@@ -555,6 +756,17 @@ module.exports = function(passport) {
         newUser.auth.twitter.tokenSecret = tokenSecret;
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
+
+        let sessionId = uuid();
+        newUser.userSession = sessionId;
+
+        let newSession = genSession(sessionId);
+        newSession.email = newUser.email;
+        newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+        newSession.startTime = Date.now();
+        newSession.platform = "twitter";
+        await newSession.save();     
+
         await newUser.save();
         socialPostListener.emit("varTriggerUpdate", "registrations");
         done(null, newUser, "new-name");
@@ -599,6 +811,17 @@ module.exports = function(passport) {
               user.auth.linkedin.accessToken = accessToken;
               user.auth.linkedin.refreshToken = refreshToken;
               user.lastActive = Date.now();
+
+              let sessionId = uuid();
+              user.userSession = sessionId;
+  
+              let newSession = genSession(sessionId);
+              newSession.email = user.email;
+              newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+              newSession.startTime = Date.now();
+              newSession.platform = "linkedin";
+              await newSession.save();
+
               await user.save();
               return done(null, user);
             }
@@ -616,6 +839,17 @@ module.exports = function(passport) {
             user.auth.linkedin.accessToken = accessToken;
             user.auth.linkedin.refreshToken = refreshToken;
             user.lastActive = Date.now();
+
+            let sessionId = uuid();
+            user.userSession = sessionId;
+  
+            let newSession = genSession(sessionId);
+            newSession.email = user.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "linkedin";
+            await newSession.save();
+
             await user.save();
             return done(null, user);
           }
@@ -627,6 +861,17 @@ module.exports = function(passport) {
             existingUser.auth.linkedin.accessToken = accessToken;
             existingUser.auth.linkedin.refreshToken = refreshToken;
             existingUser.lastActive = Date.now();
+
+            let sessionId = uuid();
+            existingUser.userSession = sessionId;
+  
+            let newSession = genSession(sessionId);
+            newSession.email = existingUser.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "linkedin";
+            await newSession.save();
+
             await existingUser.save();
             return done(null, existingUser);
           }
@@ -648,6 +893,18 @@ module.exports = function(passport) {
               linkEmail.auth.linkedin.accessToken = accessToken;
               linkEmail.auth.linkedin.refreshToken = refreshToken;
               linkEmail.lastActive = Date.now();
+
+
+            let sessionId = uuid();
+            linkEmail.userSession = sessionId;
+
+            let newSession = genSession(sessionId);
+            newSession.email = linkEmail.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "linkedin";
+            await newSession.save();
+
               await linkEmail.save();
               return done(null, linkEmail);
             }
@@ -662,6 +919,17 @@ module.exports = function(passport) {
             user.auth.linkedin.accessToken = accessToken;
             user.auth.linkedin.refreshToken = refreshToken;
             user.lastActive = Date.now();
+
+            let sessionId = uuid();
+            user.userSession = sessionId;
+  
+            let newSession = genSession(sessionId);
+            newSession.email = user.email;
+            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+            newSession.startTime = Date.now();
+            newSession.platform = "linkedin";
+            await newSession.save();
+
             await user.save();
             return done(null, user);
           }
@@ -672,6 +940,17 @@ module.exports = function(passport) {
           newUser.auth.linkedin.accessToken = accessToken;
           newUser.created = Date.now();
           newUser.lastActive = Date.now();
+
+          let sessionId = uuid();
+          newUser.userSession = sessionId;
+  
+          let newSession = genSession(sessionId);
+          newSession.email = newUser.email;
+          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+          newSession.startTime = Date.now();
+          newSession.platform = "linkedin";
+          await newSession.save();     
+
           await newUser.save();
           socialPostListener.emit("varTriggerUpdate", "registrations");
           done(null, newUser, "new-name");
@@ -742,6 +1021,17 @@ function formatName(fullName) {
   }
   const finalFN = formattedName.trim();
   return finalFN;
+}
+
+function genSession(id){
+  return new UserSession({
+    sessionId: id,
+    email: '',
+    startTime: '',
+    endTime: '',
+    ip: '',
+    platform:''
+  })
 }
 
 function validateRefId(refId) {

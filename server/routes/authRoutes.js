@@ -1,4 +1,5 @@
 var User = require("../models/user");
+const UserSession = require("../models/userSessions");
 const emailer = require("../emailer/impl");
 const passport = require("passport");
 const axios = require("axios");
@@ -13,7 +14,18 @@ const path = require("path");
 const bcrypt = require("bcrypt-nodejs");
 
 module.exports = (app) => {
-  app.get("/logout", function (req, res) {
+  app.get("/logout", async function (req, res) {
+    try{
+    const email = req.user.email;
+    const user = await User.findOne({email})
+    const userSession = await UserSession.findOne({sessionId:user.userSession});
+    if (user && userSession) {
+      userSession.endTime = Date.now();
+      user.userSession = "";
+      await user.save();
+      await userSession.save();
+    }
+
     req.logout();
     req.session.destroy(function (err) {
       if (err) {
@@ -21,6 +33,10 @@ module.exports = (app) => {
       }
       res.redirect("/");
     });
+  }catch(e){
+    console.log(e);
+    res.redirect("/");
+  }
   });
 
   app.get("/api/logout", (req, res) => {
