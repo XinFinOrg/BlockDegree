@@ -188,7 +188,7 @@ class UsersSessions extends Component {
                       </span>
                     </span>
                     <br />
-                    {this.props.userSessions ? (
+                    {/* {this.props.userSessions ? (
                       <div className="table-updated right">
                         <i className="fa fa-history"></i> Updated at{" "}
                         <strong>
@@ -204,7 +204,7 @@ class UsersSessions extends Component {
                       </div>
                     ) : (
                       ""
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
