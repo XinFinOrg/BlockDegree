@@ -81,6 +81,12 @@ const columns = [
     headerFormatter: defHeadFormatter,
   },
   {
+    dataField: "ip",
+    text: "IP Address",
+    filter: textFilter(),
+    headerFormatter: defHeadFormatter,
+  },
+  {
     dataField: "platform",
     text: "Platform",
     filter: textFilter(),
@@ -132,6 +138,7 @@ class UsersSessions extends Component {
       retData.push({
         srNo: srNo++,
         email: user.email,
+        ip:user.ip,
         platform: user.platform,
         startTime: new Date(parseFloat(user.startTime)).toString(),
         endTime: user.endTime!=="" ? new Date(parseFloat(user.endTime)).toString():"Not Terminated",
