@@ -102,6 +102,8 @@ exports.generatePostImage_Multi = async (templateId) => {
     for (let i = 0; i < templateVars.length; i++) {
       let currVar = templateVars[i];
       vars[currVar] = await calculateVariableValue(currVar);
+      if (!vars[currVar] || vars[currVar] == NaN || vars[currVar] == "NaN")
+        return null;
     }
 
     console.log("month toppers:", vars);
@@ -109,13 +111,11 @@ exports.generatePostImage_Multi = async (templateId) => {
     let imageHeight = template.imageHeight,
       imageWidth = template.imageWidth;
 
-
-
-      /**
-       * 
-       * @note Since the object is not exactly JSON, we cannot run checks for objects on mongodb doc.
-       * 
-       */
+    /**
+     *
+     * @note Since the object is not exactly JSON, we cannot run checks for objects on mongodb doc.
+     *
+     */
     // console.log(
     //   imageHeight,
     //   imageWidth,
@@ -397,7 +397,17 @@ async function calculateVariableValue(varName) {
           tot += parseFloat(allFunds[i].amountGoal);
         }
 
-        const totXdc = await usdToXdc(tot);
+        const siteStatData = await axios.post(
+          "https://explorer.xinfin.network/getXinFinStats"
+        );
+
+        let totXdc;
+        if (siteStatData && siteStatData.data) {
+          totXdc = parseFloat(tot) / siteStatData.data.priceUsd;
+        }
+
+        if (!totXdc || totXdc == NaN || totXdc == "NaN" || totXdc == Infinity)
+          totXdc = "1987643";
 
         return parseInt(totXdc).toLocaleString("en");
       }
