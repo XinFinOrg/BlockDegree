@@ -15,8 +15,9 @@
 
 .single-footer-widget {
     h4{
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         font-weight: 500;
+		text-transform: uppercase;
     }
     .form-control{
         border: none;
@@ -37,6 +38,10 @@
     }
     ul li {
         margin-bottom: 5px;
+		letter-spacing: -0.5px;
+		line-height: 20px;
+		padding-bottom: 10px;
+		font-size: 15px;
         a {
             color: $text-color;
             @include transition();
