@@ -29,6 +29,7 @@ module.exports = function (app) {
   });
 
   app.post("/pay", requireLogin, cors(), paymentService.payPaypal);
+  app.post("/payVideo", requireLogin, cors(), paymentService.payPaypalVideoSub);
   app.post(
     "/api/payRazorpay",
     requireLogin,
@@ -43,10 +44,15 @@ module.exports = function (app) {
     paymentService.completeRazorpay
   );
   app.get("/suc", paymentService.payPaypalSuccess);
+  app.get("/sucVideo", paymentService.payPaypalSuccessVideoSub);
   app.get("/payment-success", function (req, res) {
     console.log(req.session.message);
 
     res.render("paymentSuccess", { message: req.session.message });
+  });
+  app.get("/payment-success-video", function (req, res) {
+    console.log(req.session.message);
+    res.render("paymentSuccess");
   });
   app.post("/api/payViaXdc", requireLogin, paymentService.payViaXdc);
   app.post("/api/payViaXdce", requireLogin, paymentService.payViaXdce);

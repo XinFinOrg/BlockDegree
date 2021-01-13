@@ -1,0 +1,15 @@
+<button type="button" onclick="payVideoSub()" class="btn btn-primary">Paypal Video sub</button>
+
+<script type="text/javascript">
+  function payVideoSub() {
+    let formNew = document.createElement('form');
+    formNew.action = "/payVideo";
+    formNew.method = "post";
+    // formNew.style.display = "none";
+
+    
+    document.body.appendChild(formNew);
+    formNew.submit();
+
+  }
+</script>
