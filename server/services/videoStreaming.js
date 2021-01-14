@@ -1,14 +1,14 @@
 const fs = require('fs');
 const path = require('path');
-const { v4: uuid } = require('uuid');
+// const { v4: uuid } = require('uuid');
 
 exports.videoStreaming = async (req, res) => {
   try {
     const videoId = req.params.id + '.mp4';
-    const filePath = path.join(__dirname, `../../src/videos/${videoId}`);
+    const filePath = path.join(__dirname, '../../src/videos/' + videoId);
     const findVideo = fs.readdirSync(path.join(__dirname, `../../src/videos`));
     for (let i = 0; i < findVideo.length; i++) {
-      if (findVideo[i] == videoId) {
+      if (findVideo[i].includes(videoId)) {
         const stat = fs.statSync(filePath);
         const fileSize = stat.size;
         const range = req.headers.range;

@@ -16,7 +16,6 @@ module.exports = app => {
   // app.get("/api/userCount",userStats.currUserCount);
   // app.get("/api/visitCount",userStats.currVisitCount);
   // app.get("/api/caCount",userStats.currCACount);
-
   app.get("/api/getSiteStats", userStats.getSiteStats);
   app.get("/api/getXinFinStats", userStats.getXinFinStats);
   app.get("/api/getCurrentTimestamp", courseService.getCurrentTimestamp);

@@ -47,7 +47,6 @@ module.exports = function (app) {
   app.get("/sucVideo", paymentService.payPaypalSuccessVideoSub);
   app.get("/payment-success", function (req, res) {
     console.log(req.session.message);
-
     res.render("paymentSuccess", { message: req.session.message });
   });
   app.get("/payment-success-video", function (req, res) {

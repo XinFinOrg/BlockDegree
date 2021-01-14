@@ -1,38 +1,25 @@
-<video id="videoPlayer" controlsList="nodownload" controls width="600px" height="400px">
-  <source src="https://www.blockdegree.org/api/videoStream/1" type="video/mp4">
-</video>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<button id="btn1" onclick="func1()">1</button>
-<button id="btn2" onclick="func2()">2</button>
-<button id="btn3" onclick="func3()">3</button>
-<button id="btn4" onclick="func4()">4</button>
-<button id="btn5" onclick="func5()">5</button>
-<button id="btn6" onclick="func6()">6</button>
-<button id="btn7" onclick="func7()">7</button>
-<button id="btn8" onclick="func8()">8</button>
+<video id="videoPlayer" controlsList="nodownload" controls width="600px" height="400px">
+  <source id="videoPlayerSource" src="http://localhost:3000/api/videoStream/1" type="video/mp4">
+</video>
+<button videoId="1">1</button>
+<button videoId="2">2</button>
+<button videoId="3">3</button>
+<button videoId="4">4</button>
+<button videoId="5">5</button>
+<button videoId="6">6</button>
+<button videoId="7">7</button>
+<button videoId="8">8</button>
 <script type="text/javascript">
-  function func1() {
-    document.getElementsByTagName('source').src = "https://www.blockdegree.org/api/videoStream/1"
-  }
-  function func2() {
-    document.getElementsByTagName('source').src = "https://www.blockdegree.org/api/videoStream/2"
-  }
-  function func3() {
-    document.getElementsByTagName('source').src = "https://www.blockdegree.org/api/videoStream/3"
-  }
-  function func4() {
-    document.getElementsByTagName('source').src = "https://www.blockdegree.org/api/videoStream/4"
-  }
-  function func5() {
-    document.getElementsByTagName('source').src = "https://www.blockdegree.org/api/videoStream/5"
-  }
-  function func6() {
-    document.getElementsByTagName('source').src = "https://www.blockdegree.org/api/videoStream/6"
-  }
-  function func7() {
-    document.getElementsByTagName('source').src = "https://www.blockdegree.org/api/videoStream/7"
-  }
-  function func8() {
-    document.getElementsByTagName('source').src = "https://www.blockdegree.org/api/videoStream/8"
-  }
+  $('button').click(function () {
+    const videoPlayer = document.getElementById("videoPlayer")
+    videoPlayer.pause();
+    let videoId = $(this).attr("videoId");
+    $('#videoPlayerSource').attr('src', `http://localhost:3000/api/videoStream/${videoId}`)
+    videoPlayer.load();
+    videoPlayer.play();
+    $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active')
+    $($(this).attr('videoId')).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
+  })
 </script>

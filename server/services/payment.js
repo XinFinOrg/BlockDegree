@@ -570,10 +570,7 @@ exports.payPaypalVideoSub = async (req, res) => {
     //     error: "Payment for a non-existing course.",
     //   });
     // }
-    console.log(req.body);
     // console.log(discObj);
-    console.log(typeof price);
-    console.log(`Price Before : ${price}`);
     // console.log(`Discount Price : ${discObj.discAmt}`);
     // if (price != course.priceUsd) {
     //   return res.render("displayError", {
@@ -714,14 +711,13 @@ exports.payPaypalVideoSub = async (req, res) => {
               payment_logs.promoCode = "videoSub";
               payment_logs.referralCode = "";
               await payment_logs.save();
-
               return res.redirect(payment.links[i].href);
             }
           }
         }
       });
     } else {
-      return res.render("displayError", {
+      return res.render("paymentAlready", {
         error: "Payment already completed.",
       });
     }
