@@ -44,7 +44,7 @@ module.exports = function (app) {
     paymentService.completeRazorpay
   );
   app.get("/suc", paymentService.payPaypalSuccess);
-  app.get("/sucVideo", paymentService.payPaypalSuccessVideoSub);
+  app.get("/suc-video", paymentService.payPaypalSuccessVideoSub);
   app.get("/payment-success", function (req, res) {
     console.log(req.session.message);
     res.render("paymentSuccess", { message: req.session.message });

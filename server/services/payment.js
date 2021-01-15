@@ -659,7 +659,7 @@ exports.payPaypalVideoSub = async (req, res) => {
           payment_method: "paypal",
         },
         redirect_urls: {
-          return_url: `${process.env.HOST}/sucVideo`,
+          return_url: `${process.env.HOST}/suc-video`,
           cancel_url: `${process.env.HOST}/errVideo`,
         },
         transactions: [
