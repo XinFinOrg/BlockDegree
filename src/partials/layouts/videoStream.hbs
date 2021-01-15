@@ -4,14 +4,12 @@
 <div id="video-page-wrapper" class="container__cstm">
     <div class="row">
         {{#if video}}
-
         <div class="col-lg-9 colo-md-8">
             <div class="embed-responsive embed-responsive-16by9">
                 <video id="videoPlayer" controlsList="nodownload" controls width="600px" height="400px">
-                    <source id="videoPlayerSource" src="https://www.blockdegree.org/api/videoStream/1" type="video/mp4">
+                    <source id="videoPlayerSource" src="http://localhost:3000/api/videoStream/1" type="video/mp4">
                 </video>
             </div>
-
             <ul class="nav nav-custom nav-borderless nav_tabs1" id="nav_tabs" role="tablist">
                 <li class="nav-item"><a class="nav-link show active" href="#overview" role="tab" data-toggle="tab"
                         aria-selected="true">Overview</a>
@@ -21,14 +19,28 @@
                 <li class="nav-item"><a class="nav-link show" href="#announcement" role="tab" data-toggle="tab"
                         aria-selected="false">Announcements</a></li>
             </ul>
-
             <div class="tab-content">
                 <div class="tab-pane fade active show" id="overview">
                     <div>
-                        <h3>Content Coming Soon</h3>
-                        {{!-- <p>Explore how to create a web application that sends requests to the server for
-                            additional data
-                            as users scroll the page.</p> --}}
+                        <h3>Introduction to how Blockchain Works ?</h3>
+                        <p>Blockchain is a combination of three leading technologies:</p>
+                        <ol>
+                            <li>Cryptographic keys.</li>
+                            <li>A peer-to-peer network containing a shared ledger.</li>
+                            <li>A means of computing, to store the transactions and records of the network.</li>
+                        </ol>
+                        <p>Cryptography keys consist of two keys – Private key and Public key. These keys help in
+                            performing successful transactions between two parties. Each individual has these two keys,
+                            which they use to produce a secure digital identity reference. This secured identity is the
+                            most important aspect of Blockchain technology. In the world of cryptocurrency, this
+                            identity is referred to as ‘digital signature’ and is used for authorizing and controlling
+                            transactions.
+                            The digital signature is merged with the peer-to-peer network; a large number of individuals
+                            who act as authorities use the digital signature in order to reach a consensus on
+                            transactions, among other issues. When they authorize a deal, it is certified by a
+                            mathematical verification, which results in a successful secured transaction between the two
+                            network-connected parties. So to sum it up, Blockchain users employ cryptography keys to
+                            perform different types of digital interactions over the peer-to-peer network.</p>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="notes">
@@ -45,47 +57,45 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
         <div class="col-lg-3 colo-md-4">
             <div id="video-links-block">
-                <button videoId="1">1. Infinite scroll Introduction<br />
+                <button videoId="1">1. Chapter 1<br />
                     <div id="btn1" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 6 min
+                        <i class="fa fa-play-circle"></i> 11.55 min
                     </div>
                 </button>
-                <button videoId="2">2. Scroll project Resources<br />
+                <button videoId="2">2. Chapter 2<br />
                     <div id="btn2" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 8 min
+                        <i class="fa fa-play-circle"></i> 8.48 min
                     </div>
                 </button>
-                <button videoId="3">3. Setup basic application page<br />
+                <button videoId="3">3. Chapter 3<br />
                     <div id="btn3" class="video-item-link">
                         <i class="fa fa-play-circle"></i> 3 min
                     </div>
                 </button>
-                <button videoId="4">4. Setup database application PHP<br />
+                <button videoId="4">4. Chapter 4<br />
                     <div id="btn4" class="video-item-link">
                         <i class="fa fa-play-circle"></i> 6 min
                     </div>
                 </button>
-                <button videoId="5">5. jQuery scroll detection<br />
+                <button videoId="5">5. Chapter 5<br />
                     <div id="btn5" class="video-item-link">
                         <i class="fa fa-play-circle"></i> 3 min
                     </div>
                 </button>
-                <button videoId="6">6. Source code conn.PHP<br />
+                <button videoId="6">6. Chapter 6<br />
                     <div id="btn6" class="video-item-link">
                         <i class="fa fa-play-circle"></i> 5 min
                     </div>
                 </button>
-                <button videoId="7">7. Output API Contents PHP<br />
+                <button videoId="7">7. Chapter 7<br />
                     <div id="btn7" class="video-item-link">
                         <i class="fa fa-play-circle"></i> 3 min
                     </div>
                 </button>
-                <button videoId="8">8. App development overview PHP<br />
+                <button videoId="8">8. Chapter 8<br />
                     <div id="btn8" class="video-item-link">
                         <i class="fa fa-play-circle"></i> 4 min
                     </div>
@@ -108,7 +118,7 @@
         $('button').click(function () {
             videoPlayer.pause();
             let videoId = $(this).attr("videoId");
-            $('#videoPlayerSource').attr('src', `https://www.blockdegree.org/api/videoStream/${videoId}`)
+            $('#videoPlayerSource').attr('src', `http://localhost:3000/api/videoStream/${videoId}`)
             videoPlayer.load();
             videoPlayer.play();
             $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active')
