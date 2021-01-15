@@ -91,7 +91,7 @@
     "whatwg-fetch": "2.0.3",
     "xlsx": "^0.16.0"
   },
-  "homepage": "https://localhost/newadmin",
+  "homepage": "http://localhost/newadmin",
   "devDependencies": {
     "cross-env": "^5.2.0",
     "node-sass": "^4.5.3",
@@ -116,7 +116,7 @@
       "<rootDir>/src/**/?(*.)(spec|test).js?(x)"
     ],
     "testEnvironment": "node",
-    "testURL": "https://localhost",
+    "testURL": "http://localhost",
     "transform": {
       "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
