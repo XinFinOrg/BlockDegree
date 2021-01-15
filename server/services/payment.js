@@ -708,7 +708,7 @@ exports.payPaypalVideoSub = async (req, res) => {
               payment_logs.payment_id = invoice_number;
               payment_logs.payment_status = false;
               payment_logs.payment_amount = price;
-              payment_logs.promoCode = "videoSub";
+              payment_logs.promoCode = "";
               payment_logs.referralCode = "";
               await payment_logs.save();
               return res.redirect(payment.links[i].href);

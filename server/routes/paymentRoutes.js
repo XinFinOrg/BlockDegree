@@ -29,7 +29,7 @@ module.exports = function (app) {
   });
 
   app.post("/pay", requireLogin, cors(), paymentService.payPaypal);
-  app.post("/payVideo", requireLogin, cors(), paymentService.payPaypalVideoSub);
+  app.post("/pay-video", requireLogin, cors(), paymentService.payPaypalVideoSub);
   app.post(
     "/api/payRazorpay",
     requireLogin,
