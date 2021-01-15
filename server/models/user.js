@@ -51,6 +51,9 @@ var userSchema = mongoose.Schema({
       },
     ],
   },
+  videoSubscription: {
+    type: Boolean, default: false
+  },
   auth: {
     facebook: {
       id: String,

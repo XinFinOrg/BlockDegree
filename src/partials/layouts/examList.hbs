@@ -2,22 +2,22 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
   function getParamValue(param) {
-  let currentUrl = window.location.href;
-  if (currentUrl.split("?").length > 1) {
-    let paramsString = currentUrl.split("?")[1];
-    const params = paramsString.split("&");
-    for (let i = 0; i < params.length; i++) {
-      const key = params[i].split("=")[0];
-      const value = params[i].split("=")[1];
-      if (key === param) return value;
+    let currentUrl = window.location.href;
+    if (currentUrl.split("?").length > 1) {
+      let paramsString = currentUrl.split("?")[1];
+      const params = paramsString.split("&");
+      for (let i = 0; i < params.length; i++) {
+        const key = params[i].split("=")[0];
+        const value = params[i].split("=")[1];
+        if (key === param) return value;
+      }
     }
-  }
 
-  return null;
-}
-console.log(getParamValue("paymentSuccess"))
-  if (getParamValue("paymentSuccess")=='true'){
-    setTimeout(() => {$.notify("<b>Payment Successful</b>, you  can now <b>Take Exam</b>",{type:"success", duration:5000})}, 2000);
+    return null;
+  }
+  console.log(getParamValue("paymentSuccess"))
+  if (getParamValue("paymentSuccess") == 'true') {
+    setTimeout(() => { $.notify("<b>Payment Successful</b>, you  can now <b>Take Exam</b>", { type: "success", duration: 5000 }) }, 2000);
   }
 </script>
 <style>
@@ -60,41 +60,46 @@ console.log(getParamValue("paymentSuccess"))
       <li> Inorder to get a certificate, you'll need to get aleast <strong>passing percentage</strong>. If you have score less than
         passing percent, you'll have to give the exam again. <strong>Only 3 attempts</strong> possible per single payment.</li>
     </ol>-->
-	
-	<ul class="exams-points-note">
-          <li>
-            <div class="count"><span>1</span></div>
-            <div class="text">
-              <p>Below are the current courses available on our platform. Please <strong>ENROLL</strong> in the course of your choice.</p>
-            </div>
-          </li>
-          <li>
-            <div class="count"><span>2</span></div>
-            <div class="text">
-              <p>If you have already enrolled in one of our courses then you <strong>Take Exam</strong> for certification after completing the <strong>whole curriculum</strong> for that given course.</p>
-            </div>
-          </li>
-          <li>
-            <div class="count"><span>3</span></div>
-            <div class="text">
-              <p>Inorder to get a certificate, you'll need to get aleast <strong>passing percentage</strong>. If you have score less than passing percent, you'll have to give the exam again. <strong>Only 3 attempts</strong> possible per single payment.</p>
-            </div>
-          </li>
+
+    <ul class="exams-points-note">
+      <li>
+        <div class="count"><span>1</span></div>
+        <div class="text">
+          <p>Below are the current courses available on our platform. Please <strong>ENROLL</strong> in the course of
+            your choice.</p>
+        </div>
+      </li>
+      <li>
+        <div class="count"><span>2</span></div>
+        <div class="text">
+          <p>If you have already enrolled in one of our courses then you <strong>Take Exam</strong> for certification
+            after completing the <strong>whole curriculum</strong> for that given course.</p>
+        </div>
+      </li>
+      <li>
+        <div class="count"><span>3</span></div>
+        <div class="text">
+          <p>Inorder to get a certificate, you'll need to get aleast <strong>passing percentage</strong>. If you have
+            score less than passing percent, you'll have to give the exam again. <strong>Only 3 attempts</strong>
+            possible per single payment.</p>
+        </div>
+      </li>
     </ul>
-	
-	<div class="alert alert-warning alert-outline">
-		<strong>Warning:</strong> Check / update your name before taking exam as the certificate will be generated on that name only & cannot be changed.
-	</div>
+
+    <div class="alert alert-warning alert-outline">
+      <strong>Warning:</strong> Check / update your name before taking exam as the certificate will be generated on that
+      name only & cannot be changed.
+    </div>
   </div>
 
   <div class="row" id="exams__list">
     {{#each json.courses as |course index|}}
-    <div class="col-lg-3 col-md-6 single-exam__course mb-4">
+    <div class="col-lg-4 col-md-6 single-exam__course mb-4">
       <div class="card height--full">
         <div class="card-body row mx-0 p-0">
           <div class="card-title">
-		  	<h3 class="text-center mb-0">{{this.title}}</h3>
-		  </div>
+            <h3 class="text-center mb-0">{{this.title}}</h3>
+          </div>
           <div class="card-text p-4 px-sm-4 py-4 width--full">
             {{#each pointers as |point| }}
             &#10004; {{ point }}<br>
@@ -135,11 +140,10 @@ console.log(getParamValue("paymentSuccess"))
             <div class="promoCode-block" id="{{this.type}}ReferralCodeBlock">
               <div class="input-group mb-3">
                 <input type="text" class="form-control" name="referralCode" placeholder="referral code (optional)"
-                  id="{{this.type}}ReferralCode">            
+                  id="{{this.type}}ReferralCode">
                 <div class="input-group-append">
-                  <button type="button" class="btn btn-dark"
-                    onclick="checkReferralCode({{this.type}})">Check</button>
-                </div>    
+                  <button type="button" class="btn btn-dark" onclick="checkReferralCode({{this.type}})">Check</button>
+                </div>
               </div>
             </div>
 
@@ -149,8 +153,9 @@ console.log(getParamValue("paymentSuccess"))
             </button>
             <div>
               <span class=" "><a href="/fmd" class="fmd-button">Apply For FundMyDegree</a></span>
-            {{!-- <span class="promoCode-txt">Apply</span> 
-            <span class="promoCode-btn" id="{{this.type}}PromoCodeBtn">PROMO CODE</span>&nbsp;<span class="promoCode-txt">   --}}
+              {{!-- <span class="promoCode-txt">Apply</span>
+              <span class="promoCode-btn" id="{{this.type}}PromoCodeBtn">PROMO CODE</span>&nbsp;<span
+                class="promoCode-txt"> --}}
             </div>
             <div id="btn-paymentModal{{this.type}}" style="display:none" data-toggle="modal"
               data-target="#paymentModal{{this.type}}">
@@ -175,13 +180,13 @@ console.log(getParamValue("paymentSuccess"))
                     <button type="button" class="btn-payment" onclick="payViaXdc({{this.type}},{{this.price}})"
                       data-dismiss="modal"> Pay Via XDC </button>
 
-                    
+
 
                     <button type="button" class="btn-payment" onclick="pay({{this.type}},{{this.price}})"
                       data-dismiss="modal">
                       Pay Via PayPal </button>
-                      <button type="button" class="btn-payment razorpay-btn" style="display: none;" onclick="payRazorpay({{this.type}},{{this.price}})"
-                      data-dismiss="modal">
+                    <button type="button" class="btn-payment razorpay-btn" style="display: none;"
+                      onclick="payRazorpay({{this.type}},{{this.price}})" data-dismiss="modal">
                       Pay Via Netbanking / Card / UPI </button>
 
 
@@ -234,15 +239,13 @@ console.log(getParamValue("paymentSuccess"))
                   <div class="modal-footer">
 
                     <button type="button" class="xin-modal-close" data-dismiss="modal">Close</button>
-                    <buton type="button" class="xin-modal-submit" onclick="launchXinPay({{this.type}},{{this.price}})" data-dismiss="modal">Done
+                    <buton type="button" class="xin-modal-submit" onclick="launchXinPay({{this.type}},{{this.price}})"
+                      data-dismiss="modal">Done
                     </buton>
                   </div>
                 </div>
               </div>
             </div>
-
-
-
 
             {{/if}}
 
@@ -251,7 +254,49 @@ console.log(getParamValue("paymentSuccess"))
       </div>
     </div>
     {{/each}}
-    
+
+
+
+
+    <!-- Static Video Membership box starts -->
+    <div class="col-lg-4 col-md-6 single-exam__course mb-4">
+      <div class="card height--full">
+        <div class="card-body row mx-0 p-0">
+          <div class="card-title">
+            <h3 class="text-center mb-0">Video Membership</h3>
+          </div>
+          <div class="card-text p-4 px-sm-4 py-4 width--full">
+            ✔ Get All Video Content.<br>
+            ✔ Lifetime Access.<br>
+            ✔ Get access to exclusive video.<br>
+          </div>
+          <div class="card-price width--full text-center">
+            <h2 class="pb-3 text-white" id="course_4curr_price">$149</h2>
+
+            {{#if video }}
+            <button onclick="videoScreen()" class="btn text-body btn-light mb-3" data-price="videoScreen"
+              id="videoScreen">
+              View Videos
+            </button>
+            {{else}}
+            <button onclick="payVideoSub()" class=" btn text-body btn-light mb-3" data-price="149"
+              id="videoMember">PayPal</button>
+            {{/if}}
+            <div id="btn-videoMembership" style="display:none" data-toggle="modal" data-target="#videoMembership">
+            </div>
+
+
+            <div id="btn-XinPayNotifiercourse_4" style="display:none" data-toggle="modal"
+              data-target="#XinPayNotifiercourse_4">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Static Video Membership box ends -->
+
+
+
     <button id="btn-displayHashModal" type="button" style="display: none;" class="btn btn-primary" data-toggle="modal"
       data-target="#displayHashModal">
       Open modal
@@ -282,29 +327,37 @@ console.log(getParamValue("paymentSuccess"))
       </div>
     </div>
     <div style="width: 100%;">
-    <div class="pay-with">
-    We accept &nbsp;&nbsp; <!-- PayPal Logo --><img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" style="height: 100px;width:100px;" border="0" alt="PayPal Logo"> <img src="https://xinfin.org/assets/images/brand-assets/xdc-logo.png" style="height: 50px;width:50px;" border="0" alt="XDC Logo">
+      <div class="pay-with">
+        We accept &nbsp;&nbsp;
+        <!-- PayPal Logo --><img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png"
+          style="height: 100px;width:100px;" border="0" alt="PayPal Logo"> <img
+          src="https://xinfin.org/assets/images/brand-assets/xdc-logo.png" style="height: 50px;width:50px;" border="0"
+          alt="XDC Logo">
+      </div>
     </div>
-    </div>
-  </div>  
+  </div>
 </div>
 
 <script type="text/javascript">
-  let  originCountry= "{{country}}"
-  let showRazorpay= false;
+  let originCountry = "{{country}}"
+  let showRazorpay = false;
 
-  console.log(`origin country: |${originCountry}|`, "show razorpay: ", showRazorpay );
-  
-  if (originCountry==='IN'){
-    $(".razorpay-btn").attr ("style", "display:inline-block");
+  console.log(`origin country: |${originCountry}|`, "show razorpay: ", showRazorpay);
+
+  const xxx = "{{video}}";
+
+  console.log("videoSub", xxx)
+
+  if (originCountry === 'IN') {
+    $(".razorpay-btn").attr("style", "display:inline-block");
   }
 
   let allModals = [];
   const divisor = 1; // for testing purposes 1 million'th of actual value will be used
   const coinMarketCapUrl = "/api/wrapCoinMarketCap";
   const etherScanIo = "https://etherscan.io/tx/";
-    const apothemExplorer = "https://explorer.xinfin.network/tx/";
-    const mainnetExplorer = "https://explorer.xinfin.network/tx/";
+  const apothemExplorer = "https://explorer.xinfin.network/tx/";
+  const mainnetExplorer = "https://explorer.xinfin.network/tx/";
 
   function takeExam(slug) {
 
@@ -320,9 +373,9 @@ console.log(getParamValue("paymentSuccess"))
               window.location = '/blockchain-advanced-exam'
             } else if (slug.id === "course_3") {
               window.location = '/blockchain-professional-exam'
-            } else if  (slug.id === "course_4"){
+            } else if (slug.id === "course_4") {
               window.location = '/cloud-computing-exam'
-            }  
+            }
             else {
               window.location = '/'
             }
@@ -330,6 +383,10 @@ console.log(getParamValue("paymentSuccess"))
         }
       }
     })
+  }
+
+  function videoScreen() {
+    window.location = '/video-stream'
   }
 
   function handlePayment(course_id, price) {
@@ -372,16 +429,16 @@ console.log(getParamValue("paymentSuccess"))
   function pay(course_id, price) {
     const email = localStorage.getItem('email');
     const codeName = document.getElementById(course_id.id + "codeName").value;
-    const referralCode = document.getElementById(course_id.id+"ReferralCode").value;
+    const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
     console.log(course_id.id + "codeName");
     console.log(codeName);
     $(`#${course_id.id}`).attr("disabled", true);
 
     let formNew = document.createElement('form');
-    formNew.style.display="none";
+    formNew.style.display = "none";
     formNew.action = "/pay";
     formNew.method = "post";
-    formNew.style.display="none";
+    formNew.style.display = "none";
 
     let elementEmail = document.createElement("input");
     let elementCourseId = document.createElement("input");
@@ -405,9 +462,21 @@ console.log(getParamValue("paymentSuccess"))
     elementCodeName.value = codeName;
     formNew.appendChild(elementCodeName);
 
-    elementReferralCode.name="referralCode";
-    elementReferralCode.value=referralCode;
+    elementReferralCode.name = "referralCode";
+    elementReferralCode.value = referralCode;
     formNew.appendChild(elementReferralCode);
+
+    document.body.appendChild(formNew);
+    formNew.submit();
+  }
+
+  function payVideoSub() {
+    const email = localStorage.getItem('email');
+    let formNew = document.createElement('form');
+    formNew.style.display = "none";
+    formNew.action = "/pay-video";
+    formNew.method = "post";
+    formNew.style.display = "none";
 
     document.body.appendChild(formNew);
     formNew.submit();
@@ -416,78 +485,78 @@ console.log(getParamValue("paymentSuccess"))
   function payRazorpay(course_id, price) {
     const email = localStorage.getItem('email');
     const codeName = document.getElementById(course_id.id + "codeName").value;
-    const referralCode = document.getElementById(course_id.id+"ReferralCode").value;
+    const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
     console.log(course_id.id + "codeName");
     console.log(codeName);
     $.ajax({
-      method:"post",
-      url:"/api/payRazorpay",
-      data:{
-        email:email,
-        codeName:codeName,
-        referralCode:referralCode,
-        price:price,
-        course_id:course_id.id
+      method: "post",
+      url: "/api/payRazorpay",
+      data: {
+        email: email,
+        codeName: codeName,
+        referralCode: referralCode,
+        price: price,
+        course_id: course_id.id
       },
-      success : (resp) => {
-        if (resp.status===true) {
-            const { orderId, key, amnt, email, userName } = resp.data;
-        const newOrder = {
-          key: key, // Enter the Key ID generated from the Dashboard
-          amount: `${amnt}`, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-          currency: "INR",
-          name: userName,
-          description: "Online Education",
-          image: "https://www.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
-          order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-          handler: function (response) {
-            const {
-              razorpay_payment_id,
-              razorpay_order_id,
-              razorpay_signature,
-            } = response;
-            $.ajax({
-              url: "/api/completeRazorpayDirect",
-              method: "post",
-              data: {
-                paymentId: razorpay_payment_id,
-                orderId: razorpay_order_id,
-                signature: razorpay_signature,
-              },
-              success: (resp) => {
-                if (resp.status == true) {
-                  window.location.href="/exams?paymentSuccess=true"
-                } else {
-                  $.notify(resp.error, { type: "danger" });
-                }
-              },
-              error: (err) => {
-                $.notify(
-                  "Some error occured please contact <b>info@blockdegree.org</b>",
-                  { type: "danger" }
-                );
-              },
-            });
-          },
-          prefill: {
+      success: (resp) => {
+        if (resp.status === true) {
+          const { orderId, key, amnt, email, userName } = resp.data;
+          const newOrder = {
+            key: key, // Enter the Key ID generated from the Dashboard
+            amount: `${amnt}`, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            currency: "INR",
             name: userName,
-            email: email,
-          },
-          theme: {
-            color: "#2073d4",
-          },
-        };
-        let rzp1 = new Razorpay(newOrder);
-        rzp1.open();
-        }else{
-          $.notify(resp.error,{type:"danger"})
-        }       
+            description: "Online Education",
+            image: "https://www.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+            order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            handler: function (response) {
+              const {
+                razorpay_payment_id,
+                razorpay_order_id,
+                razorpay_signature,
+              } = response;
+              $.ajax({
+                url: "/api/completeRazorpayDirect",
+                method: "post",
+                data: {
+                  paymentId: razorpay_payment_id,
+                  orderId: razorpay_order_id,
+                  signature: razorpay_signature,
+                },
+                success: (resp) => {
+                  if (resp.status == true) {
+                    window.location.href = "/exams?paymentSuccess=true"
+                  } else {
+                    $.notify(resp.error, { type: "danger" });
+                  }
+                },
+                error: (err) => {
+                  $.notify(
+                    "Some error occured please contact <b>info@blockdegree.org</b>",
+                    { type: "danger" }
+                  );
+                },
+              });
+            },
+            prefill: {
+              name: userName,
+              email: email,
+            },
+            theme: {
+              color: "#2073d4",
+            },
+          };
+          let rzp1 = new Razorpay(newOrder);
+          rzp1.open();
+        } else {
+          $.notify(resp.error, { type: "danger" })
+        }
       },
-      error:e => {
+      error: e => {
 
       }
     })
-  } 
+  }
 
   async function payViaXdc(course_id, price) {
     // check if the 
@@ -583,7 +652,6 @@ console.log(getParamValue("paymentSuccess"))
             await ethereum.enable();
 
             const xdceAddrMainnet = "0x41ab1b6fcbb2fa9dced81acbdec13ea6315f2bf2";
-            {{!-- const xdceAddrMainnet = "0xF53048a4429DbFE150B4Bc0F3Cd3C19d7b093429"; --}}
             const xdceABI = [
               {
                 constant: false,
@@ -1221,7 +1289,7 @@ console.log(getParamValue("paymentSuccess"))
           data: { course: course_id.id, price: price, codeName: codeName }
         });
         if (!respFree.status) {
-          
+
           $.notify(respFree.error, { type: "danger" });
           return;
         }
@@ -1278,37 +1346,37 @@ console.log(getParamValue("paymentSuccess"))
               else {
                 console.log("Transaction Hash: ", result);
 
-              const modTitle = "<strong>Transaction Submitted Successfully</strong>";
-              const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a> <button onclick="copyTextToClipboard('pending_txHash')" >Click</button> to copy hash`;
+                const modTitle = "<strong>Transaction Submitted Successfully</strong>";
+                const modBody = "Your transaction has been successfully submitted. Once your transaction will be confirmed, processing of the payment will be initiated. Please don't leave this page untill your transaction is confirmed. Your trasnaction hash is <div style='display:none;' id='pending_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a> <button onclick="copyTextToClipboard('pending_txHash')" >Click</button> to copy hash`;
 
-              openModal("modal-info", modTitle, modBody);
+                openModal("modal-info", modTitle, modBody);
 
-              $.notify("Transaction is <strong>pending</strong> . . .", {
-                type: "warning", allow_dismiss: false, delay: Date.now(), placement: {
-                  from: 'bottom',
-                  align: 'right'
-                }
-              });
+                $.notify("Transaction is <strong>pending</strong> . . .", {
+                  type: "warning", allow_dismiss: false, delay: Date.now(), placement: {
+                    from: 'bottom',
+                    align: 'right'
+                  }
+                });
 
                 $.ajax({
                   method: "post",
                   url: "/api/payViaXdc",
-                  data: { course: course_id.id, price: txPrice, txn_hash: result, codeName: codeName,referralCode:referralCode },
+                  data: { course: course_id.id, price: txPrice, txn_hash: result, codeName: codeName, referralCode: referralCode },
                   success: response => {
                     if (!response.status) {
                       // Error, its ok.
-                    const modTitle = "<strong>Some Error Occured</strong>";
-                    const modBody = response.error + ".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
-                    openModal("modal-warning", modTitle, modBody);
-                    $.notifyClose('bottom-right')
-                    return
+                      const modTitle = "<strong>Some Error Occured</strong>";
+                      const modBody = response.error + ".Your trasnaction hash is <div style='display:none' id='confirmed_err_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a> <button onclick="copyTextToClipboard('confirmed_err_txHash')" >Click</button> to copy hash`;
+                      openModal("modal-warning", modTitle, modBody);
+                      $.notifyClose('bottom-right')
+                      return
                     } else {
 
-                    const modTitle = "<strong>Transaction Received Successfully</strong>";
-                    const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a>. Click on link to view on XinFin Explorer.`;
-                    openModal("modal-success", modTitle, modBody);
-                    $.notifyClose('bottom-right')
-                    return;
+                      const modTitle = "<strong>Transaction Received Successfully</strong>";
+                      const modBody = "Your transaction has been successfully submitted & received. Once your transaction has enough confirmations, your payment will be completed. You can check the state of your payment in the <strong><a href='/profile?inFocus=cryptoPayment'>Profile</a></strong> page. Your trasnaction hash is <div style='visibility:hidden' id='confirmed_txHash' >" + result + "</div> " + `<a href="${apothemExplorer + result}" target="_blank">${result.toString().slice(0, 11)}...</a>. Click on link to view on XinFin Explorer.`;
+                      openModal("modal-success", modTitle, modBody);
+                      $.notifyClose('bottom-right')
+                      return;
                     }
                   },
                   error: xhr => {
@@ -1497,18 +1565,18 @@ console.log(getParamValue("paymentSuccess"))
     const referralCode = document.getElementById(`${courseId}ReferralCode`).value;
     console.log(`Referral Code: ${referralCode}`);
     $.ajax({
-      method:"post",
-      url:"/api/checkReferralCode",
-      data:{referralCode:referralCode},
+      method: "post",
+      url: "/api/checkReferralCode",
+      data: { referralCode: referralCode },
       success: res => {
-        if (!res.status){
-          $.notify(`<strong>Error</strong>: ${res.error}`,{type:'danger'});
+        if (!res.status) {
+          $.notify(`<strong>Error</strong>: ${res.error}`, { type: 'danger' });
           return;
         }
         $.notify(`Referral code is <strong>valid</strong> !`)
       },
       error: xhr => {
-        return $.notify(`<strong>Error</strong>: Some error occured while making a request to the server`,{type:"danger"});
+        return $.notify(`<strong>Error</strong>: Some error occured while making a request to the server`, { type: "danger" });
       }
     })
   }

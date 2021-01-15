@@ -455,6 +455,9 @@ exports.successFundPaypal = async (req, res) => {
         req.session.message =
           "You can get more details about the funding from your <a href='/profile#fmd-funded'>Profile</a>";
         res.redirect("/payment-success");
+        req.session.message =
+          "You can get more details about the funding from your <a href='/profile#fmd-funded'>Profile</a>";
+        res.redirect("/payment-success-video");
         burnEmitter.emit("donationTokenBurn", fundId);
         emailer.sendFMDCompleteUser(
           currFundReq.email,
@@ -954,6 +957,9 @@ exports.fmdCorporatePaypalSuc = async (req, res) => {
         req.session.message =
           "Payment successful. Please contact <b>info@blockdegree.org</b> to proceed with the next steps.";
         res.redirect("/payment-success");
+        req.session.message =
+          "Payment successful. Please contact <b>info@blockdegree.org</b> to proceed with the next steps.";
+        res.redirect("/payment-success-video");
       }
     });
   } catch (e) {

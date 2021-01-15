@@ -56,7 +56,6 @@ module.exports = {
 
   sendTokenMail: (mail, token, req, type) => {
     console.log("sendTokenMail:", type, mail);
-
     var mailOptions;
     let link = "https://www.blockdegree.org/confirmation/?token=" + token.token;
     if (type === "signup" || type === "resend") {
@@ -69,7 +68,7 @@ module.exports = {
     } else if (
       type === "course_1" ||
       type === "course_2" ||
-      type === "course_3" || 
+      type === "course_3" ||
       type === "course_4"
     ) {
       var courseName;
@@ -79,9 +78,9 @@ module.exports = {
         courseName = "blockchain-advanced-exam";
       } else if (type === "course_3") {
         courseName = "blockchain-professional-exam";
-      } else if (type==="course_4"){
+      } else if (type === "course_4") {
         courseName = "cloud-computing-exam";
-      } 
+      }
       mailOptions = {
         from: "info@blockdegree.org",
         to: mail,
@@ -94,6 +93,13 @@ module.exports = {
           ` : \nhttps://www.blockdegree.org/` +
           courseName +
           ".\n",
+      };
+    } else if (type === "video-subscription") {
+      mailOptions = {
+        from: "info@blockdegree.org",
+        to: mail,
+        subject: "Blockdegee: Video Subscription",
+        html: `<div>Thank you forr subscribing to Blockdegree videos.</div>`,
       };
     }
 

@@ -593,8 +593,8 @@ exports.getExamResult = async (req, res) => {
             ] === undefined
               ? ""
               : user.examData.payment[
-                  examTypes[examName].coursePayment_id + "_payment"
-                ];
+              examTypes[examName].coursePayment_id + "_payment"
+              ];
           obj["expiryDate"] = expiryDate.getTime();
           user.examData.certificateHash.push(obj);
           user.examData.payment[
@@ -648,7 +648,8 @@ exports.getExamStatus = async (req, res) => {
             course_4: user.examData.payment.course_4,
           },
           json: json,
-          country: geo?geo.country:"unknown",
+          video: user.videoSubscription === true,
+          country: geo ? geo.country : "unknown",
         };
         res.render("examList", examListData);
       }
