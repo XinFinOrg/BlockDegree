@@ -10,18 +10,23 @@ if (process.env.MODE === "uat" || process.env.MODE === "dev") {
 let i = 0;
 exports.getXdcPrice = async () => {
   try {
-    const cmc_xdc_data = await axios({
-      method: "get",
-      headers: {
-        "X-CMC_PRO_API_KEY": cmcKeys[i++ % cmcKeys.length],
-      },
-      url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest",
-      params: {
-        id: "2634",
-      },
-    });
+    // const cmc_xdc_data = await axios({
+    //   method: "get",
+    //   headers: {
+    //     "X-CMC_PRO_API_KEY": cmcKeys[i++ % cmcKeys.length],
+    //   },
+    //   url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest",
+    //   params: {
+    //     id: "2634",
+    //   },
+    // });
+    const resp = await axios.post(
+      "https://explorer.xinfin.network/getXinFinStats"
+    );
+    const priceUsd = resp.data.priceUsd;
+
     return (
-      parseFloat(cmc_xdc_data.data.data["2634"].quote.USD.price) *
+      parseFloat(priceUsd) *
       parseFloat(priceMultiplier)
     );
   } catch (e) {
@@ -32,19 +37,23 @@ exports.getXdcPrice = async () => {
 
 exports.usdToXdc = async (usd) => {
   try {
-    const cmc_xdc_data = await axios({
-      method: "get",
-      headers: {
-        "X-CMC_PRO_API_KEY": cmcKeys[i++ % cmcKeys.length],
-      },
-      url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest",
-      params: {
-        id: "2634",
-      },
-    });
+    // const cmc_xdc_data = await axios({
+    //   method: "get",
+    //   headers: {
+    //     "X-CMC_PRO_API_KEY": cmcKeys[i++ % cmcKeys.length],
+    //   },
+    //   url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest",
+    //   params: {
+    //     id: "2634",
+    //   },
+    // });
+    const resp = await axios.post(
+      "https://explorer.xinfin.network/getXinFinStats"
+    );
+    const priceUsd = resp.data.priceUsd;
     return (
       parseFloat(usd) /
-      (parseFloat(cmc_xdc_data.data.data["2634"].quote.USD.price) *
+      (parseFloat(priceUsd) *
         parseFloat(priceMultiplier))
     );
   } catch (e) {
@@ -58,19 +67,23 @@ exports.usdToXdc = async (usd) => {
  */
 exports.xdcToUsd = async (xdc) => {
   try {
-    const cmc_xdc_data = await axios({
-      method: "get",
-      headers: {
-        "X-CMC_PRO_API_KEY": cmcKeys[i++ % cmcKeys.length],
-      },
-      url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest",
-      params: {
-        id: "2634",
-      },
-    });
+    // const cmc_xdc_data = await axios({
+    //   method: "get",
+    //   headers: {
+    //     "X-CMC_PRO_API_KEY": cmcKeys[i++ % cmcKeys.length],
+    //   },
+    //   url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest",
+    //   params: {
+    //     id: "2634",
+    //   },
+    // });
+    const resp = await axios.post(
+      "https://explorer.xinfin.network/getXinFinStats"
+    );
+    const priceUsd = resp.data.priceUsd;
     return (
       parseFloat(xdc) *
-      parseFloat(cmc_xdc_data.data.data["2634"].quote.USD.price) *
+      parseFloat(priceUsd) *
       priceMultiplier
     );
   } catch (e) {
