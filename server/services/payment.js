@@ -543,7 +543,7 @@ exports.payPaypalSuccessVideoSub = (req, res) => {
 
 exports.payPaypalVideoSub = async (req, res) => {
   try {
-    let price = 149;
+    let price = 97;
     let email = req.user.email;
     // let course_id = req.body.course_id;
     // let videoSubscription = req.body.videoSubscription;
