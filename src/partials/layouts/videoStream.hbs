@@ -1,4 +1,4 @@
-{{> includes/hero hero-title="Video Library"}}
+{{> includes/hero hero-title="Study Blockchain in 60minutes"}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <div id="video-page-wrapper" class="container__cstm">
@@ -21,8 +21,8 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade active show" id="overview">
-                    <div>
-                        
+                    <div id="overviewContent">
+
                     </div>
                 </div>
                 <div class="tab-pane fade" id="notes">
@@ -44,7 +44,7 @@
             <div id="video-links-block">
                 <button videoId="1">1. Introduction to Blockchain Tech<br />
                     <div id="btn1" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 8.15 min
+                        <i class="fa fa-play-circle"></i> 7.10 min
                     </div>
                 </button>
                 <button videoId="2">2. 6 Features and Benefits of Blockchain Tech<br />
@@ -100,6 +100,8 @@
 
     <script>
         const videoPlayer = document.getElementById("videoPlayer")
+        const overviews = {{{ Overview }}};
+        $('#overviewContent').html(overviews["1"])
         $('button[videoId="1"]').addClass('video-item-link-active')
         $('button').click(function () {
             videoPlayer.pause();
@@ -109,6 +111,7 @@
             videoPlayer.play();
             $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active')
             $($(this).attr('videoId')).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
+            $('#overviewContent').html(overviews[videoId])
         })
         function payment() {
             let formNew = document.createElement('form');
