@@ -212,5 +212,13 @@ function getDegreeContentDetails(examType){
         courseSub:`Cloud Computing`
       }
     }
+    case "wallet":{
+      return {
+        topic:"Blockchain Wallet",
+        subTopic:"Basic Blockchain Wallet Course",
+        course:`Blockchain Wallet Specialist`,
+        courseSub:`Blockchain Wallet`
+      }
+    }
   }
 }

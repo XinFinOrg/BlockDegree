@@ -301,6 +301,53 @@
           "topic": "How to Deploy Cloud"
         }
       ]
+    },
+    {
+      "title": "Blockchain Wallet",
+      "price": "9.99",
+      "type": "course_5",
+      "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
+      "duration": "3 days",
+      "slug": "blockchain-wallet",
+      "pointers": [
+        " 30 Marks Practical & Theory",
+        "40% will be the passing percentage",
+        " Individual will get max of 3 Attempts"
+      ],
+
+      "sypnosis": "x",
+      "overview": "x",
+      "skills": "30 Days of unlimited access to course content. Certified Cloud Computing  Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
+      "prerequisites": [
+        "You should have access to a Computer with Internet connection",
+       "Don't delay, start keeping your Cryptos safe today!"
+      ],
+      "curriculum": [
+        {
+          "topic": "What is Blockchain Wallet and How Does It Work?"
+        },
+        {
+          "topic": "Why Use a Blockchain Wallet?"
+        },
+        {
+          "topic": "What is a Blockchain Wallet?"
+        },
+        {
+          "topic": "How Do Blockchain Wallets Work?"
+        },
+        {
+          "topic": "Blockchain Wallet Types"
+        },
+        {
+          "topic": "Blockchain Wallets Comparison"
+        },
+        {
+          "topic": "How to protect your private keys?"
+        },
+        {
+          "topic": "Case Studies"
+        }
+      ]
     }
   ]
 }

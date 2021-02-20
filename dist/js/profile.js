@@ -59,6 +59,10 @@ if (typeof jQuery != "undefined") {
             userProfile.examData.payment.course_4 == true
               ? "Enrolled"
               : "Not Paid";
+              computingStatus.innerHTML =
+          userProfile.examData.payment.course_5 == true
+            ? "Enrolled"
+            : "Not Paid";
           basicAttempts.innerHTML = userProfile.examData.examBasic.attempts;
           advancedAttempts.innerHTML =
             userProfile.examData.examAdvanced.attempts;
