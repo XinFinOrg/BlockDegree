@@ -15,7 +15,7 @@ Hot wallets are online wallets through which cryptocurrencies can be transferred
 
 With hot wallets, private keys are stored in the cloud for faster transfer. With cold wallets, private keys are stored in separate hardware that is not connected to the internet or the cloud, or they are stored on a paper document. Hot wallets are easy to access online 24/7 and can be accessed via a desktop or mobile device, but there is the risk of unrecoverable theft if hacked. With cold wallets, the method of the transaction helps in protecting the wallet from unauthorized access 
 
-#### Images Pending![](https://jpg)
+#### Images Pending![](https://github.com/XinFinOrg/BlockDegree/blob/2d53335dd48a2634c4d222f3e8e0be73d4bffe5d/dist/img/wallet-course/3-hot-wallets-and-cold-wallets.jpg?raw=true)
 
 ###### We can further break down wallets into three types:
 
@@ -26,7 +26,7 @@ With hot wallets, private keys are stored in the cloud for faster transfer. With
  #### 1. Software Wallets:-
 A software wallet is an application that is downloaded on a device; it could be a desktop or a mobile device, or it could be a web-based wallet that can be accessed online. Breadwallet, XDC ewallet, and  Copay are popular software wallets. We can further categorize software wallets as desktop wallets, online wallets (web wallets), and mobile wallets.
 
-#### Images Pending![](https://jpg)
+#### Images Pending![](https://github.com/XinFinOrg/BlockDegree/blob/2d53335dd48a2634c4d222f3e8e0be73d4bffe5d/dist/img/wallet-course/4-software-wallets.jpg?raw=true)
 
 #### 2. Desktop Wallets
 

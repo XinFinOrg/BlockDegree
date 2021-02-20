@@ -14,4 +14,4 @@ But giving out your email address doesn't mean someone will be able to send out 
 
 The private key is top secret. It's similar to your password; it should not get hacked and you should not disclose it to anyone. You use this private key to spend your funds. If someone gets access to your private key, there is a high possibility that your account is compromised, and you might end up losing all the cryptocurrency deposits in your account.
 
-#### Images Pending ![](https://jpg)
+#### Images Pending ![](https://github.com/XinFinOrg/BlockDegree/blob/2d53335dd48a2634c4d222f3e8e0be73d4bffe5d/dist/img/wallet-course/2-how-do-blockchain-wallets-work.jpg?raw=true)
