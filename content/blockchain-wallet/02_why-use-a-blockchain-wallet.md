@@ -8,8 +8,8 @@ courseIdx: 4
 #### 2. Why Use a Blockchain Wallet?
 
 A blockchain wallet is a cryptocurrency wallet that allows users to manage different kinds of cryptocurrencies'for example, Bitcoin XDC or Ethereum. A blockchain wallet helps someone exchange funds easily. Transactions are secure, as they are cryptographically signed. The wallet is accessible from web devices, including mobile ones, and the privacy and identity of the user are maintained. So a blockchain wallet provides all the features that are necessary for safe and secure transfers and exchanges of funds between different parties.
-
- ### images (pending)![](https://github.com/XinFinOrg/BlockDegree/blob/2d53335dd48a2634c4d222f3e8e0be73d4bffe5d/dist/img/wallet-course/1-why-use-blockchain-wallets.png?raw=true)  
+  
+ ### ![](https://github.com/XinFinOrg/BlockDegree/blob/2d53335dd48a2634c4d222f3e8e0be73d4bffe5d/dist/img/wallet-course/1-why-use-blockchain-wallets.png?raw=true)  
 
 It is very similar to the process of sending or receiving money through PayPal or any other gateway used today, but you use cryptocurrency instead. Examples of blockchain wallets include Electrum, Blockchain.info, XDC wallet, Mycelium, Samurai, and Bitcoin paper wallet. There are many more based on the needs you have and the security you require.
 
