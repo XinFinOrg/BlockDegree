@@ -36,27 +36,47 @@ class Nav extends Component {
               <ul className="nav">
                 <li className={this.isPathActive('/tables/users') ? 'active' : null}>
                   <Link to="/tables/users">User Table</Link>
-                </li>                
+                </li>
+              </ul>
+              <ul className="nav">
+                <li className={this.isPathActive('/tables/kyc-user') ? 'active' : null}>
+                  <Link to="/tables/kyc-user">KYC Table</Link>
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/tables/promocodes') ? 'active' : null}>
                   <Link to="/tables/promocodes">Promocode Table</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/tables/certificates') ? 'active' : null}>
                   <Link to="/tables/certificates">Certificates Table</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/tables/referrer-codes') ? 'active' : null}>
                   <Link to="/tables/referrer-codes">Referral Codes Table</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/tables/user-sessions') ? 'active' : null}>
                   <Link to="/tables/user-sessions">User Sessions Table</Link>
-                </li>                
+                </li>
+              </ul>
+              <ul className="nav">
+                <li className={this.isPathActive('/tables/fund-my-degree') ? 'active' : null}>
+                  <Link to="/tables/fund-my-degree">Fund My Degree</Link>
+                </li>
+              </ul>
+              <ul className="nav">
+                <li className={this.isPathActive('/tables/referals') ? 'active' : null}>
+                  <Link to="/tables/referals">Referal Users</Link>
+                </li>
+              </ul>
+              <ul className="nav">
+                <li className={this.isPathActive('/tables/razor-pay-log') ? 'active' : null}>
+                  <Link to="/tables/razor-pay-log">Razor Pay Log</Link>
+                </li>
               </ul>
             </div>
           </Collapse>
@@ -74,38 +94,38 @@ class Nav extends Component {
               <ul className="nav">
                 <li className={this.isPathActive('/functionalities/promocodes') ? 'active' : null}>
                   <Link to="/functionalities/promocodes">PromoCodes</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/functionalities/referral-codes') ? 'active' : null}>
                   <Link to="/functionalities/referral-codes">Referral Codes</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/functionalities/course-payment') ? 'active' : null}>
                   <Link to="/functionalities/course-payment">Course Payment</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/functionalities/wallet-config') ? 'active' : null}>
                   <Link to="/functionalities/wallet-config">Wallet Config</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/functionalities/events') ? 'active' : null}>
                   <Link to="/functionalities/events">Events</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/functionalities/fmd') ? 'active' : null}>
                   <Link to="/functionalities/fmd">Fund My Degree</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/functionalities/site-statistics') ? 'active' : null}>
                   <Link to="/functionalities/site-statistics">Site Statistics</Link>
-                </li>                
-              </ul>              
+                </li>
+              </ul>
             </div>
           </Collapse>
         </li>
@@ -122,29 +142,29 @@ class Nav extends Component {
               <ul className="nav">
                 <li className={this.isPathActive('/txlogs/promocode-logs') ? 'active' : null}>
                   <Link to="/txlogs/promocode-logs">PromoCode Logs</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/txlogs/payment-logs') ? 'active' : null}>
                   <Link to="/txlogs/payment-logs">Payment Logs</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/txlogs/burn-logs') ? 'active' : null}>
                   <Link to="/txlogs/burn-logs">Burn Logs</Link>
-                </li>                
+                </li>
               </ul>
               <ul className="nav">
                 <li className={this.isPathActive('/txlogs/crypto-logs') ? 'active' : null}>
                   <Link to="/txlogs/crypto-logs">Crypto Logs</Link>
-                </li>                
+                </li>
               </ul>
             </div>
           </Collapse>
         </li>
-{/* // pe-7s-power */}
+        {/* // pe-7s-power */}
         <li className="btn-logout">
-            <a href="/logout">  <i className="pe-7s-power"></i><p>Logout</p></a>
+          <a href="/logout">  <i className="pe-7s-power"></i><p>Logout</p></a>
         </li>
 
         {/* <li className={location.pathname === '/dashboard-old' ? 'active' : null}>

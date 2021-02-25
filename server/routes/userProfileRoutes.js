@@ -1,9 +1,12 @@
 const profileService = require("../services/userProfile");
 const requireLogin = require("../middleware/requireLogin");
 const requireProfileSet = require("../middleware/requireProfileSet");
+const fileUpload = require("../middleware/fileUpload");
 
-module.exports = app => {
+module.exports = (app) => {
   app.get("/api/setupProfile", requireLogin, profileService.setupProfile);
+  app.post("/api/kycDetails", requireLogin, profileService.kycDetails);
+  app.post("/api/kycUserDetails", requireLogin, profileService.kycUserDetails);
   app.get(
     "/api/getProfile",
     requireLogin,
@@ -25,6 +28,10 @@ module.exports = app => {
     profileService.getUserCryptoPayment
   );
   app.post("/api/getCourseMeta", requireLogin, profileService.getCourseMeta);
-  app.get("/api/getUserPaypalPayment", requireLogin, profileService.getUserPaypalPayment);
+  app.get(
+    "/api/getUserPaypalPayment",
+    requireLogin,
+    profileService.getUserPaypalPayment
+  );
   app.get("/api/getUserRefId", requireLogin, profileService.getUserRefId);
 };
