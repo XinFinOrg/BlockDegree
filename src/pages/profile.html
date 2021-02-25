@@ -1,24 +1,20 @@
 {{#> base}} {{> layouts/base title="Blockchain Profile"}} {{#*inline
 "body-block"}} {{> includes/hero hero-title="Profile" hero-copy="View / Update
 your profile"}}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"
+  defer></script>
 <div id="profile">
   <div class="tabbed-section">
     <div class="container">
       <div class="tab">
-        <button
-          id="view-profile-btn"
-          class="tablinks"
-          onclick="openTab(event, 'view_profile')"
-        >
+        <button id="view-profile-btn" class="tablinks" onclick="openTab(event, 'view_profile')">
           View Profile
         </button>
-        <button
-          id="edit-profile-btn"
-          class="tablinks"
-          onclick="openTab(event, 'edit_profile')"
-        >
+        <button id="edit-profile-btn" class="tablinks" onclick="openTab(event, 'edit_profile')">
           Edit Profile
+        </button>
+        <button id="kyc-profile-btn" class="tablinks" onclick="openTab(event, 'kyc_profile')">
+          KYC Profile
         </button>
       </div>
     </div>
@@ -28,7 +24,6 @@ your profile"}}
     <div class="container">
       <div id="view_profile" class="tabcontent">
         <h2 class="profile-Heading">User Profile</h2>
-
         <h3 class="profile-subHeading mt-4">Basic Details</h3>
         <div class="table-responsive">
           <table class="table table-hover">
@@ -48,14 +43,14 @@ your profile"}}
                 <td id="name"></td>
               </tr>
               <tr>
+                <td>KYC status</td>
+                <td id="kycStatus"></td>
+              </tr>
+              <tr>
                 <td>Referral Code</td>
                 <td>
                   <span id="refId"></span>
-                  <button
-                    style="float: right;"
-                    class="btn btn-primary"
-                    onclick="copyToClipboard('refId')"
-                  >
+                  <button style="float: right;" class="btn btn-primary" onclick="copyToClipboard('refId')">
                     COPY
                   </button>
                 </td>
@@ -63,12 +58,8 @@ your profile"}}
               <tr>
                 <td>Referral Link</td>
                 <td>
-                  <span id="refLink"></span
-                  ><button
-                    style="float: right;"
-                    class="btn btn-primary"
-                    onclick="copyToClipboard('refLink')"
-                  >
+                  <span id="refLink"></span><button style="float: right;" class="btn btn-primary"
+                    onclick="copyToClipboard('refLink')">
                     COPY
                   </button>
                 </td>
@@ -146,7 +137,7 @@ your profile"}}
           Payment Via Paypal
         </h3>
         <div class="table-responsive">
-          <table class="table table-hover" >
+          <table class="table table-hover">
             <thead>
               <tr>
                 <th>Course Name</th>
@@ -182,10 +173,7 @@ your profile"}}
             </thead>
             <tbody id="tokenPayment-tbody"></tbody>
           </table>
-          <div
-            style="background-color: lightsteelblue;"
-            id="tokenPayment-tfooter"
-          ></div>
+          <div style="background-color: lightsteelblue;" id="tokenPayment-tfooter"></div>
         </div>
 
         <h3 id="fmd-requests" class="profile-subHeading mt-5">
@@ -243,34 +231,20 @@ your profile"}}
               <tr>
                 <td>Email-ID</td>
                 <td>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="edit_email"
-                    disabled
-                  />
+                  <input type="text" class="form-control" id="edit_email" disabled />
                 </td>
               </tr>
               <tr>
                 <td>Full Name</td>
                 <td>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="edit_name"
-                    name="fullName"
-                  />
+                  <input type="text" class="form-control" id="edit_name" name="fullName" />
                 </td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
                 <td>
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-update"
-                    onclick="handleUpdateName()"
-                    id="update-name-btn"
-                  >
+                  <button type="button" class="btn btn-primary btn-update" onclick="handleUpdateName()"
+                    id="update-name-btn">
                     Update
                   </button>
                 </td>
@@ -311,18 +285,110 @@ your profile"}}
 			  </tr>   
 			  </table>-->
       </div>
+
+      <div id="kyc_profile" class="tabcontent">
+        <h2 class="profile-Heading">KYC Profile</h2>
+        <h3 class="profile-subHeading mt-4">KYC Details</h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Email-ID</td>
+                <td id="kycEmail"></td>
+              </tr>
+              <tr>
+                <td>Full Name</td>
+                <td id="kycName"></td>
+              </tr>
+              <tr>
+                <td>D.O.B</td>
+                <td>
+                  <input type="date" class="form-control" id="dob" name="dob" min="1980-01-01" />
+                </td>
+              </tr>
+              <tr>
+                <td>KYC No.</td>
+                <td>
+                  <input type="text" class="form-control" id="kycNo" name="kycNo" placeholder="Enter KYC no." />
+                </td>
+              </tr>
+              <tr>
+                <td>Address</td>
+                <td>
+                  <input type="text" class="form-control" id="address" name="address"
+                    placeholder="Enter Your Address" />
+                </td>
+              </tr>
+              <tr>
+                <td>City</td>
+                <td>
+                  <input type="text" class="form-control" id="city" name="city" placeholder="Enter the city" />
+                </td>
+              </tr>
+              <tr>
+                <td>State</td>
+                <td>
+                  <input type="text" class="form-control" id="state" name="state" placeholder="Enter the State" />
+                </td>
+              </tr>
+              <tr>
+                <td>Country</td>
+                <td>
+                  <input type="text" class="form-control" id="country" name="country" placeholder="Enter Country" />
+                </td>
+              </tr>
+              <tr>
+                <td>Pincode</td>
+                <td>
+                  <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Enter Pincode" />
+                </td>
+              </tr>
+              <tr>
+                <td>Selfie Images</td>
+                <td>
+                  <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" id="selfieimg"
+                    name="selfie" />
+                </td>
+              </tr>
+              <tr>
+                <td>KYC Front Images</td>
+                <td>
+                  <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" id="kycfrontimg"
+                    name="kycfront" />
+                </td>
+              </tr>
+              <tr>
+                <td>KYC Back Images</td>
+                <td>
+                  <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" id="kycbackimg"
+                    name="kycback" />
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-update" onclick="handleUpdateKyc()"
+                    id="update-name-btn">
+                    KYC Update
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<button
-  type="button"
-  id="btn-confirmName"
-  style="display: none;"
-  class="btn btn-primary"
-  data-toggle="modal"
-  data-target="#modalConfirmName"
->
+<button type="button" id="btn-confirmName" style="display: none;" class="btn btn-primary" data-toggle="modal"
+  data-target="#modalConfirmName">
   Launch demo modal
 </button>
 
@@ -333,12 +399,7 @@ your profile"}}
         <h5 class="modal-title" id="exampleModalLabel">
           <strong>CONFIRM NAME</strong>
         </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -366,131 +427,130 @@ your profile"}}
 </div>
 
 <div class="fmd-page-wrapper" id="payByXdcWrapper">
-    <div class="modal fade" id="xdcQRCode" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="qr-code-wrapper">
+  <div class="modal fade" id="xdcQRCode" tabindex="-1" role="dialog" aria-labelledby="applyNowCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="qr-code-wrapper">
 
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="applyNowLongTitle">Pay By XDC</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="qr-text">Send Amount <strong><span class="xdc-value"
-                                    id="xdc-value-modal"></span>&nbsp;XDC coin</strong>&nbsp; to
-                            the
-                            address below using your <strong><a
-                                    href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
-                                    target="_blank">XDC Wallet</a></strong></div>
-                        <div id="xdc-qr-img" class="xdc-qr-img"></div>
+          <div class="modal-header">
+            <h5 class="modal-title" id="applyNowLongTitle">Pay By XDC</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="qr-text">Send Amount <strong><span class="xdc-value" id="xdc-value-modal"></span>&nbsp;XDC
+                coin</strong>&nbsp; to
+              the
+              address below using your <strong><a
+                  href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN" target="_blank">XDC
+                  Wallet</a></strong></div>
+            <div id="xdc-qr-img" class="xdc-qr-img"></div>
 
-                        <input type="text" class="form-control" id="xdc-addr-value-modal" readonly="readonly"
-                            value="" class="xdc-addr-txt">
-                        <button type="button" id="xdc-modal-copy-btn" class="btn btn-outline-primary">COPY</button>
-                        <div>
-                            After completing the TX, please <span data-dismiss="modal" id="req-claim-fund"
-                                class="claim-fund">CLAIM</span> your fund!
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div>
-                            <div>Don't have&nbsp;<strong>XDC&nbsp;<img
-                                        src="https://www.blockdegree.org/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
-                                ?&nbsp;Buy from <a href="https://alphaex.net" target="_blank">AlphaEx</a> or <a
-                                    href="https://stex.com" target="_blank">Stex</a>
-                            </div>
-                        </div>
-                        <div>Download XDC Wallet&nbsp;<a
-                                href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
-                                target="_blank">Android</a></div>
-
-                    </div>
-                </div>
+            <input type="text" class="form-control" id="xdc-addr-value-modal" readonly="readonly" value=""
+              class="xdc-addr-txt">
+            <button type="button" id="xdc-modal-copy-btn" class="btn btn-outline-primary">COPY</button>
+            <div>
+              After completing the TX, please <span data-dismiss="modal" id="req-claim-fund"
+                class="claim-fund">CLAIM</span> your fund!
             </div>
+          </div>
+          <div class="modal-footer">
+            <div>
+              <div>Don't have&nbsp;<strong>XDC&nbsp;<img
+                    src="http://localhost:3000/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
+                ?&nbsp;Buy from <a href="https://alphaex.net" target="_blank">AlphaEx</a> or <a href="https://stex.com"
+                  target="_blank">Stex</a>
+              </div>
+            </div>
+            <div>Download XDC Wallet&nbsp;<a href="https://play.google.com/store/apps/details?id=com.xdcwallet&hl=en_IN"
+                target="_blank">Android</a></div>
+
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 </div>
 
 <button id="togglePostTwitter" type="button" class="btn btn-primary social-tw" data-toggle="modal"
-data-target="#postTwitter" style="display: none"><i class="fa fa-twitter social"></i> Post on Twitter </button>
+  data-target="#postTwitter" style="display: none"><i class="fa fa-twitter social"></i> Post on Twitter </button>
 <!-- Modal -->
 <div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered" role="document">
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <!-- Modal content -->
     <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Twitter Post</h3>
-            <button type="button" class="close" data-dismiss="modal">×</button>
-        </div>
-        <div class="modal-body">
-            <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
-                    class="form-control" style="border-radius:5px;" id="postMSGTwitter"></textarea></p>
+      <div class="modal-header">
+        <h3 class="modal-title">Twitter Post</h3>
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
+            class="form-control" style="border-radius:5px;" id="postMSGTwitter"></textarea></p>
 
-            <select name="user[avatar]" id="images-twitter">
-                <option value="">Please Select</option>
-                <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
-                <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
-                <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
-            </select>
+        <select name="user[avatar]" id="images-twitter">
+          <option value="">Please Select</option>
+          <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
+          <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
+          <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
+        </select>
 
-            <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
-            <div style="text-align: center;">
-                <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3"
-                    onclick="postTweet()">Post On Twitter <i class="fa fa-twitter"></i></button>
-            </div>
+        <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
+        <div style="text-align: center;">
+          <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3" onclick="postTweet()">Post On
+            Twitter <i class="fa fa-twitter"></i></button>
         </div>
+      </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">
-                Close
-            </button>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 </div>
 
 
 <button id="togglePostLinkedin" type="button" class="btn btn-primary social-li" data-toggle="modal"
-data-target="#postLinkedin" style="display: none">Post Linkedin</button>
+  data-target="#postLinkedin" style="display: none">Post Linkedin</button>
 <div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered" role="document">
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <!-- Modal content -->
     <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Linkedin Post</h3>
-            <button type="button" class="close" data-dismiss="modal">×</button>
+      <div class="modal-header">
+        <h3 class="modal-title">Linkedin Post</h3>
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
+            class="form-control" style="border-radius:5px;" id="postMSGLinkedin"></textarea></p>
+        <div class="banner-title">
+          Select a banner of your choice to post!
         </div>
-        <div class="modal-body">
-            <p style="text-align: center;margin-bottom: 0.75rem!important;"><textarea cols="30" rows="6"
-                    class="form-control" style="border-radius:5px;" id="postMSGLinkedin"></textarea></p>
-            <div class="banner-title">
-                Select a banner of your choice to post!
-            </div>
-            <select name="user[avatar]" id="images-linkedin">
-                <option value="">Please Select</option>
-                <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
-                <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
-                <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
-            </select>
+        <select name="user[avatar]" id="images-linkedin">
+          <option value="">Please Select</option>
+          <option value="1" data-img-src='/img/fmd/post-social/1.jpg'></option>
+          <option value="2" data-img-src='/img/fmd/post-social/2.jpg'></option>
+          <option value="3" data-img-src='/img/fmd/post-social/3.jpg'></option>
+        </select>
 
-            <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
-            <div style="text-align: center;">
-                <button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()">Post On
-                    Linkedin <i class="fa fa-linkedin-square"></i> </button>
-            </div>
+        <!--<div><img src="/img/fmd/post-social/1.jpg" style="width:500px;height:300px;display:block;margin:0 auto;" id="modalImageLinkedin" /></div>-->
+        <div style="text-align: center;">
+          <button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()">Post On
+            Linkedin <i class="fa fa-linkedin-square"></i> </button>
         </div>
+      </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
     </div>
-</div>
+  </div>
 </div>
 
 {{/inline}} {{#*inline "scripts-block"}}
@@ -499,41 +559,40 @@ aria-hidden="true">
 <script src="js/profile.js?v=1.33"></script>
 
 <script>
-
-window.addEventListener(
+  window.addEventListener(
     "message",
     function (event) {
       console.log("Originating event: ", event.origin);
       console.log(event.origin);
-      if (event.origin == "https://www.blockdegree.org") {
-        if (event.data == "ok"){
+      if (event.origin == "http://localhost:3000") {
+        if (event.data == "ok") {
           $.notify("Social linked!", { type: "success" });
           checkAuth();
         }
-        else if (event.data == "share"){
+        else if (event.data == "share") {
           console.log("message from popup.");
-        // toggle linkedin modal
-        if (loginLinkedin === true) {
-          if (linkedinFunder == true) {
-            postLinkedin(true);
-            linkedinFunder = false;
-          } else {
-            $("#togglePostLinkedin").click();
-          }
-          loginLinkedin = false;
-        }
-
-        // toggle twitter modal
-        if (loginTwitter === true) {
-          if (twitterFunder == true) {
-            postTweet(true);
-            twitterFunder = false;
-          } else {
-            $("#togglePostTwitter").click();
+          // toggle linkedin modal
+          if (loginLinkedin === true) {
+            if (linkedinFunder == true) {
+              postLinkedin(true);
+              linkedinFunder = false;
+            } else {
+              $("#togglePostLinkedin").click();
+            }
+            loginLinkedin = false;
           }
 
-          loginTwitter = false;
-        }          
+          // toggle twitter modal
+          if (loginTwitter === true) {
+            if (twitterFunder == true) {
+              postTweet(true);
+              twitterFunder = false;
+            } else {
+              $("#togglePostTwitter").click();
+            }
+
+            loginTwitter = false;
+          }
         }
       }
     },
@@ -582,30 +641,30 @@ window.addEventListener(
   }
 
   function handleAuthGoogle() {
-    // window.location.replace("https://www.blockdegree.org/auth/google")
+    // window.location.replace("http://localhost:3000/auth/google")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/google?close=true",
+      path: "http://localhost:3000/auth/google?close=true",
     });
   }
 
   function handleAuthFacebook() {
-    // window.location.replace("https://www.blockdegree.org/auth/facebook")
+    // window.location.replace("http://localhost:3000/auth/facebook")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/facebook?close=true",
+      path: "http://localhost:3000/auth/facebook?close=true",
     });
   }
 
   function handleAuthTwitter() {
-    // window.location.replace("https://www.blockdegree.org/auth/twitter")
+    // window.location.replace("http://localhost:3000/auth/twitter")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/twitter?close=true",
+      path: "http://localhost:3000/auth/twitter?close=true",
     });
   }
 
   function handleAuthLinkedin() {
-    // window.location.replace("https://www.blockdegree.org/auth/linkedin")
+    // window.location.replace("http://localhost:3000/auth/linkedin")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/linkedin?close=true",
+      path: "http://localhost:3000/auth/linkedin?close=true",
     });
   }
 
@@ -626,9 +685,9 @@ window.addEventListener(
       options.windowOptions
     );
     that._oauthInterval = window.setInterval(function () {
-      if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
+      if (that._oauthWindow.location.href == "http://localhost:3000") {
         that._oauthWindow.location.href ==
-          "https://www.blockdegree.org/closeCallback";
+          "http://localhost:3000/closeCallback";
       }
     }, 1000);
   }
@@ -674,24 +733,20 @@ window.addEventListener(
             // push paypal tx
             for (let x = logs.length - 1; x >= logs.length - 5 && x >= 0; x--) {
               // log filed
-              retHtml += `<tr><td>${courseName[logs[x].course_id]}</td><td>${
-                logs[x].payment_id
-              }</td><td>${
-                logs[x].burnStatus
+              retHtml += `<tr><td>${ courseName[logs[x].course_id] }</td><td>${ logs[x].payment_id
+                }</td><td>${ logs[x].burnStatus
                   ? logs[x].burnStatus === "awaiting balance"
                     ? "pending"
                     : logs[x].burnStatus
                   : "-"
-              }</td>
-              <td>${logs[x].burnTokenName ? logs[x].burnTokenName : "-"}</td>
+                }</td>
+              <td>${ logs[x].burnTokenName ? logs[x].burnTokenName : "-" }</td>
 
-              <td>${logs[x].burnAmnt ? logs[x].burnAmnt : "-"}</td><td>${
-                logs[x].burnTx
-                  ? `<a target="_blank" href="${
-                      mainnetExplorer + logs[x].burnTx
-                    }">${logs[x].burnTx.slice(0, 11)}...</a>`
+              <td>${ logs[x].burnAmnt ? logs[x].burnAmnt : "-" }</td><td>${ logs[x].burnTx
+                  ? `<a target="_blank" href="${ mainnetExplorer + logs[x].burnTx
+                  }">${ logs[x].burnTx.slice(0, 11) }...</a>`
                   : "-"
-              }</td></tr>`;
+                }</td></tr>`;
             }
           }
           paypalTokenBody.innerHTML = retHtml;
@@ -765,9 +820,8 @@ window.addEventListener(
                   );
                 }
 
-                pay_hash_link = `<a href="${
-                  etherScanIo + payments[z].txn_hash
-                }" target="_blank">${payment_txHash}</a>`;
+                pay_hash_link = `<a href="${ etherScanIo + payments[z].txn_hash
+                  }" target="_blank">${ payment_txHash }</a>`;
 
                 if (payments[z].autoBurn) {
                   // will burn
@@ -798,9 +852,8 @@ window.addEventListener(
 
                     burn_txHash =
                       payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
-                    burn_hash_link = `<a href="${
-                      etherScanIo + payments[z].burn_txn_hash
-                    }" target="_blank">${burn_txHash}</a>`;
+                    burn_hash_link = `<a href="${ etherScanIo + payments[z].burn_txn_hash
+                      }" target="_blank">${ burn_txHash }</a>`;
                     burnAmnt = payments[z].burn_token_amnt;
                   }
                 } else {
@@ -818,9 +871,8 @@ window.addEventListener(
                   );
                 }
 
-                pay_hash_link = `<a href="${
-                  apothemExplorer + payments[z].txn_hash
-                }" target="_blank">${payment_txHash}</a>`;
+                pay_hash_link = `<a href="${ apothemExplorer + payments[z].txn_hash
+                  }" target="_blank">${ payment_txHash }</a>`;
 
                 if (payments[z].autoBurn) {
                   // will burn
@@ -851,9 +903,8 @@ window.addEventListener(
 
                     burn_txHash =
                       payments[z].burn_txn_hash.toString().slice(0, 11) + "...";
-                    burn_hash_link = `<a href="${
-                      apothemExplorer + payments[z].burn_txn_hash
-                    }" target="_blank">${burn_txHash}</a>`;
+                    burn_hash_link = `<a href="${ apothemExplorer + payments[z].burn_txn_hash
+                      }" target="_blank">${ burn_txHash }</a>`;
                     burnAmnt = payments[z].burn_token_amnt;
                   }
                 } else {
@@ -873,11 +924,10 @@ window.addEventListener(
                 // wont burn
                 burn_txHash = "NA";
               }
-              pay_hash_link = `<a href="${
-                payments[z].tokenName === "xdce"
-                  ? etherScanIo + payments[z].txn_hash
-                  : apothemExplorer + payments[z].txn_hash
-              }" target="_blank">${payment_txHash}</a>`;
+              pay_hash_link = `<a href="${ payments[z].tokenName === "xdce"
+                ? etherScanIo + payments[z].txn_hash
+                : apothemExplorer + payments[z].txn_hash
+                }" target="_blank">${ payment_txHash }</a>`;
               // status += `( ${payments[z].confirmations}/${
               //   payments[z].tokenName === "xdce"
               //     ? payments[z].xdceConfirmation
@@ -894,31 +944,27 @@ window.addEventListener(
               burn_hash_link = burn_txHash;
             }
 
-            retHtml += `<tr><td>${
-              payments[z].courseName[0].toUpperCase() +
+            retHtml += `<tr><td>${ payments[z].courseName[0].toUpperCase() +
               payments[z].courseName.slice(1)
-            }</td><td>${payments[
-              z
-            ].tokenName.toUpperCase()}</td><td>${pay_hash_link}</td><td class="${
-              payments[z].status != "not yet mined"
+              }</td><td>${ payments[
+                z
+              ].tokenName.toUpperCase() }</td><td>${ pay_hash_link }</td><td class="${ payments[z].status != "not yet mined"
                 ? payments[z].status
                 : "notYetMined"
-            }">${
-              payments[z].status != "not yet mined"
+              }">${ payments[z].status != "not yet mined"
                 ? status == "completed" || status == "not yet mined"
                   ? "<div style='width:100%;text-align:center;'>" +
-                    status[0].toUpperCase() +
-                    status.slice(1) +
-                    "</div>"
+                  status[0].toUpperCase() +
+                  status.slice(1) +
+                  "</div>"
                   : status
                 : "<div style='width:100%;text-align:center;'>Not Yet Mined</div>"
-            }</td><td>${burn_hash_link}</td><td>${
-              burnAmnt == null
+              }</td><td>${ burn_hash_link }</td><td>${ burnAmnt == null
                 ? "-"
                 : Math.round((burnAmnt / Math.pow(10, 18)) * 100) / 100 +
-                  " " +
-                  payments[z].tokenName.toUpperCase()
-            }</td></tr>`;
+                " " +
+                payments[z].tokenName.toUpperCase()
+              }</td></tr>`;
           }
           tableBody.innerHTML = retHtml;
           tableFooter.innerHTML = `<button class="btn btn-primary" style="margin:5px;float:right;" onclick="fetchCryptoTransactions()">Refresh</button>`;
@@ -975,42 +1021,37 @@ window.addEventListener(
           retHtml += `<tr>
             <td>`;
           currRow.courseId.forEach((currCourse) => {
-            retHtml += `<div class="course-name">${getCourseName(
+            retHtml += `<div class="course-name">${ getCourseName(
               currCourse
-            )}</dvi>`;
+            ) }</dvi>`;
           });
           retHtml += `</td>
-            <td>${currRow.receiveAddr}</td>`;
-          retHtml += `<td class="${
-            currRow.status === "completed" ? "completed" : "pending"
-          }">${currRow.status === "completed" ? "completed" : "pending"}</td>
+            <td>${ currRow.receiveAddr }</td>`;
+          retHtml += `<td class="${ currRow.status === "completed" ? "completed" : "pending"
+            }">${ currRow.status === "completed" ? "completed" : "pending" }</td>
             <td><button class="btn btn-outline-primary" onclick="renderRequestModal(
-          '${currRow.userName}',
-          '${currRow.requestUrlShort}',
-          '${currRow.requestUrlLong}',
-          '${escape(currRow.description)}',
-          '${currRow.receiveAddr}',
-          '${currRow.fundId}',
-          '${currRow.status}',
-          '${currRow.amountGoal}',
-          '${currRow.donerName}',
+          '${ currRow.userName }',
+          '${ currRow.requestUrlShort }',
+          '${ currRow.requestUrlLong }',
+          '${ escape(currRow.description) }',
+          '${ currRow.receiveAddr }',
+          '${ currRow.fundId }',
+          '${ currRow.status }',
+          '${ currRow.amountGoal }',
+          '${ currRow.donerName }',
           'true')">View</button></td>
-            <td><a href="https://explorer.xinfin.network/tx/${
-              currRow.fundTx
-            }">${currRow.fundTx.slice(0, 11)}...</a></td>
-            <td>${
-              currRow.burnStatus === "completed"
-                ? `<a href="https://explorer.xinfin.network/tx/${
-                    currRow.burnTx
-                  }">${currRow.burnTx.slice(0, 11)}...</a>`
-                : `-`
+            <td><a href="https://explorer.xinfin.network/tx/${ currRow.fundTx
+            }">${ currRow.fundTx.slice(0, 11) }...</a></td>
+            <td>${ currRow.burnStatus === "completed"
+              ? `<a href="https://explorer.xinfin.network/tx/${ currRow.burnTx
+              }">${ currRow.burnTx.slice(0, 11) }...</a>`
+              : `-`
             }</td>
-            <td>${
-              currRow.burnStatus === "completed"
-                ? currRow.donerName == undefined
-                  ? "Anonymous"
-                  : currRow.donerName
-                : "-"
+            <td>${ currRow.burnStatus === "completed"
+              ? currRow.donerName == undefined
+                ? "Anonymous"
+                : currRow.donerName
+              : "-"
             }</td>
             </tr>`;
         });
@@ -1039,34 +1080,30 @@ window.addEventListener(
           retHtml += `<tr>
             <td>`;
           currRow.courseId.forEach((currCourse) => {
-            retHtml += `<div class="course-name">${getCourseName(
+            retHtml += `<div class="course-name">${ getCourseName(
               currCourse
-            )}</dvi>`;
+            ) }</dvi>`;
           });
           retHtml += `</td>
-            <td>${currRow.userName}</td>`;
-          retHtml += `<td class="${
-            currRow.status === "completed" ? "completed" : "pending"
-          }">${currRow.status === "completed" ? "completed" : "pending"}</td>
+            <td>${ currRow.userName }</td>`;
+          retHtml += `<td class="${ currRow.status === "completed" ? "completed" : "pending"
+            }">${ currRow.status === "completed" ? "completed" : "pending" }</td>
           <td><button class="btn btn-outline-primary" onclick="renderRequestModal(
-          '${currRow.userName}',
-          '${currRow.requestUrlShort}',
-          '${currRow.requestUrlLong}',
-          '${escape(currRow.description)}',
-          '${currRow.receiveAddr}',
-          '${currRow.fundId}',
-          '${currRow.status}',
-          '${currRow.amountGoal}',
-          '${currRow.donerName}')">View</button></td>
-            <td><a href="https://explorer.xinfin.network/tx/${
-              currRow.fundTx
-            }">${currRow.fundTx.slice(0, 11)}...</a></td>
-            <td>${
-              currRow.burnStatus === "completed"
-                ? `<a href="https://explorer.xinfin.network/tx/${
-                    currRow.burnTx
-                  }">${currRow.burnTx.slice(0, 11)}...</a>`
-                : `-`
+          '${ currRow.userName }',
+          '${ currRow.requestUrlShort }',
+          '${ currRow.requestUrlLong }',
+          '${ escape(currRow.description) }',
+          '${ currRow.receiveAddr }',
+          '${ currRow.fundId }',
+          '${ currRow.status }',
+          '${ currRow.amountGoal }',
+          '${ currRow.donerName }')">View</button></td>
+            <td><a href="https://explorer.xinfin.network/tx/${ currRow.fundTx
+            }">${ currRow.fundTx.slice(0, 11) }...</a></td>
+            <td>${ currRow.burnStatus === "completed"
+              ? `<a href="https://explorer.xinfin.network/tx/${ currRow.burnTx
+              }">${ currRow.burnTx.slice(0, 11) }...</a>`
+              : `-`
             }</td>
             </tr>`;
         });
@@ -1102,7 +1139,7 @@ window.addEventListener(
   }
 
   function getProgressBar(curr, max) {
-    console.log(`Current ${curr} & Max ${max}`);
+    console.log(`Current ${ curr } & Max ${ max }`);
     if (curr >= max) {
       // completed
       return `<div id="myProgress">
@@ -1117,8 +1154,8 @@ window.addEventListener(
       // pending
       let width = Math.round((curr / max) * 100);
       return `<div id="myProgress">
-    	<span id="myBarText" ><strong>pending (${curr}/${max})</strong> </span>
-    <div id="myBar" style="width:${width}%">
+    	<span id="myBarText" ><strong>pending (${ curr }/${ max })</strong> </span>
+    <div id="myBar" style="width:${ width }%">
   </div>
   </div>`;
     }
@@ -1134,7 +1171,7 @@ window.addEventListener(
     document.execCommand("copy");
     $body.removeChild($tempInput);
 
-    $.notify(` Referral ${id === "refId" ? "ID" : "Link"} Copied!`, {
+    $.notify(` Referral ${ id === "refId" ? "ID" : "Link" } Copied!`, {
       type: "info",
       z_index: 2000,
     });

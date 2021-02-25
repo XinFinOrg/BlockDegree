@@ -6,8 +6,28 @@ if (typeof jQuery != "undefined") {
       success: (result) => {
         if (!result.status) {
           alert("You are not logged in, please visit after logging in");
-          window.location.replace("https://www.blockdegree.org/login");
+          window.location.replace("http://localhost:3000/login");
         } else {
+          let kycStatus;
+          $.ajax({
+            method: "get",
+            url: "/api/getKycUser",
+            success: (kycResult) => {
+              kycStatus = document.getElementById('kycStatus');
+              kycStatus.innerHTML = "pending";
+              for (const user of kycResult.data) {
+                if (user.email == result.user.email && user.isKycVerified === true) {
+                  kycStatus = document.getElementById('kycStatus');
+                  kycStatus.innerHTML = user.kycStatus;
+                  document.getElementById('kyc-profile-btn').style.visibility = "hidden";
+                  document.getElementById('kyc_profile').style.visibility = "hidden";
+                } else {
+                  kycStatus = document.getElementById('kycStatus');
+                  kycStatus.innerHTML = user.kycStatus;
+                }
+              }
+            },
+          });
           // is logged in, set the parameter
           let userProfile = result.user;
           // getting elements in the view-profile page
@@ -78,13 +98,13 @@ if (typeof jQuery != "undefined") {
           let currentUrl = window.location.href;
           let paramsString = currentUrl.split("?")[1];
           if (paramsString) {
-            console.log(`ParamsString: ${paramsString}`);
+            console.log(`ParamsString: ${ paramsString }`);
             let params = paramsString.split("&");
             console.log(params);
             for (let i = 0; i < params.length; i++) {
               let key = params[i].split("=")[0],
                 value = params[i].split("=")[1];
-              console.log(`Key: ${key} & Value: ${value}`);
+              console.log(`Key: ${ key } & Value: ${ value }`);
               if (key == "confirmName" && value.startsWith("true")) {
                 // new registration, need to confirm the name.
                 document.getElementById("btn-confirmName").click();
@@ -187,12 +207,90 @@ if (typeof jQuery != "undefined") {
           }
         } else {
           alert("You're not logged in");
-          window.location.replace("https://www.blockdegree.org/login");
+          window.location.replace("http://localhost:3000/login");
         }
       },
       error: (err) => {
         alert("Error while getting the current user");
-        window.location.replace("https://www.blockdegree.org/login");
+        window.location.replace("http://localhost:3000/login");
+      },
+    });
+  }
+
+  $(document).ready(() => {
+    $.ajax({
+      method: "get",
+      url: "/api/current_user",
+      success: (result) => {
+        const kycProfile = document.getElementById("kyc-profile-btn");
+        const kycEmail = document.getElementById("kycEmail");
+        const kycName = document.getElementById("kycName");
+        kycEmail.innerHTML = result.user.email;
+        kycName.innerHTML = result.user.name;
+        kycProfile.click();
+      },
+    });
+  });
+
+  var selfiefiles = [];
+  var kycFrontfiles = [];
+  var kycBackfiles = [];
+  let selfieImg = document.getElementById("selfieimg");
+  selfieImg.onchange = (e) => {
+    console.log(".... selfie", e.target.files);
+    selfiefiles = e.target.files;
+  };
+  let kycFrontImg = document.getElementById("kycfrontimg");
+  kycFrontImg.onchange = (e) => {
+    kycFrontfiles = e.target.files;
+  };
+  let kycBackImg = document.getElementById("kycbackimg");
+  kycBackImg.onchange = (e) => {
+    kycBackfiles = e.target.files;
+  };
+  function handleUpdateKyc() {
+    const kycNo = document.getElementById("kycNo").value;
+    const dob = document.getElementById("dob").value;
+    const address = document.getElementById("address").value;
+    const city = document.getElementById("city").value;
+    const state = document.getElementById("state").value;
+    const country = document.getElementById("country").value;
+    const pincode = document.getElementById("pincode").value;
+    $.ajax({
+      method: "get",
+      url: "/api/current_user",
+      success: (result) => {
+        const newForm = new FormData();
+        newForm.append("name", result.user.name);
+        newForm.append("email", result.user.email);
+        newForm.append("dob", dob);
+        newForm.append("kycNo", kycNo);
+        newForm.append("address", address);
+        newForm.append("city", city);
+        newForm.append("state", state);
+        newForm.append("country", country);
+        newForm.append("pincode", pincode);
+        newForm.append("selfieImg", selfiefiles[0], "selfieImg.png");
+        newForm.append("kycFrontImg", kycFrontfiles[0], "kycFrontImg.png");
+        newForm.append("kycBackImg", kycBackfiles[0], "kycBackImg.png");
+        if (!(selfiefiles[0] || kycFrontfiles[0] || kycBackfiles[0])) {
+          $.notify("Something Wrong", { type: "danger" });
+        }
+        $.ajax({
+          method: "post",
+          url: "/api/kycDetails",
+          data: newForm,
+          enctype: "multipart/form-data",
+          contentType: false,
+          processData: false,
+          success: (userData) => {
+            if (userData.statusCode == 200) {
+              $.notify(`KYC Saved ${ result.user.email }`, { type: "success" });
+            } else {
+              $.notify("something wrong", { type: "danger" });
+            }
+          },
+        });
       },
     });
   }
@@ -201,7 +299,7 @@ if (typeof jQuery != "undefined") {
     console.log("inside update link");
     if (
       confirm(
-        `Warning: You are going to remove a social account linkeded to this account, you will no longer be able to login using this social account from ${social} after removing`
+        `Warning: You are going to remove a social account linkeded to this account, you will no longer be able to login using this social account from ${ social } after removing`
       )
     ) {
       $.ajax({
@@ -215,7 +313,7 @@ if (typeof jQuery != "undefined") {
               user.auth[social].id == undefined ||
               user.auth[social].id == ""
             ) {
-              alert(`Error: ${social} is not linked to this account`);
+              alert(`Error: ${ social } is not linked to this account`);
             } else {
               $.ajax({
                 method: "post",
@@ -245,25 +343,25 @@ if (typeof jQuery != "undefined") {
                       }
                     }
                   } else {
-                    alert(`Cannot not remove: ${result.error}`);
+                    alert(`Cannot not remove: ${ result.error }`);
                   }
                 },
                 error: (err) => {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("https://www.blockdegree.org");
+                  window.location.reload("http://localhost:3000");
                 },
               });
             }
           } else {
             alert("Please log in to continue");
-            window.location.reload("https://www.blockdegree.org/login");
+            window.location.reload("http://localhost:3000/login");
           }
         },
         error: (err) => {
           alert("Error while getting current user");
-          window.location.reload("https://www.blockdegree.org/login");
+          window.location.reload("http://localhost:3000/login");
         },
       });
     }
@@ -279,13 +377,13 @@ if (typeof jQuery != "undefined") {
           // user is logged in
           let user = result.user;
           if (user.auth[social].id == undefined || user.auth[social].id == "") {
-            $.notify(`Error: ${social} is not linked to this account`, {
+            $.notify(`Error: ${ social } is not linked to this account`, {
               type: "danger",
             });
           } else {
             if (
               confirm(
-                `Warning: This social account from ${social} will be forever detached from your profile & you wont be able to login using this social.`
+                `Warning: This social account from ${ social } will be forever detached from your profile & you wont be able to login using this social.`
               )
             ) {
               $.ajax({
@@ -299,26 +397,26 @@ if (typeof jQuery != "undefined") {
                     });
                     checkAuth();
                   } else {
-                    alert(`Cannot not remove: ${result.error}`);
+                    alert(`Cannot not remove: ${ result.error }`);
                   }
                 },
                 error: (err) => {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("https://www.blockdegree.org");
+                  window.location.reload("http://localhost:3000");
                 },
               });
             }
           }
         } else {
           alert("Please log in to continue");
-          window.location.reload("https://www.blockdegree.org/login");
+          window.location.reload("http://localhost:3000/login");
         }
       },
       error: (err) => {
         alert("Error while getting current user");
-        window.location.reload("https://www.blockdegree.org/login");
+        window.location.reload("http://localhost:3000/login");
       },
     });
   }
