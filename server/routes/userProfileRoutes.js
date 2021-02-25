@@ -5,7 +5,6 @@ const fileUpload = require("../middleware/fileUpload");
 
 module.exports = (app) => {
   app.get("/api/setupProfile", requireLogin, profileService.setupProfile);
-  app.post("/api/kycDetails", requireLogin, profileService.kycDetails);
   app.post("/api/kycUserDetails", requireLogin, profileService.kycUserDetails);
   app.get(
     "/api/getProfile",
