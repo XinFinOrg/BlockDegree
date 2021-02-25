@@ -12,11 +12,7 @@ import {
   FETCH_ALL_FUNDS,
   FETCH_XDC_PRICE,
   FETCH_SOCIAL_SHARE,
-  FETCH_ALL_USER_SESSIONS,
-  FETCH_ALL_KYCUSER,
-  FETCH_FUND_MY_DEGREE,
-  FETCH_REFERALS,
-  FETCH_RAZOR_PAY_LOG
+  FETCH_ALL_USER_SESSIONS
 } from "./types";
 
 /*
@@ -57,55 +53,6 @@ export const fetchAllPromoCodes = () => async (dispatch) => {
   });
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_ALL_PROMOCODES, payload: res.data });
-};
-
-export const fetchAllKycUser = () => async (dispatch) => {
-  console.log("called fetch all kyc user");
-  const res = await axios.get("/api/getKycUser");
-  res.data["fetchedTS"] = Date.now();
-  dispatch({ type: FETCH_ALL_KYCUSER, payload: res.data });
-};
-
-export const fetchFundMyDegree = () => async (dispatch) => {
-  console.log("called fetch all fund my degree");
-  const res = await axios.get("/api/getfundmydegree");
-  res.data["fetchedTS"] = Date.now();
-  dispatch({ type: FETCH_FUND_MY_DEGREE, payload: res.data });
-};
-
-export const fetchRazorPayLog = () => async (dispatch) => {
-  console.log("called fetch all Razor Pay Log");
-  const res = await axios.get("/api/getrazorpaylog");
-  res.data["fetchedTS"] = Date.now();
-  dispatch({ type: FETCH_RAZOR_PAY_LOG, payload: res.data });
-};
-
-export const fetchReferals = () => async (dispatch) => {
-  console.log("called fetch all Referal");
-  const res = await axios.get("/api/getuserreferals");
-  res.data["fetchedTS"] = Date.now();
-  dispatch({ type: FETCH_REFERALS, payload: res.data });
-};
-
-export const fetchKycUserPic = (data) => async (dispatch) => {
-  console.log("called fetch kyc user pic", data);
-  const res = await axios.get(`/api/getKycUserPic/${ data }`);
-  res.data["fetchedTS"] = Date.now();
-  dispatch({ type: FETCH_REFERALS, payload: res.data });
-};
-
-export const rejectKycUser = (data) => async (dispatch) => {
-  console.log("called fetch kyc user pic", data);
-  const res = await axios.post('/api/rejectKycUser', { email: data });
-  res.data["fetchedTS"] = Date.now();
-  dispatch({ type: FETCH_REFERALS, payload: res.data });
-};
-
-export const approveKycUser = (data) => async (dispatch) => {
-  console.log("called fetch kyc user pic", data);
-  const res = await axios.post('/api/approveKycUser', { email: data });
-  res.data["fetchedTS"] = Date.now();
-  dispatch({ type: FETCH_REFERALS, payload: res.data });
 };
 
 export const fetchAllUserSessions = () => async (dispatch) => {
@@ -170,7 +117,7 @@ export const fetchXdcPrice = () => async (dispatch) => {
 };
 
 export const fetchSocialShares = () => async (dispatch) => {
-  const res = await axios.get("/api/getSocialShares");
+  const res = await axios.get("/api/getSocialShares");  
   res.data["fetchedTS"] = Date.now();
   dispatch({ type: FETCH_SOCIAL_SHARE, payload: res.data });
 };
