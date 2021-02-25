@@ -8,6 +8,7 @@ const uuid = require("uuid/v4");
 const KycDetails = require('../models/kycDetails');
 const path = require('path');
 const fs = require('fs');
+const _ = require('lodash');
 
 const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
 
@@ -52,10 +53,10 @@ exports.setupProfile = async (req, res) => {
 exports.kycUserDetails = async (req, res) => {
   try {
     let currentPath = path.join(__dirname, '../../src/docImgs');
-    if (req.files.selfieImg && req.files.kycFrontImg && req.files.kycBackImg) {
+    if (_.isNull(req.files) && _.isNull(req.body)) {
       res.status(400).json({
         status: 400,
-        message: "please select all 3 images"
+        message: "please select all 3 images with all proper data"
       });
     }
     const selfiePic = currentPath + "-" + uuid() + "-" + req.files.selfieImg.name;
