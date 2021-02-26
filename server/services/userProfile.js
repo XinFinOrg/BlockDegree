@@ -4,6 +4,11 @@ const CoursePrice = require("../models/coursePrice");
 const PaymentLog = require("../models/payment_logs");
 const UserReferral = require("../models/userReferral");
 const BitlyClient = require("bitly").BitlyClient;
+const uuid = require("uuid/v4");
+const KycDetails = require('../models/kycDetails');
+const path = require('path');
+const fs = require('fs');
+const _ = require('lodash');
 
 const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
 
@@ -19,7 +24,7 @@ exports.setupProfile = async (req, res) => {
   try {
     user = await User.findOne({ email: req.user.email });
   } catch (e) {
-    console.error(`Exception in setupProfile ${e}`);
+    console.error(`Exception in setupProfile ${ e }`);
     res.render("displayError", { error: "Exception in setup profile" });
   }
   if (!user) {
@@ -45,10 +50,63 @@ exports.setupProfile = async (req, res) => {
   res.json({ msg: "ok" });
 };
 
+exports.kycUserDetails = async (req, res) => {
+  try {
+    let currentPath = path.join(__dirname, '../../src/docImgs/');
+    if (_.isNull(req.files) && _.isNull(req.body)) {
+      res.status(400).json({
+        status: 400,
+        message: "please select all 3 images with all proper data"
+      });
+    } else if ((Object.keys(req.files).length < 3) || (Object.keys(req.body).length < 9)) {
+      res.status(400).json({
+        status: 400,
+        message: "please select all 3 images with all proper data"
+      });
+    } else {
+      const uniqueNo = uuid();
+      const selfiePic = currentPath + uniqueNo + "-" + req.files.selfieImg.name;
+      fs.writeFileSync(selfiePic, req.files.selfieImg.data);
+      const kycFrontPic = currentPath + uniqueNo + "-" + req.files.kycFrontImg.name;
+      fs.writeFileSync(kycFrontPic, req.files.kycFrontImg.data);
+      const kycBackPic = currentPath + uniqueNo + "-" + req.files.kycBackImg.name;
+      fs.writeFileSync(kycBackPic, req.files.kycBackImg.data);
+      const data = await KycDetails({
+        isKycVerified: false,
+        kycStatus: "pending",
+        name: req.body.name,
+        email: req.body.email,
+        dob: req.body.dob,
+        kycNo: req.body.kycNo,
+        address: req.body.address,
+        city: req.body.city,
+        state: req.body.state,
+        country: req.body.country,
+        pincode: req.body.pincode,
+        img: {
+          selfie: selfiePic,
+          kycFrontImg: kycFrontPic,
+          kycBackImg: kycBackPic,
+        }
+      }).save();
+      res.status(200).json({
+        message: "User Kyc Saved Successfully",
+        status: 200,
+        data
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      status: 400,
+      message: "please select all 3 images"
+    });
+  }
+};
+
 exports.getProfile = async (req, res) => {
   console.log("called get profile");
   const user = await User.findOne({ email: req.user.email }).catch((e) =>
-    console.error(`Exception in setupProfile ${e}`)
+    console.error(`Exception in setupProfile ${ e }`)
   );
   if (!user) {
     return console.error(`User not found, seems like the DB is down`);
@@ -59,7 +117,7 @@ exports.getProfile = async (req, res) => {
 exports.addProfileEdu = async (req, res) => {
   console.log("called add profile edu");
   const user = await User.findOne({ email: req.user.email }).catch((e) =>
-    console.error(`Exception in setupProfile ${e}`)
+    console.error(`Exception in setupProfile ${ e }`)
   );
   if (!user) {
     return console.error(`User not found, seems like the DB is down`);
@@ -75,7 +133,7 @@ exports.addProfileEdu = async (req, res) => {
 exports.updateProfilePhoto = async (req, res) => {
   console.log("called update profile photo");
   const user = await User.findOne({ email: req.user.email }).catch((e) =>
-    console.error(`Exception in setupProfile ${e}`)
+    console.error(`Exception in setupProfile ${ e }`)
   );
   if (!user) {
     return console.error(`User not found, seems like the DB is down`);
@@ -88,7 +146,7 @@ exports.updateProfilePhoto = async (req, res) => {
 exports.deleteProfileEdu = async (req, res) => {
   console.log("called delete profile edu");
   const user = await User.findOne({ email: req.user.email }).catch((e) =>
-    console.error(`Exception in setupProfile ${e}`)
+    console.error(`Exception in setupProfile ${ e }`)
   );
   if (!user) {
     return console.error(`User not found, seems like the DB is down`);
@@ -109,7 +167,7 @@ exports.removeSocial = async (req, res) => {
   if (user != null) {
     // found user
     console.log(
-      `Request to remove social ${social} for user ${req.user.email}`
+      `Request to remove social ${ social } for user ${ req.user.email }`
     );
     let couldRemove = false;
     Object.keys(user.auth).forEach((currAuth) => {
@@ -155,7 +213,7 @@ exports.setProfileName = async (req, res) => {
     user = await User.findOne({ email: req.user.email });
   } catch (e) {
     console.error(
-      `Error occured at setProfileName for user : ${req.user.email} : ${e}`
+      `Error occured at setProfileName for user : ${ req.user.email } : ${ e }`
     );
     return res.json({
       updated: false,
@@ -166,7 +224,7 @@ exports.setProfileName = async (req, res) => {
   if (user == null) {
     return res.json({
       updated: false,
-      error: `No user ${req.user.email} found!!`,
+      error: `No user ${ req.user.email } found!!`,
     });
   }
   user.name = req.body.fullName;
@@ -174,7 +232,7 @@ exports.setProfileName = async (req, res) => {
     await user.save();
   } catch (e) {
     console.error(
-      `Error occured at setProfileName for user ${req.user.email} `,
+      `Error occured at setProfileName for user ${ req.user.email } `,
       e
     );
     return res.json({
@@ -311,15 +369,15 @@ exports.getUserRefId = async (req, res) => {
       user.shortUrl === ""
     ) {
       shortUrl = await bitly.shorten(user.longUrl);
-      shortUrl=shortUrl.url;
+      shortUrl = shortUrl.url;
       user.shortUrl = shortUrl;
-      await user.save()
-    }else{
+      await user.save();
+    } else {
       shortUrl = user.shortUrl;
     }
-    res.json({status:true, refId:user.referralCode, url:shortUrl})
+    res.json({ status: true, refId: user.referralCode, url: shortUrl });
   } catch (e) {
-    console.log(`exception  at ${__filename}.getUserRefId: `, e);
+    console.log(`exception  at ${ __filename }.getUserRefId: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };

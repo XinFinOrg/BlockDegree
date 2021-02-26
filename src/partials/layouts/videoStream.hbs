@@ -17,7 +17,8 @@
                 <li class="nav-item"><a class="nav-link show" href="#notes" role="tab" data-toggle="tab"
                         aria-selected="false">Notes</a></li>
                 <li class="nav-item"><a class="nav-link show" href="#announcement" role="tab" data-toggle="tab"
-                        aria-selected="false">Announcements</a></li>
+                        aria-selected="false">Announcements</a>
+                </li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade active show" id="overview">
@@ -52,8 +53,7 @@
                 </div>
                 <div class="tab-pane fade" id="announcement">
                     <div>
-                        {{!-- <h3 class="fw6">Important Q&A support</h3> --}}
-                        {{!-- <p>Happy 2019 to everyone, thank you for being a student and all of your support.</p> --}}
+
                     </div>
                 </div>
             </div>
@@ -100,6 +100,15 @@
                         <i class="fa fa-play-circle"></i> 4.17 min
                     </div>
                 </button>
+                <button id="qnaSection">Q&A<br />
+                    <div id="btn10" class="video-item-link">
+                        <div style="display: flex; justify-content: center; flex-direction: column;">
+                            <p id="question" style="margin-bottom: 10px;">The Question is?</p>
+                            <textarea id="answer" class="form-control"></textarea>
+                            <button id="qnaBtn" class="form-control">Submit</button>
+                        </div>
+                    </div>
+                </button>
             </div>
         </div>
         {{else}}
@@ -112,17 +121,66 @@
     </div>
 
     <script>
+        $(document).ready(() => {
+            const newForm = new FormData()
+            $.ajax({
+                method: "get",
+                url: "/api/current_user",
+                success: (result) => {
+                    newForm.append('email', result.user.email)
+                    $.ajax({
+                        method: "post",
+                        url: "/api/getQna",
+                        data: newForm,
+                        enctype: "multipart/form-data",
+                        contentType: false,
+                        processData: false,
+                        success: (getData) => {
+                            if (getData.status == 200) {
+                                document.getElementById('qnaSection').style.display = "none"
+                                document.getElementById('qnaBtn').style.display = "none"
+                            }
+                        }
+                    })
+                }
+            })
+        })
+        document.getElementById('qnaBtn').addEventListener('click', () => {
+            const question = document.getElementById('question').textContent;
+            const answer = document.getElementById('answer').value;
+            const newForm = new FormData()
+            newForm.append("question", question)
+            newForm.append('answer', answer)
+            $.ajax({
+                method: "get",
+                url: "/api/current_user",
+                success: (result) => {
+                    newForm.append('email', result.user.email)
+                    $.ajax({
+                        method: "post",
+                        url: "/api/qna",
+                        data: newForm,
+                        enctype: "multipart/form-data",
+                        contentType: false,
+                        processData: false,
+                        success: (answerData) => {
+                            console.log('..........', answerData)
+                        }
+                    })
+                }
+            })
+        })
         const videoPlayer = document.getElementById("videoPlayer")
         $('button[videoId="1"]').addClass('video-item-link-active')
         $('button').click(function () {
             videoPlayer.pause();
             let videoId = $(this).attr("videoId");
-            $('#videoPlayerSource').attr('src', `https://www.blockdegree.org/api/videoStream/${videoId}`)
+            $('#videoPlayerSource').attr('src', `https://www.blockdegree.org/api/videoStream/${ videoId }`)
             videoPlayer.load();
             videoPlayer.play();
-            $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active')
+            $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
             $($(this).attr('videoId')).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
-        })
+        });
         function payment() {
             let formNew = document.createElement('form');
             formNew.action = "/pay-video";

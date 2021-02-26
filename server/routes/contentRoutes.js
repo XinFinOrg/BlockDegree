@@ -20,13 +20,15 @@ module.exports = app => {
   app.get("/api/getXinFinStats", userStats.getXinFinStats);
   app.get("/api/getCurrentTimestamp", courseService.getCurrentTimestamp);
   app.get("/api/videoStream/:id", requireLogin, videoSub, streaming.videoStreaming);
-  app.get("/video-stream", requireLogin , (req, res) => {
-    try{
+  app.get("/video-stream", requireLogin, (req, res) => {
+    try {
       const videoSub = req.user.videoSubscription;
-      res.render("videoStream",{video:videoSub})
+      res.render("videoStream", { video: videoSub });
     }
-    catch(e){
+    catch (e) {
       console.log(e);
-      }
-  })
+    }
+  });
+  app.post("/api/qna", requireLogin, userStats.qna);
+  app.post("/api/getQna", requireLogin, userStats.getQna);
 };

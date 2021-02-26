@@ -309,44 +309,48 @@ your profile"}}
               <tr>
                 <td>D.O.B</td>
                 <td>
-                  <input type="date" class="form-control" id="dob" name="dob" min="1980-01-01" />
+                  <input required type="date" class="form-control" id="dob" name="dob" min="1980-01-01" />
                 </td>
               </tr>
               <tr>
                 <td>KYC No.</td>
                 <td>
-                  <input type="text" class="form-control" id="kycNo" name="kycNo" placeholder="Enter KYC no." />
+                  <input required type="text" class="form-control" id="kycNo" name="kycNo"
+                    placeholder="Enter KYC no." />
                 </td>
               </tr>
               <tr>
                 <td>Address</td>
                 <td>
-                  <input type="text" class="form-control" id="address" name="address"
+                  <input required type="text" class="form-control" id="address" name="address"
                     placeholder="Enter Your Address" />
                 </td>
               </tr>
               <tr>
                 <td>City</td>
                 <td>
-                  <input type="text" class="form-control" id="city" name="city" placeholder="Enter the city" />
+                  <input required type="text" class="form-control" id="city" name="city" placeholder="Enter the city" />
                 </td>
               </tr>
               <tr>
                 <td>State</td>
                 <td>
-                  <input type="text" class="form-control" id="state" name="state" placeholder="Enter the State" />
+                  <input required type="text" class="form-control" id="state" name="state"
+                    placeholder="Enter the State" />
                 </td>
               </tr>
               <tr>
                 <td>Country</td>
                 <td>
-                  <input type="text" class="form-control" id="country" name="country" placeholder="Enter Country" />
+                  <input required type="text" class="form-control" id="country" name="country"
+                    placeholder="Enter Country" />
                 </td>
               </tr>
               <tr>
                 <td>Pincode</td>
                 <td>
-                  <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Enter Pincode" />
+                  <input required type="number" class="form-control" id="pincode" name="pincode"
+                    placeholder="Enter Pincode" />
                 </td>
               </tr>
               <tr>
@@ -359,15 +363,15 @@ your profile"}}
               <tr>
                 <td>KYC Front Images</td>
                 <td>
-                  <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" id="kycfrontimg"
-                    name="kycfront" />
+                  <input required type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control"
+                    id="kycfrontimg" name="kycfront" />
                 </td>
               </tr>
               <tr>
                 <td>KYC Back Images</td>
                 <td>
-                  <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" id="kycbackimg"
-                    name="kycback" />
+                  <input required type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control"
+                    id="kycbackimg" name="kycback" />
                 </td>
               </tr>
               <tr>
@@ -459,7 +463,7 @@ your profile"}}
           <div class="modal-footer">
             <div>
               <div>Don't have&nbsp;<strong>XDC&nbsp;<img
-                    src="http://localhost:3000/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
+                    src="https://www.blockdegree.org/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
                 ?&nbsp;Buy from <a href="https://alphaex.net" target="_blank">AlphaEx</a> or <a href="https://stex.com"
                   target="_blank">Stex</a>
               </div>
@@ -564,7 +568,7 @@ your profile"}}
     function (event) {
       console.log("Originating event: ", event.origin);
       console.log(event.origin);
-      if (event.origin == "http://localhost:3000") {
+      if (event.origin == "https://www.blockdegree.org") {
         if (event.data == "ok") {
           $.notify("Social linked!", { type: "success" });
           checkAuth();
@@ -641,30 +645,30 @@ your profile"}}
   }
 
   function handleAuthGoogle() {
-    // window.location.replace("http://localhost:3000/auth/google")
+    // window.location.replace("https://www.blockdegree.org/auth/google")
     popupLogin({
-      path: "http://localhost:3000/auth/google?close=true",
+      path: "https://www.blockdegree.org/auth/google?close=true",
     });
   }
 
   function handleAuthFacebook() {
-    // window.location.replace("http://localhost:3000/auth/facebook")
+    // window.location.replace("https://www.blockdegree.org/auth/facebook")
     popupLogin({
-      path: "http://localhost:3000/auth/facebook?close=true",
+      path: "https://www.blockdegree.org/auth/facebook?close=true",
     });
   }
 
   function handleAuthTwitter() {
-    // window.location.replace("http://localhost:3000/auth/twitter")
+    // window.location.replace("https://www.blockdegree.org/auth/twitter")
     popupLogin({
-      path: "http://localhost:3000/auth/twitter?close=true",
+      path: "https://www.blockdegree.org/auth/twitter?close=true",
     });
   }
 
   function handleAuthLinkedin() {
-    // window.location.replace("http://localhost:3000/auth/linkedin")
+    // window.location.replace("https://www.blockdegree.org/auth/linkedin")
     popupLogin({
-      path: "http://localhost:3000/auth/linkedin?close=true",
+      path: "https://www.blockdegree.org/auth/linkedin?close=true",
     });
   }
 
@@ -685,9 +689,9 @@ your profile"}}
       options.windowOptions
     );
     that._oauthInterval = window.setInterval(function () {
-      if (that._oauthWindow.location.href == "http://localhost:3000") {
+      if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
         that._oauthWindow.location.href ==
-          "http://localhost:3000/closeCallback";
+          "https://www.blockdegree.org/closeCallback";
       }
     }, 1000);
   }

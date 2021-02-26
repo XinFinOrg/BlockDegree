@@ -6,6 +6,8 @@ const PaymentLogs = require("../models/payment_logs");
 const updateSiteStats = require("../listeners/updateSiteStats").em;
 const GeoIP = require("geoip-lite");
 const axios = require("axios");
+const qna = require("../models/qna");
+const _ = require('lodash');
 
 const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 
@@ -141,7 +143,7 @@ exports.getUserListUsingCode = async (req, res) => {
     let promoCode = await PromoCode.findOne({ codeName: req.body.codeName });
     if (promoCode == null) {
       res.json({
-        error: `No promocode ${promoCode} found`,
+        error: `No promocode ${ promoCode } found`,
         users: null,
         status: false,
       });
@@ -182,7 +184,7 @@ exports.getVisits = async (req, res) => {
   if (allVisits == null) {
     res.json({
       status: false,
-      error: `No Such content (${req.body.content}) is registered`,
+      error: `No Such content (${ req.body.content }) is registered`,
     });
   } else {
     res.json({ status: true, error: null, visits: allVisits });
@@ -382,7 +384,7 @@ exports.getSiteStats = (req, res) => {
   try {
     RedisClient.get("siteStats", async (err, result) => {
       if (err) {
-        console.log(`exception at ${__filename}.getSiteStats: `, err);
+        console.log(`exception at ${ __filename }.getSiteStats: `, err);
         return res.json({ status: false, error: "internal  error" });
       }
       if (result !== null) {
@@ -427,7 +429,7 @@ exports.getSiteStats = (req, res) => {
       }
     });
   } catch (e) {
-    console.log(`exception at ${__filename}.getSiteStats: `, e);
+    console.log(`exception at ${ __filename }.getSiteStats: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
@@ -482,4 +484,56 @@ exports.getAllReferralCodes = async (req, res) => {
     return res.json({ status: false, error: "internal error" });
   }
   return res.json({ status: true, error: null, codes: allPromoCode });
+};
+
+exports.qna = async (req, res) => {
+  try {
+    if (_.isNull(req.body)) {
+      res.status(422).json({
+        message: "Please fill up the answer",
+        status: 422
+      });
+    } else {
+      const ansSave = await new qna({
+        isAnsSubmitted: true,
+        email: req.body.email,
+        question: req.body.question,
+        answer: req.body.answer
+      });
+      ansSave.save();
+      res.status(200).json({
+        message: "Answer Submitted",
+        status: 200,
+        data: ansSave
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      message: "Something Wrong",
+      status: 400
+    });
+  }
+};
+
+exports.getQna = async (req, res) => {
+  try {
+    const data = await qna.findOne({ email: req.body.email });
+    if (data) {
+      res.status(200).json({
+        message: "Got Answer",
+        status: 200
+      });
+    } else {
+      res.status(400).json({
+        message: "No Answer Submitted",
+        status: 400
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      message: "Something Wrong",
+      status: 400
+    });
+  }
 };

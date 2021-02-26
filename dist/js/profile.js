@@ -6,7 +6,7 @@ if (typeof jQuery != "undefined") {
       success: (result) => {
         if (!result.status) {
           alert("You are not logged in, please visit after logging in");
-          window.location.replace("http://localhost:3000/login");
+          window.location.replace("https://www.blockdegree.org/login");
         } else {
           let kycStatus;
           $.ajax({
@@ -19,8 +19,8 @@ if (typeof jQuery != "undefined") {
                 if (user.email == result.user.email && user.isKycVerified === true) {
                   kycStatus = document.getElementById('kycStatus');
                   kycStatus.innerHTML = user.kycStatus;
-                  document.getElementById('kyc-profile-btn').style.visibility = "hidden";
-                  document.getElementById('kyc_profile').style.visibility = "hidden";
+                  document.getElementById('kyc-profile-btn').style.display = "none";
+                  document.getElementById('kyc_profile').style.display = "none";
                 } else {
                   kycStatus = document.getElementById('kycStatus');
                   kycStatus.innerHTML = user.kycStatus;
@@ -207,12 +207,12 @@ if (typeof jQuery != "undefined") {
           }
         } else {
           alert("You're not logged in");
-          window.location.replace("http://localhost:3000/login");
+          window.location.replace("https://www.blockdegree.org/login");
         }
       },
       error: (err) => {
         alert("Error while getting the current user");
-        window.location.replace("http://localhost:3000/login");
+        window.location.replace("https://www.blockdegree.org/login");
       },
     });
   }
@@ -273,18 +273,15 @@ if (typeof jQuery != "undefined") {
         newForm.append("selfieImg", selfiefiles[0], "selfieImg.png");
         newForm.append("kycFrontImg", kycFrontfiles[0], "kycFrontImg.png");
         newForm.append("kycBackImg", kycBackfiles[0], "kycBackImg.png");
-        if (!(selfiefiles[0] || kycFrontfiles[0] || kycBackfiles[0])) {
-          $.notify("Something Wrong", { type: "danger" });
-        }
         $.ajax({
           method: "post",
-          url: "/api/kycDetails",
+          url: "/api/kycUserDetails",
           data: newForm,
           enctype: "multipart/form-data",
           contentType: false,
           processData: false,
           success: (userData) => {
-            if (userData.statusCode == 200) {
+            if (userData.status == 200) {
               $.notify(`KYC Saved ${ result.user.email }`, { type: "success" });
             } else {
               $.notify("something wrong", { type: "danger" });
@@ -350,18 +347,18 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("http://localhost:3000");
+                  window.location.reload("https://www.blockdegree.org");
                 },
               });
             }
           } else {
             alert("Please log in to continue");
-            window.location.reload("http://localhost:3000/login");
+            window.location.reload("https://www.blockdegree.org/login");
           }
         },
         error: (err) => {
           alert("Error while getting current user");
-          window.location.reload("http://localhost:3000/login");
+          window.location.reload("https://www.blockdegree.org/login");
         },
       });
     }
@@ -404,19 +401,19 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("http://localhost:3000");
+                  window.location.reload("https://www.blockdegree.org");
                 },
               });
             }
           }
         } else {
           alert("Please log in to continue");
-          window.location.reload("http://localhost:3000/login");
+          window.location.reload("https://www.blockdegree.org/login");
         }
       },
       error: (err) => {
         alert("Error while getting current user");
-        window.location.reload("http://localhost:3000/login");
+        window.location.reload("https://www.blockdegree.org/login");
       },
     });
   }
