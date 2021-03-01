@@ -488,7 +488,9 @@ exports.getAllReferralCodes = async (req, res) => {
 
 exports.qna = async (req, res) => {
   try {
-    if (_.isNull(req.body)) {
+    const qna = JSON.stringify(req.body.qna);
+    // const qnaEmail = JSON.stringify(req.body.qnaEmail);
+    if (qna == "") {
       res.status(422).json({
         message: "Please fill up the answer",
         status: 422
@@ -496,11 +498,11 @@ exports.qna = async (req, res) => {
     } else {
       const ansSave = await new qna({
         isAnsSubmitted: true,
-        email: req.body.email,
-        question: req.body.question,
-        answer: req.body.answer
+        // email: qnaEmail,
+        question: "3 takeaways from your course ?",
+        answer: qna
       });
-      ansSave.save();
+      await ansSave.save();
       res.status(200).json({
         message: "Answer Submitted",
         status: 200,
@@ -522,6 +524,7 @@ exports.getQna = async (req, res) => {
     if (data) {
       res.status(200).json({
         message: "Got Answer",
+        data,
         status: 200
       });
     } else {

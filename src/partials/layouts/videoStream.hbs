@@ -1,14 +1,46 @@
 {{> includes/hero hero-title="Video Library"}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+    #qnaEmail {
+        display: none;
+    }
 
+    #qnaForm {
+        width: 600px;
+        height: 400px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #qnaAns {
+        border: 1px solid #3498db;
+        border-radius: 0px;
+        font-size: 15px;
+    }
+
+    #qnaBtn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 0px;
+    }
+</style>
 <div id="video-page-wrapper" class="container__cstm">
     <div class="row">
         {{#if video}}
         <div class="col-lg-9 colo-md-8">
             <div class="embed-responsive embed-responsive-16by9">
-                <video id="videoPlayer" controlsList="nodownload" controls width="600px" height="400px">
-                    <source id="videoPlayerSource" src="https://www.blockdegree.org/api/videoStream/1" type="video/mp4">
-                </video>
+                <div id="video-wrapper">
+                    <input type="text" id="qnaEmail" name="qnaEmail">
+                    <video id="videoPlayer" controlsList="nodownload" controls width="600px" height="400px">
+                        <source id="videoPlayerSource" src="http://localhost:3000/api/videoStream/1" type="video/mp4">
+                    </video>
+                </div>
+
             </div>
             <ul class="nav nav-custom nav-borderless nav_tabs1" id="nav_tabs" role="tablist">
                 <li class="nav-item"><a class="nav-link show active" href="#overview" role="tab" data-toggle="tab"
@@ -100,13 +132,9 @@
                         <i class="fa fa-play-circle"></i> 4.17 min
                     </div>
                 </button>
-                <button id="qnaSection">Q&A<br />
-                    <div id="btn10" class="video-item-link">
-                        <div style="display: flex; justify-content: center; flex-direction: column;">
-                            <p id="question" style="margin-bottom: 10px;">The Question is?</p>
-                            <textarea id="answer" class="form-control"></textarea>
-                            <button id="qnaBtn" class="form-control">Submit</button>
-                        </div>
+                <button videoId="qna">Course Exit<br />
+                    <div id="btn9" class="video-item-link">
+                        Q&A
                     </div>
                 </button>
             </div>
@@ -122,21 +150,20 @@
 
     <script>
         $(document).ready(() => {
-            const newForm = new FormData()
             $.ajax({
                 method: "get",
                 url: "/api/current_user",
                 success: (result) => {
-                    newForm.append('email', result.user.email)
+                    document.getElementById('qnaEmail').innerHTML = result.user.email
                     $.ajax({
                         method: "post",
                         url: "/api/getQna",
-                        data: newForm,
+                        data: { email: result.user.email },
                         enctype: "multipart/form-data",
                         contentType: false,
                         processData: false,
                         success: (getData) => {
-                            if (getData.status == 200) {
+                            if (getData.data.isAnsSubmitted == true) {
                                 document.getElementById('qnaSection').style.display = "none"
                                 document.getElementById('qnaBtn').style.display = "none"
                             }
@@ -145,37 +172,25 @@
                 }
             })
         })
-        document.getElementById('qnaBtn').addEventListener('click', () => {
-            const question = document.getElementById('question').textContent;
-            const answer = document.getElementById('answer').value;
-            const newForm = new FormData()
-            newForm.append("question", question)
-            newForm.append('answer', answer)
-            $.ajax({
-                method: "get",
-                url: "/api/current_user",
-                success: (result) => {
-                    newForm.append('email', result.user.email)
-                    $.ajax({
-                        method: "post",
-                        url: "/api/qna",
-                        data: newForm,
-                        enctype: "multipart/form-data",
-                        contentType: false,
-                        processData: false,
-                        success: (answerData) => {
-                            console.log('..........', answerData)
-                        }
-                    })
-                }
-            })
-        })
+
         const videoPlayer = document.getElementById("videoPlayer")
         $('button[videoId="1"]').addClass('video-item-link-active')
         $('button').click(function () {
             videoPlayer.pause();
             let videoId = $(this).attr("videoId");
-            $('#videoPlayerSource').attr('src', `https://www.blockdegree.org/api/videoStream/${ videoId }`)
+            console.log("videoId", videoId);
+            if (videoId === "qna") {
+                $('.embed-responsive').removeClass('embed-responsive-16by9')
+                $('#video-wrapper').html(`
+                    <form method="post" action="http://localhost:3000/api/qna" id="qnaForm">
+                        <label for="qna" id="qnaQuest">3 takeaways from your course ?</label><br>
+                        <textarea type="text" name="qna" id="qnaAns" rows="4" cols="50" placeholder="Enter Your Answer"></textarea><br><br>
+                        <button id="qnaBtn" type="submit" form="qnaForm">Submit</button>
+                    </form>
+                    `);
+                return;
+            }
+            $('#videoPlayerSource').attr('src', `http://localhost:3000/api/videoStream/${ videoId }`)
             videoPlayer.load();
             videoPlayer.play();
             $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
