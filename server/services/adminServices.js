@@ -18,6 +18,7 @@ const UserReferral = require("../models/userReferral");
 const Questions = require("../models/question");
 const SocialShare = require("../models/socialShare");
 const UserSessions = require("../models/userSessions");
+const razorpaylog = require('../models/razorpay_payment');
 const { renderFunderCerti } = require("../helpers/renderFunderCerti");
 const {
   makeValueTransferXDC,
@@ -25,6 +26,9 @@ const {
   getTransactionTimestamp,
 } = require("../helpers/blockchainHelpers");
 const emailer = require("../emailer/impl");
+const kycDetails = require("../models/kycDetails");
+const userReferral = require("../models/userReferral");
+const userFundRequest = require("../models/userFundRequest");
 
 exports.addCourse = async (req, res) => {
   if (
@@ -566,7 +570,7 @@ exports.addWallet = async (req, res) => {
         if (
           wallet_address === configWallet.recipientWallets[i].wallet_address &&
           wallet_token_name ===
-            configWallet.recipientWallets[i].wallet_token_name &&
+          configWallet.recipientWallets[i].wallet_token_name &&
           wallet_network === configWallet.recipientWallets[i].wallet_network
         ) {
           // wallet exists, return bad request
@@ -704,7 +708,7 @@ exports.switchWalletTo = async (req, res) => {
         if (
           configWallet.recipientWallets[i].wallet_address === wallet_address &&
           wallet_token_name ===
-            configWallet.recipientWallets[i].wallet_token_name &&
+          configWallet.recipientWallets[i].wallet_token_name &&
           wallet_network === configWallet.recipientWallets[i].wallet_network
         ) {
           // // found the wallet
@@ -721,9 +725,9 @@ exports.switchWalletTo = async (req, res) => {
               console.log("In active wallets loop");
               if (
                 configWallet.recipientActive[z].wallet_network ===
-                  wallet_network &&
+                wallet_network &&
                 configWallet.recipientActive[z].wallet_token_name ===
-                  wallet_token_name
+                wallet_token_name
               ) {
                 exists = true;
                 break loop1;
@@ -743,9 +747,9 @@ exports.switchWalletTo = async (req, res) => {
               for (let f = 0; f < configWallet.recipientActive.length; f++) {
                 if (
                   configWallet.recipientActive[f].wallet_network ===
-                    wallet_network &&
+                  wallet_network &&
                   configWallet.recipientActive[f].wallet_token_name ===
-                    wallet_token_name
+                  wallet_token_name
                 ) {
                   configWallet.recipientActive[
                     f
@@ -818,9 +822,9 @@ exports.switchWalletTo = async (req, res) => {
               for (let z = 0; z < configWallet.burnActive.length; z++) {
                 if (
                   configWallet.burnActive[z].wallet_network ===
-                    wallet_network &&
+                  wallet_network &&
                   configWallet.burnActive[z].wallet_token_name ===
-                    wallet_token_name
+                  wallet_token_name
                 ) {
                   exists = true;
                   break loop1;
@@ -839,9 +843,9 @@ exports.switchWalletTo = async (req, res) => {
                 for (let f = 0; f < configWallet.burnActive.length; f++) {
                   if (
                     configWallet.burnActive[f].wallet_network ===
-                      wallet_network &&
+                    wallet_network &&
                     configWallet.burnActive[f].wallet_token_name ===
-                      wallet_token_name
+                    wallet_token_name
                   ) {
                     configWallet.burnActive[f].wallet_address = wallet_address;
                     configWallet.markModified("burnActive");
@@ -940,7 +944,7 @@ exports.addNotification = async (req, res) => {
     await newNoti.save();
   } catch (e) {
     console.error(
-      `Some error occured while saving the notification schema at adminServices.addNotification: ${e}`
+      `Some error occured while saving the notification schema at adminServices.addNotification: ${ e }`
     );
     return res.json({ status: false, error: "Internal Error" });
   }
@@ -1055,7 +1059,7 @@ exports.approveFund = async (req, res) => {
     await fundReq.save();
     return res.json({ status: true, message: "fund request approved" });
   } catch (e) {
-    console.log(`exception at ${__filename}.approveFund: `, e);
+    console.log(`exception at ${ __filename }.approveFund: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
@@ -1077,7 +1081,7 @@ exports.rejectFund = async (req, res) => {
     await fundReq.save();
     return res.json({ status: true, message: "fund request removed" });
   } catch (e) {
-    console.log(`exception at ${__filename}.rejectFund: `, e);
+    console.log(`exception at ${ __filename }.rejectFund: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
@@ -1173,7 +1177,7 @@ exports.getAllFundRequests = async (req, res) => {
       .lean();
     res.json({ status: true, data: allFund });
   } catch (e) {
-    console.log(`exception at $${__filename}.getAllFundRequests: `, e);
+    console.log(`exception at $${ __filename }.getAllFundRequests: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
@@ -1183,7 +1187,7 @@ exports.syncRecipients = (req, res) => {
     DonationListener.em.emit("syncRecipients");
     res.json({ status: true });
   } catch (e) {
-    console.log(`exception at ${__filename}.syncRecipients: `, e);
+    console.log(`exception at ${ __filename }.syncRecipients: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
@@ -1197,7 +1201,7 @@ exports.syncPendingBurnFMD = async (req, res) => {
     pendingEmitter.emit("syncPendingBurnFMD", burnAll == "true");
     res.json({ status: true });
   } catch (e) {
-    console.log(`exception at ${__filename}.syncPendingBurnFMD: `, e);
+    console.log(`exception at ${ __filename }.syncPendingBurnFMD: `, e);
     return res.json({ status: false });
   }
 };
@@ -1214,11 +1218,11 @@ exports.logFMDPk = async (req, res) => {
       console.log("[*] fmd not found");
       return res.json({ status: false });
     } else {
-      console.log(`PK: ${fundReq.receiveAddrPrivKey}`);
+      console.log(`PK: ${ fundReq.receiveAddrPrivKey }`);
       return res.json({ status: true });
     }
   } catch (e) {
-    console.log(`[*] exception at ${__filename}.logFMDPk: `, e);
+    console.log(`[*] exception at ${ __filename }.logFMDPk: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
@@ -1228,7 +1232,7 @@ exports.syncPendingDonation = async (req, res) => {
     DonationListener.em.emit("syncPendingDonation");
     res.json({ status: true });
   } catch (e) {
-    console.log(`exception at ${__filename}.syncPendingDonation: `, e);
+    console.log(`exception at ${ __filename }.syncPendingDonation: `, e);
     return res.json({ status: false, error: "internal error" });
   }
 };
@@ -1238,7 +1242,7 @@ exports.createUserReferralAll = (req, res) => {
     referralEmitter.emit("createReferralAllUser");
     res.json({ status: true });
   } catch (e) {
-    console.log(`exception at ${__filename}.createUserReferralAll: `, e);
+    console.log(`exception at ${ __filename }.createUserReferralAll: `, e);
     res.json({ status: false });
   }
 };
@@ -1258,7 +1262,7 @@ exports.getReferredByUser = async (req, res) => {
       },
     });
   } catch (e) {
-    console.log(`exception at ${__filename}.createUserReferralAll: `, e);
+    console.log(`exception at ${ __filename }.createUserReferralAll: `, e);
     res.json({ status: false });
   }
 };
@@ -1281,13 +1285,13 @@ exports.syncFunderCerti = async (req, res) => {
     allFundReq.forEach((currFundReq) => {
       renderFunderCerti(currFundReq.donerName, currFundReq.fundId).catch(
         (e) => {
-          console.log(`exception at ${__filename}.syncFunderCerti: `, e);
+          console.log(`exception at ${ __filename }.syncFunderCerti: `, e);
         }
       );
     });
     res.json({ status: true });
   } catch (e) {
-    console.log(`exception at ${__filename}.syncFunderCerti: `, e);
+    console.log(`exception at ${ __filename }.syncFunderCerti: `, e);
     return res.json({ status: false, error: "internal error" });
   }
 };
@@ -1344,7 +1348,7 @@ exports.transferFMDFundToAdmin = async (req, res) => {
         "blockdegree-bot@blokcdegree.org",
         process.env.SUPP_EMAIL_ID,
         "Transferred FMD tokens to Wallet",
-        `Hello,\n we have transfered ${transferAmnt} tokens into the burn wallet for XDC for the fund with id ${fundId}`
+        `Hello,\n we have transfered ${ transferAmnt } tokens into the burn wallet for XDC for the fund with id ${ fundId }`
       );
     } else if (all == true) {
       let count = 0,
@@ -1372,13 +1376,13 @@ exports.transferFMDFundToAdmin = async (req, res) => {
         "blockdegree-bot@blokcdegree.org",
         process.env.SUPP_EMAIL_ID,
         "Transferred FMD tokens to Wallet",
-        `Hello,\n we have transfered ${count} FMDs into the burn wallet for XDC, total amount ${totAmnt} XDC.`
+        `Hello,\n we have transfered ${ count } FMDs into the burn wallet for XDC, total amount ${ totAmnt } XDC.`
       );
     } else {
       return res.json({ status: false, error: "bad request" });
     }
   } catch (e) {
-    console.log(`exception at ${__filename}.transferFMDFundToAdmin: `, e);
+    console.log(`exception at ${ __filename }.transferFMDFundToAdmin: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
@@ -1422,9 +1426,9 @@ exports.syncCompletionDateFMD = async (req, res) => {
         }
         await completedFunds[i].save();
       }
-    res.json({ status: true, data: `synced ${count} completion dates.` });
+    res.json({ status: true, data: `synced ${ count } completion dates.` });
   } catch (e) {
-    console.log(`exception at ${__filename}.syncCompletionDateFMD: `, e);
+    console.log(`exception at ${ __filename }.syncCompletionDateFMD: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
@@ -1440,7 +1444,7 @@ exports.setFMDCompletionDateManual = async (req, res) => {
     await fund.save();
     res.json({ status: true, data: "CompletionDate updated" });
   } catch (e) {
-    console.log(`exception at ${__filename}.setFMDCOmpletionDateManual: `, e);
+    console.log(`exception at ${ __filename }.setFMDCOmpletionDateManual: `, e);
     return res.json({ status: false, error: "internal error" });
   }
 };
@@ -1474,12 +1478,133 @@ exports.addComputingQuestions = async (req, res) => {
   }
 };
 
+exports.getKycUser = async (req, res) => {
+  try {
+    const getKycUser = await kycDetails.find({}).lean();
+    res.json({ data: getKycUser, status: 200 });
+  } catch (error) {
+    res.json({
+      error: "Error while fetching data",
+      status: 400,
+    });
+  }
+};
+
+exports.approveKycUser = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await kycDetails.findOneAndUpdate(email, {
+      $set: { isKycVerified: true, kycStatus: "approved" },
+    });
+    return res.json({
+      message: "User Kyc Approved",
+      status: 200,
+    });
+  } catch (error) {
+    return res.json({
+      error: "Went Something Wrong",
+      status: 422,
+    });
+  }
+};
+
+exports.rejectKycUser = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await kycDetails.findOneAndUpdate(email, {
+      $set: { isKycVerified: false, kycStatus: "rejected" },
+    });
+    return res.json({
+      message: "User Kyc Rejected",
+      status: 200,
+    });
+  } catch (error) {
+    return res.json({
+      error: "Went Something Wrong",
+      status: 422,
+    });
+  }
+};
+
+exports.getrazorpaylog = async (req, res) => {
+  try {
+    const logs = await razorpaylog.find({}).lean();
+    if (!logs.length) {
+      res.status(422).json({
+        error: "No Data Available",
+        status: 422,
+      });
+    } else {
+      res.status(200).json({
+        message: "Got Razor pay log",
+        data: logs,
+        status: 200
+      });
+    }
+  } catch (error) {
+    res.status(422).json({
+      error: "Went Something Wrong",
+      status: 422,
+    });
+  }
+};
+
+exports.getuserreferals = async (req, res) => {
+  try {
+    const userRef = await userReferral.find({}).lean();
+    if (!userRef.length) {
+      res.status(422).json({
+        error: "No Data Available",
+        status: 422,
+      });
+    } else {
+      res.status(200).json({
+        message: "Got User referal",
+        data: userRef,
+        status: 200
+      });
+    }
+  } catch (error) {
+    res.status(422).json({
+      error: "Went Something Wrong",
+      status: 422,
+    });
+  }
+};
+exports.getfundmydegree = async (req, res) => {
+  try {
+    const userFund = await userFundRequest.find({}).select({ receiveAddrPrivKey: 0 }).lean();
+    if (!userFund.length) {
+      res.status(422).json({
+        error: "No Data Available",
+        status: 422,
+      });
+    } else {
+      res.status(200).json({
+        message: "Got Fund My Degree",
+        data: userFund,
+        status: 200
+      });
+    }
+  }
+  catch (error) {
+    res.status(422).json({
+      error: "Went Something Wrong",
+      status: 422,
+    });
+  }
+};
+
+exports.getKycUserPic = (req, res) => {
+  res.sendFile(req.params.path);
+};
+
 exports.getSocialShares = async (req, res) => {
   try {
     const allShares = await SocialShare.find({}).lean();
     res.json({ status: true, data: allShares });
   } catch (e) {
-    console.log(`exeption at ${__filename}.getSocialShares: `, e);
+    console.log(`exeption at ${ __filename }.getSocialShares: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
