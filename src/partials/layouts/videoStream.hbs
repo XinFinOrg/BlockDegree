@@ -132,7 +132,7 @@
                         <i class="fa fa-play-circle"></i> 4.17 min
                     </div>
                 </button>
-                <button videoId="qna">Course Exit<br />
+                <button videoId="qna" id="qnaMain">Course Exit<br />
                     <div id="btn9" class="video-item-link">
                         Q&A
                     </div>
@@ -154,18 +154,13 @@
                 method: "get",
                 url: "/api/current_user",
                 success: (result) => {
-                    document.getElementById('qnaEmail').innerHTML = result.user.email
                     $.ajax({
                         method: "post",
                         url: "/api/getQna",
                         data: { email: result.user.email },
-                        enctype: "multipart/form-data",
-                        contentType: false,
-                        processData: false,
                         success: (getData) => {
-                            if (getData.data.isAnsSubmitted == true) {
-                                document.getElementById('qnaSection').style.display = "none"
-                                document.getElementById('qnaBtn').style.display = "none"
+                            if (getData.data.isAnsSubmitted === true) {
+                                document.getElementById('qnaMain').style.display = "none"
                             }
                         }
                     })
@@ -180,14 +175,42 @@
             let videoId = $(this).attr("videoId");
             console.log("videoId", videoId);
             if (videoId === "qna") {
-                $('.embed-responsive').removeClass('embed-responsive-16by9')
-                $('#video-wrapper').html(`
-                    <form method="post" action="http://localhost:3000/api/qna" id="qnaForm">
+                let newForm = new FormData()
+                let qnaForm = `
+                    <div id="qnaForm">
                         <label for="qna" id="qnaQuest">3 takeaways from your course ?</label><br>
                         <textarea type="text" name="qna" id="qnaAns" rows="4" cols="50" placeholder="Enter Your Answer"></textarea><br><br>
-                        <button id="qnaBtn" type="submit" form="qnaForm">Submit</button>
-                    </form>
-                    `);
+                        <button id="qnaBtn">Submit</button>
+                    </div>
+                    `
+                $('.embed-responsive').removeClass('embed-responsive-16by9')
+                $('#video-wrapper').html(qnaForm);
+                document.getElementById('qnaBtn').addEventListener('click', () => {
+                    $.ajax({
+                        method: "get",
+                        url: "/api/current_user",
+                        success: (result) => {
+                            let question = "3 takeaways from your course ?"
+                            let answer = document.getElementById('qnaAns').value
+                            newForm.append('email', result.user.email)
+                            newForm.append('question', question)
+                            newForm.append('answer', answer)
+                            $.ajax({
+                                method: "post",
+                                url: "/api/qna",
+                                data: newForm,
+                                enctype: "multipart/form-data",
+                                contentType: false,
+                                processData: false,
+                                success: (qnaResult) => {
+                                    if (qnaResult.status == 200) {
+                                        window.location.reload()
+                                    }
+                                }
+                            })
+                        }
+                    })
+                })
                 return;
             }
             $('#videoPlayerSource').attr('src', `http://localhost:3000/api/videoStream/${ videoId }`)
