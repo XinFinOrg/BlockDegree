@@ -6,8 +6,8 @@ const PaymentLogs = require("../models/payment_logs");
 const updateSiteStats = require("../listeners/updateSiteStats").em;
 const GeoIP = require("geoip-lite");
 const axios = require("axios");
-const qna = require("../models/qna");
-const _ = require('lodash');
+const Qna = require("../models/qna");
+const _ = require("lodash");
 
 const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 
@@ -143,7 +143,7 @@ exports.getUserListUsingCode = async (req, res) => {
     let promoCode = await PromoCode.findOne({ codeName: req.body.codeName });
     if (promoCode == null) {
       res.json({
-        error: `No promocode ${ promoCode } found`,
+        error: `No promocode ${promoCode} found`,
         users: null,
         status: false,
       });
@@ -184,7 +184,7 @@ exports.getVisits = async (req, res) => {
   if (allVisits == null) {
     res.json({
       status: false,
-      error: `No Such content (${ req.body.content }) is registered`,
+      error: `No Such content (${req.body.content}) is registered`,
     });
   } else {
     res.json({ status: true, error: null, visits: allVisits });
@@ -384,7 +384,7 @@ exports.getSiteStats = (req, res) => {
   try {
     RedisClient.get("siteStats", async (err, result) => {
       if (err) {
-        console.log(`exception at ${ __filename }.getSiteStats: `, err);
+        console.log(`exception at ${__filename}.getSiteStats: `, err);
         return res.json({ status: false, error: "internal  error" });
       }
       if (result !== null) {
@@ -429,7 +429,7 @@ exports.getSiteStats = (req, res) => {
       }
     });
   } catch (e) {
-    console.log(`exception at ${ __filename }.getSiteStats: `, e);
+    console.log(`exception at ${__filename}.getSiteStats: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
@@ -486,57 +486,80 @@ exports.getAllReferralCodes = async (req, res) => {
   return res.json({ status: true, error: null, codes: allPromoCode });
 };
 
+/**
+ *
+ *
+ * QNA Code -> CourseExit
+ *
+ */
+
 exports.qna = async (req, res) => {
   try {
-    const qna = JSON.stringify(req.body.qna);
-    // const qnaEmail = JSON.stringify(req.body.qnaEmail);
-    if (qna == "") {
+    const { question, answer } = req.body;
+    const email = req.user.email;
+
+    console.log("question, answer", req.body, question, answer);
+
+    if (_.isEmpty(question) || _.isEmpty(answer)) {
       res.status(422).json({
         message: "Please fill up the answer",
-        status: 422
+        status: 422,
       });
     } else {
-      const ansSave = await new qna({
+      const ansSave = new Qna({
         isAnsSubmitted: true,
-        // email: qnaEmail,
-        question: "3 takeaways from your course ?",
-        answer: qna
+        email: email,
+        question: question,
+        answer: answer,
+        courseId: "video-stream",
       });
       await ansSave.save();
       res.status(200).json({
         message: "Answer Submitted",
         status: 200,
-        data: ansSave
+        data: ansSave,
       });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).json({
+    res.status(500).json({
       message: "Something Wrong",
-      status: 400
+      status: 500,
     });
   }
 };
 
+/**
+ *
+ * CourseId -> video-stream
+ *
+ */
 exports.getQna = async (req, res) => {
   try {
-    const data = await qna.findOne({ email: req.body.email });
-    if (data) {
-      res.status(200).json({
-        message: "Got Answer",
-        data,
-        status: 200
+    const courseId = req.body.courseId;
+    if (_.isEmpty(courseId))
+      return res.status(422).json({
+        message: "no course exists",
+        status: 422,
       });
-    } else {
-      res.status(400).json({
-        message: "No Answer Submitted",
-        status: 400
+    const data = await Qna.findOne({
+      $and: [{ email: req.body.email }, { courseId }, { isAnsSubmitted: true }],
+    });
+    console.log("data", data);
+    if (data)
+      return res.status(200).json({
+        data: { submitted: true },
+        status: 200,
       });
-    }
+    return res.status(200).json({
+      data: { submitted: false },
+      status: 200,
+    });
   } catch (error) {
-    res.status(400).json({
+    console.log("error", error);
+    res.status(500).json({
       message: "Something Wrong",
-      status: 400
+      status: 500,
     });
   }
 };
