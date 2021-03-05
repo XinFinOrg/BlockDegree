@@ -8,6 +8,27 @@ if (typeof jQuery != "undefined") {
           alert("You are not logged in, please visit after logging in");
           window.location.replace("https://www.blockdegree.org/login");
         } else {
+          let kycStatus;
+          $.ajax({
+            method: "get",
+            url: "/api/getKycUser",
+            success: (kycResult) => {
+              kycStatus = document.getElementById('kycStatus');
+              kycStatus.innerHTML = "pending";
+              for (const user of kycResult.data) {
+                if (user.email == result.user.email && user.isKycVerified === true) {
+                  kycStatus = document.getElementById('kycStatus');
+                  kycStatus.innerHTML = user.kycStatus;
+                  document.getElementById('kyc-profile-btn').style.display = "none";
+                  document.getElementById('kyc_profile').style.display = "none";
+                } else {
+                  kycStatus = document.getElementById('kycStatus');
+                  kycStatus.innerHTML = user.kycStatus;
+                }
+              }
+            },
+          });
+
           // is logged in, set the parameter
           let userProfile = result.user;
           // getting elements in the view-profile page
@@ -197,6 +218,81 @@ if (typeof jQuery != "undefined") {
       error: (err) => {
         alert("Error while getting the current user");
         window.location.replace("https://www.blockdegree.org/login");
+      },
+    });
+  }
+
+  $(document).ready(() => {
+    $.ajax({
+      method: "get",
+      url: "/api/current_user",
+      success: (result) => {
+        const kycProfile = document.getElementById("kyc-profile-btn");
+        const kycEmail = document.getElementById("kycEmail");
+        const kycName = document.getElementById("kycName");
+        kycEmail.innerHTML = result.user.email;
+        kycName.innerHTML = result.user.name;
+        kycProfile.click();
+      },
+    });
+  });
+
+  var selfiefiles = [];
+  var kycFrontfiles = [];
+  var kycBackfiles = [];
+  let selfieImg = document.getElementById("selfieimg");
+  selfieImg.onchange = (e) => {
+    console.log(".... selfie", e.target.files);
+    selfiefiles = e.target.files;
+  };
+  let kycFrontImg = document.getElementById("kycfrontimg");
+  kycFrontImg.onchange = (e) => {
+    kycFrontfiles = e.target.files;
+  };
+  let kycBackImg = document.getElementById("kycbackimg");
+  kycBackImg.onchange = (e) => {
+    kycBackfiles = e.target.files;
+  };
+  function handleUpdateKyc() {
+    const kycNo = document.getElementById("kycNo").value;
+    const dob = document.getElementById("dob").value;
+    const address = document.getElementById("address").value;
+    const city = document.getElementById("city").value;
+    const state = document.getElementById("state").value;
+    const country = document.getElementById("country").value;
+    const pincode = document.getElementById("pincode").value;
+    $.ajax({
+      method: "get",
+      url: "/api/current_user",
+      success: (result) => {
+        const newForm = new FormData();
+        newForm.append("name", result.user.name);
+        newForm.append("email", result.user.email);
+        newForm.append("dob", dob);
+        newForm.append("kycNo", kycNo);
+        newForm.append("address", address);
+        newForm.append("city", city);
+        newForm.append("state", state);
+        newForm.append("country", country);
+        newForm.append("pincode", pincode);
+        newForm.append("selfieImg", selfiefiles[0], "selfieImg.png");
+        newForm.append("kycFrontImg", kycFrontfiles[0], "kycFrontImg.png");
+        newForm.append("kycBackImg", kycBackfiles[0], "kycBackImg.png");
+        $.ajax({
+          method: "post",
+          url: "/api/kycUserDetails",
+          data: newForm,
+          enctype: "multipart/form-data",
+          contentType: false,
+          processData: false,
+          success: (userData) => {
+            if (userData.status == 200) {
+              $.notify(`KYC Saved ${ result.user.email }`, { type: "success" });
+            } else {
+              $.notify("something wrong", { type: "danger" });
+            }
+          },
+        });
       },
     });
   }

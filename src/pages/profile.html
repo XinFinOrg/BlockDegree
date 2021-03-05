@@ -311,6 +311,109 @@ your profile"}}
 			  </tr>   
 			  </table>-->
       </div>
+
+      <div id="kyc_profile" class="tabcontent">
+        <h2 class="profile-Heading">KYC Profile</h2>
+        <h3 class="profile-subHeading mt-4">KYC Details</h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Email-ID</td>
+                <td id="kycEmail"></td>
+              </tr>
+              <tr>
+                <td>Full Name</td>
+                <td id="kycName"></td>
+              </tr>
+              <tr>
+                <td>D.O.B</td>
+                <td>
+                  <input required type="date" class="form-control" id="dob" name="dob" min="1980-01-01" />
+                </td>
+              </tr>
+              <tr>
+                <td>KYC No.</td>
+                <td>
+                  <input required type="text" class="form-control" id="kycNo" name="kycNo"
+                    placeholder="Enter KYC no." />
+                </td>
+              </tr>
+              <tr>
+                <td>Address</td>
+                <td>
+                  <input required type="text" class="form-control" id="address" name="address"
+                    placeholder="Enter Your Address" />
+                </td>
+              </tr>
+              <tr>
+                <td>City</td>
+                <td>
+                  <input required type="text" class="form-control" id="city" name="city" placeholder="Enter the city" />
+                </td>
+              </tr>
+              <tr>
+                <td>State</td>
+                <td>
+                  <input required type="text" class="form-control" id="state" name="state"
+                    placeholder="Enter the State" />
+                </td>
+              </tr>
+              <tr>
+                <td>Country</td>
+                <td>
+                  <input required type="text" class="form-control" id="country" name="country"
+                    placeholder="Enter Country" />
+                </td>
+              </tr>
+              <tr>
+                <td>Pincode</td>
+                <td>
+                  <input required type="number" class="form-control" id="pincode" name="pincode"
+                    placeholder="Enter Pincode" />
+                </td>
+              </tr>
+              <tr>
+                <td>Selfie Images</td>
+                <td>
+                  <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" id="selfieimg"
+                    name="selfie" />
+                </td>
+              </tr>
+              <tr>
+                <td>KYC Front Images</td>
+                <td>
+                  <input required type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control"
+                    id="kycfrontimg" name="kycfront" />
+                </td>
+              </tr>
+              <tr>
+                <td>KYC Back Images</td>
+                <td>
+                  <input required type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control"
+                    id="kycbackimg" name="kycback" />
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-update" onclick="handleUpdateKyc()"
+                    id="update-name-btn">
+                    KYC Update
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

@@ -45,6 +45,54 @@ exports.setupProfile = async (req, res) => {
   res.json({ msg: "ok" });
 };
 
+exports.kycUserDetails = async (req, res) => {
+  try {
+
+    let currentPath = path.join(__dirname, '../../src/docImgs');
+    if (_.isNull(req.files) && _.isNull(req.body)) {
+      res.status(400).json({
+        status: 400,
+        message: "please select all 3 images with all proper data"
+      });
+    }
+    const selfiePic = currentPath + "-" + uuid() + "-" + req.files.selfieImg.name;
+    fs.writeFileSync(selfiePic, req.files.selfieImg.data);
+    const kycFrontPic = currentPath + "-" + uuid() + "-" + req.files.kycFrontImg.name;
+    fs.writeFileSync(kycFrontPic, req.files.kycFrontImg.data);
+    const kycBackPic = currentPath + "-" + uuid() + "-" + req.files.kycBackImg.name;
+    fs.writeFileSync(kycBackPic, req.files.kycBackImg.data);
+    const data = await KycDetails({
+      isKycVerified: false,
+      kycStatus: "pending",
+      name: req.body.name,
+      email: req.body.email,
+      dob: req.body.dob,
+      kycNo: req.body.kycNo,
+      address: req.body.address,
+      city: req.body.city,
+      state: req.body.state,
+      country: req.body.country,
+      pincode: req.body.pincode,
+      img: {
+        selfie: selfiePic,
+        kycFrontImg: kycFrontPic,
+        kycBackImg: kycBackPic,
+      }
+    }).save();
+    res.status(200).json({
+      message: "User Kyc Saved Successfully",
+      status: 200,
+      data
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 400,
+      message: "please select all 3 images"
+    });
+  }
+};
+
+
 exports.getProfile = async (req, res) => {
   console.log("called get profile");
   const user = await User.findOne({ email: req.user.email }).catch((e) =>

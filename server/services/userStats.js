@@ -6,6 +6,7 @@ const PaymentLogs = require("../models/payment_logs");
 const updateSiteStats = require("../listeners/updateSiteStats").em;
 const GeoIP = require("geoip-lite");
 const axios = require("axios");
+const _ = require("lodash");
 
 const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 
