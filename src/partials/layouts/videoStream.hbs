@@ -164,7 +164,6 @@
             let videoId = $(this).attr("videoId");
             console.log("videoId", videoId);
             if (videoId === "qna") {
-                let newForm = new FormData()
                 let qnaForm = `
                     <div id="qnaForm">
                         <label for="qna" id="qnaQuest">3 takeaways from your course ?</label><br>
@@ -175,6 +174,7 @@
                 $('.embed-responsive').removeClass('embed-responsive-16by9')
                 $('#video-wrapper').html(qnaForm);
                 document.getElementById('qnaBtn').addEventListener('click', () => {
+                    let newForm = new FormData()
                     $.ajax({
                         method: "get",
                         url: "/api/current_user",
@@ -195,9 +195,13 @@
                                     if (qnaResult.status == 200) {
                                         window.location.reload()
                                     }
+                                },
+                                error:(resp) => {
+                                    if (resp && resp.responseJSON && resp.responseJSON.message) alert(resp.responseJSON.message)
                                 }
                             })
-                        }
+                        },
+
                     })
                 })
                 return;

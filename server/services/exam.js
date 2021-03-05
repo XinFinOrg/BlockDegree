@@ -565,6 +565,7 @@ exports.getExamResult = async (req, res) => {
       examName,
       d,
       donerName,
+      null,
       (bothRender) => {
         if (!bothRender.uploaded) {
           console.log("error:", bothRender);

@@ -8,6 +8,7 @@ const GeoIP = require("geoip-lite");
 const axios = require("axios");
 const Qna = require("../models/qna");
 const _ = require("lodash");
+const { renderForIPFSHash } = require("../helpers/renderCertificate");
 
 const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 
@@ -519,6 +520,37 @@ exports.qna = async (req, res) => {
         status: 200,
         data: ansSave,
       });
+
+      const user = await User.findOne({ email });
+
+      if (user) {
+        renderForIPFSHash(
+          user.name,
+          "",
+          "course-exit",
+          new Date(),
+          "",
+          "video-stream",
+          async (bothRender) => {
+            if (!bothRender.uploaded) console.log("error:", bothRender);
+            else {
+              const [report, certi] = bothRender.hash;
+              user.examData.certificateHash.push({
+                timestamp: Date.now(),
+                marks: 0,
+                total: 0,
+                examType: "Study Blockchain in 60 Minutes",
+                headlessHash: report,
+                clientHash: certi,
+                paymentMode: "paypal",
+                // expiryDate: String,
+              });
+
+              await user.save();
+            }
+          }
+        );
+      }
     }
   } catch (error) {
     console.log(error);

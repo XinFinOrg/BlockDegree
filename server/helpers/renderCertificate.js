@@ -14,34 +14,65 @@ if (process.env.IPFS_NETWORK == "local") {
   clientIPFS = new ipfsClient({
     host: "ipfs.xinfin.network",
     port: 443,
-    protocol: "https"
+    protocol: "https",
   });
 }
 
-exports.renderForIPFSHash = (name, percent, examType, d, donerName, callback) => {
-  if (donerName==undefined || donerName==null ){
-    donerName=""
+const ViewPort = (type) => {
+  switch (type) {
+    case "course-exit": {
+    }
+    case "video-stream": {
+      return {
+        width: 900,
+        height: 615,
+      };
+    }
+    default: {
+      return {
+        width: 800,
+        height: 600,
+      };
+    }
+  }
+};
+
+exports.renderForIPFSHash = (
+  name,
+  percent,
+  examType,
+  d,
+  donerName,
+  type = null,
+  callback
+) => {
+  let certiPath = "/certificate.ejs";
+
+  if (type === "video-stream") certiPath = "/ikiguide.ejs";
+
+  if (donerName == undefined || donerName == null) {
+    donerName = "";
   }
   console.log("Called RENDER IPFS");
   let date = d.toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
-    year: "numeric"
+    year: "numeric",
   });
   let ts = d.getTime();
   if (name == "" || percent == null || examType == "") {
     return callback({ uploaded: false, error: "bad parameters", hash: "" });
   }
   ejs.renderFile(
-    __dirname + "/certificate.ejs",
+    __dirname + certiPath,
     {
       rndDgt: crypto.randomBytes(32).toString("hex"),
       name: name,
       course: getDegreeContentDetails(examType).course,
       score: percent,
       date: date,
-      ts:ts,
-      examType: examType
+      ts: ts,
+      examType: examType,
     },
     (err, data) => {
       if (err != null) {
@@ -49,7 +80,7 @@ exports.renderForIPFSHash = (name, percent, examType, d, donerName, callback) =>
           uploaded: false,
           info: "error in EJS rendering",
           hash: "",
-          error: err
+          error: err,
         });
       }
       let buffer = Buffer.from(data, "utf-8");
@@ -59,28 +90,50 @@ exports.renderForIPFSHash = (name, percent, examType, d, donerName, callback) =>
             uploaded: false,
             info: "error in adding certi to IPFS",
             hash: "",
-            error: err
+            error: err,
           });
         }
         console.log("Uploaded");
-        renderWithQR(name, percent, examType, d, ipfsHash[0].hash, donerName, obj => {
-          callback({
-            uploaded: obj.uploaded,
-            info: obj.info,
-            hash: obj.hash,
-            error: obj.error
-          });
-        });
+        renderWithQR(
+          name,
+          percent,
+          examType,
+          d,
+          ipfsHash[0].hash,
+          donerName,
+          type,
+          (obj) => {
+            callback({
+              uploaded: obj.uploaded,
+              info: obj.info,
+              hash: obj.hash,
+              error: obj.error,
+            });
+          }
+        );
       });
     }
   );
 };
 
-var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) => {
+var renderWithQR = async (
+  name,
+  percent,
+  examType,
+  d,
+  hash,
+  donerName,
+  type = null,
+  callback
+) => {
+  let certiPath = "/certificateWithQR.ejs";
+
+  if (type === "video-stream") certiPath = "/ikiguideQR.ejs";
+
   let date = d.toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
-    year: "numeric"
+    year: "numeric",
   });
   let ts = d.getTime();
   if (name == "" || percent == null || examType == "") {
@@ -94,20 +147,20 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
   ); // or the domain of where its hosted
   const degreeDetails = getDegreeContentDetails(examType);
   ejs.renderFile(
-    __dirname + "/certificateWithQR.ejs",
+    __dirname + certiPath,
     {
       rndDgt: crypto.randomBytes(32).toString("hex"),
       name: name,
       course: degreeDetails.course,
-      courseSub:degreeDetails.courseSub,
-      topic:degreeDetails.topic,
-      subTopic:degreeDetails.subTopic,
-      score: Math.round(parseFloat(percent))+"",
+      courseSub: degreeDetails.courseSub,
+      topic: degreeDetails.topic,
+      subTopic: degreeDetails.subTopic,
+      score: Math.round(parseFloat(percent)) + "",
       date: date,
       dataURL: dataURL,
-      ts:ts,
+      ts: ts,
       examType: examType,
-      donerName:donerName
+      donerName: donerName,
     },
     (err, data) => {
       if (err != null) {
@@ -115,7 +168,7 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
           uploaded: false,
           info: "error in EJS rendering",
           hash: "",
-          error: err
+          error: err,
         });
       }
       let buffer = Buffer.from(data, "utf-8");
@@ -125,7 +178,7 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
             uploaded: false,
             info: "error in adding certi to IPFS",
             hash: "",
-            error: err
+            error: err,
           });
         }
         // save the buffer to cache
@@ -136,23 +189,22 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
               uploaded: false,
               info: "error in adding certi to IPFS",
               hash: "",
-              error: err
+              error: err,
             });
           } else {
-            files.forEach(async file => {
+            files.forEach(async (file) => {
               var localPath = "server/cached/" + file.path + ".png";
               imgHTML = file.content.toString("utf-8");
               // Asynchronous Starts
               let browser;
               try {
                 browser = await puppeteer.launch({
-                  args: ["--no-sandbox", "--disable-setuid-sandbox"]
+                  args: ["--no-sandbox", "--disable-setuid-sandbox"],
                 });
                 const page = await browser.newPage();
                 await page.setViewport({
-                  width: 800,
-                  height: 600,
-                  deviceScaleFactor: 1
+                  ...ViewPort(examType),
+                  deviceScaleFactor: 1,
                 });
                 await page.setContent(imgHTML);
                 await page.screenshot({ path: localPath });
@@ -165,14 +217,14 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
                   uploaded: false,
                   info: "error while screenshot in puppeteer",
                   hash: "",
-                  error: browserException
+                  error: browserException,
                 });
               }
 
               browser.close().then(() => {
                 // asynchronous
                 b64content = fs.readFileSync(localPath, {
-                  encoding: "base64"
+                  encoding: "base64",
                 });
               });
             });
@@ -183,34 +235,45 @@ var renderWithQR = async (name, percent, examType, d, hash,donerName, callback) 
           uploaded: true,
           info: "",
           hash: [hash, ipfsHash[0].hash],
-          error: null
+          error: null,
         });
       });
     }
   );
 };
 
-function getDegreeContentDetails(examType){
+function getDegreeContentDetails(examType) {
   console.log("examType: ", examType);
-  
-  switch(examType){
-    case "basic":{}
-    case "advanced":{}
-    case "professional":{
-      return {
-        topic:"Blockchain",
-        subTopic:"Basic Course For Engineers",
-        course:`Certified Blockchain ${examType.charAt(0).toUpperCase() + examType.slice(1)} Expert`,
-        courseSub:`Blockchain Certificate`
-      }
+
+  switch (examType) {
+    case "basic": {
     }
-    case "computing":{
-      return {
-        topic:"Cloud Computing",
-        subTopic:"Basic Cloud Computing Course",
-        course:`Cloud Computing Specialist`,
-        courseSub:`Cloud Computing`
-      }
+    case "advanced": {
     }
+    case "professional": {
+      return {
+        topic: "Blockchain",
+        subTopic: "Basic Course For Engineers",
+        course: `Certified Blockchain ${
+          examType.charAt(0).toUpperCase() + examType.slice(1)
+        } Expert`,
+        courseSub: `Blockchain Certificate`,
+      };
+    }
+    case "computing": {
+      return {
+        topic: "Cloud Computing",
+        subTopic: "Basic Cloud Computing Course",
+        course: `Cloud Computing Specialist`,
+        courseSub: `Cloud Computing`,
+      };
+    }
+    case "course-exit":
+      return {
+        topic: "Study Blockchain in 60 Minutes",
+        subTopic: "Study Blockchain in 60 Minutes",
+        course: `Study Blockchain in 60 Minutes`,
+        courseSub: `Study Blockchain in 60 Minutes`,
+      };
   }
 }
