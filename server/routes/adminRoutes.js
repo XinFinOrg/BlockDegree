@@ -20,7 +20,7 @@ module.exports = (app) => {
   app.get("/admin/userStats", requireLogin, requireAdmin, (req, res) => {
     res.sendFile("userStats.html", { root: adminPath });
   });
-  app.get("/api/getKycUserPic/:path",requireLogin, requireAdmin, adminServices.getKycUserPic);
+  app.get("/api/getKycUserPic/:path", requireLogin, requireAdmin, adminServices.getKycUserPic);
 
   // migration API only once
   // app.get("/api/migrate", migrationService.migrateFrom);
@@ -179,11 +179,14 @@ module.exports = (app) => {
     app.get("/api/addComputingQuestions", requireLogin, requireAdmin, adminServices.addComputingQuestions);
     app.get("/api/getSocialShares", requireLogin, requireAdmin, adminServices.getSocialShares);
     app.get("/api/getUserSessions", requireLogin, requireAdmin, adminServices.getUserSessions);
-    app.get("/api/getKycUser", adminServices.getKycUser);
-    app.post("/api/approveKycUser", adminServices.approveKycUser);
-    app.post("/api/rejectKycUser", adminServices.rejectKycUser);
-    app.get("/api/getrazorpaylog", adminServices.getrazorpaylog);
-    app.get("/api/getuserreferals", adminServices.getuserreferals);
-    app.get("/api/getfundmydegree", adminServices.getfundmydegree);
+    app.get("/api/getKycUser", requireLogin, requireAdmin, adminServices.getKycUser);
+    app.post("/api/approveKycUser", requireLogin, requireAdmin, adminServices.approveKycUser);
+    app.post("/api/rejectKycUser", requireLogin, requireAdmin, adminServices.rejectKycUser);
+    app.get("/api/getrazorpaylog", requireLogin, requireAdmin, adminServices.getrazorpaylog);
+    app.get("/api/getuserreferals", requireLogin, requireAdmin, adminServices.getuserreferals);
+    app.get("/api/getfundmydegree", requireLogin, requireAdmin, adminServices.getfundmydegree);
+    app.get('/api/examVideo', (req, res) => {
+      res.sendFile(path.join(__dirname, '../../src/pages/examVideo.html'));
+    });
   }
 };
