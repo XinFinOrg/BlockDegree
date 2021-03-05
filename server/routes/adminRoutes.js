@@ -22,6 +22,7 @@ module.exports = (app) => {
   });
   app.get("/api/getKycUserPic/:path", requireLogin, requireAdmin, adminServices.getKycUserPic);
 
+
   // migration API only once
   // app.get("/api/migrate", migrationService.migrateFrom);
 
@@ -126,57 +127,57 @@ module.exports = (app) => {
 
   // prettier-ignore
   {
-    app.post("/api/addCourse", requireLogin, requireAdmin, adminServices.addCourse);
-    app.post("/api/setXdceTolerance", requireLogin, requireAdmin, adminServices.setXdceTolerance);
-    app.post("/api/setXdcTolerance", requireLogin, requireAdmin, adminServices.setXdcTolerance);
-    app.post("/api/setPriceUsd", requireLogin, requireAdmin, adminServices.setPriceUsd);
-    app.post("/api/setXdceConfirmation", requireLogin, requireAdmin, adminServices.setXdceConfirmation);
-    app.post("/api/setXdcConfirmation", requireLogin, requireAdmin, adminServices.setXdcConfirmation);
-    app.post("/api/setCourseBurnPercent", requireLogin, requireAdmin, adminServices.setCourseBurnPercent);
-    app.post("/api/enableBurning", requireLogin, requireAdmin, adminServices.enableBurning);
-    app.post("/api/disableBurning", requireLogin, requireAdmin, adminServices.disableBurning);
-    app.post("/api/addWallet", requireLogin, requireAdmin, adminServices.addWallet);
-    app.post("/api/switchWalletTo", requireLogin, requireAdmin, adminServices.switchWalletTo);
-    app.post("/api/addReferralCode", requireLogin, requireAdmin, adminServices.addReferralCode);
-    app.post("/api/enableReferralCode", requireLogin, requireAdmin, adminServices.enableRefCode);
-    app.post("/api/disableReferralCode", requireLogin, requireAdmin, adminServices.disableRefCode);
-    app.get("/api/getCourseVisits", requireLogin, requireAdmin, userStatsService.getCourseVisits);
-    app.get("/api/getAllUser", requireLogin, requireAdmin, userStatsService.getAllUser);
-    app.get("/api/getAllPromoCodes", requireLogin, requireAdmin, userStatsService.getAllPromoCodes);
-    app.get("/api/getAllReferralCodes", requireLogin, requireAdmin, userStatsService.getAllReferralCodes);
-    app.get("/api/getPromoCodeLogs", requireLogin, requireAdmin, adminServices.getPromoCodeLogs);
-    app.get("/api/getPaymentLogs", requireLogin, requireAdmin, adminServices.getPaymentLogs);
-    app.get("/api/getBurnlogs", requireLogin, requireAdmin, adminServices.getBurnLogs);
-    app.get("/api/getCryptoLogs", requireLogin, requireAdmin, adminServices.getCryptoLogs);
-    app.get("/api/forcePendingBurn", requireLogin, requireAdmin, adminServices.forcePendingBurn);
-    app.post("/api/scheduleEventByTime", requireLogin, requireAdmin, postSocial.scheduleEventByTime);
-    app.post("/api/addPostTemplate", requireLogin, requireAdmin, postSocial.addPostTemplate);
-    app.post("/api/scheduleEventByState", requireLogin, requireAdmin, postSocial.scheduleEventByState);
-    app.get("/api/getSocialPostTemplates", requireLogin, requireAdmin, adminServices.getSocialPostTemplates);
-    app.get("/api/initiateSocialPostConfig", requireLogin, requireAdmin, postSocial.initiateSocialPostConfig);
-    app.get("/api/enableAutoPost", requireLogin, requireAdmin, postSocial.enableAutoPost);
-    app.get("/api/disableAutoPost", requireLogin, requireAdmin, postSocial.disableAutoPost);
-    app.get("/api/getCurrentEventJobs", requireLogin, requireAdmin, postSocial.getCurrentEventJobs);
-    app.get("/api/forceSyncEvents", requireLogin, requireAdmin, postSocial.forceReSync);
-    app.post("/api/removePost", requireLogin, requireAdmin, postSocial.removePost);
-    app.post("/api/cancelEvent", requireLogin, requireAdmin, postSocial.cancelScheduledPost);
-    app.get("/api/fetchFacebookLastUpdate", requireLogin, requireAdmin, postSocial.fetchFacebookLastUpdate);
-    app.get("/api/getAllFundRequests", requireLogin, requireAdmin, adminServices.getAllFundRequests);
-    app.post("/api/approveFund", requireLogin, requireAdmin, adminServices.approveFund);
-    app.post("/api/rejectFund", requireLogin, requireAdmin, adminServices.rejectFund);
-    app.post("/api/syncRecipients", requireLogin, requireAdmin, adminServices.syncRecipients);
+    app.post("/api/addCourse",requireLogin,requireAdmin,adminServices.addCourse);
+    app.post("/api/setXdceTolerance",requireLogin,requireAdmin,adminServices.setXdceTolerance);
+    app.post("/api/setXdcTolerance",requireLogin,requireAdmin,adminServices.setXdcTolerance);
+    app.post("/api/setPriceUsd",requireLogin,requireAdmin,adminServices.setPriceUsd);
+    app.post("/api/setXdceConfirmation",requireLogin,requireAdmin,adminServices.setXdceConfirmation);
+    app.post("/api/setXdcConfirmation",requireLogin,requireAdmin,adminServices.setXdcConfirmation);
+    app.post("/api/setCourseBurnPercent",requireLogin,requireAdmin,adminServices.setCourseBurnPercent);
+    app.post("/api/enableBurning",requireLogin,requireAdmin,adminServices.enableBurning);
+    app.post("/api/disableBurning",requireLogin,requireAdmin,adminServices.disableBurning);
+    app.post("/api/addWallet",requireLogin,requireAdmin,adminServices.addWallet);
+    app.post("/api/switchWalletTo",requireLogin, requireAdmin,adminServices.switchWalletTo);
+    app.post("/api/addReferralCode",requireLogin,requireAdmin,adminServices.addReferralCode);
+    app.post("/api/enableReferralCode",requireLogin, requireAdmin,adminServices.enableRefCode);
+    app.post("/api/disableReferralCode",requireLogin, requireAdmin,adminServices.disableRefCode);
+    app.get("/api/getCourseVisits",requireLogin, requireAdmin,userStatsService.getCourseVisits);
+    app.get("/api/getAllUser",requireLogin, requireAdmin,userStatsService.getAllUser);
+    app.get("/api/getAllPromoCodes",requireLogin, requireAdmin,userStatsService.getAllPromoCodes);
+    app.get("/api/getAllReferralCodes",requireLogin, requireAdmin,userStatsService.getAllReferralCodes);
+    app.get("/api/getPromoCodeLogs",requireLogin, requireAdmin,adminServices.getPromoCodeLogs);
+    app.get("/api/getPaymentLogs",requireLogin, requireAdmin,adminServices.getPaymentLogs);
+    app.get("/api/getBurnlogs",requireLogin, requireAdmin,adminServices.getBurnLogs);
+    app.get("/api/getCryptoLogs",requireLogin, requireAdmin,adminServices.getCryptoLogs);
+    app.get("/api/forcePendingBurn",requireLogin, requireAdmin,adminServices.forcePendingBurn);
+    app.post("/api/scheduleEventByTime",requireLogin,requireAdmin,postSocial.scheduleEventByTime);
+    app.post("/api/addPostTemplate",requireLogin,requireAdmin,postSocial.addPostTemplate);
+    app.post("/api/scheduleEventByState",requireLogin,requireAdmin,postSocial.scheduleEventByState);
+    app.get("/api/getSocialPostTemplates",requireLogin,requireAdmin,adminServices.getSocialPostTemplates);
+    app.get("/api/initiateSocialPostConfig",requireLogin,requireAdmin,postSocial.initiateSocialPostConfig);
+    app.get("/api/enableAutoPost",requireLogin,requireAdmin,postSocial.enableAutoPost);
+    app.get("/api/disableAutoPost",requireLogin,requireAdmin,postSocial.disableAutoPost);
+    app.get("/api/getCurrentEventJobs",requireLogin,requireAdmin,postSocial.getCurrentEventJobs);
+    app.get("/api/forceSyncEvents",requireLogin,requireAdmin,postSocial.forceReSync);
+    app.post("/api/removePost",requireLogin,requireAdmin,postSocial.removePost);
+    app.post("/api/cancelEvent",requireLogin,requireAdmin, postSocial.cancelScheduledPost);
+    app.get("/api/fetchFacebookLastUpdate",requireLogin,requireAdmin, postSocial.fetchFacebookLastUpdate);
+    app.get("/api/getAllFundRequests",requireLogin,requireAdmin, adminServices.getAllFundRequests);
+    app.post("/api/approveFund",requireLogin,requireAdmin, adminServices.approveFund);
+    app.post("/api/rejectFund",requireLogin,requireAdmin, adminServices.rejectFund);
+    app.post("/api/syncRecipients",requireLogin,requireAdmin, adminServices.syncRecipients);
     // app.get("/api/logFMDPk", adminServices.logFMDPk); syncPendingBurnFMD
-    app.post("/api/syncPendingBurnFMD", requireLogin, requireAdmin, adminServices.syncPendingBurnFMD);
-    app.get("/api/createUserReferralAll", requireLogin, requireAdmin, adminServices.createUserReferralAll);
-    app.post("/api/getReferredByUser", requireLogin, requireAdmin, adminServices.getReferredByUser);
+    app.post("/api/syncPendingBurnFMD",requireLogin,requireAdmin, adminServices.syncPendingBurnFMD);
+    app.get("/api/createUserReferralAll",requireLogin,requireAdmin, adminServices.createUserReferralAll);
+    app.post("/api/getReferredByUser" ,requireLogin,requireAdmin,adminServices.getReferredByUser);
     // syncPendingDonation
-    app.get("/api/syncPendingDonation", requireLogin, requireAdmin, adminServices.syncPendingDonation);
-    app.get("/api/syncFunderCerti", requireLogin, requireAdmin, adminServices.syncFunderCerti);
+    app.get("/api/syncPendingDonation" ,requireLogin,requireAdmin,adminServices.syncPendingDonation);
+    app.get("/api/syncFunderCerti", requireLogin,requireAdmin, adminServices.syncFunderCerti);
 
-    app.post("/api/transferFMDFundToAdmin", requireLogin, requireAdmin, adminServices.transferFMDFundToAdmin);
-    app.post("/api/syncCompletionDateFMD", requireLogin, requireAdmin, adminServices.syncCompletionDateFMD);
-    app.post("/api/setFMDCompletionDateManual", requireLogin, requireAdmin, adminServices.setFMDCompletionDateManual);
-    app.get("/api/addComputingQuestions", requireLogin, requireAdmin, adminServices.addComputingQuestions);
+    app.post("/api/transferFMDFundToAdmin",requireLogin,requireAdmin, adminServices.transferFMDFundToAdmin);
+    app.post("/api/syncCompletionDateFMD",requireLogin,requireAdmin, adminServices.syncCompletionDateFMD);
+    app.post("/api/setFMDCompletionDateManual",requireLogin,requireAdmin, adminServices.setFMDCompletionDateManual);
+    app.get("/api/addComputingQuestions",requireLogin,requireAdmin, adminServices.addComputingQuestions);
     app.get("/api/getSocialShares", requireLogin, requireAdmin, adminServices.getSocialShares);
     app.get("/api/getUserSessions", requireLogin, requireAdmin, adminServices.getUserSessions);
     app.get("/api/getKycUser", requireLogin, requireAdmin, adminServices.getKycUser);
@@ -188,5 +189,6 @@ module.exports = (app) => {
     app.get('/api/examVideo', (req, res) => {
       res.sendFile(path.join(__dirname, '../../src/pages/examVideo.html'));
     });
+
   }
 };

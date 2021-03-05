@@ -275,5 +275,14 @@ function getDegreeContentDetails(examType) {
         course: `Study Blockchain in 60 Minutes`,
         courseSub: `Study Blockchain in 60 Minutes`,
       };
+
+    case "wallet":{
+      return {
+        topic:"Blockchain Wallet",
+        subTopic:"Basic Blockchain Wallet Course",
+        course:`Blockchain Wallet Specialist`,
+        courseSub:`Blockchain Wallet`
+      }
+    }
   }
 }

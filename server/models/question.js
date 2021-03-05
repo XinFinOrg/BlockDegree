@@ -9,7 +9,8 @@ var questionSchema = mongoose.Schema({
     questionsBasic: Array,
     questionsAdvanced: Array,
     questionsProfessional: Array,
-    questionsComputing: Array
+    questionsComputing: Array,
+    questionsWallet: Array
 });
 
 // create the model for users and expose it to our app

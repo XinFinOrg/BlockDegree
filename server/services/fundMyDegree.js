@@ -1023,6 +1023,8 @@ function getCourseName(id) {
       return "Blockchain Professional";
     case "course_4":
       return "Cloud Computing";
+    case "course_5":
+      return "Blockchain Wallet";
     default:
       return "";
   }

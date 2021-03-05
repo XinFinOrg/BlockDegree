@@ -13,14 +13,17 @@ var userSchema = mongoose.Schema({
       course_2: Boolean,
       course_3: Boolean,
       course_4: Boolean,
+      course_5: Boolean,
       course_1_payment: String,
       course_2_payment: String,
       course_3_payment: String,
       course_4_payment: String,
+      course_5_payment: String,
       course_1_doner: String,
       course_2_doner: String,
       course_3_doner: String,
       course_4_doner: String,
+      course_5_doner: String,
     },
     examBasic: {
       attempts: Number,
@@ -35,6 +38,10 @@ var userSchema = mongoose.Schema({
       marks: Number,
     },
     examComputing: {
+      attempts: Number,
+      marks: Number,
+    },
+    examWallet: {
       attempts: Number,
       marks: Number,
     },
