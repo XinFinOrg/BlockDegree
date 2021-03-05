@@ -1,4 +1,4 @@
-{{> includes/hero hero-title="Video Library"}}
+{{> includes/hero hero-title="Study Blockchain in 60minutes"}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <style>
     #qnaEmail {
@@ -54,26 +54,8 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade active show" id="overview">
-                    <div>
-                        <h3>Introduction to how Blockchain Works ?</h3>
-                        <p>Blockchain is a combination of three leading technologies:</p>
-                        <ol>
-                            <li>Cryptographic keys.</li>
-                            <li>A peer-to-peer network containing a shared ledger.</li>
-                            <li>A means of computing, to store the transactions and records of the network.</li>
-                        </ol>
-                        <p>Cryptography keys consist of two keys – Private key and Public key. These keys help in
-                            performing successful transactions between two parties. Each individual has these two keys,
-                            which they use to produce a secure digital identity reference. This secured identity is the
-                            most important aspect of Blockchain technology. In the world of cryptocurrency, this
-                            identity is referred to as ‘digital signature’ and is used for authorizing and controlling
-                            transactions.
-                            The digital signature is merged with the peer-to-peer network; a large number of individuals
-                            who act as authorities use the digital signature in order to reach a consensus on
-                            transactions, among other issues. When they authorize a deal, it is certified by a
-                            mathematical verification, which results in a successful secured transaction between the two
-                            network-connected parties. So to sum it up, Blockchain users employ cryptography keys to
-                            perform different types of digital interactions over the peer-to-peer network.</p>
+                    <div id="overviewContent">
+
                     </div>
                 </div>
                 <div class="tab-pane fade" id="notes">
@@ -92,44 +74,49 @@
         </div>
         <div class="col-lg-3 colo-md-4">
             <div id="video-links-block">
-                <button videoId="1">1. Chapter 1<br />
+                <button videoId="1">1. Introduction to Blockchain Tech<br />
                     <div id="btn1" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 11.55 min
+                        <i class="fa fa-play-circle"></i> 7.10 min
                     </div>
                 </button>
-                <button videoId="2">2. Chapter 2<br />
+                <button videoId="2">2. 6 Features and Benefits of Blockchain Tech<br />
                     <div id="btn2" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 8.48 min
+                        <i class="fa fa-play-circle"></i> 8.25 min
                     </div>
                 </button>
-                <button videoId="3">3. Chapter 3<br />
+                <button videoId="3">3. Distributed Ledger Technology<br />
                     <div id="btn3" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 7.08 min
+                        <i class="fa fa-play-circle"></i> 4.18 min
                     </div>
                 </button>
-                <button videoId="4">4. Chapter 4<br />
+                <button videoId="4">4. How Blockchain Works<br />
                     <div id="btn4" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 7.03 min
+                        <i class="fa fa-play-circle"></i> 11.56 min
                     </div>
                 </button>
-                <button videoId="5">5. Chapter 5<br />
+                <button videoId="5">5. Crypto Assets<br />
                     <div id="btn5" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 3.48 min
+                        <i class="fa fa-play-circle"></i> 8.49 min
                     </div>
                 </button>
-                <button videoId="6">6. Chapter 6<br />
+                <button videoId="6">6. Bitcoin<br />
                     <div id="btn6" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 8.24 min
+                        <i class="fa fa-play-circle"></i> 7.04 min
                     </div>
                 </button>
-                <button videoId="7">7. Chapter 7<br />
+                <button videoId="7">7. Ethereum<br />
                     <div id="btn7" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 2.41 min
+                        <i class="fa fa-play-circle"></i> 3.49 min
                     </div>
                 </button>
-                <button videoId="8">8. Chapter 8<br />
+                <button videoId="8">8. Alt-coins<br />
                     <div id="btn8" class="video-item-link">
-                        <i class="fa fa-play-circle"></i> 4.17 min
+                        <i class="fa fa-play-circle"></i> 2.42 min
+                    </div>
+                </button>
+                <button videoId="9">9. Types of Crypto Assets<br />
+                    <div id="btn8" class="video-item-link">
+                        <i class="fa fa-play-circle"></i> 7.09 min
                     </div>
                 </button>
                 <button videoId="qna">Course Exit<br />
@@ -174,6 +161,8 @@
         })
 
         const videoPlayer = document.getElementById("videoPlayer")
+        const overviews = {{{ Overview }}};
+        $('#overviewContent').html(overviews["1"])
         $('button[videoId="1"]').addClass('video-item-link-active')
         $('button').click(function () {
             videoPlayer.pause();
@@ -195,7 +184,9 @@
             videoPlayer.play();
             $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
             $($(this).attr('videoId')).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
-        });
+
+            $('#overviewContent').html(overviews[videoId])
+        })
         function payment() {
             let formNew = document.createElement('form');
             formNew.action = "/pay-video";
