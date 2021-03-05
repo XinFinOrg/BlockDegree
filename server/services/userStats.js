@@ -6,9 +6,7 @@ const PaymentLogs = require("../models/payment_logs");
 const updateSiteStats = require("../listeners/updateSiteStats").em;
 const GeoIP = require("geoip-lite");
 const axios = require("axios");
-const Qna = require("../models/qna");
 const _ = require("lodash");
-const { renderForIPFSHash } = require("../helpers/renderCertificate");
 
 const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 
@@ -485,113 +483,4 @@ exports.getAllReferralCodes = async (req, res) => {
     return res.json({ status: false, error: "internal error" });
   }
   return res.json({ status: true, error: null, codes: allPromoCode });
-};
-
-/**
- *
- *
- * QNA Code -> CourseExit
- *
- */
-
-exports.qna = async (req, res) => {
-  try {
-    const { question, answer } = req.body;
-    const email = req.user.email;
-
-    console.log("question, answer", req.body, question, answer);
-
-    if (_.isEmpty(question) || _.isEmpty(answer)) {
-      res.status(422).json({
-        message: "Please fill up the answer",
-        status: 422,
-      });
-    } else {
-      const ansSave = new Qna({
-        isAnsSubmitted: true,
-        email: email,
-        question: question,
-        answer: answer,
-        courseId: "video-stream",
-      });
-      await ansSave.save();
-      res.status(200).json({
-        message: "Answer Submitted",
-        status: 200,
-        data: ansSave,
-      });
-
-      const user = await User.findOne({ email });
-
-      if (user) {
-        renderForIPFSHash(
-          user.name,
-          "",
-          "course-exit",
-          new Date(),
-          "",
-          "video-stream",
-          async (bothRender) => {
-            if (!bothRender.uploaded) console.log("error:", bothRender);
-            else {
-              const [report, certi] = bothRender.hash;
-              user.examData.certificateHash.push({
-                timestamp: Date.now(),
-                marks: 0,
-                total: 0,
-                examType: "Study Blockchain in 60 Minutes",
-                headlessHash: report,
-                clientHash: certi,
-                paymentMode: "paypal",
-                // expiryDate: String,
-              });
-
-              await user.save();
-            }
-          }
-        );
-      }
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Something Wrong",
-      status: 500,
-    });
-  }
-};
-
-/**
- *
- * CourseId -> video-stream
- *
- */
-exports.getQna = async (req, res) => {
-  try {
-    const courseId = req.body.courseId;
-    if (_.isEmpty(courseId))
-      return res.status(422).json({
-        message: "no course exists",
-        status: 422,
-      });
-    const data = await Qna.findOne({
-      $and: [{ email: req.body.email }, { courseId }, { isAnsSubmitted: true }],
-    });
-    console.log("data", data);
-    if (data)
-      return res.status(200).json({
-        data: { submitted: true },
-        status: 200,
-      });
-    return res.status(200).json({
-      data: { submitted: false },
-      status: 200,
-    });
-  } catch (error) {
-    console.log("error", error);
-    res.status(500).json({
-      message: "Something Wrong",
-      status: 500,
-    });
-  }
 };

@@ -13,4 +13,4 @@ const mongooseSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("qna", mongooseSchema); //course
+module.exports = mongoose.model("CourseExit", mongooseSchema); //course

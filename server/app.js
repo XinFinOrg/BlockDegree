@@ -83,7 +83,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 require("./routes/paymentRoutes.js")(app);
 require("./routes/authRoutes")(app);
 require("./routes/examRoutes")(app);
-// require('./routes/paymentRoutes')(app) // Not working; need to make a further dive.
+require('./routes/paymentRoutes')(app) // Not working; need to make a further dive.
 require("./routes/contentRoutes")(app);
 require("./routes/emailVeriRoutes")(app);
 require("./routes/shareSocialsRoutes")(app);
@@ -92,7 +92,8 @@ require("./routes/contactUsRoutes")(app);
 require("./routes/promoCodeRoutes")(app);
 require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
-require("./routes/fmdRoutes")(app);
+require("./routes/courseExitRoutes")(app);
+// require("./routes/fmdRoutes")(app);
 
 // remove the comment to serve from build
 app.use("/newadmin", dynamicMiddleware);

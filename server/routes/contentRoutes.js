@@ -49,6 +49,4 @@ module.exports = (app) => {
       console.log(e);
     }
   });
-  app.post("/api/qna", requireLogin, userStats.qna);
-  app.post("/api/getQna", requireLogin, userStats.getQna);
 };
