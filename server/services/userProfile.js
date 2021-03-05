@@ -52,6 +52,7 @@ exports.setupProfile = async (req, res) => {
 
 exports.kycUserDetails = async (req, res) => {
   try {
+
     let currentPath = path.join(__dirname, '../../src/docImgs');
     if (_.isNull(req.files) && _.isNull(req.body)) {
       res.status(400).json({

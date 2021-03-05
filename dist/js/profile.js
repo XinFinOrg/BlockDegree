@@ -19,8 +19,8 @@ if (typeof jQuery != "undefined") {
                 if (user.email == result.user.email && user.isKycVerified === true) {
                   kycStatus = document.getElementById('kycStatus');
                   kycStatus.innerHTML = user.kycStatus;
-                  document.getElementById('kyc-profile-btn').style.visibility = "hidden";
-                  document.getElementById('kyc_profile').style.visibility = "hidden";
+                  document.getElementById('kyc-profile-btn').style.display = "none";
+                  document.getElementById('kyc_profile').style.display = "none";
                 } else {
                   kycStatus = document.getElementById('kycStatus');
                   kycStatus.innerHTML = user.kycStatus;
@@ -273,18 +273,15 @@ if (typeof jQuery != "undefined") {
         newForm.append("selfieImg", selfiefiles[0], "selfieImg.png");
         newForm.append("kycFrontImg", kycFrontfiles[0], "kycFrontImg.png");
         newForm.append("kycBackImg", kycBackfiles[0], "kycBackImg.png");
-        if (!(selfiefiles[0] || kycFrontfiles[0] || kycBackfiles[0])) {
-          $.notify("Something Wrong", { type: "danger" });
-        }
         $.ajax({
           method: "post",
-          url: "/api/kycDetails",
+          url: "/api/kycUserDetails",
           data: newForm,
           enctype: "multipart/form-data",
           contentType: false,
           processData: false,
           success: (userData) => {
-            if (userData.statusCode == 200) {
+            if (userData.status == 200) {
               $.notify(`KYC Saved ${ result.user.email }`, { type: "success" });
             } else {
               $.notify("something wrong", { type: "danger" });

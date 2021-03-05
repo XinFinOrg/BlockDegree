@@ -31,6 +31,7 @@ module.exports = (app) => {
   app.get("/api/getSiteStats", userStats.getSiteStats);
   app.get("/api/getXinFinStats", userStats.getXinFinStats);
   app.get("/api/getCurrentTimestamp", courseService.getCurrentTimestamp);
+
   app.get(
     "/api/videoStream/:id",
     requireLogin,
@@ -48,4 +49,6 @@ module.exports = (app) => {
       console.log(e);
     }
   });
+    app.post("/api/qna", requireLogin, userStats.qna);
+  app.post("/api/getQna", requireLogin, userStats.getQna);
 };
