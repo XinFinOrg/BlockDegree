@@ -15,6 +15,12 @@ import allFunds from "./allFunds";
 import xdcPrice from "./xdcPrice";
 import socialShares from "./socialShares";
 import userSessions from "./UserSessions";
+import fundmydegree from "./FundMyDegree";
+import referals from "./Referals";
+import razorpaylog from "./RazorPayLog";
+import kycuser from "./kycuser";
+import rejectkycuser from './RejectKyc';
+import approvekycuser from './ApproveKyc';
 
 export default {
   auth: Auth,
@@ -31,6 +37,12 @@ export default {
   cryptoLogs: cryptoLogs,
   allFunds: allFunds,
   xdcPrice: xdcPrice,
+  kycuser,
+  referals,
+  rejectkycuser,
+  approvekycuser,
+  razorpaylog,
+  fundmydegree,
   socialShares,
   userSessions,
 };
