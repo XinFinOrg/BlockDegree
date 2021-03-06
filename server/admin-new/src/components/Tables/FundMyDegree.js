@@ -43,7 +43,7 @@ function expiryDatePostFilter(filterVal, data) {
             return false;
         });
     }
-    return data;
+    return data; 
 }
 
 function defHeadFormatter(column, colIndex, { sortElement, filterElement }) {
