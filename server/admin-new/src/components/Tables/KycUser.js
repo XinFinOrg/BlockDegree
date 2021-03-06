@@ -148,13 +148,13 @@ export class KycUser extends Component {
   handleDataChange = data => {
     document.getElementById("currDataCount").innerHTML = data.dataSize;
   };
-  
+
   render() {
     let showModalWithImg = (
       <Modal show={this.state.showModal} keyboard={true} centered animation={true} onHide={() => { this.setState({ showModal: !this.state.showModal }); }} size="lg" aria-labelledby="contained-modal-title-vcenter"
         dialogClassName="description-modal blockdegree-modal">
         <Modal.Header closeButton>
-          <Modal.Title>{}</Modal.Title>
+          <Modal.Title>{ }</Modal.Title>
           <Modal.Body>
             {/* <img src={} /> */}
             Hello
@@ -217,8 +217,8 @@ export class KycUser extends Component {
                         Hours
                       </div>
                     ) : (
-                        ""
-                      )}
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
@@ -238,13 +238,13 @@ export class KycUser extends Component {
                   />
                 </div>
               ) : (
-                  <div className="chart-preload">
-                    <div>
-                      <i className="fa fa-cogs fa-5x" aria-hidden="true" />
-                    </div>
-                  Loading
+                <div className="chart-preload">
+                  <div>
+                    <i className="fa fa-cogs fa-5x" aria-hidden="true" />
                   </div>
-                )}
+                  Loading
+                </div>
+              )}
             </div>
           </div>
         </div>

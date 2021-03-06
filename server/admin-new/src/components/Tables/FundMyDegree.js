@@ -10,6 +10,8 @@ import filterFactory, {
     numberFilter
 } from "react-bootstrap-table2-filter";
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
+import { Button, Modal } from "react-bootstrap";
+
 
 function createdPostFilter(filterVal, data) {
     if (filterVal.date != null && filterVal.comparator !== "") {
@@ -43,7 +45,7 @@ function expiryDatePostFilter(filterVal, data) {
             return false;
         });
     }
-    return data; 
+    return data;
 }
 
 function defHeadFormatter(column, colIndex, { sortElement, filterElement }) {
@@ -78,49 +80,53 @@ const fundMyDegreeColumns = [
         headerFormatter: defHeadFormatter,
     },
     {
-        dataField: "fundId",
-        text: "Fund ID",
+        dataField: "courseId",
+        text: "Course ID",
         filter: textFilter(),
         sort: true,
         headerFormatter: defHeadFormatter,
     },
     {
-        dataField: "fundTx",
-        text: "Fund Tx",
+        dataField: "requestUrlShort",
+        text: "Request Url",
         filter: textFilter(),
         sort: true,
         headerFormatter: defHeadFormatter,
     },
     {
-        dataField: "paypalId",
-        text: "Paypal Id",
+        dataField: "donerEmail",
+        text: "Donor Email",
         filter: textFilter(),
         sort: true,
         headerFormatter: defHeadFormatter,
     },
     {
-        dataField: "razorpayId",
-        text: "Razor Pay Id",
-        filter: textFilter(),
-        sort: true,
-        headerFormatter: defHeadFormatter,
-    },
-    {
-        dataField: "burnTx",
-        text: "Burn Tx",
+        dataField: "donerName",
+        text: "Donor Name",
         filter: textFilter(),
         headerFormatter: defHeadFormatter,
     },
     {
-        dataField: "burnAmnt",
-        text: "Burn Amount",
-        filter: numberFilter(),
-        sort: true,
+        dataField: "description",
+        text: "Description",
+        // sort: true,
         headerFormatter: defHeadFormatter,
     },
 ];
 
 export class FundMyDegree extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showModal: false
+        };
+        this.modeler = this.modeler.bind(this);
+    }
+
+    showDesc() {
+        this.setState({ showModal: !this.state.showModal });
+    }
+
     componentDidMount() {
         this.props.fetchFundMyDegree();
         if (this.props.fundmydegree) this.filterFundMyDegree();
@@ -136,14 +142,15 @@ export class FundMyDegree extends Component {
                     srNo: srNo++,
                     email: userFund.email,
                     userName: userFund.userName,
-                    fundId: userFund.fundId,
-                    paypalId: userFund.paypalId,
-                    razorpayId: userFund.razorpayId,
-                    burnTx: userFund.burnTx,
-                    burnAmnt: userFund.burnAmnt
+                    courseId: userFund.courseId,
+                    requestUrlShort: <a href={userFund.requestUrlShort}>{userFund.requestUrlShort}</a>,
+                    donerEmail: userFund.donerEmail,
+                    donerName: userFund.donerName,
+                    description: <Button onClick={() => this.showDesc(), this.modeler(userFund.description)}></Button>,
                 });
             }
         });
+
         if (document.getElementById("currDataCount"))
             document.getElementById("currDataCount").innerHTML = returnData.length;
         return returnData;
@@ -153,9 +160,25 @@ export class FundMyDegree extends Component {
         document.getElementById("currDataCount").innerHTML = data.dataSize;
     };
 
+
     render() {
+        function modeler(modelData) {
+            return (
+                <Modal show={this.state.showModal} keyboard={true} centered animation={true} onHide={() => { this.setState({ showModal: !this.state.showModal }); }} size="lg" aria-labelledby="contained-modal-title-vcenter"
+                    dialogClassName="description-modal blockdegree-modal">
+                    <Modal.Header closeButton>
+                        <Modal.Title>Description</Modal.Title>
+                        <Modal.Body>
+                            {modelData}
+                        </Modal.Body>
+                    </Modal.Header>
+                </Modal>
+            );
+        }
+
         return (
             <div className="table-container">
+                {modeler()}
                 <div className="row">
                     <div className="col-md-12">
                         <div className="header">
@@ -208,8 +231,8 @@ export class FundMyDegree extends Component {
                         Hours
                                             </div>
                                         ) : (
-                                                ""
-                                            )}
+                                            ""
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -229,13 +252,13 @@ export class FundMyDegree extends Component {
                                     />
                                 </div>
                             ) : (
-                                    <div className="chart-preload">
-                                        <div>
-                                            <i className="fa fa-cogs fa-5x" aria-hidden="true" />
-                                        </div>
-                  Loading
+                                <div className="chart-preload">
+                                    <div>
+                                        <i className="fa fa-cogs fa-5x" aria-hidden="true" />
                                     </div>
-                                )}
+                  Loading
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

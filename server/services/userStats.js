@@ -6,7 +6,7 @@ const PaymentLogs = require("../models/payment_logs");
 const updateSiteStats = require("../listeners/updateSiteStats").em;
 const GeoIP = require("geoip-lite");
 const axios = require("axios");
-const _ = require("lodash");
+const _ = require('lodash');
 
 const cmc = "https://api.coinmarketcap.com/v1/ticker/xinfin-network/";
 
@@ -142,7 +142,7 @@ exports.getUserListUsingCode = async (req, res) => {
     let promoCode = await PromoCode.findOne({ codeName: req.body.codeName });
     if (promoCode == null) {
       res.json({
-        error: `No promocode ${promoCode} found`,
+        error: `No promocode ${ promoCode } found`,
         users: null,
         status: false,
       });
@@ -183,7 +183,7 @@ exports.getVisits = async (req, res) => {
   if (allVisits == null) {
     res.json({
       status: false,
-      error: `No Such content (${req.body.content}) is registered`,
+      error: `No Such content (${ req.body.content }) is registered`,
     });
   } else {
     res.json({ status: true, error: null, visits: allVisits });
@@ -383,7 +383,7 @@ exports.getSiteStats = (req, res) => {
   try {
     RedisClient.get("siteStats", async (err, result) => {
       if (err) {
-        console.log(`exception at ${__filename}.getSiteStats: `, err);
+        console.log(`exception at ${ __filename }.getSiteStats: `, err);
         return res.json({ status: false, error: "internal  error" });
       }
       if (result !== null) {
@@ -428,7 +428,7 @@ exports.getSiteStats = (req, res) => {
       }
     });
   } catch (e) {
-    console.log(`exception at ${__filename}.getSiteStats: `, e);
+    console.log(`exception at ${ __filename }.getSiteStats: `, e);
     res.json({ status: false, error: "internal error" });
   }
 };
