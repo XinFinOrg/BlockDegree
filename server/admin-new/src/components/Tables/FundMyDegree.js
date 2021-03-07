@@ -120,7 +120,6 @@ export class FundMyDegree extends Component {
         this.state = {
             showModal: false
         };
-        this.modeler = this.modeler.bind(this);
     }
 
     showDesc() {
@@ -146,7 +145,7 @@ export class FundMyDegree extends Component {
                     requestUrlShort: <a href={userFund.requestUrlShort}>{userFund.requestUrlShort}</a>,
                     donerEmail: userFund.donerEmail,
                     donerName: userFund.donerName,
-                    description: <Button onClick={() => this.showDesc(), this.modeler(userFund.description)}></Button>,
+                    description: <Button onClick={() => this.showDesc()}></Button>,
                 });
             }
         });
@@ -162,24 +161,22 @@ export class FundMyDegree extends Component {
 
 
     render() {
-        function modeler(modelData) {
-            return (
-                <Modal show={this.state.showModal} keyboard={true} centered animation={true} onHide={() => { this.setState({ showModal: !this.state.showModal }); }} size="lg" aria-labelledby="contained-modal-title-vcenter"
-                    dialogClassName="description-modal blockdegree-modal">
-                    <Modal.Header closeButton>
-                        <Modal.Title>Description</Modal.Title>
-                        <Modal.Body>
-                            {modelData}
-                        </Modal.Body>
-                    </Modal.Header>
-                </Modal>
-            );
-        }
+        let showModalDesp = (
+            <Modal show={this.state.showModal} keyboard={true} centered animation={true} onHide={() => { this.setState({ showModal: !this.state.showModal }); }} size="lg" aria-labelledby="contained-modal-title-vcenter"
+                dialogClassName="description-modal blockdegree-modal">
+                <Modal.Header closeButton>
+                    <Modal.Title>Description</Modal.Title>
+                    <Modal.Body>
+                        Hello
+                    </Modal.Body>
+                </Modal.Header>
+            </Modal>
+        );
 
         return (
-            <div className="table-container">
-                {modeler()}
-                <div className="row">
+            <div className="table-container" >
+                { showModalDesp}
+                < div className="row" >
                     <div className="col-md-12">
                         <div className="header">
                             <div className="row">
@@ -261,8 +258,8 @@ export class FundMyDegree extends Component {
                             )}
                         </div>
                     </div>
-                </div>
-            </div>
+                </ div>
+            </div >
         );
     }
 }

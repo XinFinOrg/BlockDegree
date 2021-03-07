@@ -1481,7 +1481,7 @@ exports.addComputingQuestions = async (req, res) => {
 exports.getKycUser = async (req, res) => {
   try {
     const getKycUser = await kycDetails.find({}).lean();
-    res.json({ data: getKycUser, status: 200 });
+    res.status(200).json({ data: getKycUser, status: 200 });
   } catch (error) {
     res.json({
       error: "Error while fetching data",
