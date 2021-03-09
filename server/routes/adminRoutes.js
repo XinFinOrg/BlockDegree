@@ -180,11 +180,12 @@ module.exports = (app) => {
     app.get("/api/addComputingQuestions",requireLogin,requireAdmin, adminServices.addComputingQuestions);
     app.get("/api/getSocialShares", requireLogin, requireAdmin, adminServices.getSocialShares);
     app.get("/api/getUserSessions", requireLogin, requireAdmin, adminServices.getUserSessions);
-    app.get("/api/getKycUser", requireLogin, requireAdmin, adminServices.getKycUser);
+    app.get("/api/getKycUser", adminServices.getKycUser);
     app.post("/api/approveKycUser", requireLogin, requireAdmin, adminServices.approveKycUser);
     app.post("/api/rejectKycUser", requireLogin, requireAdmin, adminServices.rejectKycUser);
     app.get("/api/getrazorpaylog", requireLogin, requireAdmin, adminServices.getrazorpaylog);
     app.get("/api/getuserreferals", requireLogin, requireAdmin, adminServices.getuserreferals);
+
     app.get("/api/getfundmydegree", requireLogin, requireAdmin, adminServices.getfundmydegree);
     app.get('/api/examVideo', (req, res) => {
       res.sendFile(path.join(__dirname, '../../src/pages/examVideo.html'));

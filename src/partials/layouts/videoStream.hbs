@@ -145,7 +145,7 @@
                 success: (result) => {
                     $.ajax({
                         method: "post",
-                        url: "/api/getQna",
+                        url: "/api/getCourseExit",
                         data: { email: result.user.email, courseId: "video-stream" },
                         success: (getData) => {
                             if (getData.data.submitted === true) {
@@ -188,7 +188,7 @@
                             newForm.append('answer', answer)
                             $.ajax({
                                 method: "post",
-                                url: "/api/qna",
+                                url: "/api/courseExit",
                                 data: newForm,
                                 enctype: "multipart/form-data",
                                 contentType: false,

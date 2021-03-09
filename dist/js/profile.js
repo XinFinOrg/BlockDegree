@@ -242,7 +242,6 @@ if (typeof jQuery != "undefined") {
   var kycBackfiles = [];
   let selfieImg = document.getElementById("selfieimg");
   selfieImg.onchange = (e) => {
-    console.log(".... selfie", e.target.files);
     selfiefiles = e.target.files;
   };
   let kycFrontImg = document.getElementById("kycfrontimg");
@@ -352,7 +351,7 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("https://www.blockdegree.org");
+                  window.location.reload("http://localhost:3000");
                 },
               });
             }
@@ -406,7 +405,7 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("https://www.blockdegree.org");
+                  window.location.reload("http://localhost:3000");
                 },
               });
             }
