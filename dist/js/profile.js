@@ -242,7 +242,6 @@ if (typeof jQuery != "undefined") {
   var kycBackfiles = [];
   let selfieImg = document.getElementById("selfieimg");
   selfieImg.onchange = (e) => {
-    console.log(".... selfie", e.target.files);
     selfiefiles = e.target.files;
   };
   let kycFrontImg = document.getElementById("kycfrontimg");

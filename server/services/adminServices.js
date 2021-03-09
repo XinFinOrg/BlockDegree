@@ -20,11 +20,11 @@ const SocialShare = require("../models/socialShare");
 const UserSessions = require("../models/userSessions");
 const razorpaylog = require('../models/razorpay_payment');
 const { renderFunderCerti } = require("../helpers/renderFunderCerti");
-const {
-  makeValueTransferXDC,
-  getBalance,
-  getTransactionTimestamp,
-} = require("../helpers/blockchainHelpers");
+ const {
+   makeValueTransferXDC,
+   getBalance,
+   getTransactionTimestamp,
+ } = require("../helpers/blockchainHelpers");
 const emailer = require("../emailer/impl");
 const kycDetails = require("../models/kycDetails");
 const userReferral = require("../models/userReferral");
@@ -1481,7 +1481,7 @@ exports.addComputingQuestions = async (req, res) => {
 exports.getKycUser = async (req, res) => {
   try {
     const getKycUser = await kycDetails.find({}).lean();
-    res.json({ data: getKycUser, status: 200 });
+    res.status(200).json({ data: getKycUser, status: 200 });
   } catch (error) {
     res.json({
       error: "Error while fetching data",
