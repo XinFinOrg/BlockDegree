@@ -4,7 +4,6 @@ node_modules/
 server/protected/courses
 dist/*.html
 .env
-src/docImgs
 
 data.json
 

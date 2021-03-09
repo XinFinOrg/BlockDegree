@@ -1,0 +1,167 @@
+{
+  "exam": [
+    {
+      "question": "Asymmetric encryption uses:",
+      "choices": [
+        "Public keys only",
+        "Private keys only",
+        "Public and Private keys",
+        "Proof of Stake"
+      ]
+    },
+    {
+      "question": "What is a private key?",
+      "choices": [
+        "A key on your key chain",
+        "A key given to the public",
+        "A key NOT to be given to the public",
+        "A key that opens a secret door"
+      ]
+    },
+    {
+      "question": " What is a Cold Storage",
+      "choices": [
+        "A place to hang your coat",
+        "A private key connected to the Internet",
+        "A private key not connected to the Internet",
+        "A desktop wallet"
+      ]
+    },
+    {
+      "question": "Which is NOT a part of asymmetric encryption?",
+      "choices": [
+        "Mining",
+        "Public key",
+        "Passphrase",
+        "Private Key"
+      ]
+    },
+    {
+      "question": "Where can you buy cryptocurrency?",
+      "choices": [
+        "A private transaction",
+        " An exchange",
+        "A Bitcoin ATM.",
+        "All of the above"
+      ]
+    },
+    {
+      "question": "Where is the LEAST SAFE place to keep your  cryptocurrency?",
+      "choices": [
+        "In your pocket",
+        " On an exchange",
+        "On a hot wallet",
+        "At your work desk"
+      ]
+    },
+    {
+      "question": "Where do you store your cryptocurrency??",
+      "choices": [
+        "Bank account",
+        "Floppy Disk",
+        "Wallet",
+        "In your pocket."
+      ]
+    },
+    {
+      "question": "Cryptographic Hash Function transforms an arbitrary length of a fixed length string that act more or less as a Fingerprint of the document",
+      "choices": [
+        " True",
+        "False"
+      ]
+    },
+    {
+      "question": " What is the name of the famous Bitcoin exchange from Japan that collapsed in 2014?",
+      "choices": [
+        "Blockchain.info",
+        "Tradehill",
+        "Mt. Gox",
+        "Bitstamp."
+      ]
+    },
+    {
+      "question": "A bitcoin address collision happens when 2 different payments are made at the same time to the same bitcoin address?",
+      "choices": [
+        "True",
+        "False"
+      ]
+    },
+    {
+      "question": "What is the impact of information leak for an organization?   ",
+      "choices": [
+        " Loss in profit ",
+        "Loss of trust in costumers",
+        "Cut down the reputation of the organization",
+        "All of these "
+      ]
+    },
+    {
+      "question": "Are there any real bitcoins that you can store in your wallet?",
+      "choices": [
+        " Yes",
+        "No"
+      ]
+    },
+    {
+      "question": " Is it fine to have someone else to trade crypto on our behalf without you being having access of the private keys associated with the account?",
+      "choices": [
+        " Yes",
+        "No"
+      ]
+    },
+    {
+      "question": "Which kind of wallets are more vulnerable to attacks?      ",
+      "choices": [
+        "Hot Wallets",
+        "Cold Wallets",
+        "Paper Wallets",
+        "Digital Wallets "
+      ]
+    },
+    {
+      "question": " Which of the following are hardware wallets?     ",
+      "choices": [
+        "Ledger Nano S",
+        "Trezor",
+        "Keep key",
+        "All of these"
+      ]
+    },
+    {
+      "question": "Blockchain networks use various cryptographic algorithms to create unique digital signatures. What can be the case when the entropy is high?",
+      "choices": [
+        "More secure.",
+        "No effect.",
+        "Less secure",
+        "Will be easily attacked"
+      ]
+    },
+    {
+      "question": "Which cryptographic algorithm does Bitcoin use for creating digital signatures?",
+      "choices": [
+        "Diffie-Hellman",
+        "Rivest Shamir Adleman",
+        "Rivest Shamir AdlemanRivest Shamir Adleman",
+        "Elliptic Curve Digital Signature Algorithm"
+      ]
+    },
+    {
+      "question": " Which of the following is not a crypto exchange attack?",
+      "choices": [
+        "Mt Gox ",
+        "Mafia Boy ",
+        "Bitfinex",
+        "Allinvain"
+      ]
+    },
+    {
+      "question": "What is a seed phrase?",
+      "choices": [
+        " Private key",
+        "Public key",
+        " Wallet address",
+        "Set of strings used to retrieve private key"
+      ]
+    }
+  ]
+}
