@@ -12,7 +12,7 @@ const BurnLog = require("../models/burn_logs");
 const SocialPostTemplates = require("../models/socialPostTemplates");
 const UserFundRequest = require("../models/userFundRequest");
 const pendingEmitter = require("../listeners/pendingTx").em;
-// const DonationListener = require("../listeners/donationListener");
+const DonationListener = require("../listeners/donationListener");
 const referralEmitter = require("../listeners/userReferral").em;
 const UserReferral = require("../models/userReferral");
 const Questions = require("../models/question");
@@ -20,11 +20,11 @@ const SocialShare = require("../models/socialShare");
 const UserSessions = require("../models/userSessions");
 const razorpaylog = require('../models/razorpay_payment');
 const { renderFunderCerti } = require("../helpers/renderFunderCerti");
-// const {
-//   makeValueTransferXDC,
-//   getBalance,
-//   getTransactionTimestamp,
-// } = require("../helpers/blockchainHelpers");
+ const {
+   makeValueTransferXDC,
+   getBalance,
+   getTransactionTimestamp,
+ } = require("../helpers/blockchainHelpers");
 const emailer = require("../emailer/impl");
 const kycDetails = require("../models/kycDetails");
 const userReferral = require("../models/userReferral");
