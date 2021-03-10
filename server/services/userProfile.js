@@ -3,9 +3,18 @@ const PaymentToken = require("../models/payment_token");
 const CoursePrice = require("../models/coursePrice");
 const PaymentLog = require("../models/payment_logs");
 const UserReferral = require("../models/userReferral");
+const kycDetails = require("../models/kycDetails");
 const BitlyClient = require("bitly").BitlyClient;
+const path = require("path");
+const _ = require("lodash");
+const uuid = require("uuid/v4");
+const fs = require("fs");
 
 const bitly = new BitlyClient(process.env.BITLY_ACCESS_TOKEN, {});
+
+const kycImagepath = path.resolve(__dirname, "../kyc-img/");
+
+if (!fs.existsSync(kycImagepath)) fs.mkdirSync(kycImagepath);
 
 /*
 
@@ -47,21 +56,20 @@ exports.setupProfile = async (req, res) => {
 
 exports.kycUserDetails = async (req, res) => {
   try {
-
-    let currentPath = path.join(__dirname, '../../src/docImgs');
+    let currentPath = kycImagepath;
     if (_.isNull(req.files) && _.isNull(req.body)) {
       res.status(400).json({
         status: 400,
-        message: "please select all 3 images with all proper data"
+        message: "please select all 3 images with all proper data",
       });
     }
-    const selfiePic = currentPath + "-" + uuid() + "-" + req.files.selfieImg.name;
-    fs.writeFileSync(selfiePic, req.files.selfieImg.data);
-    const kycFrontPic = currentPath + "-" + uuid() + "-" + req.files.kycFrontImg.name;
-    fs.writeFileSync(kycFrontPic, req.files.kycFrontImg.data);
-    const kycBackPic = currentPath + "-" + uuid() + "-" + req.files.kycBackImg.name;
-    fs.writeFileSync(kycBackPic, req.files.kycBackImg.data);
-    const data = await KycDetails({
+    const selfiePic = uuid();
+    fs.writeFileSync(currentPath+ "/" + selfiePic+".png", req.files.selfieImg.data);
+    const kycFrontPic = uuid();
+    fs.writeFileSync(currentPath+ "/" + kycFrontPic+".png", req.files.kycFrontImg.data);
+    const kycBackPic = uuid();
+    fs.writeFileSync(currentPath+ "/" + kycBackPic+".png", req.files.kycBackImg.data);
+    const data = await kycDetails({
       isKycVerified: false,
       kycStatus: "pending",
       name: req.body.name,
@@ -77,21 +85,22 @@ exports.kycUserDetails = async (req, res) => {
         selfie: selfiePic,
         kycFrontImg: kycFrontPic,
         kycBackImg: kycBackPic,
-      }
+      },
     }).save();
     res.status(200).json({
       message: "User Kyc Saved Successfully",
       status: 200,
-      data
+      data,
     });
   } catch (error) {
+    console.log("error", error);
+
     res.status(400).json({
       status: 400,
-      message: "please select all 3 images"
+      message: "please select all 3 images",
     });
   }
 };
-
 
 exports.getProfile = async (req, res) => {
   console.log("called get profile");
@@ -102,6 +111,21 @@ exports.getProfile = async (req, res) => {
     return console.error(`User not found, seems like the DB is down`);
   }
   res.json(user.profile);
+};
+
+exports.getUserKyc = async (req, res) => {
+  try {
+    const getKycUser = await kycDetails
+      .findOne({ email: req.user.email })
+      .lean();
+    res.status(200).json({ data: getKycUser, status: 200 });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      error: "Error while fetching data",
+      status: 400,
+    });
+  }
 };
 
 exports.addProfileEdu = async (req, res) => {
@@ -359,13 +383,13 @@ exports.getUserRefId = async (req, res) => {
       user.shortUrl === ""
     ) {
       shortUrl = await bitly.shorten(user.longUrl);
-      shortUrl=shortUrl.url;
+      shortUrl = shortUrl.url;
       user.shortUrl = shortUrl;
-      await user.save()
-    }else{
+      await user.save();
+    } else {
       shortUrl = user.shortUrl;
     }
-    res.json({status:true, refId:user.referralCode, url:shortUrl})
+    res.json({ status: true, refId: user.referralCode, url: shortUrl });
   } catch (e) {
     console.log(`exception  at ${__filename}.getUserRefId: `, e);
     res.json({ status: false, error: "internal error" });

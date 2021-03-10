@@ -30,3 +30,5 @@ dist/img/funder-certi/*
 questions
 *.bak
 *.config.js
+
+kyc-img/

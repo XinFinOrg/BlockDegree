@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -13,6 +12,8 @@ import filterFactory, {
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import { Button, Modal } from "react-bootstrap";
 import Axios from "axios";
+
+const imageBasePath = "https://www.blockdegree.org/kyc-user-image/";
 
 function defHeadFormatter(column, colIndex, { sortElement, filterElement }) {
   return (
@@ -42,6 +43,13 @@ const kycColumns = [
   {
     dataField: "name",
     text: "name",
+    filter: textFilter(),
+    sort: true,
+    headerFormatter: defHeadFormatter,
+  },
+  {
+    dataField: "kycStatus",
+    text: "Status",
     filter: textFilter(),
     sort: true,
     headerFormatter: defHeadFormatter,
@@ -95,7 +103,8 @@ export class KycUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false
+      showModal: false,
+      modalImage: "",
     };
   }
   componentDidMount() {
@@ -103,14 +112,10 @@ export class KycUser extends Component {
     if (this.props.kycuser) this.filterKycUser();
   }
 
-  showImg() {
-    this.setState({ showModal: !this.state.showModal });
-  }
-
   filterKycUser() {
     let srNo = 1;
     let returnData = [];
-    this.props.kycuser.data.map(user => {
+    this.props.kycuser.data.map((user) => {
       if (user.length < 0) {
         return <span>No data Available</span>;
       } else {
@@ -120,24 +125,61 @@ export class KycUser extends Component {
           name: user.name,
           dob: user.dob,
           address: user.address,
-          selfie: <Button onClick={() => {
-            this.props.fetchKycUserPic(user.img.selfie);
-            this.showImg();
-          }}>Show Image</Button>,
-          kycFrontImg: <Button onClick={() => {
-            this.props.fetchKycUserPic(user.img.kycFrontImg);
-            this.showImg();
-          }}>Show Image</Button>,
-          kycBackImg: <Button onClick={() => {
-            this.props.fetchKycUserPic(user.img.kycBackImg);
-            this.showImg();
-          }}>Show Image</Button>,
-          approve: <Button onClick={() => {
-            this.props.approveKycUser(user.email);
-          }}>Approve</Button>,
-          reject: <Button onClick={() => {
-            this.props.rejectKycUser(user.email);
-          }}>Reject</Button>
+          kycStatus: user.kycStatus,
+          selfie: (
+            <Button
+              onClick={() => {
+                this.setState({
+                  modalImage: user.img.selfie,
+                  showModal: !this.state.showModal,
+                });
+              }}
+            >
+              Show Image
+            </Button>
+          ),
+          kycFrontImg: (
+            <Button
+              onClick={() => {
+                this.setState({
+                  modalImage: user.img.kycFrontImg,
+                  showModal: !this.state.showModal,
+                });
+              }}
+            >
+              Show Image
+            </Button>
+          ),
+          kycBackImg: (
+            <Button
+              onClick={() => {
+                this.setState({
+                  modalImage: user.img.kycBackImg,
+                  showModal: !this.state.showModal,
+                });
+              }}
+            >
+              Show Image
+            </Button>
+          ),
+          approve: (
+            <Button
+              onClick={() => {
+                this.props.approveKycUser(user.email);
+              }}
+            >
+              Approve
+            </Button>
+          ),
+          reject: (
+            <Button
+              onClick={() => {
+                this.props.rejectKycUser(user.email);
+              }}
+            >
+              Reject
+            </Button>
+          ),
         });
       }
     });
@@ -146,19 +188,28 @@ export class KycUser extends Component {
     return returnData;
   }
 
-  handleDataChange = data => {
+  handleDataChange = (data) => {
     document.getElementById("currDataCount").innerHTML = data.dataSize;
   };
-  
+
   render() {
     let showModalWithImg = (
-      <Modal show={this.state.showModal} keyboard={true} centered animation={true} onHide={() => { this.setState({ showModal: !this.state.showModal }); }} size="lg" aria-labelledby="contained-modal-title-vcenter"
-        dialogClassName="description-modal blockdegree-modal">
+      <Modal
+        show={this.state.showModal}
+        keyboard={true}
+        centered
+        animation={true}
+        onHide={() => {
+          this.setState({ showModal: !this.state.showModal });
+        }}        
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        dialogClassName="description-modal blockdegree-modal"
+      >
         <Modal.Header closeButton>
-          <Modal.Title>{}</Modal.Title>
+          <Modal.Title></Modal.Title>
           <Modal.Body>
-            {/* <img src={} /> */}
-            Hello
+            <img width="100%" height="500px" src={imageBasePath + this.state.modalImage} />
           </Modal.Body>
         </Modal.Header>
       </Modal>
@@ -211,15 +262,13 @@ export class KycUser extends Component {
                         <strong>
                           {new Date(this.props.kycuser.fetchedTS).getHours() +
                             ":" +
-                            new Date(
-                              this.props.kycuser.fetchedTS
-                            ).getMinutes()}
+                            new Date(this.props.kycuser.fetchedTS).getMinutes()}
                         </strong>{" "}
                         Hours
                       </div>
                     ) : (
-                        ""
-                      )}
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
@@ -233,19 +282,19 @@ export class KycUser extends Component {
                     columns={kycColumns}
                     filter={filterFactory()}
                     pagination={paginationFactory({
-                      hideSizePerPage: true
+                      hideSizePerPage: true,
                     })}
                     onDataSizeChange={this.handleDataChange}
                   />
                 </div>
               ) : (
-                  <div className="chart-preload">
-                    <div>
-                      <i className="fa fa-cogs fa-5x" aria-hidden="true" />
-                    </div>
-                  Loading
+                <div className="chart-preload">
+                  <div>
+                    <i className="fa fa-cogs fa-5x" aria-hidden="true" />
                   </div>
-                )}
+                  Loading
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -254,8 +303,8 @@ export class KycUser extends Component {
   }
 }
 
-function mapsStateToProps({ kycuser, rejectkycuser, approvekycuser, }) {
-  return { kycuser, rejectkycuser, approvekycuser, };
+function mapsStateToProps({ kycuser, rejectkycuser, approvekycuser }) {
+  return { kycuser, rejectkycuser, approvekycuser };
 }
 
 function evaluateDateExpression(a, b, comparator) {

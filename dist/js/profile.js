@@ -11,20 +11,25 @@ if (typeof jQuery != "undefined") {
           let kycStatus;
           $.ajax({
             method: "get",
-            url: "/api/getKycUser",
+            url: "/api/getUserKyc",
             success: (kycResult) => {
-              kycStatus = document.getElementById('kycStatus');
+              
+              kycResult=kycResult.data;
+
+              kycStatus = document.getElementById("kycStatus");
               kycStatus.innerHTML = "pending";
-              for (const user of kycResult.data) {
-                if (user.email == result.user.email && user.isKycVerified === true) {
-                  kycStatus = document.getElementById('kycStatus');
-                  kycStatus.innerHTML = user.kycStatus;
-                  document.getElementById('kyc-profile-btn').style.display = "none";
-                  document.getElementById('kyc_profile').style.display = "none";
-                } else {
-                  kycStatus = document.getElementById('kycStatus');
-                  kycStatus.innerHTML = user.kycStatus;
-                }
+
+              console.log("kycStatus", kycResult);
+
+              if (kycResult.isKycVerified === true) {
+                kycStatus = document.getElementById("kycStatus");
+                kycStatus.innerHTML = kycResult.kycStatus;
+                document.getElementById("kyc-profile-btn").style.display =
+                  "none";
+                document.getElementById("kyc_profile").style.display = "none";
+              } else {
+                kycStatus = document.getElementById("kycStatus");
+                kycStatus.innerHTML = kycResult.kycStatus;
               }
             },
           });
@@ -80,10 +85,10 @@ if (typeof jQuery != "undefined") {
             userProfile.examData.payment.course_4 == true
               ? "Enrolled"
               : "Not Paid";
-              computingStatus.innerHTML =
-          userProfile.examData.payment.course_5 == true
-            ? "Enrolled"
-            : "Not Paid";
+          computingStatus.innerHTML =
+            userProfile.examData.payment.course_5 == true
+              ? "Enrolled"
+              : "Not Paid";
           basicAttempts.innerHTML = userProfile.examData.examBasic.attempts;
           advancedAttempts.innerHTML =
             userProfile.examData.examAdvanced.attempts;
@@ -274,9 +279,9 @@ if (typeof jQuery != "undefined") {
         newForm.append("state", state);
         newForm.append("country", country);
         newForm.append("pincode", pincode);
-        newForm.append("selfieImg", selfiefiles[0], "selfieImg.png");
-        newForm.append("kycFrontImg", kycFrontfiles[0], "kycFrontImg.png");
-        newForm.append("kycBackImg", kycBackfiles[0], "kycBackImg.png");
+        newForm.append("selfieImg", selfiefiles[0]);
+        newForm.append("kycFrontImg", kycFrontfiles[0]);
+        newForm.append("kycBackImg", kycBackfiles[0]);
         $.ajax({
           method: "post",
           url: "/api/kycUserDetails",
@@ -286,7 +291,7 @@ if (typeof jQuery != "undefined") {
           processData: false,
           success: (userData) => {
             if (userData.status == 200) {
-              $.notify(`KYC Saved ${ result.user.email }`, { type: "success" });
+              $.notify(`KYC Saved ${result.user.email}`, { type: "success" });
             } else {
               $.notify("something wrong", { type: "danger" });
             }
