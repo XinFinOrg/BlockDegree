@@ -1,6 +1,7 @@
 const fs = require("fs");
 const _ = require("lodash");
 const path = require("path");
+const uuidv4 = require("uuid/v4");
 const CoursePrice = require("../models/coursePrice");
 const AllWallet = require("../models/wallet");
 const KeyConfig = require("../config/keyConfig");
@@ -29,6 +30,7 @@ const emailer = require("../emailer/impl");
 const kycDetails = require("../models/kycDetails");
 const userReferral = require("../models/userReferral");
 const userFundRequest = require("../models/userFundRequest");
+const examSession = require("../models/examSession");
 
 exports.addCourse = async (req, res) => {
   if (
@@ -1616,6 +1618,22 @@ exports.getUserSessions = async (req, res) => {
   } catch (e) {
     console.log(e);
     res.json({ status: false, error: "internal error" });
+  }
+};
+
+exports.setVideoSessions = async (req, res) => {
+  try {
+    const userSession = await UserSessions.findOne({ email: req.user.email }).sort({ createdAt: -1 });
+    await new examSession({
+      email: req.user.email,
+      examId: uuidv4(),
+      sessionId: userSession.sessionId,
+      courseId: req.body.courseId
+    }).save();
+    res.status(200).json({ status: 200, message: "Video Session Time Set" });
+  } catch (error) {
+    console.error('Error:::', error);
+    res.status(422).json({ message: "Something Wrong" });
   }
 };
 

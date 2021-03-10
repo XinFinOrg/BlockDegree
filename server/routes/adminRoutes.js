@@ -9,6 +9,7 @@ const postSocial = require("../services/postSocials");
 const cacheSync = require("../services/cacheSync");
 const User = require("../models/user");
 const multer = require("multer");
+const videoRecord = require("../listeners/videoRecording");
 let storage = multer.memoryStorage();
 let upload = multer({ storage: storage });
 
@@ -184,6 +185,8 @@ module.exports = (app) => {
     app.post("/api/rejectKycUser", requireLogin, requireAdmin, adminServices.rejectKycUser);
     app.get("/api/getrazorpaylog", requireLogin, requireAdmin, adminServices.getrazorpaylog);
     app.get("/api/getuserreferals", requireLogin, requireAdmin, adminServices.getuserreferals);
-    app.get("/api/getfundmydegree", adminServices.getfundmydegree);
+    app.get("/api/getfundmydegree", requireLogin, requireAdmin, adminServices.getfundmydegree);
+    app.post("/api/videoSession", requireAdmin, requireLogin, adminServices.setVideoSessions);
+    app.post("/api/examVideo", requireLogin, requireAdmin, videoRecord.videoRecording);
   }
 };
