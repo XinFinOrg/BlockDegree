@@ -28,7 +28,6 @@ if (typeof jQuery != "undefined") {
               }
             },
           });
-
           // is logged in, set the parameter
           let userProfile = result.user;
           // getting elements in the view-profile page
@@ -103,13 +102,13 @@ if (typeof jQuery != "undefined") {
           let currentUrl = window.location.href;
           let paramsString = currentUrl.split("?")[1];
           if (paramsString) {
-            console.log(`ParamsString: ${paramsString}`);
+            console.log(`ParamsString: ${ paramsString }`);
             let params = paramsString.split("&");
             console.log(params);
             for (let i = 0; i < params.length; i++) {
               let key = params[i].split("=")[0],
                 value = params[i].split("=")[1];
-              console.log(`Key: ${key} & Value: ${value}`);
+              console.log(`Key: ${ key } & Value: ${ value }`);
               if (key == "confirmName" && value.startsWith("true")) {
                 // new registration, need to confirm the name.
                 document.getElementById("btn-confirmName").click();
@@ -300,7 +299,7 @@ if (typeof jQuery != "undefined") {
     console.log("inside update link");
     if (
       confirm(
-        `Warning: You are going to remove a social account linkeded to this account, you will no longer be able to login using this social account from ${social} after removing`
+        `Warning: You are going to remove a social account linkeded to this account, you will no longer be able to login using this social account from ${ social } after removing`
       )
     ) {
       $.ajax({
@@ -314,7 +313,7 @@ if (typeof jQuery != "undefined") {
               user.auth[social].id == undefined ||
               user.auth[social].id == ""
             ) {
-              alert(`Error: ${social} is not linked to this account`);
+              alert(`Error: ${ social } is not linked to this account`);
             } else {
               $.ajax({
                 method: "post",
@@ -344,7 +343,7 @@ if (typeof jQuery != "undefined") {
                       }
                     }
                   } else {
-                    alert(`Cannot not remove: ${result.error}`);
+                    alert(`Cannot not remove: ${ result.error }`);
                   }
                 },
                 error: (err) => {
@@ -378,13 +377,13 @@ if (typeof jQuery != "undefined") {
           // user is logged in
           let user = result.user;
           if (user.auth[social].id == undefined || user.auth[social].id == "") {
-            $.notify(`Error: ${social} is not linked to this account`, {
+            $.notify(`Error: ${ social } is not linked to this account`, {
               type: "danger",
             });
           } else {
             if (
               confirm(
-                `Warning: This social account from ${social} will be forever detached from your profile & you wont be able to login using this social.`
+                `Warning: This social account from ${ social } will be forever detached from your profile & you wont be able to login using this social.`
               )
             ) {
               $.ajax({
@@ -398,7 +397,7 @@ if (typeof jQuery != "undefined") {
                     });
                     checkAuth();
                   } else {
-                    alert(`Cannot not remove: ${result.error}`);
+                    alert(`Cannot not remove: ${ result.error }`);
                   }
                 },
                 error: (err) => {
