@@ -6,13 +6,12 @@
     }
 
     #qnaForm {
-        width: 600px;
+        width: 500px;
         height: 400px;
         margin: 0 auto;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
     }
 
     #qnaAns {
@@ -23,11 +22,16 @@
     }
 
     #qnaBtn {
+        width: 125px;
         background-color: #3498db;
         color: white;
         border: none;
         padding: 5px 10px;
         border-radius: 0px;
+    }
+    .flex-button{
+        display: flex;
+        justify-content: flex-end;
     }
 </style>
 <div id="video-page-wrapper" class="container__cstm">
@@ -124,7 +128,6 @@
                 <button videoId="qna" id="qnaMain">Course Exit<br />
                     <div id="" class="video-item-link">
                         Q&A
-
                     </div>
                 </button>
             </div>
@@ -169,9 +172,11 @@
             if (videoId === "qna") {
                 let qnaForm = `
                     <div id="qnaForm">
-                        <label for="qna" id="qnaQuest">3 takeaways from your course ?</label><br>
+                        <label for="qna" id="qnaQuest" style="font-weight:500;text-align: left;">3 takeaways from your course ?</label>
                         <textarea type="text" name="qna" id="qnaAns" rows="4" cols="50" placeholder="Enter Your Answer"></textarea>
-                        <button id="qnaBtn">Submit</button>
+                        <div class="flex-button">
+                            <button id="qnaBtn">Submit</button>
+                        </div>
                     </div>
                     `
                 $('.embed-responsive').removeClass('embed-responsive-16by9')
