@@ -28,8 +28,14 @@ exports.renderCourses = (req, res) => {
 
     case "cloud-computing": {
       eventEmitter.emit("visited", req, "cloud-computing");
+      res.redirect("/courses/cloud-computing/what-is-cloud-computing");
+      break;
+    }
+
+    case "blockchain-wallet": {
+      eventEmitter.emit("visited", req, "blockchain-wallet");
       res.redirect(
-        "/courses/cloud-computing/what-is-cloud-computing"
+        "/courses/blockchain-wallet/what-is-blockchain-wallet-and-how-does-it-work"
       );
       break;
     }
@@ -60,6 +66,6 @@ exports.callCurriculum = (req, res) => {
   console.log("after");
 };
 
-exports.getCurrentTimestamp = (req,res) => {
-  return res.json({timestamp:Date.now()});
-}
+exports.getCurrentTimestamp = (req, res) => {
+  return res.json({ timestamp: Date.now() });
+};

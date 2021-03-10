@@ -28,7 +28,8 @@ function newDefaultUser() {
         course_1: false,
         course_2: false,
         course_3: false,
-        course_4:false
+        course_4: false,
+        course_5: false,
       },
       examBasic: {
         attempts: 0,

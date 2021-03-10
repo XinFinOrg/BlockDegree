@@ -34,5 +34,5 @@ courseIdx: 3
     Multi-cloud is the use of two or more cloud computing services from any number of different cloud vendors. A multi-cloud environment could be all-private, all-public or a combination of both. Companies use multi-cloud environments to distribute computing resources and minimize the risk of downtime and data loss. Often, multi-cloud is confused with the hybrid cloud.
  
      
-![](https://www.blockdegree.org/img/cloud-computing-imges/multi-cloud.png)
+![](https://github.com/XinFinOrg/BlockDegree/blob/2d53335dd48a2634c4d222f3e8e0be73d4bffe5d/dist/img/wallet-course/1-why-use-blockchain-wallets.png?raw=true)
 

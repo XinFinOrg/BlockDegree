@@ -29,6 +29,11 @@ const examTypes = {
     questionName: "questionsComputing",
     coursePayment_id: "course_4",
   },
+  wallet: {
+    courseName: "examWallet",
+    questionName: "questionsWallet",
+    coursePayment_id: "course_5",
+  },
 };
 
 let { readJSONFile } = utils;
@@ -43,8 +48,12 @@ exports.submitExam = async (req, res, next) => {
   let attemptsAdvanced = req.user.examData.examAdvanced.attempts;
   let attemptsProfessional = req.user.examData.examProfessional.attempts;
   let attemptsComputing = req.user.examData.examComputing.attempts;
+  let attemptsWallet = req.user.examData.examWallet.attempts;
+
   console.log("AttemptsComputing: ", attemptsComputing);
   if (attemptsComputing === undefined) attemptsComputing = 0;
+  if (attemptsWallet === undefined) attemptsWallet = 0;
+
 
   var query = {};
   query = { email: req.user.email };
@@ -412,6 +421,87 @@ exports.submitExam = async (req, res, next) => {
             }
           );
         }
+      }else if (examName === "wallet") {
+        console.log("inside wallet", attemptsWallet);
+        if (attemptsWallet != null && attemptsWallet < 3) {
+          questions.findOne({ exam: "firstExam" }).then((result, error) => {
+            console.log(result.questionsWallet);
+
+            for (
+              let index = 0;
+              index < result.questionsWallet.length;
+              index++
+            ) {
+              if (
+                parseInt(req.body[index]) + 1 ==
+                result.questionsWallet[index].answer
+              ) {
+                marks++;
+              }
+            }
+            attemptsWallet += 1;
+            console.log("Marks", marks);
+            User.findOneAndUpdate(
+              query,
+              {
+                $set: {
+                  "examData.examWallet.attempts":
+                    attemptsWallet > 2 ? 0 : attemptsWallet,
+                  "examData.examWallet.marks": marks,
+                  "examData.payment.course_5": attemptsWallet <= 2,
+                  "examData.payment.course_5_payment":
+                    attemptsWallet <= 2
+                      ? currUser.examData.payment.course_5_payment
+                      : "",
+                  "examData.payment.course_5_doner":
+                    attemptsWallet <= 2
+                      ? currUser.examData.payment.course_5_doner
+                      : "",
+                },
+              },
+              { upsert: false },
+              (err, doc) => {
+                if (err) {
+                  console.error("Some error occured at exam.submitExam: ", err);
+                  return res.json({
+                    status: false,
+                    error:
+                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience",
+                  });
+                }
+                res.json({ status: true, error: null });
+                return;
+              }
+            );
+          });
+        } else if (attemptsWallet >= 3) {
+          attemptsWallet = 0;
+          User.findOneAndUpdate(
+            query,
+            {
+              $set: {
+                "examData.examWallet.attempts": attemptsWallet,
+                "examData.examWallet.marks": marks,
+                "examData.payment.course_5": false,
+                "examData.payment.course_5_payment": "",
+                "examData.payment.course_5_doner": "",
+              },
+            },
+            { upsert: false },
+            (err, doc) => {
+              if (err) {
+                console.error("Some error occured at exam.submitExam: ", err);
+                return res.json({
+                  status: false,
+                  error:
+                    "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience",
+                });
+              }
+              res.json({ status: true, error: null });
+              return;
+            }
+          );
+        }
       }
     }
   }
@@ -478,6 +568,22 @@ exports.getCCExam = (req, res) => {
   );
 };
 
+
+exports.getBlockchainWalletExam = (req, res) => {
+  readJSONFile(
+    path.join(process.cwd(), "/server/protected/blockchain-wallet.json"),
+    (err, json) => {
+      if (err) {
+        return res.render("displayError", {
+          error:
+            "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org",
+        });
+      }
+      res.render("blockchainWallet", { examStr: JSON.stringify(json) });
+    }
+  );
+};
+
 exports.getExamResult = async (req, res) => {
   console.log(
     `called the exam-result endpoint by ${ req.user.email } at ${ Date.now() }`
@@ -535,6 +641,7 @@ exports.getExamResult = async (req, res) => {
       examAdvanced: examName == "advanced",
       examProfessional: examName == "professional",
       examComputing: examName == "computing",
+      examWallet: examName == "wallet",
     },
     data: user,
     obtainedMarks: marksObtained,
@@ -542,7 +649,7 @@ exports.getExamResult = async (req, res) => {
     total: totalQuestions,
   };
   let passingPercent = 60;
-  if (examName == "basic" || examName == "computing") {
+  if (examName == "basic" || examName == "computing" || examName == "wallet") {
     passingPercent = 40;
   } else if (examName == "advanced") {
     passingPercent = 50;
@@ -672,6 +779,7 @@ exports.getExamStatus = async (req, res) => {
             course_2: user.examData.payment.course_2,
             course_3: user.examData.payment.course_3,
             course_4: user.examData.payment.course_4,
+            course_5: user.examData.payment.course_5,
           },
           json: json,
           video: user.videoSubscription === true,
