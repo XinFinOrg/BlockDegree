@@ -1,6 +1,7 @@
 const requireLogin = require("../middleware/requireLogin");
 const requireAdmin = require("../middleware/requireAdmin");
 const path = require("path");
+const express = require("express");
 const adminPath = path.join(__dirname, "../admin/");
 const migrationService = require("../services/migrate");
 const userStatsService = require("../services/userStats");
@@ -21,8 +22,12 @@ module.exports = (app) => {
   app.get("/admin/userStats", requireLogin, requireAdmin, (req, res) => {
     res.sendFile("userStats.html", { root: adminPath });
   });
-  app.get("/api/getKycUserPic/:path", requireLogin, requireAdmin, adminServices.getKycUserPic);
-
+  app.get(
+    "/api/getKycUserPic/:path",
+    requireLogin,
+    requireAdmin,
+    adminServices.getKycUserPic
+  );
 
   // migration API only once
   // app.get("/api/migrate", migrationService.migrateFrom);
@@ -181,7 +186,7 @@ module.exports = (app) => {
     app.get("/api/addComputingQuestions",requireLogin,requireAdmin, adminServices.addComputingQuestions);
     app.get("/api/getSocialShares", requireLogin, requireAdmin, adminServices.getSocialShares);
     app.get("/api/getUserSessions", requireLogin, requireAdmin, adminServices.getUserSessions);
-    app.get("/api/getKycUser", adminServices.getKycUser);
+    app.get("/api/getKycUser", requireLogin, requireAdmin, adminServices.getKycUser);
     app.post("/api/approveKycUser", requireLogin, requireAdmin, adminServices.approveKycUser);
     app.post("/api/rejectKycUser", requireLogin, requireAdmin, adminServices.rejectKycUser);
     app.get("/api/getrazorpaylog", requireLogin, requireAdmin, adminServices.getrazorpaylog);

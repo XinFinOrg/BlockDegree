@@ -8,23 +8,42 @@ if (typeof jQuery != "undefined") {
           alert("You are not logged in, please visit after logging in");
           window.location.replace("https://www.blockdegree.org/login");
         } else {
-          let kycStatus;
+          let kycStatus, kycNo, dob, address, city, state, country, pincode;
           $.ajax({
             method: "get",
-            url: "/api/getKycUser",
+            url: "/api/getUserKyc",
             success: (kycResult) => {
-              kycStatus = document.getElementById('kycStatus');
+
+              kycResult = kycResult.data;
+
+              kycStatus = document.getElementById("kycStatus");
               kycStatus.innerHTML = "pending";
-              for (const user of kycResult.data) {
-                if (user.email == result.user.email && user.isKycVerified === true) {
-                  kycStatus = document.getElementById('kycStatus');
-                  kycStatus.innerHTML = user.kycStatus;
-                  document.getElementById('kyc-profile-btn').style.display = "none";
-                  document.getElementById('kyc_profile').style.display = "none";
-                } else {
-                  kycStatus = document.getElementById('kycStatus');
-                  kycStatus.innerHTML = user.kycStatus;
-                }
+
+              console.log("kycStatus", kycResult);
+
+              if ((kycResult.isKycVerified === true && kycResult.kycStatus === "approved") || (kycResult.isSubmitted === true && kycResult.kycStatus === "pending")) {
+                kycStatus = document.getElementById("kycStatus");
+                kycStatus.innerHTML = kycResult.kycStatus;
+                document.getElementById("kyc-profile-btn").style.display =
+                  "none";
+                document.getElementById("kyc_profile").style.display = "none";
+              } else {
+                kycStatus = document.getElementById("kycStatus");
+                kycStatus.innerHTML = kycResult.kycStatus;
+                // kycNo = document.getElementById("kycNo");
+                // kycNo.innerHTML = kycResult.kycNo;
+                // dob = document.getElementById("dob");
+                // dob.innerHTML = kycResult.dob;
+                // address = document.getElementById("address");
+                // address.innerHTML = kycResult.address;
+                // city = document.getElementById("city");
+                // city.innerHTML = kycResult.city;
+                // state = document.getElementById("state");
+                // state.innerHTML = kycResult.state;
+                // country = document.getElementById("country");
+                // country.innerHTML = kycResult.country;
+                // pincode = document.getElementById("pincode");
+                // pincode.innerHTML = kycResult.pincode;
               }
             },
           });
@@ -79,10 +98,10 @@ if (typeof jQuery != "undefined") {
             userProfile.examData.payment.course_4 == true
               ? "Enrolled"
               : "Not Paid";
-              computingStatus.innerHTML =
-          userProfile.examData.payment.course_5 == true
-            ? "Enrolled"
-            : "Not Paid";
+          computingStatus.innerHTML =
+            userProfile.examData.payment.course_5 == true
+              ? "Enrolled"
+              : "Not Paid";
           basicAttempts.innerHTML = userProfile.examData.examBasic.attempts;
           advancedAttempts.innerHTML =
             userProfile.examData.examAdvanced.attempts;
@@ -273,9 +292,9 @@ if (typeof jQuery != "undefined") {
         newForm.append("state", state);
         newForm.append("country", country);
         newForm.append("pincode", pincode);
-        newForm.append("selfieImg", selfiefiles[0], "selfieImg.png");
-        newForm.append("kycFrontImg", kycFrontfiles[0], "kycFrontImg.png");
-        newForm.append("kycBackImg", kycBackfiles[0], "kycBackImg.png");
+        newForm.append("selfieImg", selfiefiles[0]);
+        newForm.append("kycFrontImg", kycFrontfiles[0]);
+        newForm.append("kycBackImg", kycBackfiles[0]);
         $.ajax({
           method: "post",
           url: "/api/kycUserDetails",
@@ -286,6 +305,7 @@ if (typeof jQuery != "undefined") {
           success: (userData) => {
             if (userData.status == 200) {
               $.notify(`KYC Saved ${ result.user.email }`, { type: "success" });
+              window.location.reload();
             } else {
               $.notify("something wrong", { type: "danger" });
             }
@@ -350,7 +370,7 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("http://localhost:3000");
+                  window.location.reload("https://www.blockdegree.org");
                 },
               });
             }
@@ -404,7 +424,7 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("http://localhost:3000");
+                  window.location.reload("https://www.blockdegree.org");
                 },
               });
             }
