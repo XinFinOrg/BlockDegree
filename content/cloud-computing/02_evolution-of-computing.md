@@ -6,7 +6,7 @@ courseIdx: 3
 
 # Evolution of Computing
 
-   ![](https://www.blockdegree.org/img/cloud-computing-imges/evolution_Cloud_computing.jpg)
+   ![](https://newuat.blockdegree.org/img/cloud-computing-imges/evolution_Cloud_computing.jpg)
 
 
 
@@ -18,13 +18,13 @@ courseIdx: 3
 - For non-techies out there, the cloud might be an intimidating and nebulous concept. We hear about cloud computing all the time, but what exactly does it mean?
 
 ##### The National Institute of Standards and Technology (NIST) describes the basics of cloud computing this way:-
- ![](https://www.blockdegree.org/img/cloud-computing-imges/evolution_cloud-computing2.jpg)
+ ![](https://newuat.blockdegree.org/img/cloud-computing-imges/evolution_cloud-computing2.jpg)
 - Cloud computing is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources (e.g., networks, servers, storage, applications, and services) that can be rapidly provisioned and released with minimal management effort or service provider interaction.
 
 - Simply put, cloud computing is the delivery of computing services including servers, storage, databases, networking, software, analytics, and intelligence over the Internet (the cloud) to offer faster innovation, flexible resources, and economies of scale. You typically pay only for cloud services you use, helping lower your operating costs, run your infrastructure more efficiently and scale as your business needs change.
 
 ##### Primary Difference between Server Based Computing & Cloud Computing :-
-  ![](https://www.blockdegree.org/img/cloud-computing-imges/what_is-exctly-cloud.png)
+  ![](https://newuat.blockdegree.org/img/cloud-computing-imges/what_is-exctly-cloud.png)
 
 #### How does cloud computing work?
 

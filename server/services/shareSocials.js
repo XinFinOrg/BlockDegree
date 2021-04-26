@@ -306,7 +306,7 @@ exports.postLinkedin = async (req, res) => {
                 description: {
                   text: "Blockdegree - Opensource blockchain training"
                 },
-                originalUrl: "https://www.blockdegree.org",
+                originalUrl: "https://newuat.blockdegree.org",
                 title: {
                   text: "Blockdegree - Opensource blockchain training"
                 }
