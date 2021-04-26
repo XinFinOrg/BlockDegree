@@ -10,7 +10,7 @@ const CLIENTS = [];
  */
 exports.server = (server, sessionParser) => {
   const wss = new WebSocket.Server({
-    port: 3055,
+    port: 3056,
     server: server,
     verifyClient: (info, done) => {
       console.log("Parsing session info from request...");
