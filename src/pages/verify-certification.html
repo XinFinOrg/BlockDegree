@@ -118,8 +118,53 @@
     </div>
   </div>
 </div>
+
+<div
+  class="modal fade"
+  id="mintTokenModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Mint Token</h3>
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="col-lg-3" for="mintCertificateHash">Certificate</label>
+          <input class="col-lg-8" type="text" id="mintCertificateHash" disabled="true" /> 
+        </div>
+        <div class="mb-3">
+          <label class="col-lg-3" for="tokenName">Token Name</label>
+          <input class="col-lg-8" type="text" id="tokenName" disabled="true" value="Blockdegree Certificate" /> 
+        </div>
+        <div class="mb-3">
+          <label class="col-lg-3" for="tokenName">Owner</label>
+          <input class="col-lg-8" type="text" id="tokenOwner" placeholder="enter owner XDC address" /> 
+        </div>
+        <div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-primary mt-3 float-right"
+            onclick="handleMint()"
+          >
+            Mint Token
+          </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <button
-  onclick="showImageModal('Linkedin')"
   id="togglePostLinkedin"
   type="button"
   class="btn btn-primary social-li"
@@ -217,6 +262,7 @@
 <script>
   let postLinkedinHash = "";
   let postTwitterHash = "";
+  let mintCertificateHash = "";
 
   const msg =
     "Hey, I just got certified in blockchain from Blockdegree.org, check it out !! ";
@@ -295,7 +341,8 @@
     total,
     date,
     clientHash,
-    headlessHash
+    headlessHash,
+    rst
   ) {
     if  (examName==="computing"){
       examName="cloud computing";
@@ -307,6 +354,16 @@
       marks = "NA";
       total = "NA";
     }
+
+    let mintBtn;
+
+    if(rst.minted===true) {
+      mintBtn = `                                <a target="blank" href="https://explorer.apothem.network/tx/${rst.mintTx}" >VIEW NFT TX</a>`;
+    }else {
+      mintBtn = `                                <span class="social-li" onclick="handleMintModal('${clientHash}')"><i class="fa  fa-arrow-circle-o-up"></i></span>&nbsp;MINT As NFT`;
+
+    }
+
     return (
       '<div class="col-lg-6 mb-5">' +
       '            		<div class="card">' +
@@ -339,6 +396,9 @@
       headlessHash +
       "</a></li>" +
       "          					</ul>                            " +
+      '                            <p class="social-sharing mt-3 mb-0 float-left">' +
+        mintBtn +
+        "					</p>" +
       '                            <p class="social-sharing mt-3 mb-0 float-right">' +
       "Share on : " +
       `                                <span class="social-li" onclick="handleShareLinkdedin('${clientHash}')"><i class="fa fa-linkedin social"></i></span>` +
@@ -502,7 +562,8 @@
                       currCerti.total,
                       currCerti.timestamp,
                       currCerti.clientHash,
-                      currCerti.headlessHash
+                      currCerti.headlessHash,
+                      currCerti
                     );
                   }
                 }
@@ -609,6 +670,45 @@
       error: err => {
         $.notify(
           "Oops looks like some error occurred, please try again after sometime.",
+          { type: "danger" }
+        );
+      }
+    });
+  }
+
+  function handleMintModal(hash) {
+    mintCertificateHash = hash;
+
+    $("#mintCertificateHash").val(mintCertificateHash);
+
+    $("#mintTokenModal").modal('show');
+  }
+
+  function handleMint() {
+
+    const owner  = $("#tokenOwner").val();
+
+    $.ajax({
+      method: "post",
+      url: "/api/mint-nft",
+      data: {owner:owner, certificateHash:mintCertificateHash},
+      success: result => {
+        if (result.status===true) {
+          $.notify(
+          result.message,
+          { type: "success" }
+        );
+        }else {
+        $.notify(
+          result.error,
+          { type: "danger" }
+        );
+        }
+        
+      },
+      error: err => {
+        $.notify(
+          `Oops, some error has occured, please try again after sometime`,
           { type: "danger" }
         );
       }
