@@ -704,13 +704,14 @@
           { type: "danger" }
         );
         }
-        
+        $("#mintTokenModal").modal('hide');
       },
       error: err => {
         $.notify(
           `Oops, some error has occured, please try again after sometime`,
           { type: "danger" }
         );
+        $("#mintTokenModal").modal('hide');
       }
     });
   }
