@@ -144,10 +144,6 @@ exports.ABI = [
 		"constant": false,
 		"inputs": [
 			{
-				"name": "from",
-				"type": "address"
-			},
-			{
 				"name": "to",
 				"type": "address"
 			},
@@ -584,4 +580,4 @@ exports.ABI = [
 	}
 ]
 
-exports.ADDRESS = "xdcffa7a698de2efd1c8b11c293484c51eff635ee4b";
+exports.ADDRESS = "xdc1bed335ff67b4408646fb4c8a9040a14f4ac5046";
