@@ -13,7 +13,7 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import { Button, Modal } from "react-bootstrap";
 import Axios from "axios";
 
-const imageBasePath = "https://newuat.blockdegree.org/kyc-user-image/";
+const imageBasePath = "https://www.blockdegree.org/kyc-user-image/";
 
 function defHeadFormatter(column, colIndex, { sortElement, filterElement }) {
   return (

@@ -6,7 +6,7 @@ if (typeof jQuery != "undefined") {
       success: (result) => {
         if (!result.status) {
           alert("You are not logged in, please visit after logging in");
-          window.location.replace("https://newuat.blockdegree.org/login");
+          window.location.replace("https://www.blockdegree.org/login");
         } else {
           let kycStatus;
           $.ajax({
@@ -217,12 +217,12 @@ if (typeof jQuery != "undefined") {
           }
         } else {
           alert("You're not logged in");
-          window.location.replace("https://newuat.blockdegree.org/login");
+          window.location.replace("https://www.blockdegree.org/login");
         }
       },
       error: (err) => {
         alert("Error while getting the current user");
-        window.location.replace("https://newuat.blockdegree.org/login");
+        window.location.replace("https://www.blockdegree.org/login");
       },
     });
   }
@@ -356,18 +356,18 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("https://newuat.blockdegree.org");
+                  window.location.reload("https://www.blockdegree.org");
                 },
               });
             }
           } else {
             alert("Please log in to continue");
-            window.location.reload("https://newuat.blockdegree.org/login");
+            window.location.reload("https://www.blockdegree.org/login");
           }
         },
         error: (err) => {
           alert("Error while getting current user");
-          window.location.reload("https://newuat.blockdegree.org/login");
+          window.location.reload("https://www.blockdegree.org/login");
         },
       });
     }
@@ -410,19 +410,19 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("https://newuat.blockdegree.org");
+                  window.location.reload("https://www.blockdegree.org");
                 },
               });
             }
           }
         } else {
           alert("Please log in to continue");
-          window.location.reload("https://newuat.blockdegree.org/login");
+          window.location.reload("https://www.blockdegree.org/login");
         }
       },
       error: (err) => {
         alert("Error while getting current user");
-        window.location.reload("https://newuat.blockdegree.org/login");
+        window.location.reload("https://www.blockdegree.org/login");
       },
     });
   }
