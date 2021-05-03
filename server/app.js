@@ -92,8 +92,8 @@ require("./routes/contactUsRoutes")(app);
 require("./routes/promoCodeRoutes")(app);
 require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
-require("./routes/courseExitRoutes")(app);
 require("./routes/fmdRoutes")(app);
+require("./routes/nftRoutes")(app);
 
 // remove the comment to serve from build
 app.use("/newadmin", dynamicMiddleware);

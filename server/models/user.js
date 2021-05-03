@@ -55,6 +55,8 @@ var userSchema = mongoose.Schema({
         clientHash: String,
         paymentMode: String,
         expiryDate: String,
+        minted: Boolean,
+        mintTx:String,
       },
     ],
   },
