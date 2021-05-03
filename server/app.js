@@ -20,7 +20,7 @@ const { forceReSync } = require("./services/postSocials");
 const redis = require("redis");
 
 let RedisStore = require("connect-redis")(session);
-let redisClient = redis.createClient({ prefix: "uat.blockdegree" });
+let redisClient = redis.createClient({ prefix: "blockdegree" });
 global.RedisClient = redisClient;
 let app = express();
 require("dotenv").config();
@@ -66,7 +66,7 @@ const sessionParser = session({
     host: "localhost",
     port: 6379,
   }),
-  secret: "test",
+  secret: "",
   resave: true,
   rolling: true,
   saveUninitialized: true,
@@ -115,7 +115,7 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-const server = app.listen("3005", async () => {
+const server = app.listen("3000", async () => {
   pendingTx.emit("initiatePendingTx");
   pendingTx.emit("initiatePendingBurn");
   pendingTx.emit("syncPendingBurnFMD");
