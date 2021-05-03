@@ -580,4 +580,4 @@ exports.ABI = [
 	}
 ]
 
-exports.ADDRESS = "xdc7e5ad558ccf303599185c9a5810abf7aa2f32379";
+exports.ADDRESS = "xdcc2f4f58261df5324e66e862b6c8a7e0c1df02552";

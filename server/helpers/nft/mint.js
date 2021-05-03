@@ -4,9 +4,9 @@ const { ABI, ADDRESS } = require("./contract");
 const keyConfig = require("../../config/keyConfig");
 const { isUndefined } = require("lodash");
 
-const HttpProvider = "https://rpc.apothem.network";
+const HttpProvider = "https://rpc.xinfin.network";
 
-const wallet_network = "51";
+const wallet_network = "50";
 
 function getKey(wallet_network) {
   return keyConfig[
