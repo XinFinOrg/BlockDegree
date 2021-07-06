@@ -97,7 +97,7 @@ exports.MintNft = async (req, res) => {
     newNFT.status = "completed";
     await newNFT.save();
 
-    for (let i = 0; i < user.examData.certificateHash.length - 1; i++) {
+    for (let i = 0; i < user.examData.certificateHash.length; i++) {
       if (user.examData.certificateHash[i].clientHash === certificateHash) {
         user.examData.certificateHash[i].minted = true;
         user.examData.certificateHash[i].mintTx = receipt.transactionHash;
