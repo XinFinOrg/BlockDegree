@@ -25,11 +25,12 @@
           password,
         },
         success: (result) => {          
-          if (result && result.status === true) {
+          if (result && result.status === false) {
             // Simulate an HTTP redirect:
-            window.location.replace("https://www.blockdegree.org/newadmin");
-          } else {
             alert("login failed")
+          } else {
+            window.location.replace("https://www.blockdegree.org/newadmin");
+
           }
         }
       })
