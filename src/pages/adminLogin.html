@@ -11,39 +11,43 @@
   </h3>
 
   <script>
-    function submit(e) {
-      // e.preventDefault();
 
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+    $(document).ready(function () {
 
-      $.ajax({
-        url: "/api/login",
-        method: "post",
-        data: {
-          email,
-          password,
-        },
-        success: (result) => {          
-          if (result && result.status === false) {
-            // Simulate an HTTP redirect:
-            alert("login failed")
-          } else {
-            window.location.replace("https://www.blockdegree.org/newadmin");
+      $("#admin-login").on("submit", (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
+        $.ajax({
+          url: "/api/login",
+          method: "post",
+          data: {
+            email,
+            password,
+          },
+          success: (result) => {
+            if (result && result.status === false) {
+              // Simulate an HTTP redirect:
+              alert("login failed")
+            } else {
+              window.location.replace("https://www.blockdegree.org/newadmin");
+
+            }
           }
-        }
+        })
       })
 
-    }
+    })
+
   </script>
 
-  <!-- <form> -->
-  <input type="text" id="email" placeholder="admin email" />
-  <input type="password" id="password" placeholder="admin email" />
-  <button onclick="submit()" type="button">Log In</button>
+  <form id="admin-login">
+    <input type="text" id="email" placeholder="admin email" />
+    <input type="password" id="password" placeholder="admin email" />
+    <button type="submit" type="button">Log In</button>
 
-  <!-- </form> -->
+  </form>
 </body>
 <script>
 
