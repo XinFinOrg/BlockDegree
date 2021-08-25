@@ -145,7 +145,7 @@ function dynamicMiddleware(req, res, next) {
       res.render("error");
     }
   } else {
-    res.render("error");
+    res.render("adminLogin");
   }
 }
 

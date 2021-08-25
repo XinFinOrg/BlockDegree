@@ -1,0 +1,51 @@
+<html>
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+  <h3>
+    Blockdegree Admin Login
+  </h3>
+
+  <script>
+    function submit(e) {
+      // e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      $.ajax({
+        url: "/api/login",
+        method: "post",
+        data: {
+          email,
+          password,
+        },
+        success: (result) => {          
+          if (result && result.status === true) {
+            // Simulate an HTTP redirect:
+            window.location.replace("https://www.blockdegree.org/newadmin");
+          } else {
+            alert("login failed")
+          }
+        }
+      })
+
+    }
+  </script>
+
+  <!-- <form> -->
+  <input type="text" id="email" placeholder="admin email" />
+  <input type="password" id="password" placeholder="admin email" />
+  <button onclick="submit()" type="button">Log In</button>
+
+  <!-- </form> -->
+</body>
+<script>
+
+</script>
+
+</html>
