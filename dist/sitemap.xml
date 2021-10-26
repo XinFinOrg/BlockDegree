@@ -2,103 +2,103 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
-    <loc>https://www.blockdegree.org/</loc>
+    <loc>http://localhost:3000/</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/guides</loc>
+    <loc>http://localhost:3000/guides</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/privacy-policy</loc>
+    <loc>http://localhost:3000/privacy-policy</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/terms-and-conditions</loc>
+    <loc>http://localhost:3000/terms-and-conditions</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/verify-certification</loc>
+    <loc>http://localhost:3000/verify-certification</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/login</loc>
+    <loc>http://localhost:3000/login</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/contact</loc>
+    <loc>http://localhost:3000/contact</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/blockchain-professional</loc>
+    <loc>http://localhost:3000/blockchain-professional</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/</loc>
+    <loc>http://localhost:3000/</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/profile</loc>
+    <loc>http://localhost:3000/profile</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/blockchain-advanced</loc>
+    <loc>http://localhost:3000/blockchain-advanced</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/login?from=blockchain-professional</loc>
+    <loc>http://localhost:3000/login?from=blockchain-professional</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/register</loc>
+    <loc>http://localhost:3000/register</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/blockchain-basic</loc>
+    <loc>http://localhost:3000/blockchain-basic</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/login?from=blockchain-advanced</loc>
+    <loc>http://localhost:3000/login?from=blockchain-advanced</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/login?from=blockchain-basic</loc>
+    <loc>http://localhost:3000/login?from=blockchain-basic</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.blockdegree.org/forgotpassword.html</loc>
+    <loc>http://localhost:3000/forgotpassword.html</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

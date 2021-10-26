@@ -271,7 +271,7 @@ exports.em = em;
 
 // ---------------------------------------- Donation ----------------------------------------
 
-newBlockProcessor();
+// newBlockProcessor();
 
 async function checkPendingCompletion() {
   try {
@@ -300,8 +300,7 @@ async function checkPendingCompletion() {
             "blockdegree-bot@blockdegree.org",
             process.env.SUPP_EMAIL_ID,
             "Payment Missed",
-            `Missed payment for fund ${
-              currFundReq.fundId
+            `Missed payment for fund ${currFundReq.fundId
             }, has an amount balance of ${xdc3.utils.fromWei(xdcBalance)}`
           );
         }
@@ -365,7 +364,7 @@ function xdcReconn() {
         inReconnXDC = false;
         subscriptionNewHeaders.unsubscribe();
         processorInUse = false;
-        newBlockProcessor();
+        // newBlockProcessor();
         clearInterval(currInterval);
       });
     }, 5000);
@@ -522,7 +521,7 @@ function newBlockProcessor() {
         //     e
         //   )}\nStarting a new block processor.`
         // );
-        newBlockProcessor();
+        // newBlockProcessor();
         return;
       }
     });

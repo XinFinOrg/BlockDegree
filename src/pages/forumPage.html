@@ -1,0 +1,40 @@
+{{#> base}}
+{{> layouts/base title="Forum"}}
+
+{{#*inline "body-block"}}
+{{> includes/hero hero-title="Forum" hero-copy="Find answers your questions, helps others find
+theirs"}}
+
+<section class="bg-white py-3 forum-search">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-lg-6 offset-lg-3 text-center">
+        <form id="search-form">
+          <div class="input-group mb-3">
+            <input type="text" id="search" class="form-control" placeholder="Enter your Question" />
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary">
+                Search
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{/inline}} {{#*inline "scripts-block"}}
+<script src="/js/home.js?v=1.46"></script>
+<script>
+  $(document).ready(function () {
+
+    $("#search-form").on("submit", (e) => {
+      e.preventDefault();
+      const search = document.getElementById("search").value;
+      window.location.href = `/forum?search=${search}`;
+    })
+
+  })
+</script>
+{{/inline}} {{/base}}

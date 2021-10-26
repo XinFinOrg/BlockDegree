@@ -40,16 +40,16 @@ $(document).ready(() => {
       $("#fs-select-course .next").addClass("disabled");
     }
   });
-  $("#fs-add-desc textarea").on('keyup',(e) => {
+  $("#fs-add-desc textarea").on('keyup', (e) => {
     // check text limit
     const desc = document.getElementById("req-description").value;
-    
-    if (desc && desc.trim()!=="" && desc.trim().length > 10 && desc.trim().length < 250 ){
+
+    if (desc && desc.trim() !== "" && desc.trim().length > 10 && desc.trim().length < 250) {
       $("#fs-add-desc .err").html("&nbsp;");
       $("#fs-add-desc .next").removeAttr("disabled");
       $("#fs-add-desc .next").removeClass("disabled");
-    }else{
-      if (desc.trim().length < 10 ){
+    } else {
+      if (desc.trim().length < 10) {
         $("#fs-add-desc .err").html("description too short");
       } else if (desc.trim().length > 250) {
         $("#fs-add-desc .err").html("description too long");
@@ -63,11 +63,11 @@ $(document).ready(() => {
     // atleast one banner active
     const templateNo = document.getElementById("images-apply").value;
     console.log("template no: ", templateNo);
-    
-    if (templateNo && ["1","2","3"].includes(templateNo)){
+
+    if (templateNo && ["1", "2", "3"].includes(templateNo)) {
       $("#fs-select-banner .next").removeAttr("disabled");
       $("#fs-select-banner .next").removeClass("disabled");
-    }else{
+    } else {
       $("#fs-select-banner .next").attr("disabled", "true");
       $("#fs-select-banner .next").addClass("disabled");
     }
@@ -86,8 +86,8 @@ $(document).ready(() => {
 
   window.addEventListener("message", function (event) {
     if (
-      event.origin == "https://www.blockdegree.org" ||
-      event.origin == "https://blockdegree.org"
+      event.origin == "http://localhost:3000" ||
+      event.origin == "http://localhost:3000"
     ) {
       if (event.data == "share") {
         console.log("message from popup.");
@@ -178,23 +178,16 @@ async function getFMDAllData(update) {
             pendingFundsCnt++;
             pendingFundsUsd += parseFloat(currData.amountGoal);
             retDataPending += `<tr>
-            <td>${currDate.getDate()}/${
-              currDate.getMonth() + 1
-            }/${currDate.getFullYear()} ${currDate.getHours()}:${currDate.getMinutes()}</td>
-            <td>${
-              currData.userName
-            }</td>                                                
-            <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${
-              currData.userName
-            }','${currData.requestUrlShort}','${
-              currData.requestUrlLong
-            }','${escape(currData.description)}','${currData.receiveAddr}','${
-              currData.fundId
-            }', '${currData.status}','${currData.amountGoal}', '${
-              currData.donerName
-            }','${
-              userEmail === currData.email
-            }')">View Description</button></td><td>`;
+            <td>${currDate.getDate()}/${currDate.getMonth() + 1
+              }/${currDate.getFullYear()} ${currDate.getHours()}:${currDate.getMinutes()}</td>
+            <td>${currData.userName
+              }</td>                                                
+            <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${currData.userName
+              }','${currData.requestUrlShort}','${currData.requestUrlLong
+              }','${escape(currData.description)}','${currData.receiveAddr}','${currData.fundId
+              }', '${currData.status}','${currData.amountGoal}', '${currData.donerName
+              }','${userEmail === currData.email
+              }')">View Description</button></td><td>`;
 
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataPending += `<span class="courseName">${getCourseName(
@@ -203,11 +196,9 @@ async function getFMDAllData(update) {
             }
             retDataPending += `</td>             
             <td>$ ${currData.amountGoal}</td>
-            <td><button type="button" onclick="renderPaymentMethodModal('${
-              currData.receiveAddr
-            }', '${currData.fundId}', ${currData.amountGoal})" ${
-              userEmail === currData.email ? "disabled" : ""
-            } class="btn btn-primary">Fund Now</button></td>
+            <td><button type="button" onclick="renderPaymentMethodModal('${currData.receiveAddr
+              }', '${currData.fundId}', ${currData.amountGoal})" ${userEmail === currData.email ? "disabled" : ""
+              } class="btn btn-primary">Fund Now</button></td>
           </tr>`;
           } else if (currData.status === "completed") {
             const completionDate = new Date(
@@ -216,24 +207,17 @@ async function getFMDAllData(update) {
             approvedFundsCnt++;
             approvedFundsUsd += parseFloat(currData.amountGoal);
             retDataApproved += `<tr>
-            <td>${currDate.getDate()}/${
-              currDate.getMonth() + 1
-            }/${currDate.getFullYear()} ${currDate.getHours()}:${currDate.getMinutes()}</td>
-            <td>${completionDate.getDate()}/${
-              completionDate.getMonth() + 1
-            }/${completionDate.getFullYear()} ${completionDate.getHours()}:${completionDate.getMinutes()}</td>
-            <td>${
-              currData.userName
-            }</td>                                                
-            <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${
-              currData.userName
-            }','${currData.requestUrlShort}','${
-              currData.requestUrlLong
-            }','${escape(currData.description)}','${currData.receiveAddr}','${
-              currData.fundId
-            }','${currData.status}','${currData.amountGoal}', '${
-              currData.donerName
-            }'
+            <td>${currDate.getDate()}/${currDate.getMonth() + 1
+              }/${currDate.getFullYear()} ${currDate.getHours()}:${currDate.getMinutes()}</td>
+            <td>${completionDate.getDate()}/${completionDate.getMonth() + 1
+              }/${completionDate.getFullYear()} ${completionDate.getHours()}:${completionDate.getMinutes()}</td>
+            <td>${currData.userName
+              }</td>                                                
+            <td><button type="button" class="btn btn-outline-primary" onclick="renderRequestModal('${currData.userName
+              }','${currData.requestUrlShort}','${currData.requestUrlLong
+              }','${escape(currData.description)}','${currData.receiveAddr}','${currData.fundId
+              }','${currData.status}','${currData.amountGoal}', '${currData.donerName
+              }'
             )">View Description</button></td><td>`;
             for (let z = 0; z < currData.courseId.length; z++) {
               retDataApproved += `<span class="courseName">${getCourseName(
@@ -358,12 +342,11 @@ function renderPaymentMethodModal(addr, fundId, amountGoal) {
                       data-dismiss="modal">
                       Pay Via PayPal </button>
 
-                  ${
-                    showRazorpay == true
-                      ? `<button type="button" data-dismiss="modal" class="btn-payment" onclick="payRazorpay('${fundId}','${amountGoal}')"
+                  ${showRazorpay == true
+      ? `<button type="button" data-dismiss="modal" class="btn-payment" onclick="payRazorpay('${fundId}','${amountGoal}')"
                       data-dismiss="modal"> Pay Via CARD/NetBanking/UPI </button>`
-                      : ""
-                  }
+      : ""
+    }
               </div>
 
           </div>
@@ -412,7 +395,7 @@ function handleFundRequestSubmit() {
     courseIds.push(document.getElementById("computing-course").value);
   const templateNumber = document.getElementById("images-apply").value;
   const message = document.getElementById("apply-msg").value;
-  const socialPostPlatform = twitterAuthStatus===true?"twitter":"linkedin";
+  const socialPostPlatform = twitterAuthStatus === true ? "twitter" : "linkedin";
   $.notify("Submitting the <strong>Funding Request</strong> . . .", {
     type: "info", allow_dismiss: false, delay: Date.now(), placement: {
       from: 'bottom',
@@ -513,14 +496,13 @@ function renderRequestModal(
   )}&source=blockdegree.org`;
   const funderMessage =
     "Sponsored a student's degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation";
-  const fundeeMessage = `Thank you <b>${
-    funderName == undefined ||
+  const fundeeMessage = `Thank you <b>${funderName == undefined ||
     funderName == "undefined" ||
     funderName === null ||
     funderName === ""
-      ? "Anonymous person"
-      : funderName
-  }</b> for sponsoring a degree! Appreciate it!<br/> <b>#blockdegree #fundmydegree #onlineeducation </b>`;
+    ? "Anonymous person"
+    : funderName
+    }</b> for sponsoring a degree! Appreciate it!<br/> <b>#blockdegree #fundmydegree #onlineeducation </b>`;
   let retHtml = "";
 
   if (type === "completed") {
@@ -535,26 +517,24 @@ function renderRequestModal(
                       <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title align-self-center" id="requestModal--title">Request By <strong>${userName}</strong></h5>
-                              ${`<span class="funded-by">Funded By ${
-                                funderName == "undefined" ||
-                                funderName == "" ||
-                                funderName == null
-                                  ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
-                                  : funderName
-                              }</span>`}                              
+                              ${`<span class="funded-by">Funded By ${funderName == "undefined" ||
+        funderName == "" ||
+        funderName == null
+        ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
+        : funderName
+      }</span>`}                              
                               <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button>
 
                           </div>` +
       `
       
                           <div class="form-control" id="funder-certi-msg">Test</div>
-                          ${
-                            funderName == "undefined" ||
-                            funderName == "" ||
-                            funderName == null
-                              ? ""
-                              : `<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`
-                          }
+                          ${funderName == "undefined" ||
+        funderName == "" ||
+        funderName == null
+        ? ""
+        : `<div class="modal-body" id="requestModal--body"><img src="/img/funder-certi/${fundId}.png"></div>`
+      }
                           ` +
       `<div class="modal-footer">` +
       `${`<button
@@ -565,15 +545,14 @@ function renderRequestModal(
         Close
       </button><div class='badge badge-success funded'>FUNDED <i class="fa fa-check" aria-hidden="true"></i></div>`}
                                Share On&nbsp;
-                               <a target="_blank" href="${
-                                 isMobile() === true
-                                   ? `https://api.whatsapp.com/send?text=${encodeURIComponent(
-                                       funderMessage
-                                     )}`
-                                   : `https://web.whatsapp.com/send?text=${encodeURIComponent(
-                                       funderMessage
-                                     )}`
-                               }">
+                               <a target="_blank" href="${isMobile() === true
+        ? `https://api.whatsapp.com/send?text=${encodeURIComponent(
+          funderMessage
+        )}`
+        : `https://web.whatsapp.com/send?text=${encodeURIComponent(
+          funderMessage
+        )}`
+      }">
                                <i class="fa fa-whatsapp fa-lg"></i>
                              </a>&nbsp;                               
                                <div data-dismiss="modal" onclick="handleShareLinkdedin('Sponsored a student\\'s degree at Blockdegree.org! #blockdegree #fundmydegree #onlineeducation','true','${fundId}')">
@@ -599,29 +578,26 @@ function renderRequestModal(
                       <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="requestModal--title">Request By <strong>${userName}</strong></h5>
-                              ${
-                                type == "completed"
-                                  ? `<span class="funded-by text-success">Funded By ${
-                                      funderName == "undefined"
-                                        ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
-                                        : funderName
-                                    }</span>`
-                                  : ""
-                              }
+                              ${type == "completed"
+        ? `<span class="funded-by text-success">Funded By ${funderName == "undefined"
+          ? `Anonymous ( <span class="claim-fund" data-dismiss="modal" onclick="claimFund('${fundId}')">claim</span> )`
+          : funderName
+        }</span>`
+        : ""
+      }
                               <div class="btn-block"> <button type="button" class="btn btn-outline-primary" onclick="copyToClipboard('${requestUrlShort}','requestModal--title', 'Request Link' )" >Copy Link</button></div>
                           </div>` +
       `<div class="modal-body" id="requestModal--body">                            
                           </div>` +
       `<div class="modal-footer">` +
-      `${
-        type === "completed"
-          ? `<button
+      `${type === "completed"
+        ? `<button
         class="btn btn-secondary fund-btn-close"
         data-dismiss="modal"
       >
         Close
       </button><div class='badge badge-success funded'>FUNDED <i class="fa fa-check" aria-hidden="true"></i></div>`
-          : `
+        : `
         <button
           class="btn btn-secondary fund-btn-close"
           data-dismiss="modal"
@@ -639,15 +615,14 @@ function renderRequestModal(
       `
       }
                                Share On&nbsp;
-                               <a target="_blank" href="${
-                                 isMobile() === true
-                                   ? `https://api.whatsapp.com/send?text=${encodeURIComponent(
-                                       whatsappText
-                                     )}`
-                                   : `https://web.whatsapp.com/send?text=${encodeURIComponent(
-                                       whatsappText
-                                     )}`
-                               }">
+                               <a target="_blank" href="${isMobile() === true
+        ? `https://api.whatsapp.com/send?text=${encodeURIComponent(
+          whatsappText
+        )}`
+        : `https://web.whatsapp.com/send?text=${encodeURIComponent(
+          whatsappText
+        )}`
+      }">
                                <i class="fa fa-whatsapp fa-lg"></i>
                              </a>&nbsp;                               
                                <div data-dismiss="modal" onclick="handleShareLinkdedin('Check the new function of #Blockdegree, where students can apply for funding to give exams for free.\\nFunders can fund any student and get their name on a student\\'s certificate as a sponsor.\\nLink: ${requestUrlShort}\\n#onlinelearning #FundMyDegree')">
@@ -883,7 +858,7 @@ function submitClaimFund(fundId) {
         $("#claimTxModal").modal("hide");
       }
     },
-    error: (e) => {},
+    error: (e) => { },
   });
 }
 
@@ -967,7 +942,7 @@ function handleAuthTwitterShare() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "https://www.blockdegree.org/auth/twitter?close=true&share=true",
+    "http://localhost:3000/auth/twitter?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -976,7 +951,7 @@ function handleAuthLinkedinShare() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "https://www.blockdegree.org/auth/linkedin?close=true&share=true",
+    "http://localhost:3000/auth/linkedin?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -1132,8 +1107,8 @@ var _createClass = (function () {
         if (
           ((select = jQuery(this)).data("picker") &&
             select.data("picker").destroy(),
-          select.data("picker", new ImagePicker(this, sanitized_options(opts))),
-          null != opts.initialized)
+            select.data("picker", new ImagePicker(this, sanitized_options(opts))),
+            null != opts.initialized)
         )
           return opts.initialized.call(select.data("picker"));
       });
@@ -1161,11 +1136,11 @@ var _createClass = (function () {
       if (!a || !b || a.length !== b.length) return !1;
       for (
         a = a.slice(0),
-          b = b.slice(0),
-          a.sort(),
-          b.sort(),
-          i = j = 0,
-          len = a.length;
+        b = b.slice(0),
+        a.sort(),
+        b.sort(),
+        i = j = 0,
+        len = a.length;
         j < len;
         i = ++j
       )
@@ -1184,7 +1159,7 @@ var _createClass = (function () {
           (this.select = jQuery(select_element)),
           (this.multiple = "multiple" === this.select.attr("multiple")),
           null != this.select.data("limit") &&
-            (this.opts.limit = parseInt(this.select.data("limit"))),
+          (this.opts.limit = parseInt(this.select.data("limit"))),
           this.build_and_append_picker();
       }
       return (
@@ -1271,8 +1246,8 @@ var _createClass = (function () {
                   (container = jQuery("<ul></ul>")).append(
                     jQuery(
                       "<li class='group_title'>" +
-                        option_group.attr("label") +
-                        "</li>"
+                      option_group.attr("label") +
+                      "</li>"
                     )
                   ),
                   target_container.append(
@@ -1284,8 +1259,8 @@ var _createClass = (function () {
                   var l, len1, ref1, results1;
                   for (
                     results1 = [],
-                      l = 0,
-                      len1 = (ref1 = scoped_dom.children("option")).length;
+                    l = 0,
+                    len1 = (ref1 = scoped_dom.children("option")).length;
                     l < len1;
                     l++
                   )
@@ -1295,16 +1270,16 @@ var _createClass = (function () {
                       );
                   return results1;
                 }.call(this),
-                  results = [],
-                  k = 0,
-                  len1 = ref1.length;
+                results = [],
+                k = 0,
+                len1 = ref1.length;
                 k < len1;
                 k++
               )
                 (option = ref1[k]),
                   this.picker_options.push(option),
                   option.has_image() &&
-                    results.push(target_container.append(option.node));
+                  results.push(target_container.append(option.node));
               return results;
             },
           },
@@ -1317,8 +1292,8 @@ var _createClass = (function () {
                   var j, len, ref, results;
                   for (
                     results = [],
-                      j = 0,
-                      len = (ref = this.picker_options).length;
+                    j = 0,
+                    len = (ref = this.picker_options).length;
                     j < len;
                     j++
                   )
@@ -1344,27 +1319,27 @@ var _createClass = (function () {
               var new_values, old_values, selected_value;
               if (
                 ((old_values = this.selected_values()),
-                (selected_value = imagepicker_option.value().toString()),
-                this.multiple
-                  ? indexOf.call(this.selected_values(), selected_value) >= 0
-                    ? ((new_values = this.selected_values()).splice(
+                  (selected_value = imagepicker_option.value().toString()),
+                  this.multiple
+                    ? indexOf.call(this.selected_values(), selected_value) >= 0
+                      ? ((new_values = this.selected_values()).splice(
                         jQuery.inArray(selected_value, old_values),
                         1
                       ),
-                      this.select.val([]),
-                      this.select.val(new_values))
-                    : null != this.opts.limit &&
-                      this.selected_values().length >= this.opts.limit
-                    ? null != this.opts.limit_reached &&
-                      this.opts.limit_reached.call(this.select)
-                    : this.select.val(
-                        this.selected_values().concat(selected_value)
-                      )
-                  : this.has_implicit_blanks() &&
-                    imagepicker_option.is_selected()
-                  ? this.select.val("")
-                  : this.select.val(selected_value),
-                !both_array_are_equal(old_values, this.selected_values()) &&
+                        this.select.val([]),
+                        this.select.val(new_values))
+                      : null != this.opts.limit &&
+                        this.selected_values().length >= this.opts.limit
+                        ? null != this.opts.limit_reached &&
+                        this.opts.limit_reached.call(this.select)
+                        : this.select.val(
+                          this.selected_values().concat(selected_value)
+                        )
+                    : this.has_implicit_blanks() &&
+                      imagepicker_option.is_selected()
+                      ? this.select.val("")
+                      : this.select.val(selected_value),
+                  !both_array_are_equal(old_values, this.selected_values()) &&
                   (this.select.change(), null != this.opts.changed))
               )
                 return this.opts.changed.call(
@@ -1453,9 +1428,9 @@ var _createClass = (function () {
             value: function (event) {
               if (
                 (this.picker.toggle(this, event),
-                null != this.opts.clicked &&
+                  null != this.opts.clicked &&
                   this.opts.clicked.call(this.picker.select, this, event),
-                null != this.opts.selected && this.is_selected())
+                  null != this.opts.selected && this.is_selected())
               )
                 return this.opts.selected.call(this.picker.select, this, event);
             },
@@ -1468,24 +1443,24 @@ var _createClass = (function () {
                 (this.node = jQuery("<li/>")),
                 this.option.data("font_awesome")
                   ? (image = jQuery("<i>")).attr(
-                      "class",
-                      "fa-fw " + this.option.data("img-src")
-                    )
+                    "class",
+                    "fa-fw " + this.option.data("img-src")
+                  )
                   : (image = jQuery("<img class='image_picker_image'/>")).attr(
-                      "src",
-                      this.option.data("img-src")
-                    ),
+                    "src",
+                    this.option.data("img-src")
+                  ),
                 (thumbnail = jQuery("<div class='thumbnail'>")),
                 (imgClass = this.option.data("img-class")) &&
-                  (this.node.addClass(imgClass),
+                (this.node.addClass(imgClass),
                   image.addClass(imgClass),
                   thumbnail.addClass(imgClass)),
                 (imgAlt = this.option.data("img-alt")) &&
-                  image.attr("alt", imgAlt),
+                image.attr("alt", imgAlt),
                 thumbnail.on("click", this.clicked),
                 thumbnail.append(image),
                 this.opts.show_label &&
-                  thumbnail.append(jQuery("<p/>").html(this.label())),
+                thumbnail.append(jQuery("<p/>").html(this.label())),
                 this.node.append(thumbnail),
                 this.node
               );
@@ -1512,7 +1487,7 @@ function payRazorpay(fundId, amount) {
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image: "https://www.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          image: "http://localhost:3000/img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {

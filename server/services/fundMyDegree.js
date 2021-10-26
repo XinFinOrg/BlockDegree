@@ -133,7 +133,7 @@ exports.requestNewFund = async (req, res) => {
       requiresApproval
     );
 
-    const requestPath = `https://www.blockdegree.org/fund-my-degree?fundId=${newFund.fundId}`;
+    const requestPath = `http://localhost:3000/fund-my-degree?fundId=${newFund.fundId}`;
     const shortUrl = await bitly.shorten(requestPath);
     newFund["requestUrlLong"] = requestPath;
     newFund["requestUrlShort"] = shortUrl.url;
@@ -153,9 +153,9 @@ exports.requestNewFund = async (req, res) => {
       let b64content = fs
         .readFileSync(`server/fmd-templates/${templateNumber}.jpg`)
         .toString("base64");
-        shareId = await PostSocialTwitter(
+      shareId = await PostSocialTwitter(
         req.user.email,
-        msg+`Link:${shortUrl.url}`,
+        msg + `Link:${shortUrl.url}`,
         b64content,
         `funding-request:${newFund.fundId}`
       );
@@ -163,14 +163,14 @@ exports.requestNewFund = async (req, res) => {
       let path = `server/fmd-templates/${templateNumber}.jpg`;
       shareId = await PostSocialLinkedin(
         req.user.email,
-        msg+`Link:${shortUrl.url}`,
+        msg + `Link:${shortUrl.url}`,
         path,
         `funding-request:${newFund.fundId}`
       );
     }
 
-    newFund["shared"]=true;
-    newFund["shareId"]=shareId;
+    newFund["shared"] = true;
+    newFund["shareId"] = shareId;
 
     await newFund.save();
     if (hasProfanity === true) {
@@ -405,8 +405,7 @@ exports.successFundPaypal = async (req, res) => {
         await emailer.sendMail(
           process.env.SUPP_EMAIL_ID,
           "Payment-error: error while executing the sale",
-          `While processing order for the user ${
-            req.user.email
+          `While processing order for the user ${req.user.email
           } some error occured while executing the sale: ${error.response.toString()}. Please consider for re-imbursement.`
         );
         return;
@@ -431,8 +430,7 @@ exports.successFundPaypal = async (req, res) => {
           await emailer.sendMail(
             process.env.SUPP_EMAIL_ID,
             "Payment-error: error while executing the sale",
-            `While processing order for the user ${
-              req.user.email
+            `While processing order for the user ${req.user.email
             } some error occured while executing the sale: ${error.response.toString()}. Please consider for re-imbursement.`
           );
         }
@@ -627,8 +625,7 @@ exports.completeRazorpay = async (req, res) => {
       "blockdegree-bot@blockdegree.org",
       process.env.SUPP_EMAIL_ID,
       "ERROR in Razorpay",
-      `Some error occured while processing payment for user ${
-        req.user.email
+      `Some error occured while processing payment for user ${req.user.email
       } error: ${String(e)}. please consider re-embursement`
     );
   }
@@ -974,7 +971,7 @@ exports.fmdCorporatePaypalErr = async (req, res) => {
       error:
         "Some error occured while processing your payment, please try again or contact at <b>info@blockdegree.org</b>",
     });
-  } catch (e) {}
+  } catch (e) { }
 };
 
 /**

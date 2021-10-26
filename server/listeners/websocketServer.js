@@ -27,7 +27,7 @@ exports.server = (server, sessionParser) => {
     // const userId = request.session;
     // if (
     //   !userId.passport
-    //   // request.headers.origin !== "https://www.blockdegree.org"
+    //   // request.headers.origin !== "http://localhost:3000"
     // ) {
     //   console.log(`[*] invalid access at websocket`);
     //   ws.close();

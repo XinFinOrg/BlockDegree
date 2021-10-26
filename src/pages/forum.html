@@ -1,0 +1,149 @@
+{{#> base}}
+{{> layouts/base title="Forum Questions"}}
+{{#*inline "body-block"}}
+<!-- {{> includes/hero hero-title="Fund My Degree"}} -->
+<div class="forum-questions-page">
+  <!-- start Header bg -->
+  <section class="forum-search block-bg shift-by-header">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3 text-center">
+          <form id="search-form">
+            <div class="input-group mb-3">
+              <input type="text" id="search" class="form-control" placeholder="Enter your Question" />
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-dark" id="search-submit">
+                  Search
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end Header bg -->
+
+  <!-- Search starts -->
+  <section class="search-results bg-muted py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1">
+          <div class="d-flex flex-row justify-content-between">
+            <h2 class="min-h2-height" id="results-heading" class="mb-3"></h2>
+            <a class="d-block btn btn-primary" href="/ask-question">Ask Question</a>
+          </div>
+          <div class="min-text-height" id="results-count"></div>
+          <div class="dropdown-divider"></div>
+          <div class="min-text-height" id="results">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Search ends -->
+</div>
+
+{{/inline}} {{#*inline "scripts-block"}}
+<!-- <script src="/js/home.js?v=1.46"></script> -->
+<script>
+  $(document).ready(function () {
+    let searchPage = 0
+
+    const searchParamVal = getParamValue("search");
+    if (searchParamVal) {
+      document.getElementById("search").value = searchParamVal
+      submitSearchForm(searchParamVal)
+    }
+
+    $("#search-form").on("submit", (e) => {
+      e.preventDefault();
+      const search = document.getElementById("search").value;
+      window.history.replaceState({ page: searchPage }, "", `?search=${search}`)
+      submitSearchForm(search)
+    })
+
+    function submitSearchForm(search) {
+      setNoResults({ message: "Loading..." })
+      $("#search-submit").prop("disabled", true);
+      $.ajax({
+        type: "get",
+        data: {
+          search,
+          pageNo: 0,
+          perPage: 10,
+        },
+        url: "/api/forumQuestions",
+        success: (result) => {
+          $("#search-submit").prop("disabled", false);
+          try {
+            if (!result.status) {
+              setNoResults({ message: result.error || "Internal Error" })
+            }
+            if (result.count === 0) {
+              setNoResults({ message: "No Results" })
+            } else {
+              setResults(result)
+            }
+          } catch (e) {
+            setNoResults({ message: "Failed to load questions" })
+          }
+        },
+        error: (jqXHR, status, err) => {
+          $("#search-submit").prop("disabled", false);
+          console.log(jqXHR, status, err)
+          setNoResults({ message: "Failed to load questions" })
+        },
+      });
+    }
+
+    function setNoResults({ message }) {
+      document.getElementById("results-heading").innerHTML = 'Search Results'
+      document.getElementById("results-count").innerHTML = '0 results'
+      document.getElementById("results").innerHTML = `<p class="text-center">${message}</p>`
+    }
+
+    function generateQuestionHtml({ urlSlug, hasAcceptedAnswer, answerCount = 0, text: questionText, description, createdAt, askedBy }) {
+      const questionUrl = `/questions/${urlSlug}`
+      return (`<div class="question d-flex flex-row">
+          <div class="p-2 question-meta">
+            <div class="text-center answer-count ${hasAcceptedAnswer ? 'accepted-answer' : ''} p-2">
+              <div class="font-weight-bold text-lg">${answerCount}</div>
+              <div class="text-sm">Answer${answerCount !== 1 ? 's' : ''}</div>
+            </div>
+          </div>
+          <div class="p-2 flex-grow-1">
+            <a class="d-block text-info text-lg" href="${questionUrl}">Q: ${questionText}</a>
+            ${description ? `<div class="text-sm">${description}</div>` : ''}
+            <div class="d-flex flex-row justify-content-between text-grey">
+              <div class="text-sm">created at: ${new Date(createdAt)}</div>
+              ${askedBy?.name ? `<div class="text-sm">asked by: ${askedBy?.name}</div>` : ''}
+            </div>
+          </div>
+        </div>`)
+    }
+
+    function setResults({ count, questions }) {
+      document.getElementById("results-count").innerHTML = `${count} results`
+      document.getElementById("results").innerHTML = `<div class="questions-wrapper">${questions.map(
+        q => generateQuestionHtml(q)
+      ).join('')}</div>`
+    }
+  })
+
+  function getParamValue(param) {
+    let currentUrl = window.location.href;
+    if (currentUrl.split("?").length > 1) {
+      let paramsString = currentUrl.split("?")[1];
+      const params = paramsString.split("&");
+      for (let i = 0; i < params.length; i++) {
+        const key = params[i].split("=")[0];
+        const value = params[i].split("=")[1];
+        if (key === param) return value;
+      }
+    }
+
+    return null;
+  }
+</script>
+{{/inline}} {{/base}}

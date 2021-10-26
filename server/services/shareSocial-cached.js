@@ -8,7 +8,7 @@ const BitlyClient = require("bitly").BitlyClient;
 let exec = require("child_process").exec;
 const twttr = require("twitter-text");
 const UserFundReq = require("../models/userFundRequest");
-const {PostSocialTwitter, PostSocialLinkedin} = require("../helpers/postSocial");
+const { PostSocialTwitter, PostSocialLinkedin } = require("../helpers/postSocial");
 require("dotenv").config();
 
 // Rate  Limited 1000 calls per hour i.e. {windowMs,max} -> only max requests allowed over windowMs
@@ -291,7 +291,7 @@ exports.postTwitter = async (req, res) => {
 //                 description: {
 //                   text: "Blockdegree - Opensource blockchain training"
 //                 },
-//                 originalUrl: "https://www.blockdegree.org",
+//                 originalUrl: "http://localhost:3000",
 //                 title: {
 //                   text: "Blockdegree - Opensource blockchain training"
 //                 }
@@ -316,7 +316,7 @@ exports.postTwitter = async (req, res) => {
 //   }
 // };
 
-exports.postFacebook = async (req, res) => {};
+exports.postFacebook = async (req, res) => { };
 
 exports.uploadImageLinkedin = async (req, res) => {
   // set the credentials from req.user;
@@ -457,7 +457,7 @@ exports.uploadImageLinkedin = async (req, res) => {
       });
     });
   }
-  
+
 
   await PostSocialLinkedin(user.email, msg, pathToFile, `certificate:${hash}`);
   res.json({ uploaded: true, error: null });
@@ -537,145 +537,147 @@ exports.uploadImageLinkedin = async (req, res) => {
 
 //---------------------------------POST VIA FMD-----------------------------------
 exports.postTwitterFMD = async (req, res) => {
-console.log("Called share on twitter by : ", req.user.email);
-if (!req.user) {
-  return res.redirect("/login");
-} else {
-  let user;
-  try {
-    user = await User.findOne({ email: req.user.email });
-  } catch (e) {
-    console.error(`Exception in shareSocial.postTwitterFMD/User.findOne: `, e);
-    return res.json({
-      uploaded: false,
-      error:
-        "Some error has occured please try again after sometime or contact us"
-    });
-  }
-  if (!user) {
+  console.log("Called share on twitter by : ", req.user.email);
+  if (!req.user) {
     return res.redirect("/login");
-  } else if (
-    user.auth.twitter.token == "" ||
-    user.auth.twitter.token == undefined ||
-    user.auth.twitter.tokenSecret == "" ||
-    user.auth.twitter.tokenSecret == undefined
-  ) {
-    return res.redirect("/auth/twitter");
   } else {
-    
+    let user;
+    try {
+      user = await User.findOne({ email: req.user.email });
+    } catch (e) {
+      console.error(`Exception in shareSocial.postTwitterFMD/User.findOne: `, e);
+      return res.json({
+        uploaded: false,
+        error:
+          "Some error has occured please try again after sometime or contact us"
+      });
+    }
+    if (!user) {
+      return res.redirect("/login");
+    } else if (
+      user.auth.twitter.token == "" ||
+      user.auth.twitter.token == undefined ||
+      user.auth.twitter.tokenSecret == "" ||
+      user.auth.twitter.tokenSecret == undefined
+    ) {
+      return res.redirect("/auth/twitter");
+    } else {
 
-    console.log("auth ok")
 
-    let msg = req.body.msg;
-    // let fundId = req.body.fundId;
-    let templateNumber = req.body.templateNumber;
-    let funderCerti = req.body.funder;
-    let fundId = req.body.fundId;
-    let currFundReq=null;
-    if (funderCerti=="true"){
-      currFundReq = await UserFundReq.findOne({fundId:fundId});
-      if (currFundReq===null){
-        res.json({status:false, error:"fund not found"});
+      console.log("auth ok")
+
+      let msg = req.body.msg;
+      // let fundId = req.body.fundId;
+      let templateNumber = req.body.templateNumber;
+      let funderCerti = req.body.funder;
+      let fundId = req.body.fundId;
+      let currFundReq = null;
+      if (funderCerti == "true") {
+        currFundReq = await UserFundReq.findOne({ fundId: fundId });
+        if (currFundReq === null) {
+          res.json({ status: false, error: "fund not found" });
+        }
+      }
+      // const currFund = await UserFundReq.findOne({fundId:fundId});
+
+      // if (currFund===null){
+      //   return res.json({status:false, error:"fund not found"})
+      // }
+
+      if (!getTweetCharacterLength(msg)) {
+        console.error(
+          `Error in shareSocial.postTweet: invalid number of characters in tweet : ${msg} by ${req.user.email}`
+        );
+        return res.json({
+          error: "invalid number of characters in the post",
+          uploaded: false
+        });
+      } else {
+        console.log("msg ok");
+
+        let currUser;
+        try {
+          currUser = await User.findOne({ email: req.user.email });
+        } catch (e) {
+          console.error(
+            `Exception in shareSocial.postTwitter/User.findOne: `,
+            e
+          );
+          return res.json({ uploaded: false, error: e });
+        }
+        var config = getTwitterConfig(
+          process.env.TWITTER_CLIENT_ID,
+          process.env.TWITTER_CLIENT_SECRET,
+          currUser.auth.twitter.token,
+          currUser.auth.twitter.tokenSecret
+        );
+        let T = new twit(config);
+        let imgHTML = "";
+
+        console.log(currFundReq);
+
+
+        let b64content = "";
+        if (funderCerti == "true") {
+          b64content = fs.readFileSync(`dist/img/funder-certi/${currFundReq.fundId}.png`).toString("base64");;
+        } else {
+          b64content = fs.readFileSync(`server/fmd-templates/${templateNumber}.jpg`).toString("base64");;
+        }
+
+        await PostSocialTwitter(user.email, msg, b64content, `fmd-share:${fundId}`);
+        res.json({ uploaded: true, error: null });
+
+        // T.post("media/upload", { media_data: b64content }, function(
+        //   // asynchronous
+        //   err,
+        //   data,
+        //   response
+        // ) {
+        //   if (err) {
+        //     console.log("ERROR:");
+        //     console.log(err);
+        //     return res.json({ uploaded: false, error: err });
+        //   } else {
+        //     T.post(
+        //       "statuses/update",
+        //       {
+        //         status: msg, // need to check the length for the length of tweet.
+        //         media_ids: new Array(data.media_id_string)
+        //       },
+        //       function(err, data, response) {
+        //         if (err) {
+        //           console.log("ERROR: ", err);
+        //           res.json({ uploaded: false, error: err });
+        //         } else {
+        //           console.log("Posted the status!");
+        //           res.json({ uploaded: true, error: null });
+        //         }
+        //       }
+        //     ).catch(e => {
+        //       console.error(`Exception at T.post while Posting Tweeting: `, e);
+        //       return res.json({
+        //         error:
+        //           "Some error occured while posting,please try again after sometime or else contact-us",
+        //         uploaded: false
+        //       });
+        //     });
+        //   }
+        // }).catch(e => {
+        //   console.error(
+        //     `Exception at T.post while uploading image for posting Tweeting: `,
+        //     e
+        //   );
+        //   return res.json({
+        //     error:
+        //       "Some error occured while posting,please try again after sometime or else contact-us",
+        //     uploaded: false
+        //   });
+        // });
+
       }
     }
-    // const currFund = await UserFundReq.findOne({fundId:fundId});
-
-    // if (currFund===null){
-    //   return res.json({status:false, error:"fund not found"})
-    // }
-
-    if (!getTweetCharacterLength(msg)) {
-      console.error(
-        `Error in shareSocial.postTweet: invalid number of characters in tweet : ${msg} by ${req.user.email}`
-      );
-      return res.json({
-        error: "invalid number of characters in the post",
-        uploaded: false
-      });
-    } else {
-      console.log("msg ok");
-      
-      let currUser;
-      try {
-        currUser = await User.findOne({ email: req.user.email });
-      } catch (e) {
-        console.error(
-          `Exception in shareSocial.postTwitter/User.findOne: `,
-          e
-        );
-        return res.json({ uploaded: false, error: e });
-      }
-      var config = getTwitterConfig(
-        process.env.TWITTER_CLIENT_ID,
-        process.env.TWITTER_CLIENT_SECRET,
-        currUser.auth.twitter.token,
-        currUser.auth.twitter.tokenSecret
-      );
-      let T = new twit(config);
-      let imgHTML = "";
-
-      console.log(currFundReq);
-      
-
-      let b64content = "";
-      if (funderCerti=="true"){
-        b64content = fs.readFileSync(`dist/img/funder-certi/${currFundReq.fundId}.png`).toString("base64");;
-      }else{
-        b64content = fs.readFileSync(`server/fmd-templates/${templateNumber}.jpg`).toString("base64");;
-      }
-
-      await PostSocialTwitter(user.email, msg, b64content, `fmd-share:${fundId}`);
-      res.json({ uploaded: true, error: null });
-
-      // T.post("media/upload", { media_data: b64content }, function(
-      //   // asynchronous
-      //   err,
-      //   data,
-      //   response
-      // ) {
-      //   if (err) {
-      //     console.log("ERROR:");
-      //     console.log(err);
-      //     return res.json({ uploaded: false, error: err });
-      //   } else {
-      //     T.post(
-      //       "statuses/update",
-      //       {
-      //         status: msg, // need to check the length for the length of tweet.
-      //         media_ids: new Array(data.media_id_string)
-      //       },
-      //       function(err, data, response) {
-      //         if (err) {
-      //           console.log("ERROR: ", err);
-      //           res.json({ uploaded: false, error: err });
-      //         } else {
-      //           console.log("Posted the status!");
-      //           res.json({ uploaded: true, error: null });
-      //         }
-      //       }
-      //     ).catch(e => {
-      //       console.error(`Exception at T.post while Posting Tweeting: `, e);
-      //       return res.json({
-      //         error:
-      //           "Some error occured while posting,please try again after sometime or else contact-us",
-      //         uploaded: false
-      //       });
-      //     });
-      //   }
-      // }).catch(e => {
-      //   console.error(
-      //     `Exception at T.post while uploading image for posting Tweeting: `,
-      //     e
-      //   );
-      //   return res.json({
-      //     error:
-      //       "Some error occured while posting,please try again after sometime or else contact-us",
-      //     uploaded: false
-      //   });
-      // });
-
-    }}}
   }
+}
 
 
 exports.uploadImageLinkedinFMD = async (req, res) => {
@@ -698,11 +700,11 @@ exports.uploadImageLinkedinFMD = async (req, res) => {
     // set linkedin credentials and post.
     return res.redirect("/auth/linkedin");
   }
-  
-  let msg =
-    req.body.msg 
 
-    // OLD SYSTEM
+  let msg =
+    req.body.msg
+
+  // OLD SYSTEM
   // register an upload : will get upload URL
   // let authToken = user.auth.linkedin.accessToken;
   // let personURN = user.auth.linkedin.id;
@@ -750,19 +752,19 @@ exports.uploadImageLinkedinFMD = async (req, res) => {
   let fundId = req.body.fundId;
   let currFundReq = null;
   let pathToFile = ""
-  if (funder=="true"){
-    currFundReq = await UserFundReq.findOne({fundId:fundId});
-    if (currFundReq==null){
-      return res.json({status:false, error:"fund not found"})
+  if (funder == "true") {
+    currFundReq = await UserFundReq.findOne({ fundId: fundId });
+    if (currFundReq == null) {
+      return res.json({ status: false, error: "fund not found" })
     }
     pathToFile = `dist/img/funder-certi/${currFundReq.fundId}.png`;
-  }else{
+  } else {
     pathToFile = `server/fmd-templates/${templateNumber}.jpg`;
   }
 
   await PostSocialLinkedin(user.email, msg, pathToFile, `fmd-share:${fundId}`);
   res.json({ uploaded: true, error: null });
-  
+
   // OLD SYSTEM
   // var os = new os_func();
   // os.execCommand(
@@ -836,7 +838,7 @@ exports.uploadImageLinkedinFMD = async (req, res) => {
 
 
 function os_func() {
-  this.execCommand = function(cmd, callback, callbackError) {
+  this.execCommand = function (cmd, callback, callbackError) {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);

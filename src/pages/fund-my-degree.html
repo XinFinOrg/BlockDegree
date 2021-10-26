@@ -40,21 +40,11 @@
           </li>
         </ul>
         <div class="fmd-features-btn-block">
-          <a
-            href="/fmd-apply"
-            class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"
-            >Apply Now</a
-          >
+          <a href="/fmd-apply" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Apply Now</a>
         </div>
       </div>
-      <div
-        class="col-lg-5 col-md-6 col-sm-12 col-xs-12 order-md-1 order-sm-2 align-self-center"
-      >
-        <img
-          src="img/fmd/students.png"
-          class="img-fluid d-block mx-auto"
-          alt=""
-        />
+      <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12 order-md-1 order-sm-2 align-self-center">
+        <img src="img/fmd/students.png" class="img-fluid d-block mx-auto" alt="" />
       </div>
     </div>
   </div>
@@ -106,19 +96,11 @@
           </li>
         </ul>
         <div class="fmd-features-btn-block alt">
-          <a
-            href="/fmd-fund"
-            class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white"
-            >Fund Now</a
-          >
+          <a href="/fmd-fund" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Fund Now</a>
         </div>
       </div>
       <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12 align-self-center">
-        <img
-          src="img/fmd/funders.png"
-          class="img-fluid d-block mx-auto"
-          alt=""
-        />
+        <img src="img/fmd/funders.png" class="img-fluid d-block mx-auto" alt="" />
       </div>
     </div>
   </div>
@@ -130,24 +112,24 @@
 <script>
   const paramVal = getParamValue("fundId");
 
-  if (paramVal!==null){
-    window.location.href = `https://www.blockdegree.org/fund-my-degree-fund?fundId=${paramVal}`
-  }
-  
-  
-  function getParamValue(param) {
-  let currentUrl = window.location.href;
-  if (currentUrl.split("?").length > 1) {
-    let paramsString = currentUrl.split("?")[1];
-    const params = paramsString.split("&");
-    for (let i = 0; i < params.length; i++) {
-      const key = params[i].split("=")[0];
-      const value = params[i].split("=")[1];
-      if (key === param) return value;
-    }
+  if (paramVal !== null) {
+    window.location.href = `http://localhost:3000/fund-my-degree-fund?fundId=${paramVal}`
   }
 
-  return null;
-}
+
+  function getParamValue(param) {
+    let currentUrl = window.location.href;
+    if (currentUrl.split("?").length > 1) {
+      let paramsString = currentUrl.split("?")[1];
+      const params = paramsString.split("&");
+      for (let i = 0; i < params.length; i++) {
+        const key = params[i].split("=")[0];
+        const value = params[i].split("=")[1];
+        if (key === param) return value;
+      }
+    }
+
+    return null;
+  }
 </script>
 {{/inline}} {{/base}}

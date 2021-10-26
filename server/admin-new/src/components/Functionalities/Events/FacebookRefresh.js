@@ -30,8 +30,8 @@ class FacebookRefresh extends Component {
 
   handleSuccess = event => {
     if (
-      event.origin === "https://www.blockdegree.org" ||
-      event.origin === "https://blockdegree.org"
+      event.origin === "http://localhost:3000" ||
+      event.origin === "http://localhost:3000"
     ) {
       console.log("From PopUp", event.data);
       this.setState({ showSuccess: true });
@@ -45,12 +45,12 @@ class FacebookRefresh extends Component {
       options.windowOptions || "location=0,status=0,width=600,height=600";
     options.callback =
       options.callback ||
-      function() {
+      function () {
         window.location.reload();
       };
     var that = this;
     that._oauthWindow = window.open(
-      "https://www.blockdegree.org/admin/facebookRefresh?close=true",
+      "http://localhost:3000/admin/facebookRefresh?close=true",
       options.windowName,
       options.windowOptions
     );

@@ -1,0 +1,73 @@
+<div class="forum-questions-page">
+    <!-- start Header bg -->
+    <section class="forum-search block-bg shift-by-header"></section>
+    <!-- end Header bg -->
+
+    <!-- Ask Question starts -->
+    <section class="search-results bg-muted py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1">
+                    <div class="d-flex flex-row justify-content-between">
+                        <h2 class="mb-3">Ask Question</h2>
+                    </div>
+                    <form id="ask-question-form">
+                        <div class="form-group">
+                            <label for="question">Question</label>
+                            <input type="text" name="text" class="form-control" id="question"
+                                aria-describedby="questionHelp" placeholder="e.g. What is Blockchain?" required>
+                            <!-- <small id="questionHelp" class="form-text text-muted">Instead adding a deplicate question consider adding a comment to the question or the relevant answer</small> -->
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+                        </div>
+
+                        <button type="submit" id="ask-question-submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Ask Question ends -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#ask-question-form").on("submit", (e) => {
+            e.preventDefault();
+            var form = $('#ask-question-form')[0];
+            var data = new FormData(form);
+            $("#ask-question-submit").prop("disabled", true);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "/api/forumQuestions",
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function (data) {
+                    $("#ask-question-submit").prop("disabled", false);
+                    if (data.status) {
+                        $.notify("Your question was successfully submitted", { type: "success" });
+                        $('#ask-question-form').each(function () {
+                            this.reset();
+                        });
+                    } else {
+                        if (data.error) {
+                            $.notify(data.error, { type: "danger" });
+                        }
+                    }
+                },
+                error: function (e) {
+                    $("#ask-question-submit").prop("disabled", false);
+                    $.notify("Failed, Your question could not be submitted", { type: "danger" });
+                    console.log("ERROR : ", e);
+                }
+            });
+        })
+
+    })
+</script>

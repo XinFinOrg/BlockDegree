@@ -66,7 +66,7 @@ const sessionParser = session({
     host: "localhost",
     port: 6379,
   }),
-  secret: "",
+  secret: "test",
   resave: true,
   rolling: true,
   saveUninitialized: true,
@@ -94,6 +94,7 @@ require("./routes/adminRoutes")(app);
 require("./routes/userProfileRoutes")(app);
 require("./routes/fmdRoutes")(app);
 require("./routes/nftRoutes")(app);
+require("./routes/forumQuestionsRoutes")(app);
 
 // remove the comment to serve from build
 app.use("/newadmin", dynamicMiddleware);
@@ -171,5 +172,5 @@ function connectToMongoDB() {
     setTimeout(connectToMongoDB, 5000);
   }
 }
-require("./listeners/websocketServer").server(server, sessionParser);
+// require("./listeners/websocketServer").server(server, sessionParser);
 module.exports = app;

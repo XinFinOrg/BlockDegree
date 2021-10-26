@@ -9,28 +9,16 @@
         <h2 class="mb-3">Login</h2>
         <p class="pb-1 mb-0">Login with your social media account</p>
         <div class="text-center social-btn">
-          <button
-            onclick="handleAuthFacebook()"
-            class="btn btn-primary btn-lg btn-block"
-          >
+          <button onclick="handleAuthFacebook()" class="btn btn-primary btn-lg btn-block">
             <i class="fa fa-facebook"></i> Login with <b>Facebook</b>
           </button>
-          <button
-            onclick="handleAuthTwitter()"
-            class="btn btn-info btn-lg btn-block"
-          >
+          <button onclick="handleAuthTwitter()" class="btn btn-info btn-lg btn-block">
             <i class="fa fa-twitter"></i> Login with <b>Twitter</b>
           </button>
-          <button
-            onclick="handleAuthLinkedin()"
-            class="btn btn-linkedin btn-lg btn-block"
-          >
+          <button onclick="handleAuthLinkedin()" class="btn btn-linkedin btn-lg btn-block">
             <i class="fa fa-linkedin"></i> Login with <b>LinkedIn</b>
           </button>
-          <button
-            onclick="handleAuthGoogle()"
-            class="btn btn-danger btn-lg btn-block"
-          >
+          <button onclick="handleAuthGoogle()" class="btn btn-danger btn-lg btn-block">
             <i class="fa fa-google"></i> Login with <b>Google</b>
           </button>
         </div>
@@ -38,45 +26,22 @@
         <h3 class="login-with-mail pb-1">Login with email</h3>
 
         <!-- Login Form -->
-        <form
-          class="login-form-block mt-1"
-          id="form-login"
-          method="post"
-          action="/api/login"
-        >
+        <form class="login-form-block mt-1" id="form-login" method="post" action="/api/login">
           <!--<div class="text-left pl-4">
             <label for="email" class="mb-0">Email</label>
           </div>-->
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Email"
-            autocomplete="off"
-            required
-          />
+          <input type="email" id="email" name="email" placeholder="Email" autocomplete="off" required />
           <div id="invalidEm"></div>
           <!--<div class="text-left pl-4">
             <label for="password" class="mb-0 pt-2">Password</label>
           </div>-->
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Password"
-            autocomplete="off"
-            required
-          />
+          <input type="password" id="password" name="password" placeholder="Password" autocomplete="off" required />
 
           <div class="pl-2">
             <a href="forgotpassword.html">Forgot Password?</a>
           </div>
 
-          <input
-            type="submit"
-            class="btn btn-primary py-2 mt-2 text-white"
-            value="Log In"
-          />
+          <input type="submit" class="btn btn-primary py-2 mt-2 text-white" value="Log In" />
         </form>
       </div>
 
@@ -98,16 +63,16 @@
 
 {{#*inline "scripts-block"}}
 <script>
-  window.onload = function() {
+  window.onload = function () {
     checkAuth();
   };
 
   window.addEventListener(
     "message",
-    function(event) {
+    function (event) {
       if (
-        event.origin == "https://www.blockdegree.org" ||
-        event.origin == "https://blockdegree.org"
+        event.origin == "http://localhost:3000" ||
+        event.origin == "http://localhost:3000"
       ) {
         console.log("From PopUp", event.data);
         document.cookie = event.data + ";path=/";
@@ -117,23 +82,23 @@
     false
   );
   function handleAuthGoogle() {
-    // window.location.replace("https://www.blockdegree.org/auth/google")
-    popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
+    // window.location.replace("http://localhost:3000/auth/google")
+    popupLogin({ path: "http://localhost:3000/auth/google?close=true" });
   }
   function handleAuthFacebook() {
-    // window.location.replace("https://www.blockdegree.org/auth/facebook")
+    // window.location.replace("http://localhost:3000/auth/facebook")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/facebook?close=true"
+      path: "http://localhost:3000/auth/facebook?close=true"
     });
   }
   function handleAuthTwitter() {
-    // window.location.replace("https://www.blockdegree.org/auth/twitter")
-    popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
+    // window.location.replace("http://localhost:3000/auth/twitter")
+    popupLogin({ path: "http://localhost:3000/auth/twitter?close=true" });
   }
   function handleAuthLinkedin() {
-    // window.location.replace("https://www.blockdegree.org/auth/linkedin")
+    // window.location.replace("http://localhost:3000/auth/linkedin")
     popupLogin({
-      path: "https://www.blockdegree.org/auth/linkedin?close=true"
+      path: "http://localhost:3000/auth/linkedin?close=true"
     });
   }
 
@@ -157,7 +122,7 @@
           result.linkedinAuth
         ) {
           // user is logged in, redirect.
-          location.replace("https://www.blockdegree.org");
+          location.replace("http://localhost:3000");
         }
         // signed in with twitter, show share button
       }
@@ -170,7 +135,7 @@
       options.windowOptions || "location=0,status=0,width=600,height=600";
     options.callback =
       options.callback ||
-      function() {
+      function () {
         window.location.reload();
       };
     var that = this;
@@ -180,10 +145,10 @@
       options.windowName,
       options.windowOptions
     );
-    that._oauthInterval = window.setInterval(function() {
-      if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
+    that._oauthInterval = window.setInterval(function () {
+      if (that._oauthWindow.location.href == "http://localhost:3000") {
         that._oauthWindow.location.href ==
-          "https://www.blockdegree.org/closeCallback";
+          "http://localhost:3000/closeCallback";
       }
     }, 1000);
   }

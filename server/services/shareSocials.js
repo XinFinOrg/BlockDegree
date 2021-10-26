@@ -150,7 +150,7 @@ exports.postTwitter = async (req, res) => {
                   });
 
                   // User should be able to set the status for post
-                  T.post("media/upload", { media_data: b64content }, function(
+                  T.post("media/upload", { media_data: b64content }, function (
                     // asynchronous
                     err,
                     data,
@@ -167,7 +167,7 @@ exports.postTwitter = async (req, res) => {
                           status: msg, // need to check the length for the length of tweet.
                           media_ids: new Array(data.media_id_string)
                         },
-                        function(err, data, response) {
+                        function (err, data, response) {
                           if (err) {
                             console.log("ERROR: ", err);
                             res.json({ uploaded: false, error: err });
@@ -306,7 +306,7 @@ exports.postLinkedin = async (req, res) => {
                 description: {
                   text: "Blockdegree - Opensource blockchain training"
                 },
-                originalUrl: "https://www.blockdegree.org",
+                originalUrl: "http://localhost:3000",
                 title: {
                   text: "Blockdegree - Opensource blockchain training"
                 }
@@ -331,7 +331,7 @@ exports.postLinkedin = async (req, res) => {
   }
 };
 
-exports.postFacebook = async (req, res) => {};
+exports.postFacebook = async (req, res) => { };
 
 exports.uploadImageLinkedin = async (req, res) => {
   // set the credentials from req.user;
@@ -416,7 +416,7 @@ exports.uploadImageLinkedin = async (req, res) => {
   // const uploadURL = response.data.value;
   const uploadMechnism =
     response.data.value.uploadMechanism[
-      "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
+    "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
     ];
   const uploadURL = uploadMechnism.uploadUrl;
   const asset = response.data.value.asset;
@@ -462,7 +462,7 @@ exports.uploadImageLinkedin = async (req, res) => {
           console.log(`local path: ${localPath}`);
           os.execCommand(
             `curl -i --upload-file ${localPath} --header "Authorization: Bearer ${authToken}" --header "X-Restli-Protocol-Version:2.0.0" '${uploadURL}'`,
-            async function(returnValue) {
+            async function (returnValue) {
               let resp;
               try {
                 resp = await axios({
@@ -548,7 +548,7 @@ exports.uploadImageLinkedin = async (req, res) => {
 };
 
 function os_func() {
-  this.execCommand = function(cmd, callback, callbackError) {
+  this.execCommand = function (cmd, callback, callbackError) {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);

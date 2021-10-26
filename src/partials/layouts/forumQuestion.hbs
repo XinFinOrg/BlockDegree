@@ -1,0 +1,195 @@
+<div class="forum-questions-page">
+    <!-- start Header bg -->
+    <section class="forum-search block-bg shift-by-header"></section>
+    <!-- end Header bg -->
+
+    <!-- forumQuestion starts -->
+    <section class="search-results bg-muted py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1">
+                    {{#unless question}}
+                    <div class="min-text-height text-center">
+                        <span>We could not find your question.</span>
+                        <a href="/forum">search again?</a>
+                    </div>
+                    {{/unless}}
+
+                    <!-- Question starts -->
+                    {{#if question }}
+                    <div class="question d-flex flex-row">
+                        <div class="p-2 question-meta">
+                            <div
+                                class="text-center answer-count {{#if question.hasAcceptedAnswer }}accepted-answer{{/if}} p-2">
+                                <div class="font-weight-bold text-lg">{{question.answerCount}}</div>
+                                <div class="text-sm">Answer{{#unless meta.hasOneAnswer}}s{{/unless}}</div>
+                            </div>
+                        </div>
+                        <div class="p-2 flex-grow-1">
+                            <h4>Q: {{question.text}}</h4>
+                            {{#if question.description }}<div class="text-sm">{{question.description}}</div>{{/if}}
+                            <div class="d-flex flex-row justify-content-between text-grey">
+                                {{#if question.createdAt }}<div class="text-sm">created at: {{question.createdAt}}</div>
+                                {{/if}}
+                                {{#if question.askedBy.name }}<div class="text-sm">asked by: {{question.askedBy.name}}
+                                </div>{{/if}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+
+                    {{#if meta.hasNoAnswers }}
+                    <div class="min-text-height text-center">No Answers yet!</div>
+                    {{else}}
+                    {{#each question.answers as |answer|}}
+                    <div class="question d-flex flex-row">
+                        <div class="p-2 question-meta">
+                            <div class="text-right">A:</div>
+                        </div>
+                        <div class="p-2 flex-grow-1">
+                            <div>{{{answer.text}}}</div>
+                            <div class="d-flex flex-row justify-content-between text-grey">
+                                {{#if answer.answeredOn }}
+                                <div class="text-sm">created at: {{answer.answeredOn}}</div>
+                                {{/if}}
+                                {{#if answer.answeredBy }}
+                                <div class="text-sm">answered by:
+                                    {{answer.answeredBy}}
+                                </div>
+                                {{/if}}
+                            </div>
+                            {{#each answer.comments as |comment|}}
+                            <div class="d-flex flex-row ml-sm-3">
+                                <div class="min-text-height flex-grow-1">
+                                    <span class="text-sm">{{comment.text}}</span>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-ellipsis">- {{comment.commentedBy}}</span>
+                                </div>
+                            </div>
+                            {{/each}}
+                            {{#if ../meta.isLoggedIn }}
+                            <form class="d-flex flex-row" action="javascript:void(0);"
+                                onsubmit="addComment('{{answer._id}}')">
+                                <div class="form-group m-0 flex-grow-1">
+                                    <label for="add-comment-text-{{answer._id}}" class="sr-only">Password</label>
+                                    <input type="text" class="form-control" id="add-comment-text-{{answer._id}}"
+                                        placeholder="comment">
+                                </div>
+                                <button type="submit" id="submit-comment-{{answer._id}}"
+                                    class="btn btn-primary ml-2">Add
+                                    Comment</button>
+                            </form>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{/if}}
+
+                    {{#if meta.isLoggedIn }}
+                    <div class="dropdown-divider"></div>
+                    <div class="question d-flex flex-row">
+                        <div class="p-2 question-meta"></div>
+                        <form class="p-2 flex-grow-1" id="submit-answer-form">
+                            <div class="form-group">
+                                {{!-- <label for="answer">Submit an answer</label> --}}
+                                <textarea class="form-control" id="answer" name="text" rows="3"
+                                    placeholder="Submit an answer"></textarea>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-dark">
+                                    Search
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    {{/if}}
+
+                    {{/if}}
+                    <!-- Question ends -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- forumQuestion ends -->
+</div>
+
+<script>
+    const urlSlug = window.location.href.split("?")[0].split('/questions/')[1]
+    function nl2br(str) {
+        return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    }
+    $(document).ready(function () {
+        $("#submit-answer-form").on("submit", (e) => {
+            e.preventDefault();
+            const data = new FormData();
+            const answer = $("#answer").val();
+            data.append('text', nl2br(answer));
+            $("#submit-answer-submit").prop("disabled", true);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: `/api/forumQuestions/${urlSlug}/addAnswer`,
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function (data) {
+                    $("#submit-answer-submit").prop("disabled", false);
+                    if (data.status) {
+                        window.location.reload()
+                        //$.notify("Your answer was successfully submitted", { type: "success" });
+                        //$('#ask-question-form').each(function () {
+                        //    this.reset();
+                        //});
+                    } else {
+                        if (data.error) {
+                            $.notify(data.error, { type: "danger" });
+                        }
+                    }
+                },
+                error: function (e) {
+                    $.notify("Failed, Your answer could not be submitted", { type: "danger" });
+                    console.log("ERROR : ", e);
+                    $("#submit-answer-submit").prop("disabled", false);
+                }
+            });
+        })
+    })
+    function addComment(answerId) {
+        const data = new FormData();
+        const comment = $(`#add-comment-text-${answerId}`).val();
+        data.append('text', comment);
+        $(`#submit-comment-${answerId}`).prop("disabled", true);
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: `/api/forumQuestions/${urlSlug}/addComment/${answerId}`,
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 800000,
+            success: function (data) {
+                $(`#submit-comment-${answerId}`).prop("disabled", false);
+                if (data.status) {
+                    window.location.reload()
+                    //$.notify("Your answer was successfully submitted", { type: "success" });
+                    //$('#ask-question-form').each(function () {
+                    //    this.reset();
+                    //});
+                } else {
+                    if (data.error) {
+                        $.notify(data.error, { type: "danger" });
+                    }
+                }
+            },
+            error: function (e) {
+                $.notify("Failed, Your answer could not be submitted", { type: "danger" });
+                console.log("ERROR : ", e);
+                $("#submit-answer-submit").prop("disabled", false);
+            }
+        });
+    }
+</script>

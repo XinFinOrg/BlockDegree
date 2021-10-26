@@ -13,7 +13,7 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import { Button, Modal } from "react-bootstrap";
 import Axios from "axios";
 
-const imageBasePath = "https://www.blockdegree.org/kyc-user-image/";
+const imageBasePath = "http://localhost:3000/kyc-user-image/";
 
 function defHeadFormatter(column, colIndex, { sortElement, filterElement }) {
   return (
@@ -201,7 +201,7 @@ export class KycUser extends Component {
         animation={true}
         onHide={() => {
           this.setState({ showModal: !this.state.showModal });
-        }}        
+        }}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         dialogClassName="description-modal blockdegree-modal"

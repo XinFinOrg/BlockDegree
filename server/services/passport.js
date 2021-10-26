@@ -21,7 +21,7 @@ function newDefaultUser() {
     name: "",
     created: "",
     lastActive: "",
-    userSession:"",
+    userSession: "",
     profile: {},
     examData: {
       payment: {
@@ -66,7 +66,7 @@ function newDefaultUser() {
         isVerified: false
       },
       linkedin: {
-        refreshToken:"",
+        refreshToken: "",
         accessToken: "",
         id: ""
       }
@@ -74,12 +74,12 @@ function newDefaultUser() {
   });
 }
 
-module.exports = function(passport) {
-  passport.serializeUser(function(user, done) {
+module.exports = function (passport) {
+  passport.serializeUser(function (user, done) {
     done(null, user.id);
   });
-  passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
+  passport.deserializeUser(function (id, done) {
+    User.findById(id, function (err, user) {
       done(err, user);
     });
   });
@@ -91,10 +91,10 @@ module.exports = function(passport) {
         passwordField: "password",
         passReqToCallback: true
       },
-      function(req, email, password, done) {
+      function (req, email, password, done) {
         console.log(req.body, email, password);
-        process.nextTick(function() {
-          User.findOne({ email: email }, function(err, user) {
+        process.nextTick(function () {
+          User.findOne({ email: email }, function (err, user) {
             if (err) {
               console.log("some error", err);
               return done(err);
@@ -114,7 +114,7 @@ module.exports = function(passport) {
               }
             } else {
               // Validating user
-              let refId = req.body.refId;            
+              let refId = req.body.refId;
               let validEm = validateEmail(email),
                 validPwd = validatePWD(password),
                 validFN = validateName(req.body.firstName),
@@ -142,7 +142,7 @@ module.exports = function(passport) {
               newUser.auth.local.password = newUser.generateHash(password);
               newUser.created = Date.now();
               newUser.lastActive = Date.now();
-              newUser.save(function(err) {
+              newUser.save(function (err) {
                 if (err) {
                   console.log("Error:", err);
                   throw err;
@@ -154,7 +154,7 @@ module.exports = function(passport) {
                   email: email,
                   token: crypto.randomBytes(16).toString("hex")
                 });
-                token.save(function(err) {
+                token.save(function (err) {
                   if (err) {
                     console.log(err);
                     return done(null, false, "token errror");
@@ -165,9 +165,9 @@ module.exports = function(passport) {
                     .then(res => console.log("emailer res>>>>>", res))
                     .catch(err => console.log("emailer err>>>>", err));
                   referralEmitter.emit("createUserReferral", email);
-                  if (refId!==""){
+                  if (refId !== "") {
                     console.log(`|${refId}|`);
-                    
+
                     referralEmitter.emit("referralUsage", refId, email);
                   }
                   return done(null, newUser);
@@ -187,13 +187,13 @@ module.exports = function(passport) {
         passwordField: "password",
         passReqToCallback: true
       },
-      function(req, email, password, done) {
+      function (req, email, password, done) {
         let validEm = validateEmail(email);
         if (!validEm.valid) {
           return done(null, false, "Invalid email");
         }
 
-        User.findOne({ email: email }, async function(err, user) {
+        User.findOne({ email: email }, async function (err, user) {
           if (err) return done(err);
           if (!user) return done(null, false, "No user found.");
           if (user.auth.local.password == "") {
@@ -237,7 +237,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/google/callback",
+        callbackURL: "http://localhost:3000/auth/google/callback",
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {
@@ -362,7 +362,7 @@ module.exports = function(passport) {
         newUser.auth.google.refreshToken = refreshToken;
         newUser.created = Date.now();
         newUser.lastActive = Date.now();
-        
+
         let sessionId = uuid();
         newUser.userSession = sessionId;
 
@@ -371,7 +371,7 @@ module.exports = function(passport) {
         newSession.ip = req.headers["x-forwarded-for"] || req.ip;
         newSession.startTime = Date.now();
         newSession.platform = "google";
-        await newSession.save();        
+        await newSession.save();
 
         await newUser.save();
         socialPostListener.emit("varTriggerUpdate", "registrations");
@@ -386,12 +386,12 @@ module.exports = function(passport) {
       {
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/facebook/callback",
+        callbackURL: "http://localhost:3000/auth/facebook/callback",
         passReqToCallback: true,
         profileFields: ["id", "emails", "name", "displayName"]
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        process.nextTick(async function() {
+        process.nextTick(async function () {
           if (req.user) {
             if (
               req.user.auth.facebook.id == "" ||
@@ -416,15 +416,15 @@ module.exports = function(passport) {
               user.lastActive = Date.now();
 
 
-            let sessionId = uuid();
-            user.userSession = sessionId;
+              let sessionId = uuid();
+              user.userSession = sessionId;
 
-            let newSession = genSession(sessionId);
-            newSession.email = user.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "facebook";
-            await newSession.save();
+              let newSession = genSession(sessionId);
+              newSession.email = user.email;
+              newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+              newSession.startTime = Date.now();
+              newSession.platform = "facebook";
+              await newSession.save();
 
               await user.save();
               return done(null, user);
@@ -433,7 +433,7 @@ module.exports = function(passport) {
             let otherUserSocial = await User.findOne({
               "auth.facebook.id": profile.id
             });
-            if (otherUserSocial!==null && otherUserSocial.email!==user.email){
+            if (otherUserSocial !== null && otherUserSocial.email !== user.email) {
               return done(
                 "This social account is not linked to your account.",
                 null,
@@ -446,7 +446,7 @@ module.exports = function(passport) {
 
             let sessionId = uuid();
             user.userSession = sessionId;
-  
+
             let newSession = genSession(sessionId);
             newSession.email = user.email;
             newSession.ip = req.headers["x-forwarded-for"] || req.ip;
@@ -470,7 +470,7 @@ module.exports = function(passport) {
 
             let sessionId = uuid();
             existingUser.userSession = sessionId;
-  
+
             let newSession = genSession(sessionId);
             newSession.email = existingUser.email;
             newSession.ip = req.headers["x-forwarded-for"] || req.ip;
@@ -502,15 +502,15 @@ module.exports = function(passport) {
               linkEmail.lastActive = Date.now();
 
 
-            let sessionId = uuid();
-            linkEmail.userSession = sessionId;
+              let sessionId = uuid();
+              linkEmail.userSession = sessionId;
 
-            let newSession = genSession(sessionId);
-            newSession.email = linkEmail.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "facebook";
-            await newSession.save();
+              let newSession = genSession(sessionId);
+              newSession.email = linkEmail.email;
+              newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+              newSession.startTime = Date.now();
+              newSession.platform = "facebook";
+              await newSession.save();
 
               await linkEmail.save();
               done(null, linkEmail);
@@ -536,7 +536,7 @@ module.exports = function(passport) {
             newSession.startTime = Date.now();
             newSession.platform = "facebook";
             await newSession.save();
-            
+
             await user.save();
             return done(null, user);
           }
@@ -551,13 +551,13 @@ module.exports = function(passport) {
 
           let sessionId = uuid();
           newUser.userSession = sessionId;
-  
+
           let newSession = genSession(sessionId);
           newSession.email = newUser.email;
           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
           newSession.startTime = Date.now();
           newSession.platform = "facebook";
-          await newSession.save();     
+          await newSession.save();
 
           await newUser.save();
           socialPostListener.emit("varTriggerUpdate", "registrations");
@@ -573,18 +573,18 @@ module.exports = function(passport) {
       {
         clientID: socialPostKeys.facebook.app_id,
         clientSecret: socialPostKeys.facebook.app_secret,
-        callbackURL: "https://www.blockdegree.org/admin/facebookRefresh/callback"
+        callbackURL: "http://localhost:3000/admin/facebookRefresh/callback"
       },
       async (token, tokenSecret, profile, done) => {
-        if (profile.emails[0].value === socialPostKeys.facebook.email){
+        if (profile.emails[0].value === socialPostKeys.facebook.email) {
           console.log(`Token: ${token} TokenSecret: ${tokenSecret}`);
           console.log(`Profile: ${profile}`);
           done(null, { token: token, tokenSecret: tokenSecret });
         }
-        else{
+        else {
           console.log(`Admin tried to referesh token with different account ${profile.emails[0].value}, actual: ${socialPostKeys.facebook.email}.`);
           done("invalid facaebook account", null);
-        }        
+        }
       }
     )
   );
@@ -595,7 +595,7 @@ module.exports = function(passport) {
       {
         consumerKey: process.env.TWITTER_CLIENT_ID,
         consumerSecret: process.env.TWITTER_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/twitter/callback",
+        callbackURL: "http://localhost:3000/auth/twitter/callback",
         includeEmail: true,
         passReqToCallback: true
       },
@@ -624,7 +624,7 @@ module.exports = function(passport) {
             let otherUserSocial = await User.findOne({
               "auth.twitter.id": profile.id
             });
-            if (otherUserSocial!==null && otherUserSocial.email!==user.email){
+            if (otherUserSocial !== null && otherUserSocial.email !== user.email) {
               return done(
                 "This social account is not linked to your account.",
                 null,
@@ -766,7 +766,7 @@ module.exports = function(passport) {
         newSession.ip = req.headers["x-forwarded-for"] || req.ip;
         newSession.startTime = Date.now();
         newSession.platform = "twitter";
-        await newSession.save();     
+        await newSession.save();
 
         await newUser.save();
         socialPostListener.emit("varTriggerUpdate", "registrations");
@@ -781,12 +781,12 @@ module.exports = function(passport) {
       {
         clientID: process.env.LINKEDIN_CLIENT,
         clientSecret: process.env.LINKEDIN_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/linkedin/callback",
+        callbackURL: "http://localhost:3000/auth/linkedin/callback",
         scope: ["r_liteprofile", "r_emailaddress", "w_member_social"],
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {
-        process.nextTick(async function() {
+        process.nextTick(async function () {
           if (req.user) {
             if (
               req.user.auth.linkedin.id == "" ||
@@ -815,7 +815,7 @@ module.exports = function(passport) {
 
               let sessionId = uuid();
               user.userSession = sessionId;
-  
+
               let newSession = genSession(sessionId);
               newSession.email = user.email;
               newSession.ip = req.headers["x-forwarded-for"] || req.ip;
@@ -830,7 +830,7 @@ module.exports = function(passport) {
             let otherUserSocial = await User.findOne({
               "auth.linkedin.id": profile.id
             });
-            if (otherUserSocial!==null&&otherUserSocial.email!==user.email){
+            if (otherUserSocial !== null && otherUserSocial.email !== user.email) {
               return done(
                 "This social account is not linked to your account.",
                 null,
@@ -843,7 +843,7 @@ module.exports = function(passport) {
 
             let sessionId = uuid();
             user.userSession = sessionId;
-  
+
             let newSession = genSession(sessionId);
             newSession.email = user.email;
             newSession.ip = req.headers["x-forwarded-for"] || req.ip;
@@ -854,7 +854,7 @@ module.exports = function(passport) {
             await user.save();
             return done(null, user);
           }
-          let  existingUser = await User.findOne({
+          let existingUser = await User.findOne({
             "auth.linkedin.id": profile.id
           });
           if (existingUser) {
@@ -865,7 +865,7 @@ module.exports = function(passport) {
 
             let sessionId = uuid();
             existingUser.userSession = sessionId;
-  
+
             let newSession = genSession(sessionId);
             newSession.email = existingUser.email;
             newSession.ip = req.headers["x-forwarded-for"] || req.ip;
@@ -896,15 +896,15 @@ module.exports = function(passport) {
               linkEmail.lastActive = Date.now();
 
 
-            let sessionId = uuid();
-            linkEmail.userSession = sessionId;
+              let sessionId = uuid();
+              linkEmail.userSession = sessionId;
 
-            let newSession = genSession(sessionId);
-            newSession.email = linkEmail.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "linkedin";
-            await newSession.save();
+              let newSession = genSession(sessionId);
+              newSession.email = linkEmail.email;
+              newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+              newSession.startTime = Date.now();
+              newSession.platform = "linkedin";
+              await newSession.save();
 
               await linkEmail.save();
               return done(null, linkEmail);
@@ -923,7 +923,7 @@ module.exports = function(passport) {
 
             let sessionId = uuid();
             user.userSession = sessionId;
-  
+
             let newSession = genSession(sessionId);
             newSession.email = user.email;
             newSession.ip = req.headers["x-forwarded-for"] || req.ip;
@@ -944,13 +944,13 @@ module.exports = function(passport) {
 
           let sessionId = uuid();
           newUser.userSession = sessionId;
-  
+
           let newSession = genSession(sessionId);
           newSession.email = newUser.email;
           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
           newSession.startTime = Date.now();
           newSession.platform = "linkedin";
-          await newSession.save();     
+          await newSession.save();
 
           await newUser.save();
           socialPostListener.emit("varTriggerUpdate", "registrations");
@@ -1024,19 +1024,19 @@ function formatName(fullName) {
   return finalFN;
 }
 
-function genSession(id){
+function genSession(id) {
   return new UserSession({
     sessionId: id,
     email: '',
     startTime: '',
     endTime: '',
     ip: '',
-    platform:''
+    platform: ''
   })
 }
 
 function validateRefId(refId) {
-  if (refId.length===15 && refId.startsWith("bd-")){
+  if (refId.length === 15 && refId.startsWith("bd-")) {
     return true;
   }
   return false

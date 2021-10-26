@@ -12,14 +12,14 @@ const em = new EventEmitter();
  */
 async function referralUsage(code, email) {
   try {
-    console.log("called referralUsage");    
+    console.log("called referralUsage");
     const referred = await UserReferral.findOne({ referralCode: code });
     if (referred === null) {
       return console.log("[*] code not found");
     }
     referred.registrations.push(email);
     await referred.save();
-    console.log("saved");    
+    console.log("saved");
   } catch (e) {
     console.log(`exceptionat ${__filename}.referralUsage: `, e);
   }
@@ -44,7 +44,7 @@ function createUserReferral(email) {
       const newCode = new UserReferral({
         email: email,
         referralCode: refCode,
-        longUrl: `https://www.blockdegree.org/login?refId=${refCode}`,
+        longUrl: `http://localhost:3000/login?refId=${refCode}`,
         registrations: [],
       });
       await newCode.save();

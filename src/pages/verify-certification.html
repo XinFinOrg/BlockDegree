@@ -2,25 +2,17 @@
 {{> layouts/base title="Verify certification"}}
 
 {{#*inline "body-block"}}
-{{> includes/hero hero-title="Verify certification" hero-copy="Boost your credentials with our blockchain certification"}}
+{{> includes/hero hero-title="Verify certification" hero-copy="Boost your credentials with our blockchain
+certification"}}
 
 <div class="bg-white py-3">
   <div class="container py-5" id="verify-certificate">
     <div class="row">
       <div class="col-lg-6 offset-lg-3 text-center">
         <div class="input-group mb-3">
-          <input
-            type="text"
-            id="certiHash"
-            class="form-control"
-            placeholder="Enter the hash"
-          />
+          <input type="text" id="certiHash" class="form-control" placeholder="Enter the hash" />
           <div class="input-group-append">
-            <button
-              type="button"
-              class="btn btn-dark"
-              onclick="openCertiByHash()"
-            >
+            <button type="button" class="btn btn-dark" onclick="openCertiByHash()">
               Open Certificate
             </button>
           </div>
@@ -36,11 +28,7 @@
               </div>-->
 
         <div>
-          <button
-            type="button"
-            class="btn btn-primary text-white"
-            onclick="getAllCertificates()"
-          >
+          <button type="button" class="btn btn-primary text-white" onclick="getAllCertificates()">
             Get My Certificates
           </button>
         </div>
@@ -54,27 +42,14 @@
     <div class="row" id="card_wrap"></div>
   </div>
 </div>
-<button
-  type="button"
-  class="btn btn-primary social-tw"
-  onclick="showImageModal('Twitter')"
-  data-toggle="modal"
-  data-target="#postTwitter"
-  style="display: none"
-  id="togglePostTwitter"
->
+<button type="button" class="btn btn-primary social-tw" onclick="showImageModal('Twitter')" data-toggle="modal"
+  data-target="#postTwitter" style="display: none" id="togglePostTwitter">
   <i class="fa fa-twitter social"></i> Post on Twitter
 </button>
 
 <!-- Modal -->
-<div
-  class="modal fade"
-  id="postTwitter"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalCenterTitle"
-  aria-hidden="true"
->
+<div class="modal fade" id="postTwitter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <!-- Modal content-->
     <div class="modal-content">
@@ -93,18 +68,10 @@
         <div id="postTwitterHash" style="display: none"></div>
         <div>
           <div>
-            <img
-              src="/img/gif/loading_block.gif"
-              style="width:300px;height:300px;display:block;margin:0 auto;"
-              id="modalImageTwitter"
-            />
+            <img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;"
+              id="modalImageTwitter" />
           </div>
-          <button
-            id="btn-postTweet"
-            type="button"
-            class="btn btn-primary social-tw mt-3"
-            onclick="postTweet()"
-          >
+          <button id="btn-postTweet" type="button" class="btn btn-primary social-tw mt-3" onclick="postTweet()">
             <i class="fa fa-twitter"></i> Post On Twitter
           </button>
         </div>
@@ -119,14 +86,8 @@
   </div>
 </div>
 
-<div
-  class="modal fade"
-  id="mintTokenModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalCenterTitle"
-  aria-hidden="true"
->
+<div class="modal fade" id="mintTokenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <!-- Modal content-->
     <div class="modal-content">
@@ -137,93 +98,70 @@
       <div class="modal-body">
         <div class="mb-3">
           <label class="col-lg-3" for="mintCertificateHash">Certificate</label>
-          <input class="col-lg-8" type="text" id="mintCertificateHash" disabled="true" /> 
+          <input class="col-lg-8" type="text" id="mintCertificateHash" disabled="true" />
         </div>
         <div class="mb-3">
           <label class="col-lg-3" for="tokenName">Token Name</label>
-          <input class="col-lg-8" type="text" id="tokenName" disabled="true" value="Blockdegree Certificate" /> 
+          <input class="col-lg-8" type="text" id="tokenName" disabled="true" value="Blockdegree Certificate" />
         </div>
         <div class="mb-3">
           <label class="col-lg-3" for="tokenName">Owner</label>
-          <input class="col-lg-8" type="text" id="tokenOwner" placeholder="enter owner XDC address" /> 
+          <input class="col-lg-8" type="text" id="tokenOwner" placeholder="enter owner XDC address" />
         </div>
         <div>
-      </div>
+        </div>
 
-      <div class="modal-footer">
-        <button
-            type="button"
-            class="btn btn-primary mt-3 float-right"
-            onclick="handleMint()"
-          >
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary mt-3 float-right" onclick="handleMint()">
             Mint Token
           </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 
-<button
-  id="togglePostLinkedin"
-  type="button"
-  class="btn btn-primary social-li"
-  data-toggle="modal"
-  data-target="#postLinkedin"
-  style="display: none"
->
-  Post Linkedin
-</button>
-<div
-  class="modal fade"
-  id="postLinkedin"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalCenterTitle"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Linkedin Post</h3>
-        <button type="button" class="close" data-dismiss="modal">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <input type="checkbox" id="certiLinkLinkedin" /> Include link to
-          Certificate<br />
+  <button id="togglePostLinkedin" type="button" class="btn btn-primary social-li" data-toggle="modal"
+    data-target="#postLinkedin" style="display: none">
+    Post Linkedin
+  </button>
+  <div class="modal fade" id="postLinkedin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Linkedin Post</h3>
+          <button type="button" class="close" data-dismiss="modal">×</button>
         </div>
-        <p><textarea cols="30" rows="3" id="postMSGLinkedin"></textarea></p>
-        <div id="postLinkedinHash" style="display: none"></div>
-        <div>
-          <div>
-            <img
-              src="/img/gif/loading_block.gif"
-              style="width:300px;height:300px;display:block;margin:0 auto;"
-              id="modalImageLinkedin"
-            />
+        <div class="modal-body">
+          <div class="mb-3">
+            <input type="checkbox" id="certiLinkLinkedin" /> Include link to
+            Certificate<br />
           </div>
-          <button
-            type="button"
-            class="btn btn-primary social-li mt-3"
-            onclick="postLinkedin()"
-          >
-            <i class="fa fa-linkedin"></i> Post On Linkedin
+          <p><textarea cols="30" rows="3" id="postMSGLinkedin"></textarea></p>
+          <div id="postLinkedinHash" style="display: none"></div>
+          <div>
+            <div>
+              <img src="/img/gif/loading_block.gif" style="width:300px;height:300px;display:block;margin:0 auto;"
+                id="modalImageLinkedin" />
+            </div>
+            <button type="button" class="btn btn-primary social-li mt-3" onclick="postLinkedin()">
+              <i class="fa fa-linkedin"></i> Post On Linkedin
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">
+            Close
           </button>
         </div>
       </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">
-          Close
-        </button>
-      </div>
     </div>
   </div>
-</div>
 
-<!--<div class="bg-white py-3">
+  <!--<div class="bg-white py-3">
 
   		<div class="container py-5" id="verify-certificate">
   			<div class="row">
@@ -251,231 +189,243 @@
   		</div>
   	</div>-->
 
-{{/inline}}
+  {{/inline}}
 
-{{#*inline "scripts-block"}}
+  {{#*inline "scripts-block"}}
 
-{{/inline}}
+  {{/inline}}
 
-{{/base}}
+  {{/base}}
 
-<script>
-  let postLinkedinHash = "";
-  let postTwitterHash = "";
-  let mintCertificateHash = "";
+  <script>
+    let postLinkedinHash = "";
+    let postTwitterHash = "";
+    let mintCertificateHash = "";
 
-  const msg =
-    "Hey, I just got certified in blockchain from Blockdegree.org, check it out !! ";
+    const msg =
+      "Hey, I just got certified in blockchain from Blockdegree.org, check it out !! ";
 
-  $(document).ready(() => {
-    $.ajax({
-      method: "post",
-      url: "/api/getAuthStatus",
-      data: {},
-      success: auths => {
-        if (
-          auths.localAuth ||
-          auths.twitterAuth ||
-          auths.facebookAuth ||
-          auths.googleAuth ||
-          auths.linkedinAuth
-        ) {
-          //logged in
-          $.ajax({
-            method: "get",
-            url: "/api/isNameRegistered",
-            success: result => {
-              console.log(result);
-              if (!result.isSet) {
-                document.getElementById("setName").innerHTML =
-                  "<div class='input-group mb-3'>" +
-                  '<input type="text" class="form-control" id="fullName" placeholder="Enter Fill Name">' +
-                  "<div class='input-group-append'>" +
-                  '<button type="button" class="btn btn-dark" onclick="callSetName()" >Set Name</button>' +
-                  "</div>" +
-                  "</div>";
+    $(document).ready(() => {
+      $.ajax({
+        method: "post",
+        url: "/api/getAuthStatus",
+        data: {},
+        success: auths => {
+          if (
+            auths.localAuth ||
+            auths.twitterAuth ||
+            auths.facebookAuth ||
+            auths.googleAuth ||
+            auths.linkedinAuth
+          ) {
+            //logged in
+            $.ajax({
+              method: "get",
+              url: "/api/isNameRegistered",
+              success: result => {
+                console.log(result);
+                if (!result.isSet) {
+                  document.getElementById("setName").innerHTML =
+                    "<div class='input-group mb-3'>" +
+                    '<input type="text" class="form-control" id="fullName" placeholder="Enter Fill Name">' +
+                    "<div class='input-group-append'>" +
+                    '<button type="button" class="btn btn-dark" onclick="callSetName()" >Set Name</button>' +
+                    "</div>" +
+                    "</div>";
+                }
               }
-            }
-          });
-        } else {
-          return;
+            });
+          } else {
+            return;
+          }
+        }
+      });
+    });
+
+    window.addEventListener("message", function (event) {
+      if (
+        event.origin == "http://localhost:3000" ||
+        event.origin == "http://localhost:3000"
+      ) {
+        if (event.data == "ok") {
+          console.log("message from popup.");
+          if (postLinkedinHash != "") {
+            // toggle linkedin modal
+            $("#togglePostLinkedin").click();
+          } else if (postTwitterHash != "") {
+            // toggle twitter modal
+            $("#togglePostTwitter").click();
+          }
         }
       }
     });
-  });
+    function callSetName() {
+      $.ajax({
+        method: "post",
+        url: "/api/setName",
+        data: {
+          fullName: formatName(document.getElementById("fullName").value)
+        },
+        success: result => {
+          alert(`Msg : ${result.msg}`);
+          document.location.reload();
+        }
+      });
+    }
 
-  window.addEventListener("message", function(event) {
-    if (
-      event.origin == "https://www.blockdegree.org" ||
-      event.origin == "https://blockdegree.org"
+    function generateCard(
+      examName,
+      marks,
+      total,
+      date,
+      clientHash,
+      headlessHash,
+      rst
     ) {
-      if (event.data == "ok") {
-        console.log("message from popup.");
-        if (postLinkedinHash != "") {
-          // toggle linkedin modal
-          $("#togglePostLinkedin").click();
-        } else if (postTwitterHash != "") {
-          // toggle twitter modal
-          $("#togglePostTwitter").click();
-        }
+      if (examName === "computing") {
+        examName = "cloud computing";
       }
-    }
-  });
-  function callSetName() {
-    $.ajax({
-      method: "post",
-      url: "/api/setName",
-      data: {
-        fullName: formatName(document.getElementById("fullName").value)
-      },
-      success: result => {
-        alert(`Msg : ${result.msg}`);
-        document.location.reload();
+      if (examName === "wallet") {
+        examName = "Blockchain Wallet";
       }
-    });
-  }
+      if (examName === "Study Blockchain in 60 Minutes") {
+        marks = "NA";
+        total = "NA";
+      }
 
-  function generateCard(
-    examName,
-    marks,
-    total,
-    date,
-    clientHash,
-    headlessHash,
-    rst
-  ) {
-    if  (examName==="computing"){
-      examName="cloud computing";
-    }
-    if (examName === "wallet"){
-      examName="Blockchain Wallet";
-    }
-    if (examName === "Study Blockchain in 60 Minutes") {
-      marks = "NA";
-      total = "NA";
-    }
+      let mintBtn;
 
-    let mintBtn;
+      if (rst.minted === true) {
+        mintBtn = `                                <a target="blank" href="https://explorer.xinfin.network/tx/${rst.mintTx}" >VIEW NFT TX</a>`;
+      } else {
+        mintBtn = `                                <span class="social-li" onclick="handleMintModal('${clientHash}')"><i class="fa  fa-arrow-circle-o-up"></i></span>&nbsp;MINT As NFT`;
 
-    if(rst.minted===true) {
-      mintBtn = `                                <a target="blank" href="https://explorer.xinfin.network/tx/${rst.mintTx}" >VIEW NFT TX</a>`;
-    }else {
-      mintBtn = `                                <span class="social-li" onclick="handleMintModal('${clientHash}')"><i class="fa  fa-arrow-circle-o-up"></i></span>&nbsp;MINT As NFT`;
+      }
 
-    }
-
-    return (
-      '<div class="col-lg-6 mb-5">' +
-      '            		<div class="card">' +
-      '              			<div class="card-body bg-light">' +
-      '							<ul class="list-group list-group-flush">' +
-      '								<li class="list-group-item"><span>Exam Name : ' +
-      "</span>" +
-      examName+
-      " </li>" +
-      '								<li class="list-group-item"><span>Marks Obtained : ' +
-      "</span>" +
-      marks +
-      " </li>" +
-      '                                <li class="list-group-item"><span>Total Questions : ' +
-      "</span>" +
-      total +
-      " </li>" +
-      '                                <li class="list-group-item"><span>Date : ' +
-      "</span>" +
-      new Date(parseFloat(date)) +
-      " </li>" +
-      '                                <li class="list-group-item"><span>Certificate : ' +
-      "</span>" +
-      `<a href="https://ipfs-gateway.xinfin.network/${clientHash}" target="_blank">`+
-      clientHash +
-      "</a></li>" +
-      '                                <li class="list-group-item"><span>Document : ' +
-      "</span>" +
-      `<a href="https://ipfs-gateway.xinfin.network/${headlessHash}" target="_blank">`+
-      headlessHash +
-      "</a></li>" +
-      "          					</ul>                            " +
-      '                            <p class="social-sharing mt-3 mb-0 float-left">' +
+      return (
+        '<div class="col-lg-6 mb-5">' +
+        '            		<div class="card">' +
+        '              			<div class="card-body bg-light">' +
+        '							<ul class="list-group list-group-flush">' +
+        '								<li class="list-group-item"><span>Exam Name : ' +
+        "</span>" +
+        examName +
+        " </li>" +
+        '								<li class="list-group-item"><span>Marks Obtained : ' +
+        "</span>" +
+        marks +
+        " </li>" +
+        '                                <li class="list-group-item"><span>Total Questions : ' +
+        "</span>" +
+        total +
+        " </li>" +
+        '                                <li class="list-group-item"><span>Date : ' +
+        "</span>" +
+        new Date(parseFloat(date)) +
+        " </li>" +
+        '                                <li class="list-group-item"><span>Certificate : ' +
+        "</span>" +
+        `<a href="https://ipfs-gateway.xinfin.network/${clientHash}" target="_blank">` +
+        clientHash +
+        "</a></li>" +
+        '                                <li class="list-group-item"><span>Document : ' +
+        "</span>" +
+        `<a href="https://ipfs-gateway.xinfin.network/${headlessHash}" target="_blank">` +
+        headlessHash +
+        "</a></li>" +
+        "          					</ul>                            " +
+        '                            <p class="social-sharing mt-3 mb-0 float-left">' +
         mintBtn +
         "					</p>" +
-      '                            <p class="social-sharing mt-3 mb-0 float-right">' +
-      "Share on : " +
-      `                                <span class="social-li" onclick="handleShareLinkdedin('${clientHash}')"><i class="fa fa-linkedin social"></i></span>` +
-      `                                <span class="social-tw" onclick="handleShareTwitter('${clientHash}')" ><i class="fa fa-twitter social"></i></span>` +
-      " or " +
-      `                            <span class="social-li" onclick="downloadCertificate('${clientHash}')"><i class="fa fa-download"></i></span>` +
-      `<img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="${clientHash}loading_download">` +
-      "							</p>" +
-      "						</div>" +
-      "					</div>" +
-      "				</div>"
+        '                            <p class="social-sharing mt-3 mb-0 float-right">' +
+        "Share on : " +
+        `                                <span class="social-li" onclick="handleShareLinkdedin('${clientHash}')"><i class="fa fa-linkedin social"></i></span>` +
+        `                                <span class="social-tw" onclick="handleShareTwitter('${clientHash}')" ><i class="fa fa-twitter social"></i></span>` +
+        " or " +
+        `                            <span class="social-li" onclick="downloadCertificate('${clientHash}')"><i class="fa fa-download"></i></span>` +
+        `<img src="/img/gif/loading_block.gif" style="width:30px;height:30px;display:none" id="${clientHash}loading_download">` +
+        "							</p>" +
+        "						</div>" +
+        "					</div>" +
+        "				</div>"
 
-      // "<div >" +
-      // '            <span style="width: 100px;">Exam Name</span>:<span style="width: 100px;">' +
-      // examName +
-      // "</span><br>" +
-      // '            <span style="width: 100px;">Marks Obtained</span>:<span style="width: 100px;">' +
-      // marks +
-      // "</span><br>" +
-      // '            <span style="width: 100px;">Total Questions</span>:<span style="width: 100px;">' +
-      // total +
-      // "</span><br>" +
-      // '            <span style="width: 100px;">Date</span>:<span style="width: 100px;">' +
-      // new Date(parseFloat(date)) +
-      // "</span><br>" +
-      // '            <span style="width: 100px;">Certificate</span>:<span style="width: 100px;">' +
-      // clientHash +
-      // "</span><br>" +
-      // '            <span style="width: 100px;">Document</span>:<span style="width: 100px;">' +
-      // headlessHash +
-      // "</span>" +
-      // "      </div><br>"
-    );
-  }
-
-  function openCertiByHash() {
-    let hash = document.getElementById("certiHash").value;
-    console.log(`Hash length: ${hash.length}`);
-    if (!validateHash(hash)) {
-      $.notify("Invalid Hash", { type: "danger" });
-      return;
+        // "<div >" +
+        // '            <span style="width: 100px;">Exam Name</span>:<span style="width: 100px;">' +
+        // examName +
+        // "</span><br>" +
+        // '            <span style="width: 100px;">Marks Obtained</span>:<span style="width: 100px;">' +
+        // marks +
+        // "</span><br>" +
+        // '            <span style="width: 100px;">Total Questions</span>:<span style="width: 100px;">' +
+        // total +
+        // "</span><br>" +
+        // '            <span style="width: 100px;">Date</span>:<span style="width: 100px;">' +
+        // new Date(parseFloat(date)) +
+        // "</span><br>" +
+        // '            <span style="width: 100px;">Certificate</span>:<span style="width: 100px;">' +
+        // clientHash +
+        // "</span><br>" +
+        // '            <span style="width: 100px;">Document</span>:<span style="width: 100px;">' +
+        // headlessHash +
+        // "</span>" +
+        // "      </div><br>"
+      );
     }
-    let found = false;
 
-    $.ajax({
-      url: "/api/getAuthStatus",
-      method: "post",
-      data: {},
-      success: async auth => {
-        if (
-          auth.twitterAuth ||
-          auth.localAuth ||
-          auth.facebookAuth ||
-          auth.googleAuth ||
-          auth.linkedinAuth
-        ) {
-          // logged in
-          $.ajax({
-            method: "get",
-            url: "/api/getAllCertificates",
-            success: result => {
-              console.log("result");
-              console.log(result);
-              if (result.msg == "ok") {
-                let certificates = result.certificateHash;
-                console.log("Certificates : ");
-                console.log(certificates);
-                if (
-                  certificates != null &&
-                  certificates != "" &&
-                  certificates != undefined
-                ) {
-                  for (let i = 1; i < certificates.length; i++) {
-                    if (
-                      certificates[i].clientHash == hash ||
-                      certificates[i].headlessHash == hash
-                    ) {
+    function openCertiByHash() {
+      let hash = document.getElementById("certiHash").value;
+      console.log(`Hash length: ${hash.length}`);
+      if (!validateHash(hash)) {
+        $.notify("Invalid Hash", { type: "danger" });
+        return;
+      }
+      let found = false;
+
+      $.ajax({
+        url: "/api/getAuthStatus",
+        method: "post",
+        data: {},
+        success: async auth => {
+          if (
+            auth.twitterAuth ||
+            auth.localAuth ||
+            auth.facebookAuth ||
+            auth.googleAuth ||
+            auth.linkedinAuth
+          ) {
+            // logged in
+            $.ajax({
+              method: "get",
+              url: "/api/getAllCertificates",
+              success: result => {
+                console.log("result");
+                console.log(result);
+                if (result.msg == "ok") {
+                  let certificates = result.certificateHash;
+                  console.log("Certificates : ");
+                  console.log(certificates);
+                  if (
+                    certificates != null &&
+                    certificates != "" &&
+                    certificates != undefined
+                  ) {
+                    for (let i = 1; i < certificates.length; i++) {
+                      if (
+                        certificates[i].clientHash == hash ||
+                        certificates[i].headlessHash == hash
+                      ) {
+                        window.open(
+                          `https://ipfs-gateway.xinfin.network/${hash}`,
+                          "newwin",
+                          "height=700px,width=900px"
+                        );
+                        return;
+                      }
+                    }
+                    if (!found) {
+                      $.notify("Given hash is not associated to your account", {
+                        type: "warning"
+                      });
                       window.open(
                         `https://ipfs-gateway.xinfin.network/${hash}`,
                         "newwin",
@@ -484,456 +434,444 @@
                       return;
                     }
                   }
-                  if (!found) {
-                    $.notify("Given hash is not associated to your account", {
-                      type: "warning"
-                    });
-                    window.open(
-                      `https://ipfs-gateway.xinfin.network/${hash}`,
-                      "newwin",
-                      "height=700px,width=900px"
-                    );
-                    return;
-                  }
                 }
               }
+            });
+          } else {
+            window.open(
+              `https://ipfs-gateway.xinfin.network/${hash}`,
+              "newwin",
+              "height=700px,width=900px"
+            );
+          }
+        }
+      });
+    }
+
+    function validateHash(hash) {
+      // let onlyAphaNumeric = "/^[0-9a-zA-Z]+$/";
+      // if (!hash.match(onlyAphaNumeric)) {
+      //   return false;
+      // }
+      if (hash.length == 46) {
+        return true;
+      }
+      return false;
+    }
+
+    function getAllCertificates() {
+      let card_wrap = document.getElementById("card_wrap");
+      document.getElementById("card_wrapping_container").style = "display:block";
+      let retHTML = "";
+      console.log("called");
+      $.ajax({
+        url: "/api/getAuthStatus",
+        method: "post",
+        data: {},
+        success: async auth => {
+          if (
+            auth.twitterAuth ||
+            auth.localAuth ||
+            auth.facebookAuth ||
+            auth.googleAuth ||
+            auth.linkedinAuth
+          ) {
+            // is logged in
+            $.ajax({
+              method: "get",
+              url: "/api/getAllCertificates",
+              success: result => {
+                console.log("result");
+                console.log(result);
+                if (result.msg == "ok") {
+                  let allCerti = result.certificateHash;
+                  if (allCerti.length == 1) {
+                    $.notify(
+                      "You have no certificates right now, give an exam to get a certificate",
+                      { type: "danger" }
+                    );
+                  } else {
+                    for (let i = 1; i < allCerti.length; i++) {
+                      let currCerti = allCerti[i];
+                      // console.log(currCerti);
+                      retHTML += generateCard(
+                        currCerti.examType,
+                        currCerti.marks,
+                        currCerti.total,
+                        currCerti.timestamp,
+                        currCerti.clientHash,
+                        currCerti.headlessHash,
+                        currCerti
+                      );
+                    }
+                  }
+                  card_wrap.innerHTML = retHTML;
+                  $("html,body").animate(
+                    {
+                      scrollTop: $(".card").offset().top - 100
+                    },
+                    "slow"
+                  );
+                } else {
+                  $.notify(`Error while fetching certificates: ${result.msg}`, {
+                    type: "danger"
+                  });
+                }
+              }
+            });
+          } else {
+            document.getElementById("card_wrapping_container").style =
+              "display:none";
+            $.notify("Please login", { type: "danger" });
+            exit();
+          }
+        }
+      });
+    }
+
+    async function downloadCertificate(hash) {
+      console.log("inside download");
+      document.getElementById(hash + "loading_download").style =
+        "width:30px;height:30px;display:inline";
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/downloadCertificate", true);
+      xhr.responseType = "arraybuffer";
+      xhr.onload = function () {
+        if (this.status === 200) {
+          var filename = "";
+          var disposition = xhr.getResponseHeader("Content-Disposition");
+          if (disposition && disposition.indexOf("attachment") !== -1) {
+            var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            var matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1])
+              filename = matches[1].replace(/['"]/g, "");
+          }
+          var type = xhr.getResponseHeader("Content-Type");
+
+          var blob =
+            typeof File === "function"
+              ? new File([this.response], filename, { type: type })
+              : new Blob([this.response], { type: type });
+          if (typeof window.navigator.msSaveBlob !== "undefined") {
+            // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+            window.navigator.msSaveBlob(blob, filename);
+          } else {
+            var URL = window.URL || window.webkitURL;
+            var downloadUrl = URL.createObjectURL(blob);
+            document.getElementById(hash + "loading_download").style =
+              "display:none";
+            if (filename) {
+              // use HTML5 a[download] attribute to specify filename
+              var a = document.createElement("a");
+              // safari doesn't support this yet
+              if (typeof a.download === "undefined") {
+                window.location = downloadUrl;
+              } else {
+                a.href = downloadUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+              }
+            } else {
+              window.location = downloadUrl;
             }
-          });
+          }
         } else {
-          window.open(
-            `https://ipfs-gateway.xinfin.network/${hash}`,
-            "newwin",
-            "height=700px,width=900px"
+          $.notify("Looks like some error has occured, please try again", {
+            type: "danger"
+          });
+        }
+      };
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.send($.param({ hash: hash }));
+    }
+
+    function handleShareLinkdedin(hash) {
+      console.log("called handle linkedin share");
+      console.log(`hash: ${hash}`);
+      document.getElementById("postMSGLinkedin").innerHTML = msg;
+      postLinkedinHash = hash;
+      document.getElementById("postLinkedinHash").innerHTML = hash;
+      $.ajax({
+        method: "post",
+        url: "/api/getAuthStatus",
+        data: {},
+        success: result => {
+          let popUpWin;
+          if (!result.linkedinAuth) {
+            // has not linked its linkedin account,  first link the account and then continue.
+            popUpWin = handleAuthLinkedin();
+          } else {
+            $("#togglePostLinkedin").click();
+          }
+        },
+        error: err => {
+          $.notify(
+            "Oops looks like some error occurred, please try again after sometime.",
+            { type: "danger" }
           );
         }
-      }
-    });
-  }
-
-  function validateHash(hash) {
-    // let onlyAphaNumeric = "/^[0-9a-zA-Z]+$/";
-    // if (!hash.match(onlyAphaNumeric)) {
-    //   return false;
-    // }
-    if (hash.length == 46) {
-      return true;
+      });
     }
-    return false;
-  }
 
-  function getAllCertificates() {
-    let card_wrap = document.getElementById("card_wrap");
-    document.getElementById("card_wrapping_container").style = "display:block";
-    let retHTML = "";
-    console.log("called");
-    $.ajax({
-      url: "/api/getAuthStatus",
-      method: "post",
-      data: {},
-      success: async auth => {
-        if (
-          auth.twitterAuth ||
-          auth.localAuth ||
-          auth.facebookAuth ||
-          auth.googleAuth ||
-          auth.linkedinAuth
-        ) {
-          // is logged in
-          $.ajax({
-            method: "get",
-            url: "/api/getAllCertificates",
-            success: result => {
-              console.log("result");
-              console.log(result);
-              if (result.msg == "ok") {
-                let allCerti = result.certificateHash;
-                if (allCerti.length == 1) {
+    function handleMintModal(hash) {
+      mintCertificateHash = hash;
+
+      $("#mintCertificateHash").val(mintCertificateHash);
+
+      $("#mintTokenModal").modal('show');
+    }
+
+    function handleMint() {
+
+      const owner = $("#tokenOwner").val();
+
+      $.ajax({
+        method: "post",
+        url: "/api/mint-nft",
+        data: { owner: owner, certificateHash: mintCertificateHash },
+        success: result => {
+          if (result.status === true) {
+            $.notify(
+              result.message,
+              { type: "success" }
+            );
+          } else {
+            $.notify(
+              result.error,
+              { type: "danger" }
+            );
+          }
+          $("#mintTokenModal").modal('hide');
+        },
+        error: err => {
+          $.notify(
+            `Oops, some error has occured, please try again after sometime`,
+            { type: "danger" }
+          );
+          $("#mintTokenModal").modal('hide');
+        }
+      });
+    }
+
+    function handleShareTwitter(hash) {
+      console.log("called handle twitter share");
+      console.log(`hash: ${hash}`);
+      document.getElementById("postMSGTwitter").innerHTML = msg;
+      postTwitterHash = hash;
+      document.getElementById("postTwitterHash").innerHTML = hash;
+      $.ajax({
+        method: "post",
+        url: "/api/getAuthStatus",
+        data: {},
+        success: result => {
+          let popUpWin;
+          if (!result.twitterAuth) {
+            // has not linked its linkedin account,  first link the account and then continue.
+            popUpWin = handleAuthTwitter();
+          } else {
+            $("#togglePostTwitter").click();
+          }
+        },
+        error: err => {
+          $.notify(
+            `Oops, some error has occured, please try again after sometime`,
+            { type: "danger" }
+          );
+        }
+      });
+    }
+
+    function handleAuthTwitter() {
+      return window.open(
+        "http://localhost:3000/auth/twitter?close=true",
+        "newwin",
+        "height=600px,width=600px"
+      );
+    }
+    function handleAuthLinkedin() {
+      return window.open(
+        "http://localhost:3000/auth/linkedin?close=true",
+        "newwin",
+        "height=600px,width=600px"
+      );
+    }
+
+    function postTweet() {
+      let userMSG = document.getElementById("postMSGTwitter").value;
+      let certiLink = document.getElementById("certiLinkTwitter").checked;
+      let hash = document.getElementById("postTwitterHash");
+      let validMsg = false;
+      console.log(`PostTwitterHash: ${postTwitterHash}`);
+      $.post({
+        method: "post",
+        url: "/api/checkTweetCharacters",
+        data: { tweet: userMSG, includeLink: certiLink },
+        success: result => {
+          validMsg = result.valid;
+          if (!validMsg) {
+            $.notify("Max tweet character exceeded, please shorten your msg", {
+              type: "danger"
+            });
+          } else {
+            $.notify(
+              "Your post is now being submitted, please wait a few seconds."
+            );
+            $.ajax({
+              method: "post",
+              url: "/api/shareOnTwitter",
+              data: { hash: hash.innerHTML, certiLink: certiLink, msg: userMSG },
+              success: (result, textStatus, xhr) => {
+                console.log(`XHR status: ${xhr.status}`);
+                console.log(`TextStatus: ${textStatus}`);
+                if (result.uploaded) {
+                  $.notify("Successfully posted on twitter!", {
+                    type: "success"
+                  });
+                  postTwitterHash = "";
+                  hash.innerHTML = "";
+                } else {
+                  $.notify("Oops, error occured while posting!", {
+                    type: "danger"
+                  });
+                  postTwitterHash = "";
+                  hash.innerHTML = "";
+                }
+              },
+              error: xhr => {
+                if (xhr.status == 429) {
                   $.notify(
-                    "You have no certificates right now, give an exam to get a certificate",
+                    "Looks like a lot of people are using this API, please try again after sometime",
                     { type: "danger" }
                   );
                 } else {
-                  for (let i = 1; i < allCerti.length; i++) {
-                    let currCerti = allCerti[i];
-                    // console.log(currCerti);
-                    retHTML += generateCard(
-                      currCerti.examType,
-                      currCerti.marks,
-                      currCerti.total,
-                      currCerti.timestamp,
-                      currCerti.clientHash,
-                      currCerti.headlessHash,
-                      currCerti
-                    );
-                  }
+                  $.notify(
+                    "Some error has occured, please tray again after sometime",
+                    { type: "danger" }
+                  );
                 }
-                card_wrap.innerHTML = retHTML;
-                $("html,body").animate(
-                  {
-                    scrollTop: $(".card").offset().top - 100
-                  },
-                  "slow"
-                );
-              } else {
-                $.notify(`Error while fetching certificates: ${result.msg}`, {
-                  type: "danger"
-                });
               }
-            }
-          });
-        } else {
-          document.getElementById("card_wrapping_container").style =
-            "display:none";
-          $.notify("Please login", { type: "danger" });
-          exit();
-        }
-      }
-    });
-  }
-
-  async function downloadCertificate(hash) {
-    console.log("inside download");
-    document.getElementById(hash + "loading_download").style =
-      "width:30px;height:30px;display:inline";
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/downloadCertificate", true);
-    xhr.responseType = "arraybuffer";
-    xhr.onload = function() {
-      if (this.status === 200) {
-        var filename = "";
-        var disposition = xhr.getResponseHeader("Content-Disposition");
-        if (disposition && disposition.indexOf("attachment") !== -1) {
-          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          var matches = filenameRegex.exec(disposition);
-          if (matches != null && matches[1])
-            filename = matches[1].replace(/['"]/g, "");
-        }
-        var type = xhr.getResponseHeader("Content-Type");
-
-        var blob =
-          typeof File === "function"
-            ? new File([this.response], filename, { type: type })
-            : new Blob([this.response], { type: type });
-        if (typeof window.navigator.msSaveBlob !== "undefined") {
-          // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
-          window.navigator.msSaveBlob(blob, filename);
-        } else {
-          var URL = window.URL || window.webkitURL;
-          var downloadUrl = URL.createObjectURL(blob);
-          document.getElementById(hash + "loading_download").style =
-            "display:none";
-          if (filename) {
-            // use HTML5 a[download] attribute to specify filename
-            var a = document.createElement("a");
-            // safari doesn't support this yet
-            if (typeof a.download === "undefined") {
-              window.location = downloadUrl;
-            } else {
-              a.href = downloadUrl;
-              a.download = filename;
-              document.body.appendChild(a);
-              a.click();
-            }
-          } else {
-            window.location = downloadUrl;
+            });
           }
-        }
-      } else {
-        $.notify("Looks like some error has occured, please try again", {
-          type: "danger"
-        });
-      }
-    };
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send($.param({ hash: hash }));
-  }
-
-  function handleShareLinkdedin(hash) {
-    console.log("called handle linkedin share");
-    console.log(`hash: ${hash}`);
-    document.getElementById("postMSGLinkedin").innerHTML = msg;
-    postLinkedinHash = hash;
-    document.getElementById("postLinkedinHash").innerHTML = hash;
-    $.ajax({
-      method: "post",
-      url: "/api/getAuthStatus",
-      data: {},
-      success: result => {
-        let popUpWin;
-        if (!result.linkedinAuth) {
-          // has not linked its linkedin account,  first link the account and then continue.
-          popUpWin = handleAuthLinkedin();
-        } else {
-          $("#togglePostLinkedin").click();
-        }
-      },
-      error: err => {
-        $.notify(
-          "Oops looks like some error occurred, please try again after sometime.",
-          { type: "danger" }
-        );
-      }
-    });
-  }
-
-  function handleMintModal(hash) {
-    mintCertificateHash = hash;
-
-    $("#mintCertificateHash").val(mintCertificateHash);
-
-    $("#mintTokenModal").modal('show');
-  }
-
-  function handleMint() {
-
-    const owner  = $("#tokenOwner").val();
-
-    $.ajax({
-      method: "post",
-      url: "/api/mint-nft",
-      data: {owner:owner, certificateHash:mintCertificateHash},
-      success: result => {
-        if (result.status===true) {
-          $.notify(
-          result.message,
-          { type: "success" }
-        );
-        }else {
-        $.notify(
-          result.error,
-          { type: "danger" }
-        );
-        }
-        $("#mintTokenModal").modal('hide');
-      },
-      error: err => {
-        $.notify(
-          `Oops, some error has occured, please try again after sometime`,
-          { type: "danger" }
-        );
-        $("#mintTokenModal").modal('hide');
-      }
-    });
-  }
-
-  function handleShareTwitter(hash) {
-    console.log("called handle twitter share");
-    console.log(`hash: ${hash}`);
-    document.getElementById("postMSGTwitter").innerHTML = msg;
-    postTwitterHash = hash;
-    document.getElementById("postTwitterHash").innerHTML = hash;
-    $.ajax({
-      method: "post",
-      url: "/api/getAuthStatus",
-      data: {},
-      success: result => {
-        let popUpWin;
-        if (!result.twitterAuth) {
-          // has not linked its linkedin account,  first link the account and then continue.
-          popUpWin = handleAuthTwitter();
-        } else {
-          $("#togglePostTwitter").click();
-        }
-      },
-      error: err => {
-        $.notify(
-          `Oops, some error has occured, please try again after sometime`,
-          { type: "danger" }
-        );
-      }
-    });
-  }
-
-  function handleAuthTwitter() {
-    return window.open(
-      "https://www.blockdegree.org/auth/twitter?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
-  }
-  function handleAuthLinkedin() {
-    return window.open(
-      "https://www.blockdegree.org/auth/linkedin?close=true",
-      "newwin",
-      "height=600px,width=600px"
-    );
-  }
-
-  function postTweet() {
-    let userMSG = document.getElementById("postMSGTwitter").value;
-    let certiLink = document.getElementById("certiLinkTwitter").checked;
-    let hash = document.getElementById("postTwitterHash");
-    let validMsg = false;
-    console.log(`PostTwitterHash: ${postTwitterHash}`);
-    $.post({
-      method: "post",
-      url: "/api/checkTweetCharacters",
-      data: { tweet: userMSG, includeLink: certiLink },
-      success: result => {
-        validMsg = result.valid;
-        if (!validMsg) {
-          $.notify("Max tweet character exceeded, please shorten your msg", {
+        },
+        error: err => {
+          validMsg = false;
+          console.log("inside error in checkTweetCharacters: ", err);
+          $.notify("Some error occured please try again after sometime", {
             type: "danger"
           });
+          postTwitterHash = "";
+          hash.innerHTML = "";
+          return;
+        }
+      });
+
+      $("#postTwitter").modal("hide");
+    }
+
+    function showImageModal(social) {
+      console.log("inside download");
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/downloadCertificate", true);
+      xhr.responseType = "arraybuffer";
+      xhr.onload = function () {
+        if (this.status === 200) {
+          var filename = "";
+          var disposition = xhr.getResponseHeader("Content-Disposition");
+          if (disposition && disposition.indexOf("attachment") !== -1) {
+            var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            var matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1])
+              filename = matches[1].replace(/['"]/g, "");
+          }
+          var type = xhr.getResponseHeader("Content-Type");
+
+          var blob =
+            typeof File === "function"
+              ? new File([this.response], filename, { type: type })
+              : new Blob([this.response], { type: type });
+          if (typeof window.navigator.msSaveBlob !== "undefined") {
+            // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+            window.navigator.msSaveBlob(blob, filename);
+          } else {
+            var URL = window.URL || window.webkitURL;
+            document.querySelector(
+              `#modalImage${social}`
+            ).src = URL.createObjectURL(blob);
+          }
         } else {
-          $.notify(
-            "Your post is now being submitted, please wait a few seconds."
-          );
-          $.ajax({
-            method: "post",
-            url: "/api/shareOnTwitter",
-            data: { hash: hash.innerHTML, certiLink: certiLink, msg: userMSG },
-            success: (result, textStatus, xhr) => {
-              console.log(`XHR status: ${xhr.status}`);
-              console.log(`TextStatus: ${textStatus}`);
-              if (result.uploaded) {
-                $.notify("Successfully posted on twitter!", {
-                  type: "success"
-                });
-                postTwitterHash = "";
-                hash.innerHTML = "";
-              } else {
-                $.notify("Oops, error occured while posting!", {
-                  type: "danger"
-                });
-                postTwitterHash = "";
-                hash.innerHTML = "";
-              }
-            },
-            error: xhr => {
-              if (xhr.status == 429) {
-                $.notify(
-                  "Looks like a lot of people are using this API, please try again after sometime",
-                  { type: "danger" }
-                );
-              } else {
-                $.notify(
-                  "Some error has occured, please tray again after sometime",
-                  { type: "danger" }
-                );
-              }
-            }
+          $.notify("Looks like some error has occured, please try again", {
+            type: "danger"
           });
         }
-      },
-      error: err => {
-        validMsg = false;
-        console.log("inside error in checkTweetCharacters: ", err);
-        $.notify("Some error occured please try again after sometime", {
-          type: "danger"
-        });
-        postTwitterHash = "";
-        hash.innerHTML = "";
-        return;
-      }
+      };
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.send($.param({ hash: postTwitterHash || postLinkedinHash }));
+    }
+
+    function postLinkedin() {
+      let userMSG = document.getElementById("postMSGLinkedin").value;
+      let certiLink = document.getElementById("certiLinkLinkedin").checked;
+      let hash = document.getElementById("postLinkedinHash");
+      $.notify("Your post is now being submitted, please wait a few seconds.");
+      $.ajax({
+        method: "post",
+        url: "/api/shareOnLinkedin",
+        data: { hash: hash.innerHTML, msg: userMSG, certiLink: certiLink },
+        success: result => {
+          console.log(result);
+          if (result.uploaded) {
+            $.notify("Successfully posted on linkedin!", { type: "success" });
+          } else {
+            $.notify("Oops, error occured while posting!", { type: "danger" });
+          }
+          postLinkedinHash = "";
+          hash.innerHTML = "";
+        },
+        error: err => {
+          postLinkedinHash = "";
+          hash.innerHTML = "";
+        }
+      });
+      document.getElementById("postMSGLinkedin").value = msg;
+      $("#postLinkedin").modal("hide");
+    }
+
+    $("#postLinkedin").on("hidden.bs.modal", function () {
+      document.getElementById("postMSGLinkedin").value = msg;
+      document.querySelector(`#modalImageLinkedin`).src =
+        "/img/gif/loading_block.gif";
     });
 
-    $("#postTwitter").modal("hide");
-  }
+    $("#postTwitter").on("hidden.bs.modal", function () {
+      document.getElementById("postMSGTwitter").value = msg;
+      document.querySelector(`#modalImageTwitter`).src =
+        "/img/gif/loading_block.gif";
+    });
 
-  function showImageModal(social) {
-    console.log("inside download");
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/downloadCertificate", true);
-    xhr.responseType = "arraybuffer";
-    xhr.onload = function() {
-      if (this.status === 200) {
-        var filename = "";
-        var disposition = xhr.getResponseHeader("Content-Disposition");
-        if (disposition && disposition.indexOf("attachment") !== -1) {
-          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          var matches = filenameRegex.exec(disposition);
-          if (matches != null && matches[1])
-            filename = matches[1].replace(/['"]/g, "");
-        }
-        var type = xhr.getResponseHeader("Content-Type");
+    function formatName(fullName) {
+      const lowerFN = fullName.toLowerCase();
+      const splitFN = lowerFN.split(" ");
+      let formattedName = "";
+      for (name of splitFN) {
+        formattedName += name.charAt(0).toUpperCase() + name.slice(1) + " ";
+      }
+      const finalFN = formattedName.trim();
+      return finalFN;
+    }
 
-        var blob =
-          typeof File === "function"
-            ? new File([this.response], filename, { type: type })
-            : new Blob([this.response], { type: type });
-        if (typeof window.navigator.msSaveBlob !== "undefined") {
-          // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
-          window.navigator.msSaveBlob(blob, filename);
-        } else {
-          var URL = window.URL || window.webkitURL;
-          document.querySelector(
-            `#modalImage${social}`
-          ).src = URL.createObjectURL(blob);
-        }
+    function checkCharacter() {
+      let textMsg = document.getElementById("postMSGTwitter").value;
+      let count = textMsg.normalize("NFC").length;
+      document.getElementById("charCount").innerHTML = count;
+      if (textMsg.trim().length == 0 || count >= 260) {
+        document.getElementById("btn-postTweet").disabled = true;
+        document.getElementById("charCount").style =
+          "padding-left:10px;padding-right:10px;color:red";
       } else {
-        $.notify("Looks like some error has occured, please try again", {
-          type: "danger"
-        });
+        document.getElementById("btn-postTweet").disabled = false;
+        document.getElementById("charCount").style =
+          "padding-left:10px;padding-right:10px;color:black";
       }
-    };
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send($.param({ hash: postTwitterHash || postLinkedinHash }));
-  }
-
-  function postLinkedin() {
-    let userMSG = document.getElementById("postMSGLinkedin").value;
-    let certiLink = document.getElementById("certiLinkLinkedin").checked;
-    let hash = document.getElementById("postLinkedinHash");
-    $.notify("Your post is now being submitted, please wait a few seconds.");
-    $.ajax({
-      method: "post",
-      url: "/api/shareOnLinkedin",
-      data: { hash: hash.innerHTML, msg: userMSG, certiLink: certiLink },
-      success: result => {
-        console.log(result);
-        if (result.uploaded) {
-          $.notify("Successfully posted on linkedin!", { type: "success" });
-        } else {
-          $.notify("Oops, error occured while posting!", { type: "danger" });
-        }
-        postLinkedinHash = "";
-        hash.innerHTML = "";
-      },
-      error: err => {
-        postLinkedinHash = "";
-        hash.innerHTML = "";
-      }
-    });
-    document.getElementById("postMSGLinkedin").value = msg;
-    $("#postLinkedin").modal("hide");
-  }
-
-  $("#postLinkedin").on("hidden.bs.modal", function() {
-    document.getElementById("postMSGLinkedin").value = msg;
-    document.querySelector(`#modalImageLinkedin`).src =
-      "/img/gif/loading_block.gif";
-  });
-
-  $("#postTwitter").on("hidden.bs.modal", function() {
-    document.getElementById("postMSGTwitter").value = msg;
-    document.querySelector(`#modalImageTwitter`).src =
-      "/img/gif/loading_block.gif";
-  });
-
-  function formatName(fullName) {
-    const lowerFN = fullName.toLowerCase();
-    const splitFN = lowerFN.split(" ");
-    let formattedName = "";
-    for (name of splitFN) {
-      formattedName += name.charAt(0).toUpperCase() + name.slice(1) + " ";
     }
-    const finalFN = formattedName.trim();
-    return finalFN;
-  }
-
-  function checkCharacter() {
-    let textMsg = document.getElementById("postMSGTwitter").value;
-    let count = textMsg.normalize("NFC").length;
-    document.getElementById("charCount").innerHTML = count;
-    if (textMsg.trim().length == 0 || count >= 260) {
-      document.getElementById("btn-postTweet").disabled = true;
-      document.getElementById("charCount").style =
-        "padding-left:10px;padding-right:10px;color:red";
-    } else {
-      document.getElementById("btn-postTweet").disabled = false;
-      document.getElementById("charCount").style =
-        "padding-left:10px;padding-right:10px;color:black";
-    }
-  }
-</script>
+  </script>

@@ -1,24 +1,52 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Blockdegree Admin Login</title>
+  <link href="http://localhost:3000/css/bootstrap.css" rel="stylesheet" />
+  <link href="http://localhost:3000/css/main.css" rel="stylesheet" />
 </head>
 
 <body>
-  <h3>
-    Blockdegree Admin Login
-  </h3>
+
+  <section>
+    <div class="form-messages alert alert-danger d-none" role="alert"></div>
+    <div class="container__cstm">
+      <div class="row justify-content-center">
+        <div class="form-content" id="form-register" method="post" action="/signup">
+          <!-- Login Form -->
+          <form id="admin-login" class="p-4">
+            <h2 class="mb-4">Blockdegree Admin Login</h2>
+            <input type="email" id="email" class="" name="email" placeholder="Email" autocomplete="off" required="">
+            <div id="invalidEmail"></div>
+            <!--<div class="text-left pl-4">
+            <label for="password" class="mb-0 pt-2">Password</label>
+          </div>-->
+            <input type="password" id="password" class="" name="password" placeholder="Password" required="">
+            <div id="invalidPwd" name="invalidPwd"></div>
+
+            <input id="btn-login" type="submit" class="btn btn-primary py-2 mt-3 text-white" value="Login">
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 
   <script>
-
     $(document).ready(function () {
 
       $("#admin-login").on("submit", (e) => {
         e.preventDefault();
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
-
         $.ajax({
           url: "/api/login",
           method: "post",
@@ -31,26 +59,15 @@
               // Simulate an HTTP redirect:
               alert("login failed")
             } else {
-              window.location.replace("https://www.blockdegree.org/newadmin");
-
+              window.location.replace("http://localhost:3000/newadmin");
             }
           }
         })
       })
 
     })
-
   </script>
 
-  <form id="admin-login">
-    <input type="text" id="email" placeholder="admin email" />
-    <input type="password" id="password" placeholder="admin email" />
-    <button type="submit" type="button">Log In</button>
-
-  </form>
 </body>
-<script>
-
-</script>
 
 </html>

@@ -7,7 +7,7 @@ class UserInfo extends Component {
     this.props.fetchUser();
     this.props.fetchCourseVisits();
     this.props.fetchAllUser();
-    this.props.fetchAllPromoCodeLog(); 
+    this.props.fetchAllPromoCodeLog();
   }
 
   state = {
@@ -17,7 +17,7 @@ class UserInfo extends Component {
   render() {
     let { auth } = this.props;
     // if (!auth || !auth.status){
-    //   window.location.replace("https://www.blockdegree.org");
+    //   window.location.replace("http://localhost:3000");
     // }
     return (
       <div className="user-wrapper">

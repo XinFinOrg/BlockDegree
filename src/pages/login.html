@@ -7,28 +7,16 @@
         <h2 class="mb-3">Login</h2>
         <p class="pb-1 mb-0">Login with your social media account</p>
         <div class="text-center social-btn">
-          <button
-            onclick="handleAuthFacebook()"
-            class="btn btn-primary btn-lg btn-block"
-          >
+          <button onclick="handleAuthFacebook()" class="btn btn-primary btn-lg btn-block">
             <i class="fa fa-facebook"></i> Login with <b>Facebook</b>
           </button>
-          <button
-            onclick="handleAuthTwitter()"
-            class="btn btn-info btn-lg btn-block"
-          >
+          <button onclick="handleAuthTwitter()" class="btn btn-info btn-lg btn-block">
             <i class="fa fa-twitter"></i> Login with <b>Twitter</b>
           </button>
-          <button
-            onclick="handleAuthLinkedin()"
-            class="btn btn-linkedin btn-lg btn-block"
-          >
+          <button onclick="handleAuthLinkedin()" class="btn btn-linkedin btn-lg btn-block">
             <i class="fa fa-linkedin"></i> Login with <b>LinkedIn</b>
           </button>
-          <button
-            onclick="handleAuthGoogle()"
-            class="btn btn-danger btn-lg btn-block"
-          >
+          <button onclick="handleAuthGoogle()" class="btn btn-danger btn-lg btn-block">
             <i class="fa fa-google"></i> Login with <b>Google</b>
           </button>
         </div>
@@ -36,45 +24,22 @@
         <h3 class="login-with-mail pb-1">Login with email</h3>
 
         <!-- Login Form -->
-        <form
-          class="login-form-block mt-1"
-          id="form-login"
-          method="post"
-          action="/api/login"
-        >
+        <form class="login-form-block mt-1" id="form-login" method="post" action="/api/login">
           <!--<div class="text-left pl-4">
             <label for="email" class="mb-0">Email</label>
           </div>-->
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Email"
-            autocomplete="off"
-            required
-          />
+          <input type="email" id="email" name="email" placeholder="Email" autocomplete="off" required />
           <div id="invalidEm"></div>
           <!--<div class="text-left pl-4">
             <label for="password" class="mb-0 pt-2">Password</label>
           </div>-->
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Password"
-            autocomplete="off"
-            required
-          />
+          <input type="password" id="password" name="password" placeholder="Password" autocomplete="off" required />
 
           <div class="pl-2">
             <a href="forgotpassword.html">Forgot Password?</a>
           </div>
 
-          <input
-            type="submit"
-            class="btn btn-primary py-2 mt-2 text-white"
-            value="Log In"
-          />
+          <input type="submit" class="btn btn-primary py-2 mt-2 text-white" value="Log In" />
         </form>
       </div>
 
@@ -101,7 +66,7 @@
   window.addEventListener(
     "message",
     function (event) {
-      if (event.origin == "https://www.blockdegree.org") {
+      if (event.origin == "http://localhost:3000") {
         console.log("From PopUp", event.data);
         document.cookie = event.data;
         checkAuth();
@@ -112,46 +77,46 @@
   function handleAuthGoogle() {
     const refId = getParam("refId");
     if (refId === null) {
-      window.location.replace(`https://www.blockdegree.org/auth/google`);
+      window.location.replace(`http://localhost:3000/auth/google`);
     } else {
       window.location.replace(
-        `https://www.blockdegree.org/auth/google?refId=${refId}`
+        `http://localhost:3000/auth/google?refId=${refId}`
       );
     }
-    // popupLogin({ path: "https://www.blockdegree.org/auth/google?close=true" });
+    // popupLogin({ path: "http://localhost:3000/auth/google?close=true" });
   }
   function handleAuthFacebook() {
     const refId = getParam("refId");
     if (refId === null) {
-      window.location.replace(`https://www.blockdegree.org/auth/facebook`);
+      window.location.replace(`http://localhost:3000/auth/facebook`);
     } else {
       window.location.replace(
-        `https://www.blockdegree.org/auth/facebook?refId=${refId}`
+        `http://localhost:3000/auth/facebook?refId=${refId}`
       );
     }
-    // popupLogin({ path: "https://www.blockdegree.org/auth/facebook?close=true" });
+    // popupLogin({ path: "http://localhost:3000/auth/facebook?close=true" });
   }
   function handleAuthTwitter() {
     const refId = getParam("refId");
     if (refId === null) {
-      window.location.replace(`https://www.blockdegree.org/auth/twitter`);
+      window.location.replace(`http://localhost:3000/auth/twitter`);
     } else {
       window.location.replace(
-        `https://www.blockdegree.org/auth/twitter?refId=${refId}`
+        `http://localhost:3000/auth/twitter?refId=${refId}`
       );
     }
-    // popupLogin({ path: "https://www.blockdegree.org/auth/twitter?close=true" });
+    // popupLogin({ path: "http://localhost:3000/auth/twitter?close=true" });
   }
   function handleAuthLinkedin() {
     const refId = getParam("refId");
     if (refId === null) {
-      window.location.replace(`https://www.blockdegree.org/auth/linkedin`);
+      window.location.replace(`http://localhost:3000/auth/linkedin`);
     } else {
       window.location.replace(
-        `https://www.blockdegree.org/auth/linkedin?refId=${refId}`
+        `http://localhost:3000/auth/linkedin?refId=${refId}`
       );
     }
-    // popupLogin({ path: "https://www.blockdegree.org/auth/linkedin?close=true" });
+    // popupLogin({ path: "http://localhost:3000/auth/linkedin?close=true" });
   }
 
   function checkAuth() {
@@ -174,7 +139,7 @@
           result.linkedinAuth
         ) {
           // user is logged in, redirect.
-          location.replace("https://www.blockdegree.org");
+          location.replace("http://localhost:3000");
         }
         // signed in with twitter, show share button
       },
@@ -234,21 +199,21 @@
     }
   }
 
-  
-function getParam(param) {
-  let currentUrl = window.location.href;
-  if (currentUrl.split("?").length > 1) {
-    let paramsString = currentUrl.split("?")[1];
-    const params = paramsString.split("&");
-    for (let i = 0; i < params.length; i++) {
-      const key = params[i].split("=")[0];
-      const value = params[i].split("=")[1];
-      if (key === param) return value;
-    }
-  }
 
-  return null;
-}
+  function getParam(param) {
+    let currentUrl = window.location.href;
+    if (currentUrl.split("?").length > 1) {
+      let paramsString = currentUrl.split("?")[1];
+      const params = paramsString.split("&");
+      for (let i = 0; i < params.length; i++) {
+        const key = params[i].split("=")[0];
+        const value = params[i].split("=")[1];
+        if (key === param) return value;
+      }
+    }
+
+    return null;
+  }
 
 </script>
 {{/inline}} {{/base}}
