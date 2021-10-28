@@ -1,0 +1,486 @@
+<div class="forum-questions-page">
+    <!-- start Header bg -->
+    <section class="forum-search block-bg shift-by-header"></section>
+    <!-- end Header bg -->
+
+    <!-- Schedule an Exam starts -->
+    <section class="search-results bg-muted py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1" id="examWrapper">
+                    {{#unless examSchedule}}
+                    <div class="text-center">
+                        <span>Invalid Exam Url.</span>
+                        <a href="/schedule-exam">see schedule</a>
+                    </div>
+                    {{/unless}}
+                    {{#if examSchedule}}
+
+                    <!-- before Exam starts -->
+                    {{#unless meta.examStateSubmitted}}
+                    {{#unless meta.examhasStarted}}
+                    {{#unless meta.examTimeStarted}}
+                    <h2 id="message" class="text-center">your exam starts at {{examSchedule.scheduledDate}}</h2>
+                    <div id="timeLeft">time left: <span id="countdown">--</span></div>
+                    {{/unless}}
+                    {{/unless}}
+                    {{/unless}}
+                    <!-- before Exam ends -->
+                    <!-- after Exam starts -->
+                    {{#if meta.examStateSubmitted}}
+                    <h2 class="text-center">Your exam is completed</h2>
+                    {{/if}}
+
+                    {{#if meta.examhasStarted}}
+                    {{#unless meta.examStateSubmitted}}
+                    <div>
+                        <h4 class="text-lg">{{meta.examTitle}}</h4>
+                        <div class="text-sm">cheating will be pinalized</div>
+                    </div>
+                    <div class="mt-4">
+                        <form id="exam-questions-form">
+                            {{#each questions as |question index|}}
+                            <div class="form-group">
+                                <label for="question-{{index}}">{{index}}: {{question}}</label>
+                                <textarea class="form-control" name="{{index}}" id="question-{{index}}"
+                                    rows="3"></textarea>
+                            </div>
+                            {{/each}}
+                            <button type="submit" id="exam-questions-submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                    <div class="d-none">
+                        <button id="stop">Stop</button>
+                        <input name="userFileName" type="text">//userFilename Here</input>
+                        <a id="download">
+                            <button type="button" class="btn btn-primary mb-4">Download</button>
+                        </a>
+                        <video id="video" autoplay height='480' width="640" muted></video>
+                        <video id="screenShare" autoplay height='480' width="640" muted></video>
+                    </div>
+                    {{/unless}}
+                    {{/if}}
+                    <!-- after Exam ends -->
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- Schedule an Exam ends -->
+</div>
+<script>
+    $(document).ready(function () {
+        const urlSlug = window.location.href.split("?")[0].split('/take-exam/')[1]
+
+        $("#exam-questions-form").on("submit", (e) => {
+            e.preventDefault();
+            shouldStop = true
+            submitExam();
+        })
+        function setSubmitExamTimer(startDate, duration) {
+            const [addHours, addMinutes, addSeconds] = duration.split(':');
+            var endDateTime = new Date(startDate)
+            endDateTime.setTime(endDateTime.getTime() + (addHours * 60 * 60 * 1000));
+            endDateTime.setTime(endDateTime.getTime() + (addMinutes * 60 * 1000));
+            endDateTime.setTime(endDateTime.getTime() + (addSeconds * 1000));
+
+            if (endDateTime <= new Date()) {
+                console.log('end date is greater than current date')
+                shouldStop = true
+                submitExam()
+            }
+            var distance = endDateTime - new Date();
+            //console.log(distance)
+            setTimeout(function () {
+                shouldStop = true
+                submitExam();
+            }, distance);
+        }
+
+        function startExam() {
+            const data = new FormData();
+            data.append('state', 'started');
+            data.append('date', new Date());
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: `/api/examSchedule/${urlSlug}`,
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function (data) {
+                    if (data.status) {
+                        window.location.reload()
+                        //setSubmitExamTimer(data.examSchedule.startedDate, data.examSchedule.duration)
+                        //$.notify("Your exam has started", { type: "success" });
+                        //$('#schedule-exam-form').each(function () {
+                        //    this.reset();
+                        //});
+                    } else {
+                        if (data.error) {
+                            $.notify(data.error, { type: "danger" });
+                        }
+                    }
+                },
+                error: function (e) {
+                    $.notify("Failed", { type: "danger" });
+                    console.log("ERROR : ", e);
+                }
+            });
+        }
+
+        function submitExam() {
+            if (examStateSubmitted) {
+                window.location.reload()
+                return
+            }
+            var data = new FormData();
+            data.append('state', 'submitted');
+            $("#exam-questions-submit").prop("disabled", true);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: `/api/examSchedule/${urlSlug}/submit`,
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function (data) {
+                    if (data.status) {
+                        var form = $('#exam-questions-form')[0];
+                        var postData = new FormData(form);
+                        postData.append('attemptNo', data.examSchedule.attemptsTaken);
+                        $.ajax({
+                            type: "POST",
+                            enctype: 'multipart/form-data',
+                            url: `/api/examSchedule/${urlSlug}/attempt`,
+                            data: postData,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            timeout: 800000,
+                            success: function (data) {
+                                $("#exam-questions-submit").prop("disabled", false);
+                                if (data.status) {
+                                    examSubmitted = true
+                                    console.log(data)
+                                    //window.location.reload()
+                                    document.getElementById('examWrapper').innerHTML = '<h2 class="text-center">Your exam is completed</h2>';
+                                    //$('#exam-questions-submit').each(function () {
+                                    //    this.reset();
+                                    //});
+                                } else {
+                                    if (data.error) {
+                                        $.notify(data.error, { type: "danger" });
+                                    }
+                                }
+                            },
+                            error: function (e) {
+                                $("#exam-questions-submit").prop("disabled", false);
+                                $.notify("Failed", { type: "danger" });
+                                console.log("ERROR : ", e);
+                            }
+                        });
+                    } else {
+                        $("#exam-questions-submit").prop("disabled", false);
+                        if (data.error) {
+                            $.notify(data.error, { type: "danger" });
+                        }
+                    }
+                },
+                error: function (e) {
+                    $("#exam-questions-submit").prop("disabled", false);
+                    $.notify("Failed", { type: "danger" });
+                    console.log("ERROR : ", e);
+                }
+            });
+        }
+
+        const examScheduledDate = "{{{ examSchedule.scheduledDate }}}"
+        const examStartedDate = "{{{ examSchedule.startedDate }}}"
+        const examDuration = "{{{ examSchedule.duration }}}"
+        const examTimeStarted = "{{{ meta.examTimeStarted }}}" === "true"
+        const examhasStarted = "{{{ meta.examhasStarted }}}" === "true"
+        const examStateSubmitted = "{{{ meta.examStateSubmitted }}}" === "true"
+        let examSubmitted = false;
+        //record
+        let shouldStop = false;
+        let screenStopped = false, userStopped = false;
+        let blurCount = 0
+        const videoElement = document.getElementsByTagName("video")[0];
+        const screenShareElement = document.getElementById("screenShare");
+        //const downloadLink = document.getElementById('download');
+        const stopButton = document.getElementById('stop');
+        const audioRecordConstraints = {
+            echoCancellation: true
+        }
+
+        if (!examStateSubmitted) {
+            if (!(examhasStarted || examTimeStarted)) {
+                var end = new Date(examScheduledDate);
+
+                var _second = 1000;
+                var _minute = _second * 60;
+                var _hour = _minute * 60;
+                var _day = _hour * 24;
+                var timer;
+
+                function showRemaining() {
+                    var now = new Date();
+                    var distance = end - now;
+                    if (distance < 0) {
+                        clearInterval(timer);
+                        document.getElementById('countdown').innerHTML = '--';
+                        startExam()
+                        return;
+                    }
+                    var days = Math.floor(distance / _day);
+                    var hours = Math.floor((distance % _day) / _hour);
+                    var minutes = Math.floor((distance % _hour) / _minute);
+                    var seconds = Math.floor((distance % _minute) / _second);
+
+                    document.getElementById('countdown').innerHTML = days + 'days ';
+                    document.getElementById('countdown').innerHTML += hours + 'hrs ';
+                    document.getElementById('countdown').innerHTML += minutes + 'mins ';
+                    document.getElementById('countdown').innerHTML += seconds + 'secs';
+                }
+
+                timer = setInterval(showRemaining, 1000);
+            } else {
+                if (examhasStarted) {
+                    const startDate = examStartedDate === '' ? examScheduledDate : examStartedDate
+                    setSubmitExamTimer(startDate, examDuration)
+
+                    $(window).focus(function () {
+                        if (examSubmitted) {
+                            //ignore
+                            return
+                        }
+                        if (blurCount <= 1) {
+                            //ignore
+                            return
+                        }
+                        if (blurCount <= 2) {
+                            $.notify("switching tabs can lead to auto-submission", { type: "danger" });
+                        }
+                    });
+
+                    $(window).blur(function () {
+                        if (examSubmitted) {
+                            //ignore
+                            return
+                        }
+                        blurCount++
+                        if (shouldStop !== true && blurCount > 2) {
+                            shouldStop = true
+                            submitExam();
+                        }
+                    });
+
+                    //recordAudio()
+                    recordVideo()
+                    recordScreen()
+                    stopButton.addEventListener('click', function () { shouldStop = true; });
+                } else {
+                    startExam() // scheduled time has passed but the exam has not started
+                }
+            }
+        }
+
+        function updateFilename(filename, urlSlug, attritube) {
+            var postData = new FormData();
+            const attemptNo = '{{examSchedule.attemptsTaken}}'
+            postData.append('filename', filename);
+            postData.append('attemptNo', attemptNo);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: `/api/examAttempt/${urlSlug}/${attritube}`,
+                data: postData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function (data) {
+                    //$("#exam-questions-submit").prop("disabled", false);
+                    if (data.status) {
+                        //console.log(data)
+                        //window.location.reload()
+                        //document.getElementById('examWrapper').innerHTML = '<h2 class="text-center">Your exam is completed</h2>';
+                        //$('#exam-questions-submit').each(function () {
+                        //    this.reset();
+                        //});
+                    } else {
+                        if (data.error) {
+                            $.notify(data.error, { type: "danger" });
+                        }
+                    }
+                },
+                error: function (e) {
+                    //$("#exam-questions-submit").prop("disabled", false);
+                    $.notify("Failed", { type: "danger" });
+                    //console.log("ERROR : ", e);
+                }
+            });
+        }
+
+        const userHandleRecord = function ({ stream, mimeType }) {
+            //startRecord()
+            let recordedChunks = [];
+            userStopped = false;
+            const mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = function (e) {
+                if (e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+
+                if (shouldStop === true && userStopped === false) {
+                    mediaRecorder.stop();
+                    userStopped = true;
+                }
+            };
+
+            mediaRecorder.onstop = function () {
+                //submitExam()
+                const blob = new Blob(recordedChunks, {
+                    type: mimeType,
+                });
+                recordedChunks = []
+                var fd = new FormData();
+                fd.append('data', blob);
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/uploadUserRecording',
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                }).done(function (data) {
+                    updateFilename(data.filename, data.urlSlug, 'userRecordingFileName')
+                    console.log(data);
+                });
+            };
+
+            mediaRecorder.start(200);
+        };
+
+        const screenHandleRecord = function ({ stream, mimeType }) {
+
+            //startRecord()
+            let recordedChunks = [];
+            screenStopped = false;
+            const mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = function (e) {
+                if (e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+
+                if (shouldStop === true && screenStopped === false) {
+                    mediaRecorder.stop();
+                    screenStopped = true;
+                }
+            };
+
+            mediaRecorder.onstop = function () {
+                submitExam()
+                const blob = new Blob(recordedChunks, {
+                    type: mimeType,
+                });
+                recordedChunks = []
+                var fd = new FormData();
+                fd.append('data', blob);
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/uploadScreenRecording',
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                }).done(function (data) {
+                    updateFilename(data.filename, data.urlSlug, 'screenRecordingFileName')
+                    console.log(data);
+                });
+            };
+
+            mediaRecorder.start(200);
+        };
+
+        async function recordAudio() {
+            const mimeType = 'audio/webm';
+            shouldStop = false;
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: audioRecordConstraints });
+            userHandleRecord({ stream, mimeType })
+        }
+
+        async function recordVideo() {
+            const mimeType = 'video/webm';
+            shouldStop = false;
+            const constraints = {
+                audio: {
+                    "echoCancellation": true
+                },
+                video: {
+                    "width": {
+                        "min": 640,
+                        "max": 1024
+                    },
+                    "height": {
+                        "min": 480,
+                        "max": 768
+                    }
+                }
+            };
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            videoElement.srcObject = stream;
+            userHandleRecord({ stream, mimeType })
+        }
+
+        async function recordScreen() {
+            const mimeType = 'video/webm';
+            shouldStop = false;
+            const constraints = {
+                video: {
+                    cursor: 'motion'
+                }
+            };
+            if (!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia)) {
+                return window.alert('Screen Record not supported!')
+            }
+            let stream = null;
+            const displayStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "motion" }, audio: { 'echoCancellation': true } });
+            const recordScreenWithAudio = true
+            if (recordScreenWithAudio) {
+                const audioContext = new AudioContext();
+
+                const voiceStream = await navigator.mediaDevices.getUserMedia({ audio: { 'echoCancellation': true }, video: false });
+                const userAudio = audioContext.createMediaStreamSource(voiceStream);
+
+                const audioDestination = audioContext.createMediaStreamDestination();
+                userAudio.connect(audioDestination);
+
+                if (displayStream.getAudioTracks().length > 0) {
+                    const displayAudio = audioContext.createMediaStreamSource(displayStream);
+                    displayAudio.connect(audioDestination);
+                }
+                displayStream.getVideoTracks().map(t => {
+                    t.onended = function () {
+                        shouldStop = true;
+                    };
+                });
+
+                const tracks = [...displayStream.getVideoTracks(), ...audioDestination.stream.getTracks()]
+                stream = new MediaStream(tracks);
+                screenHandleRecord({ stream, mimeType })
+            } else {
+                stream = displayStream;
+                screenHandleRecord({ stream, mimeType });
+            };
+            screenShareElement.srcObject = stream;
+        }
+    })
+
+</script>

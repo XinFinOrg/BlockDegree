@@ -1,0 +1,129 @@
+<div class="forum-questions-page">
+    <!-- start Header bg -->
+    <section class="forum-search block-bg shift-by-header"></section>
+    <!-- end Header bg -->
+
+    <!-- Schedule an Exam starts -->
+    <section class="search-results bg-muted py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1">
+                    <div class="d-flex flex-row justify-content-between">
+                        <h2 class="mb-3">Schedule an Exam</h2>
+                    </div>
+                    <form class="d-flex align-items-end mx-n2" id="schedule-exam-form">
+                        <div class="form-group mb-0 flex-grow-1 flex-column mx-2">
+                            <label for="course">Course Name</label>
+                            <select class="form-control" id="course" name="type">
+                                {{#each courses as |course| }}
+                                <option value="{{course.type}}" data-duration="{{course.examDuration}}">
+                                    {{course.title}}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group mb-0 flex-grow-1 flex-column mx-2">
+                            <label for="date">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" min="2021-01-01" />
+                        </div>
+                        <div class="form-group mb-0 flex-grow-1 flex-column mx-2">
+                            <label for="time-slot">Time slot</label>
+                            <select class="form-control" id="time-slot" name="timeSlot">
+                                {{#each timeSlots as |timeSlot| }}
+                                <option value="{{timeSlot.value}}">{{timeSlot.text}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <button type="submit" id="schedule-exam-submit" class="btn btn-primary mb-0">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{#if examSchedules}}
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1">
+                    <div class="d-flex flex-row justify-content-between">
+                        <h2 class="mb-3">Schedules</h2>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Course Name</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Time slot</th>
+                                <th scope="col">link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each examSchedules as |exam|}}
+                            <tr>
+                                <td>{{exam.course.title}}</td>
+                                <td>{{exam.scheduledDate}}</td>
+                                <td>{{exam.timeSlot}}:00 hrs</td>
+                                <td><a href="/take-exam/{{exam.urlSlug}}" target="_blank">link</a></td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+    </section>
+    <!-- Schedule an Exam ends -->
+</div>
+<script>
+    $(document).ready(function () {
+        $("#schedule-exam-form").on("submit", (e) => {
+            e.preventDefault();
+            var type = $('#schedule-exam-form').find('select[name="type"]').val().trim();
+            var title = $('#schedule-exam-form').find('select[name="type"]').find("option:selected").text().trim();
+            var duration = $('#schedule-exam-form').find('select[name="type"]').find("option:selected").data('duration').trim();
+            var timeSlot = $('#schedule-exam-form').find('select[name="timeSlot"]').val();
+            var date = $('#schedule-exam-form').find('input[name="date"]').val();
+            if (date === '') {
+                $.notify("date can not be empty", { type: "danger" });
+                return
+            }
+
+            const data = new FormData();
+            data.append('courseTitle', title);
+            data.append('courseType', type);
+            data.append('duration', duration);
+            data.append('timeSlot', timeSlot);
+            data.append('date', new Date(date).setHours(0, 0, 0));
+
+            $("#schedule-exam-submit").prop("disabled", true);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "/api/examSchedules",
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function (data) {
+                    $("#schedule-exam-submit").prop("disabled", false);
+                    if (data.status) {
+                        window.location.reload();
+                        // $.notify("Your exam schedule added", { type: "success" });
+                        // $('#schedule-exam-form').each(function () {
+                        //     this.reset();
+                        // });
+                    } else {
+                        if (data.error) {
+                            $.notify(data.error, { type: "danger" });
+                        }
+                    }
+                },
+                error: function (e) {
+                    $("#schedule-exam-submit").prop("disabled", false);
+                    $.notify("Failed, Your exam schedule could not be submitted", { type: "danger" });
+                    console.log("ERROR : ", e);
+                }
+            });
+        })
+    })
+</script>

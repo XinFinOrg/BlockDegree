@@ -130,38 +130,14 @@ exports.findAll = async (req, res) => {
     });
   } catch (e) {
     res.json({ status: false, error: e });
-  }  
+  }
 };
 
 exports.renderforumQuestion = async (req, res) => {
   try {
     const urlSlug = req.params.urlSlug
     const question = await ForumQuestion.findOne({"urlSlug": urlSlug})
-      .populate({
-        path:     'comments',			
-        populate: { path:  'user',
-              model: 'users' }
-      })
-      .populate({
-        path: 'askedBy',
-        // populate: [
-        //   {
-        //     path: 'answer',
-        //     populate: {
-        //       path: 'answeredBy',
-        //       model: 'User'
-        //     }
-        //   }
-        // ]
-      })
-
-      // .populate('askedBy')
-      // .populate('answers.answer.answeredBy')
-      // .populate("roles.role.roleEntities.entity")
-      // .populate({
-      //   path: 'answers.answeredBy',
-      //   model: 'User'
-      // })
+      .populate('askedBy')
       .lean()
     const canMarkAnswered = req.user && req.user.email && question.askedBy.email === req.user.email
     // res.json({ status: true, question: jsonifyQuestion(question) });
@@ -196,21 +172,5 @@ exports.findOne = async (req, res) => {
     })
   } catch (e) {
     res.json({ status: false });
-  }  
-};
-
-exports.update = (req, res) => {
-  
-};
-
-exports.delete = (req, res) => {
-  
-};
-
-exports.deleteAll = (req, res) => {
-  
-};
-
-exports.findAllPublished = (req, res) => {
-  
+  }
 };

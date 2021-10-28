@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const path = require("path");
 var User = require("../models/user");
 const questions = require("../models/question");
@@ -6,6 +7,10 @@ const renderCertificate = require("../helpers/renderCertificate");
 const socialPostListener = require("../listeners/postSocial").em;
 const GeoIP = require("geoip-lite");
 // const blockchainHelper = require("../helpers/blockchainHelpers");
+// const fileUpload = require('express-fileupload');
+const ExamSchedule = require("../models/examSchedule");
+const ExamAttempt = require("../models/examAttempt");
+const crypto = require('crypto');
 
 const examTypes = {
   basic: {
@@ -36,6 +41,316 @@ const examTypes = {
 };
 
 let { readJSONFile } = utils;
+
+exports.uploadUserRecording = (req, res) => {
+  try {
+    if (!req.files)
+        return res.status(400).send('No files were uploaded.'); 
+
+    let data = req.files.data;
+    
+    let filename = 'user-'+req.user.email+new Date().getTime()+'.webm';
+    // blobSvc.createBlockBlobFromText(containerName, filename, data, function(err) {
+    //   if (err)
+    //     return res.status(500).send(err);
+
+    //   res.send('File uploaded!');
+    // })
+    
+    const uploadPath = path.join(__dirname, "../protected/"+filename)
+    data.mv(uploadPath, function(err) {
+      if (err){
+        return res.status(500).send(err);
+      }
+      res.json({ status: true, message:'File uploaded!', filename });
+    });
+  } catch (e) {
+    res.json({ status: false, error: e });
+  }
+};
+
+exports.uploadScreenRecording = (req, res) => {
+  try {
+    if (!req.files)
+        return res.status(400).send('No files were uploaded.'); 
+
+    let data = req.files.data;
+    
+    let filename = 'screen-'+req.user.email+new Date().getTime()+'.webm';
+    // blobSvc.createBlockBlobFromText(containerName, filename, data, function(err) {
+    //   if (err)
+    //     return res.status(500).send(err);
+
+    //   res.send('File uploaded!');
+    // })
+    
+    const uploadPath = path.join(__dirname, "../protected/"+filename)
+    data.mv(uploadPath, function(err) {
+      if (err){
+        return res.status(500).send(err);
+      }
+      res.json({ status: true, message:'File uploaded!', filename });
+    });
+  } catch (e) {
+    res.json({ status: false, error: e });
+  }
+};
+
+exports.getExamAttemptsFromExamSchedulesSlug = async(req, res) => {
+  try {
+    const urlSlug = req.params.urlSlug
+    const examSchedule = await ExamSchedule.findOne({urlSlug});
+    const examAttempts = await ExamAttempt.find({examSchedule}).populate('user').lean();
+    res.json({ status: true, examAttempts });
+  } catch (e) {
+    console.error("Some exception occured ay examAttempts: ", e);
+    res.json({ status: false });
+  }
+};
+
+exports.setMarks = async(req, res) => {
+  try {
+    console.error('#########################################################')
+    const {id, totalMarks} = req.body
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      // user = await this.findById(id).exec();
+      const examSchedule = await ExamAttempt.findById(id).exec()
+      examSchedule.totalMarks = totalMarks
+      await examSchedule.save()
+      // findOneAndUpdate(
+      //   {"_id": id},
+      //   {$set: {"totalMarks": totalMarks}},
+      //   {new: true}
+      // )
+      res.json({ status: true, message: "saved" });
+    }
+    res.json({ status: false });
+    
+  } catch (e) {
+    console.error("Some exception occured ay examAttempts: ", e);
+    res.json({ status: false, error: "internal error while setMarks" });
+  }
+};
+
+
+exports.attemptExamUserRecordingFileName = async(req, res) => {
+  try {
+    const {attemptNo, filename} = req.body
+    const user = req.user
+    const newExamAttempt = await ExamAttempt.findOne({"user": user,"attemptNo":attemptNo})
+    newExamAttempt.userRecordingFileName = filename
+    await newExamAttempt.save();
+    res.json({ status: true });
+  } catch (e) {
+    res.json({ status: false });
+  }
+};
+
+exports.attemptExamUserRecordingFileName = async(req, res) => {
+  try {
+    const {attemptNo, filename} = req.body
+    const user = req.user
+    const newExamAttempt = await ExamAttempt.findOne({"user": user,"attemptNo":attemptNo})
+    newExamAttempt.userRecordingFileName = filename
+    await newExamAttempt.save();
+    res.json({ status: true });
+  } catch (e) {
+    res.json({ status: false });
+  }
+};
+
+exports.attemptExamScreenRecordingFileName = async(req, res) => {
+  try {
+    const {attemptNo, filename} = req.body
+    const user = req.user
+    const newExamAttempt = await ExamAttempt.findOne({"user": user,"attemptNo":attemptNo})
+    newExamAttempt.screenRecordingFileName = filename
+    await newExamAttempt.save();
+    res.json({ status: true });
+  } catch (e) {
+    res.json({ status: false });
+  }
+};
+
+exports.takeExam = (req, res) => {
+  try {
+    readJSONFile(
+      path.join(process.cwd(), "/server/protected/blockchain-Professional-theory.json"),
+      async (err, json) => {
+        if (err != null) {
+          return res.render("displayError", {
+            error:
+              "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org",
+          });
+        }
+        const user = req.user
+        const urlSlug = req.params.urlSlug
+        const examSchedule = await ExamSchedule.findOne({user,urlSlug}).populate('user').lean();
+        const examTimeStarted = examSchedule.scheduledDate.getTime() <= new Date().getTime()
+        const examhasStarted = examSchedule.state === "started"
+        const examStateSubmitted = examSchedule.state === "submitted"
+        res.render("takeExam", {
+          examSchedule, 
+          meta: {
+            examTitle: 'Blockchain Professional - Theory',//examSchedule.course.title
+            examTimeStarted,
+            examhasStarted,
+            examStateSubmitted,
+          },
+          ...(examhasStarted && {
+            questions: json.exam.map(j=>j.question),
+          })
+        })
+      }
+    );
+  } catch (e) {
+    res.render("takeExam")
+  }
+};
+
+exports.scheduleExam = async (req, res) => {
+  const courses = [{
+    "title": "Blockchain Professional Course for Engineer",
+    "type": "course_3",
+    "examDuration": "1:00:00",
+  }]
+  const timeSlots = [{text: '9am', value: '9:00:00'},{text: '12pm', value: '12:00:00'},{text: '3pm', value: '15:00:00'},{text: '6pm', value: '18:00:00'},,{text: '9pm', value: '21:00:00'}]
+
+  const user = req.user
+  const examSchedules = await ExamSchedule.find({user, state: { $ne: "submitted" }}).populate('user').lean();
+
+  res.render("scheduleExam", {courses, timeSlots, examSchedules});
+};
+
+exports.getAllSubmittedExamSchedule = async (req, res) => {
+  try {
+    const examSchedules = await ExamSchedule.find({state: { $eq: "submitted" }}).populate('user').lean();
+    res.json({ 
+      status: true,
+      examSchedules,
+    });
+  } catch (e) {
+    console.error("Some exception occured in get examSchedule: ", e);
+    res.json({ status: false, error: e });
+  }
+};
+
+exports.createExamSchedule = async (req, res) => {
+  try {
+    const {courseTitle, courseType, timeSlot, date, duration} = req.body
+    const [addHours, addMinutes, addSeconds] = timeSlot.split(':');
+    let parsedDate =  new Date(parseInt(date))
+    parsedDate.setTime(parsedDate.getTime() + (addHours * 60 * 60 * 1000));
+    parsedDate.setTime(parsedDate.getTime() + (addMinutes * 60 * 1000));
+    parsedDate.setTime(parsedDate.getTime() + (addSeconds * 1000));
+    if (parsedDate.getTime() <= new Date().getTime()){
+      res.json({ status: false, error: "Exam schedule date must be in future" });
+      return;
+    }
+    const user = req.user
+    if (!user) {
+      res.json({ status: false, error: "Invalid User!" });
+      return;
+    }
+    const tokenizedText = courseType+parsedDate.getTime()+user.email
+    const urlSlug = crypto.createHash('md5').update(tokenizedText).digest('hex');
+    // res.json({ parsedDate, date:new Date()});
+    
+    const newExamSchedule = new ExamSchedule({ 
+      course: {title: courseTitle, type:courseType},
+      timeSlot,
+      scheduledDate: parsedDate,
+      urlSlug,
+      user,
+      duration,
+      state: 'initiated',
+      attemptsTaken: 0,
+    });
+    const examSchedule = await newExamSchedule.save();
+    res.json({ status: true, examSchedule });
+  } catch (e) {
+    console.error("Some exception occured in examSchedule: ", e);
+    if (e.name === "MongoError"){
+      res.json({ status: false, error: "Pick a different data/time" });
+      return
+    }
+    res.json({ status: false, error: "internal error while saving the new exam schedule" });
+  }
+};
+
+exports.updateExamSchedule = async (req, res) => {
+  try {
+    const urlSlug = req.params.urlSlug
+    const {state, date} = req.body
+    const examSchedule = await ExamSchedule.findOneAndUpdate(
+      {"urlSlug": urlSlug},
+      {$set: {"state": state, "startedDate":date}},
+      {new: true}
+    )
+    res.json({ status: true, examSchedule });
+  } catch (e) {
+    console.error("Some exception occured ay examSchedule: ", e);
+    res.json({ status: false });
+  }
+};
+
+exports.submitExamSchedule = async (req, res) => {
+  try {
+    const urlSlug = req.params.urlSlug
+    const {state} = req.body
+    const examSchedule = await ExamSchedule.findOneAndUpdate(
+      {"urlSlug": urlSlug},
+      {
+        $set: {"state": state},
+        $inc: { "attemptsTaken": 1 }
+      },
+      {new: true},
+    )
+    res.json({ status: true, examSchedule});
+  } catch (e) {
+    console.error("Some exception occured ay examSchedule: ", e);
+    res.json({ status: false });
+  }
+};
+
+exports.attemptExamSchedule = (req, res) => {
+  try {
+    readJSONFile(
+      path.join(process.cwd(), "/server/protected/blockchain-Professional-theory.json"),
+      async (err, json) => {
+        if (err != null) {
+          return res.render("displayError", {
+            error:
+              "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org",
+          });
+        }
+        const urlSlug = req.params.urlSlug
+        const user = req.user
+        const {attemptNo, ...rest} = req.body
+        const examSchedule = await ExamSchedule.findOne({"urlSlug": urlSlug})
+        const attempt = json.exam.map((j,i)=>({
+          givenQuestion: j.question,
+          givenAnswer: j.answer,
+          usersAnswer: rest[i],
+          marks: 0,
+          remark: '',
+        }))
+        const totalMarks = attempt.map(a=>parseFloat(a.marks)).reduce((a,c)=>a+c,0).toFixed(2)
+        const newExamAttempt = new ExamAttempt({
+          attempt,
+          totalMarks,
+          attemptNo,
+          examSchedule,
+          user,
+        });
+        await newExamAttempt.save();
+        res.json({ status: true, examSchedule});
+      }
+    );
+  } catch (e) {
+    res.json({ status: false });
+  }
+};
 
 exports.submitExam = async (req, res, next) => {
   var marks = 0;

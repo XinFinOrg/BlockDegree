@@ -1,5 +1,4 @@
-var mongoose = require('mongoose');
-var bcrypt = require("bcrypt-nodejs");
+const mongoose = require('mongoose');
 const User = require("./user");
 
 const forumQuestionSchema = mongoose.Schema(
