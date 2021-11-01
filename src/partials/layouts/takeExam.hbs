@@ -29,6 +29,7 @@
                     <!-- after Exam starts -->
                     {{#if meta.examStateSubmitted}}
                     <h2 class="text-center">Your exam is completed</h2>
+                    <div class="text-center">Feel free to close the window </div>
                     {{/if}}
 
                     {{#if meta.examhasStarted}}
@@ -133,6 +134,9 @@
         }
 
         function submitExam() {
+            if (isSubmited) {
+                return
+            }
             if (examStateSubmitted) {
                 window.location.reload()
                 return
@@ -151,9 +155,11 @@
                 timeout: 800000,
                 success: function (data) {
                     if (data.status) {
+                        isSubmited = true
                         var form = $('#exam-questions-form')[0];
                         var postData = new FormData(form);
-                        postData.append('attemptNo', data.examSchedule.attemptsTaken);
+                        attemptNo = data.examSchedule.attemptsTaken
+                        postData.append('attemptNo', attemptNo);
                         $.ajax({
                             type: "POST",
                             enctype: 'multipart/form-data',
@@ -206,7 +212,8 @@
         const examTimeStarted = "{{{ meta.examTimeStarted }}}" === "true"
         const examhasStarted = "{{{ meta.examhasStarted }}}" === "true"
         const examStateSubmitted = "{{{ meta.examStateSubmitted }}}" === "true"
-        let examSubmitted = false;
+        let examSubmitted = false, audioPermitted = true, videoPermitted = true, screenPermitted = true;
+        let attemptNo = 1, isSubmited = false;
         //record
         let shouldStop = false;
         let screenStopped = false, userStopped = false;
@@ -217,6 +224,53 @@
         const stopButton = document.getElementById('stop');
         const audioRecordConstraints = {
             echoCancellation: true
+        }
+
+        function runExam() {
+            const startDate = examStartedDate === '' ? examScheduledDate : examStartedDate
+            setSubmitExamTimer(startDate, examDuration)
+
+            $(window).focus(function () {
+                if (audioPermitted || videoPermitted || screenPermitted) {
+                    if (examSubmitted) {
+                        //ignore
+                        return
+                    }
+                    if (blurCount <= 1) {
+                        //ignore
+                        return
+                    }
+                    if (blurCount <= 2) {
+                        $.notify("switching tabs can lead to auto-submission", { type: "danger" });
+                    }
+                }
+            });
+
+            $(window).blur(function () {
+                if (audioPermitted || videoPermitted || screenPermitted) {
+                    if (examSubmitted) {
+                        //ignore
+                        return
+                    }
+                    blurCount++
+                    if (shouldStop !== true && blurCount > 2) {
+                        shouldStop = true
+                        submitExam();
+                    }
+                }
+            });
+
+            //recordAudio()
+            recordVideo()
+            recordScreen()
+            stopButton.addEventListener('click', function () { shouldStop = true; });
+        }
+
+        function stopExam() {
+            console.log(audioPermitted, videoPermitted, screenPermitted)
+            document.getElementById('examWrapper').innerHTML = `
+            <h2 id="message" class="text-center">your exam is paused</h2>
+            <div class="text-center">Please grant all permissions (audio, video and screenShare) and refresh to start your exam</div>`
         }
 
         if (!examStateSubmitted) {
@@ -252,39 +306,7 @@
                 timer = setInterval(showRemaining, 1000);
             } else {
                 if (examhasStarted) {
-                    const startDate = examStartedDate === '' ? examScheduledDate : examStartedDate
-                    setSubmitExamTimer(startDate, examDuration)
-
-                    $(window).focus(function () {
-                        if (examSubmitted) {
-                            //ignore
-                            return
-                        }
-                        if (blurCount <= 1) {
-                            //ignore
-                            return
-                        }
-                        if (blurCount <= 2) {
-                            $.notify("switching tabs can lead to auto-submission", { type: "danger" });
-                        }
-                    });
-
-                    $(window).blur(function () {
-                        if (examSubmitted) {
-                            //ignore
-                            return
-                        }
-                        blurCount++
-                        if (shouldStop !== true && blurCount > 2) {
-                            shouldStop = true
-                            submitExam();
-                        }
-                    });
-
-                    //recordAudio()
-                    recordVideo()
-                    recordScreen()
-                    stopButton.addEventListener('click', function () { shouldStop = true; });
+                    runExam()
                 } else {
                     startExam() // scheduled time has passed but the exam has not started
                 }
@@ -293,13 +315,14 @@
 
         function updateFilename(filename, urlSlug, attritube) {
             var postData = new FormData();
-            const attemptNo = '{{examSchedule.attemptsTaken}}'
+            const attemptNo = parseInt('{{examSchedule.attemptsTaken}}') + 1
             postData.append('filename', filename);
+            postData.append('urlSlug', urlSlug);
             postData.append('attemptNo', attemptNo);
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',
-                url: `/api/examAttempt/${urlSlug}/${attritube}`,
+                url: `/api/examAttempt/${attritube}`,
                 data: postData,
                 processData: false,
                 contentType: false,
@@ -353,6 +376,7 @@
                 recordedChunks = []
                 var fd = new FormData();
                 fd.append('data', blob);
+                fd.append('urlSlug', urlSlug);
                 $.ajax({
                     type: 'POST',
                     url: '/api/uploadUserRecording',
@@ -387,13 +411,14 @@
             };
 
             mediaRecorder.onstop = function () {
-                submitExam()
+                //submitExam()
                 const blob = new Blob(recordedChunks, {
                     type: mimeType,
                 });
                 recordedChunks = []
                 var fd = new FormData();
                 fd.append('data', blob);
+                fd.append('urlSlug', urlSlug);
                 $.ajax({
                     type: 'POST',
                     url: '/api/uploadScreenRecording',
@@ -412,8 +437,13 @@
         async function recordAudio() {
             const mimeType = 'audio/webm';
             shouldStop = false;
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: audioRecordConstraints });
-            userHandleRecord({ stream, mimeType })
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: audioRecordConstraints });
+                userHandleRecord({ stream, mimeType })
+            } catch (err) {
+                audioPermitted = false
+                stopExam()
+            }
         }
 
         async function recordVideo() {
@@ -434,52 +464,64 @@
                     }
                 }
             };
-            const stream = await navigator.mediaDevices.getUserMedia(constraints);
-            videoElement.srcObject = stream;
-            userHandleRecord({ stream, mimeType })
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                videoElement.srcObject = stream;
+                userHandleRecord({ stream, mimeType })
+            } catch (err) {
+                videoPermitted = false
+                stopExam()
+            }
         }
 
         async function recordScreen() {
             const mimeType = 'video/webm';
             shouldStop = false;
-            const constraints = {
-                video: {
-                    cursor: 'motion'
+            try {
+                const constraints = {
+                    video: {
+                        cursor: 'motion'
+                    }
+                };
+                if (!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia)) {
+                    return window.alert('Screen Record not supported!')
                 }
-            };
-            if (!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia)) {
-                return window.alert('Screen Record not supported!')
+                let stream = null;
+                const displayStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "motion" }, audio: { 'echoCancellation': true } });
+                const recordScreenWithAudio = true
+                if (recordScreenWithAudio) {
+                    const audioContext = new AudioContext();
+
+                    const voiceStream = await navigator.mediaDevices.getUserMedia({ audio: { 'echoCancellation': true }, video: false });
+                    const userAudio = audioContext.createMediaStreamSource(voiceStream);
+
+                    const audioDestination = audioContext.createMediaStreamDestination();
+                    userAudio.connect(audioDestination);
+
+                    if (displayStream.getAudioTracks().length > 0) {
+                        const displayAudio = audioContext.createMediaStreamSource(displayStream);
+                        displayAudio.connect(audioDestination);
+                    }
+                    displayStream.getVideoTracks().map(t => {
+                        t.onended = function () {
+                            shouldStop = true;
+                            submitExam();
+                        };
+                    });
+
+                    const tracks = [...displayStream.getVideoTracks(), ...audioDestination.stream.getTracks()]
+                    stream = new MediaStream(tracks);
+                    screenHandleRecord({ stream, mimeType })
+                } else {
+                    stream = displayStream;
+                    screenHandleRecord({ stream, mimeType });
+                };
+                screenShareElement.srcObject = stream;
+            } catch (err) {
+                screenPermitted = false
+                stopExam()
             }
-            let stream = null;
-            const displayStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "motion" }, audio: { 'echoCancellation': true } });
-            const recordScreenWithAudio = true
-            if (recordScreenWithAudio) {
-                const audioContext = new AudioContext();
-
-                const voiceStream = await navigator.mediaDevices.getUserMedia({ audio: { 'echoCancellation': true }, video: false });
-                const userAudio = audioContext.createMediaStreamSource(voiceStream);
-
-                const audioDestination = audioContext.createMediaStreamDestination();
-                userAudio.connect(audioDestination);
-
-                if (displayStream.getAudioTracks().length > 0) {
-                    const displayAudio = audioContext.createMediaStreamSource(displayStream);
-                    displayAudio.connect(audioDestination);
-                }
-                displayStream.getVideoTracks().map(t => {
-                    t.onended = function () {
-                        shouldStop = true;
-                    };
-                });
-
-                const tracks = [...displayStream.getVideoTracks(), ...audioDestination.stream.getTracks()]
-                stream = new MediaStream(tracks);
-                screenHandleRecord({ stream, mimeType })
-            } else {
-                stream = displayStream;
-                screenHandleRecord({ stream, mimeType });
-            };
-            screenShareElement.srcObject = stream;
         }
     })
 

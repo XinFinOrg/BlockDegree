@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import {getExamAttemptsFromExamSchedulesSlug, setExamAttempts} from '../../../services/LiveRecording.services';
-import {recordingPath} from '../../../constants/static'
+import { getExamAttemptsFromExamSchedulesSlug, setExamAttempts } from '../../../services/manageExam.services';
+import { videoRecordingPath, screenRecordingPath } from '../../../constants/static'
 
 export default function ExamAttempt({examSchedulesSlug}) {
   const [score, scoreSet] = useState(0);
@@ -24,13 +24,22 @@ export default function ExamAttempt({examSchedulesSlug}) {
     e.preventDefault()
     const setMarks = async () =>{
       loadingSet(true)
-      const r = await setExamAttempts({id: examAttempts[selection].id, totalMarks: score})
+      const examAttempt = examAttempts[selection]
+      const r = await setExamAttempts({id: examAttempt.id, totalMarks: score})
+      const newExamAttempts = examAttempts.map((e,i)=>{
+        if (i === selection){
+          e.totalMarks = score
+        }
+        return e
+      })
+      examAttemptsSet(newExamAttempts)
       loadingSet(false)
       scoreSet(0)
     }
     setMarks()
   }
 
+  const examAttempt = examAttempts[selection]
   return (
     <div>
       <div>Select Attempt</div>
@@ -42,15 +51,15 @@ export default function ExamAttempt({examSchedulesSlug}) {
             </ul>
             <div>
               <div>Selected examSchedule:</div>
-              <div>totalMarks: {examAttempts[selection].totalMarks || ''}</div>
-              <div>attemptNo: {examAttempts[selection].attemptNo || ''}</div>
-              <div>username: {examAttempts[selection].username || ''}</div>
-              <div>user email: {examAttempts[selection].email || ''}</div>
-              {examAttempts[selection].userRecordingFileName && (
-                <div>camera video: {`${recordingPath}${examAttempts[selection].userRecordingFileName}`}</div>
+              <div>totalMarks: {examAttempt.totalMarks || ''}</div>
+              <div>attemptNo: {examAttempt.attemptNo || ''}</div>
+              <div>username: {examAttempt.username || ''}</div>
+              <div>user email: {examAttempt.email || ''}</div>
+              {examAttempt.userRecordingFileName && (
+                <div>camera video: {`${videoRecordingPath}${examAttempt.userRecordingFileName}`}</div>
               )}
-              {examAttempts[selection].screenRecordingFileName && (
-                <div>screen video: {`${recordingPath}${examAttempts[selection].screenRecordingFileName}`}</div>
+              {examAttempt.screenRecordingFileName && (
+                <div>screen video: {`${screenRecordingPath}${examAttempt.screenRecordingFileName}`}</div>
               )}
             </div>
             <form class="form-inline">

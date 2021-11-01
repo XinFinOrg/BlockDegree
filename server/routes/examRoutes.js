@@ -14,8 +14,8 @@ module.exports = app => {
   app.post("/api/uploadScreenRecording", requireLogin, examServices.uploadScreenRecording);
   app.get("/api/examAttempts/examSchedule/:urlSlug", examServices.getExamAttemptsFromExamSchedulesSlug);
   app.post("/api/examAttempt/marks", examServices.setMarks);
-  app.post("/api/examAttempt/:urlSlug/userRecordingFileName", requireLogin, examServices.attemptExamUserRecordingFileName);
-  app.post("/api/examAttempt/:urlSlug/screenRecordingFileName", requireLogin, examServices.attemptExamScreenRecordingFileName);
+  app.post("/api/examAttempt/userRecordingFileName", requireLogin, examServices.attemptExamUserRecordingFileName);
+  app.post("/api/examAttempt/screenRecordingFileName", requireLogin, examServices.attemptExamScreenRecordingFileName);
   app.post("/postExam", requireLogin, examServices.submitExam);
   app.get("/exam-result", requireLogin, examServices.getExamResult);
   app.get("/exams", requireLogin, examServices.getExamStatus);

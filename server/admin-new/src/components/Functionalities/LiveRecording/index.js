@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 // import Dropdown from "react-bootstrap/dropdown";
-import {getExamSchedules} from '../../../services/LiveRecording.services';
+import {getExamSchedules} from '../../../services/manageExam.services';
 import ExamAttempt from './ExamAttempt';
 
 export default function LiveRecording() {

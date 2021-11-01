@@ -48,21 +48,14 @@ exports.uploadUserRecording = (req, res) => {
         return res.status(400).send('No files were uploaded.'); 
 
     let data = req.files.data;
-    
-    let filename = 'user-'+req.user.email+new Date().getTime()+'.webm';
-    // blobSvc.createBlockBlobFromText(containerName, filename, data, function(err) {
-    //   if (err)
-    //     return res.status(500).send(err);
-
-    //   res.send('File uploaded!');
-    // })
-    
-    const uploadPath = path.join(__dirname, "../protected/"+filename)
+    const urlSlug = req.body.urlSlug
+    let filename = 'user-'+req.user.email+new Date().getTime()+'.webm';    
+    const uploadPath = path.join(__dirname, "../protected/recordings/video/"+filename)
     data.mv(uploadPath, function(err) {
       if (err){
         return res.status(500).send(err);
       }
-      res.json({ status: true, message:'File uploaded!', filename });
+      res.json({ status: true, message:'File uploaded!', urlSlug, filename });
     });
   } catch (e) {
     res.json({ status: false, error: e });
@@ -75,21 +68,14 @@ exports.uploadScreenRecording = (req, res) => {
         return res.status(400).send('No files were uploaded.'); 
 
     let data = req.files.data;
-    
-    let filename = 'screen-'+req.user.email+new Date().getTime()+'.webm';
-    // blobSvc.createBlockBlobFromText(containerName, filename, data, function(err) {
-    //   if (err)
-    //     return res.status(500).send(err);
-
-    //   res.send('File uploaded!');
-    // })
-    
-    const uploadPath = path.join(__dirname, "../protected/"+filename)
+    const urlSlug = req.body.urlSlug
+    let filename = 'screen-'+req.user.email+new Date().getTime()+'.webm';    
+    const uploadPath = path.join(__dirname, "../protected/recordings/screen/"+filename)
     data.mv(uploadPath, function(err) {
       if (err){
         return res.status(500).send(err);
       }
-      res.json({ status: true, message:'File uploaded!', filename });
+      res.json({ status: true, message:'File uploaded!', urlSlug, filename });
     });
   } catch (e) {
     res.json({ status: false, error: e });
@@ -98,7 +84,7 @@ exports.uploadScreenRecording = (req, res) => {
 
 exports.getExamAttemptsFromExamSchedulesSlug = async(req, res) => {
   try {
-    const urlSlug = req.params.urlSlug
+    const { urlSlug } = req.params
     const examSchedule = await ExamSchedule.findOne({urlSlug});
     const examAttempts = await ExamAttempt.find({examSchedule}).populate('user').lean();
     res.json({ status: true, examAttempts });
@@ -110,18 +96,11 @@ exports.getExamAttemptsFromExamSchedulesSlug = async(req, res) => {
 
 exports.setMarks = async(req, res) => {
   try {
-    console.error('#########################################################')
     const {id, totalMarks} = req.body
     if (mongoose.Types.ObjectId.isValid(id)) {
-      // user = await this.findById(id).exec();
       const examSchedule = await ExamAttempt.findById(id).exec()
       examSchedule.totalMarks = totalMarks
       await examSchedule.save()
-      // findOneAndUpdate(
-      //   {"_id": id},
-      //   {$set: {"totalMarks": totalMarks}},
-      //   {new: true}
-      // )
       res.json({ status: true, message: "saved" });
     }
     res.json({ status: false });
@@ -132,27 +111,13 @@ exports.setMarks = async(req, res) => {
   }
 };
 
-
 exports.attemptExamUserRecordingFileName = async(req, res) => {
   try {
-    const {attemptNo, filename} = req.body
-    const user = req.user
-    const newExamAttempt = await ExamAttempt.findOne({"user": user,"attemptNo":attemptNo})
-    newExamAttempt.userRecordingFileName = filename
-    await newExamAttempt.save();
-    res.json({ status: true });
-  } catch (e) {
-    res.json({ status: false });
-  }
-};
-
-exports.attemptExamUserRecordingFileName = async(req, res) => {
-  try {
-    const {attemptNo, filename} = req.body
-    const user = req.user
-    const newExamAttempt = await ExamAttempt.findOne({"user": user,"attemptNo":attemptNo})
-    newExamAttempt.userRecordingFileName = filename
-    await newExamAttempt.save();
+    const {attemptNo, filename, urlSlug} = req.body
+    const examSchedule = await ExamSchedule.findOne({urlSlug});
+    const examAttempt = await ExamAttempt.findOne({examSchedule, attemptNo});
+    examAttempt.userRecordingFileName = filename
+    await examAttempt.save();
     res.json({ status: true });
   } catch (e) {
     res.json({ status: false });
@@ -161,11 +126,11 @@ exports.attemptExamUserRecordingFileName = async(req, res) => {
 
 exports.attemptExamScreenRecordingFileName = async(req, res) => {
   try {
-    const {attemptNo, filename} = req.body
-    const user = req.user
-    const newExamAttempt = await ExamAttempt.findOne({"user": user,"attemptNo":attemptNo})
-    newExamAttempt.screenRecordingFileName = filename
-    await newExamAttempt.save();
+    const {attemptNo, filename, urlSlug} = req.body
+    const examSchedule = await ExamSchedule.findOne({urlSlug});
+    const examAttempt = await ExamAttempt.findOne({examSchedule, attemptNo});
+    examAttempt.screenRecordingFileName = filename
+    await examAttempt.save();
     res.json({ status: true });
   } catch (e) {
     res.json({ status: false });
