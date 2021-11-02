@@ -50,7 +50,7 @@ exports.uploadUserRecording = (req, res) => {
     let data = req.files.data;
     const urlSlug = req.body.urlSlug
     let filename = 'user-'+req.user.email+new Date().getTime()+'.webm';    
-    const uploadPath = path.join(__dirname, "../protected/recordings/video/"+filename)
+    const uploadPath = path.join(__dirname, "../recordings/video/"+filename)
     data.mv(uploadPath, function(err) {
       if (err){
         return res.status(500).send(err);
@@ -70,7 +70,7 @@ exports.uploadScreenRecording = (req, res) => {
     let data = req.files.data;
     const urlSlug = req.body.urlSlug
     let filename = 'screen-'+req.user.email+new Date().getTime()+'.webm';    
-    const uploadPath = path.join(__dirname, "../protected/recordings/screen/"+filename)
+    const uploadPath = path.join(__dirname, "../recordings/screen/"+filename)
     data.mv(uploadPath, function(err) {
       if (err){
         return res.status(500).send(err);
@@ -96,15 +96,15 @@ exports.getExamAttemptsFromExamSchedulesSlug = async(req, res) => {
 
 exports.setMarks = async(req, res) => {
   try {
-    const {id, totalMarks} = req.body
+    const {id, totalMarks, attempt} = req.body
     if (mongoose.Types.ObjectId.isValid(id)) {
-      const examSchedule = await ExamAttempt.findById(id).exec()
-      examSchedule.totalMarks = totalMarks
-      await examSchedule.save()
-      res.json({ status: true, message: "saved" });
+      const examAttempt = await ExamAttempt.findById(id).exec()
+      examAttempt.totalMarks = totalMarks
+      examAttempt.attempt = attempt
+      await examAttempt.save()
+      res.json({ status: true, examAttempt });
     }
     res.json({ status: false });
-    
   } catch (e) {
     console.error("Some exception occured ay examAttempts: ", e);
     res.json({ status: false, error: "internal error while setMarks" });
@@ -136,6 +136,10 @@ exports.attemptExamScreenRecordingFileName = async(req, res) => {
     res.json({ status: false });
   }
 };
+
+// exports.showRecording = (req, res) => {
+//   res.render(process.cwd(), "/server/recordings/"); 
+// }
 
 exports.takeExam = (req, res) => {
   try {

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 // import Dropdown from "react-bootstrap/dropdown";
 import {getExamSchedules} from '../../../services/manageExam.services';
-import ExamAttempt from './ExamAttempt';
+import ExamAttempts from './ExamAttempts';
 
 export default function LiveRecording() {
   const [examSchedules, examSchedulesSet] = useState([]);
@@ -27,7 +27,7 @@ export default function LiveRecording() {
             <div>
             {examSchedules.length > 0 && (<div>
               <ul>
-                {examSchedules.map((e,i)=>(<li onClick={()=>selectionSet(i)}>{e.courseTitle}:{e.attemptsTaken}</li>))}
+                {examSchedules.map((e,i)=>(<li key={i} onClick={()=>selectionSet(i)}>{e.courseTitle}:{e.attemptsTaken}</li>))}
               </ul>  
               {/* <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -47,7 +47,7 @@ export default function LiveRecording() {
                 <div>username: {examSchedules[selection].username || ''}</div>
                 <div>user email: {examSchedules[selection].email || ''}</div>
               </div>
-              <ExamAttempt examSchedulesSlug={examSchedules[selection].urlSlug}/>
+              <ExamAttempts examSchedulesSlug={examSchedules[selection].urlSlug}/>
             </div>)}
             </div>
           )}

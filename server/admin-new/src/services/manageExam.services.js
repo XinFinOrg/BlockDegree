@@ -69,10 +69,10 @@ function transformExamAttempts(e) {
   }
 }
 
-export const setExamAttempts = async ({id, totalMarks}) => {
+export const setExamAttempt = async ({id, totalMarks, attempt}) => {
   try {
-    const r = await postData(base_url + `examAttempt/marks`, { id, totalMarks })
-    return r
+    const r = await postData(base_url + `examAttempt/marks`, { id, totalMarks, attempt })
+    return transformExamAttempts(r.examAttempt)
   } catch(e) {
     return {status: false, error: 'failed to fetch examSchedules'}
   }
