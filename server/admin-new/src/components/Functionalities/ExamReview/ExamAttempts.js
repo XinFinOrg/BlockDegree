@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { getExamAttemptsFromExamSchedulesSlug, setExamAttempt } from '../../../services/manageExam.services';
+import { getExamAttemptsFromExamSchedulesSlug, setExamAttempt, getCertificate } from '../../../services/manageExam.services';
 import { videoRecordingPath, screenRecordingPath } from '../../../constants/static'
 
 function useForceUpdate(){
@@ -14,7 +14,7 @@ function getTotalMarks(attempt) {
   return 0
 }
 
-export default function ExamAttempt({examSchedulesSlug}) {
+export default function ExamAttempt({examSchedulesSlug, course}) {
   const [loading, loadingSet] = useState(false);
   const [examAttempts, examAttemptsSet] = useState([]);
   const [selection, selectionSet] = useState(0);
@@ -64,6 +64,11 @@ export default function ExamAttempt({examSchedulesSlug}) {
     attemptDataSet(newattemptData)
     forceUpdate()
   }
+  const generateCertificate = async (email) => {
+    const r = await getCertificate({email, course, marksObtained: getTotalMarks(attemptData)})
+    console.log(r)
+    debugger
+  }
 
   const examAttempt = examAttempts[selection]
   const totalMarks = getTotalMarks(attemptData)
@@ -78,7 +83,12 @@ export default function ExamAttempt({examSchedulesSlug}) {
             </ul>
             <div>
               <div>Selected examSchedule:</div>
-              <div>totalMarks: {examAttempt.totalMarks || ''}</div>
+              <div>totalMarks: <b>{examAttempt.totalMarks || ''}</b></div>
+              {parseFloat(examAttempt.totalMarks) >= 50 ? (
+                <div><button type="button" className="btn btn-primary mb-2" onClick={()=>generateCertificate(examAttempt.email, )}>Generate Certificate</button></div>
+              ) : (
+                <div>Canditate needs atleast 50 marks to generate Certificate</div>
+              )}
               <div>attemptNo: {examAttempt.attemptNo || ''}</div>
               <div>username: {examAttempt.username || ''}</div>
               <div>user email: {examAttempt.email || ''}</div>

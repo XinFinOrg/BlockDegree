@@ -36,6 +36,7 @@ function transformExamSchedule(e) {
     id: e._id,
     attemptsTaken: e.attemptsTaken,
     courseTitle: e.course.title,
+    courseType: e.course.type,
     duration: e.duration,
     username: e.user.name,
     email: e.user.email,
@@ -77,3 +78,16 @@ export const setExamAttempt = async ({id, totalMarks, attempt}) => {
     return {status: false, error: 'failed to fetch examSchedules'}
   }
 }
+
+export const getCertificate = async ({email, course, marksObtained}) => {
+  try {
+    const maximumMarks = 100
+    const r = await postData(base_url + `getCertificate`, {email, course, marksObtained, maximumMarks})
+    return r
+  } catch(e) {
+    return {status: false, error: 'failed to get Certificate'}
+  }
+}
+
+
+    

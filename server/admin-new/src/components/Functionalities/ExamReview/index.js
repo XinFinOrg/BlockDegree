@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react'
 import {getExamSchedules} from '../../../services/manageExam.services';
 import ExamAttempts from './ExamAttempts';
 
-export default function LiveRecording() {
+export default function ExamReview() {
   const [examSchedules, examSchedulesSet] = useState([]);
   const [selection, selectionSet] = useState(0);
   const [loading, loadingSet] = useState(false);
@@ -47,7 +47,7 @@ export default function LiveRecording() {
                 <div>username: {examSchedules[selection].username || ''}</div>
                 <div>user email: {examSchedules[selection].email || ''}</div>
               </div>
-              <ExamAttempts examSchedulesSlug={examSchedules[selection].urlSlug}/>
+              <ExamAttempts examSchedulesSlug={examSchedules[selection].urlSlug} course={examSchedules[selection].courseType}/>
             </div>)}
             </div>
           )}

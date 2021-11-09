@@ -2,6 +2,8 @@ const User = require("../models/user");
 const ipfsClient = require("ipfs-http-client");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
+const renderCertificate = require("../helpers/renderCertificate");
+const socialPostListener = require("../listeners/postSocial").em;
 
 let clientIPFS = "";
 
@@ -17,6 +19,44 @@ if (process.env.IPFS_NETWORK == "local") {
   clientIPFS = localClient;
 } else {
   clientIPFS = xinfinClient;
+}
+
+const examTypes = {
+  basic: {
+    courseName: "examBasic",
+    questionName: "questionsBasic",
+    coursePayment_id: "course_1",
+  },
+  advanced: {
+    courseName: "examAdvanced",
+    questionName: "questionsAdvanced",
+    coursePayment_id: "course_2",
+  },
+  professional: {
+    courseName: "examProfessional",
+    questionName: "questionsProfessional",
+    coursePayment_id: "course_3",
+  },
+  computing: {
+    courseName: "examComputing",
+    questionName: "questionsComputing",
+    coursePayment_id: "course_4",
+  },
+  wallet: {
+    courseName: "examWallet",
+    questionName: "questionsWallet",
+    coursePayment_id: "course_5",
+  },
+};
+
+function findLastAttempt(user, examName) {
+  let certiCount = user.examData.certificateHash.length;
+  for (let i = certiCount - 1; i >= 0; i--) {
+    if (user.examData.certificateHash[i].examType == examName) {
+      return user.examData.certificateHash[i].timestamp;
+    }
+  }
+  return null;
 }
 
 exports.getAllCertificates = async (req, res) => {
@@ -77,6 +117,119 @@ exports.getCertificatesFromCourse = async (req, res) => {
     .status(200)
     .json({ certificateHash: certificateHash, status: 200, error: null });
 };
+
+exports.generateCertificatesFromCourseByEmail = async (req, res) => {
+  if (req.body.course == "" || req.body.course == undefined) {
+    return res.status(400).json({
+      error: "bad request: req.body.course id empty / undefined",
+      status: 400
+    });
+  }
+  const course = req.body.course;
+  const marksObtained = req.body.marksObtained;
+  const maximumMarks = req.body.maximumMarks;
+  const email = req.body.email;
+
+  let user;
+  try {
+    user = await User.findOne({ email });
+  } catch (e) {
+    console.error("Exception while fetching user: ", e);
+    return res.status(500).json({
+      error: "DB is under maintainence pls try again after sometime",
+      status: 500
+    });
+  }
+  let name = "";
+  if (user.name == "" || user.name == undefined) {
+    // old email id.
+    name = user.email;
+  } else {
+    name = user.name;
+  }
+  const percentObtained = (marksObtained * 100) / maximumMarks;
+  const examName = Object.entries(examTypes).find(([_k,v])=>v.coursePayment_id === course)[0]
+  let jsonData = {
+    exam: {
+      examBasic: examName == "basic",
+      examAdvanced: examName == "advanced",
+      examProfessional: examName == "professional",
+      examComputing: examName == "computing",
+      examWallet: examName == "wallet",
+    },
+    data: user,
+    obtainedMarks: marksObtained,
+    percent: percentObtained,
+    total: maximumMarks,
+  };
+
+  examStatus = true;
+  let d = new Date();
+  console.log(`Last Attemp timestamp : ${findLastAttempt(user, examName)}`);
+  if (user.examData.payment[course] != true) {
+    return res.redirect("/exams");
+  }
+  let donerName =
+    user.examData.payment[`${course}_doner`];
+  // Post the 2 certificates
+  renderCertificate.renderForIPFSHashWithoutQR(
+    name,
+    percentObtained,
+    examName,
+    d,
+    donerName,
+    null,
+    (bothRender) => {
+      if (!bothRender.uploaded) {
+        console.log("error:", bothRender);
+        return res.render("displayError", {
+          error: "Its not you, its us. Please try again after some time.",
+        });
+      } else {
+        jsonData.certificateHash = bothRender.hash[1];
+        jsonData.examStatus = examStatus;
+        user.examData[examTypes[examName].courseName].attempts = 0;
+        user.examData.payment[examTypes[examName].coursePayment_id] = false;
+        var obj = {};
+        const expiryDate = d;
+        expiryDate.setDate(expiryDate.getDate() - 1);
+        expiryDate.setFullYear(expiryDate.getFullYear() + 2);
+        expiryDate.setHours(23, 59, 59, 999);
+        obj["timestamp"] = Date.now();
+        obj["marks"] = marksObtained;
+        obj["total"] = maximumMarks;
+        obj["headlessHash"] = bothRender.hash[0];
+        obj["clientHash"] = bothRender.hash[1];
+        obj["examType"] = examName;
+        obj["paymentMode"] =
+          user.examData.payment[
+            examTypes[examName].coursePayment_id + "_payment"
+          ] === undefined
+            ? ""
+            : user.examData.payment[
+            examTypes[examName].coursePayment_id + "_payment"
+            ];
+        obj["expiryDate"] = expiryDate.getTime();
+        user.examData.certificateHash.push(obj);
+        user.examData.payment[
+          examTypes[examName].coursePayment_id + "_payment"
+        ] = "";
+        user.examData.payment[
+          examTypes[examName].coursePayment_id + "_doner"
+        ] = "";
+        user.save();
+        console.log(bothRender,'1################################')
+      
+        res
+          .status(200)
+          .json(jsonData);
+        socialPostListener.emit("varTriggerUpdate", "certificates");
+        return;
+      }
+    }
+  );
+};
+
 
 // Very heavy process
 // get_user -> validate_hash -> get_user -> fetch_hash_frpm_IPFS -> get_screenshot -> save_screenshot -> send_screenshot -> delete_screenshot

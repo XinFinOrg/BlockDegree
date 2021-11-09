@@ -6,6 +6,7 @@ const examScheduleSchema = mongoose.Schema(
     course: {
       title: { type: String, required: true },
       type: { type: String, required: true },
+      maximumMarks: { type: Number, default: 100 },
     },
     user : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     timeSlot: { type: String, required: true },

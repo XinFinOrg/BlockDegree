@@ -8,7 +8,7 @@ import CoursePayment from "./CoursePayment/index";
 import Events from "./Events/index";
 import FMD from "./FundMyDegree/index";
 import SiteStatistics from "./SiteStatistics";
-import LiveRecording from "./LiveRecording";
+import ExamReview from "./ExamReview";
 class Functionalities extends React.Component {
   render() {
     // prettier-ignore
@@ -21,7 +21,7 @@ class Functionalities extends React.Component {
         <Route path={`${this.props.match.url}/events`} component={Events} />
         <Route path={`${this.props.match.url}/fmd`} component={FMD} />
         <Route path={`${this.props.match.url}/site-statistics`} component={SiteStatistics} />
-        <Route path={`${this.props.match.url}/live-recording`} component={LiveRecording} />
+        <Route path={`${this.props.match.url}/exam-review`} component={ExamReview} />
       </div>
     );
   }

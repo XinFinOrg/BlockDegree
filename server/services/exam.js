@@ -140,6 +140,36 @@ exports.attemptExamScreenRecordingFileName = async(req, res) => {
 // exports.showRecording = (req, res) => {
 //   res.render(process.cwd(), "/server/recordings/"); 
 // }
+exports.getQuestionsProfessionalAnswers = async(req, res) => {
+  try {
+    const pageNo = parseInt(req.query.pageNo || 0)
+    const perPage = parseInt(req.query.perPage || 5)
+    const questionBank = await questions.findOne()//questions.findOne({ exam: "firstExam" })
+    const startIdx = pageNo*perPage
+    const endIdx = (pageNo+1)*perPage
+    const professionalQuestions = questionBank.questionsProfessional.slice(startIdx,endIdx)
+    const answers = professionalQuestions.map(q=>q.answer)
+    // const answers = professionalQuestions.map(q=>({answerId: q.answer, answer: q.choices[q.answer]}))
+    res.json({ status: true, answers });
+  } catch (e) {
+    res.json({ status: false });
+  }
+};
+
+exports.getQuestionsProfessional = async(req, res) => {
+  try {
+    const pageNo = parseInt(req.query.pageNo || 0)
+    const perPage = parseInt(req.query.perPage || 5)
+    const questionBank = await questions.findOne()//questions.findOne({ exam: "firstExam" })
+    const startIdx = pageNo*perPage
+    const endIdx = (pageNo+1)*perPage
+    const professionalQuestions = questionBank.questionsProfessional.slice(startIdx,endIdx)
+    const questionsAndChoices = professionalQuestions.map(q=>({ question: q.question, choices: q.choices }))
+    res.json({ status: true, questions: questionsAndChoices });
+  } catch (e) {
+    res.json({ status: false });
+  }
+};
 
 exports.takeExam = (req, res) => {
   try {
