@@ -87,7 +87,7 @@ $(document).ready(() => {
   window.addEventListener("message", function (event) {
     if (
       event.origin == "https://www.blockdegree.org" ||
-      event.origin == "https://www.blockdegree.org"
+      event.origin == "https://blockdegree.org"
     ) {
       if (event.data == "share") {
         console.log("message from popup.");
