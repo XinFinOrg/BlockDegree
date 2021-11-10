@@ -356,7 +356,7 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("http://localhost:3000");
+                  window.location.reload("https://www.blockdegree.org");
                 },
               });
             }
@@ -410,7 +410,7 @@ if (typeof jQuery != "undefined") {
                   alert(
                     "Error while making the call to the server, pls try again"
                   );
-                  window.location.reload("http://localhost:3000");
+                  window.location.reload("https://www.blockdegree.org");
                 },
               });
             }

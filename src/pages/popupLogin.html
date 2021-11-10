@@ -71,8 +71,8 @@
     "message",
     function (event) {
       if (
-        event.origin == "http://localhost:3000" ||
-        event.origin == "http://localhost:3000"
+        event.origin == "https://www.blockdegree.org" ||
+        event.origin == "https://www.blockdegree.org"
       ) {
         console.log("From PopUp", event.data);
         document.cookie = event.data + ";path=/";
@@ -122,7 +122,7 @@
           result.linkedinAuth
         ) {
           // user is logged in, redirect.
-          location.replace("http://localhost:3000");
+          location.replace("https://www.blockdegree.org");
         }
         // signed in with twitter, show share button
       }
@@ -146,7 +146,7 @@
       options.windowOptions
     );
     that._oauthInterval = window.setInterval(function () {
-      if (that._oauthWindow.location.href == "http://localhost:3000") {
+      if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
         that._oauthWindow.location.href ==
           "https://www.blockdegree.org/e.org/closeCallback";
       }

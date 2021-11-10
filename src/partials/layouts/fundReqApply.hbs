@@ -352,7 +352,7 @@
 		function (event) {
 			console.log("Originating event: ", event.origin);
 			console.log(event.origin);
-			if (event.origin == "http://localhost:3000") {
+			if (event.origin == "https://www.blockdegree.org") {
 				if (event.data == "ok") {
 					$.notify("Social linked!", { type: "success" });
 					if (selectedPlatform === "twitter") {
@@ -401,7 +401,7 @@
 			options.windowOptions
 		);
 		that._oauthInterval = window.setInterval(function () {
-			if (that._oauthWindow.location.href == "http://localhost:3000") {
+			if (that._oauthWindow.location.href == "https://www.blockdegree.org") {
 				that._oauthWindow.location.href ==
 					"https://www.blockdegree.org/e.org/closeCallback";
 			}

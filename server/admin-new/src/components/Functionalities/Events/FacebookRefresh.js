@@ -30,8 +30,8 @@ class FacebookRefresh extends Component {
 
   handleSuccess = event => {
     if (
-      event.origin === "http://localhost:3000" ||
-      event.origin === "http://localhost:3000"
+      event.origin === "https://www.blockdegree.org" ||
+      event.origin === "https://www.blockdegree.org"
     ) {
       console.log("From PopUp", event.data);
       this.setState({ showSuccess: true });

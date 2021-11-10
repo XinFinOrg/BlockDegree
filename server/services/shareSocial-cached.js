@@ -291,7 +291,7 @@ exports.postTwitter = async (req, res) => {
 //                 description: {
 //                   text: "Blockdegree - Opensource blockchain training"
 //                 },
-//                 originalUrl: "http://localhost:3000",
+//                 originalUrl: "https://www.blockdegree.org",
 //                 title: {
 //                   text: "Blockdegree - Opensource blockchain training"
 //                 }
