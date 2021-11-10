@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Zinfin">
+  <meta name="google-site-verification" content="f_YfGpOcLbSzXjgh7Sok66ZBFNjvH2Lt5KCZwxG9AwM" />
+  <meta name="description" content= Professional blockchain training course
+    by Blockdegree >
+  <meta charset="UTF-8">
+  <link rel="icon" href="/img/brand/blockdegree_favicon.png">
+  <title>
+     Blockdegree Blockchain Training 
+  </title>
+  <link rel="stylesheet" href="/css/linearicons.css?v=1.1">
+  <link rel="stylesheet" href="/css/font-awesome.min.css?v=1.1">
+  <link rel="stylesheet" href="/css/bootstrap.css?v=1.1">
+  <link rel="stylesheet" href="/css/magnific-popup.css?v=1.1">
+  <link rel="stylesheet" href="/css/nice-select.css?v=1.1">
+  <link rel="stylesheet" href="/css/animate.min.css?v=1.1">
+  <link rel="stylesheet" href="/css/jquery-ui.css?v=1.1">
+  <link rel="stylesheet" href="/css/slick.css?v=1.1">
+  <link rel="stylesheet" href="/css/slick-theme.css?v=1.1">
+  <link rel="stylesheet" href="/css/login-form.css?v=1.1">
+  <link rel="stylesheet" href="/css/main.css?v=1.55">
+    
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="/js/vendor/bootstrap-notify.js"></script>
+  <script src="/js/vendor/handlebars-v4.0.12.js"></script>
+  <script src="/js/utils.js?v=1.1"></script>
+  
+  
+  <!-- Home page banner slider CSS -->
+  <link href="/css/nivoslider/nivo-slider.css" rel="stylesheet" /></head>
+
+<body class=course-module>
+  <header id="header">
+    <div class="container main-menu">
+      <div class="row align-items-center justify-content-between d-flex">
+        <div id="logo">
+          <a href="/"><img src="/img/brand/blockdegree_dark.png?v=2" alt="blockdegree blockchain education training"
+              class="logo-dark" /></a>
+          <a href="/"><img src="/img/brand/blockdegree_white.png?v=2" alt="blockdegree blockchain education training"
+              class="logo-white" /></a>
+        </div>
+    
+        <nav id="nav-menu-container">
+          <ul class="nav-menu">
+            <li class="menu-has-children">
+              <a class="py-1">Courses</a>
+              <ul>
+                <li><a href="/blockchain-basic">Blockchain Basic Course for Engineer</a></li>
+                <li><a href="/blockchain-advanced">Blockchain Advanced Course for Engineer</a></li>
+                <li><a href="/blockchain-professional">Blockchain Professional Course for Engineer</a></li>
+                <li><a href="/cloud-computing">Cloud Computing</a></li>
+    
+                <li><a href="/blockchain-wallet">Blockchain Wallet</a></li>
+                <li><a href="/video-stream">Study Blockchain in 60minutes</a></li>
+              </ul>
+            </li>
+            <li><a href="/exams" class="py-1">Enroll</a></li>
+            <li><a href="/profile" id="profile-btn" class="py-1">Profile</a></li>
+            <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
+            <li><a href="/fund-my-degree" class="py-1">Fund My Degree</a></li>
+            <li><a href="/forum" class="py-1">Forum</a></li>
+            <li><a href="/contact" class="py-1">Contact Us</a></li>
+            <!--<li><a href="/campus-ambassador" class="py-1">Campus Ambassador</a></li>-->
+            <li id="login-btn">
+              <a id="nav-login" href="/login" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Login</a>
+            </li>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>  </header>
+
+  <section>
+<div class="hero-banner hero-overlay"
+     style="background: url('/img/top-banner.jpg') center/cover;">
+  <div class="container">
+    <div class="row align-items-center justify-content-center">
+      <div class="hero-banner__content text-center">
+        <h1 class="text-white">Blockchain professional course for engineer</h1>
+        
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mx-0">
+  <div class="col-12 col-sm-4 px-0">
+    <!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
+    <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=2 style="background: #fafbfc;">
+      <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
+      <div id="mod__details">
+        <script id="module-template" type="text/x-handlebars-template">
+    
+          {{#with courses.[2] }}
+    
+            {{#each curriculum as |ccm|}}
+    
+              {{#if ccm.sub-topic}}
+              <ul id="acc__mod-{{@index}}"> {{else}}
+              <ul> {{/if}}
+    
+                  <!-- Heading -->
+                  <li
+                    {{#if ccm.sub-topic}}
+                      id="{{url ccm.topic}}"
+                      class="with-child"
+                      data-toggle="collapse"
+                      data-target="#sub-{{@index}}"
+                      aria-expandeded="false"
+                    {{/if}}>
+                    <div class="row px-2 py-3">
+                      <div class="col-10">
+                        <a href="{{url ccm.topic}}">
+                          <h4 class="mod__heading"> {{ccm.topic}}</h4>
+                        </a>
+                      </div>
+                      {{#if ccm.sub-topic}}
+                        <div class="col-1 arrow"
+                             id="{{url ccm.topic}}"
+                             class="with-child"
+                             data-toggle="collapse"
+                             data-target="#sub-{{@index}}"
+                             aria-expanded="false">
+                           &#x25BC;
+                       </div>
+                     {{/if}}
+                   </div>
+                  </li>
+                  <!-- End heading -->
+    
+                  <!-- Start sub-heading if there is -->
+                  {{#if ccm.sub-topic}}
+                    <ul id="sub-{{@index}}" class="collapse side-nav__child">
+    
+                      {{#each ccm.sub-topic as |sub|}}
+                        <li class="pl-4 py-3">
+                          <a id="{{url sub}}" href="{{url ccm.topic}}#{{url sub}}">
+                            <h5 class="mod__sub-heading">{{sub}}</h5>
+                          </a>
+                        </li> {{/each}}
+    
+                    </ul>
+                  {{/if}}
+                  <!-- End sub-heading if there is -->
+    
+                </ul>
+              {{/each}}
+            {{/with}}
+    
+    
+        </script>
+      </div>
+    </nav>
+  </div>
+
+  <div class="col-12 col-sm-8 p-4 module-content">
+    <div class="container py-2">
+      <h2 id="Dependencies for developing on Ethereum">Dependencies for developing on Ethereum</h2>
+      <div><p>Today I&#39;m going to show you how to build your first decentralized application, or dApp, on the Ethereum blockchain. I&#39;ll show you how to write your first Ethereum smart contract, where we&#39;ll hold an election between two candidates. We&#39;ll write tests against the smart contract, deploy it to the Ethereum blockchain, and develop a client-side application that allows accounts to cast votes</p>
+<p>In order to build our dApp, we need a few dependencies first.</p>
+<h3 id="node-package-manager-npm">Node Package Manager (NPM)</h3>
+<p>The first dependency we need is <a href="https://nodejs.org/en/" target="_blank">Node Package Manager</a>, or NPM, which comes with Node.js. Check if you have node installed in your machine.</p>
+<div class="precode">shell</div>
+
+<pre><code class="language-console">user:~/$ node -v</code></pre>
+<h3 id="truffle-framework">Truffle Framework</h3>
+<p>The next dependency is the <a href="https://www.truffleframework.com/" target="_blank">Truffle Framework</a>, which allows us to build decentralized applications on the Ethereum blockchain. It provides a suite of tools that allow us to write smart contacts with the Solidity programming language. It also enables us to test our smart contracts and deploy them to the blockchain. It also gives us a place to develop our client-side application.</p>
+<div class="precode">shell</div>
+
+<pre><code class="language-console">user:~/$ npm install -g truffle</code></pre>
+<h3 id="ganache">Ganache</h3>
+<p>The next dependency is <a href="https://truffleframework.com/ganache" target="_blank">Ganache</a>, a local in-memory blockchain. You can install Ganache by downloading it from the Truffle Framework website. It will give us 10 external accounts with addresses on our local Ethereum blockchain. Each account is preloaded with 100 fake ether.</p>
+<h3 id="metamask">Metamask</h3>
+<p>The next dependency is the <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank">Metamask extension</a> for Google Chrome. In order to interact with the blockchain, we must connect to it. We’ll have to install a special browser extension in order to interact with the Ethereum block chain. That’s where Metamask comes in. We’ll be able to connect to our local Ethereum blockchain with our personal account, and interact with our smart contract.</p>
+<p>We’re going to be using the Metamask chrome extension for this tutorial, so you’ll also need to install the google chrome browser if you don’t have it already. To install Metamask, search for the Metamask Chrome plugin in the Google Chrome web store. Once you’ve installed it, be sure that it is checked in your list of extensions. You’ll see the fox icon in the top right hand side of your Chrome browser when it’s installed. Reference the video walk through if you get stuck!</p>
+</div>
+      <div id="next-page" class="text-center text-sm-right"></div>
+      <div class="py-3 cert-block">
+        <h3>Get Certified</h3>
+        <div class="row">
+          <div class="col-12 col-sm-4">
+            <div class="card">
+              <div class="card-body">
+                <a href="/exams" class="card-text btn btn-gradient px-1 width--full">Take Exam</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+  </section>
+
+  <footer>
+    <footer class="footer-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h4>Online Courses</h4>
+                        <ul>
+                            <li><a href="/blockchain-basic">Blockchain Basic Course</a></li>
+                            <li><a href="/blockchain-advanced">Blockchain Advanced Course</a></li>
+                            <li><a href="/blockchain-professional">Blockchain Professional Course</a></li>
+                            <li><a href="/cloud-computing">Cloud Computing</a></li>
+                            <li><a href="/blockchain-wallet">Blockchain Wallet</a></li>
+                            <li><a href="/video-stream">Study Blockchain in 60minutes</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h4>About</h4>
+                        <ul>
+                            <li><a href="/campus-ambassador">Campus Ambassador</a></li>
+                            <li><a href="/statistics">Statistics</a></li>
+                            <li><a href="/guides">Guides</a></li>
+                        </ul>
+                    </div>
+                </div>
+    
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h4>Useful Links</h4>
+                        <ul>
+                            <!--<li><a href="/faqs">FAQs</a></li>-->
+                            <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
+                            <li><a href="/privacy-policy">Privacy Policy</a></li>
+                            <li><a href="/refund-policy">Refund Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h4>Fund My Degree</h4>
+                        <ul>
+                            <li><a href="/fund-my-degree">Fund My Degree</a></li>
+                            <li><a href="/corporate-sponsorship-donation">Corporate Sponsorship / Donation</a></li>
+                        </ul>
+                    </div>
+    
+                    <br/>
+    
+                    <div class="single-footer-widget">
+                        <h4>NFT Marketplace</h4>
+                        <ul>
+                            <li><a target="_blank" rel="noreferrer" href="https://marketplace.blockdegree.org">NFT Marketplace</a>&nbsp;(&nbsp;in&nbsp;<b style="color: navy;">ALPHA</b>&nbsp;)</li>
+                            <li><a target="_blank" rel="noreferrer" href="https://github.com/XinFinOrg/blockdegree-marketplace">Dev Contribution</a></li>
+                        </ul>
+                    </div>
+                </div>
+    
+                
+            </div>
+        </div>
+    
+    
+        <div class="footer-bottom border-top">
+            <div class="container pt-25 pb-25">
+                <div class="row align-items-center justify-content-between">
+                    <p class="footer-text m-0 col-lg-6 col-md-12">
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script> Built with <i class="fa fa-heart-o" aria-hidden="true"></i> on <a
+                            href="https://Xinfin.org" target="_blank">XinFin Network</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                    <div class="col-lg-6 col-sm-12 footer-social">
+                        <a href="https://www.facebook.com/Blockdegree.org" target="_blank"><i
+                                class="fa fa-facebook"></i></a>
+                        <a href="https://twitter.com/Blockdegree_org" target="_blank"><i class="fa fa-twitter"></i></a>
+    
+                        <a href="https://www.linkedin.com/company/blockdegree" target="_blank"><i
+                                class="fa fa-linkedin"></i></a>
+                        <a href="https://www.youtube.com/channel/UCXf6t8erj-TQSdJPuSGJtig" target="_blank"><i
+                                class="fa fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </footer>
+    <hr class="hr-primary" />  </footer>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  <script src="/js/vendor/jquery.magnific-popup.min.js"></script>
+  <script src="/js/vendor/jquery-ui.js"></script>
+  <script src="/js/vendor/superfish.min.js"></script>
+  <script src="/js/vendor/jquery.ajaxchimp.min.js"></script>
+  <script src="/js/vendor/slick.min.js"></script>
+  <script src="/js/pageHandlebars.js"></script>
+  <script src="/js/main.js?v=1.41"></script>
+  
+<script src="/js/modMenu.js"></script>
+<script src="/js/cachedMenu.js"></script>
+
+    <script type="text/javascript">
+      var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/5d7f1911c22bdd393bb5fcce/default';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+      })();
+</script>
+<!--End of Tawk.to Script-->
+  </body>
+
+</html>

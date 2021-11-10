@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Zinfin">
+  <meta name="google-site-verification" content="f_YfGpOcLbSzXjgh7Sok66ZBFNjvH2Lt5KCZwxG9AwM" />
+  <meta name="description" content=Professional blockchain training course by Blockdegree>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/img/brand/blockdegree_favicon.png">
+  <title>
+    Blockdegree Blockchain Training
+  </title>
+  <link rel="stylesheet" href="/css/linearicons.css?v=1.1">
+  <link rel="stylesheet" href="/css/font-awesome.min.css?v=1.1">
+  <link rel="stylesheet" href="/css/bootstrap.css?v=1.1">
+  <link rel="stylesheet" href="/css/magnific-popup.css?v=1.1">
+  <link rel="stylesheet" href="/css/nice-select.css?v=1.1">
+  <link rel="stylesheet" href="/css/animate.min.css?v=1.1">
+  <link rel="stylesheet" href="/css/jquery-ui.css?v=1.1">
+  <link rel="stylesheet" href="/css/slick.css?v=1.1">
+  <link rel="stylesheet" href="/css/slick-theme.css?v=1.1">
+  <link rel="stylesheet" href="/css/login-form.css?v=1.1">
+  <link rel="stylesheet" href="/css/main.css?v=1.55">
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="/js/vendor/bootstrap-notify.js"></script>
+  <script src="/js/vendor/handlebars-v4.0.12.js"></script>
+  <script src="/js/utils.js?v=1.1"></script>
+
+
+  <!-- Home page banner slider CSS -->
+  <link href="/css/nivoslider/nivo-slider.css" rel="stylesheet" />
+</head>
+
+<body class=course-module>
+  <header id="header">
+    <div class="container main-menu">
+      <div class="row align-items-center justify-content-between d-flex">
+        <div id="logo">
+          <a href="/"><img src="/img/brand/blockdegree_dark.png?v=2" alt="blockdegree blockchain education training"
+              class="logo-dark" /></a>
+          <a href="/"><img src="/img/brand/blockdegree_white.png?v=2" alt="blockdegree blockchain education training"
+              class="logo-white" /></a>
+        </div>
+
+        <nav id="nav-menu-container">
+          <ul class="nav-menu">
+            <li class="menu-has-children">
+              <a class="py-1">Courses</a>
+              <ul>
+                <li><a href="/blockchain-basic">Blockchain Basic Course for Engineer</a></li>
+                <li><a href="/blockchain-advanced">Blockchain Advanced Course for Engineer</a></li>
+                <li><a href="/blockchain-professional">Blockchain Professional Course for Engineer</a></li>
+                <li><a href="/cloud-computing">Cloud Computing</a></li>
+
+                <li><a href="/blockchain-wallet">Blockchain Wallet</a></li>
+                <li><a href="/video-stream">Study Blockchain in 60minutes</a></li>
+              </ul>
+            </li>
+            <li><a href="/exams" class="py-1">Enroll</a></li>
+            <li><a href="/profile" id="profile-btn" class="py-1">Profile</a></li>
+            <li><a href="/verify-certification" class="py-1">Verify Certification</a></li>
+            <li><a href="/fund-my-degree" class="py-1">Fund My Degree</a></li>
+            <li><a href="/forum" class="py-1">Forum</a></li>
+            <li><a href="/contact" class="py-1">Contact Us</a></li>
+            <!--<li><a href="/campus-ambassador" class="py-1">Campus Ambassador</a></li>-->
+            <li id="login-btn">
+              <a id="nav-login" href="/login" class="btn btn-primary btn-cstm-rounded px-5 py-1 text-white">Login</a>
+            </li>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="hero-banner hero-overlay" style="background: url('/img/top-banner.jpg') center/cover;">
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="hero-banner__content text-center">
+            <h1 class="text-white">Blockchain professional course for engineer</h1>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mx-0">
+      <div class="col-12 col-sm-4 px-0">
+        <!-- refer to https://bitcoin.org/en/developer-guide#block-chain-overview -->
+        <nav class="py-2 py-sm-5 px-3 border-right height--full mod__sidebar" id=2 style="background: #fafbfc;">
+          <div class="d-sm-none toggle-curriculum px-4 py-2 bg-warning">View curriculum</div>
+          <div id="mod__details">
+            <script id="module-template" type="text/x-handlebars-template">
+
+          {{#with courses.[2] }}
+    
+            {{#each curriculum as |ccm|}}
+    
+              {{#if ccm.sub-topic}}
+              <ul id="acc__mod-{{@index}}"> {{else}}
+              <ul> {{/if}}
+    
+                  <!-- Heading -->
+                  <li
+                    {{#if ccm.sub-topic}}
+                      id="{{url ccm.topic}}"
+                      class="with-child"
+                      data-toggle="collapse"
+                      data-target="#sub-{{@index}}"
+                      aria-expandeded="false"
+                    {{/if}}>
+                    <div class="row px-2 py-3">
+                      <div class="col-10">
+                        <a href="{{url ccm.topic}}">
+                          <h4 class="mod__heading"> {{ccm.topic}}</h4>
+                        </a>
+                      </div>
+                      {{#if ccm.sub-topic}}
+                        <div class="col-1 arrow"
+                             id="{{url ccm.topic}}"
+                             class="with-child"
+                             data-toggle="collapse"
+                             data-target="#sub-{{@index}}"
+                             aria-expanded="false">
+                           &#x25BC;
+                       </div>
+                     {{/if}}
+                   </div>
+                  </li>
+                  <!-- End heading -->
+    
+                  <!-- Start sub-heading if there is -->
+                  {{#if ccm.sub-topic}}
+                    <ul id="sub-{{@index}}" class="collapse side-nav__child">
+    
+                      {{#each ccm.sub-topic as |sub|}}
+                        <li class="pl-4 py-3">
+                          <a id="{{url sub}}" href="{{url ccm.topic}}#{{url sub}}">
+                            <h5 class="mod__sub-heading">{{sub}}</h5>
+                          </a>
+                        </li> {{/each}}
+    
+                    </ul>
+                  {{/if}}
+                  <!-- End sub-heading if there is -->
+    
+                </ul>
+              {{/each}}
+            {{/with}}
+    
+    
+        </script>
+          </div>
+        </nav>
+      </div>
+
+      <div class="col-12 col-sm-8 p-4 module-content">
+        <div class="container py-2">
+          <h2 id="Implementing voting on client side">Implementing voting on client side</h2>
+          <div>
+            <p>Let&#39;s add a form that allows accounts to vote below the table in our <code>index.html</code></p>
+            <div class="precode">~/election/src/index.html</div>
+
+            <pre><code class="language-html">&lt;form onSubmit=&quot;App.castVote(); return false;&quot;&gt;
+  &lt;div class=&quot;form-group&quot;&gt;
+    &lt;label for=&quot;candidatesSelect&quot;&gt;Select Candidate&lt;/label&gt;
+    &lt;select class=&quot;form-control&quot; id=&quot;candidatesSelect&quot;&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
+  &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Vote&lt;/button&gt;
+  &lt;hr /&gt;
+&lt;/form&gt;</code></pre>
+            <p>Let&#39;s examine a few things about this form:</p>
+            <p>We create the form with an empty select element. We will populate the select options with the candidates
+              provided by our smart contract in our <code>app.js</code>.</p>
+            <p>The form has an <code>onSubmit</code> handler that will call the <code>castVote</code> function. We will
+              define this in our <code>app.js</code>.</p>
+            <p>Now let&#39;s update our <code>app.js</code> to handle both of those things. First we list all the
+              candidates from the smart contract inside the form&#39;s select element. Then we&#39;ll hide the form on
+              the page once the account has voted. We&#39;ll update the render function to look like this:</p>
+            <div class="precode">~/election/src/app.js</div>
+
+            <pre><code class="language-javascript">render: function() {
+  var electionInstance;
+  var loader = $(&quot;#loader&quot;);
+  var content = $(&quot;#content&quot;);
+
+  loader.show();
+  content.hide();
+
+  // Load account data
+  web3.eth.getCoinbase(function(err, account) {
+    if (err === null) {
+      App.account = account;
+      $(&quot;#accountAddress&quot;).html(&quot;Your Account: &quot; + account);
+    }
+  });
+
+  // Load contract data
+  App.contracts.Election.deployed().then(function(instance) {
+    electionInstance = instance;
+    return electionInstance.candidatesCount();
+  }).then(function(candidatesCount) {
+    var candidatesResults = $(&quot;#candidatesResults&quot;);
+    candidatesResults.empty();
+
+    var candidatesSelect = $(&#39;#candidatesSelect&#39;);
+    candidatesSelect.empty();
+
+    for (var i = 1; i &lt;= candidatesCount; i++) {
+      electionInstance.candidates(i).then(function(candidate) {
+        var id = candidate[0];
+        var name = candidate[1];
+        var voteCount = candidate[2];
+
+
+        // Render candidate Result
+        var candidateTemplate = &quot;&lt;tr&gt;&lt;th&gt;&quot; + id + &quot;&lt;/th&gt;&lt;td&gt;&quot; + name + &quot;&lt;/td&gt;&lt;td&gt;&quot; + voteCount + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;
+        candidatesResults.append(candidateTemplate);
+
+        // Render candidate ballot option
+        var candidateOption = &quot;&lt;option value=&#39;&quot; + id + &quot;&#39; &gt;&quot; + name + &quot;&lt;/ option&gt;&quot;
+        candidatesSelect.append(candidateOption);
+      });
+    }
+    return electionInstance.voters(App.account);
+  }).then(function(hasVoted) {
+    // Do not allow a user to vote
+    if(hasVoted) {
+      $(&#39;form&#39;).hide();
+    }
+    loader.hide();
+    content.show();
+  }).catch(function(error) {
+    console.warn(error);
+  });
+}</code></pre>
+            <p>Next, we want to write a function that&#39;s called whenever the form is submitted:</p>
+            <div class="precode">~/election/src/app.js</div>
+
+            <pre><code class="language-javascript">...
+castVote: function() {
+    var candidateId = $(&#39;#candidatesSelect&#39;).val();
+    App.contracts.Election.deployed().then(function(instance) {
+      return instance.vote(candidateId, { from: App.account });
+    }).then(function(result) {
+      // Wait for votes to update
+      $(&quot;#content&quot;).hide();
+      $(&quot;#loader&quot;).show();
+    }).catch(function(err) {
+      console.error(err);
+    });
+  }
+...</code></pre>
+            <p>First, we query for the <code>candidateId</code> in the form. When we call the vote function from our
+              smart contract, we pass in this id, and we provide the current account with the function&#39;s
+              &quot;from&quot; metadata. This will be an asynchronous call. When it is finished, we&#39;ll show the
+              loader and hide the page content. Whenever the vote is recorded, we&#39;ll do the opposite, showing the
+              content to the user again.</p>
+            <p>Now your front-end application should look like this:
+              <img src="/img/courses/bc-pro/election-mockup.jpg" alt="election frontend" />
+            </p>
+            <p>Go ahead and try the voting function. Once you do, you should see a Metamask confirmation pop up.
+              <img src="/img/courses/bc-pro/metamask.jpg" alt="metamask" />
+            </p>
+            <p>Once you click submit, you&#39;ve successfully casted a vote! You&#39;ll still see a loading screen. For
+              now, you&#39;ll have to refresh the page to see the votes recorded. We&#39;ll implement the functionality
+              update the loader automatically</p>
+            <p>The very last step in this tutorial is to trigger an event whenever a vote is cast. This will allow us to
+              update our client-side application when an account has voted. Fortunately, this is quite easy. Let&#39;s
+              start by declaring an event in our contract like this:</p>
+            <div class="precode">~/election/contracts/election.sol</div>
+
+            <pre><code class="language-javascript">contract Election {
+  ...
+  event votedEvent (
+    uint indexed _candidateId
+  );
+  ...
+}</code></pre>
+            <p>Now we can trigger this &quot;voted&quot; event inside our <code>vote</code> function like this:</p>
+            <div class="precode">~/election/contracts/election.sol</div>
+
+            <pre><code class="language-javascript">function vote (uint _candidateId) public {
+  // require that they haven&#39;t voted before
+  require(!voters[msg.sender]);
+
+  // require a valid candidate
+  require(_candidateId &gt; 0 &amp;&amp; _candidateId &lt;= candidatesCount);
+
+  // record that voter has voted
+  voters[msg.sender] = true;
+
+  // update candidate vote Count
+  candidates[_candidateId].voteCount ++;
+
+  // trigger voted event
+  votedEvent(_candidateId);
+}</code></pre>
+            <p>Now that we&#39;ve updated our contract, we must run our migrations</p>
+            <div class="precode">shell</div>
+
+            <pre><code class="language-console">user:~/election$: truffle migrate --reset</code></pre>
+            <p>We can also update our tests to check for this voting event like this</p>
+            <div class="precode">~/election/test/election.js</div>
+
+            <pre><code class="language-javascript">it(&quot;allows a voter to cast a vote&quot;, function() {
+  return Election.deployed().then(function(instance) {
+    electionInstance = instance;
+    candidateId = 1;
+    return electionInstance.vote(candidateId, { from: accounts[0] });
+  }).then(function(receipt) {
+    assert.equal(receipt.logs.length, 1, &quot;an event was triggered&quot;);
+    assert.equal(receipt.logs[0].event, &quot;votedEvent&quot;, &quot;the event type is correct&quot;);
+    assert.equal(receipt.logs[0].args._candidateId.toNumber(), candidateId, &quot;the candidate id is correct&quot;);
+    return electionInstance.voters(accounts[0]);
+  }).then(function(voted) {
+    assert(voted, &quot;the voter was marked as voted&quot;);
+    return electionInstance.candidates(candidateId);
+  }).then(function(candidate) {
+    var voteCount = candidate[2];
+    assert.equal(voteCount, 1, &quot;increments the candidate&#39;s vote count&quot;);
+  })
+});</code></pre>
+            <p>This test inspects the transaction receipt returned by the <code>vote</code> function to ensure that it
+              has logs. These logs contain the event that was triggered. We check that the event is the correct type,
+              and that it has the correct candidate id.</p>
+            <p>Now let&#39;s update the client-side application to listen for the voted event and fire a page refresh
+              any time that it is triggered. We can do that with a <code>listenForEvents</code> function like this:</p>
+            <div class="precode">~/election/src/app.js</div>
+
+            <pre><code class="language-javascript">...
+listenForEvents: function() {
+  App.contracts.Election.deployed().then(function(instance) {
+    instance.votedEvent({}, {
+      fromBlock: 0,
+      toBlock: &#39;latest&#39;
+    }).watch(function(error, event) {
+      console.log(&quot;event triggered&quot;, event)
+      // Reload when a new vote is recorded
+      App.render();
+    });
+  });
+}</code></pre>
+            <p>This function does a few things. First, we subscribe to the voted event by calling the
+              <code>votedEvent</code> function. We pass in some metadata that tells us to listen to all events on the
+              blockchain. Then we &quot;watch&quot; this event. Inside here, we log to the console anytime a
+              <code>votedEvent</code> is triggered. We also re-render all the content on the page. This will get rid of
+              the loader after the vote has been recorded, and show the updated vote count on the table.
+            </p>
+            <p>Finally, we can call this function whenever we initialize the contract:</p>
+            <div class="precode">~/election/src/app.js</div>
+
+            <pre><code class="language-javascript">...
+initContract: function() {
+  $.getJSON(&quot;Election.json&quot;, function(election) {
+    // Instantiate a new truffle contract from the artifact
+    App.contracts.Election = TruffleContract(election);
+    // Connect provider to interact with contract
+    App.contracts.Election.setProvider(App.web3Provider);
+
+    App.listenForEvents();
+
+    return App.render();
+  });
+}</code></pre>
+            <p>Now, you can vote on your client-side application, and watch the votes recorded in real time! Be patient,
+              it might take a few seconds for the event to trigger. If you don&#39;t see an event, try restarting
+              Chrome. There is a known issue with Metamask surrounding events. Restarting Chrome always fixes it for me.
+            </p>
+            <p>Congratulations! You have successfully built a full stack decentralized application on the Ethereum
+              blockchain!</p>
+          </div>
+          <div id="next-page" class="text-center text-sm-right"></div>
+          <div class="py-3">
+            <p class="mb-3 exam-qns text-lg">Quiz</p>
+            <form id="quiz-questions-form">
+              <div id="quiz-questions-wrapper"></div>
+            </form>
+          </div>
+          <div class="py-3 cert-block">
+            <h3>Get Certified</h3>
+            <div class="row">
+              <div class="col-12 col-sm-4">
+                <div class="card">
+                  <div class="card-body">
+                    <a href="/exams" class="card-text btn btn-gradient px-1 width--full">Take Exam</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </section>
+
+  <footer>
+    <footer class="footer-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="single-footer-widget">
+              <h4>Online Courses</h4>
+              <ul>
+                <li><a href="/blockchain-basic">Blockchain Basic Course</a></li>
+                <li><a href="/blockchain-advanced">Blockchain Advanced Course</a></li>
+                <li><a href="/blockchain-professional">Blockchain Professional Course</a></li>
+                <li><a href="/cloud-computing">Cloud Computing</a></li>
+                <li><a href="/blockchain-wallet">Blockchain Wallet</a></li>
+                <li><a href="/video-stream">Study Blockchain in 60minutes</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="single-footer-widget">
+              <h4>About</h4>
+              <ul>
+                <li><a href="/campus-ambassador">Campus Ambassador</a></li>
+                <li><a href="/statistics">Statistics</a></li>
+                <li><a href="/guides">Guides</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="single-footer-widget">
+              <h4>Useful Links</h4>
+              <ul>
+                <!--<li><a href="/faqs">FAQs</a></li>-->
+                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
+                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/refund-policy">Refund Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="single-footer-widget">
+              <h4>Fund My Degree</h4>
+              <ul>
+                <li><a href="/fund-my-degree">Fund My Degree</a></li>
+                <li><a href="/corporate-sponsorship-donation">Corporate Sponsorship / Donation</a></li>
+              </ul>
+            </div>
+
+            <br />
+
+            <div class="single-footer-widget">
+              <h4>NFT Marketplace</h4>
+              <ul>
+                <li><a target="_blank" rel="noreferrer" href="https://marketplace.blockdegree.org">NFT
+                    Marketplace</a>&nbsp;(&nbsp;in&nbsp;<b style="color: navy;">ALPHA</b>&nbsp;)</li>
+                <li><a target="_blank" rel="noreferrer" href="https://github.com/XinFinOrg/blockdegree-marketplace">Dev
+                    Contribution</a></li>
+              </ul>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+
+      <div class="footer-bottom border-top">
+        <div class="container pt-25 pb-25">
+          <div class="row align-items-center justify-content-between">
+            <p class="footer-text m-0 col-lg-6 col-md-12">
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              Copyright &copy;
+              <script>
+                document.write(new Date().getFullYear());
+              </script> Built with <i class="fa fa-heart-o" aria-hidden="true"></i> on <a href="https://Xinfin.org"
+                target="_blank">XinFin Network</a>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+            <div class="col-lg-6 col-sm-12 footer-social">
+              <a href="https://www.facebook.com/Blockdegree.org" target="_blank"><i class="fa fa-facebook"></i></a>
+              <a href="https://twitter.com/Blockdegree_org" target="_blank"><i class="fa fa-twitter"></i></a>
+
+              <a href="https://www.linkedin.com/company/blockdegree" target="_blank"><i class="fa fa-linkedin"></i></a>
+              <a href="https://www.youtube.com/channel/UCXf6t8erj-TQSdJPuSGJtig" target="_blank"><i
+                  class="fa fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </footer>
+    <hr class="hr-primary" />
+  </footer>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+  <script src="/js/vendor/jquery.magnific-popup.min.js"></script>
+  <script src="/js/vendor/jquery-ui.js"></script>
+  <script src="/js/vendor/superfish.min.js"></script>
+  <script src="/js/vendor/jquery.ajaxchimp.min.js"></script>
+  <script src="/js/vendor/slick.min.js"></script>
+  <script src="/js/pageHandlebars.js"></script>
+  <script src="/js/main.js?v=1.41"></script>
+
+  <script src="/js/modMenu.js"></script>
+  <script src="/js/cachedMenu.js"></script>
+
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function () {
+      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/5d7f1911c22bdd393bb5fcce/default';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  </script>
+  <!--End of Tawk.to Script-->
+  <script type="text/javascript">
+    const getQuestionHtml = ({ id, question, choices }) => `<div class="mb-4">
+        <div class="card bg-light py-3 px-4">
+          <p id="q0" class="mb-3 exam-qns ">
+            ${id + 1}. ${question}
+          </p>
+          <div class="row">
+            ${choices.map((choice, index) => `<div class="col-12 col-md-6">
+                      <div class="exam-choice d-flex align-items-baseline">
+                        <input class="q_option" style="flex: 0 0 15px;" type="radio" id="q${id}-c${index}" name="q${id}" value="${index}">
+                        <label for="q${id}-c${index}">${choice}</label>
+                      </div>
+                    </div>`).join('')}
+          </div>
+        </div>
+        <div class="my-2 text-sm" id="helpText-${id}" style="min-height: 1.75rem;">
+        </div>
+      </div>`;
+    $(document).ready(function () {
+      const pageNo = 5, perPage = 7;
+      $.ajax({
+        type: "get",
+        data: { pageNo, perPage },
+        url: "/api/questionsProfessional",
+        success: (result) => {
+          const questions = result.questions
+          $('#quiz-questions-wrapper').html(
+            questions.map((q, id) =>
+              getQuestionHtml({ id, question: q.question, choices: q.choices })
+            ).join('') +
+            `<button type="button" id="quiz-questions-submit" class="card-text btn btn-gradient">Submit</button>`
+          )
+          $("#quiz-questions-submit").on('click', () => {
+            $.ajax({
+              type: "get",
+              data: { pageNo, perPage },
+              url: "/api/AnswersProfessional",
+              success: (result) => {
+                console.log(result.answers)
+                if (Array.isArray(result.answers)) {
+                  questions.forEach((q, qid) => {
+                    const choiceId = parseInt($("#quiz-questions-form")[0][`q${qid}`].value)
+                    clickedOption(qid, choiceId, questions, result.answers[qid] - 1)
+                  });
+                }
+              },
+              error: (jqXHR, status, err) => {
+                console.log(jqXHR, status, err)
+              },
+            });
+          })
+        },
+        error: (jqXHR, status, err) => {
+          console.log(jqXHR, status, err)
+        },
+      });
+      const colorSuccess = "#28a745"
+      const colorFail = "##dc3545"
+      function clickedOption(questionId, choiceId, questions, answerId) {
+        const question = questions.find((q, i) => i == questionId)
+        const answer = question.choices[answerId]
+        if (answerId == choiceId) {
+          $(`#helpText-${questionId}`).html(`<span class="icon" style="width: 10px;height: 10px;font-size: 10px;background-color:${colorSuccess};"></span><span class="text">Correct Answer!</span>`)
+        } else if (Number.isNaN(choiceId)) {
+          $(`#helpText-${questionId}`).html(`
+          <span class="icon" style="width: 10px;height: 10px;font-size: 10px;background-color:${colorFail};"></span>
+          <span class="text">Correct Answer is:&nbsp;
+            <span class="font-weight-bold">${answer}</span>
+          </span>
+          `)
+        } else {
+          $(`#helpText-${questionId}`).html(`
+          <span class="icon" style="width: 10px;height: 10px;font-size: 10px;background-color:${colorFail};"></span>
+          <span class="text">Wrong Answer!, Correct Answer is:&nbsp;
+            <span class="font-weight-bold">${answer}</span>
+          </span>
+          `)
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
