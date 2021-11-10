@@ -44,7 +44,7 @@ function createUserReferral(email) {
       const newCode = new UserReferral({
         email: email,
         referralCode: refCode,
-        longUrl: `http://localhost:3000/login?refId=${refCode}`,
+        longUrl: `https://www.blockdegree.org/login?refId=${refCode}`,
         registrations: [],
       });
       await newCode.save();

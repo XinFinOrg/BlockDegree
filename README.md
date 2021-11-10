@@ -15,7 +15,7 @@ Entire Course access is free but Nominal fees will be charge, if you like to get
 Certification will be issue on XinFin Public Blockchain (More detail: XinFin.org).
 
 We invite Educational Institute to be part of Education Initiative.
-http://localhost:3000
+https://www.blockdegree.org
 
 # Free blockchain education resource
 __Learn how to become a blockchain professional__

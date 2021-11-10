@@ -50,7 +50,7 @@ class FacebookRefresh extends Component {
       };
     var that = this;
     that._oauthWindow = window.open(
-      "http://localhost:3000/admin/facebookRefresh?close=true",
+      "https://www.blockdegree.org/admin/facebookRefresh?close=true",
       options.windowName,
       options.windowOptions
     );

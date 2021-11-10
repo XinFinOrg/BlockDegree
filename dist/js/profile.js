@@ -6,7 +6,7 @@ if (typeof jQuery != "undefined") {
       success: (result) => {
         if (!result.status) {
           alert("You are not logged in, please visit after logging in");
-          window.location.replace("http://localhost:3000/login");
+          window.location.replace("https://www.blockdegree.org/login");
         } else {
           let kycStatus;
           $.ajax({
@@ -217,12 +217,12 @@ if (typeof jQuery != "undefined") {
           }
         } else {
           alert("You're not logged in");
-          window.location.replace("http://localhost:3000/login");
+          window.location.replace("https://www.blockdegree.org/login");
         }
       },
       error: (err) => {
         alert("Error while getting the current user");
-        window.location.replace("http://localhost:3000/login");
+        window.location.replace("https://www.blockdegree.org/login");
       },
     });
   }
@@ -362,12 +362,12 @@ if (typeof jQuery != "undefined") {
             }
           } else {
             alert("Please log in to continue");
-            window.location.reload("http://localhost:3000/login");
+            window.location.reload("https://www.blockdegree.org/login");
           }
         },
         error: (err) => {
           alert("Error while getting current user");
-          window.location.reload("http://localhost:3000/login");
+          window.location.reload("https://www.blockdegree.org/login");
         },
       });
     }
@@ -417,12 +417,12 @@ if (typeof jQuery != "undefined") {
           }
         } else {
           alert("Please log in to continue");
-          window.location.reload("http://localhost:3000/login");
+          window.location.reload("https://www.blockdegree.org/login");
         }
       },
       error: (err) => {
         alert("Error while getting current user");
-        window.location.reload("http://localhost:3000/login");
+        window.location.reload("https://www.blockdegree.org/login");
       },
     });
   }

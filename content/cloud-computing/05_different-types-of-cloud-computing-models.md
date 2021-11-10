@@ -8,7 +8,7 @@ courseIdx: 3
 
 - There are four main cloud computing deployment options: private, public,  hybrid clouds and multi clouds, Each has its own advantages and disadvantages and which one you (or your business) choose will depend on your data as well as the level of security and management you need.
 
-  ![](http://localhost:3000/img/cloud-computing-imges/differnt_type-of-cloud.png)
+  ![](https://www.blockdegree.org/img/cloud-computing-imges/differnt_type-of-cloud.png)
 
 ### 1. Public:-
     - A public cloud is probably the most commonly understood cloud computing option. This is where all the services and supporting infrastructure are managed off-site over the Internet and shared across multiple users (or tenants).
@@ -26,7 +26,7 @@ courseIdx: 3
 
      Hybrid cloud environments combine both private and public cloud elements to varying degrees. Despite operating independently, the clouds in a hybrid environment communicate over an encrypted connection and allow for the portability of data and applications. This is an increasingly popular cloud solution because it allows organizations greater flexibility to meet their IT needs. 
 
-     ![](http://localhost:3000/img/cloud-computing-imges/hybrid.png)
+     ![](https://www.blockdegree.org/img/cloud-computing-imges/hybrid.png)
 
 
 ### 4. Multi Cloud:-

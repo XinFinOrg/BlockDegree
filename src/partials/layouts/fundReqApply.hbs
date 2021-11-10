@@ -248,7 +248,7 @@
 						<div class="modal-footer">
 							<div>
 								<div>Don't have&nbsp;<strong>XDC&nbsp;<img
-											src="http://localhost:3000/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
+											src="https://www.blockdegree.org/e.org/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
 									?&nbsp;Buy from <a href="https://alphaex.net" target="_blank">AlphaEx</a> or <a
 										href="https://stex.com" target="_blank">Stex</a>
 								</div>
@@ -369,18 +369,18 @@
 	);
 
 	function handleAuthTwitter() {
-		// window.location.replace("http://localhost:3000/auth/twitter")
+		// window.location.replace("https://www.blockdegree.org/e.org/auth/twitter")
 		selectedPlatform = "twitter"
 		popupLogin({
-			path: "http://localhost:3000/auth/twitter?close=true",
+			path: "https://www.blockdegree.org/e.org/auth/twitter?close=true",
 		});
 	}
 
 	function handleAuthLinkedin() {
-		// window.location.replace("http://localhost:3000/auth/linkedin")
+		// window.location.replace("https://www.blockdegree.org/e.org/auth/linkedin")
 		selectedPlatform = "linkedin"
 		popupLogin({
-			path: "http://localhost:3000/auth/linkedin?close=true",
+			path: "https://www.blockdegree.org/e.org/auth/linkedin?close=true",
 		});
 	}
 
@@ -403,7 +403,7 @@
 		that._oauthInterval = window.setInterval(function () {
 			if (that._oauthWindow.location.href == "http://localhost:3000") {
 				that._oauthWindow.location.href ==
-					"http://localhost:3000/closeCallback";
+					"https://www.blockdegree.org/e.org/closeCallback";
 			}
 		}, 1000);
 	}
