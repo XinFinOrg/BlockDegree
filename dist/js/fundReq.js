@@ -86,7 +86,7 @@ $(document).ready(() => {
 
   window.addEventListener("message", function (event) {
     if (
-      event.origin == "https://www.blockdegree.org" ||
+      event.origin == "https://newuat.blockdegree.org" ||
       event.origin == "https://blockdegree.org"
     ) {
       if (event.data == "share") {
@@ -942,7 +942,7 @@ function handleAuthTwitterShare() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "https://www.blockdegree.org/auth/twitter?close=true&share=true",
+    "https://newuat.blockdegree.org/auth/twitter?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -951,7 +951,7 @@ function handleAuthLinkedinShare() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "https://www.blockdegree.org/auth/linkedin?close=true&share=true",
+    "https://newuat.blockdegree.org/auth/linkedin?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -1487,7 +1487,7 @@ function payRazorpay(fundId, amount) {
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image: "https://www.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
+          image: "https://newuat.blockdegree.org/img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {

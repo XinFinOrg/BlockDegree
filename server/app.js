@@ -66,7 +66,7 @@ const sessionParser = session({
     host: "localhost",
     port: 6379,
   }),
-  secret: "",
+  secret: "test",
   resave: true,
   rolling: true,
   saveUninitialized: true,
@@ -116,7 +116,7 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-const server = app.listen("3000", async () => {
+const server = app.listen("3005", async () => {
   pendingTx.emit("initiatePendingTx");
   pendingTx.emit("initiatePendingBurn");
   pendingTx.emit("syncPendingBurnFMD");
@@ -172,5 +172,5 @@ function connectToMongoDB() {
     setTimeout(connectToMongoDB, 5000);
   }
 }
-require("./listeners/websocketServer").server(server, sessionParser);
+// require("./listeners/websocketServer").server(server, sessionParser);
 module.exports = app;

@@ -37,7 +37,7 @@
                 <div id="video-wrapper">
                     <input type="text" id="qnaEmail" name="qnaEmail">
                     <video id="videoPlayer" controlsList="nodownload" controls width="600px" height="400px">
-                        <source id="videoPlayerSource" src="https://www.blockdegree.org/api/videoStream/1"
+                        <source id="videoPlayerSource" src="https://newuat.blockdegree.org/api/videoStream/1"
                             type="video/mp4">
                     </video>
                 </div>
@@ -208,7 +208,7 @@
                 })
                 return;
             }
-            $('#videoPlayerSource').attr('src', `https://www.blockdegree.org/api/videoStream/${videoId}`)
+            $('#videoPlayerSource').attr('src', `https://newuat.blockdegree.org/api/videoStream/${videoId}`)
             videoPlayer.load();
             videoPlayer.play();
             $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
