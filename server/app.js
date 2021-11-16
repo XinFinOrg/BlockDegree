@@ -20,7 +20,7 @@ const { forceReSync } = require("./services/postSocials");
 const redis = require("redis");
 
 let RedisStore = require("connect-redis")(session);
-let redisClient = redis.createClient({ prefix: "blockdegree" });
+let redisClient = redis.createClient({ prefix: "blockdegree-test" });
 global.RedisClient = redisClient;
 let app = express();
 require("dotenv").config();
