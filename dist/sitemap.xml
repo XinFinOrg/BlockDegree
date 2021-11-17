@@ -2,103 +2,103 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
-    <loc>http://localhost:3000/</loc>
+    <loc>https://newuat.blockdegree.org//</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/guides</loc>
+    <loc>https://newuat.blockdegree.org//guides</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/privacy-policy</loc>
+    <loc>https://newuat.blockdegree.org//privacy-policy</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/terms-and-conditions</loc>
+    <loc>https://newuat.blockdegree.org//terms-and-conditions</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/verify-certification</loc>
+    <loc>https://newuat.blockdegree.org//verify-certification</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/login</loc>
+    <loc>https://newuat.blockdegree.org//login</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/contact</loc>
+    <loc>https://newuat.blockdegree.org//contact</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/blockchain-professional</loc>
+    <loc>https://newuat.blockdegree.org//blockchain-professional</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/</loc>
+    <loc>https://newuat.blockdegree.org//</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/profile</loc>
+    <loc>https://newuat.blockdegree.org//profile</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/blockchain-advanced</loc>
+    <loc>https://newuat.blockdegree.org//blockchain-advanced</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/login?from=blockchain-professional</loc>
+    <loc>https://newuat.blockdegree.org//login?from=blockchain-professional</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/register</loc>
+    <loc>https://newuat.blockdegree.org//register</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/blockchain-basic</loc>
+    <loc>https://newuat.blockdegree.org//blockchain-basic</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/login?from=blockchain-advanced</loc>
+    <loc>https://newuat.blockdegree.org//login?from=blockchain-advanced</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/login?from=blockchain-basic</loc>
+    <loc>https://newuat.blockdegree.org//login?from=blockchain-basic</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/forgotpassword.html</loc>
+    <loc>https://newuat.blockdegree.org//forgotpassword.html</loc>
     <lastmod>2019-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

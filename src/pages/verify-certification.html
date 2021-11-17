@@ -244,8 +244,8 @@ certification"}}
 
     window.addEventListener("message", function (event) {
       if (
-        event.origin == "http://localhost:3000" ||
-        event.origin == "http://localhost:3000"
+        event.origin == "https://newuat.blockdegree.org/" ||
+        event.origin == "https://newuat.blockdegree.org/"
       ) {
         if (event.data == "ok") {
           console.log("message from popup.");
@@ -684,14 +684,14 @@ certification"}}
 
     function handleAuthTwitter() {
       return window.open(
-        "http://localhost:3000/auth/twitter?close=true",
+        "https://newuat.blockdegree.org//auth/twitter?close=true",
         "newwin",
         "height=600px,width=600px"
       );
     }
     function handleAuthLinkedin() {
       return window.open(
-        "http://localhost:3000/auth/linkedin?close=true",
+        "https://newuat.blockdegree.org//auth/linkedin?close=true",
         "newwin",
         "height=600px,width=600px"
       );

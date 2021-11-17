@@ -17,7 +17,7 @@ class UserInfo extends Component {
   render() {
     let { auth } = this.props;
     // if (!auth || !auth.status){
-    //   window.location.replace("http://localhost:3000");
+    //   window.location.replace("https://newuat.blockdegree.org/");
     // }
     return (
       <div className="user-wrapper">

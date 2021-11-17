@@ -86,8 +86,8 @@ $(document).ready(() => {
 
   window.addEventListener("message", function (event) {
     if (
-      event.origin == "http://localhost:3000" ||
-      event.origin == "http://localhost:3000"
+      event.origin == "https://newuat.blockdegree.org/" ||
+      event.origin == "https://newuat.blockdegree.org/"
     ) {
       if (event.data == "share") {
         console.log("message from popup.");
@@ -942,7 +942,7 @@ function handleAuthTwitterShare() {
   loginTwitter = true;
   loginLinkedin = false;
   return window.open(
-    "http://localhost:3000/auth/twitter?close=true&share=true",
+    "https://newuat.blockdegree.org//auth/twitter?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -951,7 +951,7 @@ function handleAuthLinkedinShare() {
   loginTwitter = false;
   loginLinkedin = true;
   return window.open(
-    "http://localhost:3000/auth/linkedin?close=true&share=true",
+    "https://newuat.blockdegree.org//auth/linkedin?close=true&share=true",
     "newwin",
     "height=600px,width=600px"
   );
@@ -1487,7 +1487,7 @@ function payRazorpay(fundId, amount) {
           currency: "INR",
           name: userName,
           description: "Online Education",
-          image: "http://localhost:3000/img/brand/blockdegree_dark.png?v=2",
+          image: "https://newuat.blockdegree.org//img/brand/blockdegree_dark.png?v=2",
           order_id: orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           handler: function (response) {
             const {

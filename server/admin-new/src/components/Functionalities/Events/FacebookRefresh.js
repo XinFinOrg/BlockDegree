@@ -30,8 +30,8 @@ class FacebookRefresh extends Component {
 
   handleSuccess = event => {
     if (
-      event.origin === "http://localhost:3000" ||
-      event.origin === "http://localhost:3000"
+      event.origin === "https://newuat.blockdegree.org/" ||
+      event.origin === "https://newuat.blockdegree.org/"
     ) {
       console.log("From PopUp", event.data);
       this.setState({ showSuccess: true });
@@ -50,7 +50,7 @@ class FacebookRefresh extends Component {
       };
     var that = this;
     that._oauthWindow = window.open(
-      "http://localhost:3000/admin/facebookRefresh?close=true",
+      "https://newuat.blockdegree.org//admin/facebookRefresh?close=true",
       options.windowName,
       options.windowOptions
     );

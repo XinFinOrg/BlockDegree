@@ -237,7 +237,7 @@ module.exports = function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:3000/auth/google/callback",
+        callbackURL: "https://newuat.blockdegree.org//auth/google/callback",
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {
@@ -386,7 +386,7 @@ module.exports = function (passport) {
       {
         clientID: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: "http://localhost:3000/auth/facebook/callback",
+        callbackURL: "https://newuat.blockdegree.org//auth/facebook/callback",
         passReqToCallback: true,
         profileFields: ["id", "emails", "name", "displayName"]
       },
@@ -573,7 +573,7 @@ module.exports = function (passport) {
       {
         clientID: socialPostKeys.facebook.app_id,
         clientSecret: socialPostKeys.facebook.app_secret,
-        callbackURL: "http://localhost:3000/admin/facebookRefresh/callback"
+        callbackURL: "https://newuat.blockdegree.org//admin/facebookRefresh/callback"
       },
       async (token, tokenSecret, profile, done) => {
         if (profile.emails[0].value === socialPostKeys.facebook.email) {
@@ -595,7 +595,7 @@ module.exports = function (passport) {
       {
         consumerKey: process.env.TWITTER_CLIENT_ID,
         consumerSecret: process.env.TWITTER_CLIENT_SECRET,
-        callbackURL: "http://localhost:3000/auth/twitter/callback",
+        callbackURL: "https://newuat.blockdegree.org//auth/twitter/callback",
         includeEmail: true,
         passReqToCallback: true
       },
@@ -781,7 +781,7 @@ module.exports = function (passport) {
       {
         clientID: process.env.LINKEDIN_CLIENT,
         clientSecret: process.env.LINKEDIN_SECRET,
-        callbackURL: "http://localhost:3000/auth/linkedin/callback",
+        callbackURL: "https://newuat.blockdegree.org//auth/linkedin/callback",
         scope: ["r_liteprofile", "r_emailaddress", "w_member_social"],
         passReqToCallback: true
       },

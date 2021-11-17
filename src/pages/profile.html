@@ -469,7 +469,7 @@ your profile"}}
           <div class="modal-footer">
             <div>
               <div>Don't have&nbsp;<strong>XDC&nbsp;<img
-                    src="http://localhost:3000/img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
+                    src="https://newuat.blockdegree.org//img/xdcFavicons/favicon.ico"></img>&nbsp;</strong>
                 ?&nbsp;Buy from <a href="https://alphaex.net" target="_blank">AlphaEx</a> or <a href="https://stex.com"
                   target="_blank">Stex</a>
               </div>
@@ -575,7 +575,7 @@ your profile"}}
     function (event) {
       console.log("Originating event: ", event.origin);
       console.log(event.origin);
-      if (event.origin == "http://localhost:3000") {
+      if (event.origin == "https://newuat.blockdegree.org/") {
         if (event.data == "ok") {
           $.notify("Social linked!", { type: "success" });
           checkAuth();
@@ -653,30 +653,30 @@ your profile"}}
   }
 
   function handleAuthGoogle() {
-    // window.location.replace("http://localhost:3000/auth/google")
+    // window.location.replace("https://newuat.blockdegree.org//auth/google")
     popupLogin({
-      path: "http://localhost:3000/auth/google?close=true",
+      path: "https://newuat.blockdegree.org//auth/google?close=true",
     });
   }
 
   function handleAuthFacebook() {
-    // window.location.replace("http://localhost:3000/auth/facebook")
+    // window.location.replace("https://newuat.blockdegree.org//auth/facebook")
     popupLogin({
-      path: "http://localhost:3000/auth/facebook?close=true",
+      path: "https://newuat.blockdegree.org//auth/facebook?close=true",
     });
   }
 
   function handleAuthTwitter() {
-    // window.location.replace("http://localhost:3000/auth/twitter")
+    // window.location.replace("https://newuat.blockdegree.org//auth/twitter")
     popupLogin({
-      path: "http://localhost:3000/auth/twitter?close=true",
+      path: "https://newuat.blockdegree.org//auth/twitter?close=true",
     });
   }
 
   function handleAuthLinkedin() {
-    // window.location.replace("http://localhost:3000/auth/linkedin")
+    // window.location.replace("https://newuat.blockdegree.org//auth/linkedin")
     popupLogin({
-      path: "http://localhost:3000/auth/linkedin?close=true",
+      path: "https://newuat.blockdegree.org//auth/linkedin?close=true",
     });
   }
 
@@ -697,9 +697,9 @@ your profile"}}
       options.windowOptions
     );
     that._oauthInterval = window.setInterval(function () {
-      if (that._oauthWindow.location.href == "http://localhost:3000") {
+      if (that._oauthWindow.location.href == "https://newuat.blockdegree.org/") {
         that._oauthWindow.location.href ==
-          "http://localhost:3000/closeCallback";
+          "https://newuat.blockdegree.org//closeCallback";
       }
     }, 1000);
   }
@@ -937,8 +937,8 @@ your profile"}}
                 burn_txHash = "NA";
               }
               pay_hash_link = `<a href="${payments[z].tokenName === "xdce"
-                  ? etherScanIo + payments[z].txn_hash
-                  : apothemExplorer + payments[z].txn_hash
+                ? etherScanIo + payments[z].txn_hash
+                : apothemExplorer + payments[z].txn_hash
                 }" target="_blank">${payment_txHash}</a>`;
               // status += `( ${payments[z].confirmations}/${
               //   payments[z].tokenName === "xdce"

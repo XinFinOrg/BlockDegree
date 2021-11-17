@@ -57,7 +57,7 @@ module.exports = {
   sendTokenMail: (mail, token, req, type) => {
     console.log("sendTokenMail:", type, mail);
     var mailOptions;
-    let link = "http://localhost:3000/confirmation/?token=" + token.token;
+    let link = "https://newuat.blockdegree.org//confirmation/?token=" + token.token;
     if (type === "signup" || type === "resend") {
       mailOptions = {
         from: "info@blockdegree.org",
@@ -93,7 +93,7 @@ module.exports = {
           "Hello,\n\n" +
           "Your payment is completed for " +
           courseName +
-          ` : \nhttp://localhost:3000/` +
+          ` : \nhttps://newuat.blockdegree.org//` +
           courseName +
           ".\n",
       };
@@ -123,7 +123,7 @@ module.exports = {
   forgotPasswordMailer: function (mail, token, res) {
     console.log("mail", mail);
     return new Promise(function (resolve, reject) {
-      var link = `http://localhost:3000/resetpassword?&email=` + token;
+      var link = `https://newuat.blockdegree.org//resetpassword?&email=` + token;
       var mailOptions = {
         from: "info@blockdegree.org",
         to: mail,
