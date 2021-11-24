@@ -25,7 +25,7 @@ export default function ExamReview() {
         <div className="col-md-12">
           {loading ? (<div className="text-center">Loading...</div>) : (
             <div>
-            {examSchedules.length > 0 && (<div>
+            {examSchedules.length > 0 ? (<div>
               <ul>
                 {examSchedules.map((e,i)=>(<li key={i} onClick={()=>selectionSet(i)}>{e.courseTitle}:{e.attemptsTaken}</li>))}
               </ul>  
@@ -48,7 +48,7 @@ export default function ExamReview() {
                 <div>user email: {examSchedules[selection].email || ''}</div>
               </div>
               <ExamAttempts examSchedulesSlug={examSchedules[selection].urlSlug} course={examSchedules[selection].courseType}/>
-            </div>)}
+            </div>) : (<div className="text-center">No Scheduled Exams</div>)}
             </div>
           )}
         </div>
