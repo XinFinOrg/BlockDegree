@@ -4,6 +4,7 @@
     console.log(currentTopic)
 
   function handleData(data) {
+    debugger
     let dataArr = JSON.parse(data);
     let currentIdx = dataArr.findIndex(course => {
       return course['topic'].toLowerCase().replace(/\?/g, '') == currentTopic
@@ -16,6 +17,7 @@
                                                       nxtTopic +'</a>'
   }
 
+  debugger
   if(sessionStorage.getItem(cacheData) != undefined) {
     handleData(sessionStorage.getItem(cacheData))
   } else {

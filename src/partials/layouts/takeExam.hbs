@@ -29,7 +29,7 @@
                     <!-- after Exam starts -->
                     {{#if meta.examStateSubmitted}}
                     <h2 class="text-center">Your exam is completed</h2>
-                    <div class="text-center">Feel free to close the window </div>
+                    <div class="text-center">Feel free to close the window</div>
                     {{/if}}
 
                     {{#if meta.examhasStarted}}
@@ -175,7 +175,7 @@
                                     examSubmitted = true
                                     console.log(data)
                                     //window.location.reload()
-                                    document.getElementById('examWrapper').innerHTML = '<h2 class="text-center">Your exam is completed</h2>';
+                                    document.getElementById('examWrapper').innerHTML = '<h2 class="text-center">Your exam is completed</h2><div class="text-center">Feel free to close the window</div>';
                                     //$('#exam-questions-submit').each(function () {
                                     //    this.reset();
                                     //});
@@ -333,7 +333,7 @@
                     if (data.status) {
                         //console.log(data)
                         //window.location.reload()
-                        //document.getElementById('examWrapper').innerHTML = '<h2 class="text-center">Your exam is completed</h2>';
+                        //document.getElementById('examWrapper').innerHTML = '<h2 class="text-center">Your exam is completed</h2><div class="text-center">Feel free to close the window</div>';
                         //$('#exam-questions-submit').each(function () {
                         //    this.reset();
                         //});

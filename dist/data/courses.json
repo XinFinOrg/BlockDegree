@@ -7,13 +7,11 @@
       "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
       "duration": "3 days",
       "slug": "blockchain-basic",
-
       "pointers": [
         "50 Marks Practical & Theory",
         "40% will be the passing percentage",
         "Individual will get max of 3 Attempts"
       ],
-
       "sypnosis": "Blockchain, the foundation of Bitcoin, has received extensive attentions recently. Blockchain serves as an immutable ledger which allows transactions take place in a decentralized manner.",
       "overview": "Blockchain, the foundation of Bitcoin, has received extensive attentions recently. Blockchain serves as an immutable ledger which allows transactions take place in a decentralized manner. Blockchain-based applications are springing up, covering numerous fields including financial services, reputation system and Internet of Things (IoT), and so on. However, there are still many challenges of blockchain technology such as scalability and security problems waiting to be overcome. This paper presents a comprehensive overview on blockchain technology.",
       "skills": "Unlimited access to course content. Get Blockchain Technology Certificate. Ability to stop, pause rewind and move through all chapters. Prepare for exam with Digital Course Material: View from anywhere and any device.",
@@ -67,7 +65,10 @@
         },
         {
           "topic": "Permissioned vs permissionless blockchain",
-          "sub-topic": ["Permissioned blockchain", "Permissionless blockchain"]
+          "sub-topic": [
+            "Permissioned blockchain",
+            "Permissionless blockchain"
+          ]
         },
         {
           "topic": "How does blockchain work?",
@@ -123,7 +124,6 @@
         "50% will be the passing percentage",
         " Individual will get max of 3 Attempts"
       ],
-
       "sypnosis": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). ",
       "overview": "The Bitcoin Blockchain ecosystem acts like a network of replicated databases, each containing the same list of past bitcoin transactions. Important members of the network are called validators or nodes which pass around transaction data (payments) and block data (additions to the ledger). Each validator independently checks the payment and block data being passed around. There are rules in place to make the network operate as intended.",
       "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
@@ -135,15 +135,23 @@
       "curriculum": [
         {
           "topic": "What is blockchain and Bitcoin?",
-          "sub-topic": ["Key differences between blockchain and bitcoin"]
+          "sub-topic": [
+            "Key differences between blockchain and bitcoin"
+          ]
         },
         {
           "topic": "How Does Bitcoin Work?",
-          "sub-topic": ["How to use Bitcoin", "Technological architecture"]
+          "sub-topic": [
+            "How to use Bitcoin",
+            "Technological architecture"
+          ]
         },
         {
           "topic": "Cryptography",
-          "sub-topic": ["Private keys", "Cryptography as a security mechanism"]
+          "sub-topic": [
+            "Private keys",
+            "Cryptography as a security mechanism"
+          ]
         },
         {
           "topic": "What is Proof Of Work",
@@ -169,7 +177,6 @@
         "60% will be the passing percentage",
         " Individual will get max of 3 Attempts"
       ],
-
       "sypnosis": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. ",
       "overview": "The Ethereum Development Training Course is designed for those seeking an in-depth understanding and development experience of the Ethereum Blockchain platform. Students will participate in approximately 50% programming lab time providing practical experience, enhancing their knowledge and existing skill set. Due to the technical programming lab content covered in this course, it is not recommended for those without programming knowledge and experience.",
       "skills": "30 Days of unlimited access to course content. Certified Blockchain Technology Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device.",
@@ -179,13 +186,16 @@
       ],
       "curriculum": [
         {
-          "topic": "What is Ethereum blockchain?"
+          "topic": "What is Ethereum blockchain?a"
         },
         {
           "topic": "Create a private Ethereum blockchain"
         },
         {
           "topic": "Add nodes to your private blockchain"
+        },
+        {
+          "topic": "Quiz 1"
         },
         {
           "topic": "What is smart contract?",
@@ -212,6 +222,9 @@
           "topic": "Deploying smart contract and tokens on Ethereum"
         },
         {
+          "topic": "Quiz 2"
+        },
+        {
           "topic": "How do account work?"
         },
         {
@@ -227,6 +240,9 @@
           "topic": "Deploying smart contracts with Truffle"
         },
         {
+          "topic": "Quiz 3"
+        },
+        {
           "topic": "Introduction to Solidity"
         },
         {
@@ -234,6 +250,9 @@
         },
         {
           "topic": "Developing the client side interface"
+        },
+        {
+          "topic": "Quiz 4"
         },
         {
           "topic": "Adding voting functions to smart contracts"
@@ -245,6 +264,9 @@
           "topic": "Implementing voting on client side"
         },
         {
+          "topic": "Quiz 5"
+        },
+        {
           "topic": "Difference between Proof of Work and Proof of Stake",
           "sub-topic": [
             "Proof of Work",
@@ -254,6 +276,9 @@
         },
         {
           "topic": "Differences among various blockchains"
+        },
+        {
+          "topic": "Quiz 6"
         }
       ]
     },
@@ -269,7 +294,6 @@
         "40% will be the passing percentage",
         " Individual will get max of 3 Attempts"
       ],
-
       "sypnosis": " One of the most critical issues in cloud computing is security. With the development of the Internet and Web technology and frequent cross-cultural communication, it is necessary for people to be able to access and manage information in many different languages.",
       "overview": "The prevalent slant in today's innovation driven world is ‘Cloud Computing’. Cloud computing can be alluded to as the putting away and getting to of information over the web instead of your computer's difficult drive. This implies you do not get to the information from either your computer's difficult drive or over a committed computer arrange (domestic or office arrange). Cloud computing implies information is put away at a farther put and is synchronized with other web data.",
       "skills": "30 Days of unlimited access to course content. Certified Cloud Computing  Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
@@ -314,13 +338,12 @@
         "40% will be the passing percentage",
         " Individual will get max of 3 Attempts"
       ],
-
       "sypnosis": "As Cryptocurrency becomes more popular, from 2017 onwards, it becomes under greater threat from hackers. Every day there is another attack on an individuals holdings, and it's imperative you know your options to prevent similar happening to you. Cryptocurrency is where the money is, and yet the infrastructure is not yet strong enough to keep you and your money 100% secure from threats and attacks.",
       "overview": "In this course, we will be providing a full and thorough guide to the four main Cryptocurrency wallets - Paper, Desktop, Mobile and Hardware wallets.",
       "skills": "30 Days of unlimited access to course content. Certified Cloud Computing  Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
       "prerequisites": [
         "You should have access to a Computer with Internet connection",
-       "Don't delay, start keeping your Cryptos safe today!"
+        "Don't delay, start keeping your Cryptos safe today!"
       ],
       "curriculum": [
         {

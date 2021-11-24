@@ -1,5 +1,5 @@
 if (typeof jQuery != "undefined") {
-  $(document).ready(function() {
+  $(document).ready(function () {
     let loginForm = $("#form-login"),
       registerForm = $("#form-register"),
       fpForm = $("#form-fp"),
@@ -66,7 +66,7 @@ if (typeof jQuery != "undefined") {
         pwdMatchInfo = document.getElementById("pwdMatchInfo"),
         cfmPw = document.getElementById("cfm-password"),
         refId = document.getElementById("refId"),
-        invalidRefId = document.getElementById("invalidRefId")
+        invalidRefId = document.getElementById("invalidRefId");
       registerForm.email = document.getElementById("email");
       let validPWD = false,
         validFN = false,
@@ -100,25 +100,28 @@ if (typeof jQuery != "undefined") {
         }
       }
 
-      cfmPw.addEventListener("input", e => {
-        validatePw();
-      });
+      if (cfmPw) {
+        cfmPw.addEventListener("input", e => {
+          validatePw();
+        });
 
-      cfmPw.onkeyup = delay(() => {
-        pwdMatch = false;
-        if (pw.value.length > 0 && pw.value == cfmPw.value) {
-          pwdMatchInfo.innerHTML = "";
-          pwdMatch = true;
-          if (
-            checkRegisterForm(validEm, validFN, validLN, validPWD, pwdMatch)
-          ) {
-            $("#btn-register").attr("disabled", false);
-          }
-        } else {
-          pwdMatchInfo.innerHTML = "Passwords dont match";
+        cfmPw.onkeyup = delay(() => {
           pwdMatch = false;
-        }
-      }, 500);
+          if (pw.value.length > 0 && pw.value == cfmPw?.value) {
+            pwdMatchInfo.innerHTML = "";
+            pwdMatch = true;
+            if (
+              checkRegisterForm(validEm, validFN, validLN, validPWD, pwdMatch)
+            ) {
+              $("#btn-register").attr("disabled", false);
+            }
+          } else {
+            pwdMatchInfo.innerHTML = "Passwords dont match";
+            pwdMatch = false;
+          }
+        }, 500);
+      }
+
       // PWD validation
       pw.onkeyup = delay(() => {
         let upperCaseLetters = /[A-Z]/g;
@@ -150,7 +153,7 @@ if (typeof jQuery != "undefined") {
             $("#btn-register").attr("disabled", false);
           }
         }
-        if (pw.value.length > 0 && pw.value == cfmPw.value) {
+        if (pw.value.length > 0 && pw.value == cfmPw?.value) {
           pwdMatchInfo.innerHTML = "";
           pwdMatch = true;
           if (
@@ -165,7 +168,9 @@ if (typeof jQuery != "undefined") {
       }, 500);
 
       registerForm.email.onkeyup = delay(() => {
-        emInfo.innerHTML = "";
+        if (emInfo) {
+          emInfo.innerHTML = "";
+        }
         validEm = false;
         if (validateEmail(registerForm.email.value)) {
           validEm = true;
@@ -174,10 +179,16 @@ if (typeof jQuery != "undefined") {
           ) {
             $("#btn-register").attr("disabled", false);
           }
-          return (emInfo.innerHTML = "");
+          if (emInfo) {
+            emInfo.innerHTML = "";
+          }
+          return
         } else {
           $("#btn-register").attr("disabled", true);
-          return (emInfo.innerHTML = "invalid email");
+          if (emInfo) {
+            emInfo.innerHTML = "invalid email";
+          }
+          return
         }
       }, 500);
 
@@ -253,31 +264,33 @@ if (typeof jQuery != "undefined") {
 
       registerForm.on("submit", e => {
         e.preventDefault();
-        if (refId.value!==""){
-          $.ajax({url:"/api/refIdExists",method:"post" ,data:{refId:refId.value}, success:resp => {
-            if (resp.status===true){
-              if (resp.exists===true){
-                if (validFN && validLN && validPWD && pwdMatch) {
-                  registerForm.email.value = registerForm.email.value.toLowerCase();
-                  new submitForm(registerForm);
-                  refId.value="";
+        if (refId.value !== "") {
+          $.ajax({
+            url: "/api/refIdExists", method: "post", data: { refId: refId.value }, success: resp => {
+              if (resp.status === true) {
+                if (resp.exists === true) {
+                  if (validFN && validLN && validPWD && pwdMatch) {
+                    registerForm.email.value = registerForm.email.value.toLowerCase();
+                    new submitForm(registerForm);
+                    refId.value = "";
+                  }
+                } else {
+                  invalidRefId.innerHTML = "Referral ID not found"
                 }
-              }else{
-                invalidRefId.innerHTML = "Referral ID not found"
+              } else {
+                $.notify("Some error occured", { type: "danger" })
               }
-            }else{
-              $.notify("Some error occured", {type:"danger"})
+            }, error: err => {
+              $.notify("Some error occured", { type: "danger" })
             }
-          }, error:err => {
-            $.notify("Some error occured", {type:"danger"})
-          }})
-        }else{
+          })
+        } else {
           if (validFN && validLN && validPWD && pwdMatch) {
             registerForm.email.value = registerForm.email.value.toLowerCase();
             new submitForm(registerForm);
           }
         }
-        
+
       });
     }
   });
@@ -292,11 +305,11 @@ if (typeof jQuery != "undefined") {
 
   function delay(callback, ms) {
     var timer = 0;
-    return function() {
+    return function () {
       var context = this,
         args = arguments;
       clearTimeout(timer);
-      timer = setTimeout(function() {
+      timer = setTimeout(function () {
         callback.apply(context, args);
       }, ms || 0);
     };

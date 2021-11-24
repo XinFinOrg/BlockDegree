@@ -118,7 +118,7 @@
             {{#if (lookup ../data this.type) }}
             <button onclick="takeExam({{this.type}})" class="btn text-body" data-price="{{this.price}}"
               id="{{this.type}}">
-              Take Exam
+              Schedule Exam
             </button>
             {{else}}
             <!--<div>
@@ -360,31 +360,33 @@
   const mainnetExplorer = "https://explorer.xinfin.network/tx/";
 
   function takeExam(slug) {
+    //Schedule Exam
+    window.location = '/schedule-exam'
 
-    $.ajax({
-      method: "get",
-      url: "/api/current_user",
-      success: response => {
-        if (response.status) {
-          if (confirm(`Certificate will be issued on name "${response.user.name}" Press OK to confirm or else CANCEL & edit your name via the PROFILE tab.`)) {
-            if (slug.id === "course_1") {
-              window.location = '/blockchain-basic-exam'
-            } else if (slug.id === "course_2") {
-              window.location = '/blockchain-advanced-exam'
-            } else if (slug.id === "course_3") {
-              window.location = '/blockchain-professional-exam'
-            } else if (slug.id === "course_4") {
-              window.location = '/cloud-computing-exam'
-            } else if (slug.id === "course_5") {
-              window.location = '/blockchain-wallet-exam'
-            }
-            else {
-              window.location = '/'
-            }
-          }
-        }
-      }
-    })
+    // $.ajax({
+//       method: "get",
+//       url: "/api/current_user",
+//       success: response => {
+//         if (response.status) {
+//           if (confirm(`Certificate will be issued on name "${response.user.name}" Press OK to confirm or else CANCEL & edit your name via the PROFILE tab.`)) {
+//             if (slug.id === "course_1") {
+//               window.location = '/blockchain-basic-exam'
+//             } else if (slug.id === "course_2") {
+//               window.location = '/blockchain-advanced-exam'
+//             } else if (slug.id === "course_3") {
+//               window.location = '/blockchain-professional-exam'
+//             } else if (slug.id === "course_4") {
+//               window.location = '/cloud-computing-exam'
+//             } else if (slug.id === "course_5") {
+//               window.location = '/blockchain-wallet-exam'
+//             }
+//             else {
+//               window.location = '/'
+//             }
+//           }
+//         }
+//       }
+//     })
   }
 
   function videoScreen() {

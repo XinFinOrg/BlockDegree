@@ -44,20 +44,22 @@ app.set("views", path.join(process.cwd() + "/src/partials/layouts"));
 app.set("view engine", "hbs");
 
 app.use(logger("dev"));
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static("dist", { extensions: ["html", "htm"] }));
-app.use(
-  express.static("server/protected/courses", { extensions: ["html", "htm"] })
-);
-app.use(cors());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 app.use(
   expressFileUpload({
     limits: { fileSize: 50 * 1024 * 1024 },
   })
 );
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(__dirname + '/recordings'));
+app.use(express.static("dist", { extensions: ["html", "htm"] }));
+app.use(
+  express.static("server/protected/courses", { extensions: ["html", "htm"] })
+);
+app.use(cors());
 // required for passport
 
 const sessionParser = session({
