@@ -15,28 +15,28 @@ const bcrypt = require("bcrypt-nodejs");
 
 module.exports = (app) => {
   app.get("/logout", async function (req, res) {
-    try{
-    const email = req.user.email;
-    const user = await User.findOne({email})
-    const userSession = await UserSession.findOne({sessionId:user.userSession});
-    if (user && userSession) {
-      userSession.endTime = Date.now();
-      user.userSession = "";
-      await user.save();
-      await userSession.save();
-    }
-
-    req.logout();
-    req.session.destroy(function (err) {
-      if (err) {
-        return next(err);
+    try {
+      const email = req.user.email;
+      const user = await User.findOne({ email })
+      const userSession = await UserSession.findOne({ sessionId: user.userSession });
+      if (user && userSession) {
+        userSession.endTime = Date.now();
+        user.userSession = "";
+        await user.save();
+        await userSession.save();
       }
+
+      req.logout();
+      req.session.destroy(function (err) {
+        if (err) {
+          return next(err);
+        }
+        res.redirect("/");
+      });
+    } catch (e) {
+      console.log(e);
       res.redirect("/");
-    });
-  }catch(e){
-    console.log(e);
-    res.redirect("/");
-  }
+    }
   });
 
   app.get("/api/logout", (req, res) => {
@@ -85,7 +85,8 @@ module.exports = (app) => {
           if (err) {
             console.log("login err>>>>>>>>>>>", err);
           }
-          res.send({ status: user, message: info });
+          // res.send({ status: user, message: info });
+          res.redirect('/');
           console.log("user logged in", user, info);
         });
       }
@@ -258,7 +259,7 @@ module.exports = (app) => {
             return res.redirect(`/closeCallback?share=${req.session.shareModal}`);
           }
           if (info == "new-name") {
-            console.log(req.session);            
+            console.log(req.session);
             if (req.session.refIdUsed === true) {
               referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
             }
