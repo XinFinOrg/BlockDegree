@@ -27,7 +27,7 @@
     "gulp-sass": "^4.0.2",
     "handlebars": "^4.7.6",
     "handlebars-layout": "^0.1.4",
-    "jsdom": "^13.2.0",
+    "jsdom": "^16.5.0",
     "keythereum": "^1.0.4",
     "metalsmith": "^2.3.0",
     "metalsmith-markdown": "^1.3.0",
