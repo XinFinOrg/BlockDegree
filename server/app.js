@@ -1,5 +1,7 @@
+require("dotenv").config();
 let createError = require("http-errors");
 let express = require("express");
+const http = require("http");
 let path = require("path");
 let cookieParser = require("cookie-parser");
 let logger = require("morgan");
@@ -23,7 +25,8 @@ let RedisStore = require("connect-redis")(session);
 let redisClient = redis.createClient({ prefix: "blockdegree" });
 global.RedisClient = redisClient;
 let app = express();
-require("dotenv").config();
+const server = http.createServer(app);
+
 mongoose.set("useCreateIndex", true);
 
 require("./services/passport")(passport);
@@ -33,7 +36,7 @@ connectToMongoDB();
 // view engine setup
 app.engine(
   "hbs",
-  hbs({
+  hbs.engine({
     extname: "hbs",
     defaultLayout: "base",
     layoutsDir: path.join(process.cwd() + "/src/partials/layouts"),
@@ -115,7 +118,7 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-const server = app.listen("3000", async () => {
+server.listen("3001", async () => {
   pendingTx.emit("initiatePendingTx");
   pendingTx.emit("initiatePendingBurn");
   pendingTx.emit("syncPendingBurnFMD");
@@ -124,6 +127,10 @@ const server = app.listen("3000", async () => {
   donationListener.em.emit("syncPendingBulkCoursePayments");
   updateSiteStats.em.emit("setSiteStats");
   forceReSync();
+
+  WebSocketServer.initializeWebSocketServer(server, sessionParser); // Pass your server object and sessionParser function
+
+  console.log("[*] server started");
 
   await adminServices.initiateWalletConfig();
   console.log("[*] server started");
@@ -152,7 +159,7 @@ function dynamicMiddleware(req, res, next) {
 function connectToMongoDB() {
   try {
     mongoose
-      .connect(process.env.DATABASE_URI, { useNewUrlParser: true })
+      .connect(process.env.DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true})
       .then(() => {
         console.log("[*] connected to mongodb");
       })
@@ -171,5 +178,11 @@ function connectToMongoDB() {
     setTimeout(connectToMongoDB, 5000);
   }
 }
-require("./listeners/websocketServer").server(server, sessionParser);
+// require("./listeners/websocketServer").server(server, sessionParser);
+// require("./listeners/websocketServer.js").server(server, sessionParser);
+const WebSocketServerModule = require("./listeners/websocketServer.js");
+WebSocketServerModule.initializeWebSocketServer(server, sessionParser);
+
+
+
 module.exports = app;
