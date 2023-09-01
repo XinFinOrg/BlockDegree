@@ -36,7 +36,7 @@ connectToMongoDB();
 // view engine setup
 app.engine(
   "hbs",
-  hbs.engine({
+  hbs({
     extname: "hbs",
     defaultLayout: "base",
     layoutsDir: path.join(process.cwd() + "/src/partials/layouts"),
