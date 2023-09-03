@@ -36,7 +36,7 @@ connectToMongoDB();
 // view engine setup
 app.engine(
   "hbs",
-  hbs({
+  hbs.engine({
     extname: "hbs",
     defaultLayout: "base",
     layoutsDir: path.join(process.cwd() + "/src/partials/layouts"),
@@ -52,9 +52,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static("dist", { extensions: ["html", "htm"] }));
-app.use(
-  express.static("server/protected/courses", { extensions: ["html", "htm"] })
-);
+  app.use(
+    express.static("server/protected/courses", { extensions: ["html", "htm"] })
+  );
 app.use(cors());
 app.use(
   expressFileUpload({
@@ -118,7 +118,7 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-server.listen("3001", async () => {
+server.listen(process.env.PORT, async () => {
   pendingTx.emit("initiatePendingTx");
   pendingTx.emit("initiatePendingBurn");
   pendingTx.emit("syncPendingBurnFMD");
@@ -127,7 +127,7 @@ server.listen("3001", async () => {
   donationListener.em.emit("syncPendingBulkCoursePayments");
   updateSiteStats.em.emit("setSiteStats");
   forceReSync();
-
+ 
   WebSocketServer.initializeWebSocketServer(server, sessionParser); // Pass your server object and sessionParser function
 
   console.log("[*] server started");
@@ -182,7 +182,6 @@ function connectToMongoDB() {
 // require("./listeners/websocketServer.js").server(server, sessionParser);
 const WebSocketServerModule = require("./listeners/websocketServer.js");
 WebSocketServerModule.initializeWebSocketServer(server, sessionParser);
-
 
 
 module.exports = app;
