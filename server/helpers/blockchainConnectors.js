@@ -1,3 +1,4 @@
+  require("dotenv").config();
   const Xdc3 = require("xdc3");
   const Web3 = require("web3");
   const WebsocketProvider = require('web3-providers-ws'); // Added this line
@@ -70,7 +71,7 @@
     ethReconn();
   });
 
-  connectionHeartbeat();
+    connectionHeartbeat();
 
   //---------------------- Connector Func Exports Starts------------------------
 
@@ -168,34 +169,51 @@
     }
   }
 
+  
   function connectionHeartbeat() {
     setInterval(async () => {
       try {
         const isActiveXdc = await xdc3.eth.net.isListening();
-        console.log(
-          `connection status XDC:${isActiveXdc}`
-        );
-        if (!isActiveXdc && inReconnXDC === false) xdcReconn();
+        if (process.env.enableBlockchainSync === 'true') {
+          console.log(`Connection status XDC: ${isActiveXdc}`);
+        }
+        if (!isActiveXdc && inReconnXDC === false) {
+          xdcReconn();
+        }
       } catch (e) {
-        if (inReconnXDC === false) xdcReconn();
+        if (inReconnXDC === false) {
+          xdcReconn();
+        }
       }
       try {
         const isActiveEth = await web3.eth.net.isListening();
-        console.log(
-          `connection status ETH:${isActiveEth}`
-        );
-        if (!isActiveEth && inReconnEth === false) ethReconn();
+        if (process.env.enableBlockchainSync === 'true') {
+          console.log(`Connection status ETH: ${isActiveEth}`);
+        }
+        if (!isActiveEth && inReconnEth === false) {
+          ethReconn();
+        }
       } catch (e) {
-        if (inReconnEth === false) ethReconn();
+        if (inReconnEth === false) {
+          ethReconn();
+        }
       }
       try {
         const isActiveRink = await web3Rink.eth.net.isListening();
-        console.log(
-          `connection status RINK:${isActiveRink} `
-        );
-        if (!isActiveRink && inReconnRink === false) rinkReconn();
+        if (process.env.enableBlockchainSync === 'true') {
+        console.log(`Connection status RINK: ${isActiveRink}`);
+        }
+        if (!isActiveRink && inReconnRink === false) {
+          rinkReconn();
+        }
       } catch (e) {
-        if (inReconnRink === false) rinkReconn();
+        if (inReconnRink === false) {
+          rinkReconn();
+        }
       }
     }, 5000);
   }
+  
+
+  // connectionHeartbeat();
+

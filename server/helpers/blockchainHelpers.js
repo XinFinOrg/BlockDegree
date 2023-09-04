@@ -190,7 +190,9 @@ function connectionHeartbeat() {
   setInterval(async () => {
     try {
       const isActiveXdc = await xdcInst.eth.net.isListening();
-      console.log(`connection status XDC blockchain helper: ${isActiveXdc}`);
+      if (process.env.enableBlockchainSync === 'true') {
+        console.log(`connection status XDC blockchain helper: ${isActiveXdc}`);
+      }
       if (!isActiveXdc && inReconnXDC === false) xdcReconn();
     } catch (e) {
       if (inReconnXDC === false) xdcReconn();

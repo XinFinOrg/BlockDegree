@@ -35,7 +35,9 @@ function connectionHeartbeat() {
   setInterval(async () => {
     try {
       const isActiveXdc = await xdc3.eth.net.isListening();
+      if (process.env.enableBlockchainSync === 'true') {
       console.log(`connection status XDC txnConfirmation: ${isActiveXdc}`);
+      }
       if (!isActiveXdc && inReconnXDC === false) xdcReconn();
     } catch (e) {
       if (inReconnXDC === false) xdcReconn();

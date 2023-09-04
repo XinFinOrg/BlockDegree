@@ -345,7 +345,9 @@ function connectionHeartbeat() {
   setInterval(async () => {
     try {
       const isActiveXdc = await xdc3.eth.net.isListening();
+      if (process.env.enableBlockchainSync === 'true') {
       console.log(`connection status XDC donationListener:${isActiveXdc}`);
+    }
       if (!isActiveXdc && inReconnXDC === false) xdcReconn();
     } catch (e) {
       if (inReconnXDC === false) xdcReconn();
@@ -385,7 +387,9 @@ function newBlockProcessor() {
       try {
         let retryCount = 0;
         let txCount = await xdc3.eth.getBlockTransactionCount(result.number);
+        if (process.env.enableBlockchainSync === 'true') {
         console.log(`[*] syncing block ${result.number} TX count: `, txCount);
+        }
 
         while (txCount === null) {
           if (retryCount === 10) {
@@ -394,6 +398,7 @@ function newBlockProcessor() {
           }
           retryCount++;
           txCount = await xdc3.eth.getBlockTransactionCount(result.number);
+          
           console.log(
             `[*] re-syncing block ${result.number} TX count: ${txCount} try: ${retryCount}`
           );
