@@ -36,7 +36,7 @@ connectToMongoDB();
 // view engine setup
 app.engine(
   "hbs",
-  hbs.engine({
+  hbs({
     extname: "hbs",
     defaultLayout: "base",
     layoutsDir: path.join(process.cwd() + "/src/partials/layouts"),
@@ -118,7 +118,7 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-server.listen(process.env.PORT, async () => {
+server.listen("3000", async () => {
   pendingTx.emit("initiatePendingTx");
   pendingTx.emit("initiatePendingBurn");
   pendingTx.emit("syncPendingBurnFMD");
@@ -178,10 +178,10 @@ function connectToMongoDB() {
     setTimeout(connectToMongoDB, 5000);
   }
 }
-// require("./listeners/websocketServer").server(server, sessionParser);
-// require("./listeners/websocketServer.js").server(server, sessionParser);
-const WebSocketServerModule = require("./listeners/websocketServer.js");
-WebSocketServerModule.initializeWebSocketServer(server, sessionParser);
+require("./listeners/websocketServer").server(server, sessionParser);
+require("./listeners/websocketServer.js").server(server, sessionParser);
+// const WebSocketServerModule = require("./listeners/websocketServer.js");
+// WebSocketServerModule.initializeWebSocketServer(server, sessionParser);
 
 
 module.exports = app;
