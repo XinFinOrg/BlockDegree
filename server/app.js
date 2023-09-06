@@ -179,7 +179,7 @@ function connectToMongoDB() {
   }
 }
 require("./listeners/websocketServer").server(server, sessionParser);
-require("./listeners/websocketServer.js").server(server, sessionParser);
+// require("./listeners/websocketServer.js").server(server, sessionParser);
 // const WebSocketServerModule = require("./listeners/websocketServer.js");
 // WebSocketServerModule.initializeWebSocketServer(server, sessionParser);
 
