@@ -203,13 +203,17 @@ function connectionHeartbeat() {
 
 function xdcReconn() {
   try {
+    if (process.env.enableBlockchainSync === 'true') {
     console.log("[*] reconn xdc running");
+    }
     inReconnXDC = true;
     let currInterval = setInterval(() => {
       let xdcProvider = new Xdc3.providers.WebsocketProvider(WsXinfinMainnet);
       xdcInst = new Xdc3(xdcProvider);
       xdcProvider.on("connect", () => {
+        if (process.env.enableBlockchainSync === 'true') {
         console.log(`[*] xdc reconnected to ws at ${__filename}`);
+        }
         inReconnXDC = false;
         clearInterval(currInterval);
       });

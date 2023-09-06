@@ -42,17 +42,24 @@
   exports.rinkInst = web3Rink;
 
   xdcProvider.on("connect", () => {
+    if (process.env.enableBlockchainSync === 'true') {
     console.log(`[*] xdc3 instance connected at ${fileName}`);
+    }
   });
+
   xdcProvider.on("end", () => {
+    if (process.env.enableBlockchainSync === 'true') {
     console.log(
       `[*] xdc3 instance disconnected at ${fileName}, starting reconn...`
     );
+    }
     xdcReconn();
   });
 
   ethProvider.on("connect", () => {
+    if (process.env.enableBlockchainSync === 'true') {
     console.log(`[*] eth instance connected at ${fileName}`);
+    }
   });
   ethProvider.on("end", () => {
     console.log(
@@ -114,13 +121,17 @@
 
   function xdcReconn() {
     try {
+      if (process.env.enableBlockchainSync === 'true') {
       console.log("[*] reconn xdc running");
+      }
       inReconnXDC = true;
       let currInterval = setInterval(() => {
         xdcProvider = new Xdc3.providers.WebsocketProvider(xdcWs);
         xdc3 = new Xdc3(xdcProvider);
         xdcProvider.on("connect", () => {
+          if (process.env.enableBlockchainSync === 'true') {
           console.log(`[*] xdc reconnected to ws at ${fileName}`);
+          }
           clearInterval(currInterval);
           exports.xdcInst = xdc3;
           inReconnXDC = false;
@@ -133,13 +144,17 @@
 
   function ethReconn() {
     try {
+      if (process.env.enableBlockchainSync === 'true') {
       console.log("[*] reconn eth running");
+      }
       inReconnEth = true;
       let currInterval = setInterval(() => {
         ethProvider = new Web3.providers.WebsocketProvider(ethWs);
         web3 = new Web3(ethProvider);
         ethProvider.on("connect", () => {
+          if (process.env.enableBlockchainSync === 'true') {
           console.log(`[*] eth reconnected to ws at ${fileName}`);
+          }
           clearInterval(currInterval);
           exports.ethInst = web3;
           inReconnEth = false;
@@ -152,13 +167,17 @@
 
   function rinkReconn() {
     try {
+      if (process.env.enableBlockchainSync === 'true') {
       console.log("[*] reconn rink running");
+      }
       inReconnRink = true;
       let currInterval = setInterval(() => {
         rinkProvider = new Web3.providers.WebsocketProvider(rinkWs);
         web3Rink = new Web3(rinkProvider);
         rinkProvider.on("connect", () => {
+          if (process.env.enableBlockchainSync === 'true') {
           console.log(`[*] rinkeby reconnected to ws at ${fileName}`);
+          }
           clearInterval(currInterval);
           exports.ethInst = web3Rink;
           inReconnRink = false;
