@@ -12,6 +12,10 @@
 
   <script>
 
+    // Array to store allowed admin email IDs
+    const allowedAdminEmails = ["adi@xinfin.org"];
+
+
     $(document).ready(function () {
 
       $("#admin-login").on("submit", (e) => {
@@ -19,27 +23,30 @@
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        $.ajax({
-          url: "/api/login",
-          method: "post",
-          data: {
-            email,
-            password,
-          },
-          success: (result) => {
-            if (result && result.status === false) {
-              // Simulate an HTTP redirect:
-              alert("login failed")
-            } else {
-              window.location.replace("https://www.blockdegree.org/newadmin");
-
+      
+         // Check if the entered email is in the list of allowed admin email IDs
+         if (allowedAdminEmails.includes(email)) {
+          $.ajax({
+            url: "/api/login",
+            method: "post",
+            data: {
+              email,
+              password,
+            },
+            success: (result) => {
+              if (result && result.status === false) {
+                // Simulate an HTTP redirect:
+                alert("Login failed");
+              } else {
+                window.location.replace("https://www.blockdegree.org/newadmin");
+              }
             }
-          }
-        })
-      })
-
-    })
-
+          });
+        } else {
+          alert("Invalid admin email");
+        }
+      });
+    });
   </script>
 
   <form id="admin-login">
