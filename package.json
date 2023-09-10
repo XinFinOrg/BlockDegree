@@ -4,6 +4,7 @@
   "scripts": {
     "start": "node ./server/bin/www",
     "dev": "nodemon ./server/app.js",
+    "prod": "pm2 start ./server/bin/www -i 1 --name 'prodBD'",
     "test": "mocha",
     "autotest": "supervisor -q -n exit -x mocha -- -b"
   },
