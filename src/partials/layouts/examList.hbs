@@ -98,7 +98,7 @@
       <div class="card height--full">
         <div class="card-body row mx-0 p-0">
           <div class="card-title">
-            <h3 class="text-center mb-0">{{this.title}}</h3>
+            <h3 class="text-center mb-0">{{"this.title"}}</h3>
           </div>
           <div class="card-text p-4 px-sm-4 py-4 width--full">
             {{#each pointers as |point| }}
@@ -186,7 +186,7 @@
                       data-dismiss="modal">
                       Pay Via PayPal </button>
                     <button type="button" class="btn-payment razorpay-btn" style="display: none;"
-                      onclick="payRazorpay({{this.type}},{{this.price}})" data-dismiss="modal">
+                      onclick="payRazorpay({{this.type}}, {{this.price}})" data-dismiss="modal">
                       Pay Via Netbanking / Card / UPI </button>
 
 
@@ -429,6 +429,7 @@
   }
 
   function pay(course_id, price) {
+    console.log("hell0")
     const email = localStorage.getItem('email');
     const codeName = document.getElementById(course_id.id + "codeName").value;
     const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
@@ -485,11 +486,13 @@
   }
 
   function payRazorpay(course_id, price) {
+    console.log("hekoo")
+    console.log(course_id, price)
     const email = localStorage.getItem('email');
     const codeName = document.getElementById(course_id.id + "codeName").value;
     const referralCode = document.getElementById(course_id.id + "ReferralCode").value;
     console.log(course_id.id + "codeName");
-    console.log(codeName);
+    console.log(codeName, referralCode);
     $.ajax({
       method: "post",
       url: "/api/payRazorpay",
