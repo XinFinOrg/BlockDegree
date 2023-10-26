@@ -30,6 +30,7 @@ function newDefaultUser() {
         course_3: false,
         course_4: false,
         course_5: false,
+        course_6: false,
       },
       examBasic: {
         attempts: 0,

@@ -689,6 +689,8 @@ function getCourseName(id) {
       return "Cloud Computing";
     case "course_5":
       return "Blockchain Wallet";
+    case "course_6":
+        return "Blockchain Basic 2";
     default:
       return "";
   }

@@ -6,7 +6,7 @@ const loginRequired = [
   "/fund-my-degree-fund",
   "/fmd-apply",
   "/fund-my-degree-apply",
-  "/exams",
+  // "/exams",
 ];
 
 let $mobile_nav = null;

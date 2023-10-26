@@ -84,7 +84,7 @@
     "sweetalert": "1.0.0",
     "sweetalert-react": "^0.4.10",
     "url-loader": "0.5.9",
-    "web3": "1.2.0",
+    "web3": "^1.2.0",
     "webpack": "3.5.1",
     "webpack-dev-server": "3.0.0",
     "webpack-manifest-plugin": "1.2.1",
