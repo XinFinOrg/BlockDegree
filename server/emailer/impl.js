@@ -84,6 +84,8 @@ module.exports = {
         courseName = "cloud-computing-exam";
       } else if (type === "course_5") {
         courseName = "blockchain-wallet-exam";
+      } else if (type === "course_6") {
+        courseName = "blockchain-basic-2";
       }
       mailOptions = {
         from: "info@blockdegree.org",
