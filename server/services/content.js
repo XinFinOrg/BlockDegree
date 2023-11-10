@@ -6,7 +6,7 @@ exports.renderCourses = (req, res) => {
   switch (req.params.courseName) {
     case "blockchain-basic": {
       eventEmitter.emit("visited", req, "basic");
-      res.redirect("/courses/blockchain-basic/history-of-blockchain");
+      res.redirect("/courses/blockchain-basic-course-for-engineer/history-of-blockchain");
       break;
     }
 

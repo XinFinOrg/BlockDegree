@@ -513,7 +513,7 @@ exports.submitExam = async (req, res, next) => {
 
 exports.getBasicExam = (req, res) => {
   readJSONFile(
-    path.join(process.cwd(), "/server/protected/blockchain-basic.json"),
+    path.join(process.cwd(), "/server/protected/blockchain-basic-course-for-engineer.json"),
     (err, json) => {
       if (err != null) {
         return res.render("displayError", {
