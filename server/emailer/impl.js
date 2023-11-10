@@ -75,7 +75,7 @@ module.exports = {
     ) {
       var courseName;
       if (type === "course_1") {
-        courseName = "blockchain-basic-exam";
+        courseName = "blockchain-basic-course-for-engineer-exam";
       } else if (type === "course_2") {
         courseName = "blockchain-advanced-exam";
       } else if (type === "course_3") {

@@ -7,7 +7,7 @@ module.exports = app => {
   app.get("/exam-result", requireLogin, examServices.getExamResult);
   app.get("/exams", requireLogin, examServices.getExamStatus);
   app.get(
-    "/blockchain-basic-exam",
+    "/blockchain-basic-course-for-engineer-exam",
     requireLogin,
     hasSubscribed,
     examServices.getBasicExam

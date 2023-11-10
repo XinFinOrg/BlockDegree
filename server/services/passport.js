@@ -238,7 +238,7 @@ module.exports = function(passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/google/callback",
+        callbackURL: "http://localhost:3010/auth/google/callback",
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {

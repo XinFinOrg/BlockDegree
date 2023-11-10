@@ -235,6 +235,8 @@ module.exports = (app) => {
   app.get("/auth/linkedin", handleClose, detectReferral, passport.authenticate("linkedin"));
 
   app.get("/auth/google/callback", (req, res, next) => {
+
+    console.log('knejndwkndekjwebdwhjevdwbhjejd')
     passport.authenticate(
       "google",
       { failureRedirect: "/" },
@@ -263,7 +265,7 @@ module.exports = (app) => {
               referralEmitter.emit("referralUsage", req.session.refIdValue, user.email);
             }
             referralEmitter.emit("createUserReferral", user.email);
-            res.redirect("/profile?confirmName=true");
+            res.redirect("http://localhost:3010/profile?confirmName=true");
             return;
           }
           var url = req.session.redirectTo || "/";
