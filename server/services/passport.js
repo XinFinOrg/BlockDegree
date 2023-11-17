@@ -11,9 +11,9 @@ const crypto = require("crypto");
 const uuid = require("uuid/v4")
 require("dotenv").config();
 
-const facebookStrategy = require("passport-facebook").Strategy;
-const twitterStrategy = require("passport-twitter").Strategy;
-const linkedinStrategy = require("passport-linkedin-oauth2").Strategy;
+// const facebookStrategy = require("passport-facebook").Strategy;
+// const twitterStrategy = require("passport-twitter").Strategy;
+// const linkedinStrategy = require("passport-linkedin-oauth2").Strategy;
 
 function newDefaultUser() {
   return new User({
@@ -382,584 +382,584 @@ module.exports = function(passport) {
   );
 
   // Login with Facebook
-  passport.use(
-    new facebookStrategy(
-      {
-        clientID: process.env.FACEBOOK_CLIENT_ID,
-        clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/facebook/callback",
-        passReqToCallback: true,
-        profileFields: ["id", "emails", "name", "displayName"]
-      },
-      async (req, accessToken, refreshToken, profile, done) => {
-        process.nextTick(async function() {
-          if (req.user) {
-            if (
-              req.user.auth.facebook.id == "" ||
-              req.user.auth.facebook.id == undefined
-            ) {
-              // check if the credentials are associated with any other user.
-              let otherUser = await User.findOne({
-                "auth.facebook.id": profile.id
-              });
-              if (otherUser != null) {
-                // this set of credentials are associated with another account, show error
-                return done(
-                  "This social account is already linked to other account, please try logging in with other account.",
-                  null,
-                  "This social account is already linked to other account, please try logging in with other account."
-                );
-              }
-              let user = await User.findOne({ email: req.user.email });
-              user.auth.facebook.id = profile.id;
-              user.auth.facebook.accessToken = accessToken;
-              user.auth.facebook.refreshToken = refreshToken;
-              user.lastActive = Date.now();
+  // passport.use(
+  //   new facebookStrategy(
+  //     {
+  //       clientID: process.env.FACEBOOK_CLIENT_ID,
+  //       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+  //       callbackURL: "https://www.blockdegree.org/auth/facebook/callback",
+  //       passReqToCallback: true,
+  //       profileFields: ["id", "emails", "name", "displayName"]
+  //     },
+  //     async (req, accessToken, refreshToken, profile, done) => {
+  //       process.nextTick(async function() {
+  //         if (req.user) {
+  //           if (
+  //             req.user.auth.facebook.id == "" ||
+  //             req.user.auth.facebook.id == undefined
+  //           ) {
+  //             // check if the credentials are associated with any other user.
+  //             let otherUser = await User.findOne({
+  //               "auth.facebook.id": profile.id
+  //             });
+  //             if (otherUser != null) {
+  //               // this set of credentials are associated with another account, show error
+  //               return done(
+  //                 "This social account is already linked to other account, please try logging in with other account.",
+  //                 null,
+  //                 "This social account is already linked to other account, please try logging in with other account."
+  //               );
+  //             }
+  //             let user = await User.findOne({ email: req.user.email });
+  //             user.auth.facebook.id = profile.id;
+  //             user.auth.facebook.accessToken = accessToken;
+  //             user.auth.facebook.refreshToken = refreshToken;
+  //             user.lastActive = Date.now();
 
 
-            let sessionId = uuid();
-            user.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           user.userSession = sessionId;
 
-            let newSession = genSession(sessionId);
-            newSession.email = user.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "facebook";
-            await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = user.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "facebook";
+  //           await newSession.save();
 
-              await user.save();
-              return done(null, user);
-            }
-            let user = await User.findOne({ email: req.user.email });
-            let otherUserSocial = await User.findOne({
-              "auth.facebook.id": profile.id
-            });
-            if (otherUserSocial!==null && otherUserSocial.email!==user.email){
-              return done(
-                "This social account is not linked to your account.",
-                null,
-                "This social account is not linked to your account."
-              );
-            }
-            user.auth.facebook.accessToken = accessToken;
-            user.auth.facebook.refreshToken = refreshToken;
-            user.lastActive = Date.now();
+  //             await user.save();
+  //             return done(null, user);
+  //           }
+  //           let user = await User.findOne({ email: req.user.email });
+  //           let otherUserSocial = await User.findOne({
+  //             "auth.facebook.id": profile.id
+  //           });
+  //           if (otherUserSocial!==null && otherUserSocial.email!==user.email){
+  //             return done(
+  //               "This social account is not linked to your account.",
+  //               null,
+  //               "This social account is not linked to your account."
+  //             );
+  //           }
+  //           user.auth.facebook.accessToken = accessToken;
+  //           user.auth.facebook.refreshToken = refreshToken;
+  //           user.lastActive = Date.now();
 
-            let sessionId = uuid();
-            user.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           user.userSession = sessionId;
   
-            let newSession = genSession(sessionId);
-            newSession.email = user.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "facebook";
-            await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = user.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "facebook";
+  //           await newSession.save();
 
-            await user.save();
-            return done(null, req.user);
-          }
-          if (!profile) {
-            return done("Profile not set", null);
-          }
-          let existingUser = await User.findOne({
-            "auth.facebook.id": profile.id
-          });
-          if (existingUser) {
-            existingUser.auth.facebook.accessToken = accessToken;
-            existingUser.auth.facebook.refreshToken = refreshToken || "";
-            existingUser.lastActive = Date.now();
+  //           await user.save();
+  //           return done(null, req.user);
+  //         }
+  //         if (!profile) {
+  //           return done("Profile not set", null);
+  //         }
+  //         let existingUser = await User.findOne({
+  //           "auth.facebook.id": profile.id
+  //         });
+  //         if (existingUser) {
+  //           existingUser.auth.facebook.accessToken = accessToken;
+  //           existingUser.auth.facebook.refreshToken = refreshToken || "";
+  //           existingUser.lastActive = Date.now();
 
-            let sessionId = uuid();
-            existingUser.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           existingUser.userSession = sessionId;
   
-            let newSession = genSession(sessionId);
-            newSession.email = existingUser.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "facebook";
-            await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = existingUser.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "facebook";
+  //           await newSession.save();
 
-            await existingUser.save();
-            return done(null, existingUser);
-          }
+  //           await existingUser.save();
+  //           return done(null, existingUser);
+  //         }
 
-          if (profile.emails == undefined || profile.emails == null) {
-            return done(
-              "no email-id not associated with this social account",
-              null,
-              "no email-id not associated with this social account"
-            );
-          }
+  //         if (profile.emails == undefined || profile.emails == null) {
+  //           return done(
+  //             "no email-id not associated with this social account",
+  //             null,
+  //             "no email-id not associated with this social account"
+  //           );
+  //         }
 
-          // email registered
-          if (profile.emails.length > 0) {
-            const linkEmail = await User.findOne({
-              email: profile.emails[0].value
-            });
-            if (linkEmail) {
-              linkEmail.auth.facebook.id = profile.id;
-              linkEmail.auth.facebook.accessToken = accessToken;
-              linkEmail.auth.facebook.refreshToken = refreshToken || "";
-              linkEmail.lastActive = Date.now();
+  //         // email registered
+  //         if (profile.emails.length > 0) {
+  //           const linkEmail = await User.findOne({
+  //             email: profile.emails[0].value
+  //           });
+  //           if (linkEmail) {
+  //             linkEmail.auth.facebook.id = profile.id;
+  //             linkEmail.auth.facebook.accessToken = accessToken;
+  //             linkEmail.auth.facebook.refreshToken = refreshToken || "";
+  //             linkEmail.lastActive = Date.now();
 
 
-            let sessionId = uuid();
-            linkEmail.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           linkEmail.userSession = sessionId;
 
-            let newSession = genSession(sessionId);
-            newSession.email = linkEmail.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "facebook";
-            await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = linkEmail.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "facebook";
+  //           await newSession.save();
 
-              await linkEmail.save();
-              done(null, linkEmail);
-            }
-          }
+  //             await linkEmail.save();
+  //             done(null, linkEmail);
+  //           }
+  //         }
 
-          let existingUser2 = await User.findOne({
-            email: profile.emails[0].value
-          });
-          if (existingUser2) {
-            let user = await User.findOne({ email: profile.emails[0].value });
-            user.auth.facebook.id = profile.id;
-            user.auth.facebook.accessToken = accessToken;
-            user.auth.facebook.refreshToken = refreshToken || "";
-            user.lastActive = Date.now();
+  //         let existingUser2 = await User.findOne({
+  //           email: profile.emails[0].value
+  //         });
+  //         if (existingUser2) {
+  //           let user = await User.findOne({ email: profile.emails[0].value });
+  //           user.auth.facebook.id = profile.id;
+  //           user.auth.facebook.accessToken = accessToken;
+  //           user.auth.facebook.refreshToken = refreshToken || "";
+  //           user.lastActive = Date.now();
 
-            let sessionId = uuid();
-            user.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           user.userSession = sessionId;
 
-            let newSession = genSession(sessionId);
-            newSession.email = user.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "facebook";
-            await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = user.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "facebook";
+  //           await newSession.save();
             
-            await user.save();
-            return done(null, user);
-          }
-          newUser = newDefaultUser();
-          newUser.email = profile.emails[0].value;
-          newUser.auth.facebook.id = profile.id;
-          newUser.auth.facebook.accessToken = accessToken;
-          newUser.auth.facebook.refreshToken = refreshToken || "";
-          newUser.name = formatName(profile.displayName);
-          newUser.created = Date.now();
-          newUser.lastActive = Date.now();
+  //           await user.save();
+  //           return done(null, user);
+  //         }
+  //         newUser = newDefaultUser();
+  //         newUser.email = profile.emails[0].value;
+  //         newUser.auth.facebook.id = profile.id;
+  //         newUser.auth.facebook.accessToken = accessToken;
+  //         newUser.auth.facebook.refreshToken = refreshToken || "";
+  //         newUser.name = formatName(profile.displayName);
+  //         newUser.created = Date.now();
+  //         newUser.lastActive = Date.now();
 
-          let sessionId = uuid();
-          newUser.userSession = sessionId;
+  //         let sessionId = uuid();
+  //         newUser.userSession = sessionId;
   
-          let newSession = genSession(sessionId);
-          newSession.email = newUser.email;
-          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-          newSession.startTime = Date.now();
-          newSession.platform = "facebook";
-          await newSession.save();     
+  //         let newSession = genSession(sessionId);
+  //         newSession.email = newUser.email;
+  //         newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //         newSession.startTime = Date.now();
+  //         newSession.platform = "facebook";
+  //         await newSession.save();     
 
-          await newUser.save();
-          socialPostListener.emit("varTriggerUpdate", "registrations");
-          done(null, newUser, "new-name");
-        });
-      }
-    )
-  );
+  //         await newUser.save();
+  //         socialPostListener.emit("varTriggerUpdate", "registrations");
+  //         done(null, newUser, "new-name");
+  //       });
+  //     }
+  //   )
+  // );
 
-  passport.use(
-    "facebookAdminRefresh",
-    new facebookStrategy(
-      {
-        clientID: socialPostKeys.facebook.app_id,
-        clientSecret: socialPostKeys.facebook.app_secret,
-        callbackURL: "https://www.blockdegree.org/admin/facebookRefresh/callback"
-      },
-      async (token, tokenSecret, profile, done) => {
-        if (profile.emails[0].value === socialPostKeys.facebook.email){
-          console.log(`Token: ${token} TokenSecret: ${tokenSecret}`);
-          console.log(`Profile: ${profile}`);
-          done(null, { token: token, tokenSecret: tokenSecret });
-        }
-        else{
-          console.log(`Admin tried to referesh token with different account ${profile.emails[0].value}, actual: ${socialPostKeys.facebook.email}.`);
-          done("invalid facaebook account", null);
-        }        
-      }
-    )
-  );
+  // passport.use(
+  //   "facebookAdminRefresh",
+  //   new facebookStrategy(
+  //     {
+  //       clientID: socialPostKeys.facebook.app_id,
+  //       clientSecret: socialPostKeys.facebook.app_secret,
+  //       callbackURL: "https://www.blockdegree.org/admin/facebookRefresh/callback"
+  //     },
+  //     async (token, tokenSecret, profile, done) => {
+  //       if (profile.emails[0].value === socialPostKeys.facebook.email){
+  //         console.log(`Token: ${token} TokenSecret: ${tokenSecret}`);
+  //         console.log(`Profile: ${profile}`);
+  //         done(null, { token: token, tokenSecret: tokenSecret });
+  //       }
+  //       else{
+  //         console.log(`Admin tried to referesh token with different account ${profile.emails[0].value}, actual: ${socialPostKeys.facebook.email}.`);
+  //         done("invalid facaebook account", null);
+  //       }        
+  //     }
+  //   )
+  // );
 
   // Login with Twitter
-  passport.use(
-    new twitterStrategy(
-      {
-        consumerKey: process.env.TWITTER_CLIENT_ID,
-        consumerSecret: process.env.TWITTER_CLIENT_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/twitter/callback",
-        includeEmail: true,
-        passReqToCallback: true
-      },
-      async (req, token, tokenSecret, profile, done) => {
-        console.log("called twitter auth");
-        if (req.user) {
-          if (
-            req.user.auth.twitter.id == "" ||
-            req.user.auth.twitter.id == undefined
-          ) {
-            // check if the credentials are associated with any other user.
-            let otherUser = await User.findOne({
-              "auth.twitter.id": profile.id
-            });
-            if (otherUser != null) {
-              // this set of credentials are associated with another account, show error
-              return done(
-                "This social account is already linked to other account, please try logging in with other account.",
-                null,
-                "This social account is already linked to other account, please try logging in with other account."
-              );
-            }
+  // passport.use(
+  //   new twitterStrategy(
+  //     {
+  //       consumerKey: process.env.TWITTER_CLIENT_ID,
+  //       consumerSecret: process.env.TWITTER_CLIENT_SECRET,
+  //       callbackURL: "https://www.blockdegree.org/auth/twitter/callback",
+  //       includeEmail: true,
+  //       passReqToCallback: true
+  //     },
+  //     async (req, token, tokenSecret, profile, done) => {
+  //       console.log("called twitter auth");
+  //       if (req.user) {
+  //         if (
+  //           req.user.auth.twitter.id == "" ||
+  //           req.user.auth.twitter.id == undefined
+  //         ) {
+  //           // check if the credentials are associated with any other user.
+  //           let otherUser = await User.findOne({
+  //             "auth.twitter.id": profile.id
+  //           });
+  //           if (otherUser != null) {
+  //             // this set of credentials are associated with another account, show error
+  //             return done(
+  //               "This social account is already linked to other account, please try logging in with other account.",
+  //               null,
+  //               "This social account is already linked to other account, please try logging in with other account."
+  //             );
+  //           }
 
-            // add credentials
-            let user = await User.findOne({ email: req.user.email });
-            let otherUserSocial = await User.findOne({
-              "auth.twitter.id": profile.id
-            });
-            if (otherUserSocial!==null && otherUserSocial.email!==user.email){
-              return done(
-                "This social account is not linked to your account.",
-                null,
-                "This social account is not linked to your account."
-              );
-            }
-            user.auth.twitter.id = profile.id;
-            user.auth.twitter.token = token;
-            user.auth.twitter.tokenSecret = tokenSecret;
-            user.lastActive = Date.now();
+  //           // add credentials
+  //           let user = await User.findOne({ email: req.user.email });
+  //           let otherUserSocial = await User.findOne({
+  //             "auth.twitter.id": profile.id
+  //           });
+  //           if (otherUserSocial!==null && otherUserSocial.email!==user.email){
+  //             return done(
+  //               "This social account is not linked to your account.",
+  //               null,
+  //               "This social account is not linked to your account."
+  //             );
+  //           }
+  //           user.auth.twitter.id = profile.id;
+  //           user.auth.twitter.token = token;
+  //           user.auth.twitter.tokenSecret = tokenSecret;
+  //           user.lastActive = Date.now();
 
-            let sessionId = uuid();
-            user.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           user.userSession = sessionId;
 
-            let newSession = genSession(sessionId);
-            newSession.email = user.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "twitter";
-            await newSession.save();
-
-
-            await user.save();
-            return done(null, user);
-          }
-          let user = await User.findOne({ email: req.user.email });
-          user.auth.twitter.token = token;
-          user.auth.twitter.tokenSecret = tokenSecret;
-          user.lastActive = Date.now();
-
-          let sessionId = uuid();
-          user.userSession = sessionId;
-
-          let newSession = genSession(sessionId);
-          newSession.email = user.email;
-          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-          newSession.startTime = Date.now();
-          newSession.platform = "twitter";
-          await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = user.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "twitter";
+  //           await newSession.save();
 
 
-          await user.save();
-          return done(null, req.user);
-        }
-        let existingUser = await User.findOne({
-          "auth.twitter.id": profile.id
-        });
-        if (existingUser) {
-          existingUser.auth.twitter.token = token;
-          existingUser.auth.twitter.tokenSecret = tokenSecret;
-          existingUser.lastActive = Date.now();
+  //           await user.save();
+  //           return done(null, user);
+  //         }
+  //         let user = await User.findOne({ email: req.user.email });
+  //         user.auth.twitter.token = token;
+  //         user.auth.twitter.tokenSecret = tokenSecret;
+  //         user.lastActive = Date.now();
 
-          let sessionId = uuid();
-          existingUser.userSession = sessionId;
+  //         let sessionId = uuid();
+  //         user.userSession = sessionId;
 
-          let newSession = genSession(sessionId);
-          newSession.email = existingUser.email;
-          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-          newSession.startTime = Date.now();
-          newSession.platform = "twitter";
-          await newSession.save();
-
-          await existingUser.save();
-          return done(null, existingUser);
-        }
-
-        if (profile.emails == undefined || profile.emails == null) {
-          return done(
-            "no email-id not associated with this social account",
-            null,
-            "no email-id not associated with this social account"
-          );
-        }
-
-        // Link auths via email
-        if (profile.emails.length > 0) {
-          const linkEmail = await User.findOne({
-            email: profile.emails[0].value
-          });
-          if (linkEmail) {
-            linkEmail.auth.twitter.id = profile.id;
-            linkEmail.auth.twitter.token = token;
-            linkEmail.auth.twitter.tokenSecret = tokenSecret;
-            linkEmail.lastActive = Date.now();
-
-            let sessionId = uuid();
-            linkEmail.userSession = sessionId;
-
-            let newSession = genSession(sessionId);
-            newSession.email = linkEmail.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "twitter";
-            await newSession.save();
+  //         let newSession = genSession(sessionId);
+  //         newSession.email = user.email;
+  //         newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //         newSession.startTime = Date.now();
+  //         newSession.platform = "twitter";
+  //         await newSession.save();
 
 
-            await linkEmail.save();
-            return done(null, linkEmail);
-          }
-        }
+  //         await user.save();
+  //         return done(null, req.user);
+  //       }
+  //       let existingUser = await User.findOne({
+  //         "auth.twitter.id": profile.id
+  //       });
+  //       if (existingUser) {
+  //         existingUser.auth.twitter.token = token;
+  //         existingUser.auth.twitter.tokenSecret = tokenSecret;
+  //         existingUser.lastActive = Date.now();
 
-        let existingUser2 = await User.findOne({
-          email: profile.emails[0].value
-        });
-        if (existingUser2) {
-          let user = await User.findOne({ email: profile.emails[0].value });
-          user.auth.twitter.id = profile.id;
-          user.auth.twitter.token = token;
-          user.auth.twitter.tokenSecret = tokenSecret;
-          user.lastActive = Date.now();
+  //         let sessionId = uuid();
+  //         existingUser.userSession = sessionId;
 
-          let sessionId = uuid();
-          user.userSession = sessionId;
+  //         let newSession = genSession(sessionId);
+  //         newSession.email = existingUser.email;
+  //         newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //         newSession.startTime = Date.now();
+  //         newSession.platform = "twitter";
+  //         await newSession.save();
 
-          let newSession = genSession(sessionId);
-          newSession.email = user.email;
-          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-          newSession.startTime = Date.now();
-          newSession.platform = "twitter";
-          await newSession.save();
+  //         await existingUser.save();
+  //         return done(null, existingUser);
+  //       }
 
-          await user.save();
-          return done(null, user);
-        }
-        newUser = newDefaultUser();
-        newUser.auth.twitter.id = profile.id;
-        newUser.name = formatName(profile.displayName);
-        newUser.email = profile.emails[0].value;
-        newUser.auth.twitter.token = token;
-        newUser.auth.twitter.tokenSecret = tokenSecret;
-        newUser.created = Date.now();
-        newUser.lastActive = Date.now();
+  //       if (profile.emails == undefined || profile.emails == null) {
+  //         return done(
+  //           "no email-id not associated with this social account",
+  //           null,
+  //           "no email-id not associated with this social account"
+  // //         );
+  //       }
 
-        let sessionId = uuid();
-        newUser.userSession = sessionId;
+  //       // Link auths via email
+  //       if (profile.emails.length > 0) {
+  //         const linkEmail = await User.findOne({
+  //           email: profile.emails[0].value
+  //         });
+  //         if (linkEmail) {
+  //           linkEmail.auth.twitter.id = profile.id;
+  //           linkEmail.auth.twitter.token = token;
+  //           linkEmail.auth.twitter.tokenSecret = tokenSecret;
+  //           linkEmail.lastActive = Date.now();
 
-        let newSession = genSession(sessionId);
-        newSession.email = newUser.email;
-        newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-        newSession.startTime = Date.now();
-        newSession.platform = "twitter";
-        await newSession.save();     
+  //           let sessionId = uuid();
+  //           linkEmail.userSession = sessionId;
 
-        await newUser.save();
-        socialPostListener.emit("varTriggerUpdate", "registrations");
-        done(null, newUser, "new-name");
-      }
-    )
-  );
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = linkEmail.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "twitter";
+  //           await newSession.save();
 
-  // Login with Linkedin
-  passport.use(
-    new linkedinStrategy(
-      {
-        clientID: process.env.LINKEDIN_CLIENT,
-        clientSecret: process.env.LINKEDIN_SECRET,
-        callbackURL: "https://www.blockdegree.org/auth/linkedin/callback",
-        scope: ["r_liteprofile", "r_emailaddress", "w_member_social"],
-        passReqToCallback: true
-      },
-      async (req, accessToken, refreshToken, profile, done) => {
-        process.nextTick(async function() {
-          if (req.user) {
-            if (
-              req.user.auth.linkedin.id == "" ||
-              req.user.auth.linkedin.id == undefined
-            ) {
-              // check if the credentials are associated with any other user.
-              let otherUser = await User.findOne({
-                "auth.linkedin.id": profile.id
-              });
-              if (otherUser != null) {
-                // this set of credentials are associated with another account, show error
-                return done(
-                  "This social account is already linked to other account, please try logging in with other account.",
-                  null,
-                  "This social account is already linked to other account, please try logging in with other account."
-                );
-              }
 
-              // add credentials
+  //           await linkEmail.save();
+  //           return done(null, linkEmail);
+  //         }
+  //       }
 
-              let user = await User.findOne({ email: req.user.email });
-              user.auth.linkedin.id = profile.id;
-              user.auth.linkedin.accessToken = accessToken;
-              user.auth.linkedin.refreshToken = refreshToken;
-              user.lastActive = Date.now();
+  //       let existingUser2 = await User.findOne({
+  //         email: profile.emails[0].value
+  //       });
+  //       if (existingUser2) {
+  //         let user = await User.findOne({ email: profile.emails[0].value });
+  //         user.auth.twitter.id = profile.id;
+  //         user.auth.twitter.token = token;
+  //         user.auth.twitter.tokenSecret = tokenSecret;
+  //         user.lastActive = Date.now();
 
-              let sessionId = uuid();
-              user.userSession = sessionId;
+  //         let sessionId = uuid();
+  //         user.userSession = sessionId;
+
+  //         let newSession = genSession(sessionId);
+  //         newSession.email = user.email;
+  //         newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //         newSession.startTime = Date.now();
+  //         newSession.platform = "twitter";
+  //         await newSession.save();
+
+  //         await user.save();
+  //         return done(null, user);
+  //       }
+  //       newUser = newDefaultUser();
+  //       newUser.auth.twitter.id = profile.id;
+  //       newUser.name = formatName(profile.displayName);
+  //       newUser.email = profile.emails[0].value;
+  //       newUser.auth.twitter.token = token;
+  //       newUser.auth.twitter.tokenSecret = tokenSecret;
+  //       newUser.created = Date.now();
+  //       newUser.lastActive = Date.now();
+
+  //       let sessionId = uuid();
+  //       newUser.userSession = sessionId;
+
+  //       let newSession = genSession(sessionId);
+  //       newSession.email = newUser.email;
+  //       newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //       newSession.startTime = Date.now();
+  //       newSession.platform = "twitter";
+  //       await newSession.save();     
+
+  //       await newUser.save();
+  //       socialPostListener.emit("varTriggerUpdate", "registrations");
+  //       done(null, newUser, "new-name");
+  //     }
+  //   )
+  // );
+
+  // // Login with Linkedin
+  // passport.use(
+  //   new linkedinStrategy(
+  //     {
+  //       clientID: process.env.LINKEDIN_CLIENT,
+  //       clientSecret: process.env.LINKEDIN_SECRET,
+  //       callbackURL: "https://www.blockdegree.org/auth/linkedin/callback",
+  //       scope: ["r_liteprofile", "r_emailaddress", "w_member_social"],
+  //       passReqToCallback: true
+  //     },
+  //     async (req, accessToken, refreshToken, profile, done) => {
+  //       process.nextTick(async function() {
+  //         if (req.user) {
+  //           if (
+  //             req.user.auth.linkedin.id == "" ||
+  //             req.user.auth.linkedin.id == undefined
+  //           ) {
+  //             // check if the credentials are associated with any other user.
+  //             let otherUser = await User.findOne({
+  //               "auth.linkedin.id": profile.id
+  //             });
+  //             if (otherUser != null) {
+  //               // this set of credentials are associated with another account, show error
+  //               return done(
+  //                 "This social account is already linked to other account, please try logging in with other account.",
+  //                 null,
+  //                 "This social account is already linked to other account, please try logging in with other account."
+  //               );
+  //             }
+
+  //             // add credentials
+
+  //             let user = await User.findOne({ email: req.user.email });
+  //             user.auth.linkedin.id = profile.id;
+  //             user.auth.linkedin.accessToken = accessToken;
+  //             user.auth.linkedin.refreshToken = refreshToken;
+  //             user.lastActive = Date.now();
+
+  //             let sessionId = uuid();
+  //             user.userSession = sessionId;
   
-              let newSession = genSession(sessionId);
-              newSession.email = user.email;
-              newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-              newSession.startTime = Date.now();
-              newSession.platform = "linkedin";
-              await newSession.save();
+  //             let newSession = genSession(sessionId);
+  //             newSession.email = user.email;
+  //             newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //             newSession.startTime = Date.now();
+  //             newSession.platform = "linkedin";
+  //             await newSession.save();
 
-              await user.save();
-              return done(null, user);
-            }
-            let user = await User.findOne({ email: req.user.email });
-            let otherUserSocial = await User.findOne({
-              "auth.linkedin.id": profile.id
-            });
-            if (otherUserSocial!==null&&otherUserSocial.email!==user.email){
-              return done(
-                "This social account is not linked to your account.",
-                null,
-                "This social account is not linked to your account."
-              );
-            }
-            user.auth.linkedin.accessToken = accessToken;
-            user.auth.linkedin.refreshToken = refreshToken;
-            user.lastActive = Date.now();
+  //             await user.save();
+  //             return done(null, user);
+  //           }
+  //           let user = await User.findOne({ email: req.user.email });
+  //           let otherUserSocial = await User.findOne({
+  //             "auth.linkedin.id": profile.id
+  //           });
+  //           if (otherUserSocial!==null&&otherUserSocial.email!==user.email){
+  //             return done(
+  //               "This social account is not linked to your account.",
+  //               null,
+  //               "This social account is not linked to your account."
+  //             );
+  //           }
+  //           user.auth.linkedin.accessToken = accessToken;
+  //           user.auth.linkedin.refreshToken = refreshToken;
+  //           user.lastActive = Date.now();
 
-            let sessionId = uuid();
-            user.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           user.userSession = sessionId;
   
-            let newSession = genSession(sessionId);
-            newSession.email = user.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "linkedin";
-            await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = user.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "linkedin";
+  //           await newSession.save();
 
-            await user.save();
-            return done(null, user);
-          }
-          let  existingUser = await User.findOne({
-            "auth.linkedin.id": profile.id
-          });
-          if (existingUser) {
-            // need to refresh token
-            existingUser.auth.linkedin.accessToken = accessToken;
-            existingUser.auth.linkedin.refreshToken = refreshToken;
-            existingUser.lastActive = Date.now();
+  //           await user.save();
+  //           return done(null, user);
+  //         }
+  //         let  existingUser = await User.findOne({
+  //           "auth.linkedin.id": profile.id
+  //         });
+  //         if (existingUser) {
+  //           // need to refresh token
+  //           existingUser.auth.linkedin.accessToken = accessToken;
+  //           existingUser.auth.linkedin.refreshToken = refreshToken;
+  //           existingUser.lastActive = Date.now();
 
-            let sessionId = uuid();
-            existingUser.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           existingUser.userSession = sessionId;
   
-            let newSession = genSession(sessionId);
-            newSession.email = existingUser.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "linkedin";
-            await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = existingUser.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "linkedin";
+  //           await newSession.save();
 
-            await existingUser.save();
-            return done(null, existingUser);
-          }
+  //           await existingUser.save();
+  //           return done(null, existingUser);
+  //         }
 
-          if (profile.emails == undefined || profile.emails == null) {
-            return done(
-              "no email-id not associated with this social account",
-              null,
-              "no email-id not associated with this social account"
-            );
-          }
+  //         if (profile.emails == undefined || profile.emails == null) {
+  //           return done(
+  //             "no email-id not associated with this social account",
+  //             null,
+  //             "no email-id not associated with this social account"
+  //           );
+  //         }
 
-          if (profile.emails.length > 0) {
-            const linkEmail = await User.findOne({
-              email: profile.emails[0].value
-            });
-            if (linkEmail) {
-              linkEmail.auth.linkedin.id = profile.id;
-              linkEmail.auth.linkedin.accessToken = accessToken;
-              linkEmail.auth.linkedin.refreshToken = refreshToken;
-              linkEmail.lastActive = Date.now();
+  //         if (profile.emails.length > 0) {
+  //           const linkEmail = await User.findOne({
+  //             email: profile.emails[0].value
+  //           });
+  //           if (linkEmail) {
+  //             linkEmail.auth.linkedin.id = profile.id;
+  //             linkEmail.auth.linkedin.accessToken = accessToken;
+  //             linkEmail.auth.linkedin.refreshToken = refreshToken;
+  //             linkEmail.lastActive = Date.now();
 
 
-            let sessionId = uuid();
-            linkEmail.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           linkEmail.userSession = sessionId;
 
-            let newSession = genSession(sessionId);
-            newSession.email = linkEmail.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "linkedin";
-            await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = linkEmail.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "linkedin";
+  //           await newSession.save();
 
-              await linkEmail.save();
-              return done(null, linkEmail);
-            }
-          }
+  //             await linkEmail.save();
+  //             return done(null, linkEmail);
+  //           }
+  //         }
 
-          let existingUser2 = await User.findOne({
-            email: profile.emails[0].value
-          });
-          if (existingUser2) {
-            let user = await User.findOne({ email: profile.emails[0].value });
-            user.auth.linkedin.id = profile.id;
-            user.auth.linkedin.accessToken = accessToken;
-            user.auth.linkedin.refreshToken = refreshToken;
-            user.lastActive = Date.now();
+  //         let existingUser2 = await User.findOne({
+  //           email: profile.emails[0].value
+  //         });
+  //         if (existingUser2) {
+  //           let user = await User.findOne({ email: profile.emails[0].value });
+  //           user.auth.linkedin.id = profile.id;
+  //           user.auth.linkedin.accessToken = accessToken;
+  //           user.auth.linkedin.refreshToken = refreshToken;
+  //           user.lastActive = Date.now();
 
-            let sessionId = uuid();
-            user.userSession = sessionId;
+  //           let sessionId = uuid();
+  //           user.userSession = sessionId;
   
-            let newSession = genSession(sessionId);
-            newSession.email = user.email;
-            newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-            newSession.startTime = Date.now();
-            newSession.platform = "linkedin";
-            await newSession.save();
+  //           let newSession = genSession(sessionId);
+  //           newSession.email = user.email;
+  //           newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //           newSession.startTime = Date.now();
+  //           newSession.platform = "linkedin";
+  //           await newSession.save();
 
-            await user.save();
-            return done(null, user);
-          }
-          newUser = newDefaultUser();
-          newUser.auth.linkedin.id = profile.id;
-          newUser.name = formatName(profile.displayName);
-          newUser.email = profile.emails[0].value;
-          newUser.auth.linkedin.accessToken = accessToken;
-          newUser.created = Date.now();
-          newUser.lastActive = Date.now();
+  //           await user.save();
+  //           return done(null, user);
+  //         }
+  //         newUser = newDefaultUser();
+  //         newUser.auth.linkedin.id = profile.id;
+  //         newUser.name = formatName(profile.displayName);
+  //         newUser.email = profile.emails[0].value;
+  //         newUser.auth.linkedin.accessToken = accessToken;
+  //         newUser.created = Date.now();
+  //         newUser.lastActive = Date.now();
 
-          let sessionId = uuid();
-          newUser.userSession = sessionId;
+  //         let sessionId = uuid();
+  //         newUser.userSession = sessionId;
   
-          let newSession = genSession(sessionId);
-          newSession.email = newUser.email;
-          newSession.ip = req.headers["x-forwarded-for"] || req.ip;
-          newSession.startTime = Date.now();
-          newSession.platform = "linkedin";
-          await newSession.save();     
+  //         let newSession = genSession(sessionId);
+  //         newSession.email = newUser.email;
+  //         newSession.ip = req.headers["x-forwarded-for"] || req.ip;
+  //         newSession.startTime = Date.now();
+  //         newSession.platform = "linkedin";
+  //         await newSession.save();     
 
-          await newUser.save();
-          socialPostListener.emit("varTriggerUpdate", "registrations");
-          done(null, newUser, "new-name");
-        });
-      }
-    )
-  );
+  //         await newUser.save();
+  //         socialPostListener.emit("varTriggerUpdate", "registrations");
+  //         done(null, newUser, "new-name");
+  //       });
+  //     }
+  //   )
+  // );
 };
 
 function validateEmail(email) {
