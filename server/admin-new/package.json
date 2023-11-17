@@ -66,7 +66,7 @@
     "react-dev-utils": "^4.0.1",
     "react-dom": "^16.12.0",
     "react-dropdown": "^1.6.4",
-    "react-google-maps": "^7.3.0",
+    "react-google-maps": "^9.4.5",
     "react-map-gl": "^3.0.4",
     "react-notification-system": "^0.2.15",
     "react-notifications-component": "^2.2.4",
