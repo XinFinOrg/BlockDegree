@@ -147,7 +147,91 @@
         "It is rejected, and no further action is taken.",
         "It remains pending indefinitely."],
         "answer": 2
-      }
+      },
+      {"question": "What is the primary purpose of the XDC token in the XinFin Network?",
+      "choices": ["Fueling rocket launches",
+      "Providing healthcare services",
+      "Serving as a payment and settlements layer",
+      "Being used for international tourism"],
+      "answer": 3
+    },
+    {"question": "How is the XDC token used within the XinFin ecosystem?",
+      "choices": ["To order fast food",
+      "As a musical instrument",
+      "For financial services and decentralised applications",
+      "As a language translation tool"],
+      "answer": 3
+    },
+    {"question": "What is the significance of a native cryptocurrency within a blockchain network?",
+      "choices": ["It's irrelevant and rarely used",
+      "It has no specific purpose",
+      "It is the fundamental digital currency that operates within the network",
+      "It's primarily used for video game purchases."],
+      "answer": 3
+    },
+    {"question": "What is XDCe, and what happened to it in the XinFin Network?",
+      "choices": ["A separate blockchain network",
+      "A type of cryptocurrency used by big corporations",
+      "It has been phased out and replaced by the XDC token",
+      "A delicious dessert"],
+      "answer": 3
+    },
+    {"question": "What is the role of the Ethereum Virtual Machine (EVM) in the XDC network?",
+    "choices": ["Sending birthday cards to XDC token holders",
+    "Running on top of the XDC blockchain to execute smart contracts",
+    "Brewing coffee for developers",
+    "Creating digital art"],
+    "answer": 2
+  },
+  {"question": "How does XDC's EVM compatibility make it easier for developers?",
+  "choices": ["It doesn't make any difference",
+  "It makes development more challenging",
+  " It allows them to use familiar tools and programming languages from Ethereum."
+  ],
+  "answer": 3
+  },
+  {"question": "How do XDC wallets work in terms of cryptography?",
+    "choices": ["They use Morse code for communication",
+    "They use telepathy for key exchange",
+    "They utilize public-key cryptography with public and private keys",
+    "They rely on secret handshakes for authentication."],
+    "answer": 3
+  },
+  {"question": "How can XDC be used for tokenization of assets in enterprises?",
+    "choices": ["It's used for tokenizing movie tickets",
+    "Digital tokens can represent ownership or value in real-world assets and be traded or used as collateral in financial transactions",
+    "It's primarily used for tokenizing candy in enterprise applications",
+    "It's used to create a digital representation of art pieces"],
+    "answer": 2
+  },
+  {"question": "What role does XDC play in streamlining trade finance operations in enterprises?",
+    "choices": ["It serves as a digital artwork platform for trade finance",
+    "XDC is used to order supplies for trade financing",
+    "Smart contracts automate processes like issuing letters of credit and trade settlement",
+    "XDC is mainly used for gardening services in trade finance"],
+    "answer": 3
+  },
+  {"question": "How can XDC be effectively utilized in supply chain management in enterprise applications?",
+    "choices": ["It can be used to order fast food for supply chain workers",
+    "Smart contracts automate and verify the movement of goods and payments, reducing the need for intermediaries",
+    "It's primarily used for managing a zoo's supply chain",
+    "It's a tool for tracking animal migrations in supply chain processes"],
+    "answer": 2
+  },
+  {"question": "What do smart contracts on the XDC Network provide a powerful tool for?",
+  "choices": ["Ordering groceries online",
+  "Automating complex business processes",
+  "Predicting the weather",
+  "Hosting virtual parties"],
+  "answer": 2
+  },
+  {"question": "When are smart contracts on the XDC Network triggered for execution?",
+  "choices": ["Whenever someone feels like it",
+  "When a specific event or action recorded on the blockchain occurs",
+  "Only during leap years",
+  "Randomly"],
+  "answer": 2
+  }
 
   ]
   }
