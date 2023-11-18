@@ -51,6 +51,10 @@ var userSchema = mongoose.Schema({
       attempts: Number,
       marks: Number,
     },
+    examXdcNetwork:{
+      attempts: Number,
+      marks: Number,
+    },
     certificateHash: [
       {
         timestamp: String,
