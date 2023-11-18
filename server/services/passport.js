@@ -31,6 +31,7 @@ function newDefaultUser() {
         course_4: false,
         course_5: false,
         course_6: false,
+        course_7: false,
       },
       examBasic: {
         attempts: 0,
