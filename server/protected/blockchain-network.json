@@ -119,7 +119,35 @@
           "A nominator is a coin holder who stakes or delegates their coins to one or more validators.",
           "A nominator is a validator."],
           "answer": 3
-        }
+        },
+        {"question": "How often can a single nominator vote for a validator in XDPoS?",
+            "choices": [" Once every two epochs.",
+            "Once every epoch.",
+            "Once every withdrawal period.",
+            "Only once in their lifetime."],
+            "answer": 1
+        },
+        {"question": "What is the role of Masternodes in the XDC Network?",
+          "choices": ["Masternodes process transactions but don't require any XDC tokens as collateral.",
+          "Masternodes validate transactions and govern the network's security.",
+          "Masternodes are only responsible for storing blockchain data.",
+          "Masternodes create new XDC tokens."],
+          "answer": 2
+        },
+        {"question": "How do Full Nodes contribute to the XDC Network?",
+        "choices": ["Full Nodes process transactions and reach consensus.",
+        "Full Nodes require collateral stakes to participate.",
+        "Full Nodes help distribute information across the network and store blockchain data.",
+        "Full Nodes create new blocks."],
+        "answer": 3
+      },
+      {"question": "What happens if a proposal in the XDC Network passes a certain threshold of approval?",
+        "choices": ["It gets automatically implemented without any further steps.",
+        "It becomes part of the XDC Network's rules and is implemented by developers.",
+        "It is rejected, and no further action is taken.",
+        "It remains pending indefinitely."],
+        "answer": 2
+      }
 
   ]
   }
