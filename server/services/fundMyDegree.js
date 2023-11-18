@@ -1027,6 +1027,8 @@ function getCourseName(id) {
       return "Blockchain Wallet";
     case "course_6":
       return "Blockchain Basic 2";
+    case "course_7":
+      return "XDC Blockchain Network";
     default:
       return "";
   }
