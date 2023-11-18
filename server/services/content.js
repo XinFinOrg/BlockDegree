@@ -39,6 +39,11 @@ exports.renderCourses = (req, res) => {
       );
       break;
     }
+    case "blockchain-network": {
+      eventEmitter.emit("visited", req, "blockchain-network");
+      res.redirect("/courses/blockchain-network/introduction-xdc-blockchain-network");
+      break;
+    }
   }
 };
 
