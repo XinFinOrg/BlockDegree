@@ -2,7 +2,7 @@
 parent: XDC Blockchain Network
 title: Regulatory Compliance and Security
 template: courseContent.hbs
-courseIdx: 7
+courseIdx: 6
 ---
 - ## Regulatory Compliance:
 

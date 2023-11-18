@@ -2,7 +2,7 @@
 parent: XDC Blockchain Network
 title: Smart Contracts on the XDC Network
 template: courseContent.hbs
-courseIdx: 7
+courseIdx: 6
 ---
 - Smart contracts on the XDC Network provide a powerful tool for automating complex business processes, increasing security, and reducing the need for intermediaries. Explore how these self-executing contracts are revolutionizing supply chain management, trade finance, cross-border payments, and more.
 
