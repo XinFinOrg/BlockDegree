@@ -38,9 +38,9 @@ const examTypes = {
     questionName: "questionsBasic2",
     coursePayment_id: "course_6",
   },
-  xdc_network: {
+  network: {
     courseName: "examXdcNetwork",
-    questionName: "questionXdcNetwork",
+    questionName: "questionsXdcNetwork",
     coursePayment_id: "course_7",
   },
 };
@@ -58,10 +58,12 @@ exports.submitExam = async (req, res, next) => {
   let attemptsProfessional = req.user.examData.examProfessional.attempts;
   let attemptsComputing = req.user.examData.examComputing.attempts;
   let attemptsWallet = req.user.examData.examWallet.attempts;
+  let attemptsxdc_network = req.user.examData.examXdcNetwork.attempts;
 
   console.log("AttemptsComputing: ", attemptsComputing);
   if (attemptsComputing === undefined) attemptsComputing = 0;
   if (attemptsWallet === undefined) attemptsWallet = 0;
+  if (attemptsxdc_network === undefined) attemptsxdc_network = 0;
 
 
   var query = {};
@@ -353,7 +355,6 @@ exports.submitExam = async (req, res, next) => {
         console.log("inside computing");
         if (attemptsComputing != null && attemptsComputing < 3) {
           questions.findOne({ exam: "firstExam" }).then((result, error) => {
-            console.log(result.questionsComputing);
 
             for (
               let index = 0;
@@ -511,7 +512,87 @@ exports.submitExam = async (req, res, next) => {
             }
           );
         }
-      } 
+      }else if (examName === "network") {
+        console.log("inside computing");
+        if (attemptsxdc_network!= null && attemptsxdc_network < 3) {
+          questions.findOne({ exam: "firstExam" }).then((result, error) => {
+
+            for (
+              let index = 0;
+              index < result.questionsXdcNetwork.length;
+              index++
+            ) {
+              if (
+                parseInt(req.body[index]) + 1 ==
+                result.questionsXdcNetwork[index].answer
+              ) {
+                marks++;
+              }
+            }
+            attemptsxdc_network += 1;
+            console.log("Marks", marks);
+            User.findOneAndUpdate(
+              query,
+              {
+                $set: {
+                  "examData.examXdcNetwork.attempts":
+                    attemptsxdc_network > 2 ? 0 : attemptsxdc_network,
+                  "examData.examXdcNetwork.marks": marks,
+                  "examData.payment.course_7": attemptsxdc_network <= 2,
+                  "examData.payment.course_7_payment":
+                    attemptsxdc_network <= 2
+                      ? currUser.examData.payment.course_7_payment
+                      : "",
+                  "examData.payment.course_7_doner":
+                    attemptsxdc_network <= 2
+                      ? currUser.examData.payment.course_7_doner
+                      : "",
+                },
+              },
+              { upsert: false },
+              (err, doc) => {
+                if (err) {
+                  console.error("Some error occured at exam.submitExam: ", err);
+                  return res.json({
+                    status: false,
+                    error:
+                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience",
+                  });
+                }
+                res.json({ status: true, error: null });
+                return;
+              }
+            );
+          });
+        } else if (attemptsxdc_network >= 3) {
+          attemptsxdc_network = 0;
+          User.findOneAndUpdate(
+            query,
+            {
+              $set: {
+                "examData.examXdcNetwork.attempts": attemptsxdc_network,
+                "examData.examXdcNetwork.marks": marks,
+                "examData.payment.course_7": false,
+                "examData.payment.course_7_payment": "",
+                "examData.payment.course_7_doner": "",
+              },
+            },
+            { upsert: false },
+            (err, doc) => {
+              if (err) {
+                console.error("Some error occured at exam.submitExam: ", err);
+                return res.json({
+                  status: false,
+                  error:
+                    "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience",
+                });
+              }
+              res.json({ status: true, error: null });
+              return;
+            }
+          );
+        }
+      }
     }
   }
 };
@@ -593,6 +674,22 @@ exports.getBlockchainWalletExam = (req, res) => {
   );
 };
 
+exports.getXdcNetworkExam= (req, res) => {
+ 
+  readJSONFile(
+    path.join(process.cwd(), "/server/protected/blockchain-network.json"),
+    (err, json) => {
+      if (err) {
+        return res.render("displayError", {
+          error:
+            "Something went wrong while fetching the exam, please try again later or contact us at info@blockdegree.org",
+        });
+      }
+      res.render("blockchainNetwork", { examStr: JSON.stringify(json) });
+    }
+  );
+};
+
 exports.getExamResult = async (req, res) => {
   console.log(
     `called the exam-result endpoint by ${req.user.email} at ${Date.now()}`
@@ -651,6 +748,7 @@ exports.getExamResult = async (req, res) => {
       examProfessional: examName == "professional",
       examComputing: examName == "computing",
       examWallet: examName == "wallet",
+      examXdcNetwork: examName =="network",
     },
     data: user,
     obtainedMarks: marksObtained,
