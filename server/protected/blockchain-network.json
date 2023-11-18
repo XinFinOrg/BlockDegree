@@ -1,0 +1,125 @@
+{
+  "exam": [
+    {
+      "question": "What is the primary focus of XinFin as a blockchain technology company?",
+      "choices": ["Developing video games", 
+      "Providing blockchain solutions for businesses and institutions", 
+      "Cryptocurrency mining", 
+      "Social media platform development."],
+      "answer": 2
+    },
+    {
+      "question": "What are the main purposes of XDC within the XinFin ecosystem?",
+      "choices": ["Serving coffee to users",
+      "Enabling interstellar travel", 
+      "Facilitating transactions on the XinFin blockchain and various network functions",
+      "Growing vegetables"],
+      "answer": 3
+    },
+    {
+      "question": "What did XinFin develop to host its XDC cryptocurrency after its initial launch on Ethereum?",
+      "choices": ["XDC Market",
+      "XDC Explorer", 
+      "XDC Network",
+      "XDC Exchange"],
+      "answer": 3
+    },
+    {
+      "question": "What type of blockchain is the XDC Network, and why is it called a \"hybrid\" blockchain?",
+      "choices": ["Public blockchain with unlimited transparency",
+      "Private blockchain with high security",
+      "Hybrid blockchain combining features of both public and private blockchains",
+      "Hybrid blockchain combining features of Bitcoin and Ethereum"],
+      "answer": 3
+    },
+    {
+      "question": "What is the primary purpose of the XDC Network, as described in the text?",
+      "choices": ["Trade finance and payments, with a focus on global trade operations",
+      "Providing blockchain solutions for individuals",
+      "Developing video games",
+      "Building social media platforms"],
+      "answer": 1
+    },
+    {
+      "question": "How can the XDC Network benefit enterprises engaged in international trade?",
+      "choices": ["By increasing settlement times",
+      "By adding more intermediaries",
+      "By reducing settlement times and the need for intermediaries",
+      "By increasing paperwork in cross-border transactions"],
+      "answer": 3
+    },
+    {
+      "question": "What does the term \"interoperability\" mean in the context of the XDC Network for enterprises?",
+      "choices": ["The ability to communicate only with other XDC networks",
+      "The ability to integrate with current infrastructure for a smoother transition to blockchain technology",
+      "Incompatibility with existing systems",
+      "Limited connectivity with other blockchains"],
+      "answer": 2
+    },
+    {
+      "question": "What does the use of blockchain technology on the XDC Network reduce in industries where data accuracy and integrity are critical?",
+      "choices": ["Data accuracy",
+      "Data volume",
+      "Risk of fraud, errors, and data manipulation",
+      "Operational efficiency."],
+      "answer": 3
+    },
+    {
+      "question": "What is one of the key advantages of the XDC Network in terms of scalability for enterprises?",
+      "choices": ["It's not suitable for businesses with expanding operations",
+      "It can only handle a small volume of transactions",
+      "It's designed to handle a high volume of transactions efficiently",
+      "It has no impact on transaction volume."],
+      "answer": 3
+    },
+    {
+      "question": "Which type of blockchain components are combined in the XDC Network's architecture?",
+      "choices": ["Public and private chains",
+      "Public and consortium chains",
+      "Private and permissioned chains",
+      "Public and federated chains."],
+      "answer": 1
+    },
+    {
+      "question": "What is the main benefit of a hybrid blockchain's combination of public and private features?",
+      "choices": ["It offers maximum privacy with no verifiability.",
+      "It ensures that every user's identity is completely hidden.",
+      "It combines the benefits of both public and private blockchains, offering security, transparency, and controlled access.",
+      "It only benefits large organisations with no need for public interactions."],
+      "answer": 3
+    },
+    {
+      "question": "How are delegates in XDPoS elected to validate transactions and create new blocks?",
+      "choices": ["By random selection",
+      "By government appointment",
+      "Based on community voting",
+      "By the highest stake in XDC tokens"],
+      "answer": 3
+    },
+    {
+    "question": "What is a Hybrid Blockchain and what does it combine from private and public blockchains?",
+      "choices": ["Hybrid Blockchain combines private and public blockchains and offers only public access.",
+      "A Hybrid Blockchain combines private and public blockchains and offers controlled access and freedom",
+      "A Hybrid Blockchain combines private and public blockchains and is entirely private.",
+      " Hybrid Blockchain combines private and public blockchains but offers no control over data access."],
+      "answer": 2
+    },
+    {
+      "question": "How does the XDC Delegated Proof-of-Stake (XDPoS) consensus address scalability challenges in blockchain platforms?",
+        "choices": ["By using a centralized network administrator.",
+        "By increasing transaction costs.",
+        "By employing a 108-Masternode system.",
+        "By offering complete anonymity."],
+        "answer": 3
+      },
+      {
+        "question": "What is the role of a nominator in XDPoS?",
+          "choices": ["A nominator is a network administrator.",
+          "A nominator is responsible for producing and validating blocks.",
+          "A nominator is a coin holder who stakes or delegates their coins to one or more validators.",
+          "A nominator is a validator."],
+          "answer": 3
+        }
+
+  ]
+  }
