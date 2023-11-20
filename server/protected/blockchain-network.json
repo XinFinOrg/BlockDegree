@@ -294,7 +294,41 @@
   "Consult with legal and regulatory experts",
   "Take more risks without assessing them."],
   "answer": 3
+  },
+  {"question": "What is the potential risk associated with using the XDC blockchain, as mentioned in the text?",
+  "choices": ["Hacks and scams",
+  "Regulatory compliance",
+  "Energy consumption",
+  "Scalability issues"],
+  "answer": 1
+  },
+  {"question": "What does XDC 2.0 aim to achieve in terms of security?",
+  "choices": ["Introducing vulnerabilities to the network.",
+  "Detecting and identifying malicious master nodes.",
+  "Abandoning security measures.",
+  "Implementing weak encryption."],
+  "answer": 2
+  },
+  {"question": "What type of security practices does ChangeNOW adhere to?",
+  "choices": ["They don't follow any security practices.",
+  "They use outdated encryption techniques.",
+  "They rely on security through obscurity.",
+  "They follow data protection regulations and industry best practices."],
+  "answer": 4
+  },
+  {"question": "Why does blockchain security matter, especially in the context of XDC Network and ChangeNOW?",
+  "choices": ["It's not important.",
+  "Blockchain's decentralized nature ensures security.",
+  "Blockchain technology exposes users to privacy risks.",
+  "It helps protect against natural disasters."],
+  "answer": 3
+  },
+  {"question": "What measures does ChangeNOW take to ensure the security and privacy of users during transactions?",
+  "choices": ["They don't take any specific measures.",
+  " They use advanced encryption techniques.",
+  "They don't care about user privacy.",
+  "They use public Wi-Fi networks for transactions."],
+  "answer": 2
   }
-
   ]
   }
