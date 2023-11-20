@@ -231,6 +231,69 @@
   "Only during leap years",
   "Randomly"],
   "answer": 2
+  },
+  {"question": "What are smart contracts?",
+  "choices": ["Legal documents written in traditional language",
+  "Self-executing contracts with terms written directly into code",
+  "Social contracts governing etiquette",
+  "Smartphones used for contract management"],
+  "answer": 2
+  },
+  {"question": "What is the role of developers in creating smart contracts on the XDC Network?",
+  "choices": ["They deploy smart contracts to a different blockchain network",
+  "They write code for smart contracts and deploy them to the XDC Network",
+  "They automate contract execution with human intervention",
+  "They write contract terms on post-it notes."],
+  "answer": 2
+  },
+  {"question": "What is the first step in creating and deploying smart contracts on the XinFin blockchain?",
+  "choices": ["Compile the smart contract",
+  "Interact with the smart contract",
+  "Set up the development environment",
+  "Write the smart contract code."],
+  "answer": 3
+  },
+  {"question": "Which programming languages can be used to write smart contract code on XinFin?",
+  "choices": ["Solidity only",
+  "C++",
+  "XDCsmartcontract only",
+  "Various languages including Solidity and XDCsmartcontract."],
+  "answer": 4
+  },
+  {"question": "What is the purpose of XinPay in deploying a smart contract on XinFin?",
+  "choices": ["To download XinFin remix",
+  "To create a new file for the smart contract",
+  "To interact with the smart contract",
+  "To access your wallet and deploy the contract."],
+  "answer": 4
+  },
+  {"question": "What is the recommended practice before deploying a smart contract on the main XinFin network?",
+  "choices": ["Don't test it at all",
+  "Test it on a testnet or local development network",
+  "Deploy it directly to the main network",
+  "Test it on a different blockchain."],
+  "answer": 2
+  },
+  {"question": "Why is it important to compile a smart contract before deployment?",
+  "choices": ["To test the contract locally.",
+  "To create a new file for the smart contract",
+  "To convert the contract code into bytecode that can be executed on the XinFin network.",
+  "To establish trust among network nodes."],
+  "answer": 4
+  },
+  {"question": "Why might businesses need to comply with AML and KYC laws when using the XDC blockchain?",
+  "choices": ["To prevent software bugs",
+  "To promote energy efficiency",
+  "To prevent money laundering and terrorist financing",
+  "To establish a consensus mechanism"],
+  "answer": 3
+  },
+  {"question": "What is one of the recommendations provided for businesses considering using the XDC blockchain?",
+  "choices": ["Avoid consulting with legal experts",
+  "Ignore regulatory compliance",
+  "Consult with legal and regulatory experts",
+  "Take more risks without assessing them."],
+  "answer": 3
   }
 
   ]
