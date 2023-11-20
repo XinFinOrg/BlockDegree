@@ -1,91 +1,71 @@
 ---
 parent: Blockchain basic course for engineer
-title: The Evolution of the Blockchain- Generation 1 to 4
+title: The Evolution of the Blockchain- Generation 1 to 3
 template: courseContent.hbs
 courseIdx: 0
 ---
-### 1st Generation Blockchains focus on moving value, maintaining a ledger, ideal payment systems
+## 1st Generation Blockchain:
 
-The functions listed above represent the real basis on which bitcoin was created. Another main part of Bitcoin is the fact that it was created to be open source, that is, made available for other users or developers to utilize or modify. By making the Bitcoin code open source, Satoshi Nakamoto gave anyone the chance to learn from Bitcoin, build on it and expand beyond it.
+1st Generation blockchains focus on fundamental concepts such as transferring value, maintaining an immutable ledger, and serving as an ideal payment system. Bitcoin, the original cryptocurrency, is a prime example of this generation. It was created with key principles in mind.
 
-### First Generation Blockchain Technology
-In order to understand the 1st Generation blockchain technology, it is essential to observe Bitcoin’s Blockchain. With the use of blockchain technology, Bitcoin became the first successful digital currency in the whole world.
+**Open Source Nature:** Bitcoin was designed as an open-source project, meaning its code was made accessible for users and developers to examine, modify, and build upon. This open approach allowed for collaboration and innovation.
 
-This was achieved through the 1st Generation blockchain technology.
+## 1st Generation Blockchain Technology:
+This technology, exemplified by Bitcoin's blockchain, represents the pioneering phase of blockchain adoption. It introduced the world to the concept of digital currency and decentralized ledger systems.
 
-Example of a Bank:-
-Alex, who works as a driver receives a total tip of 200 USD at the end of the day. He takes the money to Wells Fargo Bank where he deposits the money. Wells Fargo Bank updates its ledger, which in turn enables Alex’s bank account with them to show that he now has 200 USD. While Alex was on the way home, he realizes that he needs to buy dinner, which requires some cash on hand. However, the only Automated Teller Machine (ATM) along the road to his home belongs to HSBC bank. Meanwhile, HSBC bank ledger does not show that Alex has 200 USD, and he has no choice but to return to Wells Fargo Bank for his cash withdrawal. Without considering the inconvenience of Alex walking to the ATM of Wells Fargo Bank, a centralized ledger requires a certain level of trust: Alex has to trust Wells Fargo Bank with his money, and that his money will be returned upon his request. If the bank’s records get erased, Alex completely loses all his money with them.
+When you receive your earnings via PayPal, you encounter a series of financial roadblocks. PayPal levies transaction fees ranging from 2.5% to 5%. The ordeal doesn't end there; your USD earnings must be converted to your local currency. However, PayPal's conversion rates are typically 2 to 3 USD less favorable than the market rate, leading to additional losses.
 
-How the Blockchain is different?
+After this arduous conversion process, the funds eventually make their way to your local bank account. Here's where another hurdle arises: your bank imposes charges once your balance dips below a certain "Minimum Balance Criterion." The entire journey, from payment reception to having accessible funds, often spans a grueling 3 to 5 business days.
 
-In contrast, all participants share the ledger in blockchain, making it a decentralized and distributed ledger. Rather than leaving the record of all transactions to one central bank, everyone has a copy of the same ledger which is regularly updated. Even if a single ledger is tampered with, it will not affect other ledgers because there will be no recording or validating.
+Now, consider the plight of individuals like Alex, who wishes to send $100 to a friend, Bob. Traditional financial institutions, known for their intermediaries and transaction fees, siphon off a significant portion of the amount. In Alex's case, a 2% transaction fee equates to Bob receiving only $98. This might seem trivial for smaller amounts, but amplify the scenario to a $100,000 transfer, and the fees escalate to a substantial $2,000. The enormity of these charges is underscored by reports from financial giants like JPMorgan Chase, Bank of America, and Wells Fargo, which collectively raked in over $6 billion in transaction fees.
 
-Example of 1st Generation Blockchain:-
-Alex and 5 of his friends have a meet-up session every day. During each session, they discuss among one another how much each had spent and what they spent on over the past day. Each of them has a notebook, and each takes a record of the payments of all 5. After recording all these transactions, they all compare notes to ensure that the results are the same. After which all 5 of them sign on all 5 notebooks, and they take the notebooks home until their next session. There are several benefits to their method:
-
-Losing any of the notebooks would have no negative effect because the records are still stored with the others.
-
-2. If anyone of them tampers with the records he possesses, it will immediately become obvious during their next meet-up session. A cheater would literally have to break into 4 other homes, steal their notebooks, replace them with notebooks that look exactly the same, rewrite on all the pages that were previously written on, and forge the signatures for each page before the next session. This example is for 5 friends; now imagine if it is a few thousand friends who hold this session instead and each session takes place every 10 minutes instead of once in a day.
-
-3. The need for ‘trust’ is useless in this case: all the transactions are verified and signed by all members when each session ends.
-
-Now, why Bitcoin was created?
-
-The founder of Bitcoin, the mysterious Satoshi Nakamoto planned to remove Third-Party verification and intended to create a trustless payment platform with transactions that can not be reversed. Such a system is helpful in private transactions, receiving and providing financial aid to people residing in unstable countries with collapsing economies. Bitcoin is a currency with no borders.
-
-Imagine you did a work-from-home internship for a startup in the USA and you got paid through Paypal. Paypal will charge you a transaction fee of 2.5 to 5%. At that moment, you have USD in you Paypal account, which needs to be converted. The standard conversion rate of Paypal or other converters is usually Rs. 2 to 3/USD less than the actual rate. When you finally have the SGP currency in your bank account, you will be charged by your bank once your balance is less than the “Minimum Balance Criterion”.
-This entire process would take a minimum of 3-5 business days.
-
-For instance, Alex wants to send $100 to Bob. However, he would have to ignore a trusted third party like a Bank or Financial institution in order to enable Bob receive it earlier. A transaction charge of 2% is deducted from the total amount and Bob receives $98 only. Now the 2% charged might appear like a very little amount. However, imagine if you sent $100,000 rather than $100, then the transaction fees will also increase to $2,000, which is a huge amount. According to a record from SNL Financial and CNNMoney, JPMorgan Chase, Bank of America and Wells Fargo, they earned more than $6 billion from these transaction charges.
   <img src="/img/courses/bc-basic/hst3.png"  style="width:100%; height: 400px; align-content: center; "/>
 
 
+The bulk of these expenses are classified as Third-Party/Broker Fees, necessitated by the involvement of trusted intermediaries, such as PayPal and traditional banks, to facilitate transactions.
 
-Most of these expenses are recorded under Third-Party/Broker Fees, which you pay to a trusted third party (Paypal and your Bank) for carrying out your transactions.
+Now, envision an alternative world where the startup you worked for opts to compensate you in Bitcoin. The contrast is striking. Bitcoin transactions incur minimal fees, notably less than the traditional scenario outlined earlier, and the entire process is expedited, often completed within the span of an hour. Your earnings arrive directly in your Bitcoin wallet, circumventing the labyrinthine process of currency conversion and minimizing the loss of funds.
 
-On the contrary, if the startup you worked for had paid you in Bitcoin, there would have been a very minute fee (less than the above scenario) and the whole transaction would have been completed within an hour. You would have directly received Bitcoin in your wallet.
+ **Centralized Trust vs. Decentralization:**
+The comparison between traditional centralized systems and the decentralized nature of Bitcoin is stark. Traditional banks, as illustrated by a hypothetical example involving Alex and a centralized ledger, require users to trust the bank with their money, introducing potential vulnerabilities.
 
-This method of receiving funds is way cheaper and faster.
-Second generation blockchains are those like Ethereum, Ethereum Classic, NEO and QTUM to name a few.
-These are widely referred to as the second generation because they have made use of blockchain’s idea of recording transactions and expanded it to allow programming languages. These second-generation blockchains have also kick-started smart contracts. These gives room to customizable transactions, which means you can custom create transactions to be carried out in whatever ways best fit the needs of all parties involved.
+**Blockchain's Decentralized Ledger:**
+In contrast, the blockchain functions as a shared, decentralized ledger where all participants hold a copy of the same ledger, updated in real time. This approach ensures data integrity and security. Even if one ledger is tampered with, it doesn't affect the others.
 
-### Second Generation Blockchain.
-Second generation blockchains started the use of maintaining assets in general by a blockchain. In this generation, anyone can issue shares on the blockchain. Ethereum is a good example of a second generation blockchain. Ethereum is based on applying authoritative rules for ownership, transaction formats and state transition functions, taking both the state of a blockchain and a transaction for that blockchain, which in turn results into a new state.
+**Decentralized Trust:** In a practical example involving Alex and his friends maintaining records in a decentralized manner, trust becomes inherent in the system. All transactions are verified and signed by all participants, eliminating the need for a central authority.
 
-To further understand this, a closer look will be taken at Ethereum. Although often paired with Bitcoin as a cryptocurrency, Ethereum is actually a platform that uses the currency Ether. The purpose of its platform is to draw up ‘smart contracts’ and conduct transactions, and these processes are fueled by the currency ether (ETH).
+**Bitcoin's Purpose:** Satoshi Nakamoto, the mysterious founder of Bitcoin, aimed to eliminate third-party verification and create a trustless payment platform with irreversible transactions. This design enables private transactions and financial aid to individuals in unstable economies, highlighting Bitcoin as a borderless currency.
 
-But what is a smart contract ?
-A smart contract is a coded contract that is subsequently uploaded to a blockchain. Whenever a contract is executed in a blockchain, every network node runs it and then uploads it to the blockchain.
+**Challenges with Traditional Payment Methods:** The example of receiving payments through traditional platforms like PayPal showcases the inefficiencies, including high transaction fees, unfavorable currency conversion rates, and delays in fund transfer.
 
-In simpler terms, the smart contract is a coded ‘If-Then’ statement. That is, if certain requirements are met, the terms of the contract will be carried out. This process is not trust-based; it can never be tampered with by any party, nor can any party cheat and fail on its end of the deal. Introducing smart contract to the blockchain technology has many practical functions, as visibly portrayed by the simple example of online shopping.
+**Benefits of Bitcoin Transactions:** Bitcoin offers an alternative with lower fees and faster transaction processing. It bypasses the need for third-party intermediaries, making cross-border payments more efficient.
 
-Example of Traditional Online Shopping.
-Alex wishes to buy a new phone from Vendor A. He is required to make an upfront payment, and the phone will be shipped to him within 3 working days after the vendor receives the payment.
+## 2nd Generation Blockchain:
+2nd Generation blockchains expanded on the foundation laid by 1st Generation blockchains by introducing programmable features, particularly the concept of smart contracts. Examples of 2nd Generation blockchains include Ethereum, Ethereum Classic, NEO, and QTUM.
 
-There are a few issues that might arise in this scenario.
-Issue 1: Alex can not find any review of Vendor A online. Therefore, he is hesitant to pay upfront.
+**Smart Contracts:** These self-executing contracts contain predefined rules and conditions. They automate and secure the execution of agreements without the need for intermediaries. An example involving Alex's online shopping demonstrates how smart contracts can simplify complex transactions.
 
-Issue 2: Vendor A has to receive payment upfront, because Alex might decide not to pay after receiving the phone.
+**Ethereum:** Ethereum stands out as a 2nd Generation blockchain platform. It uses the cryptocurrency Ether (ETH) to power smart contracts and transactions. Smart contracts function as coded "If-Then" statements, ensuring that agreements are carried out without the potential for manipulation.
 
-Issue 3: The shipping company might lose the product, which means Alex does not get his phone and Vendor A gets a bad reputation.
+**DApps and Customizable Transactions:** Ethereum and similar 2nd Generation blockchains enable the creation of decentralized applications (DApps) and customizable transactions, providing versatility and adaptability to diverse use cases.
 
-All of these potential problems can be resolved using a smart contract.
-1. Alex only pays for the phone upon delivery.
+## 3rd Generation Blockchain:
+3rd Generation blockchains address scalability, interoperability, and self-governance issues. They include platforms like Steem.
 
-2. Vendor A is guaranteed payment once Alex receives the product.
+**Scalability:** These blockchains are designed to handle a significant volume of transactions efficiently. Techniques like sharding and layering are employed to achieve high scalability.
 
-3. The shipping company will compensate Vendor A if the product is lost/damaged, and Alex will be notified that it was not Vendor A’s fault.
+**Interoperability:** 3rd Generation blockchains can connect multiple blockchains, creating a network of interconnected blockchains that communicate seamlessly.
 
-This entire process requires no middleman to make sure that the deal takes place. There is no need to fill paperwork or pay administration fees, the entire contract will be carried out and entered into the blockchain making it binding and unchangeable.
+**Self-Governance:** Self-governance mechanisms are often integrated into these blockchains, allowing for autonomous decision-making and dispute resolution. Digital contracts can enforce agreements automatically, such as insurance contracts that terminate upon missed payments.
 
-2nd Generation Blockchain Technology is actually an upgrade; it is more than a simple digital currency. It has grown into a platform for creating decentralised applications which can be applied into many aspects of our daily lives to reduce cost and improve efficiency.
+**Layered Approach: Layering allows different functions to be separated within the blockchain, enhancing security and performance. This approach prevents the blockchain from slowing down when new users or tokens are introduced, as seen in 2nd Generation blockchains like Ethereum.
 
-## Third Generation Blockchain Technology.
+##Emerging Concepts and Applications:
 
-Third generation blockchains present themselves as blockchains that can service massive amounts of people and self-govern. Third generation blockchains have self-governance at their core. E.g. Steem.
+**Layer 2 Solutions:** These technologies, like the Lightning Network, aim to enhance scalability and reduce congestion.
+Cross-Chain Platforms: Projects such as Polkadot and Cosmos focus on improving interoperability.
 
-Third generation blockchains are the most useful where contracts, agreements and information flow are concerned. What third generation blockchains are capable of doing is to connect two or more blockchains like a computer network connection
+**Decentralized Finance (DeFi):** DeFi platforms aim to recreate traditional financial services in a decentralized manner.
 
-Apart from money and assets, agreements can also be registered on the third generation blockchain. With the help of the digital contract, the participants are forced to keep their promise. For instance, if an insurance contract involves regular payments, such an insurance contract can end the agreement on its own (without requiring the consent of the participant), when the participant misses payments.
-
-Third generation blockchains can also function in layers. That way, one layer could handle contracts, one layer handles transactions and another layer passes secure data among blockchains. This is aimed at securing the blockchain and never slowing it down or compromising its performance. Blockchains like Ethereum gets compromised that way. For every time a new user or token launches on the Ethereum blockchain, it compromises the blockchain speed and slows it down to manage the increasing requests and actions the blockchain needs to process or validate.
+**Non-Fungible Tokens (NFTs):** These unique digital assets have gained popularity in various industries, including art, gaming, and collectibles.
+Blockchain technology continues to evolve, offering solutions to real-world challenges and creating opportunities for innovation across diverse sectors. Stay updated as blockchain technology continues to advance and reshape our digital landscape.

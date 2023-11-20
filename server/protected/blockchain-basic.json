@@ -365,6 +365,31 @@
         {
             "question": "Why is mining becoming centralised?",
             "choices": ["Economies of Scale & Moore's Law", "Government Regulation", "The Bitcoin Foundation guidelines", "The Blockchain getting smaller"]
+        },
+        {
+            "question": "What distinguishes the XDC blockchain from traditional private/permissioned and public blockchain technologies?",
+            "choices": ["It uses a unique consensus mechanism.",
+            "It is entirely private.",
+            "It is based on the consortium blockchain paradigm. ",
+            " It relies on a proof-of-work protocol."],
+            "answer": 3
+        },
+        {
+            "question": "Who can access the private state in the XDC blockchain?",
+            "choices": ["All network participants. ",
+            "Only approved members.",
+            "Only public nodes.",
+            "The blockchain is entirely private."],
+            "answer": 3
+        },
+        {
+            "question": "How does the XDC hybrid design differ from traditional blockchain solutions, and what does it combine?",
+            "choices": ["It has no specific advantages.",
+            "It combines the advantages of private and public blockchains.",
+            "It focuses only on transaction speed.",
+            "It is exclusively used for research purposes."],
+            "answer": 3
         }
+
     ]
 }
