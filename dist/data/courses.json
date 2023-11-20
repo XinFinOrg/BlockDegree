@@ -395,6 +395,70 @@
           "topic": "Case Studies"
         }
       ]
+    },
+    {
+      "title": "XDC Blockchain Network",
+      "price": "9.99",
+      "type": "course_7",
+      "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
+      "duration": "3 days",
+      "slug": "blockchain-network",
+      "pointers": [
+        " 30 Marks Practical & Theory",
+        "40% will be the passing percentage",
+        " Individual will get max of 3 Attempts"
+      ],
+
+      "sypnosis": "As Cryptocurrency becomes more popular, from 2017 onwards, it becomes under greater threat from hackers. Every day there is another attack on an individuals holdings, and it's imperative you know your options to prevent similar happening to you. Cryptocurrency is where the money is, and yet the infrastructure is not yet strong enough to keep you and your money 100% secure from threats and attacks.",
+      "overview": "This course provides a comprehensive exploration of the XinFin (XDC) blockchain and the XDC Network, from its fundamental concepts to real-world applications in enterprise contexts. Students will learn about the blockchain's architecture, consensus mechanisms, cryptocurrency, and the use of smart contracts. The course also covers important topics such as regulatory compliance and security. By the end of the course, students will be well-equipped to understand, use, and implement XinFin blockchain technology.",
+      "skills": "30 Days of unlimited access to course content. Certified XDC Blockchain Network  Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
+      "prerequisites": [
+        "You should have access to a Computer with Internet connection",
+       "Don't delay, start keeping your Cryptos safe today!"
+      ],
+      "curriculum": [
+        {
+          "topic": "Introduction XDC Blockchain Network",
+          "sub-topic": [
+            "What is XinFin (XDC) and the XDC Network?",
+            "Advantages of the XDC Network for Enterprises"
+          ]
+        },
+        {
+          "topic": "XDC Network Architecture and Consensus Mechanism",
+          "sub-topic": [
+            "Hybrid Blockchain: Public and Private Components",
+            "Delegated Proof-of-Stake (DPoS) Consensus ",
+            "XDC Network Nodes and Governance"
+          ]
+        },
+        {
+          "topic": "XDC Cryptocurrency (XDC)",
+          "sub-topic": [
+            "XDC as the Native Cryptocurrency",
+            "XDC Wallets and Transactions",
+            "Using XDC in Enterprise Applications"
+          ]
+        },
+        {
+          "topic": "Smart Contracts on the XDC Network",
+          "sub-topic": [
+            "Introduction to Smart Contracts",
+            "Creating and Deploying Smart Contracts on XinFins",
+            "Use Cases for Smart Contracts in Enterprises"
+          ]
+        },
+        {
+          "topic": "Regulatory Compliance and Security",
+          "sub-topic": [
+            "Regulatory Considerations for Businesses",
+            "Security Best Practices on the XDC Network"
+          ]
+        },
+        {
+          "topic": "Quiz & Certificate"
+        }
+      ]
     }
   ]
 }

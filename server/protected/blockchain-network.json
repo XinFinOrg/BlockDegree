@@ -1,0 +1,334 @@
+{
+  "exam": [
+    {
+      "question": "What is the primary focus of XinFin as a blockchain technology company?",
+      "choices": ["Developing video games", 
+      "Providing blockchain solutions for businesses and institutions", 
+      "Cryptocurrency mining", 
+      "Social media platform development."],
+      "answer": 2
+    },
+    {
+      "question": "What are the main purposes of XDC within the XinFin ecosystem?",
+      "choices": ["Serving coffee to users",
+      "Enabling interstellar travel", 
+      "Facilitating transactions on the XinFin blockchain and various network functions",
+      "Growing vegetables"],
+      "answer": 3
+    },
+    {
+      "question": "What did XinFin develop to host its XDC cryptocurrency after its initial launch on Ethereum?",
+      "choices": ["XDC Market",
+      "XDC Explorer", 
+      "XDC Network",
+      "XDC Exchange"],
+      "answer": 3
+    },
+    {
+      "question": "What type of blockchain is the XDC Network, and why is it called a \"hybrid\" blockchain?",
+      "choices": ["Public blockchain with unlimited transparency",
+      "Private blockchain with high security",
+      "Hybrid blockchain combining features of both public and private blockchains",
+      "Hybrid blockchain combining features of Bitcoin and Ethereum"],
+      "answer": 3
+    },
+    {
+      "question": "What is the primary purpose of the XDC Network, as described in the text?",
+      "choices": ["Trade finance and payments, with a focus on global trade operations",
+      "Providing blockchain solutions for individuals",
+      "Developing video games",
+      "Building social media platforms"],
+      "answer": 1
+    },
+    {
+      "question": "How can the XDC Network benefit enterprises engaged in international trade?",
+      "choices": ["By increasing settlement times",
+      "By adding more intermediaries",
+      "By reducing settlement times and the need for intermediaries",
+      "By increasing paperwork in cross-border transactions"],
+      "answer": 3
+    },
+    {
+      "question": "What does the term \"interoperability\" mean in the context of the XDC Network for enterprises?",
+      "choices": ["The ability to communicate only with other XDC networks",
+      "The ability to integrate with current infrastructure for a smoother transition to blockchain technology",
+      "Incompatibility with existing systems",
+      "Limited connectivity with other blockchains"],
+      "answer": 2
+    },
+    {
+      "question": "What does the use of blockchain technology on the XDC Network reduce in industries where data accuracy and integrity are critical?",
+      "choices": ["Data accuracy",
+      "Data volume",
+      "Risk of fraud, errors, and data manipulation",
+      "Operational efficiency."],
+      "answer": 3
+    },
+    {
+      "question": "What is one of the key advantages of the XDC Network in terms of scalability for enterprises?",
+      "choices": ["It's not suitable for businesses with expanding operations",
+      "It can only handle a small volume of transactions",
+      "It's designed to handle a high volume of transactions efficiently",
+      "It has no impact on transaction volume."],
+      "answer": 3
+    },
+    {
+      "question": "Which type of blockchain components are combined in the XDC Network's architecture?",
+      "choices": ["Public and private chains",
+      "Public and consortium chains",
+      "Private and permissioned chains",
+      "Public and federated chains."],
+      "answer": 1
+    },
+    {
+      "question": "What is the main benefit of a hybrid blockchain's combination of public and private features?",
+      "choices": ["It offers maximum privacy with no verifiability.",
+      "It ensures that every user's identity is completely hidden.",
+      "It combines the benefits of both public and private blockchains, offering security, transparency, and controlled access.",
+      "It only benefits large organisations with no need for public interactions."],
+      "answer": 3
+    },
+    {
+      "question": "How are delegates in XDPoS elected to validate transactions and create new blocks?",
+      "choices": ["By random selection",
+      "By government appointment",
+      "Based on community voting",
+      "By the highest stake in XDC tokens"],
+      "answer": 3
+    },
+    {
+    "question": "What is a Hybrid Blockchain and what does it combine from private and public blockchains?",
+      "choices": ["Hybrid Blockchain combines private and public blockchains and offers only public access.",
+      "A Hybrid Blockchain combines private and public blockchains and offers controlled access and freedom",
+      "A Hybrid Blockchain combines private and public blockchains and is entirely private.",
+      " Hybrid Blockchain combines private and public blockchains but offers no control over data access."],
+      "answer": 2
+    },
+    {
+      "question": "How does the XDC Delegated Proof-of-Stake (XDPoS) consensus address scalability challenges in blockchain platforms?",
+        "choices": ["By using a centralized network administrator.",
+        "By increasing transaction costs.",
+        "By employing a 108-Masternode system.",
+        "By offering complete anonymity."],
+        "answer": 3
+      },
+      {
+        "question": "What is the role of a nominator in XDPoS?",
+          "choices": ["A nominator is a network administrator.",
+          "A nominator is responsible for producing and validating blocks.",
+          "A nominator is a coin holder who stakes or delegates their coins to one or more validators.",
+          "A nominator is a validator."],
+          "answer": 3
+        },
+        {"question": "How often can a single nominator vote for a validator in XDPoS?",
+            "choices": [" Once every two epochs.",
+            "Once every epoch.",
+            "Once every withdrawal period.",
+            "Only once in their lifetime."],
+            "answer": 1
+        },
+        {"question": "What is the role of Masternodes in the XDC Network?",
+          "choices": ["Masternodes process transactions but don't require any XDC tokens as collateral.",
+          "Masternodes validate transactions and govern the network's security.",
+          "Masternodes are only responsible for storing blockchain data.",
+          "Masternodes create new XDC tokens."],
+          "answer": 2
+        },
+        {"question": "How do Full Nodes contribute to the XDC Network?",
+        "choices": ["Full Nodes process transactions and reach consensus.",
+        "Full Nodes require collateral stakes to participate.",
+        "Full Nodes help distribute information across the network and store blockchain data.",
+        "Full Nodes create new blocks."],
+        "answer": 3
+      },
+      {"question": "What happens if a proposal in the XDC Network passes a certain threshold of approval?",
+        "choices": ["It gets automatically implemented without any further steps.",
+        "It becomes part of the XDC Network's rules and is implemented by developers.",
+        "It is rejected, and no further action is taken.",
+        "It remains pending indefinitely."],
+        "answer": 2
+      },
+      {"question": "What is the primary purpose of the XDC token in the XinFin Network?",
+      "choices": ["Fueling rocket launches",
+      "Providing healthcare services",
+      "Serving as a payment and settlements layer",
+      "Being used for international tourism"],
+      "answer": 3
+    },
+    {"question": "How is the XDC token used within the XinFin ecosystem?",
+      "choices": ["To order fast food",
+      "As a musical instrument",
+      "For financial services and decentralised applications",
+      "As a language translation tool"],
+      "answer": 3
+    },
+    {"question": "What is the significance of a native cryptocurrency within a blockchain network?",
+      "choices": ["It's irrelevant and rarely used",
+      "It has no specific purpose",
+      "It is the fundamental digital currency that operates within the network",
+      "It's primarily used for video game purchases."],
+      "answer": 3
+    },
+    {"question": "What is XDCe, and what happened to it in the XinFin Network?",
+      "choices": ["A separate blockchain network",
+      "A type of cryptocurrency used by big corporations",
+      "It has been phased out and replaced by the XDC token",
+      "A delicious dessert"],
+      "answer": 3
+    },
+    {"question": "What is the role of the Ethereum Virtual Machine (EVM) in the XDC network?",
+    "choices": ["Sending birthday cards to XDC token holders",
+    "Running on top of the XDC blockchain to execute smart contracts",
+    "Brewing coffee for developers",
+    "Creating digital art"],
+    "answer": 2
+  },
+  {"question": "How does XDC's EVM compatibility make it easier for developers?",
+  "choices": ["It doesn't make any difference",
+  "It makes development more challenging",
+  " It allows them to use familiar tools and programming languages from Ethereum."
+  ],
+  "answer": 3
+  },
+  {"question": "How do XDC wallets work in terms of cryptography?",
+    "choices": ["They use Morse code for communication",
+    "They use telepathy for key exchange",
+    "They utilize public-key cryptography with public and private keys",
+    "They rely on secret handshakes for authentication."],
+    "answer": 3
+  },
+  {"question": "How can XDC be used for tokenization of assets in enterprises?",
+    "choices": ["It's used for tokenizing movie tickets",
+    "Digital tokens can represent ownership or value in real-world assets and be traded or used as collateral in financial transactions",
+    "It's primarily used for tokenizing candy in enterprise applications",
+    "It's used to create a digital representation of art pieces"],
+    "answer": 2
+  },
+  {"question": "What role does XDC play in streamlining trade finance operations in enterprises?",
+    "choices": ["It serves as a digital artwork platform for trade finance",
+    "XDC is used to order supplies for trade financing",
+    "Smart contracts automate processes like issuing letters of credit and trade settlement",
+    "XDC is mainly used for gardening services in trade finance"],
+    "answer": 3
+  },
+  {"question": "How can XDC be effectively utilized in supply chain management in enterprise applications?",
+    "choices": ["It can be used to order fast food for supply chain workers",
+    "Smart contracts automate and verify the movement of goods and payments, reducing the need for intermediaries",
+    "It's primarily used for managing a zoo's supply chain",
+    "It's a tool for tracking animal migrations in supply chain processes"],
+    "answer": 2
+  },
+  {"question": "What do smart contracts on the XDC Network provide a powerful tool for?",
+  "choices": ["Ordering groceries online",
+  "Automating complex business processes",
+  "Predicting the weather",
+  "Hosting virtual parties"],
+  "answer": 2
+  },
+  {"question": "When are smart contracts on the XDC Network triggered for execution?",
+  "choices": ["Whenever someone feels like it",
+  "When a specific event or action recorded on the blockchain occurs",
+  "Only during leap years",
+  "Randomly"],
+  "answer": 2
+  },
+  {"question": "What are smart contracts?",
+  "choices": ["Legal documents written in traditional language",
+  "Self-executing contracts with terms written directly into code",
+  "Social contracts governing etiquette",
+  "Smartphones used for contract management"],
+  "answer": 2
+  },
+  {"question": "What is the role of developers in creating smart contracts on the XDC Network?",
+  "choices": ["They deploy smart contracts to a different blockchain network",
+  "They write code for smart contracts and deploy them to the XDC Network",
+  "They automate contract execution with human intervention",
+  "They write contract terms on post-it notes."],
+  "answer": 2
+  },
+  {"question": "What is the first step in creating and deploying smart contracts on the XinFin blockchain?",
+  "choices": ["Compile the smart contract",
+  "Interact with the smart contract",
+  "Set up the development environment",
+  "Write the smart contract code."],
+  "answer": 3
+  },
+  {"question": "Which programming languages can be used to write smart contract code on XinFin?",
+  "choices": ["Solidity only",
+  "C++",
+  "XDCsmartcontract only",
+  "Various languages including Solidity and XDCsmartcontract."],
+  "answer": 4
+  },
+  {"question": "What is the purpose of XinPay in deploying a smart contract on XinFin?",
+  "choices": ["To download XinFin remix",
+  "To create a new file for the smart contract",
+  "To interact with the smart contract",
+  "To access your wallet and deploy the contract."],
+  "answer": 4
+  },
+  {"question": "What is the recommended practice before deploying a smart contract on the main XinFin network?",
+  "choices": ["Don't test it at all",
+  "Test it on a testnet or local development network",
+  "Deploy it directly to the main network",
+  "Test it on a different blockchain."],
+  "answer": 2
+  },
+  {"question": "Why is it important to compile a smart contract before deployment?",
+  "choices": ["To test the contract locally.",
+  "To create a new file for the smart contract",
+  "To convert the contract code into bytecode that can be executed on the XinFin network.",
+  "To establish trust among network nodes."],
+  "answer": 4
+  },
+  {"question": "Why might businesses need to comply with AML and KYC laws when using the XDC blockchain?",
+  "choices": ["To prevent software bugs",
+  "To promote energy efficiency",
+  "To prevent money laundering and terrorist financing",
+  "To establish a consensus mechanism"],
+  "answer": 3
+  },
+  {"question": "What is one of the recommendations provided for businesses considering using the XDC blockchain?",
+  "choices": ["Avoid consulting with legal experts",
+  "Ignore regulatory compliance",
+  "Consult with legal and regulatory experts",
+  "Take more risks without assessing them."],
+  "answer": 3
+  },
+  {"question": "What is the potential risk associated with using the XDC blockchain, as mentioned in the text?",
+  "choices": ["Hacks and scams",
+  "Regulatory compliance",
+  "Energy consumption",
+  "Scalability issues"],
+  "answer": 1
+  },
+  {"question": "What does XDC 2.0 aim to achieve in terms of security?",
+  "choices": ["Introducing vulnerabilities to the network.",
+  "Detecting and identifying malicious master nodes.",
+  "Abandoning security measures.",
+  "Implementing weak encryption."],
+  "answer": 2
+  },
+  {"question": "What type of security practices does ChangeNOW adhere to?",
+  "choices": ["They don't follow any security practices.",
+  "They use outdated encryption techniques.",
+  "They rely on security through obscurity.",
+  "They follow data protection regulations and industry best practices."],
+  "answer": 4
+  },
+  {"question": "Why does blockchain security matter, especially in the context of XDC Network and ChangeNOW?",
+  "choices": ["It's not important.",
+  "Blockchain's decentralized nature ensures security.",
+  "Blockchain technology exposes users to privacy risks.",
+  "It helps protect against natural disasters."],
+  "answer": 3
+  },
+  {"question": "What measures does ChangeNOW take to ensure the security and privacy of users during transactions?",
+  "choices": ["They don't take any specific measures.",
+  " They use advanced encryption techniques.",
+  "They don't care about user privacy.",
+  "They use public Wi-Fi networks for transactions."],
+  "answer": 2
+  }
+  ]
+  }

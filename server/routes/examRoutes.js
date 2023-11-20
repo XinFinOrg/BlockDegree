@@ -37,4 +37,11 @@ module.exports = app => {
     hasSubscribed,
     examServices.getBlockchainWalletExam
   );
+
+  app.get(
+    "/blockchain-network-exam",
+    requireLogin,
+    hasSubscribed,
+    examServices.getXdcNetworkExam
+  );
 };

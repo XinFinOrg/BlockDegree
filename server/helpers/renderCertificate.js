@@ -283,6 +283,14 @@ function getDegreeContentDetails(examType) {
         course:`Blockchain Wallet Specialist`,
         courseSub:`Blockchain Wallet`
       }
+    };
+    case "network":{
+      return {
+        topic:"XDC Blockchain Network",
+        subTopic:"XDC Blockchain Network Course",
+        course:`XDC Blockchain Network Specialist`,
+        courseSub:`XDC Blockchain Network`
+      }
     }
   }
 }

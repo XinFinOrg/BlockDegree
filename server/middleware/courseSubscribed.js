@@ -88,6 +88,16 @@ module.exports = async function(req, res, next) {
         }
       });
     }
+    else if  (examName === "network"){
+      await User.findOne(query, function(err, user) {
+        payment_status = user.examData.payment.course_7;
+        if (payment_status != true) {
+          res.redirect("/exams");
+        } else {
+          next();
+        }
+      });
+    }
   } else {
     if (req.params.courseName) {
       res.redirect("/login?from=" + req.params.courseName);

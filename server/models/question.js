@@ -10,7 +10,8 @@ var questionSchema = mongoose.Schema({
     questionsAdvanced: Array,
     questionsProfessional: Array,
     questionsComputing: Array,
-    questionsWallet: Array
+    questionsWallet: Array,
+    questionsXDCNetwork: Array
 });
 
 // create the model for users and expose it to our app
