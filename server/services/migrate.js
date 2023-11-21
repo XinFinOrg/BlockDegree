@@ -11,7 +11,10 @@ function newDefaultUser() {
       payment: {
         course_1: false,
         course_2: false,
-        course_3: false
+        course_3: false,
+        course_4: false,
+        course_5: false,
+        course_7: false
       },
       examBasic: {
         attempts: 0,
@@ -22,6 +25,18 @@ function newDefaultUser() {
         marks: 0
       },
       examProfessional: {
+        attempts: 0,
+        marks: 0
+      },
+      examComputing: {
+        attempts: 0,
+        marks: 0
+      },
+      examWallet: {
+        attempts: 0,
+        marks: 0
+      },
+      examXdcNetwork: {
         attempts: 0,
         marks: 0
       },
@@ -73,6 +88,9 @@ exports.migrateFrom = (req, res) => {
       newUser.examData.payment.course_1 = objJSON.local.payment.course_1;
       newUser.examData.payment.course_2 = objJSON.local.payment.course_2;
       newUser.examData.payment.course_3 = objJSON.local.payment.course_3;
+      newUser.examData.payment.course_4 = objJSON.local.payment.course_4;
+      newUser.examData.payment.course_5 = objJSON.local.payment.course_5;
+      newUser.examData.payment.course_7 = objJSON.local.payment.course_7;
 
       newUser.examData.examBasic.marks = Number(
         objJSON.local.examBasic.marks.$numberInt
@@ -94,6 +112,29 @@ exports.migrateFrom = (req, res) => {
       newUser.examData.examProfessional.attempts = Number(
         objJSON.local.examProfessional.attempts.$numberInt
       );
+
+      newUser.examData.examComputing.marks = Number(
+        objJSON.local.examComputing.marks.$numberInt
+      );
+      newUser.examData.examComputing.attempts = Number(
+        objJSON.local.examComputing.attempts.$numberInt
+      );
+
+      newUser.examData.examWallet.marks = Number(
+        objJSON.local.examWallet.marks.$numberInt
+      );
+      newUser.examData.examWallet.attempts = Number(
+        objJSON.local.examWallet.attempts.$numberInt
+      );
+
+      newUser.examData.examXdcNetwork.marks = Number(
+        objJSON.local.examXdcNetwork.marks.$numberInt
+      );
+      newUser.examData.examXdcNetwork.attempts = Number(
+        objJSON.local.examXdcNetwork.attempts.$numberInt
+      );
+
+
 
       newUser.save();
     } catch (e) {
