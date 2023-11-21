@@ -45,6 +45,18 @@ function newDefaultUser() {
         attempts: 0,
         marks: 0
       },
+      examComputing: {
+        attempts: 0,
+        marks: 0
+      },
+      examWallet: {
+        attempts: 0,
+        marks: 0
+      },
+      examXdcNetwork: {
+        attempts: 0,
+        marks: 0
+      },
       certificateHash: [{}]
     },
     auth: {

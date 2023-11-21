@@ -54,6 +54,11 @@ if (typeof jQuery != "undefined") {
             ),
             computingStatus = document.getElementById("computingStatus"),
             computingAttempt = document.getElementById("computingAttempt");
+            bwalletStatus = document.getElementById("bwalletStatus"),
+            bwalletAttempt = document.getElementById("bwalletAttempt");
+            bnetworkStatus = document.getElementById("bnetworkStatus"),
+            bnetworkAttempt = document.getElementById("bnetworkAttempt");
+            videoStatus = document.getElementById("videoStatus"),
           emailID.innerHTML = userProfile.email;
           name.innerHTML = userProfile.name;
           googleLink.innerHTML =
@@ -85,12 +90,16 @@ if (typeof jQuery != "undefined") {
             userProfile.examData.payment.course_4 == true
               ? "Enrolled"
               : "Not Paid";
-          computingStatus.innerHTML =
+          bwalletStatus.innerHTML =
             userProfile.examData.payment.course_5 == true
               ? "Enrolled"
               : "Not Paid";
-          computingStatus.innerHTML =
+          bnetworkStatus.innerHTML =
             userProfile.examData.payment.course_7 == true
+              ? "Enrolled"
+              : "Not Paid";
+          videoStatus.innerHTML =
+            userProfile.videoSubscription == true
               ? "Enrolled"
               : "Not Paid";
           basicAttempts.innerHTML = userProfile.examData.examBasic.attempts;
@@ -98,6 +107,10 @@ if (typeof jQuery != "undefined") {
             userProfile.examData.examAdvanced.attempts;
           professionalAttempts.innerHTML =
             userProfile.examData.examProfessional.attempts;
+          bwalletAttempt.innerHTML =
+            userProfile.examData.examWallet.attempts;
+          bnetworkAttempt.innerHTML =
+            userProfile.examData.examXdcNetwork.attempts;
           computingAttempt.innerHTML = userProfile.examData.examComputing
             ? userProfile.examData.examComputing.attempts
             : "0";
