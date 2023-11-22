@@ -10,7 +10,7 @@ courseIdx: 0
 
 **Open Source Nature:** Bitcoin was designed as an open-source project, meaning its code was made accessible for users and developers to examine, modify, and build upon. This open approach allowed for collaboration and innovation.
 
-## 1st Generation Blockchain Technology:
+## First Generation Blockchain Technology
 This technology, exemplified by Bitcoin's blockchain, represents the pioneering phase of blockchain adoption. It introduced the world to the concept of digital currency and decentralized ledger systems.
 
 When you receive your earnings via PayPal, you encounter a series of financial roadblocks. PayPal levies transaction fees ranging from 2.5% to 5%. The ordeal doesn't end there; your USD earnings must be converted to your local currency. However, PayPal's conversion rates are typically 2 to 3 USD less favorable than the market rate, leading to additional losses.
@@ -40,7 +40,7 @@ In contrast, the blockchain functions as a shared, decentralized ledger where al
 
 **Benefits of Bitcoin Transactions:** Bitcoin offers an alternative with lower fees and faster transaction processing. It bypasses the need for third-party intermediaries, making cross-border payments more efficient.
 
-## 2nd Generation Blockchain:
+## Second Generation Blockchain
 2nd Generation blockchains expanded on the foundation laid by 1st Generation blockchains by introducing programmable features, particularly the concept of smart contracts. Examples of 2nd Generation blockchains include Ethereum, Ethereum Classic, NEO, and QTUM.
 
 **Smart Contracts:** These self-executing contracts contain predefined rules and conditions. They automate and secure the execution of agreements without the need for intermediaries. An example involving Alex's online shopping demonstrates how smart contracts can simplify complex transactions.
@@ -49,7 +49,7 @@ In contrast, the blockchain functions as a shared, decentralized ledger where al
 
 **DApps and Customizable Transactions:** Ethereum and similar 2nd Generation blockchains enable the creation of decentralized applications (DApps) and customizable transactions, providing versatility and adaptability to diverse use cases.
 
-## 3rd Generation Blockchain:
+## Third Generation Blockchain Technology
 3rd Generation blockchains address scalability, interoperability, and self-governance issues. They include platforms like Steem.
 
 **Scalability:** These blockchains are designed to handle a significant volume of transactions efficiently. Techniques like sharding and layering are employed to achieve high scalability.

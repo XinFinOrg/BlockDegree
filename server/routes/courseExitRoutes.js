@@ -1,6 +1,6 @@
 const requireLogin = require("../middleware/requireLogin");
-const courseExit = require('../services/courseExit');
+const CourseExit = require('../services/courseExit');
 module.exports = app => {
-    app.post("/api/courseExit", requireLogin, courseExit.courseExit);
-    app.post("/api/getCourseExit", requireLogin, courseExit.getCourseExit);
+    app.post("/api/course_exit", requireLogin, CourseExit.course_exit);
+    app.post("/api/getCourseExit", requireLogin, CourseExit.getCourseExit);
 };

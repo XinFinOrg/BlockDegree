@@ -4,56 +4,110 @@ title: Why do we need blockchain technology?
 template: courseContent.hbs
 courseIdx: 0
 ---
-The first practical use-case of blockchain technology can be traced back to early 2008, a period at which the world was going through a miserable financial crisis. During that period, someone with an alias: “Satoshi Nakamoto”, about whom no one really knows if it was a person or a group, noticed the danger of the centralized nature of our financial system. Back then, to transfer money or even carry out a simple transaction, the assistance of a third party (like a bank or Paypal) was required.
-
-There was a ridiculous level of power in the hands of the centralized third parties. For instance,
-They had all your information.
-
-They had the power to freeze your accounts.
-
-You had no other choice but to trust the system.
-
-In place of this centralized system, Satoshi Nakamoto proposed a decentralized peer-to-peer financial system involving a cryptocurrency called Bitcoin and Blockchain was the basic technology behind Bitcoin.
-
-While traders only focus on the million dollar gains they could possibly realize, they always overlook the basic technology behind cryptocurrency. Blockchain is the technology behind Bitcoin and Altcoins, which makes storing valuables possible. Blockchain stores data in a distributed ledger which can be potentially accessed and updated in a secure way by billions of people.
-Blockchain technology will soon go beyond the digital currency movement and begin to influence almost every sector. From real estate to entertainment, a lot of startups as well as existing businesses continue to integrate blockchain into their business models. The methods of governing some countries and their democratic processes will be influenced as well by the incoming wave of blockchain.
-
-Electoral fraud and votes hacking had been a major concern for us over the years. Advocates of Blockchain are confident that introducing a public ledger voting system could provide an unhackable system for governments while also ensuring that votes get counted faster.
-
-### Business scenario implemented using the database.
-Considering the case of supply chain where multiple parties such as manufacturers, wholesalers, distributors, retailers and logistics are involved, the movement of a product through the supply chain is only individually tracked by the parties concerned.
-  <img src="/img/courses/bc-basic/Blockchain-database.jpg"  style="width:100%; height: 400px; align-content: center; "/>
 
 
+The inception of blockchain technology dates back to early 2008, a period marred by a severe global financial crisis. It was during this tumultuous time that an enigmatic figure, known only by the pseudonym "Satoshi Nakamoto," emerged. Whether Nakamoto was an individual or a collective entity remains a mystery. What they recognized, however, was the inherent vulnerability of our centralized financial system, where intermediaries like banks and PayPal held unwarranted power over our financial transactions.
 
-Each party will have their own database and an application to capture transactions and how products move through the chain. However, the problems with this approach are:
 
-Different sources of truth: At any given time, all databases may not have similar data, as the process involved in updating the database depends on the organizations and there could be a delay in distributing the data to all the parties.
+## These intermediaries possessed an astonishing level of control:
 
-Exposure: For intermediaries that are involved, there are multiple copies of data, the manufacturer will not be able to control the introduction of fake products into the chain or rather the distribution of genuine products into the black market.
 
-Human error:The data in one or more of the databases may not be uploaded due to human error, connectivity issues or application problems. This could lead to a dispute between parties, resulting in wasted time for resolving the dispute.
+1. They had access to all your sensitive information.
+2. The authority to freeze your accounts rested in their hands.
+3. People had no choice but to place their trust in this centralised system.
 
-Lack of customer focus: The customer finds it very difficult to know if the product is genuine or not.
 
-### Business scenario implemented using blockchain
-With the same Blockchain technology, all parties track the movement of products through the supply chain.
+In response to this centralised system's shortcomings, Satoshi Nakamoto proposed an innovative solution – a decentralised, peer-to-peer financial system underpinned by a revolutionary cryptocurrency known as Bitcoin. At the heart of Bitcoin lay the groundbreaking technology called blockchain.
 
-A single shared data storage, which is tamper-evident (designed to reveal any unusual interference) and protected using cryptographic methods.
 
-All parties will have the same copy of this ledger.
+While many traders and enthusiasts focus on the potential for million-dollar gains in the cryptocurrency market, they often overlook the fundamental technology that powers these digital assets. Blockchain is the unsung hero behind cryptocurrencies like Bitcoin and Altcoins, providing the framework for securely storing value. This technology records data in a distributed ledger accessible and updatable in a secure manner by billions of people.
 
-All parties must reach a general agreement before a new transaction is added to the shared ledger.
 
-Transactions recorded on the ledger can never be changed.
+The scope of blockchain technology extends far beyond the realm of digital currencies. It is poised to disrupt and transform virtually every sector. From real estate to entertainment, numerous startups and established businesses are embracing blockchain and weaving it into their core business models. This technology is even set to influence the governance structures and democratic processes of nations, ushering in a new era of transparency and trust.
 
-Benefits of the ledger-based approach are:
-Single source of truth: At any point in time, all the parties will refer to the same data since it is a single shared ledger.
 
-Early detection of human error: Since all parties need to reach a general agreement, any human or application errors will be discovered on time in the chain.
+One area that stands to benefit immensely from blockchain is electoral systems. Electoral fraud and vote tampering have long been persistent concerns. Advocates of blockchain firmly believe that implementing a public ledger-based voting system could establish an unhackable mechanism for governments to conduct elections, ensuring swift and accurate vote counting.
 
-Safety: The manufacturer can make sure that the quality of their products is intact.
 
-Customer centric supply chain: Since blockchain enables the manufacturer to directly connect with the customer; the manufacturer is able to provide a better customer experience.
+Consider the scenario of a supply chain, where multiple stakeholders such as manufacturers, wholesalers, distributors, retailers, and logistics companies play integral roles. Traditionally, each party maintains its own database and employs separate applications to record the movement of products through the supply chain. However, this approach presents several challenges:
+<img src="/img/courses/bc-basic/Blockchain-database.jpg" style="width:100%; height: 400px; align-content: center; "/>
 
-Regulatory compliance: Through transparent auditing, Blockchain allows users to comply with regulations.
+
+
+
+**1. Discrepancy in Data:** Each database may not consistently contain the same information, as data updates depend on individual organisations, leading to potential discrepancies.
+
+
+**2. Vulnerability:** For intermediaries involved, multiple copies of data are susceptible to misuse, making it challenging to prevent the introduction of counterfeit products into the supply chain or the diversion of authentic products into illicit markets.
+
+
+**3. Human Error:** Data may not be uploaded to one or more databases due to human errors, connectivity issues, or application glitches, resulting in disputes and prolonged dispute resolution.
+
+
+**4. Lack of Transparency:** Customers face difficulty in discerning the authenticity of products due to fragmented and opaque supply chain data.
+
+
+
+
+# Business Scenario Implemented Using Blockchain
+
+
+
+
+Blockchain technology offers the promise of a single source of truth that overcomes these challenges, providing real-time, immutable, and transparent data for all stakeholders in the supply chain.
+
+
+One compelling business scenario where blockchain technology is implemented is in supply chain management. Blockchain offers significant advantages in tracking, verifying, and securing the flow of goods throughout the supply chain. Here's how it works and why it's beneficial:
+
+
+## Scenario: Supply Chain Management
+
+
+### Traditional Approach:
+In a conventional supply chain, various parties, including manufacturers, suppliers, distributors, retailers, and logistics companies, maintain their own databases and use different systems for tracking the movement of products. This disjointed system leads to several issues:
+
+
+**Data Discrepancies:** Each organization's database may not be in sync with others, causing inconsistencies and delays in decision-making.
+
+
+**Lack of Transparency:** Customers and end-users often have limited visibility into the origins and journey of products, making it challenging to verify authenticity.
+
+
+**Counterfeiting and Fraud:** The fragmented nature of the supply chain makes it easier for counterfeit products to enter the market and for fraud to occur.
+
+
+**Human Error:** Data inaccuracies or missing entries can result from human errors, data entry issues, or technical problems.
+
+
+**Blockchain-Based Solution:**
+Implementing blockchain in the supply chain addresses these challenges:
+
+
+**Transparency:** Blockchain creates a shared ledger accessible to all authorized participants, offering real-time visibility into the movement of products. Every party in the supply chain can access the same data, reducing discrepancies and improving transparency.
+
+
+**Immutable Records:** Once information is added to the blockchain, it cannot be altered or deleted. This ensures data integrity, reducing the risk of fraud or errors.
+
+
+**Traceability:** Blockchain allows each product to be assigned a unique identifier, such as a QR code, which can be used to track its entire journey from manufacturing to delivery.
+
+
+**Smart Contracts:** Self-executing smart contracts can be incorporated into the blockchain, automating processes such as payments, quality checks, and delivery confirmations.
+
+
+**Enhanced Security:** Blockchain employs robust cryptographic techniques to secure data. This reduces the risk of counterfeiting and unauthorized access.
+
+
+**Cost Savings:** The reduction in errors, fraud prevention, and streamlined processes result in cost savings for all participants.
+
+
+**Faster Issue Resolution:** Discrepancies or disputes can be resolved more quickly and with a higher degree of accuracy.
+
+
+**Product Quality Assurance:** Through blockchain, it's easier to trace the origins of products, ensuring quality and safety standards are met.
+
+
+**Competitive Advantage:** Companies that implement blockchain in their supply chain gain a competitive edge by demonstrating commitment to transparency and product quality.
+
+
+Blockchain's application in supply chain management is just one example of its transformative potential across various industries. This technology promises to increase efficiency, security, and trust in a wide range of business scenarios.

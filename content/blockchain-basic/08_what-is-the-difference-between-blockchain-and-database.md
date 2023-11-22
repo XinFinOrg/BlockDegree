@@ -5,21 +5,19 @@ template: courseContent.hbs
 courseIdx: 0
 ---
 
-<img src="/img/courses/bc-basic/blockchain-database.png"  style="width:100%; height: 400px; align-content: center; "/>
-                <img src="/img/courses/bc-basic/bc-db.png"  style="width:100%; height: 400px; align-content: center; "/>
 
-__The distinctions between a traditional (Relational or document-oriented) database and a blockchain__
+<img src="/img/courses/bc-basic/BD.png" style="width:100%; height: 400px; align-content: center; margin: 25px;"/>
 
-1. In a traditional Database, a single authorised server or a group of authorised servers (sharing in MongoDB) store the data. The users of this data will have to assume that the organisation running the server will not change the data and the security of the server will not be affected.
 
-In a Blockchain technology, all the data are stored publicly on a peer-to-peer network and also verified publicly.
 
-Verifying is formed through cryptography – that is encryption and hashing. As the data is publicly stored, a Blockchain is very tough to hack.
 
-2. In a traditional Database, there is no privacy problem. All the user data (access tokens and login credentials) are privately stored on the server.
+In a traditional database system, data is housed within a single authorised server or a cluster of authorised servers (as seen in shared environments like MongoDB). Users must place their trust in the organisation managing these servers, hoping that data won't be tampered with and that server security remains uncompromised.
 
-To handle the issue of privacy, the blockchain nodes are generally unknown. The user identity is instead in alias through a public cryptographic key. To check if the node has authorised any transaction or block, the digital signature needs to be verified with the use of the node’s public key.
 
-3. In a traditional Database, there is no need to verify data or an agreed method. In a blockchain, a proof of work or proof of agreed method is required so that only one state of the blockchain remains over the peer-to-peer network.
+On the other hand, blockchain technology revolutionises data storage. Here, all data is stored openly on a decentralised, peer-to-peer network and subject to public verification. The magic behind this verification is cryptography, including encryption and hashing. The transparent, public nature of the blockchain makes it an exceptionally formidable fortress against hacking attempts.
 
-4. In a traditional DB, there is no need to verify data or a consensus mechanism. In a blockchain, a proof of work or proof of stake consensus mechanisms is used so that eventually a single state of the blockchain is maintained over the peer to peer network.
+
+Privacy is another realm where blockchain shines. In traditional databases, user data, including sensitive access tokens and login credentials, resides on centralised servers, potentially raising privacy concerns. Blockchain takes a unique approach: nodes within the blockchain network often operate incognito, with user identities veiled behind public cryptographic keys. To confirm the authorization of transactions or blocks, one must validate the digital signature against the node's public key.
+
+
+Moreover, the blockchain introduces a whole new dimension of verification and consensus. In traditional databases, these elements are often neglected. However, in the world of blockchain, they are fundamental. A proof of work (PoW) or proof of stake (PoS) consensus mechanism is essential to maintain a single, universally accepted state of the blockchain across the peer-to-peer network. This mechanism ensures the trustworthiness and accuracy of all transactions and blocks, enhancing the security and reliability of the blockchain.
