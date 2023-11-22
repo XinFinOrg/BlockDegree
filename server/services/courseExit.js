@@ -3,7 +3,7 @@ const { renderForIPFSHash } = require("../helpers/renderCertificate");
 const CourseExit = require("../models/CourseExit");
 const User = require("../models/user");
 
-exports.courseExit = async (req, res) => {
+exports.course_exit = async (req, res) => {
   try {
     const { question, answer } = req.body;
     const email = req.user.email;
