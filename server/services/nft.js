@@ -8,7 +8,7 @@ const mint = require("../helpers/nft/mint");
 const tokenName = "Blockdegree Certificate",
   description = "Blockdegree Certificate belonging to user ";
 
-const IPFS_PREFIX = "https://ipfs-gateway.xinfin.network/";
+const IPFS_PREFIX = "https://ipfs-gateway.xdc.network/";
 
 /**
  *
