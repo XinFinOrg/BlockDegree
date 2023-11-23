@@ -143,7 +143,7 @@ var renderWithQR = async (
     return callback({ uploaded: false, error: "bad parameters", hash: "" });
   }
   const dataURL = await qrcode.toDataURL(
-    `https://ipfs-gateway.xinfin.network/${hash}`
+    `https://ipfs-gateway.xdc.network/${hash}`
   ); // or the domain of where its hosted
   const degreeDetails = getDegreeContentDetails(examType);
   ejs.renderFile(
