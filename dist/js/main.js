@@ -340,7 +340,7 @@ $(document).ready(async function () {
   $("#getCertiFromHash").click(function (e) {
     e.preventDefault();
     const hash = $("#txHash").val();
-    window.location = `https://ipfs-gateway.xinfin.network/` + hash + ``;
+    window.location = `https://ipfs-gateway.xdc.network/` + hash + ``;
   });
 
   //Login form toggle

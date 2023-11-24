@@ -63,7 +63,7 @@ exports.postTwitter = async (req, res) => {
       if (process.env.IPFS_NETWORK == "local") {
         fullURL = `http://localhost:8081/ipfs/${hash}`;
       } else if (process.env.IPFS_NETWORK == "xinfin") {
-        fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
+        fullURL = `https://ipfs-gateway.xdc.network/${hash}`;
       }
 
       try {
@@ -267,7 +267,7 @@ exports.postLinkedin = async (req, res) => {
   if (process.env.IPFS_NETWORK == "local") {
     fullURL = `http://localhost:8081/ipfs/${hash}`;
   } else if (process.env.IPFS_NETWORK == "xinfin") {
-    fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
+    fullURL = `https://ipfs-gateway.xdc.network/${hash}`;
   }
   try {
     let shortUrlObj = await bitly.shorten(fullURL);
@@ -365,7 +365,7 @@ exports.uploadImageLinkedin = async (req, res) => {
   if (process.env.IPFS_NETWORK == "local") {
     fullURL = `http://localhost:8081/ipfs/${hash}`;
   } else if (process.env.IPFS_NETWORK == "xinfin") {
-    fullURL = `https://ipfs-gateway.xinfin.network/${hash}`;
+    fullURL = `https://ipfs-gateway.xdc.network/${hash}`;
   }
   try {
     let shortUrlObj = await bitly.shorten(fullURL);
