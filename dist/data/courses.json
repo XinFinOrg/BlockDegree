@@ -325,6 +325,53 @@
       ]
     },
     {
+      "title": "Blockchain Basic Course for Engineer-2",
+      "price": "9.99",
+      "type": "course_6",
+      "video": "https://www.youtube.com/embed/_A_BhSVSA6g",
+      "duration": "3 days",
+      "slug": "blockchain-basic-2",
+      "pointers": [
+        " 30 Marks Practical & Theory",
+        "40% will be the passing percentage",
+        " Individual will get max of 3 Attempts"
+      ],
+
+      "sypnosis": "As Cryptocurrency becomes more popular, from 2017 onwards, it becomes under greater threat from hackers. Every day there is another attack on an individuals holdings, and it's imperative you know your options to prevent similar happening to you. Cryptocurrency is where the money is, and yet the infrastructure is not yet strong enough to keep you and your money 100% secure from threats and attacks.",
+      "overview": "In this course, we will be providing a full and thorough guide to the four main Cryptocurrency wallets - Paper, Desktop, Mobile and Hardware wallets.",
+      "skills": "30 Days of unlimited access to course content. Certified Cloud Computing  Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
+      "prerequisites": [
+        "You should have access to a Computer with Internet connection",
+       "Don't delay, start keeping your Cryptos safe today!"
+      ],
+      "curriculum": [
+        {
+          "topic": "What is Blockchain Wallet and How Does It Work?"
+        },
+        {
+          "topic": "Why Use a Blockchain Wallet?"
+        },
+        {
+          "topic": "What is a Blockchain Wallet?"
+        },
+        {
+          "topic": "How Do Blockchain Wallets Work?"
+        },
+        {
+          "topic": "Blockchain Wallet Types"
+        },
+        {
+          "topic": "Blockchain Wallets Comparison"
+        },
+        {
+          "topic": "How to protect your private keys?"
+        },
+        {
+          "topic": "Case Studies"
+        }
+      ]
+    },
+    {
       "title": "XDC Blockchain Network",
       "price": "9.99",
       "type": "course_7",
