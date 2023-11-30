@@ -264,16 +264,52 @@ if (typeof jQuery != "undefined") {
   var kycBackfiles = [];
   let selfieImg = document.getElementById("selfieimg");
   selfieImg.onchange = (e) => {
+    validateFile(e.target.files, "selfieimg" );
     selfiefiles = e.target.files;
   };
   let kycFrontImg = document.getElementById("kycfrontimg");
   kycFrontImg.onchange = (e) => {
+    validateFile(e.target.files, "kycfrontimg");
     kycFrontfiles = e.target.files;
   };
   let kycBackImg = document.getElementById("kycbackimg");
   kycBackImg.onchange = (e) => {
+    validateFile(e.target.files, "kycbackimg");
     kycBackfiles = e.target.files;
   };
+  function validateFile(files, inputId) {
+    const allowedExtensions = ["jpg", "jpeg", "png"];
+    const maxSizeKB = 350; // 350 KB
+  
+    const file = files[0];
+  
+    if (file) {
+      const fileNameParts = file.name.split(".");
+      const fileExtension = fileNameParts[fileNameParts.length - 1].toLowerCase();
+  
+      if (!allowedExtensions.includes(fileExtension)) {
+        $.notify("Invalid file type. Allowed types are: jpg, jpeg, png.", { type: "danger" });
+        clearFileInput(inputId);
+        return;
+      }
+  
+      if (file.size > maxSizeKB * 1024) {
+        $.notify(`File size exceeds ${maxSizeKB} KB limit.`, { type: "danger" });
+        clearFileInput(inputId);
+        return;
+      }
+    }
+  }
+  
+  function clearFileInput(inputId) {
+    const fileInput = document.getElementById(inputId);
+  
+    if (fileInput) {
+     fileInput.value = "";
+  }
+}
+  
+
   function handleUpdateKyc() {
     const kycNo = document.getElementById("kycNo").value;
     const dob = document.getElementById("dob").value;
