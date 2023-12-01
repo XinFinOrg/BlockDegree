@@ -90,7 +90,7 @@ module.exports = async function(req, res, next) {
     }
     else if  (examName === "network"){
       await User.findOne(query, function(err, user) {
-        payment_status = user.examData.payment.course_7;
+        payment_status = user.examData.payment.course_6;
         if (payment_status != true) {
           res.redirect("/exams");
         } else {

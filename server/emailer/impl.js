@@ -71,8 +71,7 @@ module.exports = {
       type === "course_3" ||
       type === "course_4" || 
       type === "course_5" ||
-      type === "course_6" ||
-      type === "course_7"
+      type === "course_6"
     ) {
       var courseName;
       if (type === "course_1") {
@@ -86,8 +85,6 @@ module.exports = {
       } else if (type === "course_5") {
         courseName = "blockchain-wallet-exam";
       } else if (type === "course_6") {
-        courseName = "blockchain-basic-2";
-      } else if (type === "course_7") {
         courseName = "blockchain-network-exam";
       }
       mailOptions = {

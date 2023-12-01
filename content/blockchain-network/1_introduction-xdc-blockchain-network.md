@@ -2,7 +2,7 @@
 parent: XDC Blockchain Network
 title: Introduction XDC Blockchain Network
 template: courseContent.hbs
-courseIdx: 6
+courseIdx: 5
 ---
 <img src="/img/courses/xdc/xdc.png" style="width:755px; height: 400px; align-content: center; margin: 25px;"/>
 
@@ -16,7 +16,7 @@ courseIdx: 6
 - XinFin uses its native cryptocurrency called XDC, which serves various purposes within the XinFin ecosystem. It can be used for transactions on the XinFin blockchain, as a means of payment, and for various other network functions.
 
 
-- XDC is an ERC-20 token, initially built on the Ethereum blockchain, but XinFin later developed its own hybrid blockchain network called the XDC Network.
+- XDC is an XRC20 token, initially built on the Ethereum blockchain, but XinFin later developed its own hybrid blockchain network called the XDC Network.
 
 
 ## 2.XDC Network:

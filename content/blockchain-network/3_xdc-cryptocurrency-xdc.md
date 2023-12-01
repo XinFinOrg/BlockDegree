@@ -2,7 +2,7 @@
 parent: XDC Blockchain Network
 title: XDC Cryptocurrency (XDC)
 template: courseContent.hbs
-courseIdx: 6
+courseIdx: 5
 ---
 
 <img src="/img/courses/xdc/XDCtoken.png" style="width:855px; height: 400px; align-content: center; margin: 25px;"/>

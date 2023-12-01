@@ -33,15 +33,10 @@ const examTypes = {
     questionName: "questionsWallet",
     coursePayment_id: "course_5",
   },
-  basic_2: {
-    courseName: "examBasic2",
-    questionName: "questionsBasic2",
-    coursePayment_id: "course_6",
-  },
   network: {
     courseName: "examXdcNetwork",
     questionName: "questionsXdcNetwork",
-    coursePayment_id: "course_7",
+    coursePayment_id: "course_6",
   },
 };
 
@@ -538,14 +533,14 @@ exports.submitExam = async (req, res, next) => {
                   "examData.examXdcNetwork.attempts":
                     attemptsxdc_network > 2 ? 0 : attemptsxdc_network,
                   "examData.examXdcNetwork.marks": marks,
-                  "examData.payment.course_7": attemptsxdc_network <= 2,
-                  "examData.payment.course_7_payment":
+                  "examData.payment.course_6": attemptsxdc_network <= 2,
+                  "examData.payment.course_6_payment":
                     attemptsxdc_network <= 2
-                      ? currUser.examData.payment.course_7_payment
+                      ? currUser.examData.payment.course_6_payment
                       : "",
-                  "examData.payment.course_7_doner":
+                  "examData.payment.course_6_doner":
                     attemptsxdc_network <= 2
-                      ? currUser.examData.payment.course_7_doner
+                      ? currUser.examData.payment.course_6_doner
                       : "",
                 },
               },
@@ -572,9 +567,9 @@ exports.submitExam = async (req, res, next) => {
               $set: {
                 "examData.examXdcNetwork.attempts": attemptsxdc_network,
                 "examData.examXdcNetwork.marks": marks,
-                "examData.payment.course_7": false,
-                "examData.payment.course_7_payment": "",
-                "examData.payment.course_7_doner": "",
+                "examData.payment.course_6": false,
+                "examData.payment.course_6_payment": "",
+                "examData.payment.course_6_doner": "",
               },
             },
             { upsert: false },
@@ -864,7 +859,6 @@ exports.getExamStatus = async (req, res) => {
             course_4: user.examData.payment.course_4,
             course_5: user.examData.payment.course_5,
             course_6: user.examData.payment.course_6,
-            course_7: user.examData.payment.course_7,
           },
           json: json,
           video: user.videoSubscription === true,
