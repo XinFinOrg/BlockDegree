@@ -14,7 +14,7 @@ function newDefaultUser() {
         course_3: false,
         course_4: false,
         course_5: false,
-        course_7: false
+        course_6: false
       },
       examBasic: {
         attempts: 0,
@@ -90,7 +90,7 @@ exports.migrateFrom = (req, res) => {
       newUser.examData.payment.course_3 = objJSON.local.payment.course_3;
       newUser.examData.payment.course_4 = objJSON.local.payment.course_4;
       newUser.examData.payment.course_5 = objJSON.local.payment.course_5;
-      newUser.examData.payment.course_7 = objJSON.local.payment.course_7;
+      newUser.examData.payment.course_6 = objJSON.local.payment.course_6;
 
       newUser.examData.examBasic.marks = Number(
         objJSON.local.examBasic.marks.$numberInt

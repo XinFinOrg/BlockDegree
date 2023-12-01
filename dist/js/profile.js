@@ -95,7 +95,7 @@ if (typeof jQuery != "undefined") {
               ? "Enrolled"
               : "Not Paid";
           bnetworkStatus.innerHTML =
-            userProfile.examData.payment.course_7 == true
+            userProfile.examData.payment.course_6 == true
               ? "Enrolled"
               : "Not Paid";
           videoStatus.innerHTML =

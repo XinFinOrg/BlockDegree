@@ -2,7 +2,7 @@
 parent: XDC Blockchain Network
 title: Introduction XDC Blockchain Network
 template: courseContent.hbs
-courseIdx: 6
+courseIdx: 5
 ---
 <img src="/img/courses/xdc/xdc.png" style="width:755px; height: 400px; align-content: center; margin: 25px;"/>
 
