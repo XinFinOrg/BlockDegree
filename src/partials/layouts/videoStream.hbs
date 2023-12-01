@@ -156,14 +156,21 @@
                 }
             })
         })
+        let originalState = $('#video-wrapper').html();
 
+        function revertToOriginalState() {
+            $('#video-wrapper').html(originalState);
+            $('.embed-responsive').addClass('embed-responsive-16by9');
+            }
+        
         const videoPlayer = document.getElementById("videoPlayer")
-        const overviews = {{{ Overview }}};
+        const overviews = {{{ Overview }}};  
         $('#overviewContent').html(overviews["1"])
         $('button[videoId="1"]').addClass('video-item-link-active')
         $('button').click(function () {
             videoPlayer.pause();
-            let videoId = $(this).attr("videoId");
+            let videoId = $(this).attr("videoId");     
+            revertToOriginalState();
             console.log("videoId", videoId);
             if (videoId === "qna") {
                 let qnaForm = `
@@ -205,12 +212,12 @@
                         },
 
                     })
-                })
+                }) 
                 return;
-            }
-            $('#videoPlayerSource').attr('src', `https://www.blockdegree.org/api/videoStream/${ videoId }`)
+            }         
+           $('#videoPlayerSource').attr('src', `https://www.blockdegree.org/api/videoStream/${ videoId }`)
             videoPlayer.load();
-            videoPlayer.play();
+            //videoPlayer.play();
             $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
             $($(this).attr('videoId')).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
 
