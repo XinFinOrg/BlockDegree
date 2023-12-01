@@ -164,7 +164,7 @@
             }
         
         const videoPlayer = document.getElementById("videoPlayer")
-        const overviews = {{{ Overview }}};  
+        const overviews = {{{ Overview }}};
         $('#overviewContent').html(overviews["1"])
         $('button[videoId="1"]').addClass('video-item-link-active')
         $('button').click(function () {
@@ -212,10 +212,10 @@
                         },
 
                     })
-                }) 
+                })
                 return;
-            }         
-           $('#videoPlayerSource').attr('src', `https://www.blockdegree.org/api/videoStream/${ videoId }`)
+            }
+            $('#videoPlayerSource').attr('src', `https://www.blockdegree.org/api/videoStream/${ videoId }`)
             videoPlayer.load();
             //videoPlayer.play();
             $(this).addClass('video-item-link-active').siblings().removeClass('video-item-link-active');
