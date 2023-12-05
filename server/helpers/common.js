@@ -55,7 +55,7 @@ exports.genRandomAlphaNum = () => {
 exports.usdToInr = (amntUsd) => {
   return new Promise((resolve, reject) => {
     axios
-      .get("https://api.exchangeratesapi.io/latest?base=USD")
+      .get("https://api.frankfurter.app/latest?from=USD")
       .then((result) => {
         const inrRate = result.data.rates.INR;
         resolve(parseFloat(amntUsd) * parseFloat(inrRate));
