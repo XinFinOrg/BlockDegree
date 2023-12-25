@@ -40,7 +40,7 @@ Cloud computing enables access from anywhere at any time, providing enhanced con
 - Streamlined Processes:
 Achieve higher productivity with fewer resources and reduced time through the streamlined processes offered by cloud computing.
 
-##  Disadvantage of Cloud Computing:
+##  Disadvantages of Cloud Computing:
   <img src="/img/courses/cloud/dis.png" style="width:855px; height: 400px; align-content: center; margin: 25px;"/>
 
 

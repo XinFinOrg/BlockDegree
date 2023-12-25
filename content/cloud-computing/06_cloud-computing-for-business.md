@@ -3,7 +3,7 @@ parent: Cloud Computing
 template: courseContent.hbs
 courseIdx: 3
 ---
-## 6. Cloud Computing in Business
+## Cloud Computing in Business
 
 Cloud computing is crucial for businesses, providing an online platform for managing computer resources. It's come a long way, now often involving third-party services. The "cloud" symbolizes how you can store and access data over the internet. Offering virtual services, cloud computing is known for its reliability, safety, and easy access. It's especially beneficial for small businesses, providing affordable storage and effective data analysis tools.
 

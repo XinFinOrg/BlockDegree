@@ -285,10 +285,19 @@
           "topic": "Characteristics of Cloud Computing"
         },
         {
-          "topic": "Advantages and Disadvantages of Cloud Computing"
+          "topic": "Advantages and Disadvantages of Cloud Computing",
+          "sub-topic": [
+            "Advantages of Cloud Computing",
+            "Disadvantages of Cloud Computing"
+          ]
         },
         {
-          "topic": "What is Virtualization?"
+          "topic": "What is Virtualization?",
+          "sub-topic": [
+            "Virtualization as a Concept of Cloud Computing",
+            "Types of Virtualizations",
+            "Characteristics of Virtualization"
+          ]
         },
         {
           "topic": "Cloud Computing for Business?"
