@@ -255,34 +255,55 @@
       ],
 
       "sypnosis": " One of the most critical issues in cloud computing is security. With the development of the Internet and Web technology and frequent cross-cultural communication, it is necessary for people to be able to access and manage information in many different languages.",
-      "overview": "The prevalent slant in today's innovation driven world is ‘Cloud Computing’. Cloud computing can be alluded to as the putting away and getting to of information over the web instead of your computer's difficult drive. This implies you do not get to the information from either your computer's difficult drive or over a committed computer arrange (domestic or office arrange). Cloud computing implies information is put away at a farther put and is synchronized with other web data.",
-      "skills": "30 Days of unlimited access to course content. Certified Cloud Computing  Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
+      "overview": "In today's innovation-driven world, the prevailing trend is \"Cloud Computing.\" Cloud computing refers to the storage and access of data over the internet instead of your computer's hard drive. This means accessing data not from your computer's hard drive or a dedicated computer network (home or office network) but from a distant location where the data is stored and synchronised with other web data.",
+      "skills": " Participants will gain valuable skills during this course, including: 30 days of unlimited access to course content, Certified Cloud Computing Basic exam voucher, The ability to stop, pause, rewind, and navigate through all chapters, Sample quiz questions for self-assessment, Exam Prep Digital Course Material accessible from anywhere and any device ",
       "prerequisites": [
-        "Necessary: Basic knowledge in Networking",
-        "Basic knowledge in Server / VPN, LAN, WAN",
-        "Advantageous: Basic knowledge Datacenter"
+        "Server / VPN",
+        "LAN",
+        "WAN",
+        "Basic knowledge of Datacenter"
       ],
       "curriculum": [
         {
-          "topic": "What is Cloud Computing"
+          "topic": "What is Cloud Computing",
+          "sub-topic": [
+            "Why the Name Cloud",
+            "Why Cloud Computing",
+            "Types of Clouds",
+            "Cloud Computing Services"
+          ]
         },
         {
-          "topic": "Evolution of Computing"
+          "topic": "Architecture of Cloud Computing",
+          "sub-topic": [
+            "Cloud Computing Architecture",
+            "Important Components of Cloud Computing Architecture",
+            "Benefits of Cloud Computing Architecture"
+          ]
         },
         {
           "topic": "Characteristics of Cloud Computing"
         },
         {
-          "topic": "Cloud Computing Service Models"
+          "topic": "Advantages and Disadvantages of Cloud Computing",
+          "sub-topic": [
+            "Advantages of Cloud Computing",
+            "Disadvantages of Cloud Computing"
+          ]
         },
         {
-          "topic": "Different Types of Cloud Computing Models"
+          "topic": "What is Virtualization?",
+          "sub-topic": [
+            "Virtualization as a Concept of Cloud Computing",
+            "Types of Virtualizations",
+            "Characteristics of Virtualization"
+          ]
         },
         {
-          "topic": "Benefits of using the cloud for your business"
+          "topic": "Cloud Computing for Business?"
         },
         {
-          "topic": "How to Deploy Cloud"
+          "topic": "How to Deploy Cloud?"
         }
       ]
     },
