@@ -1,113 +1,543 @@
 {
   "exam": [
+    
     {
-      "question": "What exactly is cloud?",
+      "question": "What is the primary advantage of cloud computing?",
       "choices": [
-        " Cloud is delivery of computing services including servers, storage, DB, Networking and other services on internet",
-        "Cloud computing is delivery of computing services over the internet from single server",
-        "Cloud is delivery of computing services on internet for multiple clients.",
-        " None of these."
-      ]
+      "Offline data storage",
+      "On-demand computing services",
+      "Exclusive local server access",
+      "Limited data access."
+      ],
+      "answer": 2
     },
+
     {
-      "question": "In cloud the billing Model",
+      "question": "What characterizes a private cloud?",
       "choices": [
-        "Fixed price over the billing term",
-        "Flexible as per Client usage",
-        "Client has an option to choose Fix Price as well as Flexible Price Models"
-      ]
-    },
-    {
-      "question": "Cloud computing Allows",
+      "Shared infrastructure for multiple organizations",
+      "Exclusively on-premises infrastructure",
+      "Third-party management",
+      "Limited control and customization"
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "What is the fundamental premise of server-based computing?",
       "choices": [
-        "Scaling of resources as per requirement",
-        "scaling requires ISP intervention / downtime",
-        "Scaling is not possible"
-      ]
-    },
-    {
-      "question": "Deployment/Activation of Cloud Computing",
+      "Decentralized application execution",
+      "Centralized server as the core",
+      "Client-focused architecture",
+      "Resource dispersion across the network"
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "In server-based computing, how is a server defined?",
       "choices": [
-        "Happens instantly by clicks",
-        "Takes minimum 4 - 6 hours from time of order",
-        "Both the above is correct"
-      ]
-    },
-    {
-      "question": " Select the characteristics of Cloud Computing",
+      "A general-purpose computer",
+      "A specialized computer for managing network resources",
+      "An endpoint device",
+      "A dedicated client computer"
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "What role does a server play in server-based computing dynamics?",
       "choices": [
-        " Instant Deployment, On Demand Self Servicing, Resource Pooling,  Elasticity",
-        "Shared Resources, Third Party Monitoring, AutoBackups, Predefined Billing",
-        "Non Shared Computing Resources, Error Free Activation, Single resource Pooling, No Activation"
-      ]
-    },
-    {
-      "question": "In IaaS following component are managed by Service Provider",
+      "Minimal involvement in resource management",
+      "Dispensing network resources on-demand",
+      "Limited interaction with clients",
+      "Acting as a decentralized processing unit"
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "How does the server facilitate communication in server-based computing?",
       "choices": [
-        "Application, Data, Runtime, Middleware, OS",
-        " Application, Data, Runtime, Middleware, OS, Virtualization, Networking",
-        "Virtualization, Servers, Storage, Networking"
-      ]
-    },
-    {
-      "question": "In SaaS following component are managed by Service Provider",
+      "By limiting client requests",
+      "Through decentralized resource sharing",
+      "By processing requests from other programs",
+      "By acting as an independent network node"
+      ],
+      "answer": 3
+      },
+      
+      {
+      "question": "Why was the term 'Cloud' chosen to describe the network design in cloud computing?",
       "choices": [
-        "Application, Data, Runtime, Middleware, OS, Virtualization, Networking, Servers, Storage",
-        "Application, Data, Runtime, Middleware, OS, Networking",
-        "Virtualization, Servers, Storage, Networking, Networking, OS"
-      ]
-    },
-    {
-      "question": "Following are examples of Public Cloud",
+      "It symbolizes data dispersion across networks",
+      "It reflects the interconnected and fluid nature of the network",
+      "It represents decentralized computing",
+      "It indicates a focus on in-house IT infrastructure"
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "What problem does cloud computing solve for businesses, according to the passage?",
       "choices": [
-        "Amazon, Google Cloud, Microsoft Azure, AliCloud, IndSoft",
-        " Salesforce, Google Suite, SOHO, Sales Force",
-        "HubSpot, EDS, Genpact, Infosys Finacle"
-      ]
-    },
-    {
-      "question": "Hybrid Cloud is Combination of",
+      "Limited data storage",
+      "High costs associated with IT infrastructure",
+      "Overreliance on in-house IT support",
+      "Dependency on mobile devices"
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "What characterizes the Hybrid Cloud deployment model?",
       "choices": [
-        " Private + Public Cloud",
-        "Two Different Public Cloud Providers",
-        "Combination of Saas + IaaS Provider"
-      ]
-    },
-    {
-      "question": "What Pay-as-you-go cloud computing?",
+      "Exclusively for B2C interactions",
+      "Involves computing resources from different clouds",
+      "Dedicated to a specific organization",
+      "Facilitates collaborative usage by multiple entities"
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "How does cloud computing shift responsibility in terms of maintenance for businesses?",
       "choices": [
-        "Pay-as-you-go cloud computing (PAYG cloud computing) is a payment method for cloud computing that charges based on usage.",
-        "Payment as soon as you start cloud service",
-        "Similar to the Prepaid billing system. "
-      ]
-    },
-    {
-      "question": "With Cloud Implementation you can achieve",
-      "choices": [
-        "Mobility, Reliability, Cost Savings, Elasticity",
-        "Cost Increase, Delay in Execution, Time Lapse",
-        " Both of the above  "
-      ]
-    },
-    {
-      "question": "What is the most popular payment method in cloud computing?",
-      "choices": ["Debit Card /Credit Card.", "Cash", "Crypto"]
-    },
-    {
-      "question": "Disadvantages of Cloud Computing",
-      "choices": [
-        "Need to Invest in Hardware ",
-        "Need to buy all Software Licenses",
-        "Both are Wrong"
-      ]
-    },
-    {
-      "question": "Benefits of Cloud Computing ?",
-      "choices": ["IndSoft.net", "Microsoft", "Alibaba"]
-    },
-    {
-      "question": "Which of the following technologies are used in LongJumps PaaS?",
-      "choices": ["REST", "SOAP", "All of the mentioned"]
-    }
+      "It increases the need for in-house maintenance",
+      "It eliminates the need for maintenance",
+      "It shifts responsibility to the service provider",
+      "It requires businesses to handle technical glitches independently"
+      ],
+      "answer": 3
+      },
+
+      {
+        "question": "Why was the term 'Cloud' chosen to describe the network design in cloud computing?",
+        "choices": [
+        "Symbolizes data dispersion",
+        "Represents decentralized computing",
+        "Reflects interconnected and fluid network nature",
+        "Indicates focus on in-house IT infrastructure"
+        ],
+        "answer": 3
+        },
+        
+        {
+        "question": "In server-based computing, what is the fundamental premise regarding applications?",
+        "choices": [
+        "Applications run on personal computers",
+        "Applications operate on a centralized server",
+        "Applications are decentralized",
+        "Applications are managed by clients"
+        ],
+        "answer": 2
+        },
+        
+        {
+        "question": "What is the primary objective of cloud computing, as mentioned in the passage?",
+        "choices": [
+        "Data storage on personal computers",
+        "Democratize access to expansive data centers",
+        "Shift responsibility to the user's end",
+        "Eliminate the need for IT infrastructure"
+        ],
+        "answer": 2
+        },
+        
+        {
+        "question": "What characterizes the 'Hybrid Cloud' deployment model?",
+        "choices": [
+        "Exclusively for B2C interactions",
+        "Involves computing resources from different clouds",
+        "Dedicated to a specific organization",
+        "Facilitates collaborative usage by multiple entities"
+        ],
+        "answer": 2
+        },
+        
+        {
+        "question": "What are the three major offerings of Cloud Computing services mentioned?",
+        "choices": [
+        "Cloud, Fog, Edge",
+        "SaaS, PaaS, IaaS",
+        "Email, Storage, Networking",
+        "Web Browsing, Mobile Apps, Social Media"
+        ],
+        "answer": 2
+        },
+        
+        {
+        "question": "What is the key feature of PaaS services mentioned in the passage?",
+        "choices": [
+        "Static platform for application development",
+        "Limited software support",
+        "Continuous updates with new features",
+        "Focus on individual application hosting"
+        ],
+        "answer": 3
+        },
+        
+        {
+        "question": "According to the passage, what problem does IaaS solve for small-scale businesses?",
+        "choices": [
+        "High costs associated with IT infrastructure",
+        "Dependency on mobile devices",
+        "Limited access to technologies",
+        "Inability to shift responsibility to service providers"
+        ],
+        "answer": 1
+        },
+        
+        {
+        "question": "What is the analogy used to explain PaaS in the passage?",
+        "choices": [
+        "Creating a painting using provided tools",
+        "Managing a server like a painting canvas",
+        "Using different paint colors for software development",
+        "Building a picture with virtual server space"
+        ],
+        "answer": 1
+        },
+        
+        {
+        "question": "What characterizes the 'Private Cloud' deployment model?",
+        "choices": [
+        "Computing resources for B2C interactions",
+        "Collaborative usage by multiple entities",
+        "Exclusive deployment for a specific organization",
+        "Versatile use in both B2B and B2C scenarios"
+        ],
+        "answer": 3
+        },
+        
+        {
+        "question": "What does the term 'democratize access to expansive data centers' mean in the context of cloud computing?",
+        "choices": [
+        "Restricting access to data centers",
+        "Enabling widespread access to data centers",
+        "Eliminating data centers",
+        "Ignoring data center accessibility"
+        ],
+        "answer": 2
+        },
+
+        {
+          "question": "How does 'Rapid Elasticity' in cloud resources compare to adjusting the volume on a phone?",
+          "choices": [
+          "Resources adjust slowly and steadily",
+          "Resources remain fixed regardless of needs",
+          "Resources can quickly grow or shrink based on needs",
+          "Adjusting resources requires expert intervention"
+          ],
+          "answer": 3
+          },
+          
+          {
+          "question": "How is 'Measured Service' in cloud computing compared in the passage?",
+          "choices": [
+          "Constant availability of resources",
+          "Similar to monitoring phone calls",
+          "Tracking phone data usage to know what's used",
+          "Limited tracking of resource usage"
+          ],
+          "answer": 3
+          },
+          
+          {
+          "question": "What is the significance of 'Resilient Computing' in cloud services, according to the passage?",
+          "choices": [
+          "Frequent disruptions during service",
+          "Dependence on physical resources",
+          "Designed to keep working even if something goes wrong",
+          "No need for a backup plan"
+          ],
+          "answer": 3
+          },
+          
+          {
+          "question": "What is the primary advantage of cloud computing highlighted in the passage?",
+          "choices": [
+          "Increased Internet Speed",
+          "Instant Software Updates",
+          "Reduced Software Costs",
+          "High-Powered Computers on User PCs"
+          ],
+          "answer": 3
+          },
+          
+          {
+          "question": "How does cloud computing achieve cost efficiency according to the passage?",
+          "choices": [
+          "Requiring high-powered computers on user PCs",
+          "Using a pay-per-use model",
+          "Relying on constant internet connection",
+          "Charging for instant software updates"
+          ],
+          "answer": 2
+          },
+          
+          {
+          "question": "What is mentioned as a disadvantage related to internet speed in cloud computing?",
+          "choices": [
+          "Limited access to cloud storage",
+          "Dependence on a constant internet connection",
+          "Reduced storage capacity",
+          "High-speed internet is often required"
+          ],
+          "answer": 4
+          },
+          
+          {
+          "question": "What is highlighted as a significant disadvantage of cloud computing in terms of security?",
+          "choices": [
+          "Frequent technical problems",
+          "Inability to manage the cloud infrastructure",
+          "Unauthorized access to user's data",
+          "Dependence on customer support"
+          ],
+          "answer": 3
+          },
+          
+          {
+          "question": "Why is constant internet connection mentioned as a disadvantage in cloud computing?",
+          "choices": [
+          "It leads to increased costs",
+          "Cloud infrastructure becomes inaccessible without it",
+          "It limits the use of pay-per-use models",
+          "Provides enhanced convenience to users"
+          ],
+          "answer": 2
+          },
+          
+          {
+          "question": "What is the primary purpose of virtualization as described in the passage?",
+          "choices": [
+          "Creating physical counterparts of resources",
+          "Reducing space requirements and costs",
+          "Enhancing hardware utilization",
+          "Managing physical storage devices"
+          ],
+          "answer": 2
+          },
+
+          {
+            "question": "How does virtualization impact cloud computing according to the text?",
+            "choices": [
+            "Increases dependence on physical infrastructure",
+            "Causes a separation of cloud computing and virtualization",
+            "Allows the concurrent execution of multiple operating systems",
+            "Limits the scalability and efficiency of cloud computing"
+            ],
+            "answer": 3
+            },
+            
+            {
+            "question": "Which type of virtualization involves remote access to an application from a server?",
+            "choices": [
+            "Storage Virtualization",
+            "Network Virtualization",
+            "Desktop Virtualization",
+            "Server Virtualization"
+            ],
+            "answer": 3
+            },
+            
+            {
+            "question": "What is the drawback mentioned for cloud providers in the text related to virtualization?",
+            "choices": [
+            "Increased security risks",
+            "High initial investment",
+            "Dependency on customer support",
+            "A need for skilled staff"
+            ],
+            "answer": 3
+            },
+            
+            {
+            "question": "What does storage virtualization aim to achieve?",
+            "choices": [
+            "Remote access to applications",
+            "Management of software installation",
+            "Utilizing multiple storage sources as a single repository",
+            "Creating virtual networks"
+            ],
+            "answer": 3
+            },
+            
+            {
+            "question": "What is the main benefit of server virtualization as mentioned in the text?",
+            "choices": [
+            "Increased energy consumption",
+            "Enhanced data integration",
+            "Reduction in infrastructural costs",
+            "Limiting the deployment of main server resources"
+            ],
+            "answer": 3
+            },
+            
+            {
+            "question": "What is the primary use of data virtualization?",
+            "choices": [
+            "Running multiple operating systems",
+            "Creating virtual networks",
+            "Collecting and managing data from various sources",
+            "Providing remote access to applications"
+            ],
+            "answer": 3
+            },
+            
+            {
+            "question": "What does the 'cloud' symbolize in cloud computing?",
+            "choices": [
+            "A physical storage device",
+            "Internet connectivity",
+            "Virtual services",
+            "Local data centers"
+            ],
+            "answer": 3
+            },
+            
+            {
+            "question": "Why is cloud computing considered crucial for businesses?",
+            "choices": [
+            "It provides physical storage devices",
+            "It offers affordable storage for large businesses",
+            "It facilitates data analysis only for small businesses",
+            "It manages computer resources online"
+            ],
+            "answer": 4
+            },
+            
+            {
+            "question": "How does cloud computing enhance data security for businesses?",
+            "choices": [
+            "By storing data locally",
+            "By automatic updates and backup",
+            "By restricting access to data",
+            "By using physical servers"
+            ],
+            "answer": 4
+            },
+            
+            {
+            "question": "What is one of the main benefits of cloud computing for small businesses?",
+            "choices": [
+            "Costly storage solutions",
+            "Ineffective data analysis tools",
+            "Affordable storage and effective data analysis tools",
+            "Limited access to data"
+            ],
+            "answer": 3
+            },
+
+            {
+              "question": "In what way does cloud computing support businesses in development and testing?",
+              "choices": [
+              "By using only physical resources",
+              "By restricting access to testing environments",
+              "By offering cost-effective solutions with physical and virtual resources",
+              "By limiting scalability"
+              ],
+              "answer": 3
+              },
+              
+              {
+              "question": "How does cloud computing support businesses in adapting to changing needs?",
+              "choices": [
+              "By using only physical servers",
+              "By restricting scalability",
+              "By avoiding the cost of unused physical servers",
+              "By limiting access to data"
+              ],
+              "answer": 3
+              },
+              
+              {
+              "question": "How do you connect to your server for configuration?",
+              "choices": [
+              "Using FTP",
+              "Via Remote Desktop (RDP) for Linux",
+              "Through virtual hosts",
+              "Via SSH for Linux or Remote Desktop for Windows"
+              ],
+              "answer": 4
+              },
+              
+              {
+              "question": "What software is commonly used for hosting web applications on a server?",
+              "choices": [
+              "MySQL",
+              "PostgreSQL",
+              "Apache or Nginx",
+              "SSL"
+              ],
+              "answer": 3
+              },
+              
+              {
+              "question": "What is the purpose of step 5, 'Upload Your Course Content'?",
+              "choices": [
+              "Configure the web server and database",
+              "Install necessary software",
+              "Transfer course files and content to the server",
+              "Set up regular backups"
+              ],
+              "answer": 3
+              },
+              
+              {
+              "question": "Why is domain configuration important in the deployment process?",
+              "choices": [
+              "It helps set up a database",
+              "It ensures server security",
+              "It connects to the server via SSH",
+              "It directs course traffic to the server"
+              ],
+              "answer": 4
+              },
+              
+              {
+              "question": "What is the purpose of implementing security measures like firewalls and SSL certificates in step 9?",
+              "choices": [
+              "To configure the web server",
+              "To access the server via SSH",
+              "To protect course data",
+              "To upload course content"
+              ],
+              "answer": 3
+              },
+              
+              {
+              "question": "Why is monitoring and maintenance essential in the deployment process?",
+              "choices": [
+              "To configure the web server",
+              "To regularly monitor server performance",
+              "To upload course content",
+              "To choose a hosting plan"
+              ],
+              "answer": 2
+              },
+              
+              {
+              "question": "Which of the following is not one of the main cloud computing services mentioned in the passage?",
+              "choices": [
+              "Software as a Service (SaaS)",
+              "Infrastructure as a Service (IaaS)",
+              "Platform as a Service (PaaS)",
+              "Storage as a Service (StaaS)"
+              ],
+              "answer": 4
+              },
+              
+              {
+              "question": "Which characteristic is associated with increased security in virtualization?",
+              "choices": [
+              "Managed Execution",
+              "Sharing",
+              "Aggregation",
+              "Emulation"
+              ],
+              "answer": 1
+              }
   ]
 }
