@@ -1,167 +1,554 @@
 {
   "exam": [
     {
-      "question": "Asymmetric encryption uses:",
+      "question": "What is a Blockchain Wallet?",
       "choices": [
-        "Public keys only",
-        "Private keys only",
-        "Public and Private keys",
-        "Proof of Stake"
-      ]
-    },
-    {
-      "question": "What is a private key?",
+      "A physical wallet for storing paper money and coins.",
+      "A digital wallet for managing cryptocurrencies and digital assets.",
+      "A type of software for tracking stock market investments.",
+      "A secure vault for storing precious metals."
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "What are the two types of keys used in a Blockchain Wallet?",
       "choices": [
-        "A key on your key chain",
-        "A key given to the public",
-        "A key NOT to be given to the public",
-        "A key that opens a secret door"
-      ]
-    },
-    {
-      "question": " What is a Cold Storage",
+      "Encryption Key and Decryption Key.",
+      "Public Key and Private Key.",
+      "Alpha Key and Beta Key.",
+      "Access Key and Security Key."
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "What is the primary advantage of decentralization in Blockchain Wallets?",
       "choices": [
-        "A place to hang your coat",
-        "A private key connected to the Internet",
-        "A private key not connected to the Internet",
-        "A desktop wallet"
-      ]
-    },
-    {
-      "question": "Which is NOT a part of asymmetric encryption?",
+      "Faster transaction speeds.",
+      "Reduction of reliance on central authorities like banks.",
+      "Enhanced graphic interface.",
+      "Lower fees for transactions."
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "Which of the following best describes the transparency feature of Blockchain Wallets?",
       "choices": [
-        "Mining",
-        "Public key",
-        "Passphrase",
-        "Private Key"
-      ]
-    },
-    {
-      "question": "Where can you buy cryptocurrency?",
+      "Users can remain completely anonymous.",
+      "Transactions are recorded on a private ledger.",
+      "Every transaction is recorded on a public blockchain.",
+      "Transaction records are deleted after a year."
+      ],
+      "answer": 3
+      },
+      
+      {
+      "question": "Why is security paramount when using Blockchain Wallets?",
       "choices": [
-        "A private transaction",
-        " An exchange",
-        "A Bitcoin ATM.",
-        "All of the above"
-      ]
-    },
-    {
-      "question": "Where is the LEAST SAFE place to keep your  cryptocurrency?",
+      "Transactions are reversible and can be modified.",
+      "The decentralized nature places greater responsibility on users to safeguard assets.",
+      "There are high transaction fees.",
+      "Cryptocurrencies are not valuable."
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "What was a significant consequence of the Mt. Gox Hack in 2014?",
       "choices": [
-        "In your pocket",
-        " On an exchange",
-        "On a hot wallet",
-        "At your work desk"
-      ]
-    },
-    {
-      "question": "Where do you store your cryptocurrency??",
+      "Increase in Bitcoin value.",
+      "Loss of approximately 850,000 Bitcoins.",
+      "Introduction of new cryptocurrencies.",
+      "Decrease in phishing attacks."
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "How do phishing attacks and social engineering relate to Blockchain Wallet security?",
       "choices": [
-        "Bank account",
-        "Floppy Disk",
-        "Wallet",
-        "In your pocket."
-      ]
-    },
-    {
-      "question": "Cryptographic Hash Function transforms an arbitrary length of a fixed length string that act more or less as a Fingerprint of the document",
+      "They are irrelevant and pose no threat.",
+      "They are government-regulated security measures.",
+      "They target users’ private keys through fraudulent schemes.",
+      "They improve the overall security of the blockchain."
+      ],
+      "answer": 3
+      },
+      
+      {
+      "question": "Which feature makes Blockchain Wallets globally accessible?",
       "choices": [
-        " True",
-        "False"
-      ]
-    },
-    {
-      "question": " What is the name of the famous Bitcoin exchange from Japan that collapsed in 2014?",
+      "Their physical presence in multiple countries.",
+      "The ability to send and receive funds across geographical boundaries.",
+      "Multilingual support.",
+      "Integration with traditional banking systems."
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "What is the role of public and private keys in a Blockchain Wallet?",
       "choices": [
-        "Blockchain.info",
-        "Tradehill",
-        "Mt. Gox",
-        "Bitstamp."
-      ]
-    },
-    {
-      "question": "A bitcoin address collision happens when 2 different payments are made at the same time to the same bitcoin address?",
+      "Public and private keys are used for encryption and decryption of messages.",
+      "Public keys are used to receive funds, while private keys authorize the expenditure of funds.",
+      "Both keys are shared publicly to ensure transparency.",
+      "Private keys are used to receive funds, while public keys are for sending funds."
+      ],
+      "answer": 2
+      },
+      
+      {
+      "question": "How does the analogy of an email address relate to a Blockchain Wallet?",
       "choices": [
-        "True",
-        "False"
-      ]
-    },
-    {
-      "question": "What is the impact of information leak for an organization?   ",
+      "The public key is like an email address, used to receive cryptocurrencies.",
+      "The private key is similar to an email address, for sending cryptocurrencies.",
+      "Both public and private keys are like email passwords.",
+      "The blockchain wallet functions as an email client."
+      ],
+      "answer": 1
+      },
+
+
+      {
+      "question": "Why is it crucial to keep your private key confidential?",
       "choices": [
-        " Loss in profit ",
-        "Loss of trust in costumers",
-        "Cut down the reputation of the organization",
-        "All of these "
-      ]
-    },
-    {
-      "question": "Are there any real bitcoins that you can store in your wallet?",
+      "To prevent spam emails.",
+      "To maintain the wallet's functionality.",
+      "To avoid unauthorized access and potential loss of cryptocurrency.",
+      "To enhance the wallet's processing speed."
+      ],
+      "answer": 3
+      },
+
+      {
+      "question": "How do you create a new wallet in the XDC Web Wallet?",
       "choices": [
-        " Yes",
-        "No"
-      ]
-    },
-    {
-      "question": " Is it fine to have someone else to trade crypto on our behalf without you being having access of the private keys associated with the account?",
+      "By providing a government-issued ID.",
+      "By clicking 'CREATE NEW WALLET' and receiving a recovery passphrase.",
+      "By linking a bank account.",
+      "By scanning a QR code."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What are the options to access your wallet in the XDC Web Wallet?",
       "choices": [
-        " Yes",
-        "No"
-      ]
-    },
-    {
-      "question": "Which kind of wallets are more vulnerable to attacks?      ",
+      "Only through a private key.",
+      "Through MEWConnect, Hardware, MetaMask, or a private key.",
+      "By answering security questions.",
+      "By receiving an access code via email."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "How can you receive XDC in the XDC Web Wallet?",
       "choices": [
-        "Hot Wallets",
-        "Cold Wallets",
-        "Paper Wallets",
-        "Digital Wallets "
-      ]
-    },
-    {
-      "question": " Which of the following are hardware wallets?     ",
+      "By sharing your Address or QR code.",
+      "By sending a request to the XDC network.",
+      "By entering the sender's wallet address.",
+      "By creating a new private key."
+      ],
+      "answer": 1
+      },
+
+      {
+      "question": "What are the advantages of using a blockchain wallet compared to traditional banking systems?",
       "choices": [
-        "Ledger Nano S",
-        "Trezor",
-        "Keep key",
-        "All of these"
-      ]
-    },
-    {
-      "question": "Blockchain networks use various cryptographic algorithms to create unique digital signatures. What can be the case when the entropy is high?",
+      "Faster transactions, no intermediaries, and more secure account tracking.",
+      "Higher interest rates on deposits.",
+      "Easier paperwork and account management.",
+      "Better customer service."
+      ],
+      "answer": 1
+      },
+
+      {
+      "question": "What is the importance of connecting to the XDC Network in the XDC Web Wallet?",
       "choices": [
-        "More secure.",
-        "No effect.",
-        "Less secure",
-        "Will be easily attacked"
-      ]
-    },
-    {
-      "question": "Which cryptographic algorithm does Bitcoin use for creating digital signatures?",
+      "It is necessary for email synchronization.",
+      "To send and receive XDC tokens.",
+      "It provides access to online shopping.",
+      "It enhances the graphical interface of the wallet."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What is a primary advantage of cryptocurrency in combating inflation?",
       "choices": [
-        "Diffie-Hellman",
-        "Rivest Shamir Adleman",
-        "Rivest Shamir AdlemanRivest Shamir Adleman",
-        "Elliptic Curve Digital Signature Algorithm"
-      ]
-    },
-    {
-      "question": " Which of the following is not a crypto exchange attack?",
+      "Its value is linked to gold.",
+      "There's an unlimited supply.",
+      "It has a fixed supply at launch, like Bitcoin's 21 million.",
+      "Its value is controlled by central banks."
+      ],
+      "answer": 3
+      },
+
+      {
+      "question": "How do miners contribute to the management of cryptocurrencies?",
       "choices": [
-        "Mt Gox ",
-        "Mafia Boy ",
-        "Bitfinex",
-        "Allinvain"
-      ]
-    },
-    {
-      "question": "What is a seed phrase?",
+      "By setting the price of cryptocurrencies.",
+      "By storing transaction data and maintaining blockchain integrity, receiving transaction fees as a reward.",
+      "By regulating the exchange of cryptocurrencies.",
+      "By marketing and promoting cryptocurrencies."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What makes cryptocurrency transactions secure and private?",
       "choices": [
-        " Private key",
-        "Public key",
-        " Wallet address",
-        "Set of strings used to retrieve private key"
-      ]
-    }
+      "Centralized databases that are well-protected.",
+      "The use of complex mathematical puzzles in the blockchain ledger.",
+      "The physical tokens that represent digital currency.",
+      "Mandatory identity verification for all transactions."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "How are cryptocurrency exchanges considered cost-effective?",
+      "choices": [
+      "They offer high-interest rates.",
+      "They eliminate the need for third parties, reducing transaction fees.",
+      "They provide government subsidies.",
+      "They use automated bots for trading."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What environmental concern is associated with cryptocurrency mining?",
+      "choices": [
+      "Excessive use of paper for printing digital currency.",
+      "High energy consumption and potential increase in carbon footprint.",
+      "Minimal impact due to digital nature.",
+      "Water pollution from mining facilities."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "Which aspect of cryptocurrency can potentially facilitate illegal transactions?",
+      "choices": [
+      "Its physical form is hard to trace.",
+      "The high level of privacy and security in transactions.",
+      "The use of cryptocurrency is not regulated.",
+      "Its instability and fluctuating value."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What risk does the loss of a private key in cryptocurrency entail?",
+      "choices": [
+      "A small fine is charged for key recovery.",
+      "Temporary freezing of the account.",
+      "Permanent loss of access to the wallet and its contents.",
+      "Automatic transfer of funds to a backup account."
+      ],
+      "answer": 3
+      },
+
+      {
+      "question": "What is a drawback related to the decentralized nature of some cryptocurrencies?",
+      "choices": [
+      "They are often too stable, leading to low profitability.",
+      "Creators and some organisations can still influence its value and flow.",
+      "They are always linked to traditional banking systems.",
+      "Decentralised currencies are not recognized by governments."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What are the three main types of software wallets?",
+      "choices": [
+      "Desktop wallets, Online wallets, Mobile wallets",
+      "Hardware wallets, Paper wallets, Cloud wallets",
+      "Online wallets, USB wallets, App-based wallets",
+      "Encrypted wallets, Decentralized wallets, Digital wallets"
+      ],
+      "answer": 1
+      },
+
+      {
+      "question": "What is a unique feature of desktop wallets?",
+      "choices": [
+      "They can be accessed from any device.",
+      "They store private keys in cold servers on your desktop.",
+      "They are mainly used for mobile transactions.",
+      "They are the least secure type of wallet."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "How do online wallets differ from mobile wallets?",
+      "choices": [
+      "Online wallets can only be used on desktops, while mobile wallets are for phones.",
+      "Online wallets store private keys offline, while mobile wallets do not.",
+      "Online wallets are accessible from any device, while mobile wallets are specifically for mobile use.",
+      "There is no difference; they are the same."
+      ],
+      "answer": 3
+      },
+
+      {
+      "question": "What is a key advantage of using a hardware wallet?",
+      "choices": [
+      "They offer faster transactions.",
+      "They are immune to online hacking attempts when not in use.",
+      "They can store unlimited amounts of different cryptocurrencies.",
+      "They are the most cost-effective wallet option."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "How do hardware wallets enhance security compared to software wallets?",
+      "choices": [
+      "By storing private keys on devices that are always connected to the internet.",
+      "By never allowing the private keys to leave the hardware wallet.",
+      "By using simple interfaces for easy access to funds.",
+      "By being designed to be tamper-evident only."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What is a paper wallet in the context of cryptocurrencies?",
+      "choices": [
+      "A digital wallet that prints receipts for every transaction.",
+      "An offline method of storing cryptocurrencies using a physical paper with QR codes.",
+      "A wallet made of paper material designed for cryptocurrency notes.",
+      "A wallet that only stores paper-based cryptocurrencies."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What is a critical step in creating a paper wallet?",
+      "choices": [
+      "Connecting it to the internet for synchronization.",
+      "Generating keys offline and printing or writing them down.",
+      "Scanning the paper wallet to create a digital backup.",
+      "Laminating it to use as a hardware wallet."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "Which statement accurately describes a risk associated with paper wallets?",
+      "choices": [
+      "They are susceptible to online hacking and phishing attacks.",
+      "Physical access to the paper wallet can lead to potential theft of funds.",
+      "They can only store a limited number of cryptocurrency types.",
+      "They are less secure because they must be connected to the internet."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What is the role of private keys in blockchain and cryptocurrencies?",
+      "choices": [
+      "They are used for public transactions.",
+      "They act like keys to your digital assets and control access to them.",
+      "They are shared with others to confirm transactions.",
+      "They are used to identify the user publicly."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "Why is it important to use hardware wallets for private keys?",
+      "choices": [
+      "Because they can store an unlimited amount of cryptocurrencies.",
+      "They offer faster transaction speeds.",
+      "They store private keys offline, making them immune to online hacking.",
+      "They are cheaper than other wallet types."
+      ],
+      "answer": 3
+      },
+
+      {
+      "question": "What is a key consideration when accessing your private keys?",
+      "choices": [
+      "Using public Wi-Fi for better connectivity.",
+      "Ensuring the environment is secure, free from malware or insecure networks.",
+      "Making sure to share your keys with trusted individuals.",
+      "Accessing them frequently to ensure they are still valid."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What type of password should you use to protect your wallet?",
+      "choices": [
+      "A simple and easy-to-remember password.",
+      "The same password as other accounts for consistency.",
+      "A strong, unique password different from other accounts.",
+      "No password is needed for blockchain wallets."
+      ],
+      "answer": 3
+      },
+
+      {
+      "question": "What is a recommended practice for backing up private keys?",
+      "choices": [
+      "Store them online for easy access.",
+      "Keep multiple backups in different locations, possibly including paper or metal forms.",
+      "Share backups with friends or family for safekeeping.",
+      "Regularly post backups on social media for recovery."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What is a recovery seed phrase in the context of blockchain wallets?",
+      "choices": [
+      "A password for opening your wallet.",
+      "A series of 12 to 24 words used to recover your assets if you lose access to your wallet.",
+      "A phrase that is publicly shared to verify transactions.",
+      "A random set of words for wallet encryption."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "How should you handle your recovery phrase?",
+      "choices": [
+      "Memorize it and do not write it down.",
+      "Write it down and store it in a secure location.",
+      "Store it on your computer or smartphone.",
+      "Share it with your wallet provider for backup."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "Why is it important to test your wallet's recovery process?",
+      "choices": [
+      "To check the speed of transactions.",
+      "To ensure that the recovery phrase correctly restores your wallet.",
+      "To verify the strength of your passwords.",
+      "Testing is not necessary for blockchain wallets."
+      ],
+      "answer": 2
+      },
+
+      {
+      "question": "What is a multi-signature wallet in cryptocurrency?",
+      "choices": [
+      "A wallet that requires only one signature for transactions.",
+      "A wallet that needs multiple private keys to authorize a transaction.",
+      "A wallet that automatically signs all transactions.",
+      "A wallet used exclusively by banks for cryptocurrency transactions."
+      ],
+      "answer": 2
+      },
+
+      {
+        "question": "What is an example of how a multi-signature wallet might be used?",
+        "choices": [
+        "A wallet that requires a password and a fingerprint to access.",
+        "A personal wallet that requires only the owner’s signature.",
+        "A company wallet requiring three out of five people to approve transactions.",
+        "A wallet that does not allow any transactions."
+        ],
+        "answer": 3
+        },
+        
+        {
+        "question": "What does cold storage mean in the context of cryptocurrencies?",
+        "choices": [
+        "Storing cryptocurrencies in a cold climate to ensure their longevity.",
+        "Keeping a reserve of cryptocurrencies offline for security.",
+        "Freezing cryptocurrency assets to prevent trading.",
+        "Using a special refrigerator to store physical tokens of cryptocurrencies."
+        ],
+        "answer": 2
+        },
+        
+        {
+        "question": "How does cold storage enhance the security of cryptocurrency?",
+        "choices": [
+        "By making transactions faster and more efficient.",
+        "By keeping the cryptocurrency online at all times.",
+        "By protecting it from theft or hacking, as it’s kept offline.",
+        "By requiring multiple signatures for access."
+        ],
+        "answer": 3
+        },
+        
+        {
+        "question": "Why might a company choose to use a multi-signature wallet?",
+        "choices": [
+        "To ensure that no single person can control the funds.",
+        "Because it is a requirement by law for all companies.",
+        "To make transactions easier and quicker.",
+        "Multi-signature wallets are less expensive than other wallets."
+        ],
+        "answer": 1
+        },
+        
+        {
+        "question": "What is a typical scenario where cold storage is used?",
+        "choices": [
+        "For storing small amounts of cryptocurrency.",
+        "When keeping large amounts of Bitcoin in a hardware wallet.",
+        "For daily transactions with cryptocurrencies.",
+        "Cold storage is not used in cryptocurrency."
+        ],
+        "answer": 2
+        },
+        
+        {
+        "question": "What is a common feature of both multi-sig wallets and cold storage?",
+        "choices": [
+        "Both require an internet connection.",
+        "They are both used for small transactions only.",
+        "Both add extra layers of security to protect digital assets.",
+        "Neither can be used for Bitcoin."
+        ],
+        "answer": 3
+        },
+        
+        {
+        "question": "How does a multi-signature wallet reduce the risk of unauthorized access or theft?",
+        "choices": [
+        "By limiting transactions to small amounts.",
+        "By requiring multiple approvals for each transaction.",
+        "By using biometric data for each transaction.",
+        "By encrypting the transaction data with a unique algorithm."
+        ],
+        "answer": 2
+        },
+        
+        {
+        "question": "What is a drawback of cryptocurrency transactions in terms of refunds or cancellations?",
+        "choices": [
+        "There is a standard refund policy for all cryptocurrencies.",
+        "Transactions are reversible within a short timeframe.",
+        "There is no refund or cancellation policy, leading to potential loss in disputes or errors.",
+        "Refunds are processed automatically if a dispute is detected."
+        ],
+        "answer": 3
+        },
+        
+        {
+        "question": "What challenge do users face with cryptocurrencies not available in all fiat currencies?",
+        "choices": [
+        "They must convert these cryptocurrencies into major ones first, potentially incurring extra fees.",
+        "Such cryptocurrencies cannot be used or exchanged.",
+        "They have to be exchanged exclusively through government agencies.",
+        "These cryptocurrencies are usually less secure and stable."
+        ],
+        "answer": 1
+        }
   ]
 }
