@@ -321,27 +321,52 @@
       ],
 
       "sypnosis": "As Cryptocurrency becomes more popular, from 2017 onwards, it becomes under greater threat from hackers. Every day there is another attack on an individuals holdings, and it's imperative you know your options to prevent similar happening to you. Cryptocurrency is where the money is, and yet the infrastructure is not yet strong enough to keep you and your money 100% secure from threats and attacks.",
-      "overview": "In this course, we will be providing a full and thorough guide to the four main Cryptocurrency wallets - Paper, Desktop, Mobile and Hardware wallets.",
-      "skills": "30 Days of unlimited access to course content. Certified Cloud Computing  Basic exam voucher. Ability to stop, pause rewind and move through all chapters. Sample quiz questions. Exam Prep Digital Course Material: View from anywhere and any device",
+      "overview": "Dive into the world of Cryptocurrency with our comprehensive guide! This course covers everything you need to know about the four main types of Cryptocurrency wallets: Paper, Desktop, Mobile, and Hardware. Whether you're a beginner or looking to enhance your knowledge, this course is tailored for you.",
+      "skills": "This course offers a complete learning experience in the field of Blockchain Wallets. Participants get 30 days of unlimited access to the course materials, a voucher for the Certified Blockchain Wallets exam, and the flexibility to learn at their own pace with the ability to pause and rewind content. The course also includes interactive quizzes and digital materials accessible on any device, ensuring a comprehensive and adaptable educational journey.",
       "prerequisites": [
-        "You should have access to a Computer with Internet connection",
-       "Don't delay, start keeping your Cryptos safe today!"
+        "Ensure you have a computer with an internet connection.",
+       "Act now to secure your cryptocurrencies without delay!"
       ],
       "curriculum": [
         {
-          "topic": "What is Blockchain Wallet and How Does It Work?"
+          "topic": "Introduction to Blockchain Wallets",
+          "sub-topic": [
+            "Definition and Purpose",
+            "Importance of Security"
+          ]
         },
         {
-          "topic": "Why Use a Blockchain Wallet?"
+          "topic": "How Blockchain Wallets Work",
+          "sub-topic": [
+            "XDC Web Wallet",
+            "Why Use a Blockchain Wallet?"
+          ]
         },
         {
-          "topic": "How Do Blockchain Wallets Work?"
+          "topic": "Advantages Disadvantage Blockchain Wallets"
         },
         {
-          "topic": "Blockchain Wallet Types"
+          "topic": "Types of Blockchain Wallets",
+          "sub-topic": [
+            "Software Wallets",
+            "Hardware Wallets",
+            "Paper Wallets"
+          ]
         },
         {
-          "topic": "How to protect your private keys?"
+          "topic": "Protecting Your Private Keys",
+          "sub-topic": [
+            "Importance of Private Keys",
+            "Best Practices for Private Key Security",
+            "Recovery Processes"
+          ]
+        },
+        {
+          "topic": "Advanced Security Measures",
+          "sub-topic": [
+            "Multi-Signature Wallets",
+            "Cold Storage"
+          ]
         }
       ]
     },
