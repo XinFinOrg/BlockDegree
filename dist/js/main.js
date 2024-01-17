@@ -373,6 +373,24 @@ $(document).ready(async function () {
       $("#course_3ReferralCodeBlock").stop().slideToggle();
   });
 
+  $("#course_4PromoCodeBtn").on("click", function () {
+    $("#course_4PromoCodeBlock").stop().slideToggle();
+    if ($("#course_4ReferralCodeBlock").is(":visible"))
+      $("#course_4ReferralCodeBlock").stop().slideToggle();
+  });
+
+  $("#course_5PromoCodeBtn").on("click", function () {
+    $("#course_5PromoCodeBlock").stop().slideToggle();
+    if ($("#course_5ReferralCodeBlock").is(":visible"))
+      $("#course_5ReferralCodeBlock").stop().slideToggle();
+  });
+
+  $("#course_6PromoCodeBtn").on("click", function () {
+    $("#course_6PromoCodeBlock").stop().slideToggle();
+    if ($("#course_6ReferralCodeBlock").is(":visible"))
+      $("#course_6ReferralCodeBlock").stop().slideToggle();
+  });
+
   $("#course_1ReferralCodeBtn").on("click", function () {
     if ($("#course_1PromoCodeBlock").is(":visible"))
       $("#course_1PromoCodeBlock").stop().slideToggle();

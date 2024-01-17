@@ -121,10 +121,10 @@
               Take Exam
             </button>
             {{else}}
-            <!--<div>
+            {{!--<div>
               <input type="text" name="codeName" placeholder="promo-code (optional)" id="{{this.type}}codeName">
               <button type="button" onclick="checkCode({{this.type}},{{this.price}})">Apply Code</button>
-            </div>-->
+            </div>--}}
 
             <div class="promoCode-block" id="{{this.type}}PromoCodeBlock">
               <div class="input-group mb-3">
@@ -153,9 +153,9 @@
             </button>
             <div>
               {{!-- <span class=" "><a href="/fmd" class="fmd-button">Apply For FundMyDegree</a></span> --}}
-              {{!-- <span class="promoCode-txt">Apply</span>
+              <span class="promoCode-txt">Apply</span>
               <span class="promoCode-btn" id="{{this.type}}PromoCodeBtn">PROMO CODE</span>&nbsp;<span
-                class="promoCode-txt"> --}}
+                class="promoCode-txt">
             </div>
             <div id="btn-paymentModal{{this.type}}" style="display:none" data-toggle="modal"
               data-target="#paymentModal{{this.type}}">
