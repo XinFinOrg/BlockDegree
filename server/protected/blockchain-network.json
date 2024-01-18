@@ -260,7 +260,7 @@
   "Various languages including Solidity and XDCsmartcontract."],
   "answer": 4
   },
-  {"question": "What is the purpose of XinPay in deploying a smart contract on XinFin?",
+  {"question": "What is the purpose of XDCPay in deploying a smart contract on XinFin?",
   "choices": ["To download XinFin remix",
   "To create a new file for the smart contract",
   "To interact with the smart contract",
