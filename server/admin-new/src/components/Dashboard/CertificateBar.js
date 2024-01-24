@@ -184,6 +184,15 @@ class CertificateBar extends Component {
               <div className="item">
                 <i className="fa fa-circle text-warning"></i> Professional
               </div>
+              <div className="item">
+              <i className="fa fa-circle text-purple"></i> ExamComputing
+            </div>
+            <div className="item">
+              <i className="fa fa-circle text-green"></i> ExamWallet
+            </div>
+            <div className="item">
+              <i className="fa fa-circle text-darkblue"></i> ExamXdcNetwork
+            </div>
             </div>
             <hr />
             {this.props.allUsers ? (
