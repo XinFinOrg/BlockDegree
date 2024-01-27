@@ -5,6 +5,7 @@ const utils = require("../utils.js");
 const renderCertificate = require("../helpers/renderCertificate");
 const socialPostListener = require("../listeners/postSocial").em;
 const GeoIP = require("geoip-lite");
+const { log } = require("console");
 // const blockchainHelper = require("../helpers/blockchainHelpers");
 
 const examTypes = {
@@ -35,7 +36,7 @@ const examTypes = {
   },
   network: {
     courseName: "examXdcNetwork",
-    questionName: "questionsXdcNetwork",
+    questionName: "questionsXDCNetwork",
     coursePayment_id: "course_6",
   },
 };
@@ -434,7 +435,9 @@ exports.submitExam = async (req, res, next) => {
 
             for (
               let index = 0;
-              index < result.questionsWallet.length;
+              // console.log('result from wallet ', result),
+              index < result.questionsWallet.length,
+              console.log('result from wallet, result.questionsWallet.length', result.questionsWallet.length);
               index++
             ) {
               if (
@@ -479,7 +482,7 @@ exports.submitExam = async (req, res, next) => {
               }
             );
           });
-        } else if (attemptsWallet >= 3) {
+        }else if (attemptsWallet >= 3) {
           attemptsWallet = 0;
           User.findOneAndUpdate(
             query,
@@ -508,58 +511,58 @@ exports.submitExam = async (req, res, next) => {
           );
         }
       }else if (examName === "network") {
-        console.log("inside computing");
-        if (attemptsxdc_network!= null && attemptsxdc_network < 3) {
-          questions.findOne({ exam: "firstExam" }).then((result, error) => {
-
-            for (
-              let index = 0;
-              index < result.questionsXdcNetwork.length;
-              index++
-            ) {
-              if (
-                parseInt(req.body[index]) + 1 ==
-                result.questionsXdcNetwork[index].answer
-              ) {
-                marks++;
-              }
-            }
-            attemptsxdc_network += 1;
-            console.log("Marks", marks);
-            User.findOneAndUpdate(
-              query,
-              {
-                $set: {
-                  "examData.examXdcNetwork.attempts":
-                    attemptsxdc_network > 2 ? 0 : attemptsxdc_network,
-                  "examData.examXdcNetwork.marks": marks,
-                  "examData.payment.course_6": attemptsxdc_network <= 2,
-                  "examData.payment.course_6_payment":
-                    attemptsxdc_network <= 2
-                      ? currUser.examData.payment.course_6_payment
-                      : "",
-                  "examData.payment.course_6_doner":
-                    attemptsxdc_network <= 2
-                      ? currUser.examData.payment.course_6_doner
-                      : "",
-                },
-              },
-              { upsert: false },
-              (err, doc) => {
-                if (err) {
-                  console.error("Some error occured at exam.submitExam: ", err);
-                  return res.json({
-                    status: false,
-                    error:
-                      "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience",
-                  });
+        console.log("inside attemptsxdc_network");
+    
+        if (attemptsxdc_network != null && attemptsxdc_network < 3) {
+            console.log('attemptsxdc_network', attemptsxdc_network);
+            questions.findOne({ exam: "firstExam" }).then((result, error) => {
+    
+                for (
+                    let index = 0;
+                    // console.log('result from line 520', result),
+                    // console.log('result from line 521 ', result.questionsXDCNetwork),
+                    index < result.questionsXDCNetwork.length;
+                    index++
+                ) {
+                    console.log('index line 523', index);
+    
+                    if (parseInt(req.body[index]) + 1 == result.questionsXDCNetwork[index].answer) {
+                        marks++;
+                    }
                 }
-                res.json({ status: true, error: null });
-                return;
-              }
-            );
-          });
-        } else if (attemptsxdc_network >= 3) {
+    
+                attemptsxdc_network += 1;
+                console.log("Marks", marks);
+                User.findOneAndUpdate(
+                    query, {
+                        $set: {
+                            "examData.examXdcNetwork.attempts": attemptsxdc_network > 2 ? 0 : attemptsxdc_network,
+                            "examData.examXdcNetwork.marks": marks,
+                            "examData.payment.course_6": attemptsxdc_network <= 2,
+                            "examData.payment.course_6_payment": attemptsxdc_network <= 2 ?
+                                currUser.examData.payment.course_6_payment :
+                                "",
+                            "examData.payment.course_6_doner": attemptsxdc_network <= 2 ?
+                                currUser.examData.payment.course_6_doner :
+                                "",
+                        },
+                    }, { upsert: false },
+                    (err, doc) => {
+                        if (err) {
+                            console.error("Some error occured at exam.submitExam: ", err);
+                            return res.json({
+                                status: false,
+                                error: "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience",
+                            });
+                        }
+                        res.json({ status: true, error: null });
+                        return;
+                    }
+                );
+            });
+        }
+    }
+    else if (attemptsxdc_network >= 3) {
           attemptsxdc_network = 0;
           User.findOneAndUpdate(
             query,
@@ -590,8 +593,6 @@ exports.submitExam = async (req, res, next) => {
       }
     }
   }
-};
-
 exports.getBasicExam = (req, res) => {
   readJSONFile(
     path.join(process.cwd(), "/server/protected/blockchain-basic.json"),
