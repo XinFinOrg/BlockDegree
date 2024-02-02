@@ -436,19 +436,19 @@ exports.submitExam = async (req, res, next) => {
                 // var marks = 90;
                 for (let index = 0; index < result.questionsWallet.length; index++) {
                     // console.log("Inside loop. Iterating through questions...");
-                    console.log("User's Answer:", req.body[index]);
-                    console.log("Correct Answer:", result.questionsWallet[index].answer.toString());
+                    // console.log("User's Answer:", req.body[index]);
+                    // console.log("Correct Answer:", result.questionsWallet[index].answer.toString());
 
 
                     if (req.body[index].toString() === result.questionsWallet[index].answer.toString()) {
-                        console.log('Correct Answer!');
+                        // console.log('Correct Answer!');
                         marks++;
-                        console.log("Marks incremented. Current marks:", marks);
+                        // console.log("Marks incremented. Current marks:", marks);
                     }
                 }
                 attemptsWallet += 1;
-                console.log("Loop completed. Final marks:", marks);
-                console.log("Attempts Wallet after loop:", attemptsWallet);
+                // console.log("Loop completed. Final marks:", marks);
+                // console.log("Attempts Wallet after loop:", attemptsWallet);
                 User.findOneAndUpdate(
                     query,
                     {
@@ -469,7 +469,7 @@ exports.submitExam = async (req, res, next) => {
                                 error: "Something went wrong while submitting your exam, don't worry your attempt won't be lost. Sorry for the inconvenience",
                             });
                         }
-                        console.log("Marks updated in the database.");
+                        // console.log("Marks updated in the database.");
                         res.json({ status: true, error: null });
                         return;
                     }
