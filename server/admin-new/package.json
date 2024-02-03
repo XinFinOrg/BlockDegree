@@ -94,7 +94,7 @@
   "homepage": "http://localhost/newadmin",
   "devDependencies": {
     "cross-env": "^5.2.0",
-    "node-sass": "^4.5.3",
+    "node-sass": "^9.0.0",
     "sass-loader": "^6.0.6"
   },
   "scripts": {
