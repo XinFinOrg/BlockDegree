@@ -89,7 +89,7 @@
     "webpack-dev-server": "3.0.0",
     "webpack-manifest-plugin": "1.2.1",
     "whatwg-fetch": "2.0.3",
-    "xlsx": "^0.16.0"
+    "xlsx": "^0.18.5"
   },
   "homepage": "http://localhost/newadmin",
   "devDependencies": {
