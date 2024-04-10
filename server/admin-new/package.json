@@ -43,7 +43,7 @@
     "jest": "20.0.4",
     "jquery": "^3.4.1",
     "moment": "^2.18.1",
-    "npm": "^6.13.3",
+    "npm": "^10.5.1",
     "object-assign": "4.1.1",
     "pe7-icon": "^1.0.4",
     "postcss-flexbugs-fixes": "3.2.0",
@@ -84,7 +84,7 @@
     "sweetalert": "1.0.0",
     "sweetalert-react": "^0.4.10",
     "url-loader": "0.5.9",
-    "web3": "^1.2.0",
+    "web3": "^4.7.0",
     "webpack": "3.5.1",
     "webpack-dev-server": "3.0.0",
     "webpack-manifest-plugin": "1.2.1",
@@ -94,7 +94,7 @@
   "homepage": "http://localhost/newadmin",
   "devDependencies": {
     "cross-env": "^5.2.0",
-    "node-sass": "^4.5.3",
+    "node-sass": "^9.0.0",
     "sass-loader": "^6.0.6"
   },
   "scripts": {
